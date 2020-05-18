@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
+import { AuthQuery } from '@blockframes/auth/+state';
 @Component({
   selector: '[form] auth-form-profile',
   templateUrl: './profile.component.html',
@@ -7,6 +8,8 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
+  public storagePath = `users/${this.authQuery.userId}/avatar`;
 
   @Input() form: ProfileForm;
+  constructor(private authQuery: AuthQuery){}
 }

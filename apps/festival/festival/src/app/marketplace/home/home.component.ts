@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public getBanner(movie: Movie): string {
     const movieElement = movie.promotionalElements.banner;
-    return movieElement && movieElement.media && movieElement.media.url;
+    return movieElement && movieElement.media && movieElement.media.urls.original;
   }
 
   // TODO 1880 country short code

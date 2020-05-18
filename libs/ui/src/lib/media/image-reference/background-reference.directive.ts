@@ -21,7 +21,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
     if(!path){
       this.ref$.next('');
     } try {
-      this.ref$.next(path.url);
+      this.ref$.next(path.urls.original);
     } catch (err) {
       this.ref$.next('')
     }

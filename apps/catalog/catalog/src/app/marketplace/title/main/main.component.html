@@ -47,7 +47,7 @@
                 <li><strong>Festivals </strong></li>
                 <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
                 <li *ngFor="let prize of prizes">
-                  <img *ngIf="prize.logo.url" [imgRef]="prize.logo"/>
+                  <img *ngIf="prize.logo.urls.original" [imgRef]="prize.logo"/>
                 </li>
               </ng-container>
             </ul>
@@ -126,7 +126,7 @@
       </mat-card>
 
     <!-- TECHNICAL INFORMATION CARD -->
-    <mat-card *ngIf="movie.salesInfo || movie.versionInfo">
+    <mat-card *ngIf="movie.salesInfo || movie.versionInfo" class="tech-information">
       <mat-card-header>
         <h3>Technical Information</h3>
       </mat-card-header>

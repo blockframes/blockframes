@@ -30,7 +30,7 @@ async function getCurrentCreationDate(tx: FirebaseFirestore.Transaction, contrac
 
 /**
  * Get current version count.
- * @param versionSnap 
+ * @param versionSnap
  */
 async function _getVersionCount(contractId: string, tx?: FirebaseFirestore.Transaction) {
   if (tx) {
@@ -78,7 +78,7 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
     const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
 
     if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
-      // TODO (#1999): Find real creator 
+      // TODO (#1999): Find real creator
       const org = await getDocument<OrganizationDocument>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
@@ -114,8 +114,8 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 /**
  * This method is in charge of updating contract version document on DB.
  * It updates some of document attributes.
- * @param tx 
- * @param contract 
+ * @param tx
+ * @param contract
  */
 function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocument) {
   // When a contract of type "mandate" is created/updated
@@ -126,7 +126,7 @@ function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocu
     }
   }
 
-  // We historize current version 
+  // We historize current version
   tx.set(db.doc(`contracts/${contract.id}/versions/${contract.lastVersion.id}`), contract.lastVersion);
 }
 
@@ -159,9 +159,9 @@ async function getRelatedContract(tx: FirebaseFirestore.Transaction, contract: C
 /**
  * This method is in charge of updating current contract document on DB.
  * It updates some of document attributes.
- * @param tx 
- * @param ref 
- * @param contract 
+ * @param tx
+ * @param ref
+ * @param contract
  * @param relatedContracts
  */
 async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, relatedContracts?: ContractDocument[]) {
@@ -292,8 +292,8 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
  *  - Autodiscover of parents and childs
  *  - Auto configuration with contract type
  *  - Public contract creation
- * 
- * @param change 
+ *
+ * @param change
  */
 export async function onContractWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,

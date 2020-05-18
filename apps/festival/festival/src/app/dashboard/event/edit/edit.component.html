@@ -24,8 +24,16 @@
             <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Message</mat-label>
-            <textarea matInput placeholder="Add a message" formControlName="message"></textarea>
+            <mat-label>Organized By</mat-label>
+            <mat-select formControlName="organizerId">
+              <ng-container *ngFor="let member of members$ | async">
+                <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
           </mat-form-field>
         </mat-card>
       </ng-container>

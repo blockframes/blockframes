@@ -9,6 +9,7 @@ import request from 'request';
 
 export type Auth = admin.auth.Auth;
 export type Firestore = admin.firestore.Firestore;
+export type Storage = admin.storage.Storage;
 export type DocumentReference = admin.firestore.DocumentReference;
 export type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
 export type QuerySnapshot = admin.firestore.QuerySnapshot;
@@ -18,6 +19,7 @@ export type UserRecord = admin.auth.UserRecord;
 export interface AdminServices {
   auth: Auth;
   db: Firestore;
+  storage: Storage;
   firebaseConfig: { projectId: string };
 }
 
@@ -29,7 +31,7 @@ export function loadAdminServices(): AdminServices {
     });
   }
 
-  return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase };
+  return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase, storage: admin.storage() };
 }
 
 function getRestoreURL(appURL: string): string {

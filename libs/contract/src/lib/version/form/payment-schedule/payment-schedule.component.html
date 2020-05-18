@@ -10,6 +10,9 @@
           <mat-label>Percentage</mat-label>
           <input test-id="percentage" matInput type="number" formControlName="percentage" max="100" min="1" #eventInput>
           <mat-icon matSuffix svgIcon="percent"></mat-icon>
+          <mat-error *ngIf="control.get('percentage').hasError('min')">
+            Only positive values are accepted.
+          </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" formGroupName="date">
           <mat-label>Triggering event</mat-label>
@@ -44,6 +47,9 @@
         <mat-label>Percentage</mat-label>
         <input matInput type="number" formControlName="percentage" max="100" min="1" #periodicInputs>
         <mat-icon matSuffix svgIcon="percent"></mat-icon>
+        <mat-error *ngIf="control.get('percentage').hasError('min')">
+          Only positive values are accepted.
+        </mat-error>
       </mat-form-field>
       <span class="caption">Within</span>
       <div formGroupName="date" fxLayout="column" fxLayoutAlign="baseline center" fxLayoutGap="20px">
@@ -51,6 +57,9 @@
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
             <mat-label>Duration</mat-label>
             <input matInput type="number" formControlName="duration" #periodicInputs>
+            <mat-error *ngIf="control.get('date.floatingDuration.duration').hasError('min')">
+              Only positive values are accepted.
+            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
             <mat-label>Period</mat-label>
@@ -110,6 +119,9 @@
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Duration</mat-label>
           <input test-id="duration" matInput type="number" formControlName="duration">
+          <mat-error *ngIf="control.get('date.floatingDuration.duration').hasError('min')">
+            Only positive values are accepted.
+          </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Period</mat-label>

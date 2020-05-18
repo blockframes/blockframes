@@ -1,6 +1,6 @@
 import { MovieBudget, createMovieBudget } from '../../+state/movie.model'
 import { FormEntity, FormValue, FormList } from '@blockframes/utils/form';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { BoxOffice } from '../../+state/movie.firestore';
 import { createBoxOffice } from '../../+state/movie.model';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
@@ -41,7 +41,7 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   return {
     unit: new FormValue(unit),
     territory: new FormControl(territory),
-    value: new FormControl(value)
+    value: new FormControl(value, Validators.min(0))
   }
 }
 

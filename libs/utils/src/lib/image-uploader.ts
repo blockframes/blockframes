@@ -4,19 +4,25 @@ import { Injectable } from "@angular/core";
 import { sanitizeFileName } from "./file-sanitizer";
 
 export interface ImgRef {
-  url: string;
   ref: string;
-  originalRef: string;
-  originalFileName?: string;
+  urls: {
+    original: string,
+    xs?: string,
+    md?: string,
+    lg?: string
+  };
 }
 
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { url: ref, originalFileName: ref } : ref;
+  const _ref = typeof ref === 'string' ? { urls: { original : ref } } : ref;
   return {
-    url: '',
     ref: '',
-    originalRef: '',
-    originalFileName: '',
+    urls: {
+      original: '',
+      xs: '',
+      md: '',
+      lg: ''
+    },
     ..._ref
   };
 }
@@ -40,7 +46,7 @@ export class ImageUploader {
       const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
       const url = await snapshot.ref.getDownloadURL();
       const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ url, ref: meta.fullPath, originalFileName: imageUrl });
+      return createImgRef({ urls: { original: url }, ref: meta.fullPath });
     } catch (error) {
       return;
     }

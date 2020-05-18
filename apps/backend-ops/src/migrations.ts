@@ -48,7 +48,7 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
 
 export async function migrate(withBackup: boolean = true) {
   console.info('start the migration process...');
-  const { db } = loadAdminServices();
+  const { db, storage } = loadAdminServices();
 
   try {
     await startMaintenance();
@@ -75,7 +75,7 @@ export async function migrate(withBackup: boolean = true) {
 
     for (const migration of migrations) {
       console.info(`applying migration: ${migration.version}`);
-      await migration.upgrade(db);
+      await migration.upgrade(db, storage);
       console.info(`done applying migration: ${migration.version}`);
     }
 

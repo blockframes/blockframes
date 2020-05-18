@@ -41,11 +41,11 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
 
 /**
  * Generates a transactional email request for user invited to the application.
- * @param email 
- * @param password 
- * @param orgName 
- * @param pageURL 
- * @param templateId 
+ * @param email
+ * @param password
+ * @param orgName
+ * @param pageURL
+ * @param templateId
  */
 export function userInvite(email: string, password: string, orgName: string, pageURL: string = appUrlContent, templateId: string = templateIds.userCredentialsContent): EmailTemplateRequest {
   const data = {
@@ -75,7 +75,7 @@ export function sendWishlistPending(email: string): EmailTemplateRequest {
 export function organizationWasAccepted(email: string, orgId: string, userFirstName?: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName,
-    pageURL: `${appUrl}${ORG_HOME}${orgId}`
+    pageURL: `${appUrl}/c/o`
   };
   return { to: email, templateId: templateIds.orgAccepted, data };
 }
@@ -89,7 +89,7 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
 }
 
 export function organizationCanAccessApp(email: string): EmailRequest {
-  // @TODO (#2685) create pretty mail template 
+  // @TODO (#2685) create pretty mail template
   return {
     to: email,
     subject: 'Your organization app access have changed !',
@@ -100,7 +100,7 @@ export function organizationCanAccessApp(email: string): EmailRequest {
 /** Send email to a user to inform him that he joined an org */
 export function userJoinedAnOrganization(userEmail: string, orgId: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
-    pageURL: `${appUrl}${ORG_HOME}${orgId}`
+    pageURL: `${appUrl}/c/o`
   };
   return { to: userEmail, templateId: templateIds.userRequestAccepted, data };
 }
@@ -120,7 +120,7 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, a
     userFirstName: request.userFirstname,
     userLastName: request.userLastname,
     orgName: request.organizationName,
-    pageURL: `${appUrl}${ORG_HOME}${request.organizationId}/members`
+    pageURL: `${appUrl}${ORG_HOME}${request.organizationId}/view/members`
   };
   return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }

@@ -1,5 +1,4 @@
 import { FormControl } from '@angular/forms';
-import { urlValidators } from '@blockframes/utils/form/validators';
 import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
 import {
   createContract,
@@ -14,6 +13,7 @@ import {
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { createParty } from '@blockframes/utils/common-interfaces';
+import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form'
 
 // PARTY DETAILS
 
@@ -41,7 +41,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new FormControl(media.url, urlValidators),
+    media: new ImgRefForm(media),
     language: new FormStaticValue(language, 'LANGUAGES'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };
