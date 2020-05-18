@@ -3,7 +3,7 @@ import FestivalInvitationsPage from './FestivalInvitationsPage';
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard-home')
+    cy.get('festival-dashboard-home', { timeout: 30000 })
   }
 
   goToCalendar() {
