@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery, orgActivity } from '@blockframes/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-dashboard',
@@ -12,8 +12,4 @@ export class DashboardComponent {
   public org$ = this.orgQuery.selectActive();
 
   constructor(private orgQuery: OrganizationQuery) {}
-
-  getActivity(activity: string) {
-    return orgActivity[activity];
-  }
 }

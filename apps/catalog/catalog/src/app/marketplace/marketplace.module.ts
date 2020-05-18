@@ -70,8 +70,8 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        canActivate: [OrganizationContractListGuard, ContractsRightListGuard],
+        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard],
         loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       }, {
         path: ':contractId',

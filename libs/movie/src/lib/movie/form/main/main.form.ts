@@ -5,6 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { yearValidators } from '@blockframes/utils/form/validators/validators';
+import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 // CREDIT
 
@@ -111,14 +112,33 @@ export class StoreConfigForm extends FormEntity<StoreConfigControl> {
 }
 
 function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
-  const { status, storeType } = createStoreConfig(storeConfig);
+  const { appAccess, status, storeType } = createStoreConfig(storeConfig);
   return {
+    appAccess: new AppAccessForm(appAccess),
     status: new FormControl(status),
     storeType: new FormControl(storeType),
   }
 }
 
 type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
+
+// APP ACCESS
+
+export class AppAccessForm extends FormEntity<AppAccessControl> {
+  constructor(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+    super(createAppAccessFormControl(appAccess));
+  }
+}
+
+function createAppAccessFormControl(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+  const { catalog, festival } = createMovieAppAccess(appAccess);
+  return {
+    catalog: new FormControl(catalog),
+    festival: new FormControl(festival)
+  }
+}
+
+type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
