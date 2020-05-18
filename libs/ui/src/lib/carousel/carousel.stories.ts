@@ -2,7 +2,7 @@ import { ToolkitModule, MOVIES } from '../storybook';
 import { CarouselModule } from './carousel.module';
 import { object } from '@storybook/addon-knobs';
 import { MatLayoutModule } from '../layout/layout.module';
-import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 
 export default {
@@ -10,7 +10,7 @@ export default {
 };
 
 export const bfCarousel = () => ({
-  moduleMetadata: { imports: [CarouselModule, ToolkitModule, MovieCardModule, MatLayoutModule] },
+  moduleMetadata: { imports: [CarouselModule, ToolkitModule, MatLayoutModule, DisplayNameModule] },
   name: 'Bf Carousel',
   template: `
     <storybook-toolkit>
@@ -18,7 +18,19 @@ export const bfCarousel = () => ({
       <div layout>
         <bf-carousel flex>
           <ng-container *ngFor="let movie of movies">
-            <movie-card shrink [movie]="movie" [col]="2"></movie-card>
+          <div [col]="2">
+          <!-- used a stripped down html from movie card, cause this component uses the router under the hood and
+          that will throw in storybook -->
+            <figure>
+              <div class="overlay">
+                <a> View More </a>
+              </div>
+            </figure>
+            <article>
+            <h6>{{ movie.main.title.international }}</h6>
+            <p class="mat-caption">{{ movie.main.directors | displayName }}</p>
+            </article>
+            </div>
           </ng-container>
         </bf-carousel>
       </div>

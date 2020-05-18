@@ -22,21 +22,15 @@ export class CarouselComponent implements AfterViewInit {
 
   public showBackwardBtn = false;
 
-  public showForwardBtn = true;
-
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
 
   constructor(private layout: Layout) { }
 
   ngAfterViewInit() {
-    this.currentPosition = this.scrollable.measureScrollOffset('left')
+    this.currentPosition = this.scrollable.measureScrollOffset('left');
   }
 
   scrollTo(direction: 'left' | 'right') {
-    /* If they both has the same number, it means there is nothing to scroll, so we want to disable the forward button */
-    if(this.scrollable.measureScrollOffset('right') === this.scrollable.measureScrollOffset('end')) {
-      return this.showForwardBtn = true;
-    }
     /*  If right === 0 it means that we are at the end and want to start from the beginning again. */
     if (!this.scrollable.measureScrollOffset('right')) {
       this.scrollable.scrollTo({ left: 0 })
