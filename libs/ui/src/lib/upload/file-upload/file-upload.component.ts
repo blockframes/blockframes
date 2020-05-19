@@ -148,7 +148,9 @@ export class FileUploadComponent implements OnInit {
       this.percentage = this.task.percentageChanges();
 
       try {
+        console.log('A'); // TODO remove debug log
         const snapshot = await this.task;
+        console.log('B'); // TODO remove debug log
 
         // Success
         this.state = 'success';
@@ -161,6 +163,10 @@ export class FileUploadComponent implements OnInit {
           this.storeUploaded.emit(createImgRef({ urls: { original: this.downloadURL } }));
         }
       } catch (error) {
+
+        // TODO for some reasons this catch is triggered during upload cancel
+        // TODO but the exception is still thrown to the ErrorHandler snack bar
+        console.log('FAILURE', error); // TODO remove debug log
 
         // the user has canceled the upload or an error as happened
 
@@ -181,17 +187,28 @@ export class FileUploadComponent implements OnInit {
       }
     }
 
-    const reader = new FileReader();
-    reader.addEventListener('loadend', _ => {
-      const buffer = new Uint8Array(reader.result as ArrayBuffer);
-      this.uploaded.emit(buffer);
-    });
-    reader.readAsArrayBuffer(file);
+    console.log('keep going'); // TODO remove debug log
+
+    // TODO DO WE REALLY WANT TO HOLD AN ENTIRE MOVIE IN THE RAM ?
+    // ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (this.state === 'uploading' || this.state === 'success') {
+      const reader = new FileReader();
+      reader.addEventListener('loadend', _ => {
+        console.log('yeaaaaaaah') // TODO remove debug log
+        const buffer = new Uint8Array(reader.result as ArrayBuffer);
+        this.uploaded.emit(buffer);
+        console.log('murica!'); // TODO remove debug log
+      });
+      reader.readAsArrayBuffer(file);
+      console.log('maybe'); // TODO remove debug log
+    }
 
     // the upload is finished, so we should re allow the user to leave -> remove the `beforeunload` handler
     // be sure that the `window` object exists beforehand
     if (this.blocking && !!window) {
       window.removeEventListener('beforeunload', unloadHandler);
     }
+
+    console.log('nope'); // TODO remove debug log
   }
 }

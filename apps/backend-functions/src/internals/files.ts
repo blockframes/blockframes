@@ -6,6 +6,7 @@ import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import {get, set} from 'lodash';
 import { ImgRef } from '@blockframes/utils/image-uploader';
+import { uploadToJWPlayer } from './jwplayer';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -14,13 +15,11 @@ import { ImgRef } from '@blockframes/utils/image-uploader';
  */
 export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
 
-  // If the type of the data is not an image, exit the function
-  if (!data.contentType?.includes('image')) {
-    console.log(`File ${data.contentType} is not an image, exiting function`);
-    return false;
-  }
+  // ----------------------------
+  //      EXCLUDED MIME TYPES
+  // ----------------------------
 
-  // we don't want to resize a vector image because:
+  // we don't want to resize a vector image (ex: watermarks) because:
   // 1) vector are resizable at will by design
   // 2) it will crash the resize program
   if (data.contentType === 'image/svg+xml') {
@@ -28,9 +27,28 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
     return false;
   }
 
-  try {
-    // Resize the image
-    await resize(data);
+  // ----------------------------
+  //      INCLUDED MIME TYPES
+  // ----------------------------
+
+  try{
+    // Check if file should be processed
+    if (data.contentType?.includes('image')) {
+
+      await resize(data); // Resize the image
+
+    } else if (data.contentType?.includes('video')) {
+
+      const response = await uploadToJWPlayer(data);
+      if (!! response.error) {
+        throw new Error(`${response.error}: ${response.result}`);
+      }
+
+    } else { // If MIME type is not included we should not process the file
+
+      console.log(`File ${data.contentType} is not an image, exiting function`);
+      return false;
+    }
 
     return true;
   } catch (err) {

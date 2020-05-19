@@ -1,24 +1,15 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, admin } from './internals/firebase';
 import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument } from './data/types';
-import { jwplayerSecret, jwplayerKey } from './environments/environment';
+import { jwplayerSecret } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
-// No typing
-const JWPlayerApi = require('jwplatform');
-
 interface ReadVideoParams {
   eventId: string;
-}
-
-interface UploadVideoParams {
-  fileName: string;
-  movieId: string;
 }
 
 export const getPrivateVideoUrl = async (
@@ -109,71 +100,4 @@ export const getPrivateVideoUrl = async (
     error: '',
     result: signedUrl
   };
-}
-
-export const uploadToJWPlayer = async (
-  data: UploadVideoParams,
-  context: CallableContext
-): Promise<ErrorResultResponse> => {
-
-  if (!data.fileName) {
-    throw new Error(`No 'fileName' params, this parameter is mandatory !`);
-  }
-
-  if (!data.movieId) {
-    throw new Error(`No 'movieId' params, this parameter is mandatory !`);
-  }
-
-  // here we need the ref (instead of getDocument) because we will update the movie bellow
-  const movieRef = db.collection('movies').doc(data.movieId);
-  const movieSnap = await movieRef.get();
-
-  if (!movieSnap.exists){
-    return {
-      error: 'UNKOWN_MOVIE',
-      result: `There is no movie with id ${data.movieId}`
-    }
-  }
-
-  if (!context.auth) {
-    throw new Error(`Unauthorized call !`);
-  }
-
-  // TODO perform further check to see if user is authorized to upload a video for a given movie
-  // TODO issue#2653
-
-  const storage = admin.storage();
-  const videoFile = await storage.bucket().file(`uploads/${data.fileName}`);
-  const [exists] =  await videoFile.exists();
-
-  if (!exists) {
-    return {
-      error: 'UNKOWN_FILE',
-      result: `There is no file stored with the name ${data.fileName}`
-    }
-  }
-
-  // it's better to use Date here instead of firestore.Timestamp since
-  // this value will be fed back to 'new Date()' inside the Google system
-  // using firestore.Timestamp was causing error about the date being in the past
-  const expires = new Date().getTime() + 7200000; // now + 2 hours
-
-  const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});
-
-  const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
-  const result = await jw.videos.create({download_url: videoUrl});
-
-  if (result.status === 'error' || !result.video || !result.video.key) {
-    return {
-      error: 'JWPLAYER-ERROR',
-      result: result
-    }
-  }
-
-  await movieRef.update({hostedVideo: result.video.key});
-
-  return {
-    error: '',
-    result: 'OK'
-  }
 }

@@ -42,10 +42,6 @@ export class TitleUploadComponent implements OnInit, OnDestroy, UnloadComponent 
       }
     }
 
-    // TODO listen for end of upload
-    // TODO trigger upload to JWPLAYER
-    // TODO find a way to prevent user to re-upload if it already exist
-
     /**
      * This function will be called by the `unload.guard.ts` to check if it canDeactivate
      */

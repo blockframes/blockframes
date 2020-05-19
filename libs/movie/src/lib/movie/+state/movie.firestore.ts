@@ -294,9 +294,8 @@ interface MovieRaw<D> {
   budget: MovieBudget;
   movieReview: MovieReview[];
 
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
+  // TODO issue##2796
+  // TODO this let us store only one video per movie
   hostedVideo?: string;
 }
 
