@@ -11,7 +11,6 @@ import { ViewComponent } from './view.component';
 import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
-import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
 // Material
@@ -19,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatMenuModule } from '@angular/material/menu';
+import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 
 const routes = [
   {
@@ -47,15 +46,14 @@ const routes = [
     MovieViewLayoutModule,
     ImageReferenceModule,
     MovieHeaderModule,
-    WishlistButtonModule,
     OrgChipModule,
+    PromotionalLinksModule,
 
     // Material
     MatChipsModule,
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
-    MatMenuModule,
     // Routes
     RouterModule.forChild(routes)
   ]
