@@ -1,0 +1,8 @@
+<file-upload
+  [accept]="accept"
+  [types]="types"
+  [path]="uploadPath"
+  (stateChanged)="uploadState($event)"
+  blocking
+  uploadOnFirestore
+></file-upload>
