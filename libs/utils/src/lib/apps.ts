@@ -15,6 +15,12 @@ const appName = {
   festival: 'Festival'
 };
 
+export const sendgridEmailsFrom = {
+  catalog: 'team@archipelcontent.com',
+  festival: 'team@archipelmarket.com',
+  default: 'admin@blockframes.io'
+} as const;
+
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
@@ -74,4 +80,16 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
   return a === 'festival' ? 'accepted' : 'submitted';
+}
+
+/**
+ * Returns the "from" email that should be used depending on the current app
+ * @param app 
+ */
+export function getSendgridFrom(app?: App): string {
+  if (!app) {
+    return sendgridEmailsFrom.default;
+  } else {
+    return sendgridEmailsFrom[app] || sendgridEmailsFrom.default;
+  }
 }

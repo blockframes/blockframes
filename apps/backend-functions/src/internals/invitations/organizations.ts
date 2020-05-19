@@ -14,7 +14,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl, getFromEmail } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -70,10 +70,10 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
   const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
-
+  const from = await getFromEmail(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
-    .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!)));
+    .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!), from));
 
   return Promise.all(adminEmailPromises);
 }
@@ -149,13 +149,15 @@ async function onInvitationFromUserToJoinOrgCreate({
   }
 
   const adminIds = await getAdminIds(toOrg.id);
+  const from = await getFromEmail(toOrg.id);
 
   const admins = await Promise.all(adminIds.map(u => getUser(u)));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
   await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!)
+    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!),
+    from
   );
 
   const urlToUse = await getAppUrl(toOrg.id);
@@ -171,7 +173,8 @@ async function onInvitationFromUserToJoinOrgCreate({
           userFirstname: userData.firstName!,
           userLastname: userData.lastName!
         }, urlToUse)
-      )
+      ),
+      from
     )
   );
 }
@@ -188,7 +191,8 @@ async function onInvitationFromUserToJoinOrgAccept({
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse));
+  const from = await getFromEmail(toOrg.id);
+  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse), from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 

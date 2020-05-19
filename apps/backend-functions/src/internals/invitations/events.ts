@@ -3,7 +3,7 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
-import { getAdminIds, getDocument } from "../../data/internals";
+import { getAdminIds, getDocument, getFromEmail, getAppUrl } from "../../data/internals";
 import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
@@ -20,7 +20,7 @@ async function onInvitationToAnEventCreate({
   mode,
   docId
 }: InvitationDocument) {
-  if(!docId){
+  if (!docId) {
     console.log('docId is not defined');
     return;
   }
@@ -38,7 +38,7 @@ async function onInvitationToAnEventCreate({
 
   // Retreive notification recipient
   let recipient: string;
-  let link : string;
+  let link: string;
   if (!!toUser) {
     recipient = toUser.email;
   } else if (!!toOrg) {
@@ -64,7 +64,9 @@ async function onInvitationToAnEventCreate({
       link = "";
     }
     console.log(`Sending invitation email for a screening event (${docId}) from ${senderEmail} to : ${recipient}`);
-    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link));
+    const urlToUse = await getAppUrl(org);
+    const from = await getFromEmail(org);
+    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link, urlToUse), from);
 
   } else if (!!fromUser) {
     /**
@@ -80,14 +82,16 @@ async function onInvitationToAnEventCreate({
     } else {
       link = "";
     }
+    const urlToUse = await getAppUrl(org);
+    const from = await getFromEmail(org);
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link));
+        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link, urlToUse), from);
       case 'request':
       default:
         console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link));
+        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link, urlToUse), from);
     }
   } else {
     throw new Error('Did not found invitation sender');
@@ -260,7 +264,7 @@ export async function isUserInvitedToScreening(userId: string, movieId: string) 
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');
 
-  const [ invitations, requests ] = await Promise.all([
+  const [invitations, requests] = await Promise.all([
     acceptedInvitations.get(),
     acceptedRequests.get()
   ]);

@@ -1,18 +1,19 @@
 import SendGrid from '@sendgrid/mail';
-import { sendgridAPIKey, sendgridEmailsFrom } from '../environments/environment';
+import { sendgridAPIKey } from '../environments/environment';
 export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails';
 import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
+import { getSendgridFrom } from '@blockframes/utils/apps';
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: string = sendgridEmailsFrom): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: string = getSendgridFrom()): Promise<any> {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;
@@ -28,7 +29,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: string
   return SendGrid.send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: string = sendgridEmailsFrom) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: string = getSendgridFrom()) {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;
@@ -60,7 +61,7 @@ export const sendTestMail = async (
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   try {
-    await sendMail(data.request, data.from || sendgridEmailsFrom);
+    await sendMail(data.request, data.from || getSendgridFrom());
     return { error: '', result: 'OK' };
   } catch (error) {
     return {

@@ -8,8 +8,8 @@ import { RequestDemoInformations, PublicUser, OrganizationDocument } from './dat
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
-import { getDocument, getOrgAppName, getAppUrl } from './data/internals';
-import { App } from '@blockframes/utils/apps';
+import { getDocument, getOrgAppName, getAppUrl, getFromEmail } from './data/internals';
+import { App, getSendgridFrom } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 
 type UserRecord = admin.auth.UserRecord;
@@ -20,7 +20,7 @@ interface UserProposal {
   email: string;
 }
 
-export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
+export const startVerifyEmailFlow = async (data: any) => {
   const { email } = data;
 
   if (!email) {
@@ -31,7 +31,7 @@ export const startVerifyEmailFlow = async (data: any, context?: CallableContext)
   await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
 };
 
-export const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
+export const startResetPasswordEmailFlow = async (data: any) => {
   const { email } = data;
 
   if (!email) {
@@ -43,16 +43,16 @@ export const startResetPasswordEmailFlow = async (data: any, context: CallableCo
 };
 
 export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
-  const { email, userName, orgName, wishlist } = data;
+  const { wishlist } = data;
 
-  if (!email || !userName || !orgName || !wishlist) {
-    throw new Error(`email, userName, orgName, and wishlist are mandatory parameters`)
-  }
+  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+  const from = await getFromEmail(org);
 
-  await sendMail(sendWishlist(userName, orgName, wishlist));
-  await sendMailFromTemplate(sendWishlistPending(email));
+  await sendMail(sendWishlist(`${user.firstName} ${user.lastName}`, org.denomination.public || org.denomination.full, wishlist), from);
+  await sendMailFromTemplate(sendWishlistPending(user.email), from);
 }
-
 
 export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
@@ -151,27 +151,36 @@ export const getOrCreateUserByMail = async (data: any): Promise<UserProposal> =>
     const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
     const appName: App = await getOrgAppName(org);
     const urlToUse = await getAppUrl(org);
+    const from = await getFromEmail(org);
     const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
 
-    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse));
+    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse), from);
 
     return { uid: user.uid, email };
   }
 };
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
-
-  await sendMail(sendDemoRequestMail(data))
+  const from = getSendgridFrom(data.app);
+  await sendMail(sendDemoRequestMail(data), from);
 
   return data;
 }
 
-export const sendUserMail = async (data: any): Promise<any> => {
-  const { userName, userMail, subject, message } = data;
+export const sendUserMail = async (data: any, context: CallableContext): Promise<any> => {
+  const { subject, message } = data;
 
-  if (!subject || !message || !userName || !userMail) {
-    throw new Error('Subject, message and user email and name are mandatory parameters for the "sendUserMail()" function');
+  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+
+  if (!subject || !message) {
+    throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  await sendMail(sendContactEmail(userName, userMail, subject, message));
+  let from = undefined;
+  if (user.orgId) {
+    from = await getFromEmail(user.orgId);
+  }
+
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message), from);
 }

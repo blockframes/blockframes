@@ -110,12 +110,11 @@ export class CartService extends CollectionService<CartState> {
    * @param movies
    */
   public async updateWishlistStatus(movies: Movie[]) {
-    const user = this.authQuery.user;
     const org = this.organizationQuery.getActive();
-    const wishlistTitles = movies.map(movie => movie.main.title.original);
+    const wishlist = movies.map(movie => movie.main.title.original);
 
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ email: user.email, userName: user.firstName, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
+    await callDeploy({ wishlist }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
       return wishlist.status === 'pending'

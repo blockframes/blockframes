@@ -5,6 +5,7 @@ import { createEmailRequest, EmailRequest } from '@blockframes/utils/emails';
 function createTestEmailControls(entity: Partial<EmailRequest>) {
   const request = createEmailRequest(entity);
   return {
+    from: new FormControl(''),
     to: new FormControl(request.to),
     subject: new FormControl(request.subject),
     text: new FormControl(request.text),
