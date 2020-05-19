@@ -1,3 +1,5 @@
+const PRIVATE = 'Private Screening';
+
 export default class FestivalScreeningPage {
   constructor() {
     cy.get('festival-screening');
@@ -9,6 +11,7 @@ export default class FestivalScreeningPage {
   }
 
   clickAskForInvitation() {
-    cy.get('festival-screening event-screening-item').first().find('button[test-id=invitation-request]').click();
+    cy.get('festival-screening event-screening-item').contains(PRIVATE).first().parent().parent().find('button[test-id=invitation-request]').click();
+    cy.wait(3000);
   }
 }
