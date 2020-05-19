@@ -6,6 +6,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
 import { getCurrentApp, getSendgridFrom, sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'admin-mails',
@@ -22,7 +23,8 @@ export class MailsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private authQuery: AuthQuery,
   ) {
   }
 
@@ -31,6 +33,7 @@ export class MailsComponent implements OnInit {
     const currentApp = getCurrentApp(this.routerQuery);
     const defaultEmailFrom = getSendgridFrom(currentApp);
     this.form.get('from').setValue(defaultEmailFrom);
+    this.form.get('to').setValue(this.authQuery.user.email);
   }
 
   async sendTestEmail() {
