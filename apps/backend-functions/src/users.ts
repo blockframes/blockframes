@@ -21,25 +21,27 @@ interface UserProposal {
 }
 
 export const startVerifyEmailFlow = async (data: any) => {
-  const { email } = data;
+  const { email, app } = data;
+  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
+  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from);
 };
 
 export const startResetPasswordEmailFlow = async (data: any) => {
-  const { email } = data;
+  const { email, app } = data;
+  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
   }
 
   const resetLink = await admin.auth().generatePasswordResetLink(email);
-  await sendMailFromTemplate(userResetPassword(email, resetLink));
+  await sendMailFromTemplate(userResetPassword(email, resetLink), from);
 };
 
 export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {

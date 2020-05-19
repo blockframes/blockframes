@@ -48,8 +48,9 @@ export const onUserDelete = onDocumentDelete(
 );
 
 /** Trigger: REST call to send a verify email to a user. */
-export const sendVerifyEmail = functions.https
-  .onCall(users.startVerifyEmailFlow);
+// @TODO (#2821)
+/*export const sendVerifyEmail = functions.https
+  .onCall(users.startVerifyEmailFlow);*/
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https
