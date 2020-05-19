@@ -2,23 +2,11 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
 import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
+import { User } from '@blockframes/user/+state/user.firestore';
 
+export { User } from '@blockframes/user/+state/user.firestore';
 export const PLACEHOLDER_AVATAR = '/assets/logo/profil_avatar_250.svg';
 
-export interface User {
-  uid: string;
-  financing: {
-    rank: string
-  };
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  position: string;
-  orgId: string;
-  avatar: ImgRef;
-  watermark: ImgRef;
-}
 
 export interface Roles {
   blockframesAdmin: boolean;

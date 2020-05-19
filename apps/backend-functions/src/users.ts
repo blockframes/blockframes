@@ -1,24 +1,16 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { generate as passwordGenerator } from 'generate-password';
-import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
+import { db } from './internals/firebase';
+import { userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser, OrganizationDocument } from './data/types';
+import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
-import { getDocument, getOrgAppName, getAppUrl } from './data/internals';
-import { App } from '@blockframes/utils/apps';
-import { templateIds } from '@env';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-interface UserProposal {
-  uid: string;
-  email: string;
-}
 
 export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
   const { email } = data;
@@ -125,39 +117,7 @@ export async function onUserDelete(
   return deleteObject(algolia.indexNameUsers, userSnapshot.id);
 }
 
-const generatePassword = () =>
-  passwordGenerator({
-    length: 12,
-    numbers: true
-  });
 
-export const getOrCreateUserByMail = async (data: any): Promise<UserProposal> => {
-  const { email, orgId } = data;
-
-  try {
-    const user = await auth.getUserByEmail(email);
-    return { uid: user.uid, email };
-  } catch {
-    const password = generatePassword();
-
-    // User does not exists, send them an email.
-    const user = await auth.createUser({
-      email,
-      password,
-      emailVerified: true,
-      disabled: false
-    });
-
-    const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-    const appName: App = await getOrgAppName(org);
-    const urlToUse = await getAppUrl(org);
-    const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
-
-    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse));
-
-    return { uid: user.uid, email };
-  }
-};
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
 
