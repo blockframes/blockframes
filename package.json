@@ -48,7 +48,6 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "storybook:ui": "npx ng run ui:storybook",
     "storybook:movie": "npx ng run movie:storybook",
-    "storybook:user": "npx nx run user:storybook",
     "prerender:festival": "npx ng build festival --prod && npx ng run festival:server --configuration production && npx angular-prerender --browser-target festival:build --server-target festival:server"
   },
   "private": true,
