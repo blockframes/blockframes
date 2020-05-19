@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { CatalogCart, createCart } from './cart.model';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
@@ -24,7 +23,6 @@ export class CartService extends CollectionService<CartState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
-    private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     protected store: CartStore
   ) {
@@ -116,13 +114,13 @@ export class CartService extends CollectionService<CartState> {
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
     await callDeploy({ wishlist }).toPromise();
 
-    const setSent = (wishlist: Wishlist) => {
-      return wishlist.status === 'pending'
-        ? { ...wishlist, status: 'sent', sent: new Date() } as Wishlist
-        : wishlist
+    const setSent = (w: Wishlist) => {
+      return w.status === 'pending'
+        ? { ...w, status: 'sent', sent: new Date() } as Wishlist
+        : w
     }
 
-    return this.organizationService.update({ ...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist)) });
+    return this.organizationService.update({ ...org, wishlist: org.wishlist.map(w => setSent(w)) });
   }
 
   /**
