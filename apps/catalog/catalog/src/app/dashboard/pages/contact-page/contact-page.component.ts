@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthQuery } from "@blockframes/auth/+state/auth.query";
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -22,7 +21,6 @@ export class ContactPageComponent implements OnInit {
 
   constructor(
     private functions: AngularFireFunctions,
-    private query: AuthQuery,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
   ) {
