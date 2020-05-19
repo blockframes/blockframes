@@ -7,6 +7,7 @@ import { templateIds } from '@env';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getAppUrl } from '../data/internals';
+import { App } from '@blockframes/utils/apps';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_ORG_INVITATION = '/c/organization/home';
@@ -79,7 +80,7 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.joinAnOrgPending, data };
 }
 
-export function organizationCanAccessApp(admin: any, appName: string, appUrl: string): EmailTemplateRequest {
+export function organizationCanAccessApp(admin: PublicUser, appName: App, appUrl: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
     appName: appName,

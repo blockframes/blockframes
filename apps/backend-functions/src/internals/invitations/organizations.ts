@@ -78,21 +78,6 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   return Promise.all(adminEmailPromises);
 }
 
-
-/** Sends an email when an organization invites an user to join. */
-async function onInvitationToOrgCreate({ toUser }: InvitationDocument) {
-  if (!toUser) {
-    console.error('No user provided');
-    return;
-  }
-
-  const userMail = await getUserMail(toUser.uid);
-  if (!userMail) {
-    console.error('No user email provided for userId:', toUser.uid);
-    return;
-  }
-}
-
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) {
   if (!toUser || !fromOrg) {
@@ -224,9 +209,7 @@ export async function onInvitationToOrgUpdate(
   after: InvitationDocument,
   invitation: InvitationDocument
 ): Promise<any> {
-  if (wasCreated(before, after)) {
-    return onInvitationToOrgCreate(invitation);
-  } else if (wasAccepted(before!, after)) {
+  if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
   } else if (wasDeclined(before!, after)) {
     return onInvitationToOrgDecline(invitation);

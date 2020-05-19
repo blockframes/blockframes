@@ -12,7 +12,7 @@ export type Module = typeof module[number];
 
 const appName = {
   catalog: 'Archipel Content',
-  festival: 'Festival'
+  festival: 'Archipel Market'
 };
 
 export type ModuleAccess = Record<Module, boolean>;
@@ -53,7 +53,7 @@ export function getAppName(slug: App) {
 
 /**
  * Returns the apps that the org have access to
- * @param org 
+ * @param org
  */
 export function getOrgAppAccess(org: OrganizationDocument): App[] {
   const allowedApps = {} as Record<App, boolean>;

@@ -18,7 +18,6 @@ import { triggerNotifications, createNotification } from './notification';
 import { app, Module } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppName, getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
-import { appUrlContent, appUrlMarket } from '@env';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -198,7 +197,7 @@ export const accessToAppChanged = async (
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const appName = await getOrgAppName(orgId);
-  const appUrl = await appName === 'festival' ? appUrlMarket : appUrlContent;
+  const appUrl = await getAppUrl(orgId);
 
   await Promise.all(admins.map(admin => sendMailFromTemplate(organizationCanAccessApp(admin, appName, appUrl ))));
 
