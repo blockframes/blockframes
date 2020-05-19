@@ -20,12 +20,12 @@ import { NOW, TOMORROW, EVENTNAME, USER_1, USER_2, ORG_NAME } from '../../fixtur
 
 let tomorrow = TOMORROW;
 
-beforeEach(() => {
-  clearDataAndPrepareTest();
-  tomorrow = new Date(NOW);
-});
-
 describe('User create a screening', () => {
+  beforeEach(() => {
+    clearDataAndPrepareTest();
+    tomorrow = new Date(NOW);
+  });
+
   it('User creates a private screening, that taking place right now', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();

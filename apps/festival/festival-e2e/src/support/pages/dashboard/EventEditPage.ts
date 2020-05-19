@@ -23,7 +23,6 @@ export default class EventEditPage {
   }
 
   selectMovie() {
-    cy.wait(3000);
     cy.get('event-edit mat-select[formControlName=titleId]').click();
     cy.get('mat-option').first().click();
   }
