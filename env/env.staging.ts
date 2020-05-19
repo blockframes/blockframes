@@ -81,7 +81,7 @@ export const templateIds = {
   // At this step, we can not use links into emails
   welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
 
-  // Template for sending the verify email 
+  // Template for sending the verify email
   // Internal to firebase, no link needed here
   userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
 
@@ -102,7 +102,8 @@ export const templateIds = {
   wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
   invitationToMeetingFromUser: 'd-b40ccbd91c2f4d6599be56ab1f8e6631',
   invitationToScreeningFromOrg: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e'
+  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e',
+  newAppAccessForOrg: 'd-274b8b8370b44dc2984273d28970a06d'
 }
 
 // Yandex Metrika Id
