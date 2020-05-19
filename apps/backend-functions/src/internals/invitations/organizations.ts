@@ -91,8 +91,6 @@ async function onInvitationToOrgCreate({ toUser }: InvitationDocument) {
     console.error('No user email provided for userId:', toUser.uid);
     return;
   }
-
-  // @TODO (#2685) Not implemented @see userInviteToOrg template
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
