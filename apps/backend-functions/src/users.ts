@@ -177,7 +177,7 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
     throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  let from = undefined;
+  let from;
   if (user.orgId) {
     from = await getFromEmail(user.orgId);
   }
