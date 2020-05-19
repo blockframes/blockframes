@@ -9,9 +9,9 @@ export function getInvitationMessage(invitation: Invitation, isForMe: boolean) {
   switch (invitation.type) {
     case 'joinOrganization':
       if (invitation.mode === 'request') {
-        return `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization`;
+        return `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization.`;
       } else {
-        return `Your organization sent an invitation to this user email: ${invitation.toUser.email}`;
+        return `Your organization sent an invitation to this user email: ${invitation.toUser.email}.`;
       }
     case 'attendEvent':
       if (isForMe) {
@@ -22,12 +22,12 @@ export function getInvitationMessage(invitation: Invitation, isForMe: boolean) {
           } else if (invitation.fromUser) {
             from = invitation.fromUser.firstName && invitation.fromUser.lastName ? `${invitation.fromUser.firstName} ${invitation.fromUser.lastName}` : invitation.fromUser.email;
           }
-          return `${from} requested to attend your event !`;
+          return `${from} requested to attend your event.`;
         } else {
-          return 'You have been invited to an event !';
+          return 'You have been invited to an event.';
         }
       } else {
-        return `Your ${invitation.mode} have been sent!`;
+        return `Your ${invitation.mode} has been sent.`;
       }
   }
 }

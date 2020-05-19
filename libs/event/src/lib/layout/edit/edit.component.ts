@@ -6,6 +6,8 @@ import { InvitationService }  from '@blockframes/invitation/+state/invitation.se
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
+import { map, finalize } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'event-edit',
@@ -19,6 +21,7 @@ export class EventEditComponent {
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
   invitationForm = createAlgoliaUserForm();
+  progress: Observable<number>;
 
   constructor(
     private service: EventService,
@@ -47,7 +50,12 @@ export class EventEditComponent {
   async invite() {
     const event = this.form.value;
     const emails = this.invitationForm.value.map(guest => guest.email);
-    await this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id);
+    let count = 0;
+    const progress$ = this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id);
     this.invitationForm.clear();
+    this.progress = progress$.pipe(
+      map(_ => ((++count) / emails.length) * 100),
+      finalize(() => delete this.progress)
+    );
   }
 }
