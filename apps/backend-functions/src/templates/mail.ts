@@ -52,7 +52,7 @@ export function userInvite(email: string, password: string, orgName: string, pag
     userEmail: email,
     userPassword: password,
     orgName,
-    pageURL
+    pageURL: `${pageURL}${USER_ORG_INVITATION}`
   };
   return { to: email, templateId, data };
 }
