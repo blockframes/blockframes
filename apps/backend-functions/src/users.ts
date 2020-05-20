@@ -122,7 +122,7 @@ export const sendDemoRequest = async (data: RequestDemoInformations): Promise<Re
 export const sendUserMail = async (data: any, context: CallableContext): Promise<any> => {
   const { subject, message } = data;
 
-  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
 
   if (!subject || !message) {

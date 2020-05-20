@@ -73,7 +73,8 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const from = await getFromEmail(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
-    .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!), from));
+    .map(adminEmail => userJoinedYourOrganization(adminEmail!, userEmail!))
+    .map(template => sendMailFromTemplate(template, from));
 
   return Promise.all(adminEmailPromises);
 }
@@ -146,19 +147,15 @@ async function onInvitationFromUserToJoinOrgCreate({
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
   return Promise.all(
-    admins.map(admin =>
-      sendMailFromTemplate(
-        userRequestedToJoinYourOrg({
-          adminEmail: admin.email,
-          adminName: admin.firstName!,
-          organizationName: toOrg.denomination.full,
-          organizationId: toOrg.id,
-          userFirstname: userData.firstName!,
-          userLastname: userData.lastName!
-        }, urlToUse)
-      ),
-      from
-    )
+    admins.map(admin => userRequestedToJoinYourOrg({
+      adminEmail: admin.email,
+      adminName: admin.firstName!,
+      organizationName: toOrg.denomination.full,
+      organizationId: toOrg.id,
+      userFirstname: userData.firstName!,
+      userLastname: userData.lastName!
+    }, urlToUse))
+      .map(template => sendMailFromTemplate(template, from))
   );
 }
 
@@ -175,7 +172,8 @@ async function onInvitationFromUserToJoinOrgAccept({
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
   const from = await getFromEmail(toOrg.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse), from);
+  const template = userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse);
+  await sendMailFromTemplate(template, from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 

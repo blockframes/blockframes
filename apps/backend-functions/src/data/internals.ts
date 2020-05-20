@@ -112,7 +112,13 @@ export async function getOrgAppName(_org: OrganizationDocument | string): Promis
  */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
   const appName = await getOrgAppName(_org);
-  return appName === 'festival' ? appUrlMarket : appUrlContent;
+  switch (appName) {
+    case 'festival':
+      return appUrlMarket;
+    case 'catalog':
+    default:
+      return appUrlContent;
+  }
 }
 
 /**

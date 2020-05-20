@@ -56,7 +56,7 @@ export const sendTestMail = async (
   data: { request: EmailRequest, from: string },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 

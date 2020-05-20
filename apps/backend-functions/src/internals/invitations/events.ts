@@ -63,7 +63,7 @@ async function onInvitationToAnEventCreate({
     } else {
       link = "";
     }
-    console.log(`Sending invitation email for a screening event (${docId}) from ${senderEmail} to : ${recipient}`);
+    console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient}`);
     const urlToUse = await getAppUrl(org);
     const from = await getFromEmail(org);
     return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link, urlToUse), from);
@@ -86,12 +86,14 @@ async function onInvitationToAnEventCreate({
     const from = await getFromEmail(org);
     switch (mode) {
       case 'invitation':
-        console.log(`Sending invitation email for a meeeting event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link, urlToUse), from);
+        console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient}`);
+        const templateInvitation = invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link, urlToUse);
+        return sendMailFromTemplate(templateInvitation, from);
       case 'request':
       default:
         console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link, urlToUse), from);
+        const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link, urlToUse);
+        return sendMailFromTemplate(templateRequest, from);
     }
   } else {
     throw new Error('Did not found invitation sender');

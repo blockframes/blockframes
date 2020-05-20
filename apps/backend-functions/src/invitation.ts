@@ -93,7 +93,6 @@ export async function onInvitationWrite(
 interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<any>>;
-  orgId: string;
 }
 
 /**
@@ -103,7 +102,7 @@ interface UserInvitation {
 export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
   return new Promise(async (res) => {
 
-    if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+    if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
     const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
     if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
 
