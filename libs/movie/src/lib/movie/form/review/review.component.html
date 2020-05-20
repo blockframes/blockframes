@@ -2,16 +2,17 @@
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <mat-form-field appearance="outline">
       <mat-label>Revue of Journal Name</mat-label>
-      <input test-id="journal" matInput [formControl]="control.get('journalName')"  name="journalName"/>
+      <input test-id="journal" matInput [formControl]="control.get('journalName')" name="journalName" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Revue Link</mat-label>
-      <input test-id="link" matInput [formControl]="control.get('revueLink')"  name="revueLink"/>
+      <input test-id="link" matInput [formControl]="control.get('revueLink')" name="revueLink" />
+      <mat-error>Please fill in a url (e.g. www.revue.com)</mat-error>
     </mat-form-field>
   </div>
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Film Critic Quote</mat-label>
-    <textarea test-id="critic" matInput [formControl]="control.get('criticQuote')"  name="criticQuote"></textarea>
+    <textarea test-id="critic" matInput [formControl]="control.get('criticQuote')" name="criticQuote"></textarea>
   </mat-form-field>
 
   <!-- Remove -->
