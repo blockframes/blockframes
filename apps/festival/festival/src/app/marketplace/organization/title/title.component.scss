@@ -1,6 +1,8 @@
+@import '~@angular/flex-layout/mq';
+
 :host {
   display: block;
-  padding: 16px 24px; 
+  padding: 16px 24px;
 }
 
 h1 {
@@ -10,6 +12,26 @@ h1 {
 a {
   width: 300px;
 }
+
 movie-card {
-  width: 100%;
+  width: 25%;
+}
+
+@include layout-bp(xs) {
+  movie-card {
+    width: 100%;
+  }
+}
+
+
+@include layout-bp(sm) {
+  movie-card {
+    width: 50%;
+  }
+}
+
+@include layout-bp(md) {
+  movie-card {
+    width: 33%;
+  }
 }

@@ -12,6 +12,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
+import { WorkspacePipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -89,6 +90,7 @@ export const noOrganizationRoutes: Routes = [
     ImgAssetModule,
     ImageReferenceModule,
     AlgoliaAutocompleteModule,
+    WorkspacePipeModule,
 
     // Material
     MatFormFieldModule,

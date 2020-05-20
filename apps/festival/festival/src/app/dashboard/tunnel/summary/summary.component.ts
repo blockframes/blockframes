@@ -41,7 +41,7 @@ export class TunnelSummaryComponent {
       const movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      movie.main.storeConfig.appAccess.festival = true
+      movie.main.storeConfig.appAccess.festival = true;
       await this.service.update(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });

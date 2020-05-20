@@ -21,7 +21,7 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
     private query: OrganizationQuery,
     private router: Router,
     private route: ActivatedRoute,
-    private routerQuery: RouterQuery,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -41,7 +41,6 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
     await this.service.update(this.query.getActiveId(), {
       appAccess: orgAppAccess
     });
-
     this.router.navigate(['../create-congratulations'], { relativeTo: this.route });
   }
 

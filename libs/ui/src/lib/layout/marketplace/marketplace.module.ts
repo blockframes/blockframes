@@ -10,7 +10,6 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 
@@ -51,7 +50,6 @@ import { MatMenuModule } from '@angular/material/menu';
     AppBarModule,
 
     // Widgets
-    NotificationWidgetModule,
     SearchWidgetModule,
     AuthWidgetModule,
   ]

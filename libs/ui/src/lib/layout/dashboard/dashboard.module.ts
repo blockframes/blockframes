@@ -13,7 +13,6 @@ import { DashboardComponent } from './dashboard.component';
 import { AppBarModule } from '../../app-bar';
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
@@ -36,7 +35,6 @@ import { MatBadgeModule } from '@angular/material/badge';
     FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
-    NotificationWidgetModule,
     SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,

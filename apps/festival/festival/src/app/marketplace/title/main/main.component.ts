@@ -1,9 +1,7 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-
-const promoLinks = ['promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'];
 
 @Component({
   selector: 'festival-main',
@@ -13,26 +11,8 @@ const promoLinks = ['promo_reel_link', 'scenario', 'screener_link', 'teaser_link
 })
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
-  public promoLinks = promoLinks;
 
   constructor(private movieQuery: MovieQuery) { }
-
-  public hasLink({ promotionalElements }: Movie): boolean {
-    return this.promoLinks.some(link => !!promotionalElements[link].media.urls.original);
-  }
-
-  public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
-    if(movie.promotionalElements[link].media.urls.original) {
-      const isDownload = link === 'scenario' || link === 'presentation_deck';
-      const isAccent = link === 'scenario' || link === 'promo_reel_link';
-      return {
-        url: movie.promotionalElements[link].media.urls.original,
-        icon: isDownload ? 'download' : 'play',
-        label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`,
-        color: isAccent ? 'accent' : 'primary'
-      };
-    }
-  }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
     return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets);
