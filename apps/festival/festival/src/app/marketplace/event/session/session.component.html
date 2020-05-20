@@ -11,7 +11,7 @@
             <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
             <h2>by {{ event.movie.main.directors | displayName }}</h2>
             <span class="mat-caption">Screening now</span>
-            <button mat-flat-button color="accent" (click)="playVideo()">
+            <button mat-flat-button color="accent" (click)="showSession = false">
               <mat-icon svgIcon="play"></mat-icon>
               <span>Play</span>
             </button>
@@ -23,25 +23,25 @@
         <event-player></event-player>
       </ng-template>
 
-      <img asset="screening_now.webp" alt="Screening now picture">
+      <img asset="screening_now.webp" alt="Cinema room">
 
     </section>
 
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
 
-      <article class="dark-contrast-theme screen" [style.background-image]="background">
+      <article class="dark-contrast-theme screen" [style.background-image]="'url(assets/images/meeting.webp)'">
         <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
           <span class="mat-display-2">{{ event.title }}</span>
           <span class="mat-caption">Meeting now</span>
-          <a mat-flat-button color="accent" [href]="event.meta.callUrl">
+          <a mat-flat-button color="accent" [href]="event.meta.callUrl" target="_blank">
             <mat-icon svgIcon="play"></mat-icon>
             <span>Join the meeting</span>
           </a>
         </div>
       </article>
-
-      <img asset="screening_now.webp" alt="Screening now picture">
+      <!-- TODO update the picture here with Mathilde's picture, she needs to validate with Marie to do it -->
+      <img asset="screening_now.webp" alt="Meeting room">
 
     </section>
   </ng-container>
