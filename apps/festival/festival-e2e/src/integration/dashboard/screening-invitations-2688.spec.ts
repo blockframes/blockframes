@@ -21,7 +21,7 @@ describe('User invites other users to his screening', () => {
     clearDataAndPrepareTest();
   });
 
-  it.skip('User creates a screening and invites John Bryant and Sarah Gregory to the screening', () => {
+  it('User creates a screening and invites John Bryant and Sarah Gregory to the screening', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
@@ -38,7 +38,7 @@ describe('User invites other users to his screening', () => {
     p4.logout();
   });
 
-  it.skip(`${PARTICIPANT_1_NAME} logs in and accepts his invitations and logs out`, () => {
+  it(`${PARTICIPANT_1_NAME} logs in and accepts his invitations and logs out`, () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
@@ -48,7 +48,7 @@ describe('User invites other users to his screening', () => {
     cy.wait(1000);
   });
 
-  it.skip(`${PARTICIPANT_2_NAME} in and accepts her invitations and logs out`, () => {
+  it(`${PARTICIPANT_2_NAME} in and accepts her invitations and logs out`, () => {
     signIn(USER_3);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
