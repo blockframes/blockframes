@@ -35,8 +35,9 @@ export class CarouselComponent implements AfterViewInit {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterViewInit() {
-    this.showBack = this.onScrolling('left')
-    this.showForward = this.onScrolling('right')
+    this.showBack = this.onScrolling('left');
+    this.showForward = this.onScrolling('right');
+    this.cdr.detectChanges()
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -54,7 +55,7 @@ export class CarouselComponent implements AfterViewInit {
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
       distinctUntilChanged(),
       tap(_ => this.cdr.detectChanges()),
-      startWith(direction === 'right' ? true : false)
+      startWith(direction === 'right' ? true : false),
     )
   }
 }
