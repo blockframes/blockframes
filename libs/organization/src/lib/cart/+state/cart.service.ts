@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { CatalogCart, createCart } from './cart.model';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
@@ -24,7 +23,6 @@ export class CartService extends CollectionService<CartState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
-    private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     protected store: CartStore
   ) {
@@ -104,27 +102,6 @@ export class CartService extends CollectionService<CartState> {
   // @dev we can replace a lot of these functions by native Akita-ng-fire functions
   // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   //////////////////
-
-  /**
-   * Update the status of the wishlist to 'sent' and create new date at this moment.
-   * @param movies
-   */
-  public async updateWishlistStatus(movies: Movie[]) {
-    const user = this.authQuery.user;
-    const org = this.organizationQuery.getActive();
-    const wishlistTitles = movies.map(movie => movie.main.title.original);
-
-    const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ email: user.email, userName: user.firstName, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
-
-    const setSent = (wishlist: Wishlist) => {
-      return wishlist.status === 'pending'
-        ? { ...wishlist, status: 'sent', sent: new Date() } as Wishlist
-        : wishlist
-    }
-
-    return this.organizationService.update({ ...org, wishlist: org.wishlist.map(wishlist => setSent(wishlist)) });
-  }
 
   /**
    *

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationQuery, createPublicOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { AuthQuery } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
@@ -10,7 +10,7 @@ import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
 import { from, of } from 'rxjs';
-import { map, mergeMap, switchMap, first } from 'rxjs/operators';
+import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -18,7 +18,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   constructor(
     store: InvitationStore,
     private authQuery: AuthQuery,
-    private authService: AuthService,
     private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
     private functions: AngularFireFunctions
@@ -123,12 +122,9 @@ export class InvitationService extends CollectionService<InvitationState> {
               mergeMap(invitation => this.add(invitation, { write }))
             );
           } else if (who === 'user') {
-            const call = this.functions.httpsCallable('inviteUsers');
-            return call({
-              emails: recipients,
-              orgId: this.orgQuery.getActiveId(),
-              invitation: base
-            });
+            const f = this.functions.httpsCallable('inviteUsers');
+            f({ emails: recipients, invitation: base }).toPromise();
+            return of('');
           } else {
             return of('');
           }
