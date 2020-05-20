@@ -6,7 +6,8 @@ export default class FestivalInvitationsPage {
   }
 
   acceptInvitation() {
-    cy.get('festival-invitation invitation-list invitation-item a[test-id=invitation-accept]').click();
+    cy.get('festival-invitation invitation-list invitation-item button[test-id=invitation-accept]').click();
+    cy.wait(1000);
   }
 
   acceptInvitationScreening() {
