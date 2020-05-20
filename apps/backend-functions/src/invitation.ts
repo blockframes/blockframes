@@ -111,7 +111,7 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
 
     for (const email of data.emails) {
       getOrCreateUserByMail({ email, orgId: user.orgId })
-        .then(user => createPublicUser(user))
+        .then(u => createPublicUser(u))
         .then(toUser => createInvitation({ ...data.invitation, toUser }))
         .then(invitation => db.collection('invitations').add(invitation))
         .then(result => promises.push({ result, error: '' }))
