@@ -20,12 +20,13 @@ import { Observable } from 'rxjs';
   selector: 'bf-carousel',
   templateUrl: 'carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class CarouselComponent implements AfterViewInit {
 
   public currentPosition: number;
 
+  // Indicators to show arrow buttons
   public showBack: Observable<boolean>;
   public showForward: Observable<boolean>;
 
@@ -42,7 +43,7 @@ export class CarouselComponent implements AfterViewInit {
 
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
-    const clientWidth = this.container.nativeElement.clientWidth;
+    const clientWidth = this.container.nativeElement.clientWidth
 
     direction === 'right'
       ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth })

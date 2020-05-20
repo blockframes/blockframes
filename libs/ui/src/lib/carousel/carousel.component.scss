@@ -16,10 +16,10 @@ button {
 
 .previous {
   left: 0px;
-  bottom: 50%;
+  bottom: calc(50% - 20px);
 }
 
 .next {
   right: 0px;
-  bottom: 50%;
+  bottom: calc(50% - 20px);
 }
