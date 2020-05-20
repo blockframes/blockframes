@@ -33,7 +33,7 @@ const steps: TunnelStep[] = [{
   time: 10,
   routes: [{
     path: 'technical-info',
-    label: 'Technical Info.'
+    label: 'Technical Information'
   }, {
     path: 'images',
     label: 'Promotional Images'
