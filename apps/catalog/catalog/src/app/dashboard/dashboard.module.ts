@@ -30,10 +30,6 @@ const routes: Routes = [
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'activity',   // List of notifications
-        loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
-      },
-      {
         path: 'notifications',
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
         data: { animation: 'notifications' }
