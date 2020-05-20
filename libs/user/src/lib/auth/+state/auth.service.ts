@@ -102,14 +102,4 @@ export class AuthService extends FireAuthService<AuthState> {
       lastName: ctx.lastName
     };
   }
-
-  /** Call a firebase function to get or create a user.
-   * @param email find the user with this email. If email doesn't match with an existing user,
-   * create a user with this email address.
-   * @param orgId string
-   */
-  public async getOrCreateUserByMail(email: string, orgId: string): Promise<User> {
-    const f = this.functions.httpsCallable('getOrCreateUserByMail');
-    return f({ email, orgId }).toPromise();
-  }
 }
