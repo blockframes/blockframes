@@ -2,17 +2,14 @@
 import {
   Component,
   ViewChild,
-  AfterViewInit,
   ChangeDetectionStrategy,
   Directive,
   HostBinding,
   ElementRef,
-  ChangeDetectorRef
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
 // RxJs
-import { map, distinctUntilChanged, startWith, tap, debounceTime } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 
@@ -20,9 +17,9 @@ import { Observable } from 'rxjs';
   selector: 'bf-carousel',
   templateUrl: 'carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarouselComponent implements AfterViewInit {
+export class CarouselComponent {
 
   public currentPosition: number;
 
@@ -33,14 +30,6 @@ export class CarouselComponent implements AfterViewInit {
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
-  ngAfterViewInit() {
-    this.showBack = this.onScrolling('left');
-    this.showForward = this.onScrolling('right');
-    this.cdr.detectChanges()
-  }
-
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
     const clientWidth = this.container.nativeElement.clientWidth
@@ -50,7 +39,8 @@ export class CarouselComponent implements AfterViewInit {
       : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth })
   }
 
-  onScrolling(direction: 'right' | 'left') {
+  // TODO #2835
+/*   onScrolling(direction: 'right' | 'left') {
     return this.scrollable.elementScrolled().pipe(
       debounceTime(50),
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
@@ -58,7 +48,7 @@ export class CarouselComponent implements AfterViewInit {
       tap(_ => this.cdr.detectChanges()),
       startWith(direction === 'right' ? true : false),
     )
-  }
+  } */
 }
 
 @Directive({ selector: '[carouselItem]' })
