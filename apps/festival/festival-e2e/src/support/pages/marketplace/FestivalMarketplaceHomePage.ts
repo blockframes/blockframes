@@ -6,7 +6,7 @@ import FestivalInvitationsPage from '../dashboard/FestivalInvitationsPage';
 
 export default class FestivalMarketplaceHomePage {
   constructor() {
-    cy.get('festival-marketplace-home');
+    cy.get('festival-marketplace-home', { timeout: 30000 });
   }
 
   goToDashboard() {

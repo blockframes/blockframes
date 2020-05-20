@@ -24,7 +24,7 @@ export async function upgrade(db: Firestore) {
 
 // For a specific organization for the e2e test
 const festivalAppAccess = (org) => {
-  if (org.id === 'B10P335uag5cUsDT1VGk' && org.denomination.full === 'main') {
+  if ((org.id === 'B10P335uag5cUsDT1VGk' || org.id === 'e1VXeusNJK6pb8kmVnUn') && org.denomination.full === 'main') {
     return  {
       dashboard: false,
       marketplace: true

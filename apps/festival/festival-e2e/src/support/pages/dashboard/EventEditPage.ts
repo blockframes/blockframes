@@ -11,11 +11,11 @@ export default class EventEditPage {
 
   selectDate(date: Date) {
     // Start Date
-    cy.get('mat-form-field[test-id=event-start]').click();
-    cy.get('event-edit time-picker[formControlName=start]').get('div').contains(date.getDate()).click();
+    cy.get('mat-form-field[test-id=event-start]').click({ force: true });
+    cy.get('event-edit time-picker[formControlName=start]').get('div').contains(date.getDate()).click({ force: true });
       // End Date
-    cy.get('mat-form-field[test-id=event-end]').click();
-    cy.get('event-edit time-picker[formControlName=end]').get('div').contains(date.getDate()).click();
+    cy.get('mat-form-field[test-id=event-end]').click({ force: true });
+    cy.get('event-edit time-picker[formControlName=end]').get('div').contains(date.getDate()).click({ force: true });
   }
 
   checkPrivate() {

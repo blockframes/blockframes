@@ -1,10 +1,10 @@
 <!-- Has pending invitation -->
 <ng-container *ngIf="invitation; else noInvitation">
-  <button mat-button [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="accept(invitation)">
+  <button mat-button test-id="invitation-accept" [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="accept(invitation)">
     <mat-icon svgIcon="check_circle"></mat-icon>
     <span>Accept Invitation</span>
   </button>
-  <button mat-button [color]="invitation.status !== 'accepted' ? 'primary' : ''" (click)="decline(invitation)">
+  <button mat-button test-id="invitation-refuse" [color]="invitation.status !== 'accepted' ? 'primary' : ''" (click)="decline(invitation)">
     <mat-icon svgIcon="close"></mat-icon>
     <span>Decline Invitation</span>
   </button>
