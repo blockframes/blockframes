@@ -126,7 +126,6 @@ export class InvitationService extends CollectionService<InvitationState> {
             const call = this.functions.httpsCallable('inviteUsers');
             return call({
               emails: recipients,
-              orgId: this.orgQuery.getActiveId(),
               invitation: base
             });
           } else {
