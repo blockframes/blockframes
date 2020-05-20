@@ -8,7 +8,6 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
-import { EventCounterModule } from "@blockframes/event/pipes/event-counter.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
@@ -28,7 +27,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ImgAssetModule,
     ImageReferenceModule,
     DisplayNameModule,
-    EventCounterModule,
     EventTimeModule,
     OrgNameModule,
     EventPlayerModule,
