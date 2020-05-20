@@ -1,5 +1,6 @@
 import EventPage from './EventPage';
 import FestivalInvitationsPage from './FestivalInvitationsPage';
+import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplaceNotificationsPage';
 
 export default class FestivalDashboardHomePage {
   constructor() {
@@ -18,5 +19,10 @@ export default class FestivalDashboardHomePage {
   clickOnInvitations() {
     cy.get('festival-dashboard a[test-id=invitations-link]').click();
     return new FestivalInvitationsPage();
+  }
+
+  goToNotifications() {
+    cy.visit('/c/o/dashboard/notifications');
+    return new FestivalMarketplaceNotifications()
   }
 }
