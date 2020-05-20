@@ -1,5 +1,19 @@
 @mixin mat-bf-slider-theme($theme) {
 
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $slider-background: map-get($foreground, divider);
+
+  .mat-slider-min-value.mat-slider-thumb-label-showing .mat-slider-thumb,
+  .mat-slider-min-value.mat-slider-thumb-label-showing.cdk-focused .mat-slider-thumb-label {
+    background-color: mat-color($primary, 500);
+  }
+
+  .mat-slider-track-background,
+  .mat-slider:hover .mat-slider-track-background {
+    background-color: $slider-background;
+  }
+
   .mat-slider-thumb-label {
     width: 37px;
     height: 37px;
@@ -7,5 +21,5 @@
 
   .mat-slider-thumb-label-text {
     font-size: 11px;
-}
+  }
 }
