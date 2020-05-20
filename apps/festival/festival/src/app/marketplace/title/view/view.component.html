@@ -9,8 +9,11 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
-        <movie-promotional-links [movie]="movie"></movie-promotional-links>
       </movie-header-cta>
+      <movie-header-actions fxLayout="row" fxLayoutAlign="start center">
+        <wishlist-button [movieId]="movie.id"></wishlist-button>
+        <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+      </movie-header-actions>
     </movie-header>
   </movie-view>
 </ng-container>

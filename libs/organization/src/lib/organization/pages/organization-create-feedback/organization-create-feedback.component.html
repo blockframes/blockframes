@@ -8,6 +8,6 @@
     <img asset="wait.webp" />
   </article>
   <ng-container *ngIf="isAccepted$ | async">
-    <a routerLink="/c/o" mat-flat-button color="accent">Go to {{ workspace }}</a>
+    <a @slideDown routerLink="/c/o" mat-flat-button color="accent">Go to {{ organization | workspace: app }}</a>
   </ng-container>
 </section>

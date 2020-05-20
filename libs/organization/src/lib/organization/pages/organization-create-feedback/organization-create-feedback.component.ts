@@ -1,36 +1,30 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { OrganizationQuery, OrganizationService } from '@blockframes/organization/+state';
+import { map, switchMap } from 'rxjs/operators';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { slideDown } from '@blockframes/utils/animations/fade';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'organization-create-feedback',
   templateUrl: './organization-create-feedback.component.html',
   styleUrls: ['./organization-create-feedback.component.scss'],
+  animations: [slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationCreateFeedbackComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
-  public workspace = this.query.getActive().appAccess[getCurrentApp(this.routerQuery)].dashboard
-    ? 'dashboard'
-    : 'marketplace';
-  public isAccepted$ = this.query.selectActive().pipe(
-    map(organization => organization.status === 'accepted')
-  );
+export class OrganizationCreateFeedbackComponent {
+  public organization = this.query.getActive();
+  public app = getCurrentApp(this.routerQuery);
+  public isAccepted$ = this.authQuery.select().pipe(
+    switchMap(user => this.service.valueChanges(user.orgId)),
+    map(organization => organization[0].status === 'accepted')
+  )
 
   constructor(
     private query: OrganizationQuery,
-    private routerQuery: RouterQuery,
-    private service: OrganizationService
+    private service: OrganizationService,
+    private authQuery: AuthQuery,
+    private routerQuery: RouterQuery
   ) {}
-
-  ngOnInit() {
-    this.subscription = this.service.syncOrgActive().subscribe();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 }

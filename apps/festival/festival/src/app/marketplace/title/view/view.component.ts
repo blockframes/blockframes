@@ -25,6 +25,15 @@ export class ViewComponent implements OnInit {
     label: 'Main Information'
   }];
 
+  promoLinks = [
+    'promo_reel_link',
+    'scenario',
+    'screener_link',
+    'teaser_link',
+    'presentation_deck',
+    'trailer_link'
+  ];
+
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,

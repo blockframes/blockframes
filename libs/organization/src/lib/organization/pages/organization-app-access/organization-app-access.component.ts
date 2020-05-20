@@ -5,7 +5,6 @@ import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { getCurrentApp, createOrgAppAccess } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'organization-app-access',
@@ -22,8 +21,7 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
     private query: OrganizationQuery,
     private router: Router,
     private route: ActivatedRoute,
-    private routerQuery: RouterQuery,
-    private snackBar: MatSnackBar
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -43,7 +41,6 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
     await this.service.update(this.query.getActiveId(), {
       appAccess: orgAppAccess
     });
-    this.snackBar.open(`The organization ${this.query.getActive().denomination.full} has been created`, 'close', { duration: 2000 });
     this.router.navigate(['../create-congratulations'], { relativeTo: this.route });
   }
 

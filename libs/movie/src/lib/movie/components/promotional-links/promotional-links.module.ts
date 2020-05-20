@@ -7,18 +7,20 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PromotionalLinksComponent } from './promotional-links.component';
 
 // Modules
-import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
+import { PromotionalLinksPipeModule } from './promotional-links.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [PromotionalLinksComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    WishlistButtonModule,
+    PromotionalLinksPipeModule,
+    MatButtonModule,
 
     // Material
     MatIconModule,
