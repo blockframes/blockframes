@@ -3,19 +3,15 @@
   position: relative;
 }
 
-.row{
+.row {
   display: flex;
   width: 100%;
   overflow: hidden;
   scroll-behavior: smooth;
 }
 
-mat-icon {
+button {
   position: absolute;
-  outline: none;
-  cursor: pointer;
-  border-radius: 50%;
-  background-color: rgba($color: #928f8f, $alpha: 0.3);
 }
 
 .previous {

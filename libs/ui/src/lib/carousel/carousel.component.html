@@ -1,5 +1,13 @@
-<div class="row" cdkScrollable>
+<div class="row" cdkScrollable #container>
   <ng-content></ng-content>
 </div>
-<mat-icon mat-icon-button svgIcon="arrow_back" (click)="scrollTo('left')" class="previous" *ngIf="showBackwardBtn"></mat-icon>
-<mat-icon mat-icon-button svgIcon="arrow_forward" (click)="scrollTo('right')" class="next"></mat-icon>
+<ng-container *ngIf="showBack | async">
+  <button mat-icon-button (click)="scrollTo('left')" class="previous">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </button>
+</ng-container>
+<ng-container *ngIf="showForward | async">
+  <button mat-icon-button (click)="scrollTo('right')" class="next">
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </button>
+</ng-container>

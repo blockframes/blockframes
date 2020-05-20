@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Component
-import { CarouselComponent, SchrinkDirective } from './carousel.component';
+import { CarouselComponent, CarouselItemDirective } from './carousel.component';
 
 // Blockframes
 import { MatLayoutModule } from '../layout/layout.module';
@@ -23,7 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatIconModule
   ],
-  exports: [CarouselComponent, SchrinkDirective],
-  declarations: [CarouselComponent, SchrinkDirective]
+  exports: [CarouselComponent, CarouselItemDirective],
+  declarations: [CarouselComponent, CarouselItemDirective]
 })
 export class CarouselModule { }

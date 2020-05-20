@@ -18,7 +18,7 @@ export const bfCarousel = () => ({
       <div layout>
         <bf-carousel flex>
           <ng-container *ngFor="let movie of movies">
-          <div [col]="2">
+          <div [col]="2" carouselItem>
           <!-- used a stripped down html from movie card, cause this component uses the router under the hood and
           that will throw in storybook -->
             <figure>
@@ -37,6 +37,6 @@ export const bfCarousel = () => ({
     </storybook-toolkit>
   `,
   props: {
-    movies: object('movies', MOVIES.slice(0, 10))
+    movies: object('movies', MOVIES.slice(0, 15))
   },
 });
