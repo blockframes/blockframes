@@ -72,12 +72,17 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
+    let appAccessChanged = false;
     for (const a of app) {
       const accessChanged = (module: Module) => {
         return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
       }
-      return accessChanged('dashboard') || accessChanged('marketplace');
+      if (accessChanged('dashboard') || accessChanged('marketplace')) {
+        appAccessChanged = true;
+      }
     }
+
+    return appAccessChanged;
   }
   return false;
 }
@@ -202,7 +207,7 @@ export const accessToAppChanged = async (
   const appName = await getOrgAppName(orgId);
   const appUrl = await getAppUrl(orgId);
 
-  await Promise.all(admins.map(admin => sendMailFromTemplate(organizationCanAccessApp(admin, appName, appUrl ), from)));
+  await Promise.all(admins.map(admin => sendMailFromTemplate(organizationCanAccessApp(admin, appName, appUrl), from)));
 
   return {
     error: '',
