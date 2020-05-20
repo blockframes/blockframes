@@ -146,13 +146,13 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
   const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
 
-  const { id, userIds } = before as OrganizationDocument;
+  const { userIds } = before as OrganizationDocument;
   const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     const urlToUse = await getAppUrl(after);
     const from = await getFromEmail(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName, urlToUse), from);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), from);
 
     // Send a notification to the creator of the organization
     const notification = createNotification({

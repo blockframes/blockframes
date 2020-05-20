@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
+import { userVerifyEmail, welcomeMessage, userResetPassword, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser, OrganizationDocument } from './data/types';
+import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
@@ -25,7 +25,7 @@ export const startVerifyEmailFlow = async (data: any) => {
   await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from);
 };
 
-export const startResetPasswordEmailFlow = async (data: any) => {
+export const startResetPasswordEmail = async (data: any) => {
   const { email, app } = data;
   const from = getSendgridFrom(app);
 
@@ -36,18 +36,6 @@ export const startResetPasswordEmailFlow = async (data: any) => {
   const resetLink = await admin.auth().generatePasswordResetLink(email);
   await sendMailFromTemplate(userResetPassword(email, resetLink), from);
 };
-
-export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
-  const { wishlist } = data;
-
-  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
-  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
-  const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
-  const from = await getFromEmail(org);
-
-  await sendMail(sendWishlist(`${user.firstName} ${user.lastName}`, org.denomination.public || org.denomination.full, wishlist), from);
-  await sendMailFromTemplate(sendWishlistPending(user.email), from);
-}
 
 export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;

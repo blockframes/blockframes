@@ -104,26 +104,6 @@ export class CartService extends CollectionService<CartState> {
   //////////////////
 
   /**
-   * Update the status of the wishlist to 'sent' and create new date at this moment.
-   * @param movies
-   */
-  public async updateWishlistStatus(movies: Movie[]) {
-    const org = this.organizationQuery.getActive();
-    const wishlist = movies.map(movie => movie.main.title.original);
-
-    const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ wishlist }).toPromise();
-
-    const setSent = (w: Wishlist) => {
-      return w.status === 'pending'
-        ? { ...w, status: 'sent', sent: new Date() } as Wishlist
-        : w
-    }
-
-    return this.organizationService.update({ ...org, wishlist: org.wishlist.map(w => setSent(w)) });
-  }
-
-  /**
    *
    * @param movieId
    */
