@@ -45,3 +45,17 @@ export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 export type InvitationType = 'attendEvent' | 'joinOrganization';
 
 export type InvitationMode = 'request' | 'invitation';
+
+
+/** Create an Invitation */
+export function createInvitation(params: Partial<InvitationBase<Date>> = {}): InvitationBase<Date> {
+  return  {
+    id: '',
+    mode: 'invitation',   // We need a default value for backend-function strict mode
+    type: 'attendEvent',  // We need a default value for backend-function strict mode
+    docId: '',
+    status: 'pending',
+    date: new Date(),
+    ...params,
+  };
+}

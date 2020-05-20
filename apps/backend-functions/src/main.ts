@@ -7,6 +7,7 @@ import {
 } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 import * as users from './users';
+import * as invitations from './invitation';
 import {
   onDocumentCreate,
   onDocumentDelete,
@@ -63,9 +64,6 @@ export const sendWishlistEmails = functions.https
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
 
-/** Trigger: REST call to get or create a user. */
-export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
-
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
 
@@ -110,6 +108,9 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+/** Trigger: REST call to invite a list of users by email. */
+export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUsers));
 
 //--------------------------------
 //   Notifications Management   //
