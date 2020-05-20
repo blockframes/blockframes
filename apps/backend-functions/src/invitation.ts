@@ -3,6 +3,10 @@ import { db, functions, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
+import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { createPublicUser } from '@blockframes/user/+state/user.firestore';
+import { getOrCreateUserByMail } from './internals/users';
+import { ErrorResultResponse } from './utils';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -81,4 +85,36 @@ export async function onInvitationWrite(
     console.error('Invitation management thrown: ', e);
     throw e;
   }
+}
+
+
+
+interface UserInvitation {
+  emails: string[];
+  invitation: Partial<InvitationBase<any>>;
+  orgId: string;
+}
+
+/**
+ * Invite a list of user by email.
+ * @dev this function polyfills the Promise.allSettled  
+ */
+export const inviteUsers = (data: UserInvitation): Promise<any> => {
+  return new Promise((res, rej) => {
+    const promises: ErrorResultResponse[] = [];
+
+    for (const email of data.emails) {
+      getOrCreateUserByMail({ email, orgId: data.orgId })
+        .then(user => createPublicUser(user))
+        .then(toUser => createInvitation({ ...data.invitation, toUser }))
+        .then(invitation => db.collection('invitations').add(invitation))
+        .then(result => promises.push({ result, error: '' }))
+        .catch(error =>  promises.push({ result: undefined, error }))
+        .then(lastIndex => {
+          if (lastIndex === data.emails.length) {
+            res(promises)
+          }
+        });
+    }
+  })
 }

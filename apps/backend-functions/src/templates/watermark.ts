@@ -1,5 +1,5 @@
 
-export function getWatermark(firstName: string, lastName: string, email: string) {
+export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
   return `
     <svg id="jwplayer-user-watermark" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
       <style>

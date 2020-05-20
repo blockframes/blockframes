@@ -33,14 +33,3 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   };
 }
 
-export function createPublicUser(user: Partial<User> = {}) : PublicUser{
-  return {
-    uid: user.uid,
-    email: user.email || '',
-    avatar: createImgRef(user.avatar),
-    watermark: createImgRef(user.watermark),
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    orgId: user.orgId || ''
-  }
-}
