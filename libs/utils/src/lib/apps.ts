@@ -18,7 +18,7 @@ const appName = {
 export const sendgridEmailsFrom = {
   catalog: 'team@archipelcontent.com',
   festival: 'team@archipelmarket.com',
-  default: 'admin@blockframes.io'
+  default: 'team@cascade8.com'
 } as const;
 
 export type ModuleAccess = Record<Module, boolean>;
