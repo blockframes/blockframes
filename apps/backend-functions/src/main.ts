@@ -49,16 +49,13 @@ export const onUserDelete = onDocumentDelete(
 );
 
 /** Trigger: REST call to send a verify email to a user. */
-export const sendVerifyEmail = functions.https
-  .onCall(users.startVerifyEmailFlow);
+// @TODO (#2821)
+/*export const sendVerifyEmail = functions.https
+  .onCall(users.startVerifyEmailFlow);*/
 
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https
-  .onCall(users.startResetPasswordEmailFlow);
-
-/** Trigger: REST call to send a wishlist pending email to a user & a wishlist request to cascade8 admin. */
-export const sendWishlistEmails = functions.https
-  .onCall(users.startWishlistEmailsFlow);
+  .onCall(users.startResetPasswordEmail);
 
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));

@@ -1,5 +1,8 @@
+import { App } from "./apps";
+
 /** Custom object used to build a demo request email. */
 export interface RequestDemoInformations {
+  app?: App,
   firstName: string;
   lastName: string;
   email: string;

@@ -10,7 +10,7 @@ import { PrivateConfig } from "@blockframes/utils/common-interfaces/utility";
  * @param context 
  */
 export const setDocumentPrivateConfig = async (data: { docId: string, config: PrivateConfig }, context: CallableContext) => {
-  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
@@ -24,7 +24,7 @@ export const setDocumentPrivateConfig = async (data: { docId: string, config: Pr
  * @param context 
  */
 export const getDocumentPrivateConfig = async (data: { docId: string, keys: string[] }, context: CallableContext) => {
-  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 

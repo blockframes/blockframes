@@ -58,13 +58,8 @@ export function userInvite(email: string, password: string, orgName: string, pag
   return { to: email, templateId, data };
 }
 
-export function sendWishlistPending(email: string): EmailTemplateRequest {
-  const data = {};
-  return { to: email, templateId: templateIds.wishlistPending, data };
-}
-
 /** Generates a transactional email request to let organization admins know that their org was approved. */
-export function organizationWasAccepted(email: string, orgId: string, userFirstName?: string, appUrl: string = appUrlContent): EmailTemplateRequest {
+export function organizationWasAccepted(email: string, userFirstName?: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName,
     pageURL: `${appUrl}/c/o`
@@ -177,12 +172,6 @@ const organizationRequestAccessToAppTemplate = (orgId: string, appUrl: string = 
   Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} or go to ${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
   `;
 
-const wishlistSent = (userName: string, orgName: string, wishlist: string[]) =>
-  `
-  ${userName} from ${orgName} just sent a wishlist including ${wishlist.length} :
-  - ${wishlist.join('\n- ')}
-  `;
-
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
   const urlToUse = await getAppUrl(org);
@@ -204,14 +193,6 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
     subject: 'An organization requested access to an app',
     text: organizationRequestAccessToAppTemplate(org.id, urlToUse)
   };
-}
-
-export function sendWishlist(userName: string, orgName: string, wishlist: string[]): EmailRequest {
-  return {
-    to: adminEmail,
-    subject: 'A wishlist has been sent',
-    text: wishlistSent(userName, orgName, wishlist)
-  }
 }
 
 export function sendDemoRequestMail(information: RequestDemoInformations) {

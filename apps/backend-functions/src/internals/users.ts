@@ -3,7 +3,7 @@ import { App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument } from '../data/types';
-import { getOrgAppName, getAppUrl, getDocument } from '../data/internals';
+import { getOrgAppName, getAppUrl, getDocument, getFromEmail } from '../data/internals';
 import { userInvite } from '../templates/mail';
 import { auth } from './firebase';
 import { sendMailFromTemplate } from './email';
@@ -45,9 +45,10 @@ export const getOrCreateUserByMail = async (data: { email: string, orgId: string
     const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
     const appName: App = await getOrgAppName(org);
     const urlToUse = await getAppUrl(org);
+    const from = await getFromEmail(org);
     const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
 
-    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse));
+    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse), from);
 
     return { uid: user.uid, email };
   }

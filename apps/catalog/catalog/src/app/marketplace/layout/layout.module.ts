@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Libraries
 // import { ToolbarModule } from '@blockframes/ui/toolbar';
 // import { KeyManagerModule } from '@blockframes/ethers';
-// import { EmailVerifyModule } from '@blockframes/auth';
+// import { EmailVerifyModule } from '@blockframes/auth'; // @TODO (#2821)
 import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
