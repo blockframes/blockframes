@@ -16,7 +16,7 @@ import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvide
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, Module } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
+import { getAdminIds, getAppUrl, getOrgAppName, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -72,12 +72,17 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
+    let appAccessChanged = false;
     for (const a of app) {
       const accessChanged = (module: Module) => {
         return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
       }
-      return accessChanged('dashboard') || accessChanged('marketplace');
+      if (accessChanged('dashboard') || accessChanged('marketplace')) {
+        appAccessChanged = true;
+      }
     }
+
+    return appAccessChanged;
   }
   return false;
 }
@@ -87,7 +92,8 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
   if (hasOrgAppAccessChanged(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
-    await sendMail(mailRequest);
+    const from = await getFromEmail(after);
+    await sendMail(mailRequest, from);
   }
 }
 
@@ -103,10 +109,10 @@ export async function onOrganizationCreate(
     throw new Error('organization update function got invalid org data');
   }
   const emailRequest = await organizationCreated(org);
-
+  const from = await getFromEmail(org);
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(emailRequest),
+    sendMail(emailRequest, from),
     // Update algolia's index
     storeSearchableOrg(orgID, org.denomination.full)
   ]);
@@ -140,12 +146,13 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
   const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
 
-  const { id, userIds } = before as OrganizationDocument;
+  const { userIds } = before as OrganizationDocument;
   const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     const urlToUse = await getAppUrl(after);
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName, urlToUse));
+    const from = await getFromEmail(after);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), from);
 
     // Send a notification to the creator of the organization
     const notification = createNotification({
@@ -196,7 +203,11 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  await Promise.all(admins.map(admin => sendMail(organizationCanAccessApp(admin.email))));
+  const from = await getFromEmail(orgId);
+  const appName = await getOrgAppName(orgId);
+  const appUrl = await getAppUrl(orgId);
+
+  await Promise.all(admins.map(admin => sendMailFromTemplate(organizationCanAccessApp(admin, appName, appUrl), from)));
 
   return {
     error: '',

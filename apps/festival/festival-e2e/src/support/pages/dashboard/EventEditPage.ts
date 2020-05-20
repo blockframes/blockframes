@@ -12,10 +12,10 @@ export default class EventEditPage {
   selectDate(date: Date) {
     // Start Date
     cy.get('mat-form-field[test-id=event-start]').click();
-    cy.get('event-edit time-picker[formControlName=start]').get('div').contains(date.getDate()).click();
+    cy.get('event-edit time-picker[formControlName=start]').get('tbody').contains(date.getDate()).click();
       // End Date
     cy.get('mat-form-field[test-id=event-end]').click();
-    cy.get('event-edit time-picker[formControlName=end]').get('div').contains(date.getDate()).click();
+    cy.get('event-edit time-picker[formControlName=end]').get('tbody').contains(date.getDate()).click();
   }
 
   checkPrivate() {
@@ -23,7 +23,6 @@ export default class EventEditPage {
   }
 
   selectMovie() {
-    cy.wait(3000);
     cy.get('event-edit mat-select[formControlName=titleId]').click();
     cy.get('mat-option').first().click();
   }

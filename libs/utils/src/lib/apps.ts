@@ -12,8 +12,14 @@ export type Module = typeof module[number];
 
 const appName = {
   catalog: 'Archipel Content',
-  festival: 'Festival'
+  festival: 'Archipel Market'
 };
+
+export const sendgridEmailsFrom = {
+  catalog: 'team@archipelcontent.com',
+  festival: 'team@archipelmarket.com',
+  default: 'team@cascade8.com'
+} as const;
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
@@ -53,7 +59,7 @@ export function getAppName(slug: App) {
 
 /**
  * Returns the apps that the org have access to
- * @param org 
+ * @param org
  */
 export function getOrgAppAccess(org: OrganizationDocument): App[] {
   const allowedApps = {} as Record<App, boolean>;
@@ -74,4 +80,16 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
   return a === 'festival' ? 'accepted' : 'submitted';
+}
+
+/**
+ * Returns the "from" email that should be used depending on the current app
+ * @param app 
+ */
+export function getSendgridFrom(a?: App): string {
+  if (!a) {
+    return sendgridEmailsFrom.default;
+  } else {
+    return sendgridEmailsFrom[a] || sendgridEmailsFrom.default;
+  }
 }

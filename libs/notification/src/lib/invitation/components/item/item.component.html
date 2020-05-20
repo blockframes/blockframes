@@ -9,20 +9,5 @@
       {{ invitation.date | date: 'shortTime' }}
     </small>
   </span>
-  <ng-container [ngSwitch]="invitation.status">
-    <ng-container *ngSwitchCase="'accepted'">
-      <span>Accepted</span>
-    </ng-container>
-    <ng-container *ngSwitchCase="'declined'">
-      <span>Declined</span>
-    </ng-container>
-    <div *ngSwitchCase="'pending'" fxLayout="row" fxLayoutGap="16px">
-      <a mat-mini-fab color="primary" (click)="accept(invitation.id)" test-id="invitation-accept">
-        <mat-icon svgIcon="check" ></mat-icon>
-      </a>
-      <a test-id="invitation-refuse" mat-mini-fab color="warn" (click)="refuse(invitation.id)">
-        <mat-icon svgIcon="refuse"></mat-icon>
-      </a>
-    </div>
-  </ng-container>
+  <invitation-action [invitation]="invitation"></invitation-action>
 </mat-list-item>

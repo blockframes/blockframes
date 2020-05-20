@@ -66,14 +66,14 @@
             }
         },
         {
-            "path": "libs/ui/src/lib/team-card/team-card.component.ts",
+            "path": "libs/user/src/lib/user/components/card/card.component.ts",
             "zeplinNames": [
                 "component/card/team-card"
             ],
             "storybook": {
-                "kind": "Team Card",
+                "kind": "User Card",
                 "storybook": [
-                    "Team Card"
+                    "User Card"
                 ]
             }
         },

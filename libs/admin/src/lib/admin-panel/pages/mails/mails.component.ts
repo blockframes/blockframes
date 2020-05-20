@@ -4,6 +4,9 @@ import { TestEmailForm } from '../../forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { getCurrentApp, getSendgridFrom, sendgridEmailsFrom } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'admin-mails',
@@ -14,16 +17,23 @@ import { ErrorResultResponse } from '@blockframes/utils/utils';
 export class MailsComponent implements OnInit {
   public form: TestEmailForm;
   public loading = false;
+  public sendgridEmailsFrom = sendgridEmailsFrom;
 
   constructor(
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
-    private functions: AngularFireFunctions
+    private functions: AngularFireFunctions,
+    private routerQuery: RouterQuery,
+    private authQuery: AuthQuery,
   ) {
   }
 
   ngOnInit() {
     this.form = new TestEmailForm();
+    const currentApp = getCurrentApp(this.routerQuery);
+    const defaultEmailFrom = getSendgridFrom(currentApp);
+    this.form.get('from').setValue(defaultEmailFrom);
+    this.form.get('to').setValue(this.authQuery.user.email);
   }
 
   async sendTestEmail() {
@@ -34,7 +44,7 @@ export class MailsComponent implements OnInit {
 
     this.loading = true;
     const request = createEmailRequest(this.form.value);
-    const output = await this.sendTestMail(request);
+    const output = await this.sendTestMail(request, this.form.get('from').value);
 
     if (output.result === 'OK') {
       this.snackBar.open(`Mail successfully sent to ${request.to}`, 'close', { duration: 5000 });
@@ -45,7 +55,7 @@ export class MailsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  private async sendTestMail(request: EmailRequest, from? : string ): Promise<ErrorResultResponse> {
+  private async sendTestMail(request: EmailRequest, from?: string): Promise<ErrorResultResponse> {
     const f = this.functions.httpsCallable('onSendTestMail');
     return f({ request, from }).toPromise();
   }

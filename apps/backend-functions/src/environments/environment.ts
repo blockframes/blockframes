@@ -8,7 +8,7 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { 
+export {
   factoryContract,
   backupBucket,
   relayer,
@@ -34,7 +34,6 @@ const mockConfigIfNeeded = (...path: string[]): any =>
   path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config());
 
 export const sendgridAPIKey = mockConfigIfNeeded('sendgrid', 'api_key');
-export const sendgridEmailsFrom = 'admin@blockframes.io';
 export const mnemonic = mockConfigIfNeeded('relayer', 'mnemonic');
 
 export const algolia = {

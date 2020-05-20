@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { RequestDemoRole, RequestDemoInformations, createDemoRequestInformations, requestDemoRole } from '@blockframes/utils/request-demo';
+import { RequestDemoRole, RequestDemoInformations, createDemoRequestInformations } from '@blockframes/utils/request-demo';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'landing-learn-more',
@@ -30,10 +32,11 @@ export class LandingLearnMoreComponent {
 
   constructor(
     private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions
-  ) {}
+    private functions: AngularFireFunctions,
+    private routerQuery: RouterQuery
+  ) { }
 
-  get phoneNumber(){
+  get phoneNumber() {
     return this.form.get('phoneNumber');
   }
 
@@ -50,7 +53,8 @@ export class LandingLearnMoreComponent {
       return;
     }
     try {
-      const information: RequestDemoInformations = createDemoRequestInformations(form.value);
+      const currentApp = getCurrentApp(this.routerQuery);
+      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
 
       this.sendDemoRequest(information);
       this.snackBar.open('Your request has been sent !', 'close', { duration: 2000 });

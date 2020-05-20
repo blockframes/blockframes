@@ -8,6 +8,14 @@
       <form [formGroup]="form" >
         <mat-card-content>
           <mat-form-field appearance="outline" class="full-width">
+            <mat-label>From</mat-label>
+            <mat-select formControlName="from">
+              <mat-option *ngFor="let from of sendgridEmailsFrom | keyvalue" [value]="from.value">
+                {{ from.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>To</mat-label>
             <input matInput type="text" placeholder="To" formControlName="to" required />
           </mat-form-field>

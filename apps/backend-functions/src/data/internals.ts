@@ -9,7 +9,7 @@ import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
 import { appUrlMarket, appUrlContent } from '../environments/environment';
 
 export function getCollection<T>(path: string): Promise<T[]> {
@@ -106,8 +106,27 @@ export async function getOrgAppName(_org: OrganizationDocument | string): Promis
   };
 }
 
+/**
+ *  This guess the app from the org app access and returns the url of the app to use
+ * @param _org 
+ */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
   const appName = await getOrgAppName(_org);
-  return appName === 'festival' ? appUrlMarket : appUrlContent;
+  switch (appName) {
+    case 'festival':
+      return appUrlMarket;
+    case 'catalog':
+    default:
+      return appUrlContent;
+  }
+}
+
+/**
+ * This guess the app from the org app access and returns the "from" email address to use
+ * @param _org 
+ */
+export async function getFromEmail(_org: OrganizationDocument | string): Promise<string> {
+  const appName = await getOrgAppName(_org);
+  return getSendgridFrom(appName);
 }
 

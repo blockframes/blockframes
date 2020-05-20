@@ -6,6 +6,7 @@ import { InvitationService }  from '@blockframes/invitation/+state/invitation.se
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'event-edit',
@@ -19,12 +20,14 @@ export class EventEditComponent {
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
   invitationForm = createAlgoliaUserForm();
+  progress: Observable<number>;
+  sending = new BehaviorSubject(false);
 
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) { }
   
   get meta() {
@@ -47,7 +50,9 @@ export class EventEditComponent {
   async invite() {
     const event = this.form.value;
     const emails = this.invitationForm.value.map(guest => guest.email);
-    await this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id);
-    this.invitationForm.clear();
+    this.invitationForm.reset([]);
+    this.sending.next(true);
+    await this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id).toPromise();
+    this.sending.next(false);
   }
 }

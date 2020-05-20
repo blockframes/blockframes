@@ -14,7 +14,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument, getAppUrl } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl, getFromEmail } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -70,29 +70,13 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
   const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
-
+  const from = await getFromEmail(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
-    .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!)));
+    .map(adminEmail => userJoinedYourOrganization(adminEmail!, userEmail!))
+    .map(template => sendMailFromTemplate(template, from));
 
   return Promise.all(adminEmailPromises);
-}
-
-
-/** Sends an email when an organization invites an user to join. */
-async function onInvitationToOrgCreate({ toUser }: InvitationDocument) {
-  if (!toUser) {
-    console.error('No user provided');
-    return;
-  }
-
-  const userMail = await getUserMail(toUser.uid);
-  if (!userMail) {
-    console.error('No user email provided for userId:', toUser.uid);
-    return;
-  }
-
-  // @TODO (#2685) Not implemented @see userInviteToOrg template
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
@@ -149,30 +133,29 @@ async function onInvitationFromUserToJoinOrgCreate({
   }
 
   const adminIds = await getAdminIds(toOrg.id);
+  const from = await getFromEmail(toOrg.id);
 
   const admins = await Promise.all(adminIds.map(u => getUser(u)));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
   await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!)
+    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!),
+    from
   );
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
   return Promise.all(
-    admins.map(admin =>
-      sendMailFromTemplate(
-        userRequestedToJoinYourOrg({
-          adminEmail: admin.email,
-          adminName: admin.firstName!,
-          organizationName: toOrg.denomination.full,
-          organizationId: toOrg.id,
-          userFirstname: userData.firstName!,
-          userLastname: userData.lastName!
-        }, urlToUse)
-      )
-    )
+    admins.map(admin => userRequestedToJoinYourOrg({
+      adminEmail: admin.email,
+      adminName: admin.firstName!,
+      organizationName: toOrg.denomination.full,
+      organizationId: toOrg.id,
+      userFirstname: userData.firstName!,
+      userLastname: userData.lastName!
+    }, urlToUse))
+      .map(template => sendMailFromTemplate(template, from))
   );
 }
 
@@ -188,7 +171,9 @@ async function onInvitationFromUserToJoinOrgAccept({
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse));
+  const from = await getFromEmail(toOrg.id);
+  const template = userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse);
+  await sendMailFromTemplate(template, from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 
@@ -226,9 +211,7 @@ export async function onInvitationToOrgUpdate(
   after: InvitationDocument,
   invitation: InvitationDocument
 ): Promise<any> {
-  if (wasCreated(before, after)) {
-    return onInvitationToOrgCreate(invitation);
-  } else if (wasAccepted(before!, after)) {
+  if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
   } else if (wasDeclined(before!, after)) {
     return onInvitationToOrgDecline(invitation);

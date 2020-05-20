@@ -65,6 +65,16 @@
         </button>
       </div>
 
+      <ng-container *ngIf="sending | async">
+        <div @scaleIn fxLayout="column" fxLayoutAlign="center center">
+          <p class="mat-caption">
+            We're sending invitations, this process can take few minutes.
+            <br/>
+            You can leave the page without canceling the process, we'll update this page when it's done.
+          </p>
+          <mat-progress-bar color="accent" mode="buffer"></mat-progress-bar>
+        </div>
+      </ng-container>
       <!-- @todo(#2763) Add loading indication here -->
       <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
     </mat-card>
