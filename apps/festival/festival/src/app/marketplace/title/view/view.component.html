@@ -10,12 +10,10 @@
           </a>
         </ng-container>
       </movie-header-cta>
-      <movie-slider-actions>
-        <wishlist-button [movieId]="movie.id" small>
-          <wishlist-add-text>Add to Wishlist</wishlist-add-text>
-          <wishlist-remove-text>Remove from Wishlist</wishlist-remove-text>
-        </wishlist-button>
-      </movie-slider-actions>
+      <movie-header-actions fxLayout="row" fxLayoutAlign="start center">
+        <wishlist-button [movieId]="movie.id"></wishlist-button>
+        <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+      </movie-header-actions>
     </movie-header>
   </movie-view>
 </ng-container>

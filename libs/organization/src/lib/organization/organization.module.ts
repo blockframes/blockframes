@@ -84,6 +84,8 @@ export const organizationRoutes: Routes = [
     ImageReferenceModule,
     OrganizationFormModule,
     ImgAssetModule,
+    TableFilterModule,
+    OrganizationDisplayModule,
 
     // Material
     MatFormFieldModule,
@@ -105,8 +107,6 @@ export const organizationRoutes: Routes = [
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
-    TableFilterModule,
-    OrganizationDisplayModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [

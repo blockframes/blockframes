@@ -68,14 +68,18 @@ async function updateMovies(
     movies.docs.map(async doc => {
       const movie = doc.data() as MovieDocument;
 
-      for (const key in movie.promotionalElements) {
-        const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
-        if (Array.isArray(value)) {
-          for (let i = 0 ; i < value.length ; i++) {
-            movie.promotionalElements[key][i] = await updateMovieField(movie.id, `promotionalElements.${key}[${i}]`, value[i], 'media', storage);
+      const keys = ['banner', 'poster', 'still_photo'];
+
+      for (const key of keys) {
+        if (!!movie.promotionalElements[key]) {
+          const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
+          if (Array.isArray(value)) {
+            for (let i = 0 ; i < value.length ; i++) {
+              movie.promotionalElements[key][i] = await updateMovieField(movie.id, `promotionalElements.${key}[${i}]`, value[i], 'media', storage);
+            }
+          } else {
+            movie.promotionalElements[key] = await updateMovieField(movie.id, `promotionalElements.${key}`, value, 'media', storage);
           }
-        } else {
-          movie.promotionalElements[key] = await updateMovieField(movie.id, `promotionalElements.${key}`, value, 'media', storage);
         }
       }
 

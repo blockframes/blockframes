@@ -30,8 +30,14 @@ const routes: Routes = [
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'activity',   // List of notifications
-        loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
+        path: 'notifications',
+        loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+        data: { animation: 'notifications' }
+      },
+      {
+        path: 'invitations',
+        loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+        data: { animation: 'invitations' }
       },
       {
         path: 'import', // Import bulk of movies

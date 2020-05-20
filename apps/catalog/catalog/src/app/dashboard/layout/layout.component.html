@@ -41,7 +41,24 @@
         </ng-template>
       </algolia-autocomplete> -->
       <div fxLayout="row" fxLayoutGap="24px">
-        <overlay-notification-widget></overlay-notification-widget>
+        <!-- Invitations -->
+        <a mat-icon-button routerLink="invitations" test-id="invitations-link">
+          <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+            <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+          </ng-container>
+          <ng-template #noInvitation>
+            <mat-icon svgIcon="add_member"></mat-icon>
+          </ng-template>
+        </a>
+        <!-- Notifications -->
+        <a mat-icon-button routerLink="notifications">
+          <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+            <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+          </ng-container>
+          <ng-template #noNotification>
+            <mat-icon svgIcon="bell"></mat-icon>
+          </ng-template>
+        </a>
         <auth-widget></auth-widget>
       </div>
     </mat-toolbar>

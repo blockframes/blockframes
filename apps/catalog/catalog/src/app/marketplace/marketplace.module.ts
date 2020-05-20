@@ -21,6 +21,16 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
+      path: 'notifications',
+      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      data: { animation: 'notifications' }
+    },
+    {
+      path: 'invitations',
+      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      data: { animation: 'invitations' }
+    },
+    {
       path: 'about',
       loadChildren: () => import('./landing/about/about.module').then(m => m.AboutModule)
     },
@@ -39,10 +49,6 @@ const routes: Routes = [{
     {
       path: 'search',
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
-    },
-    {
-      path: 'activity',   // List of notifications
-      loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
     },
     {
       path: 'selection',
