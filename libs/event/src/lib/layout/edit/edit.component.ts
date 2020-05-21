@@ -42,8 +42,8 @@ export class EventEditComponent {
   }
 
   async remove() {
-    await this.service.remove(this.form.value.id);
     this.router.navigate(['../..'], { relativeTo: this.route })
+    this.service.remove(this.form.value.id);
   }
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
