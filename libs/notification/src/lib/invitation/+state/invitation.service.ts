@@ -9,8 +9,6 @@ import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
-import { from, of } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -116,17 +114,12 @@ export class InvitationService extends CollectionService<InvitationState> {
           const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
           // We use mergeMap to keep all subscriptions in memory (switchMap unsubscribe automatically)
           if (who === 'org') {
-            return from(recipients).pipe(
-              mergeMap(recipient => this.orgService.getValue(recipient)),
-              map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })),
-              mergeMap(invitation => this.add(invitation, { write }))
-            );
+            return this.orgService.getValue(recipients)
+              .then(orgs => orgs.map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })))
+              .then(invitations => this.add(invitations, { write }));
           } else if (who === 'user') {
             const f = this.functions.httpsCallable('inviteUsers');
-            f({ emails: recipients, invitation: base }).toPromise();
-            return of('');
-          } else {
-            return of('');
+            return f({ emails: recipients, invitation: base }).toPromise();
           }
         }
       })

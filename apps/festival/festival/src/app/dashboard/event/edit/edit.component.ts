@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
@@ -23,7 +23,6 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  loading$ = new BehaviorSubject(true);
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -39,6 +38,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +62,7 @@ export class EditComponent implements OnInit, OnDestroy {
     ).subscribe(event => {
       this.type = event.type;
       this.form = new EventForm(event);
-      this.loading$.next(false);
+      this.cdr.markForCheck();
     });
   }
 

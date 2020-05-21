@@ -37,6 +37,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   private _placeholder: string;
   private _required = false;
   private _disabled = false;
+  private previousTime: string; // Used if timepicker should use allDay
 
   form = new FormGroup({
     day: new FormControl(new Date()),
@@ -50,6 +51,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   controlType = 'time-picker';
   id = `time-picker_${TimePickerComponent.nextId++}`;
   describedBy = '';
+  isAllDay: boolean;
   
   // PLACEHOLDER
 
@@ -84,7 +86,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   @Input()
   get value(): Date | null {
     if (this.form.valid) {
-      return createDate(this.form.value);
+      return createDate(this.form.getRawValue()); // We want the time even if disabled
     }
     return null;
   }
@@ -96,6 +98,20 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     const time = getTime(day);
     this.form.setValue({ time, day });
     this.stateChanges.next();
+  }
+
+  @Input()
+  set allDay(isAllDay: boolean) {
+    this.isAllDay = coerceBooleanProperty(isAllDay);
+    if (this.isAllDay) {
+      this.previousTime = this.form.get('time').value;
+      const time = this.ngControl?.name === 'end' ? '23:30' : '00:00';
+      this.form.get('time').setValue(time);
+      this.form.get('time').disable();
+    } else {
+      this.form.get('time').setValue(this.previousTime);
+      this.form.get('time').enable();
+    }
   }
 
   get empty() {
@@ -167,7 +183,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   setDate() {
-    const value = createDate(this.form.value);
+    const value = createDate(this.form.getRawValue());
     this.onChange(value)
   }
 
