@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+button {
+  position: absolute;
+}
+
+.previous {
+  left: 0px;
+  bottom: calc(50% - 20px);
+}
+
+.next {
+  right: 0px;
+  bottom: calc(50% - 20px);
+}
