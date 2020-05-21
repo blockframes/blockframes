@@ -1,4 +1,7 @@
 @mixin bf-color-font($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
   $foreground: map-get($theme, foreground);
   $color-font: map-get($theme, font);
 
@@ -64,5 +67,21 @@
   }
   input {
     color: mat-color($foreground, text);
+  }
+
+  .text-primary {
+    color: mat-color($primary);
+  }
+
+  .text-accent {
+    color: mat-color($accent);
+  }
+  
+  .text-warn {
+    color: mat-color($warn);
+  }
+
+  .text-disabled {
+    color: mat-color($foreground, disabled);
   }
 }

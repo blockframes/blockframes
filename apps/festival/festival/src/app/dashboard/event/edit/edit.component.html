@@ -9,8 +9,15 @@
             <mat-form-field appearance="outline">
               <mat-label>Select the title to display</mat-label>
               <mat-select formControlName="titleId">
-                <mat-option *ngFor="let title of titles" [value]="title.id">
-                  {{ title.main.title.international }}
+                <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.hostedVideo">
+                  <ng-container *ngIf="title.hostedVideo else noVideo">
+                    {{ title.main.title.international }}
+                  </ng-container>
+                  <ng-template #noVideo>
+                    <span class="text-disabled">{{ title.main.title.international }}</span>
+                    <span> - </span>
+                    <span class="text-warn">Upload video first.</span>
+                  </ng-template>
                 </mat-option>
               </mat-select>
             </mat-form-field>
