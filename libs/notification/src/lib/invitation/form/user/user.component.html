@@ -1,0 +1,26 @@
+<div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
+  <algolia-chips-autocomplete fxFlex index="user" displayWithPath="email" [form]="form" label="Search for a guest"
+    placeholder="Enter guest email">
+    <ng-template let-user>
+      <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
+        <img [imgRef]="user.avatar.media" placeholderAsset="profil_user.webp" alt="Profile" />
+        <span *ngIf="user.firstName">{{ user | displayName }}</span>
+        <span *ngIf="!user.firstName">{{ user.email }}</span>
+      </div>
+    </ng-template>
+  </algolia-chips-autocomplete>
+  <button mat-icon-button (click)="invite()" test-id="event-invite">
+    <mat-icon svgIcon="send"></mat-icon>
+  </button>
+</div>
+
+<ng-container *ngIf="sending | async">
+  <div @scaleIn fxLayout="column" fxLayoutAlign="center center">
+    <p class="mat-caption">
+      We're sending invitations, this process can take few minutes.
+      <br />
+      You can leave the page without canceling the process, we'll update this page when it's done.
+    </p>
+    <mat-progress-bar color="accent" mode="buffer"></mat-progress-bar>
+  </div>
+</ng-container>

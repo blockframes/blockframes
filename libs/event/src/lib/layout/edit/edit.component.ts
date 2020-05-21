@@ -25,7 +25,6 @@ export class EventEditComponent {
 
   constructor(
     private service: EventService,
-    private invitationService: InvitationService,
     private router: Router,
     private route: ActivatedRoute,
   ) { }
@@ -46,13 +45,4 @@ export class EventEditComponent {
     this.service.remove(this.form.value.id);
   }
 
-  /** Send an invitation to a list of persons, either to existing user or by creating user  */
-  async invite() {
-    const event = this.form.value;
-    const emails = this.invitationForm.value.map(guest => guest.email);
-    this.invitationForm.reset([]);
-    this.sending.next(true);
-    await this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id).toPromise();
-    this.sending.next(false);
-  }
 }

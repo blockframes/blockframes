@@ -8,9 +8,9 @@ import { ImageReferenceModule } from '@blockframes/ui/media'
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
-import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
-import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
+import { InvitationFormUserModule } from '@blockframes/invitation/form/user/user.module';
+import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -40,7 +40,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     StatusModule,
     GuestListModule,
     AppBarModule,
-    AlgoliaChipsAutocompleteModule,
+    InvitationFormUserModule,
 
     // Material
     MatDividerModule,

@@ -142,7 +142,6 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     if (this.ngControl != null) {
       this.ngControl.valueAccessor = this;
     }
-    console.log(this.ngControl);
   }
 
   onChange = (value: Date) => {};

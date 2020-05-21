@@ -1,4 +1,4 @@
-<ng-container *ngIf="!(loading$ | async)">
+<ng-container *ngIf="form">
   <event-edit @slideUpList [form]="form" [invitations]="invitations$ | async">
     <ng-container [ngSwitch]="type">
       <!-- Screening -->
