@@ -1,11 +1,23 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
-import { boolean } from '@blockframes/utils/decorators/decorators';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { searchClient, algoliaIndex, AlgoliaIndex, GetAlgoliaSchema } from '@blockframes/utils/algolia';
+import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { valueByPath } from '@blockframes/utils/pipes';
+
+const Separators = {
+  [COMMA]: ',',
+  [SEMICOLON]: ';',
+  [SPACE]: ' +'
+};
+
+function splitValue(value: string, keycodes: number[]) {
+  const separators = keycodes.map(code => Separators[code]).filter(v => !!v).join('|');
+  const pattern = new RegExp(`\s*(?:${separators})\s*`);
+  return value.trim().split(pattern).filter(v => !!v);
+}
 
 @Component({
   selector: '[index] [displayWithPath] [form] algolia-chips-autocomplete',
@@ -15,7 +27,6 @@ import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/oper
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit {
   public indexName: string;
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
@@ -57,6 +68,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   /** The icon to display in the input prefix */
   @Input() prefixIcon: string;
 
+  @Input() separators = [ENTER, COMMA, SEMICOLON];
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -85,9 +98,23 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
 
   add(value: any) {
     if (!!value) {
-      this.form.add(value);
+      if (typeof value === 'string') {
+        splitValue(value, this.separators).forEach(v => this.form.add(v))
+      } else {
+        this.form.add(value);
+      }
       this.input.nativeElement.value = '';
       this.searchCtrl.setValue(null);
     }
+  }
+
+  edit(index: number) {
+    const element = this.form.at(index).value;
+    const value = typeof element === 'object'
+      ? valueByPath(element, this.displayWithPath)
+      : element;
+    this.searchCtrl.setValue(value);
+    this.input.nativeElement.value = value;
+    this.form.removeAt(index);
   }
 }
