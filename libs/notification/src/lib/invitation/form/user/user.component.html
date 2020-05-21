@@ -1,6 +1,6 @@
 <div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
   <algolia-chips-autocomplete fxFlex index="user" displayWithPath="email" [form]="form" label="Search for a guest"
-    placeholder="Enter guest email">
+    [separators]="separators" placeholder="Enter guest email">
     <ng-template let-user>
       <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
         <img [imgRef]="user.avatar.media" placeholderAsset="profil_user.webp" alt="Profile" />

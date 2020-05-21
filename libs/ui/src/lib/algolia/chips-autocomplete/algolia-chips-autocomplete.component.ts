@@ -1,11 +1,24 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { ENTER, COMMA, SEMICOLON } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
+
+const Separators = {
+  [COMMA]: ',',
+  [SEMICOLON]: ';',
+  [SPACE]: ' +'
+};
+
+function splitValue(value: string, keycodes: number[]) {
+  const separators = keycodes.map(code => Separators[code]).filter(v => !!v).join('|');
+  const pattern = new RegExp(`\s*(?:${separators})\s*`);
+  console.log(separators, pattern);
+  return value.trim().split(pattern).filter(v => !!v);
+}
 
 @Component({
   selector: '[index] [displayWithPath] [form] algolia-chips-autocomplete',
@@ -15,7 +28,6 @@ import { valueByPath } from '@blockframes/utils/pipes';
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit {
   public indexName: string;
-  public separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
@@ -57,10 +69,12 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   /** The icon to display in the input prefix */
   @Input() prefixIcon: string;
 
+  @Input() separators = [ENTER, COMMA, SEMICOLON];
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor() {}
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
@@ -86,7 +100,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   add(value: any) {
     if (!!value) {
       if (typeof value === 'string') {
-        value.trim().split(/\s*(?:,|;)\s*/g, 50).filter(v => !!v).map(v => this.form.add(v))
+        splitValue(value, this.separators).forEach(v => this.form.add(v))
       } else {
         this.form.add(value);
       }
