@@ -4,7 +4,7 @@
     <strong>{{ ref.value }} </strong>
     <missing-control [control]="promotionalElements.get(ref.key).get('media').get('urls').get('original')" [link]="link">
       <ng-template let-media>
-     <!--    {{ media.originalFileName }} -->
+        {{ media.originalFileName }}
       </ng-template>
     </missing-control>
   </li>
