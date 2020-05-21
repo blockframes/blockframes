@@ -16,8 +16,7 @@ export class MediaImageComponent {
     private tunnel: MovieTunnelComponent,
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Promotional images', 'Title information')
-  }// TODO MF, PROBLEM IS REGISTER ON CHANGE ON THE DROPZONE COMPONENT, DOENST WORK WITH ARRAY OR FORMGROUP?
+    this.dynTitle.setPageTitle('Promotional images', 'Title information')}
 
   public movie = this.movieQuery.getActive();
   public bannerPath = `movies/${this.movie.id}/promotionalElements.banner.media`;

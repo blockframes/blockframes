@@ -12,11 +12,12 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li fxLayout="row" fxFlexAlign="start center">
-      <strong>Box office &nbsp;</strong>
+      <strong>Box Office &nbsp;</strong>
+      <mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value" class="currency-icon"></mat-icon>
       <missing-control [control]="boxOffice.get('value')" [link]="link">
-      </missing-control><mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value"></mat-icon>
+      </missing-control>
       <ng-container *ngIf="boxOffice.get('territory').value">
-        <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }} </strong>
+        <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
       </ng-container>
     </li>
   </ng-container>
@@ -43,7 +44,7 @@
   <ng-container *ngFor="let review of movieReview.controls">
     <li>
       <strong>Film Review </strong>
-      <ng-container *ngIf="reviewHasNoValue(review) else display">
+      <ng-container *ngIf="!reviewHasNoValue(review) else display">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
