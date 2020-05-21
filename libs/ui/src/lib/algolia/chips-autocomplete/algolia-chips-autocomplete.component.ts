@@ -1,9 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
-import { boolean } from '@blockframes/utils/decorators/decorators';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { ENTER, COMMA, SEMICOLON } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import { searchClient, algoliaIndex, AlgoliaIndex, GetAlgoliaSchema } from '@blockframes/utils/algolia';
+import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
 
@@ -15,7 +14,7 @@ import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/oper
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit {
   public indexName: string;
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public separatorKeysCodes: number[] = [ENTER, COMMA, SEMICOLON];
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
@@ -85,7 +84,11 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
 
   add(value: any) {
     if (!!value) {
-      this.form.add(value);
+      if (typeof value === 'string') {
+        value.split(/\s*(?:,|;)\s*/g, 50).filter(v => !!v).map(v => this.form.add(v))
+      } else {
+        this.form.add(value);
+      }
       this.input.nativeElement.value = '';
       this.searchCtrl.setValue(null);
     }
