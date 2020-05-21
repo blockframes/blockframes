@@ -1,31 +1,8 @@
+import { Injectable } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { sanitizeFileName } from "./file-sanitizer";
-
-export interface ImgRef {
-  ref: string;
-  urls: {
-    original: string,
-    xs?: string,
-    md?: string,
-    lg?: string
-  };
-}
-
-export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { urls: { original : ref } } : ref;
-  return {
-    ref: '',
-    urls: {
-      original: '',
-      xs: '',
-      md: '',
-      lg: ''
-    },
-    ..._ref
-  };
-}
+import { createImgRef, ImgRef } from "./media.model";
+import { sanitizeFileName } from "../file-sanitizer";
 
 @Injectable({ providedIn: 'root' })
 export class ImageUploader {

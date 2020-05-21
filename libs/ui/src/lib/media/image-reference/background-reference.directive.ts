@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
-import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef } from '@blockframes/utils/media';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ThemeService } from '@blockframes/ui/theme';

@@ -2,7 +2,7 @@ import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/ak
 import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/media';
 import { toDate } from '@blockframes/utils/helpers';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }

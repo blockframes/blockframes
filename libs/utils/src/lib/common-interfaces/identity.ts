@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from "../image-uploader";
+import { ImgRef, createImgRef } from "../media/media.model";
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 

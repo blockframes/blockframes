@@ -1,4 +1,4 @@
-import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef } from '@blockframes/utils/media';
 
 export interface Slide {
   /** Key list manager prob */

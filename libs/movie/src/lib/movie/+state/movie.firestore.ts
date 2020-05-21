@@ -17,7 +17,7 @@ import {
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { ImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef } from "@blockframes/utils/media";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";

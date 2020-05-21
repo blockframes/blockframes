@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader'
+import { ImgRef, createImgRef } from '@blockframes/utils/media'
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
