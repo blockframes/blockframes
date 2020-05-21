@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { valueByPath } from '@blockframes/utils/pipes';
 
 @Component({
   selector: '[index] [displayWithPath] [form] algolia-chips-autocomplete',
@@ -59,7 +60,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
@@ -85,12 +86,22 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   add(value: any) {
     if (!!value) {
       if (typeof value === 'string') {
-        value.split(/\s*(?:,|;)\s*/g, 50).filter(v => !!v).map(v => this.form.add(v))
+        value.trim().split(/\s*(?:,|;)\s*/g, 50).filter(v => !!v).map(v => this.form.add(v))
       } else {
         this.form.add(value);
       }
       this.input.nativeElement.value = '';
       this.searchCtrl.setValue(null);
     }
+  }
+
+  edit(index: number) {
+    const element = this.form.at(index).value;
+    const value = typeof element === 'object'
+      ? valueByPath(element, this.displayWithPath)
+      : element;
+    this.searchCtrl.setValue(value);
+    this.input.nativeElement.value = value;
+    this.form.removeAt(index);
   }
 }
