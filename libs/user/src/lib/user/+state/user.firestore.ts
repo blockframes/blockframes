@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef, createImgRef } from "@blockframes/utils/media";
 
 export interface User {
   uid: string;

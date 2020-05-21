@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/media';
 import { OrgAppAccess, createOrgAppAccess } from '@blockframes/utils/apps';
 
 

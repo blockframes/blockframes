@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import {get, set} from 'lodash';
-import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef } from '@blockframes/utils/media/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.

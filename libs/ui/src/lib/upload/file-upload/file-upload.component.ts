@@ -10,7 +10,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/media';
 
 @Component({
   selector: 'file-upload',

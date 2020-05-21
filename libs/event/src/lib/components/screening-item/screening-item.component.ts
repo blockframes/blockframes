@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
-import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef } from '@blockframes/utils/media';
 import { ScreeningEvent } from '../../+state';
 
 @Component({

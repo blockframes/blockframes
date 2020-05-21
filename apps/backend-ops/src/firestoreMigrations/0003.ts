@@ -1,6 +1,6 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createImgRef } from '@blockframes/utils/media';
 import { createPromotionalElement } from '@blockframes/movie/+state/movie.model';
 
 /**
