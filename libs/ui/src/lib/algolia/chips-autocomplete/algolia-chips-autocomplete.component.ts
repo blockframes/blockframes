@@ -16,7 +16,6 @@ const Separators = {
 function splitValue(value: string, keycodes: number[]) {
   const separators = keycodes.map(code => Separators[code]).filter(v => !!v).join('|');
   const pattern = new RegExp(`\s*(?:${separators})\s*`);
-  console.log(separators, pattern);
   return value.trim().split(pattern).filter(v => !!v);
 }
 
