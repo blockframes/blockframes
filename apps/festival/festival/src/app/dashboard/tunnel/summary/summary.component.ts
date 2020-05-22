@@ -51,7 +51,7 @@ export class TunnelSummaryComponent {
       })
     } else {
       // Log the invalid forms
-      console.error(this.findInvalidControlsRecursive(this.form))
+      /* console.error(this.findInvalidControlsRecursive(this.form)) */
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
   }

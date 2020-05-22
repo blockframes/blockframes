@@ -14,7 +14,7 @@
         <drop-cropper
           [storagePath]="bannerPath"
           ratio="banner"
-          [formControl]="banner.get('media')">
+          [formGroup]="banner.get('media')">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -24,14 +24,14 @@
     <!-- Poster -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Movie poster image</mat-card-title>
+        <mat-card-title>Poster</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngFor="let control of poster.controls">
           <drop-cropper
             [storagePath]="posterPath"
             ratio="poster"
-            [formControl]="control.get('media')">
+            [formGroup]="control.get('media')">
             <h3 type>Poster</h3>
             <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -50,7 +50,7 @@
           <drop-cropper
             [storagePath]="stillPath"
             ratio="still"
-            [formControl]="control.get('media')">
+            [formGroup]="control.get('media')">
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>

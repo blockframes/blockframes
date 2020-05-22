@@ -5,3 +5,8 @@ li {
     font-weight: normal;
   }
 }
+
+// Override the default margin so the parenthesis has no space
+.control-role {
+  margin-right: 0px;
+}

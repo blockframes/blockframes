@@ -41,7 +41,7 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
   newLanguage() {
     const language = this.languageForm.value;
     if (!this.form.controls[language]) {
-      const spec = createMovieLanguageSpecification({ original: true });
+      const spec = createMovieLanguageSpecification();
       this.form.setControl(language, new VersionSpecificationForm(spec));
       this.added$.next([ ...this.added$.getValue(), language ])
     }

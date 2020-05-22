@@ -61,8 +61,8 @@ export type PremiereType = keyof typeof premiereType;
 export type PremiereTypeValue = typeof premiereType[PremiereType];
 
 export const unitBox = {
-  boxoffice_dollar: 'Box office in $',
-  boxoffice_euro: 'Box office in €',
+  boxoffice_dollar: 'Box Office in $',
+  boxoffice_euro: 'Box Office in €',
   admissions: '#Admissions',
 } as const;
 
