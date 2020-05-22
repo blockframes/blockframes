@@ -19,7 +19,8 @@
     "max": "blockframes-max",
     "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
-    "dajung": "blockframes-dajung"
+    "dajung": "blockframes-dajung",
+    "blockframes-sebastian": "blockframes-sebastian"
   },
   "targets": {
     "blockframes": {
@@ -80,7 +81,9 @@
         "catalog": [
           "blockframes-francois"
         ],
-        "festival": ["blockframes-francois"]
+        "festival": [
+          "blockframes-francois"
+        ]
       }
     },
     "blockframes-bruce": {
@@ -181,6 +184,16 @@
       "hosting": {
         "catalog": [
           "blockframes-dajung"
+        ]
+      }
+    },
+    "blockframes-sebastian": {
+      "hosting": {
+        "catalog": [
+          "blockframes-sebastian"
+        ],
+        "festival": [
+          "blockframes-sebastian"
         ]
       }
     }
