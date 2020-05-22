@@ -265,7 +265,7 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [],
+            "assets": ["apps/backend-functions/src/package.json"],
             "buildLibsFromSource": true
           },
           "configurations": {
