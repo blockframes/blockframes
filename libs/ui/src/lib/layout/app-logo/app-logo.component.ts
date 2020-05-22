@@ -12,10 +12,8 @@ export class AppLogoComponent implements OnInit {
   constructor(private routerQuery: RouterQuery) {}
 
   ngOnInit() {
-    console.log('lol');
     const appName = this.routerQuery.getData<string>('app');
     this.imageLogo = this.mapAppToImage(appName);
-    console.log(appName, this.imageLogo);
   }
 
   mapAppToImage(appName: string) {
