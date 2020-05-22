@@ -8,9 +8,9 @@ import { ADMIN_DATA_PATH } from './templates/mail';
 import { dataBackupPage, dataRestorePage } from './templates/admin';
 import * as backup from './backup';
 import { adminPassword } from './environments/environment';
-// import { db } from './internals/firebase';
-// import { dataQuorumCreatePage } from './templates/admin';
-// import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/quorum/quorum';
+import { db } from './internals/firebase';
+import { dataQuorumCreatePage } from './templates/admin';
+import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/quorum/quorum';
 
 
 /**
@@ -57,7 +57,6 @@ adminApp.post(`${ADMIN_DATA_PATH}/restore`, checkPasswordOnPost(backup.restore))
 
 // Quorum Deploy & setup a movie smart-contract
 // ==============================
-/*
 adminApp.get(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.Request, res: express.Response) => {
 
   // retrieve the movie from firestore
@@ -161,4 +160,3 @@ adminApp.post(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.R
     }); // return error to client (c8 admin) browser for debug purpose
   }
 });
-*/

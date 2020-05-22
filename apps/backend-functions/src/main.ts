@@ -1,10 +1,10 @@
-// import {
-//   RelayerConfig,
-//   relayerDeployLogic,
-//   relayerRegisterENSLogic,
-//   relayerSendLogic,
-// } from './relayer';
-// import { mnemonic, relayer } from './environments/environment';
+import {
+  RelayerConfig,
+  relayerDeployLogic,
+  relayerRegisterENSLogic,
+  relayerSendLogic,
+} from './relayer';
+import { mnemonic, relayer } from './environments/environment';
 import { functions } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
@@ -209,7 +209,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 //            RELAYER           //
 //--------------------------------
-/*
 const RELAYER_CONFIG: RelayerConfig = {
   ...relayer,
   mnemonic
@@ -223,7 +222,6 @@ export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
 
 export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
-*/
 
 //--------------------------------
 //         File upload          //

@@ -11,9 +11,9 @@ import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationCanAccessApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { algolia } from './environments/environment';
-// import { mnemonic, relayer } from './environments/environment';
-// import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
-// import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
+import { mnemonic, relayer } from './environments/environment';
+import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
+import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, Module } from '@blockframes/utils/apps';
@@ -160,29 +160,29 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
     await triggerNotifications([notification]);
   }
   
-  // const RELAYER_CONFIG: RelayerConfig = {
-  //   ...relayer,
-  //   mnemonic
-  // };
-  // const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
-  // if (blockchainBecomeEnabled) {
-  //   const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
+  const RELAYER_CONFIG: RelayerConfig = {
+    ...relayer,
+    mnemonic
+  };
+  const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
+  if (blockchainBecomeEnabled) {
+    const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
-  //   const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
+    const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 
-  //   if (isOrgRegistered) {
-  //     throw new Error(`This organization has already an ENS name: ${orgENS}`);
-  //   }
+    if (isOrgRegistered) {
+      throw new Error(`This organization has already an ENS name: ${orgENS}`);
+    }
 
-  //   const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-  //   const provider = getProvider(RELAYER_CONFIG.network);
-  //   const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-  //   const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
+    const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
+    const provider = getProvider(RELAYER_CONFIG.network);
+    const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
+    const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
-  //   console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-  //   const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
-  //   console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
-  // }
+    console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
+    const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
+    console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
+  }
 
   // Update algolia's index
   await storeSearchableOrg(after.id, after.denomination.full)
