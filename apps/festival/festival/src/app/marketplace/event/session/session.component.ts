@@ -1,19 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EventService, Event } from '@blockframes/event/+state';
+import { pluck, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
 
 @Component({
   selector: 'festival-session',
   templateUrl: './session.component.html',
-  styleUrls: ['./session.component.scss']
+  styleUrls: ['./session.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionComponent implements OnInit {
 
-  url: SafeResourceUrl;
+  public event$: Observable<Event>;
+  public showSession = true;
 
-  constructor(private sanitizer: DomSanitizer) { }
+  constructor(
+    private service: EventService,
+    private route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
-    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808');
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap(eventId => this.service.queryDocs(eventId))
+    );
   }
-
 }
