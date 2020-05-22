@@ -9,6 +9,6 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
 })
 export class InvitationComponent {
 
-  invitations$ = this.query.selectAll();
+  invitations$ = this.query.selectAll({ filterBy: invitation => invitation.mode === 'invitation'});
   constructor(private query: InvitationQuery) { }
 }
