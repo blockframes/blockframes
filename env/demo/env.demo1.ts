@@ -77,32 +77,44 @@ export const sendgridAPIKey = null; // defined in functions.config, see backend-
 
 // Sendgrid Emails
 export const templateIds = {
-  // Template for welcome message when user created his account by himself
-  // At this step, we can not use links into emails
-  welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
+  // Templates for the account creation flow
+  user: {
+    // Template for welcome message when user created his account by himself
+    welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
 
-  // Template for sending the verify email 
-  // Internal to firebase, no link needed here
-  userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
+    // Template for sending the verify email
+    verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
+    resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
 
-  // Not implemented
-  orgInviteUser: 'd-7a0edb51795c493d9514fe4a595b40ac',
-
-  // Templates for informing new user that his account have been created
-  // Since user never came to archipelcontent or market, we must include a link in the mail
-  userCredentialsContent: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-  userCredentialsMarket: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
-
-  orgAccepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
-  joinAnOrgPending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
-  joinYourOrg: 'd-b1ab5d21def145ccb759520e2d984436',
-  resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
-  userHasJoined: 'd-f84d8c5a70884316870ca4ef657e368f',
-  userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
-  wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
-  invitationToMeetingFromUser: 'd-b40ccbd91c2f4d6599be56ab1f8e6631',
-  invitationToScreeningFromOrg: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e'
+    // Templates for informing new user that his account have been created
+    credentials: {
+      content: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+      market: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
+    }
+  },
+  // Templates for the org management flow
+  org: {
+    accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
+    appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
+    memberAdded: 'd-f84d8c5a70884316870ca4ef657e368f',
+  },
+  // Templates for requests (invitations)
+  request: {
+    joinOrganization: {
+      created: 'd-b1ab5d21def145ccb759520e2d984436',
+      pending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
+      accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
+    },
+    attendEvent: {
+      created: 'd-07f5e3cc6796455097b6082c22568d9e'
+    }
+  },
+  // Templates for invitations
+  invitation: {
+    attendEvent: {
+      created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5'
+    }
+  }
 }
 
 // Yandex Metrika Id

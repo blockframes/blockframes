@@ -2,11 +2,23 @@ import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitati
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { db } from "../firebase";
+import { db, getUser } from "../firebase";
 import { getAdminIds, getDocument, getFromEmail, getAppUrl } from "../../data/internals";
-import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
+import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
+import { EmailRecipient } from "@blockframes/utils/emails";
+
+
+function getEventLink(org: OrganizationDocument) {
+  if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
+    return '/c/o/marketplace/invitations';
+  } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
+    return '/c/o/dashboard/invitations';
+  } else {
+    return "";
+  }
+}
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -37,13 +49,13 @@ async function onInvitationToAnEventCreate({
   }
 
   // Retreive notification recipient
-  let recipient: string;
-  let link: string;
+  const recipients: EmailRecipient[] = [];
   if (!!toUser) {
-    recipient = toUser.email;
+    recipients.push({ email: toUser.email, name: toUser.firstName });
   } else if (!!toOrg) {
-    /** Attendee is only an user or an email for now */
-    throw new Error('Cannot invite an org to an event for now. Not implemented.');
+    const adminIds = await getAdminIds(toOrg.id);
+    const admins = await Promise.all(adminIds.map(i => getUser(i)));
+    admins.forEach(a => recipients.push({ email: a.email, name: a.firstName }));
   } else {
     throw new Error('Who is this invitation for ?');
   }
@@ -55,19 +67,22 @@ async function onInvitationToAnEventCreate({
      * will already get the invitation displayed on front end.
      */
     const senderEmail = fromOrg.denomination.public;
-    const org = await getDocument<OrganizationDocument>(`orgs/${toUser.orgId}`);
-    if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/c/o/marketplace/invitations';
-    } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/c/o/dashboard/invitations';
-    } else {
-      link = "";
-    }
-    console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
+    const link = getEventLink(org);
     const urlToUse = await getAppUrl(org);
     const from = await getFromEmail(org);
-    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link, urlToUse), from);
 
+    switch (mode) {
+      case 'invitation':
+        return Promise.all(recipients.map(recipient => {
+          console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
+          const templateInvitation = invitationToEventFromOrg(recipient, fromOrg.denomination.full, event.title, link, urlToUse);
+          return sendMailFromTemplate(templateInvitation, from);
+        }))
+      case 'request':
+      default:
+        throw new Error('Org can not create requests for events, reserved to users only');
+    }
   } else if (!!fromUser) {
     /**
      * @dev No need to create a notification because fromOrg and user recipient
@@ -75,25 +90,20 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
-    if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/c/o/marketplace/invitations';
-    } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/c/o/dashboard/invitations';
-    } else {
-      link = "";
-    }
+    const link = getEventLink(org);
+
     const urlToUse = await getAppUrl(org);
     const from = await getFromEmail(org);
     switch (mode) {
       case 'invitation':
-        console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient}`);
-        const templateInvitation = invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link, urlToUse);
-        return sendMailFromTemplate(templateInvitation, from);
+        throw new Error('User can not create invitations for events, reserved to orgs only.');
       case 'request':
       default:
-        console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient}`);
-        const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link, urlToUse);
-        return sendMailFromTemplate(templateRequest, from);
+        return Promise.all(recipients.map(recipient => {
+          console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, recipient, event.title, link, urlToUse);
+          return sendMailFromTemplate(templateRequest, from);
+        }))
     }
   } else {
     throw new Error('Did not found invitation sender');

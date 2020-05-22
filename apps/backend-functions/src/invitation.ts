@@ -1,7 +1,7 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { db, functions, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
-import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './internals/invitations/organizations';
+import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
@@ -35,13 +35,13 @@ export async function onInvitationWrite(
   // We consolidate invitation document here.
   let needUpdate = false;
   if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg.id}`);
     invitationDoc.fromOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
 
   if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg.id}`);
     invitationDoc.toOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
@@ -63,8 +63,8 @@ export async function onInvitationWrite(
     switch (invitationDoc.type) {
       case 'joinOrganization':
         invitationDoc.mode === 'invitation'
-          ? await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
-          : await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+          ? await onInvitationToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
+          : await onRequestToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
         break;
       case 'attendEvent':
         /**

@@ -46,7 +46,8 @@ export const getOrCreateUserByMail = async (data: { email: string, orgId: string
     const appName: App = await getOrgAppName(org);
     const urlToUse = await getAppUrl(org);
     const from = await getFromEmail(org);
-    const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
+    // neeed template attendEvent #2818
+    const templateToUse = appName === 'festival' ? templateIds.user.credentials.market : templateIds.user.credentials.content;
 
     await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse), from);
 
