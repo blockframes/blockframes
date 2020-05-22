@@ -1,4 +1,3 @@
-import { functions } from './internals/firebase';
 import {
   RelayerConfig,
   relayerDeployLogic,
@@ -6,6 +5,7 @@ import {
   relayerSendLogic,
 } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
+import { functions } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
 import {

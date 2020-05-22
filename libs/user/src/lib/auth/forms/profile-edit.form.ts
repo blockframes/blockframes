@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { createImgRef, ImgRef } from '@blockframes/utils/media';
+import { createImgRef, ImgRef } from '@blockframes/utils/media/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 export interface Profile {

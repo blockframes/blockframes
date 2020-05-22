@@ -11,7 +11,7 @@ import {
   PublicContractDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { createImgRef } from '@blockframes/utils/media';
+import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import {
   ContractVersion,
   ContractVersionWithTimeStamp,

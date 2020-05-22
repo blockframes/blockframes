@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, Input, Directive } from '@angular/c
 // Blockframes
 import { Movie, Credit } from '@blockframes/movie/+state';
 import { Title } from '@blockframes/movie/+state/movie.firestore';
-import { ImgRef } from '@blockframes/utils/media';
+import { ImgRef } from '@blockframes/utils/media/media.firestore';
 
 interface MovieSliderView {
     directors: string | Credit[],
