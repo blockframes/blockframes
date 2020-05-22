@@ -15,6 +15,7 @@ export class MovieSummaryImageComponent implements OnInit {
 
   ngOnInit() {
     this.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    console.log(this.promotionalElements)
   }
 
   get bannerHasNoValue() {

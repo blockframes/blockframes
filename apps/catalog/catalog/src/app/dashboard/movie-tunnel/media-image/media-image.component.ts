@@ -12,16 +12,18 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MediaImageComponent {
   form = this.tunnel.form;
 
-  constructor(
-    private tunnel: MovieTunnelComponent,
-    private movieQuery: MovieQuery,
-    private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Promotional images', 'Title information')}
-
   public movie = this.movieQuery.getActive();
   public bannerPath = `movies/${this.movie.id}/promotionalElements.banner.media`;
   public posterPath = `movies/${this.movie.id}/promotionalElements.poster.0.media`;
   public stillPath = `movies/${this.movie.id}/promotionalElements.still_photo.0.media`;
+
+  constructor(
+    private tunnel: MovieTunnelComponent,
+    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Promotional images', 'Title information')
+    this.form.valueChanges.subscribe(console.log)
+  }
 
   get promotionalElements() {
     return this.form.get('promotionalElements')

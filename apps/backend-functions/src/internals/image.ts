@@ -153,3 +153,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);
 }
+
+export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
+  
+}

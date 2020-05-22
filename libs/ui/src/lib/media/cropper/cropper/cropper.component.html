@@ -59,14 +59,19 @@
         <ng-container *ngIf="useFileuploader">
           <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
           <button mat-mini-fab color="primary">
-            <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="select new picture"></mat-icon>
+            <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="Select new picture"></mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="useCopyToClipboard">
+          <button mat-mini-fab color="accent" *ngIf="(previewUrl | async) as url">
+            <mat-icon [cdkCopyToClipboard]="url" svgIcon="archive" matTooltip="Copy to clipboard"></mat-icon>
           </button>
         </ng-container>
         <!-- TODO #1149: fix resize in cropper -->
         <!-- <mat-icon (click)="resize(url)" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="resize current picture">icon</mat-icon> -->
         <ng-container *ngIf="useDelete">
           <button mat-mini-fab color="warn">
-            <mat-icon (click)="delete()" svgIcon="trash" matTooltip="delete current picture"></mat-icon>
+            <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete current picture"></mat-icon>
           </button>
         </ng-container>
       </div>
