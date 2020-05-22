@@ -1,26 +1,30 @@
 @import '~@angular/flex-layout/mq';
 
 header {
-  width: 100%;
-  mat-toolbar {
-    .sort {
-      padding-right: 16px;
+  padding: 40px;
+  background-image: url('/assets/images/banner_header_page.webp');
+  background-position: center center;
+  background-size: cover;
+
+  h1 {
+    text-align: center;
+  }
+  section {
+    .search {
+      width: 100%;
     }
   }
 }
 
 section {
   padding: 20px 20px;
-  h1 {
-    text-transform: capitalize;
-  }
 }
 
 aside {
   position: sticky;
   top: calc(var(--toolbarHeight) + 20px);
   mat-card {
-    width: 450px;
+    width: 380px;
     max-height: calc(100vh - var(--toolbarHeight) - 40px);
     overflow: auto;
   }
