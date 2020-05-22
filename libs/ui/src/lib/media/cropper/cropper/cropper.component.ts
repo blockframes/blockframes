@@ -1,14 +1,13 @@
 import { Component, Input, forwardRef, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError, map } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of, Subscription, combineLatest } from 'rxjs';
+import { finalize, catchError } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ImgRef, createImgRef } from '@blockframes/utils/media';
+import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { delay } from '@blockframes/utils/helpers';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -95,7 +94,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
-  constructor(private storage: AngularFireStorage, /*private http: HttpClient,*/ private _renderer: Renderer2, private _elementRef: ElementRef) { }
+  constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   //////////////////////////
   // ControlValueAccessor //

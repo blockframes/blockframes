@@ -52,7 +52,6 @@
   ],
   "functions": {
     "predeploy": [
-      "cat ./package.json | jq \"del(.scripts.postinstall)\" > dist/apps/backend-functions/package.json",
       "npm run lint backend-functions",
       "npm run build:backend-functions",
       "./ops/deploy_secrets.sh"

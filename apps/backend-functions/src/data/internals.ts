@@ -5,7 +5,7 @@
  */
 import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
-import { PermissionsDocument } from '@blockframes/permissions/types';
+import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';

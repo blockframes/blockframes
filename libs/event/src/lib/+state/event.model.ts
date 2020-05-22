@@ -13,6 +13,10 @@ export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Met
   allDay: boolean;
   end: Date;
   meta: Meta;
+
+  // We need that to avoid type error in template
+  org?: Organization;
+  movie?: Movie;
 }
 export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<any, Meta>> = {}): Event<Meta> {
   const meta: any =

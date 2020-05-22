@@ -67,6 +67,7 @@
   --warn: #{mat-color($warn, 500)};
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
+  --background-slider: #{mat-color($foreground, slider-min)};
   --background-hover: #{mat-color($background, hover)};
   --background: #{mat-color($background, background, 0.5)};
   // Foreground

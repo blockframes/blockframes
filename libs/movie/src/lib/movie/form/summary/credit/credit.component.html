@@ -27,7 +27,8 @@
       <ng-template #displayProducer>
         <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
         <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
-        (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
+        (<missing-control [control]="producer.get('role')" [link]="link" scope="PRODUCER_ROLES" class="control-role">
+        </missing-control>)
         {{ isLast ? '' : ', '}}
       </ng-template>
     </ng-container>
@@ -49,7 +50,7 @@
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
     <li>
       <ng-container *ngIf="artist.get('role').value else role">
-        <strong>{{ artist.get('role').value | translateSlug: 'CREW_ROLES' }}</strong>
+        <strong>{{ artist.get('role').value | translateSlug: 'CREW_ROLES' }}&nbsp;</strong>
       </ng-container>
       <ng-template #role>
         <strong>Role</strong>

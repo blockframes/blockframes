@@ -16,8 +16,7 @@ export class MediaImageComponent {
     private tunnel: MovieTunnelComponent,
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Promotional images', 'Title information')
-  }
+    this.dynTitle.setPageTitle('Promotional images', 'Title information')}
 
   public movie = this.movieQuery.getActive();
   public bannerPath = `movies/${this.movie.id}/promotionalElements.banner.media`;

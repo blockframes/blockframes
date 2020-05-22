@@ -1,7 +1,6 @@
 import { UserRole } from "@blockframes/permissions/types";
 import { User } from "@blockframes/auth/+state/auth.store";
-import { ImgRef, createImgRef } from "@blockframes/utils/media";
-import { PublicUser } from "./user.firestore";
+import { ImgRef, createImgRef } from "@blockframes/utils/media/media.firestore";
 
 export * from './user.firestore';
 

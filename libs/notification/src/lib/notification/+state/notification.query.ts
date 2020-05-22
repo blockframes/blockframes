@@ -8,7 +8,7 @@ import { DateGroup } from '@blockframes/utils/helpers';
 import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { NotificationType } from './notification.firestore';
-import { ImgRef, createImgRef } from '@blockframes/utils/media';
+import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { toDate } from 'date-fns';
 
 function getYesterday() {

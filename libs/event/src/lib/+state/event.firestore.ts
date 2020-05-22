@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 

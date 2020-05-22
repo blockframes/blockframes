@@ -2,6 +2,7 @@ import { FormControl } from '@angular/forms';
 import { MovieReview } from '../../+state/movie.firestore';
 import { createMovieReview } from '../../+state/movie.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { urlValidators } from '@blockframes/utils/form';
 
 function createMovieReviewControl(review: Partial<MovieReview> = {}) {
   const { criticName, journalName, criticQuote, revueLink } = createMovieReview(review);
@@ -9,7 +10,7 @@ function createMovieReviewControl(review: Partial<MovieReview> = {}) {
     criticName: new FormControl(criticName),
     journalName: new FormControl(journalName),
     criticQuote: new FormControl(criticQuote),
-    revueLink: new FormControl(revueLink),
+    revueLink: new FormControl(revueLink, urlValidators),
   }
 }
 

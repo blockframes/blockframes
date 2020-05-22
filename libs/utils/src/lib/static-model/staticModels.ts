@@ -387,6 +387,10 @@ const models = {
     {
       'slug': 'b',
       'label': 'Black & white'
+    },
+    {
+      'slug': 'color-black-white',
+      'label': 'Color & Black & White'
     }
   ] as const,
   'CERTIFICATIONS': [

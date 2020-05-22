@@ -17,9 +17,9 @@
   </ng-container>
 </article>
 
-<mat-divider *ngIf="(added$ | async).length"></mat-divider>
 
 <article>
+  <mat-divider *ngIf="(added$ | async).length"></mat-divider>
   <ng-container *ngFor="let language of added$ | async">
     <h5>
       <button mat-icon-button (click)="removeLanguage(language)">

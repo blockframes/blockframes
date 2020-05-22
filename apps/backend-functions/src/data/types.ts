@@ -1,31 +1,31 @@
-import { PublicOrganization } from '@blockframes/organization/types';
-import { NotificationType } from '@blockframes/notification/types';
-import { PublicMovie } from '@blockframes/movie/types';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { NotificationType } from '@blockframes/notification/+state/notification.firestore';
+import { PublicMovie } from '@blockframes/movie/+state/movie.firestore';
 
-export { MovieDocument, PublicMovie } from '@blockframes/movie/types';
+export { MovieDocument, PublicMovie } from '@blockframes/movie/+state/movie.firestore';
 export { ContractDocument, PublicContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 export {
   OrganizationDocument,
   OrganizationStatus,
   createOrganizationDocument,
   PublicOrganization
-} from '@blockframes/organization/types';
+} from '@blockframes/organization/+state/organization.firestore';
 export {
   InvitationDocument,
   InvitationOrUndefined,
   InvitationStatus,
   InvitationType,
-} from '@blockframes/invitation/types';
+} from '@blockframes/invitation/+state/invitation.firestore';
 export {
   PermissionsDocument,
   DocPermissionsDocument,
   createDocPermissions,
   UserRole
-} from '@blockframes/permissions/types';
-export { PublicUser } from '@blockframes/user/types';
+} from '@blockframes/permissions/+state/permissions.firestore';
+export { PublicUser } from '@blockframes/user/+state/user.firestore';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { MovieAnalytics, MovieEventAnalytics, StoreStatus, StoreConfig } from '@blockframes/movie/+state/movie.firestore';
-export { NotificationOptions, NotificationType, NotificationDocument } from '@blockframes/notification/types';
+export { NotificationOptions, NotificationType, NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 export { EventsAnalytics, EventAnalytics, ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
 
 /**

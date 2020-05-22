@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { MoviePromotionalElementsForm } from './promotional-elements.form';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
@@ -8,18 +8,14 @@ import { default as staticModels } from '@blockframes/utils/static-model/staticM
   templateUrl: './promotional-elements.component.html',
   styleUrls: ['./promotional-elements.component.scss'],
 })
-export class MovieFormPromotionalElementsComponent implements OnInit {
+export class MovieFormPromotionalElementsComponent {
   public staticModels: any;
 
   constructor(public controlContainer: ControlContainer) {
     this.staticModels = staticModels;
   }
 
-  ngOnInit() { }
-
   get promotionalElements(): MoviePromotionalElementsForm {
     return this.controlContainer.control as MoviePromotionalElementsForm;
   }
-
-
 }
