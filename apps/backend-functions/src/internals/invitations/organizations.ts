@@ -139,10 +139,8 @@ async function onRequestFromUserToJoinOrgCreate({
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
-  await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!),
-    from
-  );
+  const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
+  await sendMailFromTemplate(template, from);
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
@@ -155,7 +153,7 @@ async function onRequestFromUserToJoinOrgCreate({
       userFirstname: userData.firstName!,
       userLastname: userData.lastName!
     }, urlToUse))
-      .map(template => sendMailFromTemplate(template, from))
+      .map(tpl => sendMailFromTemplate(tpl, from))
   );
 }
 

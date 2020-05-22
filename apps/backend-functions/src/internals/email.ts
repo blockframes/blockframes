@@ -7,13 +7,14 @@ import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
 import { getSendgridFrom } from '@blockframes/utils/apps';
+import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: string = getSendgridFrom()): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailData = getSendgridFrom()): Promise<any> {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;
@@ -29,7 +30,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: string
   return SendGrid.send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: string = getSendgridFrom()) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: EmailData = getSendgridFrom()) {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;

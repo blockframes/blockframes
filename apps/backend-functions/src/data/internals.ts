@@ -11,6 +11,7 @@ import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
 import { appUrlMarket, appUrlContent } from '../environments/environment';
+import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -125,7 +126,7 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
  * This guess the app from the org app access and returns the "from" email address to use
  * @param _org 
  */
-export async function getFromEmail(_org: OrganizationDocument | string): Promise<string> {
+export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
   const appName = await getOrgAppName(_org);
   return getSendgridFrom(appName);
 }
