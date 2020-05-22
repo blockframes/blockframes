@@ -15,6 +15,13 @@ h2, h4, h6 {
   margin: 0;
 }
 
+p {
+  margin-top: 8px;
+  a {
+    color: var(--primary);
+  }
+}
+
 section {
   height: 100%;
   background-color: var(--background-slider);
@@ -26,7 +33,7 @@ section {
 
 .screen {
   width: 75%;
-  padding-top: calc(56.25% * 0.75); /* 16:9 Aspect Ratio: 9 / 16 * 50% (screen size) */
+  padding-top: calc(56.25% * 0.75); /* 16:9 Aspect Ratio: 9 / 16 * 75% (screen size) */
   position: relative;
   margin-top: 24px;
   background-size: cover;
@@ -51,15 +58,9 @@ section {
   }
 }
 
-@include layout-bp(md) {
-  .screen {
-    width: 75%;
-    padding-top: calc(56.25% * 0.75); /* 16:9 Aspect Ratio: 9 / 16 * 50% (screen size) */
-  }
-}
 @include layout-bp(lt-md) {
   .screen {
     width: 100%;
-    padding-top: calc(56.25% * 1); /* 16:9 Aspect Ratio: 9 / 16 * 50% (screen size) */
+    padding-top: calc(56.25% * 1); /* 16:9 Aspect Ratio: 9 / 16 * 100% (screen size) */
   }
 }

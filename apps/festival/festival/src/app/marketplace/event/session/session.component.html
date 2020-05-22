@@ -36,10 +36,13 @@
         <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
           <span class="mat-display-2">{{ event.title }}</span>
           <span class="mat-caption">Meeting now</span>
-          <a mat-flat-button color="accent" [href]="event.meta.callUrl" target="_blank">
+          <a *ngIf="event.meta.callUrl" mat-flat-button color="accent" [href]="event.meta.callUrl" target="_blank">
             <mat-icon svgIcon="play"></mat-icon>
             <span>Join the meeting</span>
           </a>
+          <p *ngIf="!event.meta.callUrl">
+            Contact <a [href]="'mailto:' + event.organizedBy.email">{{ event.organizedBy | displayName }}</a> to provide a link for the meeting
+          </p>
         </div>
       </article>
       <!-- TODO update the picture here with Mathilde's picture, she needs to validate with Marie to create it -->
