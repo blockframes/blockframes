@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
-import { ImgRef } from '@blockframes/utils/media';
+import { ImgRef } from '@blockframes/utils/media/media.firestore';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ThemeService } from '@blockframes/ui/theme';

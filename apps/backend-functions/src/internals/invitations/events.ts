@@ -1,4 +1,4 @@
-import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
+import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";

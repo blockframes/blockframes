@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from '@blockframes/utils/media'
+import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore'
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { urlValidators } from '@blockframes/utils/form';

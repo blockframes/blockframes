@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
-import { ImgRef } from '@blockframes/utils/media';
+import { ImgRef } from '@blockframes/utils/media/media.firestore';
 import { ScreeningEvent } from '../../+state';
 
 @Component({
