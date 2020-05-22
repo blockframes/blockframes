@@ -22,16 +22,7 @@
             overlayColor="medium">
             <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace', movie.id]"
               class=informations-wrapper>
-              <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
-                <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
-                  <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
-                </button>
-              </ng-container>
-              <ng-template #notAdded>
-                <button test-id="heart-icon" mat-icon-button (click)="addToWishlist(movie, $event)">
-                  <mat-icon svgIcon="heart_outline"></mat-icon>
-                </button>
-              </ng-template>
+              <wishlist-button [movieId]="movie.id" small></wishlist-button>
               <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
                 <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
                 <div>

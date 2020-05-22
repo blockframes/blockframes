@@ -12,6 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Pages
 import { MarketplaceHomeComponent } from './home.component';
@@ -30,6 +31,7 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module'
     SliderModule,
     TranslateSlugModule,
     DisplayNameModule,
+    WishlistButtonModule,
     MatIconModule,
     MatSnackBarModule,
     RouterModule.forChild([
