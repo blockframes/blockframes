@@ -1,9 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/+state';
-import { CartService } from '@blockframes/cart/+state/cart.service';
-import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Observable, Subscription } from 'rxjs';
 
@@ -27,14 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public moviesBySections$: Observable<CarouselSection[]>;
   public sections: CarouselSection[];
 
-  constructor(
-    private movieService: MovieService,
-    private movieQuery: MovieQuery,
-    private cartService: CartService,
-    private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
-    private catalogCartQuery: CatalogCartQuery,
-  ) { }
+  constructor(private movieService: MovieService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
@@ -80,30 +69,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public alignment(index: number) {
     return index % 2 === 0 ? 'start start' : 'start end';
-  }
-
-  public toggle$(movieId: string) {
-    return this.catalogCartQuery.isAddedToWishlist(movieId);
-  }
-
-  public addToWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('addedToWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
-  }
-
-  public removeFromWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('removedFromWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
   }
 
   public getBanner(movie: Movie): string {
