@@ -14,7 +14,7 @@ export function triggerNotifications(notifications: NotificationDocument[]): Pro
   return batch.commit();
 }
 
-/** Create a Notification with required and generic informations. */
+/** Create a Notification with required and generic information. */
 export function createNotification(notification: NotificationOptions): NotificationDocument {
   return {
     toUserId: '',

@@ -5,34 +5,33 @@ import { firestore } from 'firebase-admin';
 
 /** Type of Notification depending of its origin. */
 export type NotificationType =
-  'newSignature' |
-  'finalSignature' |
-  'createDocument' |
-  'deleteDocument' |
-  'updateDocument' |
-  'inviteOrganization' |
-  'removeOrganization' |
-  'pathToDocument' |
-  'organizationAcceptedByArchipelContent' |
-  'movieSubmitted' |
-  'movieAccepted' |
-  'movieTitleUpdated' |
-  'movieTitleCreated' |
-  'movieDeleted' |
-  'invitationFromUserToJoinOrgDecline' |
-  'invitationFromOrganizationToUserDecline' |
-  'memberAddedToOrg' |
-  'memberRemovedFromOrg' |
+
+  'organizationAcceptedByArchipelContent' | // ? OK
+
+  // Notifications relative to movies
+  'movieSubmitted' | // (catalog only)
+  'movieAccepted' | // TODO modify to get when it goes from draft directly to accepted
+  'movieTitleUpdated' | // TODO delete that
+  'movieTitleCreated' | // TODO delete that
+  'movieDeleted' | // TODO delete that
+
+  // Notifications relative to invitations
+  'invitationFromUserToJoinOrgDecline' | // ? OK
+  'invitationFromOrganizationToUserDecline' | // TODO delete that
+  'memberAddedToOrg' | // ? OK
+  'memberRemovedFromOrg' | // ? OK
+
+  // Notifications relative to contracts (only for catalog app)
   'newContract' |
   'contractInNegotiation' |
 
   // Events related notifications
-  'eventIsAboutToStart' |
-  'invitationToAttendEventAccepted' |
-  'invitationToAttendEventDeclined'
+  'eventIsAboutToStart' | // teh backend code is not yet ready
+  'invitationToAttendEventAccepted' | // ? OK
+  'invitationToAttendEventDeclined' // ? OK
 ;
 
-/** Minimum required informations to create a Notification. */
+/** Minimum required information to create a Notification. */
 export interface NotificationOptions {
   /** @dev Recipient of the notification */
   toUserId: string;

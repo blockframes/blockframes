@@ -4,6 +4,8 @@ import { Notification } from './notification.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Event } from '@blockframes/event/+state';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -14,12 +16,12 @@ const initialState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'notifications' })
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
-  constructor(private movieQuery: MovieQuery) {
+  constructor(private movieQuery: MovieQuery, private firestore: AngularFirestore) {
     super(initialState);
   }
 
   /**
-   * @dev On loading notification in store, we add additionnal data for display
+   * @dev On loading notification in store, we add additional data for display
    * @param notification
    */
   akitaPreAddEntity(notification: Notification): Notification {
@@ -86,6 +88,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'memberRemovedFromOrg':
         return {
+          date: toDate(notification.date),
           message: `${displayName} has been removed from ${orgName}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
@@ -119,20 +122,53 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `c/o/dashboard/titles/${notification.docId}`
         };
       case 'eventIsAboutToStart':
+
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `Your ${event.type} "${event.title}" is about to start !`
+            };
+          });
+        });
+
         return {
           message: `Your event "${notification.docId}" is about to start !`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       case 'invitationToAttendEventAccepted':
+
+      // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `${this.notificationSubject(notification)} have accepted your invitation to ${event.type} "${event.title}".`
+            };
+          });
+        });
+
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have accepted your ${notification.type}.`,
+          message: `${this.notificationSubject(notification)} have accepted your invitation to event "${notification.docId}".`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
+
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `${this.notificationSubject(notification)} have declined your invitation to ${event.type} "${event.title}".`
+            };
+          });
+        });
+
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have declined your ${notification.type}.`,
+          message: `${this.notificationSubject(notification)} have declined your invitation to event "${notification.docId}".`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       default:
@@ -157,5 +193,12 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id);
     return movie?.promotionalElements?.poster?.length[0] || createImgRef();
+  }
+
+  private getDocument<T>(path: string): Promise<T> {
+    return this.firestore
+      .doc(path)
+      .get().toPromise()
+      .then(doc => doc.data() as T);
   }
 }
