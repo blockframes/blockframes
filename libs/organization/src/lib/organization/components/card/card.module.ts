@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationCardComponent } from './card.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
@@ -15,6 +16,7 @@ import { MatCardModule } from '@angular/material/card';
   exports: [OrganizationCardComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ImageReferenceModule,
     ToLabelModule,
     OrgNameModule,

@@ -5,6 +5,7 @@ import { ListComponent } from './list.component';
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 // Material
 import { MatRippleModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { MatRippleModule } from '@angular/material/core';
     CommonModule,
     OrganizationCardModule,
     MatRippleModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: ListComponent }]),
   ]
 })

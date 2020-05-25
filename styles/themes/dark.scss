@@ -97,12 +97,12 @@ $mat-dark-bf-red: (
 
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar:      #121424,
+  app-bar:      #06081B,
   status-bar:   #121424,
   background:   #010314,
   card:         #121424,
   hover:        rgba(mat-color($mat-dark-bf-blue, 500), 0.05),
-  dialog:           #121424,
+  dialog:           #06081B,
   disabled-button:  #1C1F2E,
   raised-button:    mat-color($mat-dark-bf-blue, 500),
   focused-button:     #CFD8FF,
