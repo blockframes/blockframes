@@ -16,6 +16,7 @@ import { Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { algolia } from '@env';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'layout-dashboard',
@@ -45,7 +46,8 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private breakpointsService: BreakpointsService,
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
-    private router: Router
+    private router: Router,
+    private authQuery: AuthQuery
   ) { }
 
   ngAfterViewInit() {
