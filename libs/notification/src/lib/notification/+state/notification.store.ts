@@ -39,21 +39,21 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           date: toDate(notification.date),
-          message: 'Your organization has been accepted !',
+          message: 'Your organization was accepted by the Archipel team.',
           imgRef: notification.organization?.logo,
           placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
         };
       case 'invitationFromUserToJoinOrgDecline':
         return {
           date: toDate(notification.date),
-          message: `Your organization has refused the request from ${displayName}.`,
+          message: `${displayName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
       case 'memberAddedToOrg':
         return {
           date: toDate(notification.date),
-          message: `${displayName} has been added to ${orgName}.`,
+          message: `${displayName} is now part of your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `c/o/organization/${notification.organization.id}/view/members`
@@ -61,7 +61,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'memberRemovedFromOrg':
         return {
           date: toDate(notification.date),
-          message: `${displayName} has been removed from ${orgName}.`,
+          message: `${displayName} has been removed from your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
@@ -89,7 +89,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'movieAccepted':
         return {
           date: toDate(notification.date),
-          message: `Your movie has been accepted by Archipel Content.`,
+          message: `Your movie was accepted by the Archipel team. It will now appear in the marketplace library.`,
           placeholderUrl: this.getPoster(notification.docId).urls.xs,
           url: `c/o/dashboard/titles/${notification.docId}`
         };
@@ -100,13 +100,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `Your ${event.type} "${event.title}" is about to start !`
+              message: `REMINDER - Your ${event.type} "${event.title}" is about to start.`
             };
           });
         });
 
         return {
-          message: `Your event "${notification.docId}" is about to start !`,
+          message: `REMINDER - Your event "${notification.docId}" is about to start.`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       case 'invitationToAttendEventAccepted':
@@ -116,14 +116,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${this.notificationSubject(notification)} have accepted your invitation to ${event.type} "${event.title}".`
+              message: `${this.notificationSubject(notification)} has accepted your invitation to ${event.type} "${event.title}".`
             };
           });
         });
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have accepted your invitation to event "${notification.docId}".`,
+          message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
@@ -133,14 +133,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${this.notificationSubject(notification)} have declined your invitation to ${event.type} "${event.title}".`
+              message: `${this.notificationSubject(notification)} has declined your invitation to ${event.type} "${event.title}".`
             };
           });
         });
 
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have declined your invitation to event "${notification.docId}".`,
+          message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       default:
