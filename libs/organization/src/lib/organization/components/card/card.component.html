@@ -1,10 +1,12 @@
-<mat-card>
+<mat-card fxLayout="column" fxLayoutAlign="center center">
   <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
   <mat-card-header>
-    <mat-card-title>{{ org | orgName }}</mat-card-title>
-    <mat-card-subtitle>{{ org.activity | toLabel: 'orgActivity' | async }}</mat-card-subtitle>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <mat-card-title>{{ org | orgName }}</mat-card-title>
+      <mat-card-subtitle>{{ org.activity | toLabel: 'orgActivity' | async }}</mat-card-subtitle>
+    </div>
   </mat-card-header>
-  <mat-card-content class="org-info">
+  <mat-card-content>
     <p class="mat-caption">{{ org | orgAddress }}</p>
   </mat-card-content>
 </mat-card>

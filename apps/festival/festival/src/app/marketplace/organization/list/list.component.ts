@@ -3,7 +3,6 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-organization-list',
