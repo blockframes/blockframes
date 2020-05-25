@@ -6,7 +6,6 @@ import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Event } from '@blockframes/event/+state';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
