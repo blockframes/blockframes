@@ -27,7 +27,7 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent } from './internals/image';
+import { onFileUploadEvent, onImageDeletion } from './internals/image';
 
 /**
  * Trigger: when user creates an account.
@@ -234,4 +234,4 @@ export const onFileUpload = functions.storage.object().onFinalize(data => onFile
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete((data, ctx) => onFileDelete(data, ctx))
+export const onFileDelete = functions.storage.object().onDelete(data => onImageDeletion(data))

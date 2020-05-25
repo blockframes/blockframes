@@ -22,7 +22,6 @@ export class MediaImageComponent {
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Promotional images', 'Title information')
-    this.form.valueChanges.subscribe(console.log)
   }
 
   get promotionalElements() {

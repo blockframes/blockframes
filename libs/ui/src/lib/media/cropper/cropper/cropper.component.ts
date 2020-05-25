@@ -1,7 +1,7 @@
-import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError, startWith, tap } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -51,7 +51,7 @@ function isFile(imgRef: ImgRef): boolean {
   viewProviders: [DropZoneDirective],
   animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements OnDestroy {
+export class CropperComponent implements OnInit, OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -99,6 +99,13 @@ export class CropperComponent implements OnDestroy {
 
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
+  ngOnInit() {
+    this.sub = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      tap(value => console.log(value))
+    ).subscribe();
+  }
+
   ///////////
   // Steps //
   ///////////
@@ -128,7 +135,7 @@ export class CropperComponent implements OnDestroy {
       const blob = b64toBlob(this.croppedImage);
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(async () => {
-          this.form.get('urls').get('original').setValue(await this.ref.getDownloadURL().toPromise())
+          this.form.get('urls').get('original').setValue(await this.ref.getDownloadURL().toPromise());
           this.nextStep('upload_complete')
         })
       );
@@ -163,6 +170,6 @@ export class CropperComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.sub) this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 }

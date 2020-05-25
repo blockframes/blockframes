@@ -145,7 +145,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
         original,
       }
     }
-
+    console.log(original, value)
     const updated = set(docData, fieldToUpdate, value);
     return tx.set(doc.ref, updated);
   })
@@ -154,8 +154,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   return remove(workingDir);
 }
 
-export async function onFileDeletion(data: functions.storage.ObjectMetadata, ctx: functions.EventContext) {
-  console.log(ctx.resource.name)
+export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
 
   // Get all the needed information from the data (bucket, path, file name and directory)
   const bucket = admin.storage().bucket(data.bucket);
@@ -170,5 +169,18 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata, ctx
   if (filePathElements.length !== 5) {
     throw new Error('unhandled filePath:' + filePath);
   }
-  const [fieldToUpdate] = filePathElements;
+
+  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
+
+  // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
+  ['lg', 'md', 'xs', 'original'].filter(sizeDir => sizeDir !== uploadedSize).forEach(async (sizeDir) => {
+    const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${fileName}`;
+
+    if (await bucket.file(path).exists()) {
+      await bucket.file(path).delete();
+      return true;
+    } else {
+      throw new Error(`${path}: couldn't be found`)
+    }
+  })
 }
