@@ -1,6 +1,6 @@
 <tunnel-layout [steps]="steps$ | async" [exitRedirect]="exitRoute$ | async">
   <header fxLayout="row" fxLayoutAlign="space-between center">
-    <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+    <app-logo></app-logo>
     <button test-id="save" mat-stroked-button color="primary" (click)="save()">
       <mat-icon svgIcon="floppy" class="primary-icon"></mat-icon>
       <span>Save</span>

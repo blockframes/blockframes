@@ -1,15 +1,15 @@
 <ng-container *ngIf="versionView$ | async as version">
-  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
+  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px">
     <div class="logo-container">
-      <img asset="archipel-content-icon.svg" type="logo" alt="Archipel Content logo" />
+      <app-logo></app-logo>
     </div>
     <div fxFlex fxLayout="column">
       <span class="payment">{{ version.status | uppercase }}</span>
       <h1>Achipel Content - {{ version.titleIds.length }} titles</h1>
     </div>
-    <div fxLayout="column" fxLayoutAlign="start end" *ngIf="version.price as price" >
+    <div fxLayout="column" fxLayoutAlign="start end" *ngIf="version.price as price">
       <span class="mat-caption"> {{ version.date | date }} </span>
-      <h2>{{ price.amount | currency: price.currency }}</h2> 
+      <h2>{{ price.amount | currency: price.currency }}</h2>
     </div>
   </header>
 </ng-container>

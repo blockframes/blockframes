@@ -16,28 +16,12 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./footer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class FooterComponent implements OnInit {
-
-  public logo$: Observable<string>;
-
   public section$: Observable<'dashboard' | 'marketplace'>;
 
-  constructor(private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) { }
+  constructor(private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    // Won't work for Storybook
-    const appName$ = this.routerQuery.select('state').pipe(map(data => getAppName(data.root.data.app)));
-    // TODO 2760
-    this.logo$ = appName$.pipe(map(app => {
-      switch (app.slug) {
-        case 'catalog':
-          return 'LogoArchipelContentPrimary.svg';
-        case 'festival':
-          return 'archipel_market.png';
-      }
-    }))
-    this.section$ = this.routerQuery.select('state').pipe(
-      map(data => getAppLocation(data.url)))
+    this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
   }
 }

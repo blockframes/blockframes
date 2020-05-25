@@ -4,7 +4,7 @@ import { ContractTunnelComponent } from './contract-tunnel.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,15 +20,16 @@ import { MatDialogModule } from '@angular/material/dialog';
     ContractTunnelRoutingModule,
     TunnelLayoutModule,
     FlexLayoutModule,
-    ImgAssetModule,
+    AppLogoModule,
+
     // Material
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
     MatDividerModule,
     MatListModule,
-    MatDialogModule,
+    MatDialogModule
   ],
-  declarations: [ContractTunnelComponent],
+  declarations: [ContractTunnelComponent]
 })
 export class ContractTunnelModule {}
