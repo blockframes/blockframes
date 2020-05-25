@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery } from '@blockframes/invitation/+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'festival-invitation',
