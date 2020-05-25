@@ -41,7 +41,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           date: toDate(notification.date),
           message: 'Your organization was accepted by the Archipel team.',
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
+          placeholderUrl: 'empty_organization.webp',
           url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'invitationFromUserToJoinOrgDecline':
@@ -86,14 +86,16 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `A new movie has been submitted`,
-          placeholderUrl: this.getPoster(notification.docId).urls.xs,
+          imgRef: this.getPoster(notification.docId).urls.xs,
+          placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/titles/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
         return {
           date: toDate(notification.date),
           message: `Your movie was accepted by the Archipel team. It will now appear in the marketplace library.`,
-          placeholderUrl: this.getPoster(notification.docId).urls.xs,
+          imgRef: this.getPoster(notification.docId).urls.xs,
+          placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/details`,
         };
       case 'eventIsAboutToStart':
@@ -127,6 +129,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.webp',
           url: `/c/o/dashboard/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
@@ -144,6 +148,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
+          imgRef: notification.user.avatar,
+          placeholderUrl: 'profil_user.webp',
           url: `/c/o/dashboard/event/${notification.docId}`
         };
       default:
