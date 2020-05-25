@@ -170,5 +170,5 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata, ctx
   if (filePathElements.length !== 5) {
     throw new Error('unhandled filePath:' + filePath);
   }
-
+  const [fieldToUpdate] = filePathElements;
 }
