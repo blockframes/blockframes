@@ -33,8 +33,6 @@ export class TitleComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  //filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival
-
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
