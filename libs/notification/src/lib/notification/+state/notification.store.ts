@@ -6,6 +6,7 @@ import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Event } from '@blockframes/event/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -34,21 +35,22 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   public formatNotification(notification: Notification) {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
     const orgName = notification.organization?.denomination.full;
-    const movieTitle = notification.movie?.title.international;
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
           date: toDate(notification.date),
           message: 'Your organization was accepted by the Archipel team.',
           imgRef: notification.organization?.logo,
-          placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
+          placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
+          url: `/c/o/organization/${notification.organization.id}/view/org`,
         };
       case 'invitationFromUserToJoinOrgDecline':
         return {
           date: toDate(notification.date),
           message: `${displayName}'s request to join your organization was refused.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'memberAddedToOrg':
         return {
@@ -56,42 +58,43 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${displayName} is now part of your organization.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `c/o/organization/${notification.organization.id}/view/members`
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'memberRemovedFromOrg':
         return {
           date: toDate(notification.date),
           message: `${displayName} has been removed from your organization.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'newContract':
         return {
           date: toDate(notification.date),
           message: `${orgName} submitted a contract.`,
           placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
-          url: `c/o/dashboard/deals/${notification.docId}`
+          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'contractInNegotiation':
         return {
           date: toDate(notification.date),
           message: `A new offer has been created.`,
           placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
-          url: `c/o/dashboard/deals/${notification.docId}`
+          url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':
         return {
           date: toDate(notification.date),
           message: `A new movie has been submitted`,
           placeholderUrl: this.getPoster(notification.docId).urls.xs,
-          url: `c/o/dashboard/titles/${notification.docId}`
+          url: `/c/o/dashboard/titles/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
         return {
           date: toDate(notification.date),
           message: `Your movie was accepted by the Archipel team. It will now appear in the marketplace library.`,
           placeholderUrl: this.getPoster(notification.docId).urls.xs,
-          url: `c/o/dashboard/titles/${notification.docId}`
+          url: `/c/o/dashboard/title/${notification.docId}/details`,
         };
       case 'eventIsAboutToStart':
 
@@ -107,7 +110,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
         return {
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
-          url: `c/o/marketplace/event/${notification.docId}`
+          url: `/c/o/marketplace/event/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'invitationToAttendEventAccepted':
 
@@ -124,7 +127,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
-          url: `c/o/marketplace/event/${notification.docId}`
+          url: `/c/o/dashboard/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
 
@@ -141,7 +144,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
-          url: `c/o/marketplace/event/${notification.docId}`
+          url: `/c/o/dashboard/event/${notification.docId}`
         };
       default:
         return {
