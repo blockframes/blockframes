@@ -6,29 +6,25 @@ import { firestore } from 'firebase-admin';
 /** Type of Notification depending of its origin. */
 export type NotificationType =
 
-  'organizationAcceptedByArchipelContent' | // ? OK
+  'organizationAcceptedByArchipelContent' |
 
   // Notifications relative to movies
   'movieSubmitted' | // (catalog only)
   'movieAccepted' | // TODO modify to get when it goes from draft directly to accepted
-  'movieTitleUpdated' | // TODO delete that
-  'movieTitleCreated' | // TODO delete that
-  'movieDeleted' | // TODO delete that
 
   // Notifications relative to invitations
-  'invitationFromUserToJoinOrgDecline' | // ? OK
-  'invitationFromOrganizationToUserDecline' | // TODO delete that
-  'memberAddedToOrg' | // ? OK
-  'memberRemovedFromOrg' | // ? OK
+  'invitationFromUserToJoinOrgDecline' |
+  'memberAddedToOrg' |
+  'memberRemovedFromOrg' |
 
   // Notifications relative to contracts (only for catalog app)
   'newContract' |
   'contractInNegotiation' |
 
   // Events related notifications
-  'eventIsAboutToStart' | // teh backend code is not yet ready
-  'invitationToAttendEventAccepted' | // ? OK
-  'invitationToAttendEventDeclined' // ? OK
+  'eventIsAboutToStart' | // TODO the backend code is not yet ready
+  'invitationToAttendEventAccepted' |
+  'invitationToAttendEventDeclined'
 ;
 
 /** Minimum required information to create a Notification. */

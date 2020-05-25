@@ -43,34 +43,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           imgRef: notification.organization?.logo,
           placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
         };
-      case 'movieTitleUpdated':
-        return {
-          date: toDate(notification.date),
-          message: `${displayName} edited ${movieTitle}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: Icon/Image is wrong here. Use correct illustration for notifications => ISSUE#2262
-        };
-      case 'movieTitleCreated':
-        return {
-          date: toDate(notification.date),
-          message: `${displayName} created ${movieTitle ? movieTitle : 'a new title'}.`,
-          imgRef: notification.user?.avatar,
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
-        };
-      case 'movieDeleted':
-        return {
-          date: toDate(notification.date),
-          message: `${displayName} deleted ${movieTitle}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
-        };
-      case 'invitationFromOrganizationToUserDecline':
-        return {
-          date: toDate(notification.date),
-          message: `${displayName} has declined your organization's invitation.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
-        };
       case 'invitationFromUserToJoinOrgDecline':
         return {
           date: toDate(notification.date),
