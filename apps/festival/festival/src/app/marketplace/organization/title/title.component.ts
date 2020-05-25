@@ -15,7 +15,8 @@ import { scaleIn } from '@blockframes/utils/animations/fade';
 export class TitleComponent implements OnInit, OnDestroy {
   @HostBinding('@scaleIn') private animePage;
   private sub: Subscription;
-  public titles$ = this.query.selectAll();
+  // Todo Try to filter movie before sync with the store
+  public titles$ = this.query.selectAll({filterBy: movies => movies.main.storeConfig.status === 'accepted' && movies.main.storeConfig.appAccess.festival});
 
   constructor(
     private service: MovieService,
@@ -31,6 +32,8 @@ export class TitleComponent implements OnInit, OnDestroy {
       switchMap(movieIds => this.service.syncManyDocs(movieIds))
     ).subscribe();
   }
+
+  //filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival
 
   ngOnDestroy() {
     this.sub.unsubscribe();
