@@ -4,7 +4,7 @@ import { TunnelTechnicalInfoPage, TunnelMainPage } from "../../support/pages/das
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 
-const NAVIGATION = ['Media', 'Technical Info.'];
+const NAVIGATION = ['Media', 'Technical Information'];
 
 const FORMATS = ['1.66', 'SD', 'Color', 'Dolby SR'];
 const PARTIAL_LANGUAGE = 'en';
