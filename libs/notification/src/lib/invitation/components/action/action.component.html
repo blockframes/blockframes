@@ -1,13 +1,22 @@
 <!-- Has pending invitation -->
 <ng-container *ngIf="invitation; else noInvitation">
-  <button mat-button test-id="invitation-accept" [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="accept(invitation)">
-    <mat-icon svgIcon="check_circle"></mat-icon>
-    <span>Accept Invitation</span>
-  </button>
-  <button mat-button test-id="invitation-refuse" [color]="invitation.status !== 'accepted' ? 'primary' : ''" (click)="decline(invitation)">
-    <mat-icon svgIcon="close"></mat-icon>
-    <span>Decline Invitation</span>
-  </button>
+  <ng-container *ngIf="invitation.status === 'pending' && !isFromUser else displayStatus">
+    <button mat-button test-id="invitation-accept" [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="accept(invitation)">
+      <mat-icon svgIcon="check_circle"></mat-icon>
+      <span>Accept Invitation</span>
+    </button>
+    <button mat-button test-id="invitation-refuse" [color]="invitation.status !== 'accepted' ? 'warn' : ''" (click)="decline(invitation)">
+      <mat-icon svgIcon="close"></mat-icon>
+      <span>Decline Invitation</span>
+    </button>
+  </ng-container>
+  <ng-template #displayStatus>
+    <div [ngSwitch]="invitation.status">
+      <p *ngSwitchCase="'accepted'">Accepted</p>
+      <p *ngSwitchCase="'declined'">Declined</p>
+      <p *ngSwitchCase="'pending'">Pending</p>
+    </div>
+  </ng-template>
 </ng-container>
 
 <ng-template #noInvitation>
