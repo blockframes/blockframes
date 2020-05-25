@@ -234,4 +234,4 @@ export const onFileUpload = functions.storage.object().onFinalize(data => onFile
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onFileDelete(data))
+export const onFileDelete = functions.storage.object().onDelete((data, ctx) => onFileDelete(data, ctx))

@@ -5,9 +5,9 @@ import { finalize, catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { ImgRef } from '@blockframes/utils/media';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRefForm } from '../../image-reference/image-reference.form';
+import { ImgRef } from '@blockframes/utils/media/media.model';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 

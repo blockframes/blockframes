@@ -4,7 +4,7 @@ import { join, dirname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import {get, set} from 'lodash';
+import { get, set } from 'lodash';
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
 
 /**
@@ -129,11 +129,11 @@ async function resize(data: functions.storage.ObjectMetadata) {
       throw new Error('Data is undefined');
     }
 
-    const  original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
+    const original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
 
     // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
     const uploadedUrl: Record<string, string> = {}
-    for (const { key, url } of  uploaded) {
+    for (const { key, url } of uploaded) {
       uploadedUrl[key] = url;
     }
 
@@ -154,6 +154,21 @@ async function resize(data: functions.storage.ObjectMetadata) {
   return remove(workingDir);
 }
 
-export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
-  
+export async function onFileDeletion(data: functions.storage.ObjectMetadata, ctx: functions.EventContext) {
+  console.log(ctx.resource.name)
+
+  // Get all the needed information from the data (bucket, path, file name and directory)
+  const bucket = admin.storage().bucket(data.bucket);
+  const filePath = data.name;
+
+  if (filePath === undefined) {
+    throw new Error('undefined data.name!');
+  }
+
+  const filePathElements = filePath.split('/')
+
+  if (filePathElements.length !== 5) {
+    throw new Error('unhandled filePath:' + filePath);
+  }
+
 }
