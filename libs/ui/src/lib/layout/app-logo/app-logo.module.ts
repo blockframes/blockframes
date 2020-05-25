@@ -4,10 +4,9 @@ import { AppLogoComponent } from './app-logo.component';
 
 // Blockframes
 import { ImgAssetModule } from '../../theme';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
-  imports: [ImgAssetModule, ImageReferenceModule, CommonModule],
+  imports: [ImgAssetModule, CommonModule],
   exports: [AppLogoComponent],
   declarations: [AppLogoComponent]
 })
