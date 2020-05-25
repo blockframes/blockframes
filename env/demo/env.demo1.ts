@@ -22,12 +22,14 @@ export const appUrlContent = 'https://demo1.archipelcontent.com';
 export const appUrlMarket = 'https://demo1.archipelmarket.com';
 
 export const firebase = {
-  apiKey: 'AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM',
-  authDomain: 'blockframes-demo-1.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-1.firebaseio.com',
-  projectId: 'blockframes-demo-1',
-  storageBucket: 'blockframes-demo-1.appspot.com',
-  messagingSenderId: '11685432883'
+  apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
+  authDomain: "blockframes-demo-1.firebaseapp.com",
+  databaseURL: "https://blockframes-demo-1.firebaseio.com",
+  projectId: "blockframes-demo-1",
+  storageBucket: "blockframes-demo-1.appspot.com",
+  messagingSenderId: "11685432883",
+  appId: "1:11685432883:web:bedc809872148fcde49d46",
+  measurementId: "G-ZQHCHN67GF"
 };
 
 // Algolia
@@ -81,7 +83,7 @@ export const templateIds = {
   // At this step, we can not use links into emails
   welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
 
-  // Template for sending the verify email 
+  // Template for sending the verify email
   // Internal to firebase, no link needed here
   userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
 
@@ -102,7 +104,8 @@ export const templateIds = {
   wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
   invitationToMeetingFromUser: 'd-b40ccbd91c2f4d6599be56ab1f8e6631',
   invitationToScreeningFromOrg: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e'
+  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e',
+  newAppAccessForOrg: 'd-274b8b8370b44dc2984273d28970a06d'
 }
 
 // Yandex Metrika Id
@@ -137,7 +140,7 @@ export const quorum = {
 
 // BigQuery
 // ========
-export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.events_';
 
 // Archipel Content OrgId
 // ======================
