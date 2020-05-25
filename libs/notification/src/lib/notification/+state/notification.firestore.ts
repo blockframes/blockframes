@@ -10,7 +10,7 @@ export type NotificationType =
 
   // Notifications relative to movies
   'movieSubmitted' | // (catalog only)
-  'movieAccepted' | // TODO modify to get when it goes from draft directly to accepted
+  'movieAccepted' |
 
   // Notifications relative to invitations
   'invitationFromUserToJoinOrgDecline' |

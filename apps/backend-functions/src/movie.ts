@@ -122,8 +122,20 @@ function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConf
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
+
+  // in catalog `draft` -> `submitted` -> `accepted`
+  // in festival `draft` -> `accepted`
+
   return (
-    (beforeStore && beforeStore.status === 'submitted') &&
-    (afterStore && afterStore.status === 'accepted')
+    // catalog
+    (
+      (beforeStore && beforeStore.status === 'submitted') &&
+      (afterStore && afterStore.status === 'accepted')
+    ) ||
+    // festival
+    (
+      (beforeStore && beforeStore.status === 'draft') &&
+      (afterStore && afterStore.status === 'accepted')
+    )
   )
 }
