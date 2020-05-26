@@ -16,6 +16,10 @@ export async function upgradeAlgoliaOrgs() {
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config = {
     searchableAttributes: [ 'name' ],
+    attributesForFaceting: [
+      'appAccess',
+      'appSide',
+    ],
   };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
@@ -24,8 +28,8 @@ export async function upgradeAlgoliaOrgs() {
   const orgs = await db.collection('orgs').get();
 
   const promises = orgs.docs.map(async org => {
-    const { id, denomination } = org.data();
-    return storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']);
+    const orgData = org.data() as OrganizationDocument;
+    return storeSearchableOrg(orgData, process.env['ALGOLIA_API_KEY']);
   });
 
   await Promise.all(promises);

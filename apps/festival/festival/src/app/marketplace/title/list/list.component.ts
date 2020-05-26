@@ -4,8 +4,8 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
-import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { Subscription, Observable, combineLatest } from 'rxjs';
+import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm } from '@blockframes/movie/form/search.form';
 import { map, distinctUntilChanged, debounceTime, filter, switchMap, pluck, startWith } from 'rxjs/operators';
@@ -22,10 +22,10 @@ import { algolia } from '@env';
 export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  public movieSearchResults$: Observable<any>;
+  public movieSearchResults$: Observable<Movie[]>;
 
   public sortByControl: FormControl = new FormControl('Title');
-  public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
+  public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
 
   public filterForm = new MovieSearchForm();
 
@@ -42,7 +42,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.filterForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
     this.filterForm.appAccess.add('festival');
-    this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
+    this.movieSearchResults$ = combineLatest([this.sortByControl.valueChanges.pipe(startWith('Title')), this.filterForm.valueChanges]).pipe(
       debounceTime(300),
       filter(() => !this.filterForm.isEmpty()),
       distinctUntilChanged(),

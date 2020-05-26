@@ -8,6 +8,7 @@ header {
 
   h1 {
     text-align: center;
+    font-size: 3em;
   }
   section {
     .search {
@@ -22,7 +23,7 @@ section {
 
 aside {
   position: sticky;
-  top: calc(var(--toolbarHeight) + 20px);
+  top: calc(var(--toolbarHeight) - 64px);
   mat-card {
     width: 380px;
     max-height: calc(100vh - var(--toolbarHeight) - 40px);

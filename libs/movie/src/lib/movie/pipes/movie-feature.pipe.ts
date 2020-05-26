@@ -9,10 +9,19 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 export class MovieFeaturePipe implements PipeTransform {
   transform(value: Movie): string {
     const { workType, totalRunTime, genres, originalLanguages, productionYear } = value.main;
+
+    let displayedGenres = '';
+    if (genres.length > 0) displayedGenres += getLabelBySlug('GENRES', genres[0]);
+    if (genres.length > 1) displayedGenres += ', ...';
+
+    let displayedLanguages = '';
+    if (originalLanguages.length > 0) displayedLanguages += getLabelBySlug('LANGUAGES', originalLanguages[0]);
+    if (originalLanguages.length > 1) displayedLanguages += ', ...';
+
     return [
       workType ? workType[workType] : '',
-      genres.length ? (getLabelBySlug('GENRES', genres[0]) + '...') : '',
-      originalLanguages.length ? (getLabelBySlug('LANGUAGES', originalLanguages[0]) + '...') : '',
+      displayedGenres,
+      displayedLanguages,
       productionYear,
       totalRunTime ? `${totalRunTime}'` : ''
     ].filter(v => !!v).join(' | ');

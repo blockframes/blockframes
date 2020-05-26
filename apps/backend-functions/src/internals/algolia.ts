@@ -1,6 +1,6 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
-import { MovieDocument, PublicUser } from '../data/types';
+import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 
@@ -39,13 +39,27 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(orgId: string, name: string, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
 
-  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject({ objectID: orgId, name });
+  const appAccess: string[] = [];
+  const appSide: string[] = [];
+
+  if (org.appAccess.catalog.dashboard || org.appAccess.catalog.marketplace) appAccess.push('catalog');
+  if (org.appAccess.festival.dashboard || org.appAccess.festival.marketplace) appAccess.push('festival');
+
+  if (org.appAccess.catalog.dashboard || org.appAccess.festival.dashboard) appSide.push('dashboard');
+  if (org.appAccess.catalog.marketplace || org.appAccess.festival.marketplace) appSide.push('marketplace');
+
+  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject({
+    objectID: org.id,
+    name: org.denomination.public || org.denomination.full,
+    appAccess,
+    appSide,
+  });
 }
 
 // ------------------------------------
