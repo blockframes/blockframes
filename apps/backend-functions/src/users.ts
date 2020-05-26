@@ -36,9 +36,14 @@ export const startAccountCreationEmailFlow = async (data: any) => {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
   }
 
-  const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  const template = accountCreationEmail(email, verifyLink, firstName);
-  await sendMailFromTemplate(template, from);
+  try {
+    const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+    const template = accountCreationEmail(email, verifyLink, firstName);
+    await sendMailFromTemplate(template, from);
+  } catch (e) {
+    throw new Error(`There was an error while sending account creation email : ${e.message}`);
+  }
+
 };
 
 export const startResetPasswordEmail = async (data: any) => {
@@ -49,9 +54,14 @@ export const startResetPasswordEmail = async (data: any) => {
     throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
   }
 
-  const resetLink = await admin.auth().generatePasswordResetLink(email);
-  const template = userResetPassword(email, resetLink);
-  await sendMailFromTemplate(template, from);
+  try {
+    const resetLink = await admin.auth().generatePasswordResetLink(email);
+    const template = userResetPassword(email, resetLink);
+    await sendMailFromTemplate(template, from);
+  } catch (e) {
+    throw new Error(`There was an error while sending reset password email : ${e.message}`);
+  }
+
 };
 
 export const onUserCreate = async (user: UserRecord) => {

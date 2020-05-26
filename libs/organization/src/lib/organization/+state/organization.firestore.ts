@@ -147,3 +147,7 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
     ...params
   }
 }
+
+export function orgName(org: OrganizationBase<Timestamp | Date>){
+  return org.denomination.public || org.denomination.full
+}

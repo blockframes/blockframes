@@ -16,7 +16,7 @@ import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvide
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, Module, getAppName } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getOrgAppSlug, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -204,8 +204,8 @@ export const accessToAppChanged = async (
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const from = await getFromEmail(orgId);
-  const appSlug = await getOrgAppSlug(orgId);
-  const appName = getAppName(appSlug)
+  const appKey = await getOrgAppKey(orgId);
+  const appName = getAppName(appKey)
   const appUrl = await getAppUrl(orgId);
   
   await Promise.all(admins.map(admin => {

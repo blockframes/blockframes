@@ -88,10 +88,15 @@ export const templateIds = {
 
     // Templates for informing new user that his account have been created
     credentials: {
-      content: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-      market: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
-      event: 'd-ce3e57248a694cefacad49bc4c820078',
-    }
+      attendEvent: {
+        catalog: 'd-ce3e57248a694cefacad49bc4c820078',
+        festival: 'd-ce3e57248a694cefacad49bc4c820078',
+      },
+      joinOrganization: {
+        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
+      }
+    },
   },
   // Templates for the org management flow
   org: {

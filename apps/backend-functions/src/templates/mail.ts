@@ -51,7 +51,7 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
  * @param pageURL
  * @param templateId
  */
-export function userInvite(email: string, password: string, orgName: string, pageURL: string = appUrlContent, templateId: string = templateIds.user.credentials.content): EmailTemplateRequest {
+export function userInvite(email: string, password: string, orgName: string, pageURL: string = appUrlContent, templateId: string = templateIds.user.credentials.joinOrganization.catalog): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
@@ -78,7 +78,7 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
-export function organizationAppAccessChanged(admin: PublicUser, appLabel: String, appUrl: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, appLabel: string, appUrl: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
     appName: appLabel,
@@ -116,7 +116,7 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, a
 }
 
 /** Generates an email for user invited by an organization to an event. */
-export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenomination: string, appLabel: String, eventId: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
+export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenomination: string, appLabel: string, eventId: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
@@ -128,7 +128,7 @@ export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenominat
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, appLabel: String, recipient: EmailRecipient, eventTitle: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, appLabel: string, recipient: EmailRecipient, eventTitle: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     adminFirstName: recipient.name,
     userFirstName: fromUserFirstname,

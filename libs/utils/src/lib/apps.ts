@@ -27,6 +27,11 @@ export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
 
+export const sendgridUrl: Record<App, string> = {
+  festival: appUrlMarket,
+  catalog: appUrlContent
+}
+
 export function getCurrentApp(routerQuery: any): App {
   return routerQuery.getValue().state?.root.data.app;
 }
@@ -82,20 +87,6 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
   return a === 'festival' ? 'accepted' : 'submitted';
-}
-
-/**
- * Returns the domain that should be used in emails depending on the current app
- * @param a 
- */
-export function getSendgridUrl(a?: App): string {
-  switch (a) {
-    case 'festival':
-      return appUrlMarket;
-    case 'catalog':
-    default:
-      return appUrlContent;
-  }
 }
 
 /**

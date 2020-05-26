@@ -9,7 +9,7 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { App, getOrgAppAccess, getSendgridFrom, getSendgridUrl } from '@blockframes/utils/apps';
+import { App, getOrgAppAccess, getSendgridFrom, app, sendgridUrl } from '@blockframes/utils/apps';
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 export function getCollection<T>(path: string): Promise<T[]> {
@@ -97,7 +97,7 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
  * Return the first app name that an org have access to
  * @param _org 
  */
-export async function getOrgAppSlug(_org: OrganizationDocument | string): Promise<App> {
+export async function getOrgAppKey(_org: OrganizationDocument | string): Promise<App> {
   if (typeof _org === 'string') {
     const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
     return getOrgAppAccess(org)[0];
@@ -111,8 +111,8 @@ export async function getOrgAppSlug(_org: OrganizationDocument | string): Promis
  * @param _org 
  */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
-  const slug = await getOrgAppSlug(_org);
-  return getSendgridUrl(slug);
+  const key = await getOrgAppKey(_org);
+  return sendgridUrl[key];
 }
 
 /**
@@ -120,7 +120,15 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
  * @param _org 
  */
 export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
-  const slug = await getOrgAppSlug(_org);
-  return getSendgridFrom(slug);
+  const key = await getOrgAppKey(_org);
+  return getSendgridFrom(key);
+}
+
+/**
+ * This check if org have access to marketplace in at least one app
+ * @param org 
+ */
+export function canAccessMarketplace(org: OrganizationDocument): boolean {
+  return app.some(a => org.appAccess[a]?.marketplace);
 }
 

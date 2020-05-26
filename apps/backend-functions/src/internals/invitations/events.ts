@@ -3,16 +3,17 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument } from "../../data/internals";
+import { getAdminIds, getDocument, canAccessMarketplace } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails";
-import { getAppName, getSendgridUrl, getSendgridFrom, App } from "@blockframes/utils/apps";
+import { getAppName, getSendgridFrom, App, sendgridUrl } from "@blockframes/utils/apps";
+import { orgName } from "@blockframes/organization/+state/organization.firestore";
 
 
 function getEventLink(org: OrganizationDocument) {
-  if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
+  if (canAccessMarketplace(org)) {
     return '/c/o/marketplace/invitations';
   } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
     return '/c/o/dashboard/invitations';
@@ -71,7 +72,7 @@ async function onInvitationToAnEventCreate({
   }
 
   // @TODO (#2848) forcing to festival since invitations to events are only on this one
-  const appSlug: App = 'festival';
+  const appKey: App = 'festival';
 
   if (!!fromOrg) {
     /**
@@ -80,11 +81,11 @@ async function onInvitationToAnEventCreate({
      * will already get the invitation displayed on front end.
      */
     const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
-    const senderName = org.denomination.public || org.denomination.full;
+    const senderName = orgName(org);
     const link = getEventLink(org);
-    const urlToUse = getSendgridUrl(appSlug);
-    const appName = getAppName(appSlug);
-    const from = getSendgridFrom(appSlug);
+    const urlToUse = sendgridUrl[appKey];
+    const appName = getAppName(appKey);
+    const from = getSendgridFrom(appKey);
 
     switch (mode) {
       case 'invitation':
@@ -105,9 +106,9 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
-    const urlToUse = getSendgridUrl(appSlug);
-    const appName = getAppName(appSlug);
-    const from = getSendgridFrom(appSlug);
+    const urlToUse = sendgridUrl[appKey];
+    const appName = getAppName(appKey);
+    const from = getSendgridFrom(appKey);
 
     switch (mode) {
       case 'invitation':
@@ -116,7 +117,7 @@ async function onInvitationToAnEventCreate({
       default:
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.public || org.denomination.full, appName.label, recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, from);
         }))
     }
