@@ -20,26 +20,27 @@
     </div>
   </ng-template>
 
-  <header fxLayout="row" fxLayoutAlign="start start" @fade>
+  <header fxLayout="row" fxLayoutAlign="start start" @fade class="dark-contrast-theme">
     <a mat-icon-button routerLink="..">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+    <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="organization logo" />
     <article fxLayout="column" fxLayoutAlign="start start">
       <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
-      <h1>{{ org.denomination.full }}</h1>
+      <span class="mat-display-2">{{ org.denomination.full }}</span>
       <h2>
         {{ org.addresses.main.street | titlecase }}
         <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
         {{ org.addresses.main.zipCode | titlecase }}
         <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
         {{ org.addresses.main.city | titlecase }}
+        <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
+        {{ org.addresses.main.country | titlecase }}
       </h2>
-      <p>{{ org.description }}</p>
+      <p class="mat-body-2">{{ org.description }}</p>
       <ng-container *ngIf="org.email">
         <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
           <span>Get in touch</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>
       </ng-container>
     </article>

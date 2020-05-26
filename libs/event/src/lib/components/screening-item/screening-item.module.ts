@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -15,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   exports: [ScreeningItemComponent],
   imports: [
     CommonModule,
+    RouterModule,
     FlexLayoutModule,
     ImageReferenceModule,
     EventRangeModule,
