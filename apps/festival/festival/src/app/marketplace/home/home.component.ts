@@ -1,6 +1,11 @@
+// Angular
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+
+// Blockframes
 import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/+state';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+
+// RxJs
 import { Observable, Subscription } from 'rxjs';
 
 interface CarouselSection {
@@ -9,7 +14,6 @@ interface CarouselSection {
   hasMovies$: Observable<boolean>;
   movies$: Observable<Movie[]>;
 }
-
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -22,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
   public sections: CarouselSection[];
+  public movies$ = this.movieQuery.selectAll();
 
   constructor(private movieService: MovieService, private movieQuery: MovieQuery) {}
 

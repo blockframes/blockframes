@@ -1,0 +1,11 @@
+<div fxLayout="column" class="overlay">
+    <h4 *ngIf="movieView.directors">{{ movieView.directors | displayName }}</h4>
+    <h1 class="mat-display-2" *ngIf="movieView.titles.international">{{ movieView.titles.international }}</h1>
+    <h2 *ngIf="movieView.titles.original">{{ movieView.titles.original }}</h2>
+    <movie-title-features [movie]="title"></movie-title-features>
+    <ng-content select="movie-slide-cta"></ng-content>
+    <p *ngIf="movieView.synopsis">
+        {{ movieView.synopsis | maxLength: 332}}
+    </p>
+    <ng-content select="movie-slide-actions"></ng-content>
+</div>

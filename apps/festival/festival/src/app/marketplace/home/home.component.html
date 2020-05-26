@@ -1,12 +1,13 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-<!--   <bf-slider>
-    <bf-slide *ngFor="let movie of movies$ | async">
-      <movie-slide>
-        
+<bf-slider hideIndicators loop  loop hideIndicators class="dark-contrast-theme">
+    <bf-slide *ngFor="let movie of movies$ | async"  overlayColor="gradient">
+      <movie-slide [movie]="movie">
+        <movie-slide-cta>CTA</movie-slide-cta>
+        <movie-slide-actions>cool</movie-slide-actions>
       </movie-slide>
     </bf-slide>
-  </bf-slider> -->
+  </bf-slider>
 
   <section fxLayout="column" fxLayoutAlign="start center">
     <ng-container *ngFor="let section of sections; let i = index">

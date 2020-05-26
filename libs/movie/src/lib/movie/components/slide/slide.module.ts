@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { MovieSliderComponent, MovieSliderActions, MovieSliderCTA } from './slider.component';
+import { MovieSlideComponent, MovieSlideActions, MovieSlideCTA } from './slide.component';
 
 // Blockframes
-import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
@@ -17,12 +16,11 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
         FlexLayoutModule,
 
         // Blockframes
-        SliderModule,
         MovieTitleFeaturesModule,
         DisplayNameModule,
         MaxLengthModule
     ],
-    declarations: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA],
-    exports: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA]
+    declarations: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA],
+    exports: [MovieSlideComponent, MovieSlideActions, MovieSlideCTA]
 })
-export class MovieSliderModule { }
+export class MovieSlideModule { }
