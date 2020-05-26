@@ -62,7 +62,7 @@
             <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="Select new picture"></mat-icon>
           </button>
         </ng-container>
-        <ng-container *ngIf="useCopyToClipboard">
+        <ng-container>
           <button mat-mini-fab color="accent" *ngIf="(previewUrl | async) as url">
             <mat-icon [cdkCopyToClipboard]="url" svgIcon="archive" matTooltip="Copy to clipboard"></mat-icon>
           </button>

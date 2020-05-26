@@ -95,7 +95,6 @@ export class CropperComponent implements OnDestroy {
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
-  @Input() useCopyToClipboard?= true;
 
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
@@ -126,9 +125,11 @@ export class CropperComponent implements OnDestroy {
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
       this.ref = this.storage.ref(`${this.storagePath}/original/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
+
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(async () => {
-          this.form.get('urls').get('original').setValue(await this.ref.getDownloadURL().toPromise());
+          const url = await this.ref.getDownloadURL().toPromise();
+          this.form.get('urls').get('original').setValue(url)
           this.nextStep('upload_complete')
         })
       );
@@ -143,11 +144,12 @@ export class CropperComponent implements OnDestroy {
   }
 
   delete() {
-    this.sub.add(this.previewUrl.subscribe(path => {
+    const deleteImage$ = this.previewUrl.subscribe(path => {
       this.storage.storage.refFromURL(path).delete();
       this.form.reset();
       this.nextStep('drop');
-    }));
+    });
+    this.sub.add(deleteImage$);
   }
 
   nextStep(name: CropStep) {

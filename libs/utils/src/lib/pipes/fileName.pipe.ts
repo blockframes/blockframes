@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FileNamePipe implements PipeTransform {
   transform(ref: string) {
     const arrayedRef = ref.split('/')
-    return arrayedRef[arrayedRef.length - 1];
+    return arrayedRef.pop();
   }
 }
 

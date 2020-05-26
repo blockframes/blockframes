@@ -6,6 +6,7 @@ import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import { get, set } from 'lodash';
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { imgSizeDirectory } from '@blockframes/utils/media/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -171,10 +172,10 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
   }
 
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
-  ['lg', 'md', 'xs', 'original'].forEach(async (sizeDir) => {
+  imgSizeDirectory.forEach(async (sizeDir) => {
     const path = `${filePathElements[0]}/${filePathElements[1]}/${filePathElements[2]}/${sizeDir}/${filePathElements[4]}`;
-
-    if (await bucket.file(path).exists()) {
+    const exists = await bucket.file(path).exists();
+    if (exists) {
       await bucket.file(path).delete();
       return true;
     } else {

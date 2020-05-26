@@ -7,9 +7,9 @@
       </a>
     </ng-container>
     <ng-template #banner>
-      <a [href]="promotionalElements.get('banner').get('media').get('urls').get('lg').value" target="_blank">
-        {{ promotionalElements.get('banner').get('media').get('ref').value | fileName }}
-      </a>
+      <ng-container *ngIf="promotionalElements.get('banner.media').value as bannerValue">
+        <a [href]="bannerValue.urls.lg" target="_blank">{{ bannerValue.media.ref | fileName }}</a>
+      </ng-container>
     </ng-template>
   </li>
   <li>
