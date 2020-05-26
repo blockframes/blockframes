@@ -170,11 +170,9 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
     throw new Error('unhandled filePath:' + filePath);
   }
 
-  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
-
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
-  ['lg', 'md', 'xs', 'original'].filter(sizeDir => sizeDir !== uploadedSize).forEach(async (sizeDir) => {
-    const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${fileName}`;
+  ['lg', 'md', 'xs', 'original'].forEach(async (sizeDir) => {
+    const path = `${filePathElements[0]}/${filePathElements[1]}/${filePathElements[2]}/${sizeDir}/${filePathElements[4]}`;
 
     if (await bucket.file(path).exists()) {
       await bucket.file(path).delete();
