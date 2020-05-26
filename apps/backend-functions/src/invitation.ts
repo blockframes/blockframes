@@ -8,6 +8,7 @@ import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.fire
 import { getOrCreateUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
+import { App } from '@blockframes/utils/apps';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -88,11 +89,10 @@ export async function onInvitationWrite(
   }
 }
 
-
-
 interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<any>>;
+  app?: App;
 }
 
 /**
@@ -109,7 +109,7 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation({ ...data.invitation });
     for (const email of data.emails) {
-      getOrCreateUserByMail(email, user.orgId, invitation.type)
+      getOrCreateUserByMail(email, user.orgId, invitation.type, data.app)
         .then(u => createPublicUser(u))
         .then(toUser => { invitation.toUser = toUser })
         .then(_ => db.collection('invitations').add(invitation))

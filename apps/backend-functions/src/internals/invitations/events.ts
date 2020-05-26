@@ -1,14 +1,14 @@
 import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, OrganizationDocument } from "../../data/types";
+import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument, getFromEmail, getAppUrl, getOrgAppSlug } from "../../data/internals";
+import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails";
-import { getAppName } from "@blockframes/utils/apps";
+import { getAppName, getSendgridUrl, getSendgridFrom, App } from "@blockframes/utils/apps";
 
 
 function getEventLink(org: OrganizationDocument) {
@@ -52,6 +52,15 @@ async function onInvitationToAnEventCreate({
   // Retreive notification recipient
   const recipients: EmailRecipient[] = [];
   if (!!toUser) {
+    /**
+     * @dev We wants to send this email only if user have an orgId. If not, this means that he already received an
+     * email inviting him along with his credentials.
+    */
+    const user = await getDocument<PublicUser>(`users/${toUser.uid}`);
+    if (!user.orgId) {
+      console.log('Invitation have already been sent along with user credentials');
+      return;
+    }
     recipients.push({ email: toUser.email, name: toUser.firstName });
   } else if (!!toOrg) {
     const adminIds = await getAdminIds(toOrg.id);
@@ -61,25 +70,27 @@ async function onInvitationToAnEventCreate({
     throw new Error('Who is this invitation for ?');
   }
 
+  // @TODO (#2848) forcing to festival since invitations to events are only on this one
+  const appSlug: App = 'festival';
+
   if (!!fromOrg) {
     /**
      * @dev For now, org can only make invitation to a screeening
      * No need to create a notification because fromOrg and user recipient
      * will already get the invitation displayed on front end.
      */
-    const senderEmail = fromOrg.denomination.public;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
+    const senderName = org.denomination.public || org.denomination.full;
     const link = getEventLink(org);
-    const urlToUse = await getAppUrl(org);
-    const appSlug = await getOrgAppSlug(org);
-    const appName = getAppName(appSlug)
-    const from = await getFromEmail(org);
+    const urlToUse = getSendgridUrl(appSlug);
+    const appName = getAppName(appSlug);
+    const from = getSendgridFrom(appSlug);
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
-          console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, fromOrg.denomination.full, appName.label, event.title, link, urlToUse);
+          console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, appName.label, event.title, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, from);
         }))
       case 'request':
@@ -94,10 +105,9 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
-    const urlToUse = await getAppUrl(org);
-    const appSlug = await getOrgAppSlug(org);
-    const appName = getAppName(appSlug)
-    const from = await getFromEmail(org);
+    const urlToUse = getSendgridUrl(appSlug);
+    const appName = getAppName(appSlug);
+    const from = getSendgridFrom(appSlug);
 
     switch (mode) {
       case 'invitation':
@@ -106,7 +116,7 @@ async function onInvitationToAnEventCreate({
       default:
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full,appName.label, recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.public || org.denomination.full, appName.label, recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, from);
         }))
     }

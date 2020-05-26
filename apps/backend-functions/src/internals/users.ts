@@ -1,9 +1,9 @@
 
-import { App } from '@blockframes/utils/apps';
+import { App, getSendgridFrom, getSendgridUrl } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
-import { getOrgAppSlug, getAppUrl, getDocument, getFromEmail } from '../data/internals';
+import { getDocument } from '../data/internals';
 import { userInvite } from '../templates/mail';
 import { auth } from './firebase';
 import { sendMailFromTemplate } from './email';
@@ -25,7 +25,7 @@ const generatePassword = () =>
 /** 
  * Get user by email & create one if there is no user for this email
  */
-export const getOrCreateUserByMail = async (email: string, orgId: string, invitationType: InvitationType ): Promise<UserProposal> => {
+export const getOrCreateUserByMail = async (email: string, orgId: string, invitationType: InvitationType, slug: App = 'catalog'): Promise<UserProposal> => {
 
   try {
     const user = await auth.getUserByEmail(email);
@@ -42,9 +42,8 @@ export const getOrCreateUserByMail = async (email: string, orgId: string, invita
     });
 
     const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-    const slug: App = await getOrgAppSlug(org);
-    const urlToUse = await getAppUrl(org);
-    const from = await getFromEmail(org);
+    const urlToUse = getSendgridUrl(slug); 
+    const from = getSendgridFrom(slug);
 
     let templateToUse = templateIds.user.credentials.content;
     switch (invitationType) {

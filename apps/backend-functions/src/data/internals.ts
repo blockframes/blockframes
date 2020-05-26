@@ -9,8 +9,7 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { App, getOrgAppAccess, getSendgridFrom } from '@blockframes/utils/apps';
-import { appUrlMarket, appUrlContent } from '../environments/environment';
+import { App, getOrgAppAccess, getSendgridFrom, getSendgridUrl } from '@blockframes/utils/apps';
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 export function getCollection<T>(path: string): Promise<T[]> {
@@ -113,13 +112,7 @@ export async function getOrgAppSlug(_org: OrganizationDocument | string): Promis
  */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
   const slug = await getOrgAppSlug(_org);
-  switch (slug) {
-    case 'festival':
-      return appUrlMarket;
-    case 'catalog':
-    default:
-      return appUrlContent;
-  }
+  return getSendgridUrl(slug);
 }
 
 /**

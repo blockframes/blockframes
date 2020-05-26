@@ -4,6 +4,7 @@
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { appUrlMarket, appUrlContent } from "@env";
 
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
@@ -84,8 +85,22 @@ export function getMoviePublishStatus(a: App): StoreStatus {
 }
 
 /**
+ * Returns the domain that should be used in emails depending on the current app
+ * @param a 
+ */
+export function getSendgridUrl(a?: App): string {
+  switch (a) {
+    case 'festival':
+      return appUrlMarket;
+    case 'catalog':
+    default:
+      return appUrlContent;
+  }
+}
+
+/**
  * Returns the "from" email that should be used depending on the current app
- * @param app 
+ * @param a 
  */
 export function getSendgridFrom(a?: App): EmailData {
   if (!a) {

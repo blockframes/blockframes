@@ -9,6 +9,8 @@ import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -18,7 +20,8 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
-    private functions: AngularFireFunctions
+    private functions: AngularFireFunctions,
+    private routerQuery: RouterQuery
   ) {
     super(store);
   }
@@ -118,8 +121,9 @@ export class InvitationService extends CollectionService<InvitationState> {
               .then(orgs => orgs.map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })))
               .then(invitations => this.add(invitations, { write }));
           } else if (who === 'user') {
-            const f = this.functions.httpsCallable('inviteUsers');
-            return f({ emails: recipients, invitation: base }).toPromise();
+            const f = this.functions.httpsCallable('inviteUsers'); 
+            const app = getCurrentApp(this.routerQuery);
+            return f({ emails: recipients, invitation: base, app }).toPromise();
           }
         }
       })
