@@ -22,7 +22,7 @@ export type NotificationType =
   'contractInNegotiation' |
 
   // Events related notifications
-  'eventIsAboutToStart' | // TODO the backend code is not yet ready
+  'eventIsAboutToStart' | // TODO the backend code is not yet ready issue #2555
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
 ;

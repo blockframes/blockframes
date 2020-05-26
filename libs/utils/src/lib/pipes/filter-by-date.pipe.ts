@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { add, startOfDay } from 'date-fns/fp'
-import { firestore } from 'firebase';
 
 export interface TimeFrame {
   label?: string;
@@ -59,27 +58,7 @@ export class FilterByDatePipe implements PipeTransform {
     const now = startOfDay(Date.now());
     const fromDate = add({ [type]: from }, now);
     const toDate = add({ [type]: to }, now);
-    return value.filter(v => {
-      if (v[key] instanceof Date) {
-        return v[key] >= fromDate && v[key] < toDate;
-      } else if (v[key] instanceof firestore.Timestamp) {
-        const date = v[key].toDate();
-        return date >= fromDate && date < toDate;
-      } else {
-        return false;
-      }
-    });
-  }
-}
-
-@Pipe({ name: 'dbTimestampToDate', pure: true})
-export class DBTimestampToDate implements PipeTransform {
-
-  transform(value: any) {
-    if (value instanceof firestore.Timestamp) {
-      return value.toDate();
-    }
-    return value;
+    return value.filter(v => v[key] >= fromDate && v[key] < toDate);
   }
 }
 
@@ -102,7 +81,7 @@ export class LabelByDatePipe implements PipeTransform {
 }
 
 @NgModule({
-  declarations: [FilterByDatePipe, DBTimestampToDate, LabelByDatePipe],
-  exports: [FilterByDatePipe, DBTimestampToDate, LabelByDatePipe]
+  declarations: [FilterByDatePipe, LabelByDatePipe],
+  exports: [FilterByDatePipe, LabelByDatePipe]
 })
 export class FilterByDateModule {}

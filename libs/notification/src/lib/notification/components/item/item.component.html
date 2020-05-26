@@ -3,7 +3,7 @@
   <img matListAvatar [placeholderAsset]="notification.placeholderUrl" [imgRef]="notification.imgRef" alt="Notification picture"/>
   <p matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
   <span matLine>
-    <small class="mat-caption">{{ notification.date | dbTimestampToDate | date: 'shortTime' }}</small>
+    <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
   </span>
   <button mat-button (click)="markAsRead(notification)">Mark as read</button>
   <a mat-button [routerLink]="notification.url">More details</a>

@@ -124,18 +124,14 @@ function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConf
 function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
 
   // in catalog `draft` -> `submitted` -> `accepted`
-  // in festival `draft` -> `accepted`
+  const acceptedInCatalog =
+    (beforeStore && beforeStore.status === 'submitted') &&
+    (afterStore && afterStore.status === 'accepted');
 
-  return (
-    // catalog
-    (
-      (beforeStore && beforeStore.status === 'submitted') &&
-      (afterStore && afterStore.status === 'accepted')
-    ) ||
-    // festival
-    (
-      (beforeStore && beforeStore.status === 'draft') &&
-      (afterStore && afterStore.status === 'accepted')
-    )
-  )
+  // in festival `draft` -> `accepted`
+  const acceptedInFestival =
+    (beforeStore && beforeStore.status === 'draft') &&
+    (afterStore && afterStore.status === 'accepted');
+
+  return acceptedInCatalog || acceptedInFestival;
 }
