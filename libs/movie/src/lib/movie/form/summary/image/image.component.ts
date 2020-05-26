@@ -11,21 +11,21 @@ export class MovieSummaryImageComponent implements OnInit {
   @Input() promotionalElements: MoviePromotionalElementsForm;
   @Input() link: string;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   get bannerHasNoValue() {
-    return !this.promotionalElements.get('banner').get('media').value.originalFileName;
+    return !this.promotionalElements.get('banner').get('media').get('urls').get('original').value;
   }
 
   get posterHasNoValue() {
-    return !this.promotionalElements.get('poster').controls[0].controls['media'].value.originalFileName;
+    return !this.promotionalElements.get('poster').controls[0].controls['media'].value.urls.original;
   }
 
   get photoHasNoValue() {
-    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].value.originalFileName;
+    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].value.urls.original;
   }
 }
