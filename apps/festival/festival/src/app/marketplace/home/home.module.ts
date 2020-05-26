@@ -13,6 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
+import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Pages
 import { HomeComponent } from './home.component';
@@ -30,8 +31,9 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module'
     SliderModule,
     DisplayNameModule,
     TranslateSlugModule,
+    WishlistButtonModule,
     MatIconModule,
-    MatSnackBarModule, 
+    MatSnackBarModule,
     RouterModule.forChild([{ path: '', component: HomeComponent }])
   ]
 })

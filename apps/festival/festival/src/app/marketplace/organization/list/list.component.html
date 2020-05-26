@@ -1,3 +1,8 @@
-<a [routerLink]="org.id" *ngFor="let org of orgs$ | async">
-  <org-card [org]="org"></org-card>
-</a>
+<ng-container *ngIf="(orgs$ | async) as orgs; else loading">
+  <a [routerLink]="org.id" *ngFor="let org of orgs">
+    <org-card [org]="org"></org-card>
+  </a>
+</ng-container>
+<ng-template #loading>
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+</ng-template>

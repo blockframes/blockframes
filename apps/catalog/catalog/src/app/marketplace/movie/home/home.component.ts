@@ -2,10 +2,6 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
-import { CartService } from '@blockframes/cart/+state/cart.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -25,14 +21,7 @@ export class MarketplaceHomeComponent implements OnInit {
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
 
-  constructor(
-    private movieQuery: MovieQuery,
-    private cartService: CartService,
-    private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
-    private catalogCartQuery: CatalogCartQuery,
-    private dynTitle: DynamicTitleService
-  ) {
+  constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Marketplace')
   }
 
@@ -76,30 +65,6 @@ export class MarketplaceHomeComponent implements OnInit {
 
   public alignment(index: number) {
     return index % 2 === 0 ? 'start start' : 'start end';
-  }
-
-  public toggle$(movieId: string) {
-    return this.catalogCartQuery.isAddedToWishlist(movieId);
-  }
-
-  public addToWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`Title ${movie.main.title.international} has been added.`, 'close', { duration: 2000 });
-    this.analytics.event('addedToWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
-  }
-
-  public removeFromWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`Title ${movie.main.title.international} has been removed.`, 'close', { duration: 2000 });
-    this.analytics.event('removedFromWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
   }
 
   // TODO 1880 country short code

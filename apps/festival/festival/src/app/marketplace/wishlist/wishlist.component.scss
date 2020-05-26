@@ -2,34 +2,17 @@ table {
   width: 100%;
 }
 
-.express-button {
-  margin-top: 16px;
-  margin-bottom: 60px;
-}
-
 tr.mat-row {
   cursor: pointer;
 }
 
-h4 {
-  margin-bottom: 8px;
-}
-
-.picture {
-  border-radius: 50%;
-  width: 40px;
-}
-
-p {
-  margin-bottom: 40px;
+:host {
+  display: block;
+  padding: 24px;
 }
 
 th.mat-header-cell {
   font-weight: lighter;
-}
-
-article {
-  height: 100%;
 }
 
 img {

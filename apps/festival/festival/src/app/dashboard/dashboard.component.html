@@ -2,7 +2,7 @@
   <aside fxLayout="column" fxLayoutAlign="space-between">
     <mat-toolbar>
       <a class="logo" routerLink=".">
-        <img asset="archipel_market.png" alt="Archipel Content Logo" />
+        <img asset="logo_archipel_market_home.svg" type="logo" alt="Archipel Market" />
       </a>
     </mat-toolbar>
     <mat-nav-list fxFlex>
@@ -22,10 +22,9 @@
     <mat-nav-list *ngIf="org$ | async as org">
       <mat-divider></mat-divider>
       <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-        <img matListAvatar [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Organization logo"/>
-        <span matLine>{{ org | orgName }}</span>
-        <span matLine>
-          <small class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</small>
+        <img matListAvatar [imgRef]="org.logo" placeholderAsset="empty_organization_sidenav.webp" alt="Organization logo"/>
+        <span mat-line>{{ org | orgName }}
+          <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</small>
         </span>
       </a>
     </mat-nav-list>
