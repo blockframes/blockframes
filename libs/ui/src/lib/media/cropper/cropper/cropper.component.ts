@@ -51,7 +51,7 @@ function isFile(imgRef: ImgRef): boolean {
   viewProviders: [DropZoneDirective],
   animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements OnInit, OnDestroy {
+export class CropperComponent implements OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -98,13 +98,6 @@ export class CropperComponent implements OnInit, OnDestroy {
   @Input() useCopyToClipboard?= true;
 
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
-
-  ngOnInit() {
-    this.sub = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      tap(value => console.log(value))
-    ).subscribe();
-  }
 
   ///////////
   // Steps //

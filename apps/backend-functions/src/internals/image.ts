@@ -145,7 +145,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
         original,
       }
     }
-    console.log(original, value)
+
     const updated = set(docData, fieldToUpdate, value);
     return tx.set(doc.ref, updated);
   })
