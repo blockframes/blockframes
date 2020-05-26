@@ -37,7 +37,8 @@ export const startAccountCreationEmailFlow = async (data: any) => {
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(accountCreationEmail(email, verifyLink, firstName), from);
+  const template = accountCreationEmail(email, verifyLink, firstName);
+  await sendMailFromTemplate(template, from);
 };
 
 export const startResetPasswordEmail = async (data: any) => {
@@ -49,7 +50,8 @@ export const startResetPasswordEmail = async (data: any) => {
   }
 
   const resetLink = await admin.auth().generatePasswordResetLink(email);
-  await sendMailFromTemplate(userResetPassword(email, resetLink), from);
+  const template = userResetPassword(email, resetLink);
+  await sendMailFromTemplate(template, from);
 };
 
 export const onUserCreate = async (user: UserRecord) => {

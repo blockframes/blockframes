@@ -31,7 +31,6 @@ export function userVerifyEmail(email: string, link: string): EmailTemplateReque
 export function accountCreationEmail(email: string, link: string, userFirstName?: string): EmailTemplateRequest {
   const data = {
     pageURL: link,
-    userEmail: email,
     userFirstName
   };
   return { to: email, templateId: templateIds.user.welcomeMessage, data };
