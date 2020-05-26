@@ -107,12 +107,12 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
 
     const promises: ErrorResultResponse[] = [];
-
+    const invitation = createInvitation({ ...data.invitation });
     for (const email of data.emails) {
-      getOrCreateUserByMail({ email, orgId: user.orgId })
+      getOrCreateUserByMail(email, user.orgId, invitation.type)
         .then(u => createPublicUser(u))
-        .then(toUser => createInvitation({ ...data.invitation, toUser }))
-        .then(invitation => db.collection('invitations').add(invitation))
+        .then(toUser => { invitation.toUser = toUser })
+        .then(_ => db.collection('invitations').add(invitation))
         .then(result => promises.push({ result, error: '' }))
         .catch(error => promises.push({ result: undefined, error }))
         .then(lastIndex => {

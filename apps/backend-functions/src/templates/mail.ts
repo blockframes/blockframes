@@ -7,7 +7,6 @@ import { templateIds } from '@env';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getAppUrl } from '../data/internals';
-import { App } from '@blockframes/utils/apps';
 import { EmailRecipient } from '@blockframes/utils/emails';
 
 const ORG_HOME = '/c/o/organization/';
@@ -76,11 +75,11 @@ export function userJoinOrgPendingRequest(email: string, orgName: string, userFi
   return { to: email, templateId: templateIds.request.joinOrganization.pending, data };
 }
 
-export function organizationCanAccessApp(admin: PublicUser, appName: App, appUrl: string): EmailTemplateRequest {
+export function organizationAppAccessChanged(admin: PublicUser, appLabel: String, appUrl: string): EmailTemplateRequest {
   const data = {
     adminFirstName: admin.firstName,
-    appName: appName,
-    appUrl: appUrl
+    appName: appLabel,
+    appUrl
   }
   return { to: admin.email, templateId: templateIds.org.appAccessChanged, data };
 }
@@ -114,10 +113,11 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, a
 }
 
 /** Generates an email for user invited by an organization to an event. */
-export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenomination: string, eventId: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
+export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenomination: string, appLabel: String, eventId: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName: recipient.name,
     orgName: orgDenomination,
+    appName: appLabel,
     eventName: eventId,
     pageURL: `${appUrl}/${link}`
   };
@@ -125,11 +125,12 @@ export function invitationToEventFromOrg(recipient: EmailRecipient, orgDenominat
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, recipient: EmailRecipient, eventTitle: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, appLabel: String, recipient: EmailRecipient, eventTitle: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     adminFirstName: recipient.name,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
+    appName: appLabel,
     eventName: eventTitle,
     pageURL: `${appUrl}/${link}`
   };

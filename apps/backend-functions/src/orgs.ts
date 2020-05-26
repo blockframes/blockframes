@@ -8,15 +8,15 @@ import { difference } from 'lodash';
 import { functions, db, getUser } from './internals/firebase';
 import { deleteObject, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationCanAccessApp } from './templates/mail';
+import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { mnemonic, relayer, algolia } from './environments/environment';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, Module } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getOrgAppName, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
+import { app, Module, getAppName } from '@blockframes/utils/apps';
+import { getAdminIds, getAppUrl, getOrgAppSlug, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -190,7 +190,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
 }
 
 export function onOrganizationDelete(
-  snap: FirebaseFirestore.DocumentSnapshot,
+  _: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
   // Update algolia's index
@@ -204,10 +204,14 @@ export const accessToAppChanged = async (
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const from = await getFromEmail(orgId);
-  const appName = await getOrgAppName(orgId);
+  const appSlug = await getOrgAppSlug(orgId);
+  const appName = getAppName(appSlug)
   const appUrl = await getAppUrl(orgId);
-
-  await Promise.all(admins.map(admin => sendMailFromTemplate(organizationCanAccessApp(admin, appName, appUrl), from)));
+  
+  await Promise.all(admins.map(admin => {
+    const template = organizationAppAccessChanged(admin, appName.label, appUrl);
+    return sendMailFromTemplate(template, from)
+  }));
 
   return {
     error: '',

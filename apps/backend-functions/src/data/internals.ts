@@ -98,7 +98,7 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
  * Return the first app name that an org have access to
  * @param _org 
  */
-export async function getOrgAppName(_org: OrganizationDocument | string): Promise<App> {
+export async function getOrgAppSlug(_org: OrganizationDocument | string): Promise<App> {
   if (typeof _org === 'string') {
     const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
     return getOrgAppAccess(org)[0];
@@ -112,8 +112,8 @@ export async function getOrgAppName(_org: OrganizationDocument | string): Promis
  * @param _org 
  */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
-  const appName = await getOrgAppName(_org);
-  switch (appName) {
+  const slug = await getOrgAppSlug(_org);
+  switch (slug) {
     case 'festival':
       return appUrlMarket;
     case 'catalog':
@@ -127,7 +127,7 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
  * @param _org 
  */
 export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
-  const appName = await getOrgAppName(_org);
-  return getSendgridFrom(appName);
+  const slug = await getOrgAppSlug(_org);
+  return getSendgridFrom(slug);
 }
 

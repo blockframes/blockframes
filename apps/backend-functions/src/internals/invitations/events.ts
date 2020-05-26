@@ -3,11 +3,12 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument, getFromEmail, getAppUrl } from "../../data/internals";
+import { getAdminIds, getDocument, getFromEmail, getAppUrl, getOrgAppSlug } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails";
+import { getAppName } from "@blockframes/utils/apps";
 
 
 function getEventLink(org: OrganizationDocument) {
@@ -70,13 +71,15 @@ async function onInvitationToAnEventCreate({
     const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const link = getEventLink(org);
     const urlToUse = await getAppUrl(org);
+    const appSlug = await getOrgAppSlug(org);
+    const appName = getAppName(appSlug)
     const from = await getFromEmail(org);
 
     switch (mode) {
       case 'invitation':
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateInvitation = invitationToEventFromOrg(recipient, fromOrg.denomination.full, event.title, link, urlToUse);
+          const templateInvitation = invitationToEventFromOrg(recipient, fromOrg.denomination.full, appName.label, event.title, link, urlToUse);
           return sendMailFromTemplate(templateInvitation, from);
         }))
       case 'request':
@@ -91,9 +94,11 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
-
     const urlToUse = await getAppUrl(org);
+    const appSlug = await getOrgAppSlug(org);
+    const appName = getAppName(appSlug)
     const from = await getFromEmail(org);
+
     switch (mode) {
       case 'invitation':
         throw new Error('User can not create invitations for events, reserved to orgs only.');
@@ -101,7 +106,7 @@ async function onInvitationToAnEventCreate({
       default:
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full,appName.label, recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, from);
         }))
     }
