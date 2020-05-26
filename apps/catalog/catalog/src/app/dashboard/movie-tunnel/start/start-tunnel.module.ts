@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { ImgAssetModule } from '@blockframes/ui/theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+
 // Materials
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +15,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
 @NgModule({
   declarations: [StartTunnelComponent],
   imports: [
@@ -21,7 +22,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     TunnelPageModule,
     ImgAssetModule,
-    
+    AppLogoModule,
+
     // Material
     MatCardModule,
     MatButtonModule,
@@ -31,6 +33,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatProgressSpinnerModule,
     // Router
     RouterModule.forChild([{ path: '', component: StartTunnelComponent }])
-  ],
+  ]
 })
 export class StartTunnelModule {}

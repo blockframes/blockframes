@@ -8,7 +8,7 @@ import { LandingLearnMoreComponent } from './learn-more/learn-more.component';
 import { LandingToolbarComponent } from './toolbar/toolbar.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { RoleModule } from './learn-more/role.pipe';
 import { RouterModule } from '@angular/router';
@@ -39,7 +39,7 @@ import { MatListModule } from '@angular/material/list';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImgAssetModule,
+    AppLogoModule,
     TelInputModule,
     RoleModule,
 

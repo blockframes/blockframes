@@ -9,6 +9,7 @@ import { FooterComponent } from './footer.component';
 
 // Blockframes
 import { ImgAssetModule } from '../../theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -18,12 +19,12 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     RouterModule,
-    ImgAssetModule,
+    AppLogoModule,
 
     // Material
     MatButtonModule
   ],
   exports: [FooterComponent],
-  declarations: [FooterComponent],
+  declarations: [FooterComponent]
 })
-export class FooterModule { }
+export class FooterModule {}
