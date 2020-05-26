@@ -80,7 +80,7 @@ export const templateIds = {
   // Templates for the account creation flow
   user: {
     // Template for welcome message when user created his account by himself
-    welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
+    welcomeMessage: 'd-fc05a8cf5b1548ebae9ca44247a6c256',
 
     // Template for sending the verify email
     verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
