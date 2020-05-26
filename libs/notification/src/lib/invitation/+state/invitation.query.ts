@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity, QueryConfig, Order } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
-import { switchMap } from 'rxjs/operators';
 import { Invitation } from './invitation.model';
 import { AuthQuery } from '@blockframes/auth/+state';
 
@@ -34,6 +33,6 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
 
   /** Query all invitation to current user / org */
   toMe(filter: (invitation: Invitation) => boolean = () => true) {
-    return this.selectAll({ filterBy: i => this.isFromMe(i) && filter(i) });
+    return this.selectAll({ filterBy: i => this.isToMe(i) && filter(i) });
   }
 }
