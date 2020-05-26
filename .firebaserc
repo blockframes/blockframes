@@ -115,6 +115,9 @@
       "hosting": {
         "catalog": [
           "blockframes-pl-2"
+        ],
+        "festival": [
+          "blockframes-pl-2"
         ]
       }
     },

@@ -4,7 +4,6 @@ import {
   InvitationDocument,
   InvitationOrUndefined,
   OrganizationDocument,
-  PublicUser
 } from './../../data/types';
 import { triggerNotifications, createNotification } from './../../notification';
 import { sendMailFromTemplate } from './../email';
@@ -90,30 +89,6 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
   await addUserToOrg(toUser.uid, fromOrg.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(toUser.uid, fromOrg.id);
-}
-
-/** Send a notification to admins of organization to notify them that the user declined their invitation. */
-async function onInvitationToOrgDecline(invitation: InvitationDocument) {
-  if (!invitation.toUser || !invitation.fromOrg) {
-    console.error('No user or org provided');
-    return;
-  }
-  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
-  const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-  const adminIds = await getAdminIds(org.id);
-
-  const notifications = adminIds.map(toUserId =>
-    createNotification({
-      toUserId,
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName
-      },
-      type: 'invitationFromOrganizationToUserDecline'
-    })
-  );
-
-  return triggerNotifications(notifications);
 }
 
 /** Sends an email when an organization invites a user to join. */
@@ -211,8 +186,6 @@ export async function onInvitationToJoinOrgUpdate(
 ): Promise<any> {
   if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
-  } else if (wasDeclined(before!, after)) {
-    return onInvitationToOrgDecline(invitation);
   }
 }
 

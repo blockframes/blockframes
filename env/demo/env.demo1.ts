@@ -22,12 +22,14 @@ export const appUrlContent = 'https://demo1.archipelcontent.com';
 export const appUrlMarket = 'https://demo1.archipelmarket.com';
 
 export const firebase = {
-  apiKey: 'AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM',
-  authDomain: 'blockframes-demo-1.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-1.firebaseio.com',
-  projectId: 'blockframes-demo-1',
-  storageBucket: 'blockframes-demo-1.appspot.com',
-  messagingSenderId: '11685432883'
+  apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
+  authDomain: "blockframes-demo-1.firebaseapp.com",
+  databaseURL: "https://blockframes-demo-1.firebaseio.com",
+  projectId: "blockframes-demo-1",
+  storageBucket: "blockframes-demo-1.appspot.com",
+  messagingSenderId: "11685432883",
+  appId: "1:11685432883:web:bedc809872148fcde49d46",
+  measurementId: "G-ZQHCHN67GF"
 };
 
 // Algolia
@@ -80,7 +82,7 @@ export const templateIds = {
   // Templates for the account creation flow
   user: {
     // Template for welcome message when user created his account by himself
-    welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
+    welcomeMessage: 'd-fc05a8cf5b1548ebae9ca44247a6c256',
 
     // Template for sending the verify email
     verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
@@ -88,9 +90,15 @@ export const templateIds = {
 
     // Templates for informing new user that his account have been created
     credentials: {
-      content: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-      market: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c'
-    }
+      attendEvent: {
+        catalog: 'd-ce3e57248a694cefacad49bc4c820078',
+        festival: 'd-ce3e57248a694cefacad49bc4c820078',
+      },
+      joinOrganization: {
+        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
+      }
+    },
   },
   // Templates for the org management flow
   org: {
@@ -149,7 +157,7 @@ export const quorum = {
 
 // BigQuery
 // ========
-export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.events_';
 
 // Archipel Content OrgId
 // ======================

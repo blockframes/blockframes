@@ -28,5 +28,7 @@ npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTestin
 echo "wait for maintenance mode to end (slightly more than 8 minutes)"
 sleep 500
 
-npm run e2e:catalog
-npm run e2e:festival
+npm run e2e:catalog && test1=$? || test1=$?
+npm run e2e:festival && test2=$? || test2=$?
+
+exit $(($test1 + $test2)) # we want to exit on error if any test exit is non-zero => sum the exit codes

@@ -15,14 +15,14 @@
         <span mat-line>My Selection</span>
       </a>
       <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-        <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
+        <mat-icon mat-list-icon svgIcon="heart_fill"></mat-icon>
         <span mat-line>Wishlist</span>
       </a>
       <a mat-list-item routerLink="deals" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="wallet"></mat-icon>
         <span mat-line>Offers & Deals</span>
       </a>
-   </mat-nav-list>
+    </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content #content>
@@ -32,21 +32,19 @@
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <a class="logo" routerLink=".">
-          <img asset="LogoArchipelContentPrimary.svg" type="logo" alt="Archipel Content Logo" />
+        <a routerLink=".">
+          <app-logo></app-logo>
         </a>
       </div>
       <div fxLayout="row" fxLayoutGap="24px">
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon
-            svgIcon="heart_fill" color="primary"
-            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          <mat-icon svgIcon="heart_fill" color="primary" [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)"
+            matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
         <button mat-icon-button routerLink="selection">
-          <mat-icon
-            svgIcon="basket" color="primary"
-            [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          <mat-icon svgIcon="basket" color="primary" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
+            matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </button>
         <mat-divider vertical></mat-divider>
