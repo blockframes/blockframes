@@ -13,7 +13,7 @@ import { NotificationQuery } from '@blockframes/notification/+state';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { algolia } from '@env';
 
@@ -25,9 +25,11 @@ import { algolia } from '@env';
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
-  public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
-  public notificationCount$ = this.notificationQuery.selectCount();
   public searchCtrl: FormControl = new FormControl('');
+  public notificationCount$ = this.notificationQuery.selectCount();
+  public invitationCount$ = this.invitationQuery.toMe(invitation => invitation.status === 'pending').pipe(
+    map(invitations => invitations.length)
+  );
 
   public ltMd$ = this.breakpointsService.ltMd;
 

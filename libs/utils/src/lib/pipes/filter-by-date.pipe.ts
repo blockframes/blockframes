@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { sub, add, startOfDay } from 'date-fns/fp'
+import { add, startOfDay } from 'date-fns/fp'
 
 export interface TimeFrame {
   label?: string;
@@ -76,7 +76,7 @@ export class LabelByDatePipe implements PipeTransform {
       case 'weeks': return formatDate(fromDate, 'MMMM d', 'en');
       case 'days': return formatDate(fromDate, 'MMMM', 'en');
       case 'years': return formatDate(fromDate, 'longDate', 'en');
-    } 
+    }
   }
 }
 

@@ -54,7 +54,7 @@ async function onInvitationToAnEventCreate({
      * No need to create a notification because fromOrg and user recipient
      * will already get the invitation displayed on front end.
      */
-    const senderEmail = fromOrg.denomination.public;
+    const senderName = fromOrg.denomination.public ? fromOrg.denomination.public : fromOrg.denomination.full;
     const org = await getDocument<OrganizationDocument>(`orgs/${toUser.orgId}`);
     if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
       link = '/c/o/marketplace/invitations';
@@ -63,7 +63,7 @@ async function onInvitationToAnEventCreate({
     } else {
       link = "";
     }
-    console.log(`Sending invitation email for an event (${docId}) from ${senderEmail} to : ${recipient}`);
+    console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient}`);
     const urlToUse = await getAppUrl(org);
     const from = await getFromEmail(org);
     return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link, urlToUse), from);
