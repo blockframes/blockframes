@@ -1,9 +1,15 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-<bf-slider hideIndicators loop  loop hideIndicators class="dark-contrast-theme">
-    <bf-slide *ngFor="let movie of movies$ | async"  overlayColor="gradient">
+  <bf-slider hideIndicators loop loop hideIndicators class="dark-contrast-theme">
+    <bf-slide *ngFor="let movie of movies$ | async" overlayColor="gradient"
+      [image]="movie.promotionalElements.banner.media">
       <movie-slide [movie]="movie">
-        <movie-slide-cta>CTA</movie-slide-cta>
+        <movie-slide-cta>
+          <ng-container *ngIf="movie.promotionalElements.trailer[0].media?.urls.original">
+            <a mat-stroked-button color="accent" [href]="movie.promotionalElements.trailer[0].media?.urls.original">Watch
+              Trailer</a>
+            </ng-container>
+        </movie-slide-cta>
         <movie-slide-actions>cool</movie-slide-actions>
       </movie-slide>
     </bf-slide>
