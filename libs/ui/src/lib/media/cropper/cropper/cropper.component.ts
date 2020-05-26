@@ -144,12 +144,12 @@ export class CropperComponent implements OnDestroy {
   }
 
   delete() {
-    const deleteImage$ = this.previewUrl.subscribe(path => {
+    const deleteSubscription$ = this.previewUrl.subscribe(path => {
       this.storage.storage.refFromURL(path).delete();
       this.form.reset();
       this.nextStep('drop');
     });
-    this.sub.add(deleteImage$);
+    this.sub.add(deleteSubscription$);
   }
 
   nextStep(name: CropStep) {
