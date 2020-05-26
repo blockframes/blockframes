@@ -38,7 +38,7 @@ const eventQueries = {
     movie: ({ meta }: ScreeningEvent) =>  {
       return meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
     },
-    org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
+    org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerId}` }),
   }),
 
   // Meeting

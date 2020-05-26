@@ -9,7 +9,8 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
 })
 export class InvitationComponent {
 
-  invitations$ = this.query.selectAll();
+  // Invitation that require an action
+  invitations$ = this.query.toMe();
 
   constructor(private query: InvitationQuery) { }
 

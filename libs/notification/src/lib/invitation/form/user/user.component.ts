@@ -4,6 +4,7 @@ import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'invitation-form-user',
@@ -15,9 +16,9 @@ import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 export class UserComponent {
   @Input() docId: string;
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
-  form = createAlgoliaUserForm();
+  form = createAlgoliaUserForm(Validators.maxLength(50));
   sending = new BehaviorSubject(false);
-  constructor(private service: InvitationService) { }
+  constructor(private service: InvitationService) {}
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
