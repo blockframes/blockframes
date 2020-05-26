@@ -15,7 +15,7 @@ export class ActionComponent implements OnInit {
   @Input() event: Event;
   @Input() invitation: Invitation;
 
-  public isFromUser: boolean;
+  public canAction: boolean;
 
   constructor(
     private service: InvitationService,
@@ -23,7 +23,7 @@ export class ActionComponent implements OnInit {
     private snackBar: MatSnackBar) {}
 
   ngOnInit() {
-    this.isFromUser = !!this.invitation && this.invitation.fromUser.uid === this.authQuery.userId;
+    this.canAction = !!this.invitation && ((!(this.invitation.fromUser?.uid === this.authQuery.userId) && this.invitation.toOrg?.id === this.authQuery.orgId) || this.invitation.toUser?.uid === this.authQuery.userId);
   }
 
   accept(invitation: Invitation) {

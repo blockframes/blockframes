@@ -119,7 +119,7 @@ export class InvitationService extends CollectionService<InvitationState> {
           if (who === 'org') {
             return this.orgService.getValue(recipients)
               .then(orgs => orgs.map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })))
-              .then(invitations => this.add(invitations, { write }));
+              .then(invitations => {console.log('lala'); this.add(invitations, { write })});
           } else if (who === 'user') {
             const f = this.functions.httpsCallable('inviteUsers'); 
             const app = getCurrentApp(this.routerQuery);

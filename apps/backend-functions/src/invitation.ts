@@ -97,7 +97,7 @@ interface UserInvitation {
 
 /**
  * Invite a list of user by email.
- * @dev this function polyfills the Promise.allSettled  
+ * @dev this function polyfills the Promise.allSettled
  */
 export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
   return new Promise(async (res) => {
