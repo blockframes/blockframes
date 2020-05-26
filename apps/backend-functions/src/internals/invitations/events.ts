@@ -3,7 +3,7 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument, canAccessMarketplace } from "../../data/internals";
+import { getAdminIds, getDocument, canAccessModule } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
@@ -13,9 +13,9 @@ import { orgName } from "@blockframes/organization/+state/organization.firestore
 
 
 function getEventLink(org: OrganizationDocument) {
-  if (canAccessMarketplace(org)) {
+  if (canAccessModule('marketplace', org)) {
     return '/c/o/marketplace/invitations';
-  } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
+  } else if (canAccessModule('dashboard', org)) {
     return '/c/o/dashboard/invitations';
   } else {
     return "";
