@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity, QueryConfig, Order } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
-import { DateGroup } from '@blockframes/utils/helpers';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { formatDate } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
 import { Invitation } from './invitation.model';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Injectable({ providedIn: 'root' })
 @QueryConfig({ sortBy: 'date', sortByOrder: Order.DESC })
 export class InvitationQuery extends QueryEntity<InvitationState> {
-  constructor(protected store: InvitationStore) {
+  constructor(protected store: InvitationStore, private authQuery: AuthQuery) {
     super(store);
   }
 
@@ -18,17 +16,22 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
     return this.selectEntity((i: Invitation) => i.docId === docId);
   }
 
-  /** Group invitations by date in an object. */
-  public groupInvitationsByDate(): Observable<DateGroup<Invitation[]>> {
-    return this.selectAll( ).pipe(
-      map(invits => {
-        return invits.reduce((acc, invitation) => {
-          // As Date cannot be used as an index type (key), we format the date into a string.
-          const key = formatDate(invitation.date as Date, 'MMM dd, yyyy', 'en-US');
+  /** Query all invitation from current user / org */
+  fromMe() {
+    return this.authQuery.user$.pipe(
+      switchMap(user => {
+        const fromMe = (i: Invitation) => i.fromOrg?.id === user.orgId || i.fromUser?.uid === user.uid;
+        return this.selectAll({ filterBy: fromMe });
+      })
+    );
+  }
 
-          acc[key] = [...(acc[key] || []), invitation];
-          return acc;
-        }, {});
+  /** Query all invitation to current user / org */
+  toMe() {
+    return this.authQuery.user$.pipe(
+      switchMap(user => {
+        const toMe = (i: Invitation) => i.toOrg?.id === user.orgId || i.toUser?.uid === user.uid;
+        return this.selectAll({ filterBy: toMe });
       })
     );
   }

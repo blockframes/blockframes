@@ -1,7 +1,7 @@
 <img fxHide.lt-sm [imgRef]="poster" placeholderAsset="empty_poster.webp" alt="Movie poster of the screening"/>
 <article fxLayout="column" fxLayoutAlign="space-between start">
   <div fxLayout="column" fxLayoutAlign="start start">
-    <h3>{{ screening.title }}</h3>
+    <h3><a [routerLink]="['../../../event/', screening.id]">{{ screening.title }}</a></h3>
     <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
     <pre class="mat-body-1">{{ screening | eventRange }}</pre>
     <org-chip [org]="screening.org"></org-chip>
