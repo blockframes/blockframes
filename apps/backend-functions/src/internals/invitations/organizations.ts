@@ -68,7 +68,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
 async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
   const adminIds = await getAdminIds(organizationId);
-  const adminEmails = await Promise.all(adminIds.map(getUserMail));
+  const adminEmails = await Promise.all(adminIds.map(id => getUserMail(id)));
   const from = await getFromEmail(organizationId);
   const adminEmailPromises = adminEmails
     .filter(mail => !!mail)
@@ -92,7 +92,7 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationFromUserToJoinOrgCreate({
+async function onRequestFromUserToJoinOrgCreate({
   toOrg,
   fromUser
 }: InvitationDocument) {
@@ -114,10 +114,8 @@ async function onInvitationFromUserToJoinOrgCreate({
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
-  await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!),
-    from
-  );
+  const template = userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!);
+  await sendMailFromTemplate(template, from);
 
   const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
@@ -130,12 +128,12 @@ async function onInvitationFromUserToJoinOrgCreate({
       userFirstname: userData.firstName!,
       userLastname: userData.lastName!
     }, urlToUse))
-      .map(template => sendMailFromTemplate(template, from))
+      .map(tpl => sendMailFromTemplate(tpl, from))
   );
 }
 
 /** Send a mail and update the user, org and permission when the user was accepted. */
-async function onInvitationFromUserToJoinOrgAccept({
+async function onRequestFromUserToJoinOrgAccept({
   toOrg,
   fromUser
 }: InvitationDocument) {
@@ -147,13 +145,13 @@ async function onInvitationFromUserToJoinOrgAccept({
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
   const from = await getFromEmail(toOrg.id);
-  const template = userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse);
+  const template = userJoinedAnOrganization(fromUser.email, urlToUse);
   await sendMailFromTemplate(template, from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
-async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationDocument) {
+async function onRequestFromUserToJoinOrgDecline(invitation: InvitationDocument) {
   if (!invitation.fromUser || !invitation.toOrg) {
     console.error('No user or org provided');
     return;
@@ -181,7 +179,7 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationDocume
 * Dispatch the invitation update call depending on whether the invitation
 * was 'created' or 'accepted'.
 */
-export async function onInvitationToOrgUpdate(
+export async function onInvitationToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
@@ -196,17 +194,17 @@ export async function onInvitationToOrgUpdate(
 * Dispatch the invitation update call depending on whether the invitation
 * was 'created' or 'accepted'.
 */
-export async function onInvitationFromUserToJoinOrgUpdate(
+export async function onRequestToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
   invitation: InvitationDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
-    return onInvitationFromUserToJoinOrgCreate(invitation);
+    return onRequestFromUserToJoinOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
-    return onInvitationFromUserToJoinOrgAccept(invitation);
+    return onRequestFromUserToJoinOrgAccept(invitation);
   } else if (wasDeclined(before!, after)) {
-    return onInvitationFromUserToJoinOrgDecline(invitation);
+    return onRequestFromUserToJoinOrgDecline(invitation);
   }
   return;
 }

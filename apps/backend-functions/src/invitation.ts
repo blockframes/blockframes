@@ -1,13 +1,14 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { db, functions, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
-import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './internals/invitations/organizations';
+import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getOrCreateUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
+import { App } from '@blockframes/utils/apps';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -35,13 +36,13 @@ export async function onInvitationWrite(
   // We consolidate invitation document here.
   let needUpdate = false;
   if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg.id}`);
     invitationDoc.fromOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
 
   if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg.id}`);
     invitationDoc.toOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
@@ -63,8 +64,8 @@ export async function onInvitationWrite(
     switch (invitationDoc.type) {
       case 'joinOrganization':
         invitationDoc.mode === 'invitation'
-          ? await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
-          : await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+          ? await onInvitationToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
+          : await onRequestToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
         break;
       case 'attendEvent':
         /**
@@ -88,11 +89,10 @@ export async function onInvitationWrite(
   }
 }
 
-
-
 interface UserInvitation {
   emails: string[];
   invitation: Partial<InvitationBase<any>>;
+  app?: App;
 }
 
 /**
@@ -107,12 +107,12 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
 
     const promises: ErrorResultResponse[] = [];
-
+    const invitation = createInvitation(data.invitation);
     for (const email of data.emails) {
-      getOrCreateUserByMail({ email, orgId: user.orgId })
+      getOrCreateUserByMail(email, user.orgId, invitation.type, data.app)
         .then(u => createPublicUser(u))
-        .then(toUser => createInvitation({ ...data.invitation, toUser }))
-        .then(invitation => db.collection('invitations').add(invitation))
+        .then(toUser => invitation.toUser = toUser)
+        .then(_ => db.collection('invitations').add(invitation))
         .then(result => promises.push({ result, error: '' }))
         .catch(error => promises.push({ result: undefined, error }))
         .then(lastIndex => {

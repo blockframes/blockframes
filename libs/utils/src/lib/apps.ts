@@ -3,6 +3,8 @@
  */
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
+import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { appUrlMarket, appUrlContent } from "@env";
 
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
@@ -16,14 +18,19 @@ const appName = {
 };
 
 export const sendgridEmailsFrom = {
-  catalog: 'team@archipelcontent.com',
-  festival: 'team@archipelmarket.com',
-  default: 'team@cascade8.com'
+  catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
+  festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
+  default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
 export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
+
+export const sendgridUrl: Record<App, string> = {
+  festival: appUrlMarket,
+  catalog: appUrlContent
+}
 
 export function getCurrentApp(routerQuery: any): App {
   return routerQuery.getValue().state?.root.data.app;
@@ -84,9 +91,9 @@ export function getMoviePublishStatus(a: App): StoreStatus {
 
 /**
  * Returns the "from" email that should be used depending on the current app
- * @param app 
+ * @param a 
  */
-export function getSendgridFrom(a?: App): string {
+export function getSendgridFrom(a?: App): EmailData {
   if (!a) {
     return sendgridEmailsFrom.default;
   } else {
