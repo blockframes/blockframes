@@ -28,10 +28,10 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     return {
       ...notification,
       ...this.formatNotification(notification),
-    }
+    };
   }
 
-  public formatNotification(notification: Notification) {
+  public formatNotification(notification: Notification): Partial<Notification> {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
     const orgName = notification.organization?.denomination.full;
     switch (notification.type) {
@@ -85,7 +85,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `A new movie has been submitted`,
-          imgRef: this.getPoster(notification.docId).urls.xs,
+          imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/titles/${notification.docId}`, // TODO check url : see  #2716
         };
@@ -93,7 +93,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `Your movie was accepted by the Archipel team. It will now appear in the marketplace library.`,
-          imgRef: this.getPoster(notification.docId).urls.xs,
+          imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/details`,
         };
@@ -110,6 +110,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         });
 
         return {
+          date: toDate(notification.date),
           message: `REMINDER - Your event "${notification.docId}" is about to start.`,
           url: `/c/o/marketplace/event/${notification.docId}`, // TODO check url : see  #2716
         };
