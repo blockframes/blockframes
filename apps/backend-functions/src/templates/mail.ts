@@ -18,19 +18,23 @@ export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-export function welcomeMessage(email: string, userFirstName?: string): EmailTemplateRequest {
-  const data = {
-    userEmail: email,
-    userFirstName
-  };
-  return { to: email, templateId: templateIds.user.welcomeMessage, data };
-}
-
+// @TODO (#2821)
+/*
 export function userVerifyEmail(email: string, link: string): EmailTemplateRequest {
   const data = {
     pageURL: link
   };
   return { to: email, templateId: templateIds.user.verifyEmail, data };
+}
+*/
+
+export function accountCreationEmail(email: string, link: string, userFirstName?: string): EmailTemplateRequest {
+  const data = {
+    pageURL: link,
+    userEmail: email,
+    userFirstName
+  };
+  return { to: email, templateId: templateIds.user.welcomeMessage, data };
 }
 
 export function userResetPassword(email: string, link: string): EmailTemplateRequest {

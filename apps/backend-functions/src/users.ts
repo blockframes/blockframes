@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userVerifyEmail, welcomeMessage, userResetPassword, sendDemoRequestMail, sendContactEmail } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
@@ -13,6 +13,8 @@ import { getSendgridFrom } from '@blockframes/utils/apps';
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
+// @TODO (#2821)
+/*
 export const startVerifyEmailFlow = async (data: any) => {
   const { email, app } = data;
   const from = getSendgridFrom(app);
@@ -23,6 +25,19 @@ export const startVerifyEmailFlow = async (data: any) => {
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
   await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from);
+};
+*/
+
+export const startAccountCreationEmailFlow = async (data: any) => {
+  const { email, app, firstName } = data;
+  const from = getSendgridFrom(app);
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+  }
+
+  const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+  await sendMailFromTemplate(accountCreationEmail(email, verifyLink, firstName), from);
 };
 
 export const startResetPasswordEmail = async (data: any) => {
@@ -53,12 +68,12 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        await startVerifyEmailFlow({ email });
         /** 
          * @dev TODO (#2826) since there is now way to get the used app when this function is triggered,
          * we cannot set the custom "from" here
         */
-        await sendMailFromTemplate(welcomeMessage(email, u.firstName));
+        await startAccountCreationEmailFlow({ email, firstName: u.firstName });
+
       }
       tx.update(userDocRef, { email, uid });
     } else {

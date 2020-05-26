@@ -8,19 +8,16 @@ import { userInvite } from '../templates/mail';
 import { auth } from './firebase';
 import { sendMailFromTemplate } from './email';
 
-
 interface UserProposal {
   uid: string;
   email: string;
 }
-
 
 const generatePassword = () =>
   passwordGenerator({
     length: 12,
     numbers: true
   });
-
 
 /** 
  * Get user by email & create one if there is no user for this email
@@ -42,7 +39,7 @@ export const getOrCreateUserByMail = async (email: string, orgId: string, invita
     });
 
     const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-    const urlToUse = getSendgridUrl(slug); 
+    const urlToUse = getSendgridUrl(slug);
     const from = getSendgridFrom(slug);
 
     let templateToUse = templateIds.user.credentials.content;
@@ -55,7 +52,8 @@ export const getOrCreateUserByMail = async (email: string, orgId: string, invita
         templateToUse = slug === 'festival' ? templateIds.user.credentials.market : templateIds.user.credentials.content;
         break;
     }
-    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse), from);
+    const template = userInvite(email, password, org.denomination.full, urlToUse, templateToUse);
+    await sendMailFromTemplate(template, from);
     return { uid: user.uid, email };
   }
 };
