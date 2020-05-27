@@ -14,22 +14,12 @@ export class ActionComponent {
   @Input() event: Event;
   public invit: Invitation;
 
-  public canAction: boolean;
-
   @Input() set invitation(invit: Invitation) {
     this.invit= invit;
-    if (!!this.invit) {
-      const userId = this.authQuery.userId;
-      const isNotFromUser = !(this.invit.fromUser?.uid === userId);
-      const isToOrg = this.invit.toOrg?.id === this.authQuery.orgId;
-      const isToUser = this.invit.toUser?.uid === userId;
-      this.canAction = (isNotFromUser && isToOrg) || isToUser;
-    }
   }
 
   constructor(
-    private service: InvitationService,
-    private authQuery: AuthQuery
+    private service: InvitationService
   ) {}
 
   accept(invitation: Invitation) {
