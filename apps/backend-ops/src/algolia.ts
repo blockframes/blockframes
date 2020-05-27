@@ -18,7 +18,7 @@ export async function upgradeAlgoliaOrgs() {
     searchableAttributes: [ 'name' ],
     attributesForFaceting: [
       'appAccess',
-      'appSide',
+      'appModule',
     ],
   };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
@@ -27,9 +27,9 @@ export async function upgradeAlgoliaOrgs() {
   const { db } = loadAdminServices();
   const orgs = await db.collection('orgs').get();
 
-  const promises = orgs.docs.map(async org => {
-    const orgData = org.data() as OrganizationDocument;
-    return storeSearchableOrg(orgData, process.env['ALGOLIA_API_KEY']);
+  const promises = orgs.docs.map(async doc => {
+    const org = doc.data() as OrganizationDocument;
+    return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
   });
 
   await Promise.all(promises);

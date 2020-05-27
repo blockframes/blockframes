@@ -41,8 +41,11 @@ export class ListComponent implements OnInit, OnDestroy {
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
-    this.filterForm.appAccess.add('festival');
-    this.movieSearchResults$ = combineLatest([this.sortByControl.valueChanges.pipe(startWith('Title')), this.filterForm.valueChanges]).pipe(
+    // this.filterForm.appAccess.add('festival');
+    this.movieSearchResults$ = combineLatest([
+      this.sortByControl.valueChanges.pipe(startWith('Title')),
+      this.filterForm.valueChanges
+    ]).pipe(
       debounceTime(300),
       filter(() => !this.filterForm.isEmpty()),
       distinctUntilChanged(),
