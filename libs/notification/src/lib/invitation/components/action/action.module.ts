@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActionComponent } from './action.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { InvitationHasActionPipeModule } from './has-action.pipe';
 
 
 
@@ -12,7 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    InvitationHasActionPipeModule
   ]
 })
 export class InvitationActionModule { }
