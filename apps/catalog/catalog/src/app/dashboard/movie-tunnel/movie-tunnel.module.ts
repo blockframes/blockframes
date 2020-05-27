@@ -17,7 +17,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 
 @NgModule({
   declarations: [MovieTunnelComponent],

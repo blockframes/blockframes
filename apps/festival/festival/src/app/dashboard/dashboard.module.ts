@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guards
@@ -110,7 +109,6 @@ const routes: Routes = [{
     FlexLayoutModule,
     DashboardLayoutModule,
     ImageReferenceModule,
-    ImgAssetModule,
     OrgNameModule,
     ToLabelModule,
     // Material

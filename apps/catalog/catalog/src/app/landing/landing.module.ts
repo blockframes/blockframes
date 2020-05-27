@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingModule } from '@blockframes/landing/landing.module';
@@ -63,7 +62,6 @@ const routes = [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImgAssetModule,
     AppLogoModule,
     TelInputModule,
     LandingModule,

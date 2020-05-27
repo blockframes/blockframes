@@ -7,9 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
-
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -103,8 +101,6 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
-
-    ImgAssetModule,
 
     // Material
     MatListModule,

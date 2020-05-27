@@ -8,7 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // import { ToolbarModule } from '@blockframes/ui/toolbar';
 // import { KeyManagerModule } from '@blockframes/ethers';
 // import { EmailVerifyModule } from '@blockframes/auth'; // @TODO (#2821)
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Widgets
@@ -48,7 +47,6 @@ import { LayoutComponent } from './layout.component';
     MatMenuModule,
 
     // Libraries
-    ImgAssetModule,
     AppLogoModule,
 
     // Widgets

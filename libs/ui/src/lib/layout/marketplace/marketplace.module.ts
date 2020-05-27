@@ -3,10 +3,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
-
 import { MarketplaceComponent } from './marketplace.component';
-
-import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -46,7 +43,6 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
 
     // Libraries
-    ImgAssetModule,
     AppBarModule,
 
     // Widgets

@@ -3,7 +3,6 @@ import { NgModule } from "@angular/core";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { SuccessComponent } from "./success.component";
 import { RouterModule } from "@angular/router";
-import { ImgAssetModule } from "@blockframes/ui/theme";
 import { MatButtonModule } from "@angular/material/button";
 
 @NgModule({
@@ -11,7 +10,6 @@ import { MatButtonModule } from "@angular/material/button";
         CommonModule,
         FlexLayoutModule,
         RouterModule.forChild([{ path: '', component: SuccessComponent }]),
-        ImgAssetModule,
         MatButtonModule
     ],
     declarations: [SuccessComponent],

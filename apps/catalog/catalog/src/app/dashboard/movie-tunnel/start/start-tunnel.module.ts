@@ -4,7 +4,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Materials
@@ -21,7 +20,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-    ImgAssetModule,
     AppLogoModule,
 
     // Material
