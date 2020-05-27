@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
 import { ScreeningEvent } from '../../+state';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'event-screening-item',
@@ -12,12 +14,14 @@ import { ScreeningEvent } from '../../+state';
 export class ScreeningItemComponent {
   public poster: ImgRef;
   public screening: ScreeningEvent;
-  public invitation: Invitation;
+  public invitation$: Observable<Invitation>;
 
   @Input() set event(screening: ScreeningEvent) {
     this.screening = screening;
     this.poster = screening.movie?.promotionalElements.poster[0].media;
-    this.invitation = this.invitationQuery.getAll().find(e => e.docId === screening.id);
+    this.invitation$ = this.invitationQuery.selectAll().pipe(
+      map(invits => invits.find(e => e.docId === screening.id))
+    );
   }
 
   constructor(private invitationQuery: InvitationQuery) { }
