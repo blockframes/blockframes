@@ -22,10 +22,21 @@ export class UserComponent {
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
-    const emails = this.form.value.map(guest => guest.email);
-    this.form.reset([]);
-    this.sending.next(true);
-    await this.service.invite('user', emails).from('org').to('attendEvent', this.docId);
-    this.sending.next(false);
+    if (this.form.valid && this.form.value.length) {
+      const emails = this.form.value.map(guest => guest.email);
+      this.form.reset([]);
+      this.sending.next(true);
+      await this.service.invite('user', emails).from('org').to('attendEvent', this.docId);
+      this.sending.next(false);
+    }
+  }
+
+  /** Send only the first emails based on the maxlength */
+  spliceAndSend(amount: number) {
+    const value = this.form.value;
+    const first = value.splice(0, amount);
+    this.form.reset(first);
+    // Wait a little to avoid animation overlap
+    setTimeout(() => this.invite(), 200);
   }
 }

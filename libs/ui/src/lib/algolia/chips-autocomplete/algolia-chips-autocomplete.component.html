@@ -11,6 +11,7 @@
     <input #input
       matInput
       type="text"
+      matChipInputAddOnBlur
       [formControl]="searchCtrl"
       [matAutocomplete]="auto"
       [matChipInputFor]="chipList"
@@ -22,7 +23,6 @@
       spellcheck="false"
     />
   </mat-chip-list>
-
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event.option.value)">

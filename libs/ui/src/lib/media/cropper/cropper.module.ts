@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 // Components
 import { CropperComponent } from './cropper/cropper.component';
@@ -30,8 +31,9 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
     MatIconModule,
     MatProgressSpinnerModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ClipboardModule
   ],
   exports: [DropZoneDirective, CropperComponent]
 })
-export class CropperModule {}
+export class CropperModule { }

@@ -70,6 +70,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
 
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
+  @Input() filters: (string | string[])[] = [];
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -84,7 +86,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
     const indexSearch = searchClient.initIndex(algoliaIndex[this.index]);
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search(text).then(result => result.hits);
+    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.filters}).then(result => result.hits);
     const facetSearch = (text: string) => indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
 
     // perform search

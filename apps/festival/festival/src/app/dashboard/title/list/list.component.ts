@@ -21,7 +21,7 @@ interface TitleView {
 
 const columns = {
   title: 'Title',
-  view: '# View',
+  view: '# Views',
   director: 'Director(s)',
   productionStatus: 'Production Status',
   status: 'Status'

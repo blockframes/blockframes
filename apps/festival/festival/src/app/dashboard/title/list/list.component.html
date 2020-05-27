@@ -4,7 +4,7 @@
 
     <div fxLayout="row" fxLayoutAlign="end center" class="import" fxLayoutGap="24px">
       <a mat-stroked-button color="primary" routerLink="../import">
-        <mat-icon svgIcon="document"></mat-icon>
+        <mat-icon svgIcon="excel"></mat-icon>
         <span>Import Movies</span>
       </a>
       <a mat-mini-fab color="primary" routerLink="../tunnel/movie" matTooltip="Add a new title">
@@ -31,9 +31,11 @@
 
 <ng-template #noTitle>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no titles</h1>
+    <h1>You have no title yet.</h1>
     <p class="mat-body-1">
-      You may add several titles at once or just one at a time.
+      You haven't imported titles yet.
+      <br>
+      You may add several titles at once through bulk import, or just one at a time.
     </p>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
@@ -41,7 +43,7 @@
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
-        <img asset="upload_files.webp" alt="Upload files image">
+        <img asset="add_files.webp" alt="Upload files image">
         <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>

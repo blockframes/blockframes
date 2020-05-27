@@ -82,6 +82,7 @@ export const icons = [
   { name: 'dark_mode', url: 'assets/icons/dark_mode.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
+  { name: 'excel', url: 'assets/icons/excel.svg' },
   {
     name: 'document_signed',
     url: 'assets/icons/document_signed.svg'

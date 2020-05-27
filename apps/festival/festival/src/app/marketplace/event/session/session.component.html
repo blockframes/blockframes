@@ -2,31 +2,35 @@
   <ng-container [ngSwitch]="event.type">
     <!-- SCREENING TYPE -->
     <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center">
-
-      <ng-container *ngIf="showSession else showVideo">
-        <article class="dark-contrast-theme screen" [backgroundRef]="event.movie.promotionalElements.banner.media">
-          <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-            <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
-            <h4>{{ event.org | orgName }} presents</h4>
-            <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
-            <h2>by {{ event.movie.main.directors | displayName }}</h2>
-            <span class="mat-caption">Screening now</span>
-            <button mat-flat-button color="accent" (click)="showSession = false">
-              <mat-icon svgIcon="play"></mat-icon>
-              <span>Play</span>
-            </button>
-          </div>
-        </article>
+      <ng-container *ngIf="event.movie else noMovie">
+        <ng-container *ngIf="showSession else showVideo">
+          <article class="dark-contrast-theme screen" [backgroundRef]="event.movie.promotionalElements.banner.media">
+            <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
+              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
+              <h4>{{ event.org | orgName }} presents</h4>
+              <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
+              <h2>by {{ event.movie.main.directors | displayName }}</h2>
+              <span class="mat-caption">Screening now</span>
+              <button mat-flat-button color="accent" (click)="showSession = false">
+                <mat-icon svgIcon="play"></mat-icon>
+                <span>Play</span>
+              </button>
+            </div>
+          </article>
+        </ng-container>
+  
+        <ng-template #showVideo>
+          <article class="screen">
+            <event-player class="overlay"></event-player>
+          </article>
+        </ng-template>
+  
+        <img asset="screening_now.webp" alt="Cinema room">
       </ng-container>
 
-      <ng-template #showVideo>
-        <article class="screen">
-          <event-player class="overlay"></event-player>
-        </article>
+      <ng-template #noMovie>
+        <p>There is no movie associated with this screening</p>
       </ng-template>
-
-      <img asset="screening_now.webp" alt="Cinema room">
-
     </section>
 
     <!-- MEETING TYPE -->
@@ -54,5 +58,7 @@
 
 
 <ng-template #loading>
-  <mat-spinner></mat-spinner>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
 </ng-template>
