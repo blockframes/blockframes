@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
 
   public isSignin = true;
-  private snackbarDuration = 2000;
+  private snackbarDuration = 4000;
 
   constructor(
     private service: AuthService,
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isSignin = !(this.route.snapshot.fragment === 'signin');
+    this.isSignin = !(this.route.snapshot.fragment === 'login');
     this.isSignin
       ? this.dynTitle.setPageTitle('Create an account')
       : this.dynTitle.setPageTitle('Login')

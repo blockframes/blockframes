@@ -58,7 +58,12 @@ export class IdentityComponent {
         .where('type', '==', 'joinOrganization')
         .where('toUser.uid', '==', this.query.userId));
       const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
-      await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
+      if(!!pendingInvitation) {
+        // We put invitation to accepted only if the invitation.type is joinOrganization.
+        // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
+        await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
+      }
+      
       this.creating = false;
       this.router.navigate(['/c'], { relativeTo: this.route });
     } catch (error) {

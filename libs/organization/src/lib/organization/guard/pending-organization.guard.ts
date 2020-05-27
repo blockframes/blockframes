@@ -9,6 +9,7 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { of } from 'rxjs';
+import { getOrgModuleAccess } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -36,7 +37,8 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
               }
 
               if (org.status === 'accepted') {
-                return '/c/o/dashboard/home';
+                const moduleAccess = getOrgModuleAccess(org);
+                return `/c/o/${ moduleAccess[0] || 'dashboard' }/home`;
               }
             })
           );

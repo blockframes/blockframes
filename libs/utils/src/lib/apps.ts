@@ -1,7 +1,7 @@
 /**
  * Apps definition
  */
-import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 import { appUrlMarket, appUrlContent } from "@env";
@@ -68,7 +68,7 @@ export function getAppName(slug: App) {
  * Returns the apps that the org have access to
  * @param org
  */
-export function getOrgAppAccess(org: OrganizationDocument): App[] {
+export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates): App[] {
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
@@ -79,6 +79,19 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
   }
 
   return Object.keys(allowedApps).map(k => k as App);
+}
+
+export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocumentWithDates): Module[] {
+  const allowedModules = {} as Record<Module, boolean>;
+  for (const a of app) {
+    for (const m of module) {
+      if (org.appAccess[a][m]) {
+        allowedModules[m] = true;
+      }
+    }
+  }
+
+  return Object.keys(allowedModules).map(k => k as Module);
 }
 
 /**
