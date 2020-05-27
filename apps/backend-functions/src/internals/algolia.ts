@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
 import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { App, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
@@ -107,7 +107,7 @@ export function storeSearchableMovie(
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
-        (Object.keys(movie.main.storeConfig!.appAccess) as App[]).filter(app => movie.main.storeConfig?.appAccess[app]) :
+        app.filter(a => movie.main.storeConfig?.appAccess[a]) :
         [],
     };
 
