@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 import { map } from 'rxjs/operators';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 
 @Component({

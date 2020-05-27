@@ -102,7 +102,6 @@ export async function onOrganizationCreate(
   context: functions.EventContext
 ): Promise<any> {
   const org = snap.data() as OrganizationDocument;
-  const orgID = context.params.orgID;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
@@ -114,7 +113,7 @@ export async function onOrganizationCreate(
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from),
     // Update algolia's index
-    storeSearchableOrg(orgID, org.denomination.full)
+    storeSearchableOrg(org)
   ]);
 }
 
@@ -148,7 +147,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
     const urlToUse = await getAppUrl(after);
     const from = await getFromEmail(after);
     await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), from);
-    
+
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
@@ -158,7 +157,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
     });
     await triggerNotifications([notification]);
   }
-  
+
   const RELAYER_CONFIG: RelayerConfig = {
     ...relayer,
     mnemonic
@@ -184,7 +183,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   }
 
   // Update algolia's index
-  await storeSearchableOrg(after.id, after.denomination.full)
+  await storeSearchableOrg(after)
 
   return Promise.resolve(true); // no-op by default
 }
