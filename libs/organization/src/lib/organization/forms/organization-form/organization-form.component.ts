@@ -20,9 +20,10 @@ export class OrganizationFormComponent {
 
   constructor(private service: OrganizationService, private query: OrganizationQuery) { }
 
-  get bankAccounts() {
-    return this.form.get('bankAccounts');
-  }
+  // ISSUE#2692
+  // get bankAccounts() {
+  //   return this.form.get('bankAccounts');
+  // }
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {

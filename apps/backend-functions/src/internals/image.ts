@@ -145,6 +145,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
     }
 
     // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
+    // TODO#2882
     const urls: Record<string, string> = {};
     for (const { key, url } of uploaded) {
       urls[key] = url;
@@ -177,7 +178,7 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
   }
 
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
-  imgSizeDirectory.forEach(async (sizeDir) => {
+  imgSizeDirectory.forEach(async (sizeDir : string) => {
     const path = `${filePathElements[0]}/${filePathElements[1]}/${filePathElements[2]}/${sizeDir}/${filePathElements[4]}`;
     const exists = await bucket.file(path).exists();
     if (exists) {
