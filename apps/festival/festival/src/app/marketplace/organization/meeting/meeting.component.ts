@@ -30,10 +30,11 @@ export class MeetingComponent {
       const orgId = this.route.snapshot.paramMap.get('orgId');
       const eventId = await this.service.add(event);
       await this.invitationService.invite('org', orgId).from('org').to('attendEvent', eventId);
+      this.snackbar.open('Your meeting request was successfully sent.', 'close', { duration: 2000 });
     } catch (err) {
-      this.snackbar.open('Something wrong happen. Could not send invitation', 'close', { duration: 500 });
+      this.snackbar.open('Something wrong happen. Could not send invitation.', 'close', { duration: 5000 });
       console.error(err);
     }
   }
-  
+
 }
