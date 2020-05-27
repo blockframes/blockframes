@@ -6,13 +6,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 //Material
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
+import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -25,14 +26,16 @@ import { HomeComponent } from './home.component';
     RouterModule.forChild([{ path: '', component: HomeComponent }]),
     FlexLayoutModule,
 
+    // Blockframes
     SliderModule,
+    CarouselModule,
+    MovieCardModule,
     MovieSlideModule,
-    TranslateSlugModule,
     WishlistButtonModule,
+    MatLayoutModule,
 
     // Material
-    MatIconModule,
-    MatButtonModule,
+    MatButtonModule
   ]
 })
 export class HomeModule { }
