@@ -67,6 +67,9 @@ export function getAppName(slug: App) {
 /**
  * Returns the apps that the org have access to
  * @param org
+ * @example
+ * getOrgAppAccess(orgA); // ['catalog', 'festival']
+ * getOrgAppAccess(orgB); // ['festival']
  */
 export function getOrgAppAccess(org: OrganizationDocument): App[] {
   const allowedApps = {} as Record<App, boolean>;
@@ -82,8 +85,29 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
 }
 
 /**
+ * Returns the modules that the org have access to, across for all apps
+ * @param org
+ * @example
+ * // we don't know in witch app the module is
+ * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
+ * getOrgModuleAccess(orgB); // ['marketplace']
+ */
+export function getOrgModuleAccess(org: OrganizationDocument): Module[] {
+  const allowedModule = {} as Record<Module, boolean>;
+  for (const a of app) {
+    for (const m of module) {
+      if (org.appAccess[a][m]) {
+        allowedModule[m] = true;
+      }
+    }
+  }
+
+  return Object.keys(allowedModule).map(k => k as Module);
+}
+
+/**
  * Determine the status to update depending on the current app.
- * For app Festival, publish status is "accepted", "submittted" for other apps
+ * For app Festival, publish status is "accepted", "submitted" for other apps
  */
 export function getMoviePublishStatus(a: App): StoreStatus {
   return a === 'festival' ? 'accepted' : 'submitted';
@@ -91,7 +115,7 @@ export function getMoviePublishStatus(a: App): StoreStatus {
 
 /**
  * Returns the "from" email that should be used depending on the current app
- * @param a 
+ * @param a
  */
 export function getSendgridFrom(a?: App): EmailData {
   if (!a) {
