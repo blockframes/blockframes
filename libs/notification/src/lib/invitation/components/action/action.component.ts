@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Event } from '@blockframes/event/+state';
 import { Invitation, InvitationService } from '../../+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -10,21 +10,26 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./action.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionComponent implements OnInit {
+export class ActionComponent {
 
   @Input() event: Event;
-  @Input() invitation: Invitation;
+  //@Input() invitation: Invitation;
+  public invit: Invitation;
 
   public canAction: boolean;
+
+  @Input() set invitation(invit: Invitation) {
+    this.invit= invit;
+    this.canAction = !!this.invit && ((!(this.invit.fromUser?.uid === this.authQuery.userId) && this.invit.toOrg?.id === this.authQuery.orgId) || this.invit.toUser?.uid === this.authQuery.userId);
+    this.cdr.markForCheck();
+  }
 
   constructor(
     private service: InvitationService,
     private authQuery: AuthQuery,
-    private snackBar: MatSnackBar) {}
-
-  ngOnInit() {
-    this.canAction = !!this.invitation && ((!(this.invitation.fromUser?.uid === this.authQuery.userId) && this.invitation.toOrg?.id === this.authQuery.orgId) || this.invitation.toUser?.uid === this.authQuery.userId);
-  }
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   accept(invitation: Invitation) {
     this.service.acceptInvitation(invitation);
