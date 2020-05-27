@@ -11,3 +11,12 @@
     <auth-signup-form (opened)="isSignin=false" (submited)="signup($event)"></auth-signup-form>
   </mat-sidenav>
 </mat-sidenav-container>
+
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    An account already exists for this email address.<br/> 
+    If you don't remember your password, <a routerLink="../email-verification">please reset it</a> or try searching in your past emails. <br/>
+    You might have received an invitation containing credentials to join Archipel.
+  </div>
+</ng-template>

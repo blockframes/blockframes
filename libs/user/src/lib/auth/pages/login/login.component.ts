@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, OnInit, TemplateRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,6 +16,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class LoginComponent implements OnInit {
   @ViewChild('signinSidenav') loginSidenav: MatSidenav;
   @ViewChild('signupSidenav') signupSidenav: MatSidenav;
+  @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
 
   public isSignin = true;
   private snackbarDuration = 2000;
@@ -60,8 +61,16 @@ export class LoginComponent implements OnInit {
       await this.service.signup(email, password, { ctx: { firstName, lastName } });
       this.router.navigate(['c']);
     } catch (err) {
-      console.error(err); // let the devs see what happened
-      this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+
+      switch (err.code) {
+        case 'auth/email-already-in-use':
+          this.snackBar.openFromTemplate(this.customSnackBarTemplate, { duration: this.snackbarDuration })
+          break;
+        default:
+          console.error(err); // let the devs see what happened
+          this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
+          break;
+      }
     }
   }
 
