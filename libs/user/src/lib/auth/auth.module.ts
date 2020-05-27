@@ -30,7 +30,6 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { IdentityGuard } from './guard/identity.guard';
 
 export const AuthRoutes: Routes = [
@@ -59,7 +58,6 @@ export const AuthRoutes: Routes = [
     TermsConditionsModule,
     AcceptConditionsModule,
     PasswordConfirmModule,
-    ImgAssetModule,
 
     // Material
     MatSnackBarModule,
