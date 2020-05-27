@@ -31,13 +31,17 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+
+// Guards
 import { IdentityGuard } from './guard/identity.guard';
+import { NoAuthGuard } from './guard/no-auth.guard';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+  { path: '', redirectTo: 'welcome', pathMatch: 'full' }, // @TODO (#2825) remove if not used
   { path: 'welcome', component: WelcomeViewComponent },
   {
     path: 'connexion',
+    canActivate: [NoAuthGuard],
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
   },
   {
@@ -46,8 +50,10 @@ export const AuthRoutes: Routes = [
     canDeactivate: [IdentityGuard],
     component: IdentityComponent
   },
-  { path: 'email-verification', component: EmailVerificationComponent},
-  { path: 'password-reset', component: PasswordResetComponent}
+  // @TODO (#2875) rename to password-reset
+  { path: 'email-verification', component: EmailVerificationComponent },
+  // @TODO (#2875) should be removed, google is doing this for us
+  { path: 'password-reset', component: PasswordResetComponent }
 ];
 
 @NgModule({
@@ -86,4 +92,4 @@ export const AuthRoutes: Routes = [
     PasswordResetComponent
   ],
 })
-export class AuthModule {}
+export class AuthModule { }

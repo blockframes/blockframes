@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthQuery, AuthService, AuthState } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
@@ -27,6 +27,7 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
       switchMap(userAuth => {
         if (!userAuth) { return new Promise(r => r(true)); }
         return this.service.sync().pipe(
+          catchError(() => new Promise(r => r(true))),
           map(_ => this.query.orgId),
           switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
           map(org => {
