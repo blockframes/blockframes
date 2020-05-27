@@ -7,6 +7,6 @@
     <org-chip [org]="screening.org"></org-chip>
   </div>
   <footer fxLayout>
-    <invitation-action [invitation]="invitation" [event]="screening"></invitation-action>
+    <invitation-action [invitation]="invitation$ | async" [event]="screening"></invitation-action>
   </footer>
 </article>

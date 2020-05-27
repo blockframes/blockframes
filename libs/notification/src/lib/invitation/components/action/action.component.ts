@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Event } from '@blockframes/event/+state';
 import { Invitation, InvitationService } from '../../+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'invitation-action',
@@ -11,9 +12,15 @@ import { Invitation, InvitationService } from '../../+state';
 export class ActionComponent {
 
   @Input() event: Event;
-  @Input() invitation: Invitation;
+  public invit: Invitation;
 
-  constructor(private service: InvitationService) {}
+  @Input() set invitation(invit: Invitation) {
+    this.invit= invit;
+  }
+
+  constructor(
+    private service: InvitationService
+  ) {}
 
   accept(invitation: Invitation) {
     this.service.acceptInvitation(invitation);
