@@ -81,13 +81,17 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
   return Object.keys(allowedApps).map(k => k as App);
 }
 
-export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocumentWithDates): Module[] {
+/**
+ * Returns the modules an org have access to for a particular app
+ * @param org 
+ * @param a 
+ */
+export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocumentWithDates, a: App): Module[] {
   const allowedModules = {} as Record<Module, boolean>;
-  for (const a of app) {
-    for (const m of module) {
-      if (org.appAccess[a][m]) {
-        allowedModules[m] = true;
-      }
+
+  for (const m of module) {
+    if (org.appAccess[a][m]) {
+      allowedModules[m] = true;
     }
   }
 

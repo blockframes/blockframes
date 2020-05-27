@@ -9,7 +9,8 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, switchMap } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { of } from 'rxjs';
-import { getOrgModuleAccess } from '@blockframes/utils/apps';
+import { getOrgModuleAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
@@ -18,7 +19,8 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
     protected service: OrganizationService,
     protected router: Router,
     private query: OrganizationQuery,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private routerQuery: RouterQuery,
   ) {
     super(service);
   }
@@ -37,8 +39,9 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
               }
 
               if (org.status === 'accepted') {
-                const moduleAccess = getOrgModuleAccess(org);
-                return `/c/o/${ moduleAccess[0] || 'dashboard' }/home`;
+                const app = getCurrentApp(this.routerQuery);
+                const moduleAccess = getOrgModuleAccess(org, app);
+                return `/c/o/${moduleAccess[0] || 'dashboard'}/home`;
               }
             })
           );
