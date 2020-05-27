@@ -2,9 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
-import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
-import { scaleIn } from '@blockframes/utils/animations/fade';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -12,7 +10,6 @@ import { Observable, BehaviorSubject } from 'rxjs';
   selector: 'event-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
-  animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
 export class EventEditComponent {

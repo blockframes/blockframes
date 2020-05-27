@@ -14,7 +14,6 @@ declare const jwplayer: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventPlayerComponent implements AfterViewInit {
-
   private player: any;
 
   constructor(
