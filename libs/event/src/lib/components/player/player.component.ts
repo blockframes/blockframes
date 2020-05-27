@@ -3,6 +3,7 @@ import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { BehaviorSubject } from 'rxjs';
 
 declare const jwplayer: any;
 
@@ -14,8 +15,8 @@ declare const jwplayer: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventPlayerComponent implements AfterViewInit {
-
   private player: any;
+  public loading: boolean;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -64,8 +65,10 @@ export class EventPlayerComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
+    this.loading = true;
     const watermarkUrl = this.authQuery.user.watermark.urls.original;
     await this.loadScript();
+    this.loading = false;
     this.initPlayer(watermarkUrl);
   }
 }
