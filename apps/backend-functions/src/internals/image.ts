@@ -4,8 +4,9 @@ import { join, dirname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import {get, set} from 'lodash';
+import { get, set } from 'lodash';
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { imgSizeDirectory } from '@blockframes/utils/media/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -129,11 +130,11 @@ async function resize(data: functions.storage.ObjectMetadata) {
       throw new Error('Data is undefined');
     }
 
-    const  original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
+    const original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
 
     // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
     const uploadedUrl: Record<string, string> = {}
-    for (const { key, url } of  uploaded) {
+    for (const { key, url } of uploaded) {
       uploadedUrl[key] = url;
     }
 
@@ -152,4 +153,33 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);
+}
+
+export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
+
+  // Get all the needed information from the data (bucket, path, file name and directory)
+  const bucket = admin.storage().bucket(data.bucket);
+  const filePath = data.name;
+
+  if (filePath === undefined) {
+    throw new Error('undefined data.name!');
+  }
+
+  const filePathElements = filePath.split('/')
+
+  if (filePathElements.length !== 5) {
+    throw new Error('unhandled filePath:' + filePath);
+  }
+
+  // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
+  imgSizeDirectory.forEach(async (sizeDir) => {
+    const path = `${filePathElements[0]}/${filePathElements[1]}/${filePathElements[2]}/${sizeDir}/${filePathElements[4]}`;
+    const exists = await bucket.file(path).exists();
+    if (exists) {
+      await bucket.file(path).delete();
+      return true;
+    } else {
+      throw new Error(`${path}: couldn't be found`)
+    }
+  })
 }

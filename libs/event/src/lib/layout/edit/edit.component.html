@@ -4,10 +4,13 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div fxLayout fxLayoutAlign="end center">
-      <ng-container *ngIf="form.dirty">
-        <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
-      </ng-container>
       <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
+      <ng-container *ngIf="form.dirty else disabled">
+        <button type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
+      </ng-container>
+      <ng-template #disabled>
+        <button mat-button disabled>Save</button>
+      </ng-template>
     </div>
   </header>
 </ng-template>

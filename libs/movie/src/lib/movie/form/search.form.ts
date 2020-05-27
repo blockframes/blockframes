@@ -7,6 +7,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus } from '../+state/movie.firestore';
 import { MovieAppAccess } from "@blockframes/utils/apps";
+import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
@@ -29,7 +30,7 @@ export interface MovieSearch extends AlgoliaSearch {
   languages: LanguagesSearch;
   productionStatus: MovieStatusSlug[];
   minBudget: number;
-  sellers: string[];
+  sellers: AlgoliaRecordOrganization[];
 }
 
 function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -74,7 +75,7 @@ function createMovieSearchControl(search: MovieSearch) {
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ExtractSlug<'MOVIE_STATUS'>>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
-    sellers: FormList.factory<string>(search.sellers),
+    sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
   };
 }
 
@@ -136,7 +137,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
           ...this.languages.get('caption').controls.map(lang => `languages.caption:${lang.value}`),
         ],
         this.productionStatus.value.map(status => `status:${status}`),
-        this.sellers.value.map(seller => `orgName:${seller}`),
+        this.sellers.value.map(seller => `orgName:${seller.name}`),
         this.storeType.value.map(type => `storeType:${type}`),
         this.storeConfig.value.map(config => `storeConfig:${config}`),
         this.appAccess.value.map(access => `appAccess:${access}`)

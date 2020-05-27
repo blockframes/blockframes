@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { EventViewComponent } from './view.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
@@ -18,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
   exports: [EventViewComponent],
   imports: [
     CommonModule,
+    RouterModule,
     FlexLayoutModule,
     BackgroundAssetModule,
     EventRangeModule,

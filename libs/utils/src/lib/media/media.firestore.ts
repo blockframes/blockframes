@@ -1,3 +1,6 @@
+export type ImgSizeDirectory = 'lg' | 'md' | 'xs' | 'original';
+export const imgSizeDirectory: ImgSizeDirectory[] = ['lg', 'md', 'xs', 'original']
+
 export interface ImgRef {
   ref: string;
   urls: {
@@ -9,7 +12,7 @@ export interface ImgRef {
 }
 
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { urls: { original : ref } } : ref;
+  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
   return {
     ref: '',
     urls: {
