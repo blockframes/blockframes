@@ -13,10 +13,10 @@ export class EventLinkPipe implements PipeTransform {
         return [prefix, event.id, 'edit'];
       }
     } else {
-      if (event.start.getTime() < Date.now() || event.end.getTime() > Date.now()) {
-        return [prefix, event.id];
-      } else {
+      if (event.start.getTime() < Date.now() && event.end.getTime() > Date.now()) {
         return [prefix, event.id, 'session'];
+      } else {
+        return [prefix, event.id];
       }
     }
   }
