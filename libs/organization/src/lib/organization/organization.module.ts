@@ -11,7 +11,6 @@ import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/pas
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 
@@ -83,7 +82,6 @@ export const organizationRoutes: Routes = [
     CropperModule,
     ImageReferenceModule,
     OrganizationFormModule,
-    ImgAssetModule,
     TableFilterModule,
     OrganizationDisplayModule,
 

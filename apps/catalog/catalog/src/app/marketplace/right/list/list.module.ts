@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { RightListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
@@ -21,7 +20,6 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     ReactiveFormsModule,
     ContractTableModule,
-    ImgAssetModule,
 
     // Material
     MatTabsModule,

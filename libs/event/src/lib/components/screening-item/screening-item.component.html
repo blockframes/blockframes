@@ -1,4 +1,4 @@
-<img fxHide.lt-sm [imgRef]="poster" placeholderAsset="empty_poster.webp" alt="Movie poster of the screening"/>
+<img fxHide.lt-sm [ref]="poster" asset="empty_poster.webp" alt="Movie poster of the screening"/>
 <article fxLayout="column" fxLayoutAlign="space-between start">
   <div fxLayout="column" fxLayoutAlign="start start">
     <h3><a [routerLink]="['../../../event/', screening.id]">{{ screening.title }}</a></h3>

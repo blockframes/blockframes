@@ -1,27 +1,22 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
-import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 
-// @todo(#2528) merge ImageAssetDirective here
 @Directive({
-  selector: 'img[imgRef]'
+  selector: 'img[ref], img[asset]'
 })
 export class ImageReferenceDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
-  private placeholder$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
-  private assetUrl$: Observable<string>;
   placeholder: string;
-  url: string;
 
   @HostBinding('src') src: string;
 
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set imgRef(path: ImgRef) {
+  @Input() set ref(path: ImgRef) {
     if(!path){
       this.ref$.next('');
     } try {
@@ -31,11 +26,9 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     }
   }
 
-  @Input() set placeholderUrl(placeholder: string) {
-    this.placeholder$.next(placeholder);
-  };
+  @Input() type: 'images' | 'logo' = 'images';
 
-  @Input() set placeholderAsset(asset: string) {
+  @Input() set asset(asset: string) {
     this.asset$.next(asset);
   }
 
@@ -45,17 +38,10 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.assetUrl$ = combineLatest([this.theme.theme$, this.asset$]).pipe(
-      map(([theme, asset]) => `assets/images/${theme}/${asset}`)
-    );
-    this.sub = combineLatest([
-      this.ref$,
-      this.placeholder$,
-      this.assetUrl$
-    ]).subscribe(([ ref, placeholder, assetUrl ]) => {
-      this.src = ref || placeholder || assetUrl;
+    this.sub = combineLatest([this.asset$, this.theme.theme$, this.ref$]).subscribe(([asset, theme, ref]) => {
+      this.src = ref || `assets/${this.type}/${theme}/${asset}`;
       this.cdr.markForCheck();
-    })
+    });
   }
 
   ngOnDestroy() {

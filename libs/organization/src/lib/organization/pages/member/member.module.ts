@@ -6,7 +6,6 @@ import { OrganizationFormModule } from '@blockframes/organization/forms/organiza
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 
@@ -42,7 +41,6 @@ import { MatListModule } from '@angular/material/list';
     OrganizationFormModule,
     FlexLayoutModule,
     ImageReferenceModule,
-    ImgAssetModule,
     TableFilterModule,
     AvatarListModule,
 

@@ -1,6 +1,6 @@
 <mat-list-item>
-  <img matListAvatar *ngIf="invitation.fromUser" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromUser.avatar" alt="Profile picture" />
-  <img matListAvatar *ngIf="invitation.fromOrg" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromOrg.logo" alt="Organization logo" />
+  <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture" />
+  <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo" />
   <p matLine class="mat-body-1">
     {{ invitation.message }}
   </p>

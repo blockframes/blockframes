@@ -1,7 +1,7 @@
 <ng-container *ngIf="(invitation | guest: 'user') as user">
   <mat-list-item>
     <div matListAvatar class="avatar-status">
-      <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp" />
+      <img [ref]="user.avatar" asset="profil_user.webp" />
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
     <span *ngIf="user.firstName" matLine>{{ user | displayName }}</span>

@@ -15,7 +15,7 @@
           <span>{{ org.denomination.full }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
-        <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+        <img [ref]="org.logo" asset="Organization_250.png" alt="organization logo" />
       </div>
     </div>
   </ng-template>
@@ -24,7 +24,7 @@
     <a mat-icon-button routerLink="..">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="organization logo" />
+    <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
     <article fxLayout="column" fxLayoutAlign="start start">
       <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
       <span class="mat-display-2">{{ org.denomination.full }}</span>
