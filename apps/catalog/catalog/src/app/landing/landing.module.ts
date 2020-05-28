@@ -4,10 +4,10 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingModule } from '@blockframes/landing/landing.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -63,10 +63,10 @@ const routes = [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImgAssetModule,
     AppLogoModule,
     TelInputModule,
     LandingModule,
+    ImageReferenceModule,
 
     // Material
     MatSidenavModule,

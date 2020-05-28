@@ -10,6 +10,7 @@ import { LandingToolbarComponent } from './toolbar/toolbar.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { RoleModule } from './learn-more/role.pipe';
 import { RouterModule } from '@angular/router';
 
@@ -26,7 +27,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 @NgModule({
   declarations: [
@@ -42,8 +42,8 @@ import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
     ReactiveFormsModule,
     AppLogoModule,
     TelInputModule,
+    ImageReferenceModule,
     RoleModule,
-    ImgAssetModule,
 
     // Material
     MatSidenavModule,

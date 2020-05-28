@@ -19,10 +19,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 
 import { KeyManagerModule } from '../key-manager/key-manager.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { UploadModule } from '@blockframes/ui/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletKeyGuard } from './guards/wallet-key.guard';
@@ -85,8 +85,8 @@ export const walletRoutes: Routes = [
     RouterModule.forChild(walletRoutes),
     PasswordConfirmModule,
     FeedbackMessageModule,
-    MatDividerModule,
-    ImgAssetModule
+    ImageReferenceModule,
+    MatDividerModule
   ],
   declarations: [
     WalletViewComponent,

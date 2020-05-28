@@ -62,7 +62,7 @@
         <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
       <ng-template colRef="avatar" let-avatar>
-        <img class="poster" [imgRef]="avatar" placeholderAsset="empty_poster.webp">
+        <img class="poster" [ref]="avatar" asset="empty_poster.webp">
       </ng-template>
     </bf-table-filter>
   </article>
@@ -78,7 +78,7 @@
       showPaginator>
       <ng-template colRef="promotionalElements.poster" let-posters>
         <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-          <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.webp">
+          <img class="poster" [ref]="poster" asset="empty_poster.webp">
         </ng-container>
         <ng-template #noposter>
           --

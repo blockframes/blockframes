@@ -36,7 +36,7 @@
           <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
           <li *ngFor="let prize of prizes">
             <!-- TODO#2654 Change placeholder to prize placeholder -->
-            <img [imgRef]="prize.logo" placeholderAsset="empty_poster.webp"/>
+            <img [ref]="prize.logo" asset="empty_poster.webp"/>
           </li>
         </ng-container>
       </ul>

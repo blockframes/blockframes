@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
@@ -24,7 +23,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     FlexLayoutModule,
     // Components
-    ImgAssetModule,
     ImageReferenceModule,
     DisplayNameModule,
     EventTimeModule,
