@@ -4,14 +4,13 @@ import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
-import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { PermissionsService } from '@blockframes/permissions/+state';
+import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { combineLatest } from 'rxjs';
 import { EventQuery } from './event.query';
+import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, tap, map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
@@ -59,6 +58,7 @@ export class EventService extends CollectionService<EventState> {
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
     private invitationService: InvitationService,
+    private permissionQuery: PermissionsQuery,
     private query: EventQuery,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
@@ -86,7 +86,9 @@ export class EventService extends CollectionService<EventState> {
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
-    return event.ownerId === this.authQuery.userId || event.ownerId === this.orgQuery.getActiveId();
+    const isUser = event.ownerId === this.authQuery.userId;
+    const isOrgAdmin = (event.ownerId === this.orgQuery.getActiveId()) && this.permissionQuery.isUserAdmin();
+    return isUser || isOrgAdmin;
   }
 
   /** Create the permission */
@@ -125,7 +127,9 @@ export class EventService extends CollectionService<EventState> {
   }
 
   /** Query one or many event by id */
-  queryDocs(ids: string | string[]) {
+  queryDocs(ids: string[]): Observable<Event[]>
+  queryDocs(ids: string): Observable<Event>
+  queryDocs(ids: string | string[]): Observable<Event | Event[]> {
     if (typeof ids === 'string') {
       return queryChanges.call(this, eventQuery(ids))
     } else {

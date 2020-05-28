@@ -1,13 +1,12 @@
 <section>
-  <h1>Thank your for creating your organization!</h1>
+  <h1>Thank you for creating your organization!</h1>
   <article class="mat-body-1">
-    <p>You’ll receive a confirmation link by mail once your organization is validated.
-      <br> Thank you for your patience.  </p>
+    <p>
+      You’ll receive an email confirmation once your organization is validated.<br/>
+      Thank you for your patience.
+    </p>
   </article>
   <article fxLayout="column" fxLayoutAlign="center center">
     <img asset="wait.webp" />
   </article>
-  <ng-container *ngIf="isAccepted$ | async">
-    <a @slideDown routerLink="/c/o" mat-flat-button color="accent">Go to {{ organization | workspace: app }}</a>
-  </ng-container>
 </section>

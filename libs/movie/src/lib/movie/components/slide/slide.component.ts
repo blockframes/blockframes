@@ -1,0 +1,55 @@
+// Angular
+import { Component, ChangeDetectionStrategy, Input, Directive } from '@angular/core';
+
+// Blockframes
+import { Movie, Credit } from '@blockframes/movie/+state';
+import { Title } from '@blockframes/movie/+state/movie.firestore';
+import { ImgRef } from '@blockframes/utils/media/media.firestore';
+
+interface MovieSliderView {
+    directors: string | Credit[],
+    titles: Title,
+    synopsis: string,
+    banner: ImgRef | string
+}
+
+function createMovieSliderView(movie: Movie): MovieSliderView {
+    return {
+        directors: movie.main?.directors || '',
+        titles: {
+            international: movie.main?.title.international || '',
+            original: movie.main?.title.original || ''
+        },
+        synopsis: movie.story?.synopsis || '',
+        banner: movie.promotionalElements?.banner.media || ''
+    }
+}
+
+@Component({
+    selector: '[movie] movie-slide',
+    templateUrl: './slide.component.html',
+    styleUrls: ['./slide.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class MovieSlideComponent {
+    title: Movie;
+    movieView: MovieSliderView;
+    @Input() set movie(movie: Movie) {
+        this.movieView = createMovieSliderView(movie);
+        this.title = movie;
+    }
+}
+
+@Directive({
+    selector: 'movie-slide-cta, [movieSlideCTA]',
+    host: { class: 'movie-slide-cta' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class MovieSlideCTA { }
+
+@Directive({
+    selector: 'movie-slide-actions, [movieSlideActions]',
+    host: { class: 'movie-slide-actions' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class MovieSlideActions { }

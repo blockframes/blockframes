@@ -10,7 +10,7 @@ import { getAppUrl } from '../data/internals';
 import { EmailRecipient } from '@blockframes/utils/emails';
 
 const ORG_HOME = '/c/o/organization/';
-const USER_ORG_INVITATION = '/c/organization/home';
+const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 
@@ -56,7 +56,7 @@ export function userInvite(email: string, password: string, orgName: string, pag
     userEmail: email,
     userPassword: password,
     orgName,
-    pageURL: `${pageURL}${USER_ORG_INVITATION}`
+    pageURL: `${pageURL}${USER_CREDENTIAL_INVITATION}`
   };
   return { to: email, templateId, data };
 }

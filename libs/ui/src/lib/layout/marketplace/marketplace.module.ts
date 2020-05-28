@@ -5,6 +5,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 
+import { MatLayoutModule } from '../layout.module';
+
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
@@ -31,6 +33,7 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterModule,
     FlexLayoutModule,
     ScrollingModule,
+    MatLayoutModule,
 
     // Material
     MatToolbarModule,

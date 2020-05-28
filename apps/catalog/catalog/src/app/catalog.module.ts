@@ -5,11 +5,13 @@ import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
 // Guards
 import { CatalogAppGuard } from './guards/catalog-app.guard';
+import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
   landing: {
     path: '',
+    canActivate: [NoAuthGuard],
     loadChildren: () => import('./landing/landing.module').then(m => m.CatalogLandingModule)
   },
   appsRoutes: [{
@@ -38,4 +40,4 @@ const routes: Routes = createRoutes({
   declarations: [],
   imports: [RouterModule.forChild(routes)],
 })
-export class CatalogModule {}
+export class CatalogModule { }

@@ -60,6 +60,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'join-congratulations',
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
   },
   {

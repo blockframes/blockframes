@@ -25,6 +25,7 @@ export class AuthWidgetComponent {
 
   public async logout() {
     await this.service.signOut();
+    window.location.reload();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

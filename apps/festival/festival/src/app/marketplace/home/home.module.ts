@@ -2,39 +2,42 @@
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-// Libraries
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { SliderModule } from '@blockframes/ui/slider/slider.module';
+// Blockframes
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
+import { SliderModule } from '@blockframes/ui/slider/slider.module';
+import { MovieSlideModule } from '@blockframes/movie/components/slide/slide.module'
+import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
-// Pages
+// Page
 import { HomeComponent } from './home.component';
 
-// Pipes
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
 
 @NgModule({
   declarations: [HomeComponent],
   imports: [
     CommonModule,
-    CropperModule,
-    MatButtonModule,
+    RouterModule.forChild([{ path: '', component: HomeComponent }]),
     FlexLayoutModule,
+
+    // Blockframes
     SliderModule,
-    DisplayNameModule,
-    TranslateSlugModule,
+    CarouselModule,
+    MovieCardModule,
+    MovieSlideModule,
     WishlistButtonModule,
-    MatIconModule,
-    MatSnackBarModule,
-    RouterModule.forChild([{ path: '', component: HomeComponent }])
+    MatLayoutModule,
+
+    // Material
+    MatButtonModule,
+    MatIconModule
   ]
 })
-export class HomeModule {}
+export class HomeModule { }
