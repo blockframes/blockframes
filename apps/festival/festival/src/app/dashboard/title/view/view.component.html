@@ -10,7 +10,7 @@
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>
-          {{ movie.main.workType }}
+          {{ getWorkType(movie.main.workType) }}
           <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
           {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
           <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|</ng-container>
@@ -19,11 +19,12 @@
         <h1>{{ movie.main.title.international }}</h1>
         <h6>{{ getDirectors(movie) }}</h6>
         <span>
-          <ng-container *ngFor="let country of movie.main.originCountries; let isLast=last">
-            {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
+          <ng-container *ngFor="let country of movie.main.originCountries">
+            {{ country | translateSlug: 'TERRITORIES'}},
           </ng-container>
-          <ng-container *ngIf="movie.main.productionYear && movie.main.originCountries.length">,</ng-container>
-          {{ movie.main.productionYear }}
+          <ng-container *ngIf="movie.main.productionYear">
+            {{ movie.main.productionYear }}
+          </ng-container>
         </span>
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="pencil"></mat-icon>
