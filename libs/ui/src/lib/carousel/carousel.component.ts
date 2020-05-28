@@ -16,8 +16,8 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { Flex } from '../layout/layout.module';
 
 // RxJs
-import { Observable, Subject, AsyncSubject } from 'rxjs';
-import { startWith, tap, distinctUntilChanged, map, debounceTime, shareReplay } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -31,11 +31,8 @@ export class CarouselComponent implements AfterViewInit {
   public currentPosition: number;
 
   /* Indicators to show arrow buttons */
-  private showBack$: Observable<boolean>;
-  private showForward$: Observable<boolean>;
-
-  public showBack: boolean;
-  public showForward: boolean;
+  public showBack$: Observable<boolean>;
+  public showForward$: Observable<boolean>;
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
@@ -49,19 +46,7 @@ export class CarouselComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.showBack$ = this.onScrolling('left');
-    /* If clientWidth is smaller or equal to scrollWidth, it means we got an overflow */
-    if (this.clientWidth <= this.container.nativeElement.scrollWidth) {
-      this.showForward$ = this.onScrolling('right')
-    }
-
-    this.showBack$.subscribe(value => {
-      this.showBack = value
-      this.cdr.detectChanges()
-    })
-    this.showForward$.subscribe(value => {
-      this.showForward = value
-      this.cdr.detectChanges()
-    })
+    this.showForward$ = this.onScrolling('right')
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -78,8 +63,12 @@ export class CarouselComponent implements AfterViewInit {
       debounceTime(50),
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
       distinctUntilChanged(),
-      startWith(direction === 'right')
-    )
+      startWith(direction === 'right'),
+      tap(_ => this.ngZone.runOutsideAngular(() => {
+        console.log('run')
+        this.cdr.detectChanges()
+      }
+      )))
   }
 }
 
