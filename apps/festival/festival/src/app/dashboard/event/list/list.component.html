@@ -5,9 +5,9 @@
     <mat-form-field *ngIf="filter">
       <mat-label>Filter-by</mat-label>
       <mat-select [formControl]="filter">
-        <mat-option [value]="types">All</mat-option>
+        <mat-option [value]="types">All events</mat-option>
         <ng-container *ngFor="let type of types">
-          <mat-option [value]="[type]">{{ type | titlecase }}</mat-option>
+          <mat-option [value]="[type]">{{ typesLabel[type] }}</mat-option>
         </ng-container>
       </mat-select>
     </mat-form-field>

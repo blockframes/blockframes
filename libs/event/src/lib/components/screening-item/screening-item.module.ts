@@ -10,6 +10,7 @@ import { InvitationActionModule } from '@blockframes/invitation/components/actio
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [ScreeningItemComponent],
@@ -23,7 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     InvitationActionModule,
     OrgChipModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatRippleModule
   ]
 })
 export class ScreeningItemModule { }
