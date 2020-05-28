@@ -60,8 +60,8 @@ export class CarouselComponent /* implements AfterViewInit */ {
     const clientWidth = this.clientWidth
 
     direction === 'right'
-      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + this.flex.marginOffset })
-      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - this.flex.marginOffset })
+      ? this.scrollable.scrollTo({ left: this.currentPosition + clientWidth + this.flex.marginOffset() })
+      : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - this.flex.marginOffset() })
   }
 
   // TODO #2835
