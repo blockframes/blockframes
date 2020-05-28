@@ -25,8 +25,8 @@ import { startWith, tap, distinctUntilChanged, map, debounceTime } from 'rxjs/op
   templateUrl: 'carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class CarouselComponent implements AfterViewInit {
+})  // TODO #2835
+export class CarouselComponent /* implements AfterViewInit */ {
 
   public currentPosition: number;
 
@@ -45,14 +45,15 @@ export class CarouselComponent implements AfterViewInit {
     return this.container.nativeElement.clientWidth;
   }
 
-  ngAfterViewInit() {
-    this.showBack = this.onScrolling('left');
+  /* TODO #2835 */
+ /*  ngAfterViewInit() {
+    this.showBack = this.onScrolling('left'); */
     /* If clientWidth is smaller or equal to scrollWidth, it means we got an overflow */
-    if (this.clientWidth <= this.container.nativeElement.scrollWidth) {
+  /*   if (this.clientWidth <= this.container.nativeElement.scrollWidth) {
       this.showForward = this.onScrolling('right')
     }
     this.scroll =  this.scrollable.elementScrolled();
-  }
+  } */
 
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
@@ -64,7 +65,7 @@ export class CarouselComponent implements AfterViewInit {
   }
 
   // TODO #2835
-  onScrolling(direction: 'right' | 'left') {
+/*   onScrolling(direction: 'right' | 'left') {
     return this.scrollable.elementScrolled().pipe(
       debounceTime(50),
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
@@ -72,7 +73,7 @@ export class CarouselComponent implements AfterViewInit {
       tap(_ => this.ngZone.run(() => this.cdr.detectChanges())),
       startWith(direction === 'right'),
     )
-  }
+  } */
 }
 
 @Directive({ selector: '[carouselItem]' })

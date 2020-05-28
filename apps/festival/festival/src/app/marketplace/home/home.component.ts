@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(private movieService: MovieService, private movieQuery: MovieQuery) { }
 
   ngOnInit() {
-    this.sub = this.movieService.syncCollection().subscribe();
+    this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
         filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival

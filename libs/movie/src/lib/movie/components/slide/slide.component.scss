@@ -1,4 +1,6 @@
-.overlay {
+:host {
+  display: flex;
+  flex-direction: column;
   padding: 80px 100px;
 }
 

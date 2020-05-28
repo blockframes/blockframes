@@ -103,6 +103,7 @@ export class Flex implements OnInit, OnDestroy {
 ​
   constructor(private layout: Layout) {}
 
+  /* Use this function if you need the number value of calculation */
   get marginOffset() {
     return this._margin;
   }
