@@ -4,6 +4,7 @@ import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation, BankAccount, createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
+import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form'
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
@@ -43,8 +44,9 @@ function createOrganizationFormControl(params?: Organization) {
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
-    logo: new FormControl(organization.logo),
-    bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
+    logo: new ImgRefForm(organization.logo),
+    // ISSUE#2692
+    // bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
   }
 }
 
@@ -69,25 +71,25 @@ function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}
 
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
 
+// ISSUE#2692
+// function createOrganizationBankAccountFormControl(account?: Partial<BankAccount>) {
+//   const entity = createBankAccount(account);
+//   return {
+//     address: new AddressForm(entity.address),
+//     IBAN: new FormControl(entity.IBAN),
+//     BIC: new FormControl(entity.BIC),
+//     name: new FormControl(entity.name),
+//     holderName: new FormControl(entity.holderName)
+//   }
+// }
 
-function createOrganizationBankAccountFormControl(account?: Partial<BankAccount>) {
-  const entity = createBankAccount(account);
-  return {
-    address: new AddressForm(entity.address),
-    IBAN: new FormControl(entity.IBAN),
-    BIC: new FormControl(entity.BIC),
-    name: new FormControl(entity.name),
-    holderName: new FormControl(entity.holderName)
-  }
-}
+// export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganizationBankAccountFormControl>;
 
-export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganizationBankAccountFormControl>;
-
-export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
-  constructor(account?: Partial<BankAccount>) {
-    super(createOrganizationBankAccountFormControl(account));
-  }
-}
+// export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
+//   constructor(account?: Partial<BankAccount>) {
+//     super(createOrganizationBankAccountFormControl(account));
+//   }
+// }
 
 // Denomination form
 function createDenominationFormControl(denomination) {
