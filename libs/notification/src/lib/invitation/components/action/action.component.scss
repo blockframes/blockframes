@@ -1,4 +1,17 @@
 :host {
   display: flex;
-  
+}
+
+button {
+  span {
+    font-size: 13px;
+  }
+}
+
+.primary {
+  color: var(--primary)
+}
+
+.warn {
+  color: var(--warn)
 }
