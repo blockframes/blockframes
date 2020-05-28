@@ -139,7 +139,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
-  
+
   const { userIds } = before as OrganizationDocument;
   const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {

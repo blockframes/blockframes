@@ -1,13 +1,12 @@
 import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError, startWith, tap } from 'rxjs/operators';
+import { finalize, catchError} from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRefForm } from '../../image-reference/image-reference.form';
-import { ImgRef } from '@blockframes/utils/media/media.model';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -34,11 +33,11 @@ function b64toBlob(data: string) {
 }
 
 /** Check if the path is a file path */
-function isFile(imgRef: ImgRef): boolean {
-  if (!imgRef || !imgRef.ref) {
+function isFile(ref: string): boolean {
+  if (!ref) {
     return false;
   }
-  const part = imgRef.ref.split('.');
+  const part = ref.split('.');
   const last = part.pop();
   return part.length >= 1 && !last.includes('/');
 }
@@ -128,8 +127,8 @@ export class CropperComponent implements OnDestroy {
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(async () => {
-          const url = await this.ref.getDownloadURL().toPromise();
-          this.form.get('urls').get('original').setValue(url)
+          // const url = await this.ref.getDownloadURL().toPromise();
+          // this.form.get('urls').get('original').setValue(url)
           this.nextStep('upload_complete')
         })
       );
@@ -145,8 +144,8 @@ export class CropperComponent implements OnDestroy {
 
   delete() {
     const deleteSubscription$ = this.previewUrl.subscribe(path => {
-      this.storage.storage.refFromURL(path).delete();
-      this.form.reset();
+      // this.storage.storage.refFromURL(path).delete();
+      // this.form.reset();
       this.nextStep('drop');
     });
     this.sub.add(deleteSubscription$);
