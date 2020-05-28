@@ -7,7 +7,6 @@ import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRefForm } from '../../image-reference/image-reference.form';
-import { createImgRef } from '@blockframes/utils/media/media.model';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
