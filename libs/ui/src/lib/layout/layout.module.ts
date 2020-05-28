@@ -98,11 +98,18 @@ export class Flex implements OnInit, OnDestroy {
   @HostBinding('style.marginRight')
   @HostBinding('style.marginLeft')
   margin: string;
+
+  private _margin: number;
 ​
   constructor(private layout: Layout) {}
+
+  get marginOffset() {
+    return this._margin;
+  }
 ​
   ngOnInit() {
     this.sub = this.layout.layout$.subscribe(({ margin, columns, gutter }) => {
+      this._margin = margin
       this.margin = `${margin}px`;
     });
   }

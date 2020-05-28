@@ -7,14 +7,24 @@
     <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the market today</a>
   </header>
 
-  <section fxLayout="column">
+  <section fxLayout="column" fxLayoutGap="48px">
     <ng-container *ngFor="let section of sections; let i = index">
-      <h1>{{ section.title }}</h1>
-      <bf-carousel flex>
-        <ng-container *ngFor="let movie of section.movies$ | async">
-          <movie-card [movie]="movie" size="poster"></movie-card>
-        </ng-container>
-      </bf-carousel>
+      <article fxLayout="column">
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <h1>{{ section.title }}</h1>
+          <a mat-button routerLink="../title">
+            <span>See all</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </div>
+        <bf-carousel flex>
+          <ng-container *ngFor="let movie of section.movies$ | async">
+            <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
+              carouselItem>
+            </movie-card>
+          </ng-container>
+        </bf-carousel>
+      </article>
       <ng-container *ngIf="i === 0">
         <bf-slider hideIndicators loop loop hideIndicators class="dark-contrast-theme">
           <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient"
@@ -22,7 +32,9 @@
             <movie-slide [movie]="movie">
               <movie-slide-cta>
                 <ng-container *ngIf="movie.promotionalElements.trailer">
-                  <a mat-stroked-button color="accent" routerLink="title">More details</a>
+                  <a mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title/' + movie.id]"
+                    class="detail">
+                    More details</a>
                 </ng-container>
               </movie-slide-cta>
               <movie-slide-actions>

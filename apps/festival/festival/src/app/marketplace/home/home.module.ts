@@ -17,6 +17,7 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Page
 import { HomeComponent } from './home.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { HomeComponent } from './home.component';
     MatLayoutModule,
 
     // Material
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class HomeModule { }

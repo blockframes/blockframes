@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.sections = [
       {
-        title: 'New Films',
+        title: 'Feature Films',
         movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' })
       },
       {
@@ -52,5 +52,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.sub) this.sub.unsubscribe();
   }
-
 }
