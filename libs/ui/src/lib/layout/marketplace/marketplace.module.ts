@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
 
 import { ImgAssetModule } from '@blockframes/ui/theme';
+import { MatLayoutModule } from '../layout.module';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -34,6 +35,7 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterModule,
     FlexLayoutModule,
     ScrollingModule,
+    MatLayoutModule,
 
     // Material
     MatToolbarModule,
