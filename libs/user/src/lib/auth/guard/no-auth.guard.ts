@@ -25,16 +25,16 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
   sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
-        if (!userAuth) { return new Promise(r => r(true)); }
+        if (!userAuth) { return Promise.resolve(true); }
         return this.service.sync().pipe(
-          catchError(() => new Promise(r => r(true))),
+          catchError(() => Promise.resolve(true)),
           map(_ => this.query.orgId),
           switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
           map(org => {
             if (!org) { return '/c/organization'; }
             const app = getCurrentApp(this.routerQuery);
-            const moduleAccess = getOrgModuleAccess(org, app);
-            return `/c/o/${moduleAccess[0] || 'dashboard'}/home`;
+            const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+            return `/c/o/${moduleAccess}/home`;
           })
         );
       })

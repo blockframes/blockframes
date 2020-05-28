@@ -70,7 +70,7 @@ export class IdentityComponent implements OnInit {
       if (!!pendingInvitation) {
         // We put invitation to accepted only if the invitation.type is joinOrganization.
         // Otherwise, user will have to create or join an org before accepting the invitation (to attend event for example)
-        await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
+        await this.invitationService.update(pendingInvitation.id, { status: 'accepted' });
       }
 
       this.creating = false;

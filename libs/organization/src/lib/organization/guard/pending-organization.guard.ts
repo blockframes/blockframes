@@ -40,8 +40,8 @@ export class PendingOrganizationGuard extends CollectionGuard<OrganizationState>
 
               if (org.status === 'accepted') {
                 const app = getCurrentApp(this.routerQuery);
-                const moduleAccess = getOrgModuleAccess(org, app);
-                return `/c/o/${moduleAccess[0] || 'dashboard'}/home`;
+                const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+                return `/c/o/${moduleAccess}/home`;
               }
             })
           );
