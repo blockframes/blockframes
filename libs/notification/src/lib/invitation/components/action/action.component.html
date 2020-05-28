@@ -4,18 +4,18 @@
     <button mat-button test-id="invitation-accept" (click)="accept(invit)">
       <div fxLayout="column" fxLayoutAlign="center center">
         <mat-icon svgIcon="check_circle"></mat-icon>
-        <span>Accept</span>
+        <span class="mat-caption">Accept</span>
       </div>
     </button>
     <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
       <div fxLayout="column" fxLayoutAlign="center center">
         <mat-icon svgIcon="close"></mat-icon>
-        <span>Refuse</span>
+        <span class="mat-caption">Refuse</span>
       </div>
     </button>
   </ng-container>
   <ng-template #displayStatus>
-    <div [ngSwitch]="invit.status">
+    <div class="status" [ngSwitch]="invit.status">
       <span class="primary" *ngSwitchCase="'accepted'">Accepted</span>
       <span class="warn" *ngSwitchCase="'declined'">Declined</span>
       <span *ngSwitchCase="'pending'">Pending</span>

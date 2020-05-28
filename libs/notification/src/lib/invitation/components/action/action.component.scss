@@ -2,10 +2,8 @@
   display: flex;
 }
 
-button {
-  span {
-    font-size: 13px;
-  }
+.status span {
+  padding: 0 32px;
 }
 
 .primary {
@@ -15,3 +13,5 @@ button {
 .warn {
   color: var(--warn);
 }
+
+
