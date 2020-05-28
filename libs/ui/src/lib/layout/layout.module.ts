@@ -2,15 +2,15 @@ import { Directive, Input, HostBinding, NgModule, ElementRef, Optional, OnDestro
 import { combineLatest, BehaviorSubject, Subscription, of, Observable } from 'rxjs';
 import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
-​
+
 declare const ResizeObserver;
-​
+
 interface LayoutGrid {
   columns: number;
   gutter: number;
   margin: number;
 }
-​
+
 function getLayoutGrid(width: number): LayoutGrid {
   if (width < 599) {
     return { columns: 4, gutter: 16, margin: 16 };  // xs
@@ -24,22 +24,22 @@ function getLayoutGrid(width: number): LayoutGrid {
     return { columns: 12, gutter: 24, margin: 24 }; // xl
   }
 }
-​
-​
+
+
 @Directive({ selector: '[layout]' })
 // tslint:disable-next-line: directive-class-suffix
 export class Layout implements OnInit, OnDestroy {
   private observer;
   public width: BehaviorSubject<number>;
   public layout$: Observable<LayoutGrid>;
-​
-  constructor(private el: ElementRef) {}
-​
-​
+
+  constructor(private el: ElementRef) { }
+
+
   ngOnInit() {
     const el = this.el.nativeElement;
     if (ResizeObserver) {
-      this.observer = new ResizeObserver(([ entry ]) => this.width.next(entry.contentRect.width));
+      this.observer = new ResizeObserver(([entry]) => this.width.next(entry.contentRect.width));
       this.observer.observe(el);
     } else {
       // do something with window:resize
@@ -55,8 +55,8 @@ export class Layout implements OnInit, OnDestroy {
     this.observer.unobserve(this.el.nativeElement);
   }
 }
-​
-​
+
+
 @Directive({
   selector: '[grid]',
   host: { class: 'mat-grid' },
@@ -64,17 +64,17 @@ export class Layout implements OnInit, OnDestroy {
 // tslint:disable-next-line: directive-class-suffix
 export class Grid implements OnInit, OnDestroy {
   private sub: Subscription;
-​
+
   @HostBinding('style.gridTemplateColumns') columns: string;
   @HostBinding('style.columnGap')
   @HostBinding('style.rowGap')
   gutters: string;
-​
+
   @HostBinding('style.margin')
   margin: string;
-​
-  constructor(private layout: Layout) {}
-​
+
+  constructor(private layout: Layout) { }
+
   ngOnInit() {
     this.sub = this.layout.layout$.subscribe(({ margin, columns, gutter }) => {
       this.columns = `repeat(${columns}, 1fr)`;
@@ -86,7 +86,7 @@ export class Grid implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 }
-​
+
 @Directive({
   selector: '[flex]',
   host: { class: 'mat-flex' }
@@ -94,20 +94,23 @@ export class Grid implements OnInit, OnDestroy {
 // tslint:disable-next-line: directive-class-suffix
 export class Flex implements OnInit, OnDestroy {
   private sub: Subscription;
-​
+
   @HostBinding('style.marginRight')
   @HostBinding('style.marginLeft')
   margin: string;
 
   private _margin: number;
-​
-  constructor(private layout: Layout) {}
+
+  constructor(private layout: Layout) { }
 
   /* Use this function if you need the number value of calculation */
   marginOffset() {
+    if (this._margin === undefined) {
+      return 0;
+    }
     return this._margin;
   }
-​
+
   ngOnInit() {
     this.sub = this.layout.layout$.subscribe(({ margin, columns, gutter }) => {
       this._margin = margin
@@ -118,35 +121,35 @@ export class Flex implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 }
-​
+
 // TODO: divide those directives into tow
-​
+
 @Directive({ selector: '[col]' })
 // tslint:disable-next-line: directive-class-suffix
 export class Column implements OnInit, OnDestroy {
   private sub: Subscription;
   private _col = new BehaviorSubject(0);
-​
+
   // Grid
   @HostBinding('style.gridColumn') gridColumns: string;
-​
+
   // Flex
   @HostBinding('style.width') width;
   @HostBinding('style.marginRight') marginRight: string;
-​
-​
+
+
   @Input()
   set col(column: number) {
     this._col.next(column);
   }
-​
+
   constructor(
     @Optional() private grid: Grid,
     @Optional() private flex: Flex,
     private layout: Layout,
     private sanitizer: DomSanitizer
-  ) {}
-​
+  ) { }
+
   ngOnInit() {
     this.sub = combineLatest([
       this.layout.layout$,
@@ -164,12 +167,12 @@ export class Column implements OnInit, OnDestroy {
       }
     });
   }
-​
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 }
-​
+
 @NgModule({
   exports: [Layout, Grid, Flex, Column],
   declarations: [Layout, Grid, Flex, Column],

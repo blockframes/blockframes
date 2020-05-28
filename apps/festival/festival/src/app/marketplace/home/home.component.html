@@ -8,7 +8,7 @@
 
   <section fxLayout="column" fxLayoutGap="48px">
     <ng-container *ngFor="let section of sections; let i = index">
-      <article fxLayout="column" *ngIf="section.hasEnoughMovies$ | async">
+      <article fxLayout="column" *ngIf="section.movieCount$ | async">
         <div fxLayout="row" fxLayoutAlign="space-between start">
           <h1>{{ section.title }}</h1>
           <a mat-button routerLink="../title">
