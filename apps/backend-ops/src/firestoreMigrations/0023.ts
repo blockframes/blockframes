@@ -20,7 +20,7 @@ export async function upgrade(db: Firestore) {
       };
 
       if (!newData) {
-        console.error(doc.ref.path, invitation, newData);
+        throw new Error(`No new data to set`);
       }
 
       return batch.set(doc.ref, newData);
@@ -40,7 +40,7 @@ export async function upgrade(db: Firestore) {
       };
 
       if (!newData) {
-        console.error(doc.ref.path, notification, newData);
+        throw new Error(`No new data to set`);
       }
 
       return batch.set(doc.ref, newData);
