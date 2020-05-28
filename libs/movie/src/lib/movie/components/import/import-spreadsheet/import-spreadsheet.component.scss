@@ -7,12 +7,16 @@ article {
 
   h1 {
     text-align: center;
+    margin-bottom: 30px;
   }
 
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
 
   section.help-section {
-    margin: 20px 0;
+    margin: 30px 0 20px;
+    a {
+      font-weight: bold;
+    }
   }
 }
 

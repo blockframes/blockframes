@@ -67,11 +67,12 @@ export function getAppName(slug: App) {
 /**
  * Returns the apps that the org have access to
  * @param org
+ * @param first
  * @example
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
  * getOrgAppAccess(orgB); // ['festival']
  */
-export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates): App[] {
+export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates, first: App = 'festival'): App[] {
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
@@ -81,7 +82,12 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
     }
   }
 
-  return Object.keys(allowedApps).map(k => k as App);
+  const apps = Object.keys(allowedApps).map(k => k as App);
+  if (apps.length > 1 && apps.includes(first)) {
+    return [first, ...app.filter(a => a !== first)];
+  } else {
+    return apps;
+  }
 }
 
 /**
