@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -30,7 +31,6 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -65,7 +65,7 @@ export const AuthRoutes: Routes = [
     TermsConditionsModule,
     AcceptConditionsModule,
     PasswordConfirmModule,
-    ImgAssetModule,
+    ImageReferenceModule,
 
     // Material
     MatSnackBarModule,

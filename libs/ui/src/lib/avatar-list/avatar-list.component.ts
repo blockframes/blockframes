@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.model';
 
 @Component({
   selector: 'avatar-list',
@@ -37,6 +36,4 @@ export class AvatarListComponent {
       this._moreDetails = more;
     }
   }
-
-  public placeholderLogo = PLACEHOLDER_LOGO;
 }

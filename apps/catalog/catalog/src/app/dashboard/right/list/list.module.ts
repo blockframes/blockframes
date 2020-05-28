@@ -1,4 +1,3 @@
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -7,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     FlexLayoutModule,
     ContractTableModule,
-    ImgAssetModule,
+    ImageReferenceModule,
 
     // Material
     MatTabsModule,

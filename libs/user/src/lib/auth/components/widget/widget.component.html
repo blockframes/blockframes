@@ -6,7 +6,7 @@
         <span class="mat-caption">{{ user.position }}</span>
       </div>
       <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
-        <img placeholderAsset="profil_user.webp" [imgRef]="user.avatar" alt="Profile picture" />
+        <img asset="profil_user.webp" [ref]="user.avatar" alt="Profile picture" />
       </button>
       <overlay-widget #menu >
         <widget-card>

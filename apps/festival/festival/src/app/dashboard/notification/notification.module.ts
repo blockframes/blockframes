@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 import { NotificationListModule } from '@blockframes/notification/components/list/list.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { NotificationComponent } from './notification.component';
 
 @NgModule({
@@ -11,8 +11,8 @@ import { NotificationComponent } from './notification.component';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImgAssetModule,
     NotificationListModule,
+    ImageReferenceModule,
     RouterModule.forChild([{ path: '', component: NotificationComponent }])
   ]
 })

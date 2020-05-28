@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { InvitationComponent } from './invitation.component';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { InvitationListModule } from '@blockframes/invitation/components/list/list.module';
 
 @NgModule({
@@ -12,8 +12,8 @@ import { InvitationListModule } from '@blockframes/invitation/components/list/li
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImgAssetModule,
     InvitationListModule,
+    ImageReferenceModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }])
   ]
 })

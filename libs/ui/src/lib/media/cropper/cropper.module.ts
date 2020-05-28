@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { DropZoneDirective } from './drop-zone.directive';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -26,7 +24,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
     FlexLayoutModule,
     ImageCropperModule,
     ImageReferenceModule,
-    ImgAssetModule,
+
     // Material
     MatIconModule,
     MatProgressSpinnerModule,
