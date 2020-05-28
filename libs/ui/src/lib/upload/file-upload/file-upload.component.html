@@ -3,7 +3,7 @@
   <section *ngSwitchCase="'waiting'">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
-        <img class="add-files-icon" asset="add_files.webp" alt="upload image" />
+        <img asset="add_files.webp" alt="upload image" />
       </button>
       <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
     </label>
@@ -16,7 +16,7 @@
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <img class="add-files-icon" asset="add_files.webp" alt="upload image" />
+    <img asset="add_files.webp" alt="upload image" />
   </section>
 
   <!-- Uploading -->

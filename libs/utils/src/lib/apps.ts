@@ -83,6 +83,9 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
   }
 
   const apps = Object.keys(allowedApps).map(k => k as App);
+  // If org have access to several app, including "first",
+  // we put it in first place of the response array
+  // @TODO (#2848)
   if (apps.length > 1 && apps.includes(first)) {
     return [first, ...app.filter(a => a !== first)];
   } else {
