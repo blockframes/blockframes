@@ -1,7 +1,7 @@
 /**
  * Apps definition
  */
-import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 import { appUrlMarket, appUrlContent } from "@env";
@@ -71,7 +71,7 @@ export function getAppName(slug: App) {
  * getOrgAppAccess(orgA); // ['catalog', 'festival']
  * getOrgAppAccess(orgB); // ['festival']
  */
-export function getOrgAppAccess(org: OrganizationDocument): App[] {
+export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates): App[] {
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
@@ -85,24 +85,33 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
 }
 
 /**
- * Returns the modules that the org have access to, across for all apps
- * @param org
+ * Returns the modules an org have access to for a particular app or for all apps
+ * @param org 
+ * @param a 
  * @example
  * // we don't know in witch app the module is
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
  * getOrgModuleAccess(orgB); // ['marketplace']
  */
-export function getOrgModuleAccess(org: OrganizationDocument): Module[] {
-  const allowedModule = {} as Record<Module, boolean>;
-  for (const a of app) {
+export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocumentWithDates, _a?: App): Module[] {
+  const allowedModules = {} as Record<Module, boolean>;
+
+  if (_a) {
     for (const m of module) {
-      if (org.appAccess[a][m]) {
-        allowedModule[m] = true;
+      if (org.appAccess[_a][m]) {
+        allowedModules[m] = true;
+      }
+    }
+  } else {
+    for (const a of app) {
+      for (const m of module) {
+        if (org.appAccess[a][m]) {
+          allowedModules[m] = true;
+        }
       }
     }
   }
-
-  return Object.keys(allowedModule).map(k => k as Module);
+  return Object.keys(allowedModules).map(k => k as Module);
 }
 
 /**
