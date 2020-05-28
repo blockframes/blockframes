@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { InvitationListModule } from '@blockframes/invitation/components/list/list.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [InvitationComponent],
@@ -12,6 +13,7 @@ import { InvitationListModule } from '@blockframes/invitation/components/list/li
     CommonModule,
     FlexLayoutModule,
     InvitationListModule,
+    ImageReferenceModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }])
   ]
 })

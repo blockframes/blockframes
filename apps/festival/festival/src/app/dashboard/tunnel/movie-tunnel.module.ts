@@ -16,6 +16,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [MovieTunnelComponent],
@@ -25,6 +26,7 @@ import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
     RouterModule,
     FlexLayoutModule,
     TunnelLayoutModule,
+    ImageReferenceModule,
 
     // Material
     MatIconModule,

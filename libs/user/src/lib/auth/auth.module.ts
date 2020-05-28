@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -64,6 +65,7 @@ export const AuthRoutes: Routes = [
     TermsConditionsModule,
     AcceptConditionsModule,
     PasswordConfirmModule,
+    ImageReferenceModule,
 
     // Material
     MatSnackBarModule,

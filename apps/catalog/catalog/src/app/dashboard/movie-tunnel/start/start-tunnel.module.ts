@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Materials
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     TunnelPageModule,
     AppLogoModule,
+    ImageReferenceModule,
 
     // Material
     MatCardModule,

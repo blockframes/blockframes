@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LandingComponent } from './landing.component';
 import { LandingModule } from '@blockframes/landing/landing.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     LandingModule,
+    ImageReferenceModule,
     // Material
     MatToolbarModule,
     MatButtonModule,

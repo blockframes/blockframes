@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
-
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MatLayoutModule } from '../layout.module';
 
 // Widgets
@@ -46,6 +46,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
 
     // Libraries
+    ImageReferenceModule,
     AppBarModule,
 
     // Widgets
