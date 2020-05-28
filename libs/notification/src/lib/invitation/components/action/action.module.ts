@@ -4,6 +4,7 @@ import { ActionComponent } from './action.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { InvitationHasActionPipeModule } from './has-action.pipe';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
@@ -14,6 +15,7 @@ import { InvitationHasActionPipeModule } from './has-action.pipe';
     CommonModule,
     MatButtonModule,
     MatIconModule,
+    FlexLayoutModule,
     InvitationHasActionPipeModule
   ]
 })
