@@ -26,7 +26,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
     AppLogoModule,
     TelInputModule,
     RoleModule,
-    ImgAssetModule,
 
     // Material
     MatSidenavModule,
