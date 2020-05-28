@@ -3,7 +3,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 const appLogos = {
   catalog: 'LogoArchipelContentPrimary.svg',
-  festival: 'archipel_market.png'
+  festival: 'logo_archipel_market_home.svg'
 };
 
 @Component({
