@@ -127,8 +127,8 @@ export class CropperComponent implements OnDestroy {
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(async () => {
-          const url = await this.ref.getDownloadURL().toPromise();
-          this.form.get('urls').get('original').setValue(url)
+          // const url = await this.ref.getDownloadURL().toPromise();
+          // this.form.get('urls').get('original').setValue(url)
           this.nextStep('upload_complete')
         })
       );
@@ -144,8 +144,8 @@ export class CropperComponent implements OnDestroy {
 
   delete() {
     const deleteSubscription$ = this.previewUrl.subscribe(path => {
-      this.storage.storage.refFromURL(path).delete();
-      this.form.reset();
+      // this.storage.storage.refFromURL(path).delete();
+      // this.form.reset();
       this.nextStep('drop');
     });
     this.sub.add(deleteSubscription$);
