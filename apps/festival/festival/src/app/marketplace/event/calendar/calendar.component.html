@@ -1,6 +1,17 @@
 <ng-template pageBar>
-  <app-menu></app-menu>
-  <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+  <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+    <app-menu></app-menu>
+    <cal-header fxFlex [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+    <mat-form-field *ngIf="filter">
+      <mat-label>Filter-by</mat-label>
+      <mat-select [formControl]="filter">
+        <mat-option [value]="types">All events</mat-option>
+        <ng-container *ngFor="let type of types">
+          <mat-option [value]="[type]">{{ typesLabel[type] }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </header>
 </ng-template>
 
 <cal-week [viewDate]="viewDate" [events]="events$ | async">

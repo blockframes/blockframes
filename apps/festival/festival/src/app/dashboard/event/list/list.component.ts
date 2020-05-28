@@ -8,6 +8,11 @@ import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
+const typesLabel = {
+  screening: 'Screenings',
+  meeting: 'Meetings'
+}
+
 @Component({
   selector: 'festival-event-list',
   templateUrl: './list.component.html',
@@ -15,6 +20,7 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventListComponent implements OnInit {
+  typesLabel = typesLabel;
   types: EventTypes[] = ['screening', 'meeting'];
   filter = new FormControl(this.types);
   editDialog: MatDialogRef<any>

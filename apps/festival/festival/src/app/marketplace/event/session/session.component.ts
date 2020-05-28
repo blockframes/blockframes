@@ -24,7 +24,7 @@ export class SessionComponent implements OnInit {
   ngOnInit(): void {
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
-      switchMap(eventId => this.service.queryDocs(eventId))
+      switchMap((eventId: string) => this.service.queryDocs(eventId))
     );
   }
 }
