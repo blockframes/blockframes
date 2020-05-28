@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmptyComponent } from './empty.component';
-import { ImageReferenceModule } from '@blockframes/ui/media';
+import { ImgAssetModule } from '@blockframes/ui/theme';
 
 
 
@@ -10,7 +10,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media';
   exports: [EmptyComponent],
   imports: [
     CommonModule,
-    ImageReferenceModule,
+    ImgAssetModule,
   ]
 })
 export class EventEmptyModule { }
