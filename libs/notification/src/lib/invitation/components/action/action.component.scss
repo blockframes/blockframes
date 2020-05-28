@@ -1,4 +1,17 @@
 :host {
   display: flex;
-  
 }
+
+.status span {
+  padding: 0 32px;
+}
+
+.primary {
+  color: var(--primary);
+}
+
+.warn {
+  color: var(--warn);
+}
+
+

@@ -8,6 +8,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [ItemComponent],
@@ -19,7 +20,8 @@ import { MatIconModule } from '@angular/material/icon';
     InvitationActionModule,
     MatListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ]
 })
 export class InvitationItemModule { }
