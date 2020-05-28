@@ -6,9 +6,11 @@ import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface CarouselSection {
   title: string;
+  hasEnoughMovies$: Observable<boolean>;
   movies$: Observable<Movie[]>;
 }
 
@@ -36,14 +38,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sections = [
       {
         title: 'Feature Films',
+        hasEnoughMovies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' }).pipe(
+          map(movies => movies.length >= 4)),
         movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' })
       },
       {
         title: 'Post-Production Films',
+        hasEnoughMovies$: selectMovies('post-production').pipe(map(movies => movies.length >= 4)),
         movies$: selectMovies('post-production')
       },
       {
         title: 'Completed Films',
+        hasEnoughMovies$: selectMovies('finished').pipe(map(movies => movies.length >= 4)),
         movies$: selectMovies('finished')
       }
     ];

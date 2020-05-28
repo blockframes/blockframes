@@ -14,12 +14,10 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
     super(store);
   }
 
-  /** @deprecated Use orgQuery.hasMovies$ instead */
   hasMovies(predicate?: Parameters<QueryEntity<MovieState, Movie>['selectCount']>[0]) {
     return this.selectCount(predicate).pipe(
       map(count => !!count),
       distinctUntilChanged(),
     );
   }
-
 }
