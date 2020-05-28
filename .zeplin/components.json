@@ -29,14 +29,14 @@
     ],
     "components": [
         {
-            "path": "libs/movie/src/lib/movie/components/slider/slider.component.ts",
+            "path": "libs/movie/src/lib/movie/components/slide/slide.component.ts",
             "zeplinNames": [
                 "component/slider/archipel_content/movie-slider"
             ],
             "storybook": {
-                "kind": "Movie Slider",
+                "kind": "Movie Slide",
                 "storybook": [
-                    "Movie Slider"
+                    "Movie Slide"
                 ]
             }
         },
