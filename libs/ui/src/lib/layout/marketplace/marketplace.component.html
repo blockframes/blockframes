@@ -1,5 +1,13 @@
 <mat-sidenav-container>
-  <mat-sidenav id="dashboard-navbar" mode="side">
+  <mat-sidenav id="dashboard-navbar" mode="over">
+    <mat-toolbar fxLayout fxLayoutAlign="space-between center">
+      <a routerLink=".">
+        <app-logo></app-logo>
+      </a>
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </button>
+    </mat-toolbar>
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
@@ -10,6 +18,9 @@
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
+        <a routerLink=".">
+          <app-logo></app-logo>
+        </a>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
           <mat-icon

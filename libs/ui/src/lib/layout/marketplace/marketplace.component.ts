@@ -61,7 +61,10 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     // https://github.com/angular/components/issues/4280
     this.routerSub = this.router.events.pipe(
      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => this.cdkScrollable.scrollTo({top: 0}))
+    ).subscribe(() => {
+      this.cdkScrollable.scrollTo({top: 0});
+      this.sidenav.close();
+    });
   }
 
   ngOnDestroy() {
