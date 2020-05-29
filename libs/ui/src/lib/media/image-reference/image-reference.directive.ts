@@ -10,7 +10,6 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
-  placeholder: string;
 
   @HostBinding('src') src: string;
 

@@ -1,23 +1,21 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
-import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 
 @Directive({
-  selector: '[backgroundRef]'
+  selector: '[bgRef], [bgAsset]'
 })
 export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
-  private assetUrl$: Observable<string>;
 
   @HostBinding('style.backgroundImage') src: string;
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set backgroundRef(path: ImgRef) {
+  @Input() set bgRef(path: ImgRef) {
     if(!path){
       this.ref$.next('');
     } try {
@@ -27,7 +25,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
     }
   }
 
-  @Input() set placeholderAsset(asset: string) {
+  @Input() set bgAsset(asset: string) {
     this.asset$.next(asset);
   }
 
@@ -37,18 +35,10 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.assetUrl$ = combineLatest([this.theme.theme$, this.asset$]).pipe(
-      map(([theme, asset]) => asset ? `assets/images/${theme}/${asset}` : '')
-    );
-    this.sub = combineLatest([
-      this.ref$,
-      this.assetUrl$
-    ]).subscribe(([ ref, assetUrl ]) => {
-      if (ref || assetUrl) {
-        this.src = `url(${ref || assetUrl})`;
-        this.cdr.markForCheck();
-      }
-    })
+    this.sub = combineLatest([this.asset$, this.theme.theme$, this.ref$]).subscribe(([asset, theme, ref]) => {
+      this.src = ref || `url(asset/images/${theme}/${asset})`;
+      this.cdr.markForCheck();
+    });
   }
 
   ngOnDestroy() {
