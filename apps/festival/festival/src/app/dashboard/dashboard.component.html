@@ -18,6 +18,13 @@
         <mat-icon matListIcon svgIcon="calendar"></mat-icon>
         <span matLine><b>My Events</b></span>
       </a>
+      <ng-container *ngIf="canAccessMarketplace(org$ | async)">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="search_table"></mat-icon>
+          <span matLine><b>Buyer's Platform</b></span>
+        </a>
+      </ng-container>
     </mat-nav-list>
     <mat-nav-list *ngIf="org$ | async as org">
       <mat-divider></mat-divider>
