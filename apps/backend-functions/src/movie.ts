@@ -1,10 +1,11 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, PublicOrganization } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -21,7 +22,7 @@ export async function onMovieCreate(
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   // Update algolia's index
-  return storeSearchableMovie(movie, organization.denomination.public || organization.denomination.full);
+  return storeSearchableMovie(movie, orgName(organization));
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
@@ -102,13 +103,11 @@ export async function onMovieUpdate(
   }
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
-  const creatorSnapshot = await db.doc(`users/${after._meta!.createdBy}`).get();
-  const creator = creatorSnapshot.data() as PublicUser;
-  const creatorOrgSnapshot = await db.doc(`orgs/${creator!.orgId}`).get();
-  const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
+  const creator = await getDocument<PublicUser>(`users/${after._meta!.createdBy}`);
+  const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    return storeSearchableMovie(after, creatorOrg.denomination.public || creatorOrg.denomination.full);
+    return storeSearchableMovie(after, orgName(creatorOrg));
   }
 }
 

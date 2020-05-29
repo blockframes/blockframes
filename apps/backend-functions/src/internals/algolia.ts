@@ -4,6 +4,7 @@ import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -48,7 +49,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   const orgRecord: AlgoliaRecordOrganization = {
     objectID: org.id,
-    name: org.denomination.public || org.denomination.full,
+    name: orgName(org),
     appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
   };

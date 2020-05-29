@@ -6,6 +6,7 @@ import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { Event } from '@blockframes/event/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { orgName } from '@blockframes/organization/+state';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -22,7 +23,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public formatNotification(notification: Notification): Partial<Notification> {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
-    const orgName = notification.organization?.denomination?.public || notification.organization?.denomination?.full || 'unknown organization';
+    const organizationName = orgName(notification.organization) || 'Organization with no name';
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -59,7 +60,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'newContract':
         return {
           date: toDate(notification.date),
-          message: `${orgName} submitted a contract.`,
+          message: `${organizationName} submitted a contract.`,
           placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
@@ -76,12 +77,12 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/titles/${notification.docId}`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/title/${notification.docId}/details`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
         return {
           date: toDate(notification.date),
-          message: `Your movie was accepted by the Archipel team. It will now appear in the marketplace library.`,
+          message: `Your project was successfully published on the marketplace.`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
           url: `/c/o/dashboard/title/${notification.docId}/details`,
