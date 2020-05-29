@@ -34,7 +34,7 @@
         <li *ngIf="movie.main.genres">
           <strong>Genre </strong>
           <ng-container *ngFor="let genre of movie.main.genres">
-            <span>{{ getGenre(genre) }} </span>
+            <span>{{ genre | translateSlug: 'GENRES' }} </span>
           </ng-container>
         </li>
         <li *ngIf="movie.main.directors">
@@ -42,19 +42,19 @@
           <span>{{ movie.main.directors | displayName }} </span>
         </li>
         <li *ngIf="movie.main.productionYear">
-          <strong>Director </strong>
+          <strong>Production Year </strong>
           <span>{{ movie.main.productionYear }} </span>
         </li>
         <li *ngIf="movie.main.originCountries">
           <strong>Country of Origin </strong>
-          <ng-container *ngFor="let country of movie.main.originCountries">
-            <span>{{ getOriginCountry(country) }} </span>
+          <ng-container *ngFor="let country of movie.main.originCountries; let isLast=last">
+            {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
           </ng-container>
         </li>
         <li *ngIf="movie.main.originalLanguages">
           <strong>Original Language </strong>
-          <ng-container *ngFor="let language of movie.main.originalLanguages">
-            <span>{{ getOriginalLanguage(language) }} </span>
+          <ng-container *ngFor="let language of movie.main.originalLanguages; let isLast=last">
+            <span>{{ language | translateSlug: 'LANGUAGES' }}{{ isLast ? '' : ', ' }}</span>
           </ng-container>
         </li>
       </ul>
@@ -88,7 +88,7 @@
     <mat-card-content>
       <ul>
         <ng-container *ngIf="movie.salesCast.cast.length > 0">
-          <h5>CAST</h5>
+          <h5>Cast</h5>
           <li><strong i18n>Principal Cast </strong>
             <ng-container *ngFor="let cast of movie.salesCast.cast; let isLast = last">
               <span>{{ cast.firstName }} {{ cast.lastName }}{{ isLast? '' : ', '}}</span>
@@ -96,7 +96,7 @@
           </li>
         </ng-container>
         <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
-          <h5>COMPANY CREDITS</h5>
+          <h5>Company Credits</h5>
           <ng-container *ngIf="movie.main.stakeholders as stakeholders">
             <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Executive
                 Producer{stakeholders.executiveProducer.length, plural,=1 {} other {s}}</strong>
@@ -119,7 +119,7 @@
           </ng-container>
         </ng-container>
         <ng-container *ngIf="movie.salesCast.crew.length > 0">
-          <h5>ARTISTIC CREW</h5>
+          <h5>Artistic Crew</h5>
           <ng-container *ngFor="let crew of movie.salesCast.crew; let isLast = last">
             <li *ngIf="crew.role === 'score-composer'"><strong i18n>Score Composer{crew.length, plural,=1 {} other {s}}
               </strong>

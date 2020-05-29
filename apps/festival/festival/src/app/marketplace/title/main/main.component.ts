@@ -53,17 +53,4 @@ export class MainComponent {
   public budgetRange({ from, to }) {
     return (from && to) ? `$ ${from} - ${to}` : '';
   }
-
-  public getGenre(genre: string) {
-    return getLabelBySlug('GENRES', genre);
-  }
-
-  public getOriginCountry(country: string) {
-    return getLabelBySlug('TERRITORIES', country);
-  }
-
-  public getOriginalLanguage(language: string) {
-    return getLabelBySlug('LANGUAGES', language);
-  }
-
 }
