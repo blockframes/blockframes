@@ -44,6 +44,8 @@ export class LoginComponent implements OnInit {
     try {
       const { email, password } = signinForm.value;
       await this.service.signin(email, password);
+      // Reset page title to default
+      this.dynTitle.setPageTitle();
       this.router.navigate(['c']);
     } catch (err) {
       console.error(err); // let the devs see what happened
@@ -59,6 +61,8 @@ export class LoginComponent implements OnInit {
     try {
       const { email, password, firstName, lastName } = signupForm.value;
       await this.service.signup(email, password, { ctx: { firstName, lastName } });
+      // Reset page title to default
+      this.dynTitle.setPageTitle();
       this.router.navigate(['c']);
     } catch (err) {
 

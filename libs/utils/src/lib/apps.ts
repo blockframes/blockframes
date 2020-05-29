@@ -12,9 +12,10 @@ export type App = typeof app[number];
 export const module = ['dashboard', 'marketplace'] as const;
 export type Module = typeof module[number];
 
-const appName = {
+export const appName = {
   catalog: 'Archipel Content',
-  festival: 'Archipel Market'
+  festival: 'Archipel Market',
+  blockframes: 'Blockframes'
 };
 
 export const sendgridEmailsFrom = {
