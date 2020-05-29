@@ -14,6 +14,6 @@ export class SessionGuard implements CanActivate {
     const canNavigate = this.invitationQuery.hasEntity((invitation: Invitation) => {
       return invitation.docId === eventId && invitation.status === 'accepted';
     });
-    return canNavigate || this.router.parseUrl('..');
+    return canNavigate || this.router.parseUrl(`/c/o/marketplace/event/${eventId}`);
   }
 }
