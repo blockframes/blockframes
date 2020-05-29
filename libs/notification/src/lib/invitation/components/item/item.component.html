@@ -1,13 +1,14 @@
 <mat-list-item>
   <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture" />
   <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo" />
-  <div matLine fxLayout="row" fxLayoutAlign="space-between center">
-    <p  class="mat-body-1">
-      {{ invitation.message }} {{ invitation.date | date: 'medium' }}
-    </p>
-    <div fxLayout="row" fxLayoutAlign="center center">
-      <invitation-action [invitation]="invitation"></invitation-action>
-      <a mat-button [routerLink]="['../event/', invitation.docId]">More details</a>
-    </div>
-  </div>
+  <p matLine class="mat-body-1">
+    {{ invitation.message }}
+  </p>
+  <span matLine>
+    <small class="mat-caption">
+      {{ invitation.date | date: 'medium' }}
+    </small>
+  </span>
+  <invitation-action [invitation]="invitation"></invitation-action>
+  <a mat-button [routerLink]="['../event/', invitation.docId]">More details</a>
 </mat-list-item>

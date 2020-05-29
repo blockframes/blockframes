@@ -4,6 +4,7 @@ import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -48,7 +49,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   const orgRecord: AlgoliaRecordOrganization = {
     objectID: org.id,
-    name: org.denomination.public || org.denomination.full,
+    name: orgName(org),
     appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
   };
@@ -62,7 +63,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  orgName: string,
+  organizationName: string,
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -104,7 +105,7 @@ export function storeSearchableMovie(
       status: !!movie.main.status ? movie.main.status : '',
       storeConfig: movie.main.storeConfig?.status || '',
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
-      orgName,
+      orgName: organizationName,
       storeType: movie.main.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
         app.filter(a => movie.main.storeConfig?.appAccess[a]) :

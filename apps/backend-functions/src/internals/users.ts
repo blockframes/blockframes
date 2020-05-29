@@ -7,6 +7,7 @@ import { getDocument } from '../data/internals';
 import { userInvite } from '../templates/mail';
 import { auth } from './firebase';
 import { sendMailFromTemplate } from './email';
+import { PublicUser } from '@blockframes/user/types';
 
 interface UserProposal {
   uid: string;
@@ -19,14 +20,15 @@ const generatePassword = () =>
     numbers: true
   });
 
-/** 
+/**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrCreateUserByMail = async (email: string, orgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal> => {
+export const getOrCreateUserByMail = async (email: string, orgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
 
   try {
-    const user = await auth.getUserByEmail(email);
-    return { uid: user.uid, email };
+    const { uid } = await auth.getUserByEmail(email);
+    const user = await getDocument<PublicUser>(`users/${uid}`);
+    return user || { uid, email }
   } catch {
     const password = generatePassword();
 
