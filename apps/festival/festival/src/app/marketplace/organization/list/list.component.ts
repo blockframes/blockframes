@@ -22,5 +22,4 @@ export class ListComponent {
       .valueChanges(ref => ref.where('appAccess.festival.dashboard', '==', true))
       .pipe(map(orgs => orgs.filter(org => org.id !== centralOrgID)));
   }
-
 }

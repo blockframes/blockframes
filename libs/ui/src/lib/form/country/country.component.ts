@@ -3,6 +3,7 @@ import { default as staticModel } from '@blockframes/utils/static-model/staticMo
 import { FormStaticValue } from '@blockframes/utils/form';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 type TERRITORIES = typeof staticModel.TERRITORIES;
 
@@ -14,7 +15,7 @@ type TERRITORIES = typeof staticModel.TERRITORIES;
 })
 export class FormCountryComponent implements OnInit {
   @Input() form: FormStaticValue<'TERRITORIES'>;
-  @Input() noWorld = false;
+  @Input() @boolean noWorld = false
 
   countries: TERRITORIES;
   filteredCountries$: Observable<TERRITORIES>;
