@@ -29,13 +29,9 @@ import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/op
 })
 export class CarouselComponent implements AfterViewInit, OnDestroy {
 
-
   /* Indicators to show arrow buttons */
   public showForward: boolean;
   public showBack: boolean;
-
-  private showBack$: Observable<boolean>;
-  private showForward$: Observable<boolean>;
 
   private subRight: Subscription;
   private subLeft: Subscription;
@@ -52,15 +48,12 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.showBack$ = this.onScrolling('left');
-    this.showForward$ = this.onScrolling('right');
-
-    this.subRight = this.onScrolling('left').subscribe(showBack => {
+    this.subLeft = this.onScrolling('left').subscribe(showBack => {
       this.showBack = showBack;
       this.ngZone.run(() => this.cdr.detectChanges())
     })
 
-    this.subLeft = this.onScrolling('left').subscribe(showForward => {
+    this.subRight = this.onScrolling('right').subscribe(showForward => {
       this.showForward = showForward;
       this.ngZone.run(() => this.cdr.detectChanges())
     })
