@@ -21,7 +21,7 @@ export async function onMovieCreate(
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   // Update algolia's index
-  return storeSearchableMovie(movie, organization.denomination.full);
+  return storeSearchableMovie(movie, organization.denomination.public || organization.denomination.full);
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
@@ -108,7 +108,7 @@ export async function onMovieUpdate(
   const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
 
   if (creatorOrg.denomination?.full) {
-    return storeSearchableMovie(after, creatorOrg.denomination.full);
+    return storeSearchableMovie(after, creatorOrg.denomination.public || creatorOrg.denomination.full);
   }
 }
 

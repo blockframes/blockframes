@@ -22,7 +22,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public formatNotification(notification: Notification): Partial<Notification> {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
-    const orgName = notification.organization?.denomination.full;
+    const orgName = notification.organization?.denomination?.public || notification.organization?.denomination?.full || 'unknown organization';
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
