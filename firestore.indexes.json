@@ -4,15 +4,17 @@
     "queryScope": "COLLECTION",
     "fields": [
       { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "meta.titleId", "order": "ASCENDING" },
       { "fieldPath": "ownerId", "order": "ASCENDING" },
-      { "fieldPath": "start", "order": "ASCENDING" }
+      { "fieldPath": "end", "order": "ASCENDING" }
     ]
   },{
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
     "fields": [
       { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "start", "order": "ASCENDING" }
+      { "fieldPath": "meta.titleId", "order": "ASCENDING" },
+      { "fieldPath": "end", "order": "ASCENDING" }
     ]
   }],
   "fieldOverrides": []

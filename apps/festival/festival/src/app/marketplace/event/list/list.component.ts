@@ -16,7 +16,10 @@ export class ListComponent implements OnInit {
   constructor(private service: EventService) { }
 
   ngOnInit(): void {
-    this.events$ = this.service.queryByType(['screening'], ref => ref.orderBy('start').startAt(new Date()));
+    const query = ref => ref
+      .orderBy('meta.titleId').where('meta.titleId', '>', '0')
+      .orderBy('end').startAt(new Date());
+    this.events$ = this.service.queryByType(['screening'], query);
   }
 
 }
