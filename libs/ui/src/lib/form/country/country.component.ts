@@ -14,11 +14,15 @@ type TERRITORIES = typeof staticModel.TERRITORIES;
 })
 export class FormCountryComponent implements OnInit {
   @Input() form: FormStaticValue<'TERRITORIES'>;
-  countries = staticModel.TERRITORIES;
+  @Input() noWorld = false;
 
+  countries: TERRITORIES;
   filteredCountries$: Observable<TERRITORIES>;
 
   ngOnInit() {
+    this.countries = this.noWorld
+      ? staticModel.TERRITORIES.filter(country => country.slug !== 'world')
+      : staticModel.TERRITORIES;
     this.filteredCountries$ = this.form.valueChanges
       .pipe(
         startWith(''),
