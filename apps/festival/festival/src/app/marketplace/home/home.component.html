@@ -9,7 +9,7 @@
   <section fxLayout="column" fxLayoutGap="48px">
     <ng-container *ngFor="let section of sections; let i = index">
       <article fxLayout="column" *ngIf="(section.movieCount$ | async) >= 4">
-        <div fxLayout="row" fxLayoutAlign="space-between start">
+        <div fxLayout="row" fxLayoutAlign="space-between start" flex>
           <h1>{{ section.title }}</h1>
           <a mat-button routerLink="../title">
             <span>See all</span>
@@ -25,7 +25,7 @@
         </bf-carousel>
         <ng-container *ngIf="i === 0">
           <div fxLayout="row" fxLayoutAlign="space-between start">
-            <h1>Feature Films</h1>
+            <h1>Featured films</h1>
             <a mat-button routerLink="../title">
               <span>See all</span>
               <mat-icon svgIcon="arrow_forward"></mat-icon>
