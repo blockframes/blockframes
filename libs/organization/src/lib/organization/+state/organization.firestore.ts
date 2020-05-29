@@ -146,5 +146,5 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
 }
 
 export function orgName(org: PublicOrganization){
-  return org.denomination.public || org.denomination.full
+  return org.denomination.full || org.denomination.public
 }
