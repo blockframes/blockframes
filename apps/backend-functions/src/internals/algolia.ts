@@ -63,7 +63,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  orgName: string,
+  organizationName: string,
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -105,7 +105,7 @@ export function storeSearchableMovie(
       status: !!movie.main.status ? movie.main.status : '',
       storeConfig: movie.main.storeConfig?.status || '',
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
-      orgName,
+      orgName: organizationName,
       storeType: movie.main.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
         app.filter(a => movie.main.storeConfig?.appAccess[a]) :
