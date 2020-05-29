@@ -103,7 +103,7 @@ export const getPrivateVideoUrl = async (
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `http://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${event.end.seconds}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${event.end.seconds}&sig=${signature}`;
 
   return {
     error: '',
