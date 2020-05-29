@@ -23,7 +23,6 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public formatNotification(notification: Notification): Partial<Notification> {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
-    const organizationName = orgName(notification.organization) || 'Organization with no name';
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -58,6 +57,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'newContract':
+        const organizationName = orgName(notification.organization) || 'Organization with no name';
         return {
           date: toDate(notification.date),
           message: `${organizationName} submitted a contract.`,
@@ -77,7 +77,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `A new movie has been submitted`,
           imgRef: this.getPoster(notification.docId),
           placeholderUrl: 'empty_poster.webp',
-          url: `/c/o/dashboard/title/${notification.docId}/details`, // TODO check url : see  #2716
+          url: `/c/o/dashboard/titles/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieAccepted':
         return {
