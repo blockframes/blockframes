@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
 import { Organization } from '@blockframes/organization/+state';
 import { fade } from '@blockframes/utils/animations/fade';
 

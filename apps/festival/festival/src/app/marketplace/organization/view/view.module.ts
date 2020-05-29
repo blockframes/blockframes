@@ -21,9 +21,10 @@ const routes = [{
   }, {
     path: 'screening',
     loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
-  }, {
-    path: 'meeting',
-    loadChildren: () => import('../meeting/meeting.module').then(m => m.MeetingModule)
+  // Put the meeting tab in comment to prevent users to go in
+  // }, {
+  //   path: 'meeting',
+  //   loadChildren: () => import('../meeting/meeting.module').then(m => m.MeetingModule)
   }]
 }]
 
