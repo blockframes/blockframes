@@ -9,6 +9,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   NgZone,
+  OnDestroy,
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -16,8 +17,8 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { Flex } from '../layout/layout.module';
 
 // RxJs
-import { Observable } from 'rxjs';
-import { startWith, tap, distinctUntilChanged, map, debounceTime } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
 
 
 @Component({
@@ -25,35 +26,38 @@ import { startWith, tap, distinctUntilChanged, map, debounceTime } from 'rxjs/op
   templateUrl: 'carousel.component.html',
   styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
-})  // TODO #2835
-export class CarouselComponent /* implements AfterViewInit */ {
-
-  public currentPosition: number;
+})
+export class CarouselComponent implements AfterViewInit, OnDestroy {
 
   /* Indicators to show arrow buttons */
-  public showBack: Observable<boolean>;
-  public showForward: Observable<boolean>;
+  public showForward: boolean;
+  public showBack: boolean;
 
+  private subRight: Subscription;
+  private subLeft: Subscription;
+
+  private currentPosition: number;
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
 
-  public scroll;
   constructor(private flex: Flex, private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
 
   get clientWidth() {
     return this.container.nativeElement.clientWidth;
   }
 
-  /* TODO #2835 */
- /*  ngAfterViewInit() {
-    this.showBack = this.onScrolling('left'); */
-    /* If clientWidth is smaller or equal to scrollWidth, it means we got an overflow */
-  /*   if (this.clientWidth <= this.container.nativeElement.scrollWidth) {
-      this.showForward = this.onScrolling('right')
-    }
-    this.scroll =  this.scrollable.elementScrolled();
-  } */
+  ngAfterViewInit() {
+    this.subLeft = this.onScrolling('left').subscribe(showBack => {
+      this.showBack = showBack;
+      this.ngZone.run(() => this.cdr.detectChanges())
+    })
+
+    this.subRight = this.onScrolling('right').subscribe(showForward => {
+      this.showForward = showForward;
+      this.ngZone.run(() => this.cdr.detectChanges())
+    })
+  }
 
   scrollTo(direction: 'left' | 'right') {
     this.currentPosition = this.scrollable.measureScrollOffset('left');
@@ -64,16 +68,19 @@ export class CarouselComponent /* implements AfterViewInit */ {
       : this.scrollable.scrollTo({ left: this.currentPosition - clientWidth - this.flex.marginOffset() })
   }
 
-  // TODO #2835
-/*   onScrolling(direction: 'right' | 'left') {
+  onScrolling(direction: 'right' | 'left') {
     return this.scrollable.elementScrolled().pipe(
       debounceTime(50),
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
       distinctUntilChanged(),
-      tap(_ => this.ngZone.run(() => this.cdr.detectChanges())),
       startWith(direction === 'right'),
-    )
-  } */
+      tap(_ => this.ngZone.run(() => this.cdr.detectChanges())))
+  }
+
+  ngOnDestroy() {
+    if (this.subLeft) this.subLeft.unsubscribe();
+    if (this.subRight) this.subRight.unsubscribe();
+  }
 }
 
 @Directive({ selector: '[carouselItem]' })

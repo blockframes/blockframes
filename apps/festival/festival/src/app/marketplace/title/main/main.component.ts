@@ -53,5 +53,4 @@ export class MainComponent {
   public budgetRange({ from, to }) {
     return (from && to) ? `$ ${from} - ${to}` : '';
   }
-
 }

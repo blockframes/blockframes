@@ -98,12 +98,12 @@ export const getPrivateVideoUrl = async (
   // TODO we should discuss with François and Vincent of the best strategy for the expiring time of links
   // TODO issue#2653
 
-  const toSign = `videos/${movie.hostedVideo}.mp4:${event.end.seconds}:${jwplayerSecret}`;
+  const toSign = `manifests/${movie.hostedVideo}.m3u8:${event.end.seconds}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `http://cdn.jwplayer.com/videos/${movie.hostedVideo}.mp4?exp=${event.end.seconds}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${event.end.seconds}&sig=${signature}`;
 
   return {
     error: '',

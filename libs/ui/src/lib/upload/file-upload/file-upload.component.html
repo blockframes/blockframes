@@ -1,20 +1,22 @@
 <ng-container [ngSwitch]="state">
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
-    <label>
-      <mat-icon color="primary" class="material-icons-outlined" svgIcon="download"></mat-icon>
+    <label class="upload-button-container">
+      <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
+        <img asset="add_files.webp" alt="upload image" />
+      </button>
       <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
     </label>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[format]"></ng-content>
     <p class="mat-caption">Drag and drop a file here or
-      <button mat-button color="primary" (click)="fileExplorer.click()">Browse</button>
+      <button mat-button color="primary" (click)="fileExplorer.click()">browse</button>
     </p>
   </section>
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <mat-icon svgIcon="import"></mat-icon>
+    <img asset="add_files.webp" alt="upload image" />
   </section>
 
   <!-- Uploading -->
