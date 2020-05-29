@@ -97,14 +97,19 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
     this.appContainer.appBar.attach(this.template)
     if (this.targetId) {
       this.zone.runOutsideAngular(() => {
-        const height = 80;
+        const heightSize = 80;
         const options = {
           root: this.appContainer.container,
-          rootMargin: `-${height}px 0px 0px 0px`,
+          rootMargin: `-${heightSize}px 0px 0px 0px`,
           threshold: 0
         }
         this.observer = new IntersectionObserver(([entry]) => {
-          const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= height;
+          // First entry artifact (not sure what happens)
+          const {x, y, width, height} = entry.rootBounds;
+          if (x === 0 && y === 0 && width === 0 && height === 0) {
+            return;
+          }
+          const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= heightSize;
           const isEnteringTop = !this.appContainer.appBar.isApp && entry.isIntersecting;
           if (isLeavingTop) {
             this.zone.run(() => this.appContainer.appBar.isApp = false);
@@ -123,6 +128,7 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.appContainer.appBar.detach();
     if (this.targetId && this.observer) {
+      console.log('Unobserve');
       this.observer.unobserve(this.targetEl);
     }
   }
