@@ -10,10 +10,14 @@
   scroll-behavior: smooth;
 }
 
-#button {
+.direction {
   position: absolute;
   background: rgba(255, 255, 255, 0.226);
   z-index: 1;
+}
+
+.direction:hover {
+  opacity: 1;
 }
 
 .previous {

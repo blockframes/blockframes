@@ -37,8 +37,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   private showBack$: Observable<boolean>;
   private showForward$: Observable<boolean>;
 
-  private subBack: Subscription;
-  private subForward: Subscription;
+  private subRight: Subscription;
+  private subLeft: Subscription;
 
   private currentPosition: number;
 
@@ -55,14 +55,14 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
     this.showBack$ = this.onScrolling('left');
     this.showForward$ = this.onScrolling('right');
 
-    this.subBack = this.showForward$.subscribe(value => {
-      this.showForward = value;
-      this.cdr.detectChanges();
+    this.subRight = this.onScrolling('left').subscribe(showBack => {
+      this.showBack = showBack;
+      this.ngZone.run(() => this.cdr.detectChanges())
     })
 
-    this.subForward = this.showBack$.subscribe(value => {
-      this.showBack = value;
-      this.cdr.detectChanges();
+    this.subLeft = this.onScrolling('left').subscribe(showForward => {
+      this.showForward = showForward;
+      this.ngZone.run(() => this.cdr.detectChanges())
     })
   }
 
@@ -85,8 +85,8 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.subBack) this.subBack.unsubscribe();
-    if (this.subForward) this.subForward.unsubscribe();
+    if (this.subLeft) this.subLeft.unsubscribe();
+    if (this.subRight) this.subRight.unsubscribe();
   }
 }
 

@@ -37,9 +37,9 @@
               <movie-slide [movie]="movie">
                 <movie-slide-cta>
                   <ng-container *ngIf="movie.promotionalElements.trailer">
-                    <a mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title/' + movie.id]"
+                    <a mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/title/', movie.id]"
                       class="detail">
-                      More details</a>
+                      More Details</a>
                   </ng-container>
                 </movie-slide-cta>
                 <movie-slide-actions>
