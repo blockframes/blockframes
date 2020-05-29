@@ -1,7 +1,4 @@
-import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit, OnInit } from '@angular/core';
-
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
 

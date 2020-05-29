@@ -4,13 +4,11 @@ import { Component, ChangeDetectionStrategy, Input, Directive } from '@angular/c
 // Blockframes
 import { Movie, Credit } from '@blockframes/movie/+state';
 import { Title } from '@blockframes/movie/+state/movie.firestore';
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
 
 interface MovieSliderView {
     directors: string | Credit[],
     titles: Title,
     synopsis: string,
-    banner: ImgRef | string
 }
 
 function createMovieSliderView(movie: Movie): MovieSliderView {
@@ -20,8 +18,7 @@ function createMovieSliderView(movie: Movie): MovieSliderView {
             international: movie.main?.title.international || '',
             original: movie.main?.title.original || ''
         },
-        synopsis: movie.story?.synopsis || '',
-        banner: movie.promotionalElements?.banner.media || ''
+        synopsis: movie.story?.synopsis || ''
     }
 }
 

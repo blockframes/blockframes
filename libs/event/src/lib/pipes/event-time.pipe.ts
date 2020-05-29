@@ -1,18 +1,25 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Event } from '../+state/event.model';
 
+export type EventTime = 'early' | 'onTime' | 'late';
+
+export function eventTime(event: Event): EventTime {
+  const now = new Date().getTime();
+  if (now < event.start.getTime()) {
+    return 'early';
+  }
+  if (now > event.end.getTime()) {
+    return 'late';
+  }
+  return 'onTime';
+}
+
+
 @Pipe({name: 'eventTime', pure: true})
 export class EventTimePipe implements PipeTransform {
 
-  transform(event: Event): 'early'|'onTime'|'late' {
-    const now = new Date().getTime();
-    if (now < event.start.getTime()) {
-      return 'early';
-    }
-    if (now > event.end.getTime()) {
-      return 'late';
-    }
-    return 'onTime';
+  transform(event: Event): EventTime {
+    return eventTime(event);
   }
 }
 
