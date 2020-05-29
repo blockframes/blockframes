@@ -57,7 +57,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         movies$: selectMovies('financing')
       },
     ];
-    this.sections.forEach(section => section.movies$.subscribe(console.log))
   }
 
   ngOnDestroy() {
