@@ -11,5 +11,5 @@ import { staticModels } from '@blockframes/utils/static-model';
 export class CertificationsComponent {
   @Input() form: FormControl;
   certifications = staticModels.CERTIFICATIONS.filter(cert =>
-    (cert.slug !== 'awarded-film' && cert.slug !== 'european-qualification'));
+    (cert.slug !== 'awarded-film' && cert.slug !== 'a-list-cast'));
 }
