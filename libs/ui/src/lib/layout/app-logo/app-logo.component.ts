@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 const appLogos = {
@@ -14,6 +14,8 @@ const appLogos = {
 })
 export class AppLogoComponent implements OnInit {
   public imageLogo: string;
+
+  @Input() theme: 'dark' | 'light';
 
   constructor(private routerQuery: RouterQuery) {}
 

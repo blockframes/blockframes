@@ -13,7 +13,9 @@
         <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
         <pre class="mat-body-1">{{ event | eventRange }}</pre>
         <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
-        <a mat-button routerLink="./session">Join the {{ event.type }}</a>
+        <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
+          <a mat-button routerLink="./session">Join the {{ event.type }}</a>
+        </ng-container>
       </ng-container>
 
       <ng-container *ngSwitchCase="'late'">

@@ -18,8 +18,9 @@ header, section {
 }
 
 header {
+  background-image: url('/assets/images/profil_banner.webp');
+  background-size: cover;
   padding: 48px;
-  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
     min-height: 170px;
     min-width: 170px;
