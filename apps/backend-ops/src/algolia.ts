@@ -89,7 +89,8 @@ export async function upgradeAlgoliaMovies() {
         throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
       }
 
-      const orgName = (querySnap.docs[0].data() as OrganizationDocument).denomination.full;
+      const org = (querySnap.docs[0].data() as OrganizationDocument);
+      const orgName = org.denomination.public || org.denomination.full;
 
       await storeSearchableMovie(movieData, orgName, process.env['ALGOLIA_API_KEY'])
     } catch (error) {
