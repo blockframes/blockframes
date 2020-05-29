@@ -10,8 +10,8 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>From</mat-label>
             <mat-select formControlName="from">
-              <mat-option *ngFor="let from of sendgridEmailsFrom | keyvalue" [value]="from.value">
-                {{ from.value }}
+              <mat-option *ngFor="let from of sendgridEmailsFrom | keyvalue" [value]="from.value.email">
+                {{ from.value.email }}( {{ from.value.name }} )
               </mat-option>
             </mat-select>
           </mat-form-field>

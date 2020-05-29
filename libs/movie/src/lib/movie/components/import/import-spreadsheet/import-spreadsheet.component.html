@@ -30,7 +30,7 @@
 
   <section class="help-section" fxLayout="column" fxLayoutAlign="center center">
     <p>Once you have filled it out, please upload it below.</p>
-    <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
+    <a [routerLink]="['./']" (click)="openIntercom()"><strong>Need help ?</strong></a>
   </section>
   <section fxLayout="column" fxLayoutAlign="center center">
     <ng-container *ngIf="sheets.length; else fileUpload">
@@ -38,10 +38,13 @@
     </ng-container>
     <ng-template #fileUpload>
       <file-upload accept="['.xls', '.xlsx', '.ods', '.csv']" [types]="[
-          'application/vnd.ms-excel',
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'application/vnd.oasis.opendocument.spreadsheet',
-          'text/csv']" (uploaded)="importSpreadsheet($event)"></file-upload>
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'text/csv']" (uploaded)="importSpreadsheet($event)">
+        <h3 type>Upload files</h3>
+        <p class="mat-caption" format>Accepted Formats : xls, xlsx</p>
+      </file-upload>
     </ng-template>
   </section>
 

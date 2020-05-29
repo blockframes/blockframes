@@ -8,7 +8,7 @@
     <ng-content select="[dimensions]"></ng-content>
     <ng-content select="[format]"></ng-content>
     <p class="mat-caption">Drag and drop a file here or <button mat-button color="primary"
-        (click)="fileUploader.click()">Browse</button></p>
+        (click)="fileUploader.click()">browse</button></p>
   </article>
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
     <image-cropper [imageFile]="file" [aspectRatio]="cropRatio" format="webp" [containWithinAspectRatio]="true"
