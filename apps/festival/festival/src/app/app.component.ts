@@ -17,7 +17,7 @@ export class AppComponent {
     icons: IconService,  // even if not used in component, keep this to load icons
     ym: YandexMetricaService // Need to be instantiate
   ) {
-    theme.initTheme('dark');
+    theme.initTheme('light');
     icons.init()
   }
 }
