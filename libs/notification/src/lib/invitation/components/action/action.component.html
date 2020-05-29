@@ -27,7 +27,14 @@
   <!-- TODO : Use ng-content here -->
   <button test-id="invitation-request" mat-button (click)="request(event)">
     <mat-icon svgIcon="calendar"></mat-icon>
-    <span *ngIf="event.isPrivate">Ask for Invitation</span>
-    <span *ngIf="!event.isPrivate">Add to my calendar</span>
+    <ng-container [ngSwitch]="event | eventTime">
+      <ng-container  *ngSwitchCase="'early'">
+        <span *ngIf="event.isPrivate">Ask for Invitation</span>
+        <span *ngIf="!event.isPrivate">Add to my calendar</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'onTime'">
+        <span>Session has already started, request access</span>
+      </ng-container>
+    </ng-container>
   </button>
 </ng-template>

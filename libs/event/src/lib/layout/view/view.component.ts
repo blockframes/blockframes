@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'event-view',
@@ -31,7 +31,8 @@ export class EventViewComponent implements OnInit {
   ngOnInit(): void {
     this.invitation$ = this.event$.pipe(
       switchMap(event => this.invitationQuery.selectByDocId(event.id)),
-    )
+      shareReplay(1)
+    );
   }
   
   /**
@@ -40,13 +41,5 @@ export class EventViewComponent implements OnInit {
    */
   addToCalendar() {
     this.invitationService.request(this.event.type === 'meeting' ? 'user' : 'org', this.event.ownerId).from('user').to('attendEvent', this.event.id);
-  }
-
-  accept(invitation: Invitation) {
-    this.invitationService.acceptInvitation(invitation);
-  }
-
-  refuse(invitation: Invitation) {
-    this.invitationService.declineInvitation(invitation);
   }
 }
