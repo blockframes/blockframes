@@ -3,8 +3,6 @@ import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { workType } from '@blockframes/movie/+state/movie.firestore';
-
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -41,9 +39,5 @@ export class TitleViewComponent implements OnInit {
 
   public getDirectors(movie: Movie) {
     return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
-  }
-
-  public getWorkType(movieWorkType: string) {
-    return workType[movieWorkType];
   }
 }
