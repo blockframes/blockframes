@@ -9,6 +9,7 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   NgZone,
+  OnDestroy,
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -16,7 +17,7 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { Flex } from '../layout/layout.module';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
 
 
@@ -26,13 +27,20 @@ import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/op
   styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarouselComponent implements AfterViewInit {
+export class CarouselComponent implements AfterViewInit, OnDestroy {
 
-  public currentPosition: number;
 
   /* Indicators to show arrow buttons */
-  public showBack$: Observable<boolean>;
-  public showForward$: Observable<boolean>;
+  public showForward: boolean;
+  public showBack: boolean;
+
+  private showBack$: Observable<boolean>;
+  private showForward$: Observable<boolean>;
+
+  private subBack: Subscription;
+  private subForward: Subscription;
+
+  private currentPosition: number;
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
@@ -43,10 +51,19 @@ export class CarouselComponent implements AfterViewInit {
     return this.container.nativeElement.clientWidth;
   }
 
-
   ngAfterViewInit() {
     this.showBack$ = this.onScrolling('left');
-    this.showForward$ = this.onScrolling('right')
+    this.showForward$ = this.onScrolling('right');
+
+    this.subBack = this.showForward$.subscribe(value => {
+      this.showForward = value;
+      this.cdr.detectChanges();
+    })
+
+    this.subForward = this.showBack$.subscribe(value => {
+      this.showBack = value;
+      this.cdr.detectChanges();
+    })
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -64,11 +81,12 @@ export class CarouselComponent implements AfterViewInit {
       map(_ => !!this.scrollable.measureScrollOffset(direction)),
       distinctUntilChanged(),
       startWith(direction === 'right'),
-      tap(_ => this.ngZone.runOutsideAngular(() => {
-        console.log('run')
-        this.cdr.detectChanges()
-      }
-      )))
+      tap(_ => this.ngZone.run(() => this.cdr.detectChanges())))
+  }
+
+  ngOnDestroy() {
+    if (this.subBack) this.subBack.unsubscribe();
+    if (this.subForward) this.subForward.unsubscribe();
   }
 }
 

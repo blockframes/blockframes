@@ -13,14 +13,15 @@
 #button {
   position: absolute;
   background: rgba(255, 255, 255, 0.226);
+  z-index: 1;
 }
 
 .previous {
   left: 0px;
-  bottom: 0px;
+  bottom: calc(50%-20px);
 }
 
 .next {
   right: 0px;
-  bottom: 0px;
+  bottom: calc(50%-20px);
 }
