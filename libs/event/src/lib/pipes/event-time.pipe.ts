@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Event } from '../+state/event.model';
 
-export type EventTime = 'early'|'onTime'|'late';
+export type EventTime = 'early' | 'onTime' | 'late';
 
 export function eventTime(event: Event): EventTime {
   const now = new Date().getTime();

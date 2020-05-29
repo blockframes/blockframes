@@ -128,7 +128,6 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.appContainer.appBar.detach();
     if (this.targetId && this.observer) {
-      console.log('Unobserve');
       this.observer.unobserve(this.targetEl);
     }
   }
