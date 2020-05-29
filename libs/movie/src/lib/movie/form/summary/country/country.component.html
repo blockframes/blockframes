@@ -25,7 +25,7 @@
         <strong>Release Media </strong>
         <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
           <ng-container *ngIf="release.get('country').value === country.value; else notMatchingCountry">
-            <missing-control [control]="release.get('media')" scope="MEDIAS" [link]="link"></missing-control>
+            <missing-control [control]="release.get('media')" [scope]="'MEDIAS'" [link]="link"></missing-control>
           </ng-container>
           <ng-template #notMatchingCountry>
             <a [routerLink]="link" class="missing-control">

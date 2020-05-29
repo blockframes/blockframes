@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
-
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MainComponent } from './main.component';
 
 // Material
@@ -21,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     CommonModule,
     FlexLayoutModule,
     TranslateSlugModule,
+    DisplayNameModule,
     ToLabelModule,
     ImageReferenceModule,
     // Material
