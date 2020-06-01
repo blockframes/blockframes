@@ -38,8 +38,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sections = [
       {
         title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' })
+        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival })
       },
       {
         title: 'In production',
