@@ -29,13 +29,13 @@
       <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
       <span class="mat-display-2">{{ org.denomination.full }}</span>
       <h2>
-        {{ org.addresses.main.street | titlecase }}
+        <span>{{ org.addresses.main.street | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-        {{ org.addresses.main.zipCode | titlecase }}
+        <span>{{ org.addresses.main.zipCode | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-        {{ org.addresses.main.city | titlecase }}
+        <span>{{ org.addresses.main.city | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
-        {{ org.addresses.main.country | translateSlug: 'TERRITORIES' }}
+        <span>{{ org.addresses.main.country | translateSlug: 'TERRITORIES' }}</span>
       </h2>
       <p class="mat-body-2">{{ org.description }}</p>
       <ng-container *ngIf="org.email">
