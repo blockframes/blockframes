@@ -74,7 +74,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public async formatContracts(sheetTab: SheetTab) {
+  public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');

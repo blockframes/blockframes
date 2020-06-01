@@ -24,6 +24,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   public sheets: SheetTab[] = [];
   public fileType = new FormControl();
   public isUserBlockframesAdmin = false;
+  public pageTitle = 'Import multiple titles at once';
 
   constructor(
     @Optional() private intercom: Intercom,
@@ -37,6 +38,9 @@ export class ImportSpreadsheetComponent implements OnInit {
 
   ngOnInit() {
     this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
+    if(this.isUserBlockframesAdmin){
+      this.pageTitle = '[ADMIN] Import multiple items at once';
+    }
     this.cdRef.markForCheck();
   }
 
@@ -46,6 +50,8 @@ export class ImportSpreadsheetComponent implements OnInit {
       sheetRange = 'A14:AZ100';
     } else if (this.fileType.value === 'contracts') {
       sheetRange = 'A1:DD100';
+    } else if (this.fileType.value === 'organizations') {
+      sheetRange = 'A1:Z100';
     } else {
       sheetRange = 'A10:AD100';
     }

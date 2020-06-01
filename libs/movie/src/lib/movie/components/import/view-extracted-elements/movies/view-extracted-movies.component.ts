@@ -136,7 +136,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public formatMovies(sheetTab: SheetTab) {
+  public format(sheetTab: SheetTab) {
     this.clearDataSources();
 
     sheetTab.rows.forEach(async spreadSheetRow => {

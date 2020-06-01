@@ -1,6 +1,7 @@
 import { Movie } from "@blockframes/movie/+state";
 import { Contract } from "@blockframes/contract/contract/+state/contract.model";
 import { DistributionRight } from "@blockframes/distribution-rights/+state/distribution-right.model";
+import { OrganizationDocumentWithDates } from "@blockframes/organization/+state";
 
 export interface SpreadsheetImportError {
   field: string;
@@ -28,4 +29,10 @@ export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
   contract: Contract;
+}
+
+export interface OrganizationsImportState {
+  errors?: SpreadsheetImportError[];
+  org: OrganizationDocumentWithDates;
+  newOrg: boolean;
 }

@@ -1,6 +1,6 @@
 <article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>Import multiple titles at once</h1>
+    <h1>{{ pageTitle }} </h1>
 
     <div fxLayout="column" fxLayoutAlign="center">
       <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
@@ -13,6 +13,9 @@
         <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
           <mat-icon svgIcon="import"></mat-icon><span>Download our excel contracts template</span>
         </button>
+        <button mat-stroked-button color="primary" (click)="downloadTemplate('organizations')">
+          <mat-icon svgIcon="import"></mat-icon><span>Download our excel organization template</span>
+        </button>
       </ng-container>
     </div>
   </section>
@@ -24,6 +27,7 @@
         <mat-option value="movies">Movies</mat-option>
         <mat-option value="rights">Distribution Rights</mat-option>
         <mat-option value="contracts">Contracts</mat-option>
+        <mat-option value="organizations">Organizations</mat-option>
       </mat-select>
     </mat-form-field>
   </section>

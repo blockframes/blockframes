@@ -67,7 +67,7 @@ export class ViewExtractedRightsComponent implements OnInit {
   }
 
 
-  public async formatDistributionRights(sheetTab: SheetTab) {
+  public async format(sheetTab: SheetTab) {
     this.clearDataSources();
     sheetTab.rows.forEach(async spreadSheetRow => {
 

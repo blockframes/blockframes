@@ -28,13 +28,14 @@ import { TableExtractedMoviesComponent } from './movies/movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 import { RouterModule } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { TableExtractedOrganizationsComponent } from './organizations/organizations.component';
 
 @NgModule({
   declarations: [
     TableExtractedMoviesComponent,
     TableExtractedRightsComponent,
     TableExtractedContractsComponent,
+    TableExtractedOrganizationsComponent,
     ViewImportErrorsComponent,
   ],
   imports: [
@@ -66,6 +67,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TableExtractedMoviesComponent,
     TableExtractedRightsComponent,
     TableExtractedContractsComponent,
+    TableExtractedOrganizationsComponent,
   ],
 })
 export class TableExtractedElementsModule {}
