@@ -9,6 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [ItemComponent],
@@ -21,6 +22,7 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatButtonModule,
     MatIconModule,
+    MatDividerModule,
     RouterModule
   ]
 })
