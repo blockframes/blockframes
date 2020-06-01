@@ -1,20 +1,22 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional, ApplicationModule } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationsImportState } from '../../import-utils';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
+import { UserService } from '@blockframes/user/+state';
+import { Module } from '@blockframes/utils/apps';
 
 enum SpreadSheetOrganization {
   fullDenomination,
   publicDenomination,
   orgEmail,
-  adminEmail,
-  adminPassword,
-  adminIdentity,
+  superAdminEmail,
+  superAdminIdentity,
+  superAdminPassword,
   catalogAccess,
   festivalAccess,
 }
@@ -37,6 +39,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     @Optional() private intercom: Intercom,
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
+    private userService: UserService,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
@@ -66,26 +69,77 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
       }
 
-      if (spreadSheetRow[SpreadSheetOrganization.orgEmail]) {
-        const importErrors = {
-          org,
-          newOrg,
-          errors: [],
-        } as OrganizationsImportState;
+      let superAdmin = createUser();
+      if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
+        const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.superAdminEmail] as string));
+        if (!!existingSuperAdmin) {
+          superAdmin = existingSuperAdmin;
+        }
+      }
 
+      const importErrors = {
+        org,
+        newOrg,
+        superAdmin,
+        errors: [],
+      } as OrganizationsImportState;
+
+      if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
+        /**
+        * @dev We process this data only if this is for a new org
+        */
         if (newOrg) {
 
+          // DENOMINATION
+          if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
+            importErrors.org.denomination.full = spreadSheetRow[SpreadSheetOrganization.fullDenomination].trim();
+          }
+
+          if (spreadSheetRow[SpreadSheetOrganization.publicDenomination]) {
+            importErrors.org.denomination.public = spreadSheetRow[SpreadSheetOrganization.publicDenomination].trim();
+          }
+
           // EMAIL
-          /**
-           * @dev We process this data only if this is for a new org
-          */
           if (spreadSheetRow[SpreadSheetOrganization.orgEmail]) {
             importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.orgEmail].trim().toLowerCase();
           }
 
+          // SUPER ADMIN
+          if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
+            importErrors.superAdmin.email = spreadSheetRow[SpreadSheetOrganization.superAdminEmail].trim().toLowerCase();
+          }
+
+          if (spreadSheetRow[SpreadSheetOrganization.superAdminIdentity]) {
+            const [firstName, lastName] = spreadSheetRow[SpreadSheetOrganization.superAdminIdentity].split(this.separator);
+            importErrors.superAdmin.firstName = firstName.trim();
+            importErrors.superAdmin.lastName = lastName.trim();
+          }
+
+          if (spreadSheetRow[SpreadSheetOrganization.superAdminPassword]) {
+            importErrors.superAdminPsw = spreadSheetRow[SpreadSheetOrganization.superAdminPassword].trim();
+          }
+
+          // APP ACCESS
+          if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
+            const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
+            if (module1) {
+              importErrors.org.appAccess.catalog[module1] = true;
+            }
+            if (module2) {
+              importErrors.org.appAccess.catalog[module2] = true;
+            }
+          }
+
+          if (spreadSheetRow[SpreadSheetOrganization.festivalAccess]) {
+            const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.festivalAccess].split(this.separator).map(m => m.trim().toLowerCase());
+            if (module1) {
+              importErrors.org.appAccess.festival[module1] = true;
+            }
+            if (module2) {
+              importErrors.org.appAccess.festival[module2] = true;
+            }
+          }
         }
-
-
 
         ///////////////
         // VALIDATION
@@ -104,8 +158,9 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         this.cdRef.markForCheck();
+
       }
-    };
+    }
     matSnackbarRef.dismissWithAction(); // loading ended
   }
 
