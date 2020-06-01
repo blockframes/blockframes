@@ -10,5 +10,10 @@
     </small>
   </span>
   <invitation-action [invitation]="invitation"></invitation-action>
-  <a mat-button [routerLink]="['../event/', invitation.docId]">More details</a>
+  <a mat-button [routerLink]="['../event/', invitation.docId]">
+    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon svgIcon="dot_menu"></mat-icon>
+      More
+    </div>
+  </a>
 </mat-list-item>
