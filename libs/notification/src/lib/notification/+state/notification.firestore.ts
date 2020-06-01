@@ -22,10 +22,11 @@ export type NotificationType =
   'contractInNegotiation' |
 
   // Events related notifications
+  'requestToAttendEventSent' |
   'eventIsAboutToStart' | // TODO the backend code is not yet ready issue #2555
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
-;
+  ;
 
 /** Minimum required information to create a Notification. */
 export interface NotificationOptions {
