@@ -65,7 +65,7 @@ export class MovieAnalyticsChartComponent {
   public isLoadingFailed = false;
   public isLoading$ = this.movieQuery.analytics.selectLoading().pipe(
     tap(async isLoading =>  {
-      await delay(60000);
+      await delay(20000);
       if (isLoading) {
         this.isLoadingFailed = true;
         this.cdr.markForCheck();

@@ -1,10 +1,11 @@
-<article fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutAlign.lt-md="center">
+<article fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutGap="24px">
   <ng-container *ngFor="let info of chartData">
     <mat-card #chart class="chart">
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div class="mat-body-2">
+        <div fxLayout="row" fxLayoutAlign="start center" class="mat-body-2">
           <mat-icon [svgIcon]="info.icon"></mat-icon>
-          <span>{{ info.title }}</span></div>
+          <span>{{ info.title }}</span>
+        </div>
         <div class="mat-caption" *ngIf="info.percentage">
           <ng-container *ngIf="info.percentage> 0; else down">
             <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
@@ -31,17 +32,15 @@
             ></apx-chart>
           </ng-container>
           <ng-template #loading>
-            <mat-spinner diameter="60"></mat-spinner>
+            <mat-spinner diameter="48"></mat-spinner>
           </ng-template>
         </ng-container>
         <ng-template #failed>
-          <p>Sorry, we cannot load your
-            <br>
-            analytics at this time.
+          <p class="mat-caption">Sorry, we cannot load your analytics at this time.
           </p>
-          <button mat-icon-button (click)="refresh()">
+          <button mat-button (click)="refresh()">
             <span>Refresh</span>
-            <mat-icon svgIcon="refresh"></mat-icon>
+            <mat-icon matSuffix svgIcon="refresh"></mat-icon>
           </button>
         </ng-template>
       </mat-card-content>
