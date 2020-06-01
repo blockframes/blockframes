@@ -80,7 +80,7 @@ export const onUserCreate = async (user: UserRecord) => {
     if (userDoc.exists) {
       if (!user.emailVerified) {
         const u = userDoc.data() as PublicUser;
-        /** 
+        /**
          * @dev TODO (#2826) since there is now way to get the used app when this function is triggered,
          * we cannot set the custom "from" here
         */

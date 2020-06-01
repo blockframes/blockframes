@@ -2,6 +2,7 @@ import { FormControl } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { createImgRef, ImgRef } from '@blockframes/utils/media/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form';
 
 export interface Profile {
   firstName: string;
@@ -31,7 +32,7 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new FormControl(profile.avatar),
+    avatar: new ImgRefForm(profile.avatar),
     email: new FormControl(profile.email)
   };
 }
