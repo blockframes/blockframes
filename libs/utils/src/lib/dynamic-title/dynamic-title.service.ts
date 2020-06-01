@@ -3,39 +3,39 @@ import { Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName } from '../apps';
+import { getAppName, appName } from '../apps';
 
 const pages = {
   catalog: {
-    app: 'Archipel Content',
-    section: (section: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    app: appName.catalog,
+    section: (section: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${section} ${suffix}`;
     },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${titleName} - ${section} ${suffix}`;
     }
   },
   blockframes: {
-    app: 'Blockframes',
-    section: (section: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    app: appName.blockframes,
+    section: (section: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${section} ${suffix}`;
     },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${titleName} - ${section} ${suffix}`;
     }
   },
   festival: {
-    app: 'Festival',
-    section: (section: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    app: appName.festival,
+    section: (section: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${section} ${suffix}`;
     },
-    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
-      const suffix = showAppName ? `- ${appName}` : '';
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
       return `${titleName} - ${section} ${suffix}`;
     }
   }
