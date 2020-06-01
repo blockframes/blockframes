@@ -1,7 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { lineChartOptions } from './default-chart-options';
 import { MovieQuery } from '../../+state';
+import { tap } from 'rxjs/operators';
+import { delay } from '@blockframes/utils/helpers';
 
 const chartInfo = [
   {
@@ -59,7 +61,17 @@ export class MovieAnalyticsChartComponent {
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
-  public isLoading$ = this.movieQuery.analytics.selectLoading();
+
+  public isLoadingFailed = false;
+  public isLoading$ = this.movieQuery.analytics.selectLoading().pipe(
+    tap(async isLoading =>  {
+      await delay(60000);
+      if (isLoading) {
+        this.isLoadingFailed = true;
+        this.cdr.markForCheck();
+      }
+    })
+  );
 
   @Input() set analyticsData(data: MovieAnalytics[]) {
     if (data) {
@@ -81,8 +93,12 @@ export class MovieAnalyticsChartComponent {
     }
   };
 
-  constructor(private movieQuery: MovieQuery) {
+  constructor(private movieQuery: MovieQuery, private cdr: ChangeDetectorRef) {
     this.lineChartOptions = lineChartOptions;
+  }
+
+  refresh() {
+    this.isLoadingFailed = false;
   }
 
   // get date by period for x, get sum of hits each day by event for y

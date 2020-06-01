@@ -1,4 +1,4 @@
-<article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
+<article fxLayout="row wrap" fxLayoutAlign="space-between center" fxLayoutAlign.lt-md="center">
   <ng-container *ngFor="let info of chartData">
     <mat-card #chart class="chart">
       <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -16,21 +16,33 @@
         </div>
       </div>
       <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
-      <mat-card-content>
-        <ng-container *ngIf="!(isLoading$ | async) else loading">
-          <apx-chart
-            [series]="getLineChartSeries(info.eventName, info.title)"
-            [chart]="lineChartOptions.chart"
-            [xaxis]="getLineChartXaxis(info.eventName)"
-            [yaxis]="lineChartOptions.yaxis"
-            [dataLabels]="lineChartOptions.dataLabels"
-            [grid]="lineChartOptions.grid"
-            [stroke]="lineChartOptions.stroke"
-            [fill]="lineChartOptions.fill"
-          ></apx-chart>
+      <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+        <ng-container *ngIf="!isLoadingFailed else failed">
+          <ng-container *ngIf="!(isLoading$ | async) else loading">
+            <apx-chart
+              [series]="getLineChartSeries(info.eventName, info.title)"
+              [chart]="lineChartOptions.chart"
+              [xaxis]="getLineChartXaxis(info.eventName)"
+              [yaxis]="lineChartOptions.yaxis"
+              [dataLabels]="lineChartOptions.dataLabels"
+              [grid]="lineChartOptions.grid"
+              [stroke]="lineChartOptions.stroke"
+              [fill]="lineChartOptions.fill"
+            ></apx-chart>
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="60"></mat-spinner>
+          </ng-template>
         </ng-container>
-        <ng-template #loading>
-          <mat-spinner></mat-spinner>
+        <ng-template #failed>
+          <p>Sorry, we cannot load your
+            <br>
+            analytics at this time.
+          </p>
+          <button mat-icon-button (click)="refresh()">
+            <span>Refresh</span>
+            <mat-icon svgIcon="refresh"></mat-icon>
+          </button>
         </ng-template>
       </mat-card-content>
     </mat-card>
