@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
 
   public isSignin = true;
-  private snackbarDuration = 4000;
+  private snackbarDuration = 8000;
 
   constructor(
     private service: AuthService,
