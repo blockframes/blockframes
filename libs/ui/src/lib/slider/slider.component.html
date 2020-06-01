@@ -12,8 +12,8 @@
   <ng-container *ngIf="!hideArrows">
     <mat-icon [svgIcon]="arrowBack" mat-ripple (click)="previous()" *ngIf="loop || currentIndex !== 0"
       tabindex="-1" class="previous"></mat-icon>
-      <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
-        *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
+    <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
+      *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
   </ng-container>
 
   <!-- Indicator -->
