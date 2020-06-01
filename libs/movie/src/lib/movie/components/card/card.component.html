@@ -1,5 +1,5 @@
 <figure (mouseenter)="hasOverlay = true" (mouseleave)="hasOverlay = false">
-  <img [ref]="movie | movieImage: size" asset="empty_poster.webp" alt="Movie Illustration" />
+  <img [ref]="movie | movieImage: size" [asset]="placeholder" alt="Movie Illustration" />
   <div fxLayout="column" fxLayoutAlign="center center" class="overlay" *ngIf="hasOverlay" @scaleIn>
     <wishlist-button [movieId]="movie.id" small></wishlist-button>
     <a mat-button @scaleIn color="primary" [routerLink]="link"> View More </a>

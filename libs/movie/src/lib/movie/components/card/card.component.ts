@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Movie } from '../../+state/movie.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
@@ -9,11 +9,20 @@ import { scaleIn } from '@blockframes/utils/animations/fade';
   animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardComponent {
+export class CardComponent implements OnInit {
   public hasOverlay = false;
+  public placeholder: string;
 
   @Input() size: 'banner' | 'poster' | 'avatar';
   @Input() movie: Movie;
   @Input() link = "..";
+
+  ngOnInit() {
+    if (this.size === 'banner') {
+      this.placeholder = 'empty_slider.webp';
+    } else {
+      this.placeholder = 'empty_poster.webp';
+    }
+  }
 }
 
