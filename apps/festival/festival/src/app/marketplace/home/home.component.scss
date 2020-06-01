@@ -5,12 +5,19 @@
 }
 
 header {
-  padding: 50px;
-  margin-bottom: 24px;
+  padding: 100px 96px;
+  margin-bottom: 80px;
   background-image: url("/assets/images/ACMbannerlanding.webp");
   background-size: cover;
   text-align: center;
   border: none;
+  h1.mat-display-2 {
+    margin-bottom: 80px;
+  }
+  h4 {
+    text-transform: uppercase;
+    margin-bottom: 0;
+  }
 }
 
 .detail {
