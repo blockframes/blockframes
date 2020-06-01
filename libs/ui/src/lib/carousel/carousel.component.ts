@@ -17,7 +17,7 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { Flex } from '../layout/layout.module';
 
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
 
 
