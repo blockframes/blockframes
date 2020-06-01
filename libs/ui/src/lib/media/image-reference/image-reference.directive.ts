@@ -2,12 +2,14 @@ import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } f
 import { ImgRef } from '@blockframes/utils/media/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
+import { map } from 'rxjs/operators';
 
 @Directive({
   selector: 'img[ref], img[asset]'
 })
 export class ImageReferenceDirective implements OnInit, OnDestroy {
   private sub: Subscription;
+  private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
   placeholder: string;
@@ -26,6 +28,10 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     }
   }
 
+  @Input() set theme(theme: 'dark' | 'light') {
+    this.localTheme$.next(theme)
+  }
+
   @Input() type: 'images' | 'logo' = 'images';
 
   @Input() set asset(asset: string) {
@@ -33,12 +39,20 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   }
 
   constructor(
-    private theme: ThemeService,
+    private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
-    this.sub = combineLatest([this.asset$, this.theme.theme$, this.ref$]).subscribe(([asset, theme, ref]) => {
+    // Can force a local theme
+    const theme$ = combineLatest([
+      this.localTheme$,
+      this.themeService.theme$
+    ]).pipe(
+      map(([local, global]) => local || global)
+    );
+  
+    this.sub = combineLatest([this.asset$, theme$, this.ref$]).subscribe(([asset, theme, ref]) => {
       this.src = ref || `assets/${this.type}/${theme}/${asset}`;
       this.cdr.markForCheck();
     });

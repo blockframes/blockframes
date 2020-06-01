@@ -4,15 +4,6 @@
 }
 
 aside {
-  height: 100%;
+  flex: 1;
 }
 
-mat-toolbar {
-  border-bottom: none;
-  .logo {
-    height: 48px;
-    img {
-      height: 100%;
-    }
-  }
-}

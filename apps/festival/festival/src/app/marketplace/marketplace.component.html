@@ -1,11 +1,5 @@
 <layout-marketplace>
   <aside>
-    <!-- We need to implement a mat-toolbar in the page for the app-bar to have the toolbar design -->
-    <mat-toolbar>
-      <a class="logo" routerLink=".">
-        <img asset="archipel_market.png" alt="Archipel Market Logo" />
-      </a>
-    </mat-toolbar>
     <mat-nav-list>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="home"></mat-icon>
@@ -34,11 +28,8 @@
     </mat-nav-list>
   </aside>
 
-  <header fxFlex fxLayout fxLayoutAlign="space-between center" class="marketplace-header">
-    <a class="logo" routerLink=".">
-      <img asset="archipel_market.png" alt="Archipel Market Logo" />
-    </a>
-    <a mat-icon-button routerLink="event/calendar">
+  <header fxFlex fxLayout fxLayoutAlign="end center" class="marketplace-header">
+    <a test-id="heart-icon" mat-icon-button routerLink="event/calendar">
       <mat-icon class="calendar-icon" svgIcon="calendar" color="primary"></mat-icon>
     </a>
   </header>

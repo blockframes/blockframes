@@ -71,10 +71,6 @@
         <ng-container *ngIf="movie.festivalPrizes.prizes as prizes">
           <li><strong>Festivals </strong></li>
           <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
-          <li *ngFor="let prize of prizes">
-            <!-- TODO#2654 Change placeholder to prize placeholder -->
-            <img [ref]="prize.logo" asset="empty_poster.webp"/>
-          </li>
         </ng-container>
       </ul>
     </mat-card-content>

@@ -14,7 +14,7 @@ const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
   poster: 3 / 4,
-  still: 5 / 7
+  still: 7 / 5
 }
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */

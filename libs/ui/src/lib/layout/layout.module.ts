@@ -65,6 +65,7 @@ export class Layout implements OnInit, OnDestroy {
 export class Grid implements OnInit, OnDestroy {
   private sub: Subscription;
 
+  @HostBinding('style.display') display = 'grid';
   @HostBinding('style.gridTemplateColumns') columns: string;
   @HostBinding('style.columnGap')
   @HostBinding('style.rowGap')

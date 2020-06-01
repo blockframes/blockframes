@@ -5,6 +5,11 @@
     width: 256px;
   }
 
+  .mat-drawer-inner-container {
+    display: flex;
+    flex-direction: column;
+  }
+
   mat-sidenav-content[tunnelSpecificities] {
     background-color: mat-color($background, app-bar);
   }

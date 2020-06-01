@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
@@ -86,6 +87,7 @@ const routes: Routes = [{
             loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
           }, {
             path: 'session',
+            canActivate: [SessionGuard],
             loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
           },
         ]
