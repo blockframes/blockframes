@@ -1,7 +1,9 @@
 <!-- @TODO (#2925) -->
 <ng-container *ngIf="(invitations$ | async).length; else noFeed">
-  <h1>Invitations</h1>
-  <invitation-list [invitations]="invitations$ | async"></invitation-list>
+  <mat-card>
+    <h1>Invitations</h1>
+    <invitation-list [invitations]="invitations$ | async"></invitation-list>
+  </mat-card>
 </ng-container>
 
 <ng-template #noFeed>
