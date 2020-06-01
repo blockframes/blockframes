@@ -83,7 +83,7 @@ export async function onMovieUpdate(
       })
     );
 
-    return triggerNotifications(notifications);
+    await triggerNotifications(notifications);
   }
 
   if (isMovieAccepted) { // When Archipel Content accept the movie
@@ -99,7 +99,7 @@ export async function onMovieUpdate(
       });
     });
 
-    return triggerNotifications(notifications);
+    await triggerNotifications(notifications);
   }
 
   // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
