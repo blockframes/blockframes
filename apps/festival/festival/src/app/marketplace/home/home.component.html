@@ -13,7 +13,7 @@
       <article fxLayout="column" *ngIf="(section.movieCount$ | async) >= 4">
         <div fxLayout="row" fxLayoutAlign="space-between start" flex>
           <h1>{{ section.title }}</h1>
-          <a mat-button routerLink="../title">
+          <a mat-button routerLink="../title" color="primary">
             <span>See all</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
