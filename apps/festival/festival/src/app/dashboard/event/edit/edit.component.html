@@ -34,7 +34,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Link to a video call</mat-label>
             <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
-            <mat-error *ngIf="form.get('meta').get('callUrl').hasError('pattern')">Please fill in a url (e.g. https://www.revue.com)</mat-error>
+            <mat-error *ngIf="form.get('meta').get('callUrl').hasError('pattern')">Please fill in a url (e.g. https://meet.google.com/xyz)</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
