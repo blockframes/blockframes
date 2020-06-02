@@ -2,12 +2,12 @@
   <ng-content></ng-content>
 </div>
 <ng-container *ngIf="showBack">
-  <button mat-icon-button (click)="scrollTo('left')" class="previous direction">
+  <button mat-fab (click)="scrollTo('left')" class="previous direction active">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </button>
 </ng-container>
 <ng-container *ngIf="showForward">
-  <button mat-icon-button (click)="scrollTo('right')" class="next direction">
+  <button mat-fab (click)="scrollTo('right')" class="next direction active">
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </button>
 </ng-container>
