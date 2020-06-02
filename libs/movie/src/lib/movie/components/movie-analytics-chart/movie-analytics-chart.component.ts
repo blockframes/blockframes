@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { lineChartOptions } from './default-chart-options';
 import { MovieQuery } from '../../+state';
-import { tap } from 'rxjs/operators';
-import { delay } from '@blockframes/utils/helpers';
+import { switchMap, map, startWith, delay } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 
 const chartInfo = [
   {
@@ -62,19 +62,18 @@ export class MovieAnalyticsChartComponent {
   public filteredEvent;
   public chartData: any[] = [];
 
-  public isLoadingFailed = false;
-  public isLoading$ = this.movieQuery.analytics.selectLoading().pipe(
-    tap(async isLoading =>  {
-      if (!isLoading) {
-        this.isLoadingFailed = false;
-        this.cdr.markForCheck();
-      }
-      await delay(20000);
-      if (isLoading) {
-        this.isLoadingFailed = true;
-        this.cdr.markForCheck();
-      }
-    })
+  public delayTime$ = new BehaviorSubject(20000);
+  public loadingState$ = combineLatest([
+    this.movieQuery.analytics.selectLoading(),
+    this.delayTime$,
+  ]).pipe(
+    switchMap(([ isLoading, delayTime ]) => {
+      return of(isLoading).pipe(
+        delay(delayTime),
+        map(loading => loading ? 'failed' : 'success'),
+        startWith('loading')
+      )
+    }),
   );
 
   @Input() set analyticsData(data: MovieAnalytics[]) {
@@ -97,12 +96,12 @@ export class MovieAnalyticsChartComponent {
     }
   };
 
-  constructor(private movieQuery: MovieQuery, private cdr: ChangeDetectorRef) {
+  constructor(private movieQuery: MovieQuery) {
     this.lineChartOptions = lineChartOptions;
   }
 
   refresh() {
-    this.isLoadingFailed = false;
+    this.delayTime$.next(20000);
   }
 
   // get date by period for x, get sum of hits each day by event for y
