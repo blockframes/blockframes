@@ -17,7 +17,9 @@ export class OrganizationCardComponent {
   @Input()
   set org(org: Organization) {
     this._org = org;
-    this.movies = org.movieIds.map(movieId => this.movieQuery.getEntity(movieId));
+    this.movies = org.movieIds
+      .map(movieId => this.movieQuery.getEntity(movieId))
+      .filter(movie => movie?.main.storeConfig.status === 'accepted');
   };
 
   get org() {
