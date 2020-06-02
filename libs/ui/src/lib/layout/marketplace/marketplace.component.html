@@ -24,7 +24,7 @@
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
           <mat-icon
-            svgIcon="heart_fill" color="primary"
+            svgIcon="heart_fill"
             [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>

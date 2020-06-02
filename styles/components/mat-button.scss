@@ -58,7 +58,7 @@
     padding: 0 20px;
  }
 
-  .mat-stroked-button {
+  .mat-stroked-button:not([disabled]) {
     border-radius: 26px;
     border-color: mat-color($foreground, text);
     &.mat-primary {
