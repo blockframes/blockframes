@@ -26,9 +26,9 @@
           </ng-container>
         </bf-carousel>
         <ng-container *ngIf="i === 0">
-          <div fxLayout="row" fxLayoutAlign="space-between start">
-            <h1 class="margin-title">Featured films</h1>
-            <a mat-button routerLink="../title">
+          <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+            <h1>Featured films</h1>
+            <a mat-button routerLink="../title" class="active" color="primary">
               <span>See all</span>
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>

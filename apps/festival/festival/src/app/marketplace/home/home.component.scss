@@ -11,6 +11,7 @@ header {
   background-size: cover;
   text-align: center;
   border: none;
+  
   h1.mat-display-2 {
     margin-bottom: 80px;
   }
@@ -31,10 +32,6 @@ bf-slider {
 /* We need some extra padding because of the intercom button. It covers the slide arrows */
 section {
   padding-bottom: 100px;
-}
-
-h1.margin-title {
-  margin-left: 24px;
 }
 
 bf-carousel {
