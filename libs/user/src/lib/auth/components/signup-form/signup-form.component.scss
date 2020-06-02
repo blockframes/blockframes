@@ -22,6 +22,13 @@ mat-checkbox {
   margin-right: 5px;
 }
 
+/** Used for Terms and Condition of Use links. */
+.terms-link {
+  color: #9eb1ff;
+  cursor: pointer;
+  font-weight: 500;
+}
+
 @include layout-bp(lg) {
   form {
     height: 80%;

@@ -104,8 +104,7 @@
 
   .mat-fab {
     &.active {
-      opacity: 0.5;
-      background-color: #606f87;
+      background-color: var(--active);
     }
   }
 

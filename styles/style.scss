@@ -33,8 +33,6 @@ a {
   color: inherit;
 }
 
-
-
 .important {
   color: mat-color($mat-dark-bf-orange, 400);
 }
@@ -63,12 +61,6 @@ a {
   color: mat-color($bf-dark-foreground, blue-icon);
 }
 
-/** Used for Terms and Condition of Use links. */
-.terms-link {
-  color: mat-color($bf-dark-foreground, blue-icon);
-  cursor: pointer;
-  font-weight: 500;
-}
 
 main {
   height: 100%;
