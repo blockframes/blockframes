@@ -10,20 +10,28 @@
 
   // No background
 
-  .mat-stroked-button, .mat-button, .mat-icon-button {
+  .mat-stroked-button,
+  .mat-button,
+  .mat-icon-button {
     color: mat-color($foreground, text);
     &.mat-primary {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($primary);
       }
     }
     &.mat-accent {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($accent);
       }
     }
     &.mat-warn {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($warn);
       }
     }
@@ -31,32 +39,44 @@
 
   // With background
 
-  .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+  .mat-raised-button,
+  .mat-flat-button,
+  .mat-fab,
+  .mat-mini-fab {
     &.mat-primary {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($primary, default-contrast);
       }
     }
     &.mat-accent {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($accent, default-contrast);
       }
     }
     &.mat-warn {
-      svg g, svg polygon, svg path {
+      svg g,
+      svg polygon,
+      svg path {
         fill: mat-color($warn, default-contrast);
       }
     }
   }
 
-  .mat-button, .mat-flat-button, .mat-raised-button, .mat-stroked-button {
+  .mat-button,
+  .mat-flat-button,
+  .mat-raised-button,
+  .mat-stroked-button {
     padding: 14px 32px;
   }
 
   // Center close button
   .mat-simple-snackbar .mat-button {
     padding: 0 20px;
- }
+  }
 
   .mat-stroked-button:not([disabled]) {
     border-radius: 26px;
@@ -76,9 +96,17 @@
     border-radius: 26px;
   }
 
-  .mat-fab, .mat-mini-fab {
+  .mat-fab,
+  .mat-mini-fab {
     @include _mat-theme-overridable-elevation(0, $theme);
     margin-bottom: 8px;
+  }
+
+  .mat-fab {
+    &.active {
+      opacity: 0.5;
+      background-color: #606f87;
+    }
   }
 
   // Add a border around the avatar of the user in the toolbar
@@ -87,15 +115,17 @@
   }
 }
 
-
 // TYPOGRAPHY
 @mixin mat-bf-button-typography($config) {
-
   // need to wrap around something to win the battle against Material CSS priority
   body {
     // note: mat-icon-button is not here on purpose
-    .mat-button, .mat-raised-button, .mat-stroked-button,
-    .mat-flat-button, .mat-fab, .mat-mini-fab {
+    .mat-button,
+    .mat-raised-button,
+    .mat-stroked-button,
+    .mat-flat-button,
+    .mat-fab,
+    .mat-mini-fab {
       letter-spacing: mat-letter-spacing($config, button);
       line-height: mat-line-height($config, button);
     }

@@ -1,11 +1,12 @@
-@import '~@angular/flex-layout/mq';
+@import "~@angular/flex-layout/mq";
 
 section {
   height: 100%;
-  margin: 100px;
+  margin: 80px;
 }
 
-.mat-card, form {
+.mat-card,
+form {
   width: 100%;
 }
 
