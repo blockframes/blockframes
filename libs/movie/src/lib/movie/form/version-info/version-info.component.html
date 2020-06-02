@@ -8,10 +8,10 @@
       <b>(original)</b>
     </h5>
     <div [formGroup]="form.get(language)" fxLayout="row" fxLayoutGap="20px">
-      <mat-checkbox formControlName="original" disabled>Original</mat-checkbox>
-      <mat-checkbox formControlName="dubbed">Dubbed</mat-checkbox>
-      <mat-checkbox formControlName="subtitle">Subtitled </mat-checkbox>
-      <mat-checkbox formControlName="caption">Closed-captioned</mat-checkbox>
+      <mat-checkbox formControlName="original" color="primary" disabled>Original</mat-checkbox>
+      <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
+      <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
+      <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
     </div>
     <p class="mat-caption">Select all versions that apply</p>
   </ng-container>
@@ -28,10 +28,10 @@
       {{ language | translateSlug: 'LANGUAGES' }}
     </h5>
     <div [formGroup]="form.get(language)" fxLayout="row" fxLayoutGap="20px">
-      <mat-checkbox formControlName="original">Original</mat-checkbox>
-      <mat-checkbox formControlName="dubbed">Dubbed</mat-checkbox>
-      <mat-checkbox formControlName="subtitle">Subtitled</mat-checkbox>
-      <mat-checkbox formControlName="caption">Closed-captioned</mat-checkbox>
+      <mat-checkbox formControlName="original" color="primary">Original</mat-checkbox>
+      <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
+      <mat-checkbox formControlName="subtitle" color="primary">Subtitled</mat-checkbox>
+      <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
     </div>
     <p class="mat-caption">Select all versions that apply</p>
   </ng-container>
