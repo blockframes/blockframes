@@ -99,7 +99,6 @@
   .mat-fab,
   .mat-mini-fab {
     @include _mat-theme-overridable-elevation(0, $theme);
-    margin-bottom: 8px;
   }
 
   .mat-fab {
