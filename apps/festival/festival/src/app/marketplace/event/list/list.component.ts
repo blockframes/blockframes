@@ -17,7 +17,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     const query = ref => ref
-      .orderBy('meta.titleId').where('meta.titleId', '>', '0')
+      .orderBy('meta.titleId').where('meta.titleId', '>', '')
       .orderBy('end').startAt(new Date());
     this.events$ = this.service.queryByType(['screening'], query);
   }
