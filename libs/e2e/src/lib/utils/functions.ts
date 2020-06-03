@@ -47,3 +47,9 @@ export function formatAmPm(date: Date, toLowerCase?: boolean) {
   hours = hours ? hours : 12; // the hour 0 should be 12
   return toLowerCase ? hours + ' ' + amPM.toLowerCase() : hours + ' ' + amPM;
 }
+
+export function getTomorrowDay(date: Date) {
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const tomorrowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
+  return tomorrowDay;
+}
