@@ -67,9 +67,14 @@
     <td mat-cell *matCellDef="let element"> {{ element.org.denomination.full ? element.org.denomination.full : '--'  }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="org.denomination.email">
+  <ng-container matColumnDef="org.email">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Org email </th>
-    <td mat-cell *matCellDef="let element"> {{ element.org.denomination.email ? element.org.denomination.email : '--'  }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.org.email ? element.org.email : '--'  }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="superAdmin.email">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Super admin email </th>
+    <td mat-cell *matCellDef="let element"> {{ element.superAdmin.email ? element.superAdmin.email : '--'  }} </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">

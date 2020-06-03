@@ -36,6 +36,5 @@ export interface OrganizationsImportState {
   errors?: SpreadsheetImportError[];
   org: OrganizationDocumentWithDates;
   superAdmin: User;
-  superAdminPsw: string;
   newOrg: boolean;
 }

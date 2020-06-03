@@ -15,8 +15,6 @@ enum SpreadSheetOrganization {
   publicDenomination,
   orgEmail,
   superAdminEmail,
-  superAdminIdentity,
-  superAdminPassword,
   catalogAccess,
   festivalAccess,
 }
@@ -109,16 +107,6 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
             importErrors.superAdmin.email = spreadSheetRow[SpreadSheetOrganization.superAdminEmail].trim().toLowerCase();
           }
 
-          if (spreadSheetRow[SpreadSheetOrganization.superAdminIdentity]) {
-            const [firstName, lastName] = spreadSheetRow[SpreadSheetOrganization.superAdminIdentity].split(this.separator);
-            importErrors.superAdmin.firstName = firstName.trim();
-            importErrors.superAdmin.lastName = lastName.trim();
-          }
-
-          if (spreadSheetRow[SpreadSheetOrganization.superAdminPassword]) {
-            importErrors.superAdminPsw = spreadSheetRow[SpreadSheetOrganization.superAdminPassword].trim();
-          }
-
           // APP ACCESS
           if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
             const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
@@ -167,6 +155,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
   private async validate(importErrors: OrganizationsImportState): Promise<OrganizationsImportState> {
 
     const organization = importErrors.org;
+    const superAdmin = importErrors.superAdmin;
     const errors = importErrors.errors;
 
     //////////////////
@@ -191,6 +180,17 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         field: 'organization.denomination.full',
         name: 'Full demomination',
         reason: 'Organization full denomination not defined',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+    // SUPER ADMIN
+    if (!superAdmin.email) {
+      errors.push({
+        type: 'error',
+        field: 'superAdmin.email',
+        name: 'Super admin email',
+        reason: 'Org super admin email not defined',
         hint: 'Edit corresponding sheet field.'
       });
     }

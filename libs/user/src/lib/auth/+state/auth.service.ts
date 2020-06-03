@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AuthStore, User, AuthState } from './auth.store';
+import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { User as FireBaseUser } from 'firebase';
 import { map } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
+import { PublicUser } from '@blockframes/user/types';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -94,7 +95,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string }) {
+  public createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string }) {
     return {
       uid: user.uid,
       email: user.email,
@@ -102,4 +103,19 @@ export class AuthService extends FireAuthService<AuthState> {
       lastName: ctx.lastName
     };
   }
+
+  /**
+   * Call a backend function to create a new user
+   * Reserved to blockframes admins only
+   * @param email 
+   * @param orgName 
+   * @param app 
+   */
+  public async createUser(email: string, orgName: string, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
+    const f = this.functions.httpsCallable('createUser');
+    const user : PublicUser =  await f({ email, orgName, app }).toPromise();
+
+    return createUser(user);
+  }
+
 }

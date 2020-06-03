@@ -9,6 +9,9 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { OrganizationsImportState, SpreadsheetImportError } from '../../import-utils';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { AuthService } from '@blockframes/auth/+state';
+import { PublicUser } from '@blockframes/user/+state';
+import { getOrgAppAccess } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: OrganizationsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -34,7 +37,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
     'select',
     'org.id',
     'org.denomination.full',
-    'org.denomination.email',
+    'org.email',
     'superAdmin.email',
     'errors',
     'warnings',
@@ -44,6 +47,7 @@ export class TableExtractedOrganizationsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
+    private authService: AuthService,
     private orgService: OrganizationService
   ) { }
 
@@ -104,16 +108,25 @@ export class TableExtractedOrganizationsComponent implements OnInit {
    * @param importState
    */
   private async addOrganization(importState: OrganizationsImportState): Promise<boolean> {
-    /*const data = this.rows.data;
-    await this.orgService.add(importState.org)
+    const [firstApp] = getOrgAppAccess(importState.org);
+    const newUser: PublicUser = await this.authService.createUser(
+      importState.superAdmin.email,
+      importState.org.denomination.full,
+      firstApp
+    );
+    importState.org.status = 'accepted';
+
+    await this.orgService.addOrganization(importState.org, newUser);
+    const data = this.rows.data;
+
     importState.errors.push({
       type: 'error',
       field: 'organizations',
       name: 'Organizations',
-      reason: 'Organizations already added',
-      hint: 'Organizations already added'
+      reason: 'Organization already added',
+      hint: 'Organization already added'
     });
-    this.rows.data = data;*/
+    this.rows.data = data;
     return true;
   }
 
