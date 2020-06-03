@@ -5,10 +5,12 @@
  */
 import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
-import { PermissionsDocument } from '@blockframes/permissions/types';
+import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
+import { App, getOrgAppAccess, getSendgridFrom, app, sendgridUrl, Module } from '@blockframes/utils/apps';
+import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -91,3 +93,41 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
   return adminIds;
 }
 
+/**
+ * Return the first app name that an org have access to
+ * @param _org 
+ */
+export async function getOrgAppKey(_org: OrganizationDocument | string): Promise<App> {
+  if (typeof _org === 'string') {
+    const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
+    return getOrgAppAccess(org)[0];
+  } else {
+    return getOrgAppAccess(_org)[0];
+  };
+}
+
+/**
+ *  This guess the app from the org app access and returns the url of the app to use
+ * @param _org 
+ */
+export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
+  const key = await getOrgAppKey(_org);
+  return sendgridUrl[key];
+}
+
+/**
+ * This guess the app from the org app access and returns the "from" email address to use
+ * @param _org 
+ */
+export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
+  const key = await getOrgAppKey(_org);
+  return getSendgridFrom(key);
+}
+
+/**
+ * This check if org have access to a specific module in at least one app
+ * @param org 
+ */
+export function canAccessModule(module: Module, org: OrganizationDocument) {
+  return app.some(a => org.appAccess[a]?.[module])
+}

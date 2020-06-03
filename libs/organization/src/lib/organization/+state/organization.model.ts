@@ -8,7 +8,7 @@ import {
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createImgRef } from '@blockframes/utils/media/media.firestore';
 
 export {
   OrganizationStatus,

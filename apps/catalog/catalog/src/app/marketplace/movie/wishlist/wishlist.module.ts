@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 // Blockframes
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { DurationModule }from '@blockframes/utils/pipes/duration.pipe'
 
 // Material
@@ -32,7 +31,6 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     // Blockframes
     TranslateSlugModule,
     ImageReferenceModule,
-    ImgAssetModule,
     DurationModule,
     
     // Material

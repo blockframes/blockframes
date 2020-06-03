@@ -7,7 +7,7 @@ import {
   LanguagesSlug,
   SubLicensorRoleSlug
 } from "@blockframes/utils/static-model/types";
-import { ImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef } from "@blockframes/utils/media/media.firestore";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
 type Timestamp = firestore.Timestamp;

@@ -3,16 +3,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
-
 import { MarketplaceComponent } from './marketplace.component';
-
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { MatLayoutModule } from '../layout.module';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { AppLogoModule } from '../app-logo/app-logo.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -35,6 +34,8 @@ import { MatMenuModule } from '@angular/material/menu';
     RouterModule,
     FlexLayoutModule,
     ScrollingModule,
+    MatLayoutModule,
+    AppLogoModule,
 
     // Material
     MatToolbarModule,
@@ -47,11 +48,10 @@ import { MatMenuModule } from '@angular/material/menu';
     MatMenuModule,
 
     // Libraries
-    ImgAssetModule,
+    ImageReferenceModule,
     AppBarModule,
 
     // Widgets
-    NotificationWidgetModule,
     SearchWidgetModule,
     AuthWidgetModule,
   ]

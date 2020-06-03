@@ -1,5 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { EventQuery } from '@blockframes/event/+state/event.query';
+import { EventService } from '@blockframes/event/+state';
+import { ActivatedRoute } from '@angular/router';
+import { switchMap, pluck } from 'rxjs/operators';
+import { InvitationService } from '@blockframes/invitation/+state';
 
 @Component({
   selector: 'festival-event-view',
@@ -9,8 +12,19 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 })
 export class EventViewComponent {
 
-  event$ = this.query.selectActive();
+  event$ = this.route.params.pipe(
+    pluck('eventId'),
+    switchMap((eventId: string) => this.service.queryDocs(eventId)),
+  );
 
-  constructor(private query: EventQuery) { }
+  invitations$ = this.event$.pipe(
+    switchMap(event => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', event.id)))
+  );
+
+  constructor(
+    private route: ActivatedRoute,
+    private service: EventService,
+    private invitationService: InvitationService,
+  ) { }
 
 }

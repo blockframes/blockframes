@@ -11,9 +11,9 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/
 import { DashboardComponent } from './dashboard.component';
 
 import { AppBarModule } from '../../app-bar';
+import { AppLogoModule } from '../app-logo/app-logo.module';
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
@@ -36,13 +36,13 @@ import { MatBadgeModule } from '@angular/material/badge';
     FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
-    NotificationWidgetModule,
     SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
     ImageReferenceModule,
     AppBarModule,
     ScrollingModule,
+    AppLogoModule,
     // Material
     MatButtonModule,
     MatDividerModule,

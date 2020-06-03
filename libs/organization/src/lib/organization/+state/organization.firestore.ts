@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 import { OrgAppAccess, createOrgAppAccess } from '@blockframes/utils/apps';
 
 
@@ -12,21 +12,25 @@ interface Denomination {
   public?: string;
 }
 
-/** Document model of an Organization */
-interface OrganizationBase<D> {
+/** A public interface or Organization, without sensitive data. */
+export interface PublicOrganization {
   id: string;
+  denomination: Denomination;
+  logo: ImgRef;
+}
+
+/** Document model of an Organization */
+interface OrganizationBase<D> extends PublicOrganization{
   activity: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
   bankAccounts?: BankAccount[]; // @TODO (#2692)
   cart: CatalogCart[];
   created: D;
-  denomination: Denomination;
   description?: string;
   email: string;
   fiscalNumber: string;
   isBlockchainEnabled: boolean;
-  logo: ImgRef;
   movieIds: string[];
   updated: D;
   userIds: string[];
@@ -85,13 +89,6 @@ export type WishlistStatus = 'pending' | 'sent';
 /** Default placeholder logo used when an Organization is created. */
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
 
-/** A public interface or Organization, without sensitive data. */
-export interface PublicOrganization {
-  id: string;
-  denomination: Denomination;
-  logo: ImgRef;
-}
-
 /** A factory function that creates an OrganizationDocument. */
 export function createOrganizationDocument(
   params: Partial<OrganizationDocument> = {}
@@ -146,4 +143,8 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
     public: '',
     ...params
   }
+}
+
+export function orgName(org: PublicOrganization){
+  return org.denomination.public || org.denomination.full
 }

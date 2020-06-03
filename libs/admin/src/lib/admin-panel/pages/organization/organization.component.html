@@ -22,10 +22,10 @@
       <div *ngFor="let a of app">
         <div [formGroup]="orgForm.appAccess.get(a)">
           <strong>{{ a | titlecase }}</strong>
-          <mat-checkbox formControlName="dashboard">
+          <mat-checkbox formControlName="dashboard" color="primary">
             Dashboard
           </mat-checkbox>
-          <mat-checkbox formControlName="marketplace">
+          <mat-checkbox formControlName="marketplace" color="primary">
             Marketplace
           </mat-checkbox>
         </div>
@@ -50,10 +50,10 @@
         <mat-icon svgIcon="eye"></mat-icon>
       </a>
     </h2>
-    <bf-table-filter 
-      [source]="members" 
-      [columns]="versionColumnsMembers" 
-      [initialColumns]="initialColumnsMembers" 
+    <bf-table-filter
+      [source]="members"
+      [columns]="versionColumnsMembers"
+      [initialColumns]="initialColumnsMembers"
       [filterPredicate]="filterPredicateMembers"
       showFilter
       showLoader
@@ -62,23 +62,23 @@
         <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
       <ng-template colRef="avatar" let-avatar>
-        <img class="poster" [imgRef]="avatar" placeholderAsset="empty_poster.webp">
+        <img class="poster" [ref]="avatar" asset="empty_poster.webp">
       </ng-template>
     </bf-table-filter>
   </article>
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <h2>Movies</h2>
-    <bf-table-filter 
-      [source]="movies" 
-      [columns]="versionColumnsMovies" 
-      [initialColumns]="initialColumnsMovies" 
+    <bf-table-filter
+      [source]="movies"
+      [columns]="versionColumnsMovies"
+      [initialColumns]="initialColumnsMovies"
       [filterPredicate]="filterPredicateMovies"
       showFilter
       showLoader
       showPaginator>
       <ng-template colRef="promotionalElements.poster" let-posters>
         <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-          <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.webp">
+          <img class="poster" [ref]="poster" asset="empty_poster.webp">
         </ng-container>
         <ng-template #noposter>
           --

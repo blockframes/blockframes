@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { LandingFooterComponent } from './footer/footer.component';
 import { LandingHeaderComponent } from './header/header.component';
 import { LandingHowItWorksComponent } from './how-it-works/how-it-works.component';
@@ -7,8 +8,10 @@ import { LandingLearnMoreComponent } from './learn-more/learn-more.component';
 import { LandingToolbarComponent } from './toolbar/toolbar.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { RoleModule } from './learn-more/role.pipe';
 import { RouterModule } from '@angular/router';
 
 // Material
@@ -24,7 +27,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -38,8 +40,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImgAssetModule,
+    AppLogoModule,
     TelInputModule,
+    ImageReferenceModule,
+    RoleModule,
 
     // Material
     MatSidenavModule,

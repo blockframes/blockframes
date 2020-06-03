@@ -3,6 +3,7 @@ import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
+import { User } from '@blockframes/auth/+state';
 export { EventsAnalytics } from './event.firestore';
 
 // Event
@@ -12,6 +13,10 @@ export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Met
   allDay: boolean;
   end: Date;
   meta: Meta;
+
+  // We need that to avoid type error in template
+  org?: Organization;
+  movie?: Movie;
 }
 export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<any, Meta>> = {}): Event<Meta> {
   const meta: any =
@@ -23,7 +28,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<an
     id: '',
     title: '',
     ownerId: '',
-    isPrivate: false,
+    isPrivate: true,
     type: 'standard',
     allDay: false,
     isOwner: false,
@@ -44,11 +49,14 @@ export const isLocal = (event: Partial<Event>): event is MeetingEvent => event?.
 export interface MeetingEvent extends Event<Meeting> {
   type: 'meeting';
   org: Organization;
+  organizedBy: User;
 }
 export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event?.type === 'meeting';
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
     callUrl: '',
+    organizerId: '',
+    description: '',
     ...meeting
   }
 }

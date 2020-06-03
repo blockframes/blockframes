@@ -1,29 +1,31 @@
-<event-review [event]="event$ | async"></event-review>
+<ng-container *ngIf="event$ | async as event">
+  <event-review [event]="event"></event-review>
 
-<ng-container *ngIf="analytics$ | async as analytics; else noAnalytics">
-  <h2>Statistics</h2>
-  <section class="analytics">
-    <mat-card>
-      <span fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon svgIcon="group"></mat-icon>
-        <span class="mat-body-2">Number of attendees</span>
-      </span>
-      <h2>{{ analytics.length }}</h2>
-    </mat-card>
-    <h3>Attendees</h3>
-    <bf-table-filter
-      showFilter
-      showPaginator
-      [initialColumns]="initialColumns"
-      [columns]="columns"
-      [source]="analytics">
-    </bf-table-filter>
-  </section>
+  <ng-container *ngIf="analytics$ | async as analytics; else noAnalytics">
+    <h2>Statistics</h2>
+    <section class="analytics">
+      <mat-card>
+        <span fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon svgIcon="group"></mat-icon>
+          <span class="mat-body-2">Number of attendees</span>
+        </span>
+        <h2>{{ analytics.length }}</h2>
+      </mat-card>
+      <h3>Attendees</h3>
+      <bf-table-filter
+        showFilter
+        showPaginator
+        [initialColumns]="initialColumns"
+        [columns]="columns"
+        [source]="analytics">
+      </bf-table-filter>
+    </section>
+  </ng-container>
+  <ng-template #noAnalytics>
+    <h2>Statistics</h2>
+    <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
+      <img asset="wait.webp" alt="waiting"/>
+      <p class="mat-body-2">There is no statistics available here yet.</p>
+    </article>
+  </ng-template>
 </ng-container>
-<ng-template #noAnalytics>
-  <h2>Statistics</h2>
-  <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
-    <img asset="wait.webp" alt="waiting"/>
-    <p class="mat-body-2">You will find statistics on your screening here once it's over.</p>
-  </article>
-</ng-template>

@@ -1,14 +1,18 @@
-h1 {
-  margin-top: 24px;
+:host {
+  display: block;
+  padding: 24px;
 }
 
-section {
-  padding: 0 100px;
-  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+table {
+  width: 100%;
 }
 
-article {
-  margin-top: 20px;
+tr.mat-row {
+  cursor: pointer;
+}
+
+th.mat-header-cell {
+  font-weight: lighter;
 }
 
 img {

@@ -9,11 +9,12 @@ import { admin, db, getStorageBucketName } from './firebase';
  */
 export async function upsertWatermark(user: PublicUser) {
 
-  if (!user.firstName || !user.lastName) {
-    throw new Error(`Cannot generate watermark for user ${user.uid} because 'firstName' and/or 'lastName' is/are not set!`);
+  if (!user.email) {
+    throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
   }
 
-  const watermark = getWatermark(user.firstName, user.lastName, user.email);
+
+  const watermark = getWatermark(user.email, user.firstName, user.lastName);
 
   const ref = `watermark/${user.uid}.svg`;
   const file = admin.storage().bucket(getStorageBucketName()).file(ref);
@@ -22,13 +23,13 @@ export async function upsertWatermark(user: PublicUser) {
     file.createWriteStream({contentType: 'image/svg+xml'}).end(watermark, () => res());
   });
 
-  const signedUrl = await file.getSignedUrl({action: 'read', expires: '01-01-3000', version: 'v2'});
+  const [signedUrl] = await file.getSignedUrl({action: 'read', expires: '01-01-3000', version: 'v2'});
 
   user.watermark = {
-    originalFileName: `${user.uid}.svg`,
-    originalRef: '',
     ref,
-    url: signedUrl[0],
+    urls: {
+      original: signedUrl,
+    },
   }
 
   const userRef = db.collection('users').doc(user.uid);

@@ -1,5 +1,5 @@
-@import '~@angular/material/theming';
-@import '~@angular/flex-layout/mq';
+@import "~@angular/material/theming";
+@import "~@angular/flex-layout/mq";
 
 mat-sidenav-container {
   height: 100vh;
@@ -43,5 +43,13 @@ mat-sidenav {
 @include layout-bp(xs) {
   mat-sidenav {
     width: 100%;
+  }
+}
+
+.custom-snackbar-message {
+  text-align: center;
+  a {
+    font-weight: bold;
+    cursor: pointer;
   }
 }

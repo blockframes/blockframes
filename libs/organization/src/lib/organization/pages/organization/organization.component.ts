@@ -32,7 +32,7 @@ export class OrganizationComponent implements OnInit {
           throw new Error('Your organization profile informations are not valid');
         }
         this.service.update(this.query.getActiveId(), this.organizationForm.value);
-        this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
+        this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

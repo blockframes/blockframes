@@ -1,4 +1,4 @@
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
@@ -10,6 +10,8 @@ export type EventMeta = Meeting | Screening | {};
 
 export interface Meeting {
   callUrl: string;
+  organizerId: string;
+  description: string;
 }
 
 export interface Screening {

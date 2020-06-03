@@ -1,7 +1,6 @@
 import { UserRole } from "@blockframes/permissions/types";
 import { User } from "@blockframes/auth/+state/auth.store";
-import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
-import { PublicUser } from "./user.firestore";
+import { ImgRef, createImgRef } from "@blockframes/utils/media/media.firestore";
 
 export * from './user.firestore';
 
@@ -33,14 +32,3 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   };
 }
 
-export function createPublicUser(user: Partial<User> = {}) : PublicUser{
-  return {
-    uid: user.uid,
-    email: user.email || '',
-    avatar: createImgRef(user.avatar),
-    watermark: createImgRef(user.watermark),
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    orgId: user.orgId || ''
-  }
-}

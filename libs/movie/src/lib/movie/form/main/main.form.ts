@@ -5,6 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { yearValidators } from '@blockframes/utils/form/validators/validators';
+import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 // CREDIT
 
@@ -111,8 +112,9 @@ export class StoreConfigForm extends FormEntity<StoreConfigControl> {
 }
 
 function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
-  const { status, storeType } = createStoreConfig(storeConfig);
+  const { appAccess, status, storeType } = createStoreConfig(storeConfig);
   return {
+    appAccess: new AppAccessForm(appAccess),
     status: new FormControl(status),
     storeType: new FormControl(storeType),
   }
@@ -120,15 +122,33 @@ function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['store
 
 type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
 
+// APP ACCESS
+
+export class AppAccessForm extends FormEntity<AppAccessControl> {
+  constructor(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+    super(createAppAccessFormControl(appAccess));
+  }
+}
+
+function createAppAccessFormControl(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+  const { catalog, festival } = createMovieAppAccess(appAccess);
+  return {
+    catalog: new FormControl(catalog),
+    festival: new FormControl(festival)
+  }
+}
+
+type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
+
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormControl(entity.internalRef),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),
-    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
+    productionYear: new FormControl(entity.productionYear, [yearValidators]),
+    genres: new FormStaticArray(entity.genres, 'GENRES'),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status),
     totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),

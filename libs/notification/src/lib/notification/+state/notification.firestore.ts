@@ -5,43 +5,37 @@ import { firestore } from 'firebase-admin';
 
 /** Type of Notification depending of its origin. */
 export type NotificationType =
-  'newSignature' |
-  'finalSignature' |
-  'createDocument' |
-  'deleteDocument' |
-  'updateDocument' |
-  'inviteOrganization' |
-  'removeOrganization' |
-  'pathToDocument' |
+
   'organizationAcceptedByArchipelContent' |
-  'movieSubmitted' |
+
+  // Notifications relative to movies
+  'movieSubmitted' | // (catalog only)
   'movieAccepted' |
-  'movieTitleUpdated' |
-  'movieTitleCreated' |
-  'movieDeleted' |
+
+  // Notifications relative to invitations
   'invitationFromUserToJoinOrgDecline' |
-  'invitationFromOrganizationToUserDecline' |
   'memberAddedToOrg' |
   'memberRemovedFromOrg' |
+
+  // Notifications relative to contracts (only for catalog app)
   'newContract' |
   'contractInNegotiation' |
 
   // Events related notifications
-  'eventIsAboutToStart' |
+  'requestToAttendEventSent' |
+  'eventIsAboutToStart' | // TODO the backend code is not yet ready issue #2555
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
-;
+  ;
 
-/** Minimum required informations to create a Notification. */
+/** Minimum required information to create a Notification. */
 export interface NotificationOptions {
   /** @dev Recipient of the notification */
   toUserId: string;
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
-  /** @dev Subject the notification */
   docId?: string;
   movie?: PublicMovie;
-  /** @dev Subject the notification */
   organization?: PublicOrganization;
   /** @dev Type of the notification */
   type: NotificationType;

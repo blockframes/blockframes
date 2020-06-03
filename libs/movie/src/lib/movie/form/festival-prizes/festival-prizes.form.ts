@@ -1,13 +1,14 @@
 import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
+import { yearValidators } from '@blockframes/utils/form/validators';
 
 // TODO #2284
 function createPrizeFormControl(entity?: Partial<Prize>) {
   const { name, year, prize, logo, premiere } = createPrize(entity);
   return {
     name: new FormControl(name),
-    year: new FormControl(year),
+    year: new FormControl(year, [yearValidators]),
     prize: new FormControl(prize),
     logo: new FormControl(logo),
     premiere: new FormControl(premiere),

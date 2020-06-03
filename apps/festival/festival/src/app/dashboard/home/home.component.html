@@ -2,8 +2,8 @@
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
-      <a mat-stroked-button color="primary" routerLink="../titles">
-        <mat-icon svgIcon="document"></mat-icon>
+      <a mat-stroked-button color="primary" routerLink="../title">
+        <mat-icon svgIcon="video_library"></mat-icon>
         <span>View my titles</span>
       </a>
       <a mat-mini-fab color="primary" routerLink="../import" matTooltip="Import a new title">
@@ -17,13 +17,14 @@
   </section>
 </ng-container>
 
+<!-- @TODO (#2891) -->
 <ng-template #noMovie>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>There’s no marketplace activity yet</h1>
+    <h1>You have no title yet.</h1>
     <p class="mat-body-1">
-      For the moment, you haven’t added any titles or they have not been validated by Archipel Content yet.
+      You haven't imported titles yet.
       <br>
-      You can choose one of the following according to your situation :
+      You may add several titles at once through bulk import, or just one at a time.
     </p>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card fxLayout="column" fxLayoutalign="center center">
@@ -31,10 +32,10 @@
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
       <mat-card fxLayout="column" >
-        <img asset="upload_files.webp" alt="Upload files image">
-        <a routerLink="../import" mat-stroked-button color="primary">Import your titles at once</a>
+        <img asset="add_files.webp" alt="Upload files image">
+        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>
-  </section>  
+  </section>
 </ng-template>
 

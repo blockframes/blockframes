@@ -6,7 +6,7 @@
     <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
       <!-- TODO#1763 get poster by countries from promotionalElements -->
       <div *ngIf="movie.promotionalElements.poster[0].media as poster">
-        <img class="movie-poster" [imgRef]="poster" [placeholderUrl]="'assets/images/movieposter-placeholder.png'" alt="movie poster"/>
+        <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"/>
       </div>
       <div class="movie-info">
         <h4>{{ getTitle(movie) }}</h4>
@@ -18,23 +18,12 @@
         <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>
       </div>
     </article>
-    <article fxLayout="column" fxLayoutAlign="center">
+    <article fxLayout="column" fxLayoutAlign="space-around end">
       <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary"
        routerLink="avails">Switch to Avails</a>
-      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary" 
+      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary"
       routerLink="main">Switch to Main Information</a>
-      <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-        <button class="heart-button" mat-button color="accent" (click)="removeFromWishlist()">
-          <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
-          <span>Remove from list</span>
-        </button>
-      </ng-container>
-      <ng-template #alreadyAdded>
-        <button class="heart-button" mat-button color="accent" (click)="addToWishlist()">
-          <mat-icon svgIcon="heart_outline" color="accent"></mat-icon>
-          <span>Add to Wishlist</span>
-        </button>
-      </ng-template>
+      <wishlist-button [movieId]="movie.id"></wishlist-button>
     </article>
   </header>
   <section>

@@ -6,7 +6,7 @@ import {
   storeSearchableOrg,
   storeSearchableUser,
 } from '../../backend-functions/src/internals/algolia';
-import { MovieDocument, PublicUser } from 'apps/backend-functions/src/data/types';
+import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';
 import { algolia } from '@env';
 
 // TODO MIGRATE TO ALGOLIA v4 #2554
@@ -14,17 +14,22 @@ import { algolia } from '@env';
 export async function upgradeAlgoliaOrgs() {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = {};
+  const config = {
+    searchableAttributes: [ 'name' ],
+    attributesForFaceting: [
+      'appAccess',
+      'appModule',
+    ],
+  };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const orgs = await db.collection('orgs').get();
 
-  const promises = [];
-  orgs.forEach(org => {
-    const { id, denomination } = org.data();
-    promises.push(storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']));
+  const promises = orgs.docs.map(async doc => {
+    const org = doc.data() as OrganizationDocument;
+    return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
   });
 
   await Promise.all(promises);
@@ -67,25 +72,35 @@ export async function upgradeAlgoliaMovies() {
   const { db } = loadAdminServices();
   const movies = await db.collection('movies').get();
 
-  const promises = [];
-  movies.forEach(movie => {
+  const promises = movies.docs.map(async movie => {
     const movieData = movie.data() as MovieDocument;
+
     try {
 
-      const promise = db.collection('users').doc(movieData._meta.createdBy).get()
-        .then(snap => snap.data())
-        .then(user => db.collection('orgs').doc(user.orgId).get())
-        .then(snap => snap.data())
-        .then(organization => storeSearchableMovie(movieData, organization.denomination.full, process.env['ALGOLIA_API_KEY']))
-      ;
-      promises.push(promise);
+      // TODO issue#2692
+      const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
+
+      if (querySnap.size === 0) {
+        throw new Error(`Movie ${movie.id} is not part of any orgs`);
+      }
+
+      // TODO : here we might decide to arbitrary choose first org
+      if (querySnap.size > 1) {
+        throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
+      }
+
+      const org = (querySnap.docs[0].data() as OrganizationDocument);
+      const orgName = org.denomination.public || org.denomination.full;
+
+      await storeSearchableMovie(movieData, orgName, process.env['ALGOLIA_API_KEY'])
     } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
       console.error(error);
-      promises.push(new Promise(res => res(true)));
     }
   });
+
   await Promise.all(promises);
+
   console.log('Algolia Movies index updated with success !');
 }
 
@@ -99,22 +114,20 @@ export async function upgradeAlgoliaUsers() {
       'lastName',
     ],
   };
+
   await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const users = await db.collection('users').get();
 
-  const promises = [];
-  users.forEach(user => {
+  const promises = users.docs.map(async user => {
     const userData = user.data() as PublicUser;
     try {
-
-      promises.push(storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']));
+      await storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']);
     } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${user.id} : skipping\n\n`);
       console.error(error);
-      promises.push(new Promise(res => res(true)));
     }
   });
   await Promise.all(promises);

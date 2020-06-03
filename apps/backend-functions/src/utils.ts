@@ -1,6 +1,7 @@
 import { db, functions } from './internals/firebase';
 import { logErrors } from './internals/sentry';
 import { skipInMaintenance } from './maintenance';
+export { ErrorResultResponse } from '@blockframes/utils/utils';
 
 ///////////////////////////////////
 // DOCUMENT ON-CHANGES FUNCTIONS //
@@ -57,9 +58,4 @@ export async function removeAllSubcollections(
     documents.forEach(ref => batch.delete(ref));
   }
   return batch;
-}
-
-export interface ErrorResultResponse {
-  error: string;
-  result: any;
 }

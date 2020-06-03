@@ -387,6 +387,10 @@ const models = {
     {
       'slug': 'b',
       'label': 'Black & white'
+    },
+    {
+      'slug': 'color-black-white',
+      'label': 'Color & Black & White'
     }
   ] as const,
   'CERTIFICATIONS': [
@@ -432,8 +436,8 @@ const models = {
     { 'slug': 'f-vod', 'label': 'F-VOD' },
     { 'slug': 's-vod', 'label': 'S-VOD' },
     //{ 'slug': 'all-rights', 'label': 'All rights' },
-    //{ 'slug': 'theatrical', 'label': 'Theatrical' },
-    //{ 'slug': 'video', 'label': 'Video' },
+    { 'slug': 'theatrical', 'label': 'Theatrical' },
+    { 'slug': 'video', 'label': 'Video' },
     { 'slug': 'planes', 'label': 'Planes' },
     { 'slug': 'boats', 'label': 'Boats' },
     { 'slug': 'hotels', 'label': 'Hotels' },

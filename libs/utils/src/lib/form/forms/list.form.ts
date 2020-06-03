@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
+type GetPartial<T> = T extends object ? Partial<T> : T;
+
 /** Check form content has a value given by the user */
 function hasValue(value: any): boolean {
   if (Array.isArray(value)) {
@@ -43,7 +45,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     if (!value || !value.length) {
       form.add();
     } else {
-      value.forEach(v => form.add(v))
+      value.forEach(v => form.add(v as GetPartial<T>))
     }
     return form;
   }
@@ -81,7 +83,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   /**
    * Custom method to add a Control using the createControl method
    */
-  add(value?: Partial<T>): Control {
+  add(value?: GetPartial<T>): Control {
     const control = this.createControl(value);
     this.push(control);
     return control;

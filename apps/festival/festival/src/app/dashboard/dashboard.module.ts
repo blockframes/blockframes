@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { DashboardComponent } from './dashboard.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { ImgAssetModule } from '@blockframes/ui/theme';
-
 
 const routes: Routes = [{
     path: '',
@@ -48,6 +48,8 @@ const routes: Routes = [{
       },
       {
         path: 'title',
+        canActivate: [OrganizationContractListGuard],
+        canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
@@ -72,9 +74,6 @@ const routes: Routes = [{
           },{
             path: 'edit',
             loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
-          }, {
-            path: 'session',
-            loadChildren: () => import('@blockframes/event/layout/session/session.module').then(m => m.EventSessionModule)
           }]
         }]
       }
@@ -110,8 +109,8 @@ const routes: Routes = [{
     FlexLayoutModule,
     DashboardLayoutModule,
     ImageReferenceModule,
-    ImgAssetModule,
     OrgNameModule,
+    ToLabelModule,
     // Material
     MatDividerModule,
     MatListModule,

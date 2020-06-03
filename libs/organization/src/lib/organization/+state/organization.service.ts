@@ -33,7 +33,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async orgNameExist(orgName: string) {
-    // @TODO #2650 #2692 use publicOrg since we can not let anyone retreive the whole organization component
+    // @TODO #2650 #2692 use publicOrg since we can not let anyone retrieve the whole organization component
     const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
     return orgs.length !== 0;
   }
@@ -50,7 +50,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.db.doc(`users/${uid}`).update({ orgId: null });
   }
 
-  /** 
+  /**
    * This converts the OrganizationDocument into an Organization
    * @param org
    * @dev If this method is implemented, remove akitaPreAddEntity and akitaPreUpdateEntity on store
@@ -78,7 +78,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
     return Promise.all([
       this.permissionsService.add(permissions, { write }),
-      this.userService.update(user.uid, { orgId, ...user }, { write }),
     ]);
   }
 
@@ -90,7 +89,14 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       ...organization,
     });
 
-    return this.add(newOrganization);
+    const orgId = await this.add(newOrganization);
+
+    // @TODO(#2710) This timeout is needed to prevent permission denied
+    // when user is creating organization
+    // Once bug resolved move this to onCreate
+    return new Promise(resolve => setTimeout(resolve, 500))
+      .then(_ => this.userService.update(user.uid, { orgId, ...user }))
+      .then(_ => orgId)
   }
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly

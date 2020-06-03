@@ -21,7 +21,8 @@ export class EmailVerifyComponent implements OnInit {
   }
 
   public async sendEmail() {
-    await this.service.sendVerifyEmail();
-    this.triggeredOnce = true;
+    // @TODO (#2821)
+    /*await this.service.sendVerifyEmail();
+    this.triggeredOnce = true;*/
   }
 }

@@ -10,7 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     FlexLayoutModule,
-
     MatProgressSpinnerModule,
   ]
 })

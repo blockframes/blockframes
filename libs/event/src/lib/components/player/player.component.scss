@@ -1,4 +1,3 @@
-
 /**
  * This is used to override JWPlayer watermark style.
  * We use it to be sure that the watermark is always centered
@@ -6,6 +5,15 @@
  */
 event-player {
   #player {
+    height: 100%;
+    
+    .loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
     div {
       div.jw-logo.jw-logo-top-right.jw-reset {
         /* We need to use `!important` because jwplayer style is inline */
@@ -17,4 +25,5 @@ event-player {
       }
     }
   }
+
 }

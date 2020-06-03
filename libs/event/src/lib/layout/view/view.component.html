@@ -1,31 +1,29 @@
 <ng-container *ngIf="event$ | async as event">
-  <header [backgroundAsset]="">
-    <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="8px">
-      <h1>{{ event.title }}</h1>
-      <p>{{ event | eventRange }}</p>
-    </div>
-    <ng-container *ngIf="event.isPrivate; else isPublic">
-      <h6>Private {{ event.type }}</h6>
-      <div *ngIf="invitation$ | async as invitation" fxLayout>
-        <button mat-button (click)="accept(invitation)">
-          <mat-icon svgIcon="check_circle"></mat-icon>
-          <span>Accept Invitation</span>
-        </button>
-        <button mat-button (click)="refuse(invitation)">
-          <mat-icon svgIcon="close"></mat-icon>
-          <span>Refuse Invitation</span>
-        </button>
-      </div>
-    </ng-container>
-    <ng-template #isPublic>
-      <h6>Public {{ event.type }}</h6>
-      <button mat-button (click)="addToCalendar()">
-        <mat-icon svgIcon="calendar"></mat-icon>
-        <span>Add to my calendar</span>
-      </button>
-    </ng-template>
-  </header>
-  <section>
+  <header class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+    <h1 class="mat-display-2">{{ event.title }}</h1>
+    <ng-container [ngSwitch]="event | eventTime">
 
-  </section>
+      <ng-container *ngSwitchCase="'early'">
+        <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+        <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'onTime'">
+        <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+        <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+        <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
+          <a mat-button routerLink="./session">Join the {{ event.type }}</a>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'late'">
+        <h6>{{ event.type }} done</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+      </ng-container>
+
+    </ng-container>
+  </header>
+  <ng-content></ng-content>
 </ng-container>

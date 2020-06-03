@@ -2,11 +2,15 @@
 
 section {
   height: 100%;
-  margin: 100px 100px 100px 24px;
+  margin: 100px;
 }
 
 .mat-card, form {
   width: 100%;
+}
+
+.forgot-password {
+  text-align: center;
 }
 
 #submit {

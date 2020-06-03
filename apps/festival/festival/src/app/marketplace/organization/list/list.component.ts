@@ -3,7 +3,8 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { scaleOut } from '@blockframes/utils/animations/fade';
 import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { centralOrgID } from '@env';
 
 @Component({
   selector: 'festival-organization-list',
@@ -17,7 +18,10 @@ export class ListComponent {
   orgs$: Observable<Organization[]>;
 
   constructor(private service: OrganizationService) {
-    this.orgs$ = this.service.valueChanges(ref => ref.where('appAccess.festival.dashboard', '==', true));
+    this.orgs$ = this.service
+      .valueChanges(ref => ref
+        .where('appAccess.festival.dashboard', '==', true)
+        .where('status', '==', 'accepted'))
+      .pipe(map(orgs => orgs.filter(org => org.id !== centralOrgID)));
   }
-
 }

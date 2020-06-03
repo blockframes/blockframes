@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Organization } from '@blockframes/organization/+state';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'org-card',
@@ -9,6 +11,21 @@ import { Organization } from '@blockframes/organization/+state';
 })
 export class OrganizationCardComponent {
 
-  @Input() org: Organization;
+  private _org: Organization;
+  public movies: Movie[] = [];
+
+  @Input()
+  set org(org: Organization) {
+    this._org = org;
+    this.movies = org.movieIds
+      .map(movieId => this.movieQuery.getEntity(movieId))
+      .filter(movie => movie?.main.storeConfig.status === 'accepted');
+  };
+
+  get org() {
+    return this._org;
+  }
+
+  constructor(private movieQuery: MovieQuery){}
 
 }

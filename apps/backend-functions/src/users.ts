@@ -1,61 +1,74 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { generate as passwordGenerator } from 'generate-password';
-import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
+import { db } from './internals/firebase';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
+import { getDocument, getFromEmail } from './data/internals';
+import { getSendgridFrom } from '@blockframes/utils/apps';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
 
-interface UserProposal {
-  uid: string;
-  email: string;
-}
-
-export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
-  const { email } = data;
+// @TODO (#2821)
+/*
+export const startVerifyEmailFlow = async (data: any) => {
+  const { email, app } = data;
+  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
   }
 
   const verifyLink = await admin.auth().generateEmailVerificationLink(email);
-  await sendMailFromTemplate(userVerifyEmail(email, verifyLink));
+  await sendMailFromTemplate(userVerifyEmail(email, verifyLink), from);
+};
+*/
+
+export const startAccountCreationEmailFlow = async (data: any) => {
+  const { email, app, firstName } = data;
+  const from = getSendgridFrom(app);
+
+  if (!email) {
+    throw new Error('email is a mandatory parameter for the "sendVerifyEmail()" function');
+  }
+
+  try {
+    const verifyLink = await admin.auth().generateEmailVerificationLink(email);
+    const template = accountCreationEmail(email, verifyLink, firstName);
+    await sendMailFromTemplate(template, from);
+  } catch (e) {
+    throw new Error(`There was an error while sending account creation email : ${e.message}`);
+  }
+
 };
 
-export const startResetPasswordEmailFlow = async (data: any, context: CallableContext) => {
-  const { email } = data;
+export const startResetPasswordEmail = async (data: any) => {
+  const { email, app } = data;
+  const from = getSendgridFrom(app);
 
   if (!email) {
     throw new Error('email is a mandatory parameter for the "sendResetPassword()" function');
   }
 
-  const resetLink = await admin.auth().generatePasswordResetLink(email);
-  await sendMailFromTemplate(userResetPassword(email, resetLink));
-};
-
-export const startWishlistEmailsFlow = async (data: any, context: CallableContext) => {
-  const { email, userName, orgName, wishlist } = data;
-
-  if (!email || !userName || !orgName || !wishlist) {
-    throw new Error(`email, userName, orgName, and wishlist are mandatory parameters`)
+  try {
+    const resetLink = await admin.auth().generatePasswordResetLink(email);
+    const template = userResetPassword(email, resetLink);
+    await sendMailFromTemplate(template, from);
+  } catch (e) {
+    throw new Error(`There was an error while sending reset password email : ${e.message}`);
   }
 
-  await sendMail(sendWishlist(userName, orgName, wishlist));
-  await sendMailFromTemplate(sendWishlistPending(email));
-}
-
+};
 
 export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    throw new Error(`email & uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+    throw new Error(`email and uid are mandatory parameter, provided email (${email}), uid (${uid})`);
   }
 
   const userDocRef = db.collection('users').doc(user.uid);
@@ -65,9 +78,14 @@ export const onUserCreate = async (user: UserRecord) => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
-      if(!user.emailVerified) {
-        await startVerifyEmailFlow({email});
-        await sendMailFromTemplate(welcomeMessage(email));
+      if (!user.emailVerified) {
+        const u = userDoc.data() as PublicUser;
+        /**
+         * @dev TODO (#2826) since there is now way to get the used app when this function is triggered,
+         * we cannot set the custom "from" here
+        */
+        await startAccountCreationEmailFlow({ email, firstName: u.firstName });
+
       }
       tx.update(userDocRef, { email, uid });
     } else {
@@ -85,10 +103,7 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-export async function onUserUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-): Promise<any> {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
@@ -99,7 +114,7 @@ export async function onUserUpdate(
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.url !== after.avatar?.url
+    before.avatar?.urls.original !== after.avatar?.urls.original
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -118,61 +133,33 @@ export async function onUserUpdate(
 
 export async function onUserDelete(
   userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
-  context: functions.EventContext
 ): Promise<any> {
 
   // update Algolia index
   return deleteObject(algolia.indexNameUsers, userSnapshot.id);
 }
 
-const generatePassword = () =>
-  passwordGenerator({
-    length: 12,
-    numbers: true
-  });
-
-export const getOrCreateUserByMail = async (
-  data: any,
-  context: CallableContext
-): Promise<UserProposal> => {
-  const { email, orgName } = data;
-
-  try {
-    const user = await auth.getUserByEmail(email);
-    return { uid: user.uid, email };
-  } catch {
-    const password = generatePassword();
-
-    // User does not exists, send them an email.
-    const user = await auth.createUser({
-      email,
-      password,
-      emailVerified: true,
-      disabled: false
-    });
-
-    await sendMailFromTemplate(userInvite(email, password, orgName));
-
-    return { uid: user.uid, email };
-  }
-};
-
-export const sendDemoRequest = async (
-  data: RequestDemoInformations,
-  context: CallableContext
-): Promise<RequestDemoInformations> => {
-
-  await sendMail(sendDemoRequestMail(data))
+export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
+  const from = getSendgridFrom(data.app);
+  await sendMail(sendDemoRequestMail(data), from);
 
   return data;
 }
 
-export const sendUserMail = async (data: any, context?: CallableContext): Promise<any> => {
-  const { userName, userMail, subject, message } = data;
+export const sendUserMail = async (data: any, context: CallableContext): Promise<any> => {
+  const { subject, message } = data;
 
-  if (!subject || !message || !userName || !userMail) {
-    throw new Error('Subject, message and user email and name are mandatory parameters for the "sendUserMail()" function');
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+
+  if (!subject || !message) {
+    throw new Error('Subject and message are mandatory parameters for the "sendUserMail()" function');
   }
 
-  await sendMail(sendContactEmail(userName, userMail, subject, message));
+  let from;
+  if (user.orgId) {
+    from = await getFromEmail(user.orgId);
+  }
+
+  await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message), from);
 }

@@ -7,11 +7,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
+import { WorkspacePipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -60,6 +60,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'join-congratulations',
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationFeedbackComponent
   },
   {
@@ -86,9 +87,9 @@ export const noOrganizationRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     OrganizationFormModule,
-    ImgAssetModule,
     ImageReferenceModule,
     AlgoliaAutocompleteModule,
+    WorkspacePipeModule,
 
     // Material
     MatFormFieldModule,

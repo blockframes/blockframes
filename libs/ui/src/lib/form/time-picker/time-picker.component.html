@@ -8,7 +8,7 @@
     (dateInput)="setDate()"
     (focus)="picker.open()"
   />
-  <input class="time mat-input-element" type="time" aria-label="Time" size="2"
+  <input *ngIf="!isAllDay" class="time mat-input-element" type="time" aria-label="Time" size="2"
     [matAutocomplete]="timing" 
     formControlName="time"
     (input)="setDate()"

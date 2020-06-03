@@ -8,11 +8,18 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 })
 @CollectionConfig({ path: 'notifications' })
 export class NotificationService extends CollectionService<NotificationState> {
-  constructor(store: NotificationStore) {
+  constructor(protected store: NotificationStore) {
     super(store);
   }
 
   public readNotification(notification: Notification) {
     this.update(notification.id, { isRead: true });
+  }
+
+  formatFromFirestore(notification: Notification): Notification {
+    return {
+      ...notification,
+      ...this.store.formatNotification(notification),
+    };
   }
 }

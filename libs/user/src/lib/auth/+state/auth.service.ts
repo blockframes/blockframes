@@ -5,6 +5,8 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { User as FireBaseUser } from 'firebase';
 import { map } from 'rxjs/operators';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -12,7 +14,8 @@ export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
     private query: AuthQuery,
-    private functions: AngularFireFunctions
+    private functions: AngularFireFunctions,
+    private routerQuery: RouterQuery
   ) {
     super(store);
   }
@@ -37,14 +40,17 @@ export class AuthService extends FireAuthService<AuthState> {
   */
   public resetPasswordInit(email: string) {
     const callSendReset = this.functions.httpsCallable('sendResetPasswordEmail');
-    return callSendReset({ email }).toPromise();
+    const app = getCurrentApp(this.routerQuery);
+    return callSendReset({ email, app }).toPromise();
   }
 
   /** Send a new verification email to the current user */
-  public async sendVerifyEmail() {
+  // @TODO (#2821)
+  /*public async sendVerifyEmail() {
     const callSendVerify = this.functions.httpsCallable('sendVerifyEmail');
-    return callSendVerify({ email: this.query.user.email }).toPromise();
-  }
+    const app = getCurrentApp(this.routerQuery);
+    return callSendVerify({ email: this.query.user.email, app }).toPromise();
+  }*/
 
   public checkResetCode(actionCode: string) {
     return this.auth.verifyPasswordResetCode(actionCode);
@@ -95,14 +101,5 @@ export class AuthService extends FireAuthService<AuthState> {
       firstName: ctx.firstName,
       lastName: ctx.lastName
     };
-  }
-
-  /** Call a firebase function to get or create a user.
-   * @email find the user with this email. If email doesn't match with an existing user,
-   * create a user with this email address.
-   */
-  public async getOrCreateUserByMail(email: string, orgName: string): Promise<User> {
-    const f = this.functions.httpsCallable('getOrCreateUserByMail');
-    return f({ email, orgName }).toPromise();
   }
 }

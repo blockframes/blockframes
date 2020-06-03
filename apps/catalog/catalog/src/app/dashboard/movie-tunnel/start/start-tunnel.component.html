@@ -1,5 +1,5 @@
 <mat-toolbar class="flex-container">
-  <img asset="logo_archipel_content_primary.svg" type="logo" alt="Archipel Content Logo" class="item-center" />
+  <app-logo class="item-center"></app-logo>
   <span class="item-right">
     <ng-container *ngIf="!loading else isLoading">
       <a mat-icon-button [routerLink]="routeBeforeTunnel">
@@ -38,7 +38,7 @@
         <ng-container *ngFor="let content of cardContents">
           <mat-card>
             <article fxLayout="column" fxLayoutAlign="center center">
-              <img [asset]="content.img" alt="Archipel Content Logo">
+              <img [asset]="content.img" alt="{{ content.title }}">
               <div>
                 <h3>{{ content.title }}</h3>
               </div>

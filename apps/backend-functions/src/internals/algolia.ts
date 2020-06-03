@@ -1,8 +1,10 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
-import { MovieDocument, PublicUser } from '../data/types';
+import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { MovieAppAccess } from "@blockframes/utils/apps";
+import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -39,13 +41,20 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(orgId: string, name: string, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
 
-  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject({ objectID: orgId, name });
+  const orgRecord: AlgoliaRecordOrganization = {
+    objectID: org.id,
+    name: orgName(org),
+    appAccess: getOrgAppAccess(org),
+    appModule: getOrgModuleAccess(org),
+  };
+
+  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject(orgRecord);
 }
 
 // ------------------------------------
@@ -54,7 +63,7 @@ export function storeSearchableOrg(orgId: string, name: string, adminKey?: strin
 
 export function storeSearchableMovie(
   movie: MovieDocument,
-  orgName: string,
+  organizationName: string,
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -65,12 +74,12 @@ export function storeSearchableMovie(
   try {
     const movieAppAccess = movie.main.storeConfig!.appAccess;
 
-    return indexBuilder(algolia.indexNameMovies, adminKey).saveObject({
+    const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
 
       // searchable keys
       title: {
-        international: movie.main.title.international,
+        international: movie.main.title.international || '',
         original: movie.main.title.original,
       },
       directors: !!movie.main.directors ?
@@ -96,12 +105,14 @@ export function storeSearchableMovie(
       status: !!movie.main.status ? movie.main.status : '',
       storeConfig: movie.main.storeConfig?.status || '',
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
-      orgName,
+      orgName: organizationName,
       storeType: movie.main.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
-        Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof MovieAppAccess)]) :
+        app.filter(a => movie.main.storeConfig?.appAccess[a]) :
         [],
-    });
+    };
+
+    return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);
@@ -120,15 +131,17 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
   }
 
   try {
-    return indexBuilder(algolia.indexNameUsers, adminKey).saveObject({
+    const userRecord: AlgoliaRecordUser = {
       objectID: user.uid,
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      avatar: user.avatar?.url || '',
-    });
+      avatar: user.avatar?.urls.original || '',
+    };
+
+    return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);
   } catch (error) {
-    console.error(`\n\n\tFailed to format the movie ${user.uid} into an algolia record : skipping\n\n`);
+    console.error(`\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`);
     console.error(error);
     return new Promise(res => res(true));
   }

@@ -4,10 +4,10 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { RightListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -21,7 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     ReactiveFormsModule,
     ContractTableModule,
-    ImgAssetModule,
+    ImageReferenceModule,
 
     // Material
     MatTabsModule,

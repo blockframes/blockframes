@@ -31,8 +31,10 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
   public wishlistCount$: Observable<number>;
-  public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
   public notificationCount$ = this.notificationQuery.selectCount();
+  public invitationCount$ = this.invitationQuery.toMe(invitation => invitation.status === 'pending').pipe(
+    map(invitations => invitations.length)
+  );
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
@@ -56,13 +58,13 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    // https://github.com/angular/components/issues/4280
     this.routerSub = this.router.events.pipe(
      filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      // https://github.com/angular/components/issues/4280
-      this.cdkScrollable.scrollTo({top: 0})
+      this.cdkScrollable.scrollTo({top: 0});
       this.sidenav.close();
-    })
+    });
   }
 
   ngOnDestroy() {

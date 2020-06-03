@@ -44,6 +44,7 @@ firebase-debug.log
 firestore-debug.log
 .runtimeconfig.json
 /functions
+ui-debug.log
 
 # ENV
 env/env.ts

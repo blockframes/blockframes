@@ -14,7 +14,6 @@ declare const jwplayer: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventPlayerComponent implements AfterViewInit {
-
   private player: any;
 
   constructor(
@@ -64,7 +63,7 @@ export class EventPlayerComponent implements AfterViewInit {
   }
 
   async ngAfterViewInit() {
-    const watermarkUrl = this.authQuery.user.watermark.url;
+    const watermarkUrl = this.authQuery.user.watermark.urls.original;
     await this.loadScript();
     this.initPlayer(watermarkUrl);
   }

@@ -3,9 +3,12 @@
   flex-direction: row;
 }
 
-img {
+a {
   height: 300px;
   margin-right: 24px;
+  img {
+    height: 100%;
+  }
 }
 
 article {

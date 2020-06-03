@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationService } from '../../+state';
+import { Invitation } from '../../+state';
 
 @Component({
   selector: 'invitation-item',
@@ -10,13 +10,5 @@ import { Invitation, InvitationService } from '../../+state';
 export class ItemComponent {
 
   @Input() invitation: Invitation;
-  constructor(private serivce: InvitationService,) { }
 
-  accept(id: string) {
-    this.serivce.update(id, { status: 'accepted' });
-  }
-
-  refuse(id: string) {
-    this.serivce.update(id, { status: 'declined' });
-  }
 }

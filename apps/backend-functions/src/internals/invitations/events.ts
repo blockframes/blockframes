@@ -1,12 +1,26 @@
-import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
+import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/+state/invitation.firestore";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
-import { NotificationDocument, OrganizationDocument } from "../../data/types";
+import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
-import { db } from "../firebase";
-import { getAdminIds, getDocument } from "../../data/internals";
-import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
+import { db, getUser } from "../firebase";
+import { getAdminIds, getDocument, canAccessModule } from "../../data/internals";
+import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
+import { EmailRecipient } from "@blockframes/utils/emails";
+import { getAppName, getSendgridFrom, App, sendgridUrl } from "@blockframes/utils/apps";
+import { orgName } from "@blockframes/organization/+state/organization.firestore";
+
+
+function getEventLink(org: OrganizationDocument) {
+  if (canAccessModule('marketplace', org)) {
+    return '/c/o/marketplace/invitations';
+  } else if (canAccessModule('dashboard', org)) {
+    return '/c/o/dashboard/invitations';
+  } else {
+    return "";
+  }
+}
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -20,7 +34,7 @@ async function onInvitationToAnEventCreate({
   mode,
   docId
 }: InvitationDocument) {
-  if(!docId){
+  if (!docId) {
     console.log('docId is not defined');
     return;
   }
@@ -37,16 +51,28 @@ async function onInvitationToAnEventCreate({
   }
 
   // Retreive notification recipient
-  let recipient: string;
-  let link : string;
+  const recipients: EmailRecipient[] = [];
   if (!!toUser) {
-    recipient = toUser.email;
+    /**
+     * @dev We wants to send this email only if user have an orgId. If not, this means that he already received an
+     * email inviting him along with his credentials.
+    */
+    const user = await getDocument<PublicUser>(`users/${toUser.uid}`);
+    if (!user.orgId) {
+      console.log('Invitation have already been sent along with user credentials');
+      return;
+    }
+    recipients.push({ email: toUser.email, name: toUser.firstName });
   } else if (!!toOrg) {
-    /** Attendee is only an user or an email for now */
-    throw new Error('Cannot invite an org to an event for now. Not implemented.');
+    const adminIds = await getAdminIds(toOrg.id);
+    const admins = await Promise.all(adminIds.map(i => getUser(i)));
+    admins.forEach(a => recipients.push({ email: a.email, name: a.firstName }));
   } else {
     throw new Error('Who is this invitation for ?');
   }
+
+  // @TODO (#2848) forcing to festival since invitations to events are only on this one
+  const appKey: App = 'festival';
 
   if (!!fromOrg) {
     /**
@@ -54,40 +80,54 @@ async function onInvitationToAnEventCreate({
      * No need to create a notification because fromOrg and user recipient
      * will already get the invitation displayed on front end.
      */
-    const senderEmail = fromOrg.denomination.public;
-    const org = await getDocument<OrganizationDocument>(`orgs/${toUser.orgId}`);
-    if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/c/o/marketplace/invitations';
-    } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/c/o/dashboard/invitations';
-    } else {
-      link = "";
-    }
-    console.log(`Sending invitation email for a screening event (${docId}) from ${senderEmail} to : ${recipient}`);
-    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link));
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
+    const senderName = orgName(org);
+    const link = getEventLink(org);
+    const urlToUse = sendgridUrl[appKey];
+    const appName = getAppName(appKey);
+    const from = getSendgridFrom(appKey);
 
-  } else if (!!fromUser) {
-    /**
-     * @dev No need to create a notification because fromOrg and user recipient
-     * will already get the invitation displayed on front end.
-     */
-    const senderEmail = fromUser.email;
-    const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
-    if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/c/o/marketplace/invitations';
-    } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/c/o/dashboard/invitations';
-    } else {
-      link = "";
-    }
     switch (mode) {
       case 'invitation':
-        console.log(`Sending invitation email for a meeeting event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link));
+        return Promise.all(recipients.map(recipient => {
+          console.log(`Sending invitation email for an event (${docId}) from ${senderName} to : ${recipient.email}`);
+          const templateInvitation = invitationToEventFromOrg(recipient, senderName, appName.label, event.title, link, urlToUse);
+          return sendMailFromTemplate(templateInvitation, from);
+        }))
       case 'request':
       default:
-        console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link));
+        throw new Error('Org can not create requests for events, reserved to users only');
+    }
+  } else if (!!fromUser) {
+
+    const senderEmail = fromUser.email;
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
+    const link = getEventLink(org);
+    const urlToUse = sendgridUrl[appKey];
+    const appName = getAppName(appKey);
+    const from = getSendgridFrom(appKey);
+
+    switch (mode) {
+      case 'invitation':
+        throw new Error('User can not create invitations for events, reserved to orgs only.');
+      case 'request':
+      default:
+
+        // Notification to request sender, letting him know that his request have been sent
+        const notification = createNotification({
+          toUserId: fromUser.uid,
+          user: fromUser,
+          docId,
+          type: 'requestToAttendEventSent'
+        });
+
+        await triggerNotifications([notification]);
+
+        return Promise.all(recipients.map(recipient => {
+          console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
+          return sendMailFromTemplate(templateRequest, from);
+        }))
     }
   } else {
     throw new Error('Did not found invitation sender');
@@ -247,18 +287,20 @@ export async function createNotificationsForEventsToStart() {
 export async function isUserInvitedToScreening(userId: string, movieId: string) {
 
   const acceptedInvitations = db.collection('invitations')
+    .where('type', '==', 'attendEvent')
     .where('docId', '==', movieId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
+    .where('type', '==', 'attendEvent')
     .where('docId', '==', movieId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');
 
-  const [ invitations, requests ] = await Promise.all([
+  const [invitations, requests] = await Promise.all([
     acceptedInvitations.get(),
     acceptedRequests.get()
   ]);

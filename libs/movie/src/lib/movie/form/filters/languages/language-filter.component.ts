@@ -24,21 +24,21 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-    .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], ExtractSlug<'VERSION_INFO'>[]]))
-    .subscribe(
-      ([languages, versions]) => {
-        if (versions.length === 0) {
-          for(const version in this.languagesFilterForm.controls) {
-            this.languagesFilterForm.controls[version].clear()
-          }
-        } else {
-          for(const version of versions) {
-            this.languagesFilterForm.get(version).clear();
-            languages.map(lang => this.languagesFilterForm.get(version).add(lang));
+      .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], ExtractSlug<'VERSION_INFO'>[]]))
+      .subscribe(
+        ([languages, versions]) => {
+          if (versions.length === 0) {
+            for (const version in this.languagesFilterForm.controls) {
+              this.languagesFilterForm.controls[version].clear()
+            }
+          } else {
+            for (const version of versions) {
+              this.languagesFilterForm.get(version).clear();
+              languages.map(lang => this.languagesFilterForm.get(version).add(lang));
+            }
           }
         }
-      }
-    );
+      );
   }
 
   ngOnDestroy() {

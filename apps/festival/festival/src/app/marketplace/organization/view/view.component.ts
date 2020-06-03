@@ -13,9 +13,6 @@ const navLinks = [{
 }, {
   path: 'screening',
   label: 'Screening Schedule'
-}, {
-  path: 'meeting',
-  label: 'Ask for a Meeting'
 }];
 
 @Component({

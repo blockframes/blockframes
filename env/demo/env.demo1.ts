@@ -18,15 +18,18 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 // Firebase
 // ========
 
-export const appUrl = 'https://demo1.blockframes.io';
+export const appUrlContent = 'https://demo1.archipelcontent.com';
+export const appUrlMarket = 'https://demo1.archipelmarket.com';
 
 export const firebase = {
-  apiKey: 'AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM',
-  authDomain: 'blockframes-demo-1.firebaseapp.com',
-  databaseURL: 'https://blockframes-demo-1.firebaseio.com',
-  projectId: 'blockframes-demo-1',
-  storageBucket: 'blockframes-demo-1.appspot.com',
-  messagingSenderId: '11685432883'
+  apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
+  authDomain: "blockframes-demo-1.firebaseapp.com",
+  databaseURL: "https://blockframes-demo-1.firebaseio.com",
+  projectId: "blockframes-demo-1",
+  storageBucket: "blockframes-demo-1.appspot.com",
+  messagingSenderId: "11685432883",
+  appId: "1:11685432883:web:bedc809872148fcde49d46",
+  measurementId: "G-ZQHCHN67GF"
 };
 
 // Algolia
@@ -75,19 +78,51 @@ export const sendgridAPIKey = null; // defined in functions.config, see backend-
 
 
 // Sendgrid Emails
-
 export const templateIds = {
-  welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
-  userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
-  orgInviteUser: 'd-7a0edb51795c493d9514fe4a595b40ac',
-  userCredentials: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-  orgAccepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
-  joinAnOrgPending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
-  joinYourOrg: 'd-b1ab5d21def145ccb759520e2d984436',
-  resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
-  userHasJoined: 'd-f84d8c5a70884316870ca4ef657e368f',
-  userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
-  wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
+  // Templates for the account creation flow
+  user: {
+    // Template for welcome message when user created his account by himself
+    welcomeMessage: 'd-fc05a8cf5b1548ebae9ca44247a6c256',
+
+    // Template for sending the verify email
+    verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
+    resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
+
+    // Templates for informing new user that his account have been created
+    credentials: {
+      attendEvent: {
+        catalog: 'd-ce3e57248a694cefacad49bc4c820078',
+        festival: 'd-ce3e57248a694cefacad49bc4c820078',
+      },
+      joinOrganization: {
+        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
+      }
+    },
+  },
+  // Templates for the org management flow
+  org: {
+    accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
+    appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
+    memberAdded: 'd-f84d8c5a70884316870ca4ef657e368f',
+  },
+  // Templates for requests (invitations)
+  request: {
+    joinOrganization: {
+      created: 'd-b1ab5d21def145ccb759520e2d984436',
+      pending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
+      accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
+    },
+    attendEvent: {
+      created: 'd-07f5e3cc6796455097b6082c22568d9e'
+    }
+  },
+  // Templates for invitations
+  invitation: {
+    attendEvent: {
+      created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5'
+    }
+  }
 }
 
 // Yandex Metrika Id
@@ -122,7 +157,7 @@ export const quorum = {
 
 // BigQuery
 // ========
-export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.events_';
 
 // Archipel Content OrgId
 // ======================

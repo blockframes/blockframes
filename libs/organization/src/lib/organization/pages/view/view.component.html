@@ -1,20 +1,14 @@
 <ng-container *ngIf="organization$ | async as org">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
-      <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
       <div class="org-info">
         <h1>{{ org.denomination.full }}</h1>
-        <h3>{{ org.activity }}</h3>
+        <h3>{{ org.activity | toLabel: 'orgActivity' | async }}</h3>
         <ng-container *ngIf="user$ | async as user">
           <h3>{{ user.position }}</h3>
         </ng-container>
-        <p class="mat-body-2">
-          {{ org.addresses.main.street | titlecase }}
-          <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-          {{ org.addresses.main.zipCode | titlecase }}
-          <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-          {{ org.addresses.main.city | titlecase }}
-        </p>
+        <p class="mat-body-2">{{ org | orgAddress }}</p>
       </div>
     </article>
     <ng-container>

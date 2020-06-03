@@ -15,31 +15,32 @@
           <span>{{ org.denomination.full }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
-        <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
       </div>
     </div>
   </ng-template>
 
-  <header fxLayout="row" fxLayoutAlign="start start" @fade>
+  <header fxLayout="row" fxLayoutAlign="start start" @fade class="dark-contrast-theme">
     <a mat-icon-button routerLink="..">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+    <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
     <article fxLayout="column" fxLayoutAlign="start start">
       <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
-      <h1>{{ org.denomination.full }}</h1>
+      <span class="mat-display-2">{{ org.denomination.full }}</span>
       <h2>
-        {{ org.addresses.main.street | titlecase }}
+        <span>{{ org.addresses.main.street | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-        {{ org.addresses.main.zipCode | titlecase }}
+        <span>{{ org.addresses.main.zipCode | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-        {{ org.addresses.main.city | titlecase }}
+        <span>{{ org.addresses.main.city | titlecase }}</span>
+        <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
+        <span>{{ org.addresses.main.country | translateSlug: 'TERRITORIES' }}</span>
       </h2>
-      <p>{{ org.description }}</p>
+      <p class="mat-body-2">{{ org.description }}</p>
       <ng-container *ngIf="org.email">
-        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-          <span>Get in touch</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email + '?subject=Meeting%20request%20via%20Archipel%20Market'">
+          <span>Ask for a meeting</span>
         </a>
       </ng-container>
     </article>

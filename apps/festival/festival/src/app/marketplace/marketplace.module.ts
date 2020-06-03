@@ -7,14 +7,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
-
+import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 const routes: Routes = [{
@@ -87,7 +88,8 @@ const routes: Routes = [{
             loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
           }, {
             path: 'session',
-            loadChildren: () => import('@blockframes/event/layout/session/session.module').then(m => m.EventSessionModule),
+            canActivate: [SessionGuard],
+            loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
           },
         ]
       }]
@@ -103,13 +105,13 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
-
-    ImgAssetModule,
+    ImageReferenceModule,
 
     // Material
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatButtonModule,
   ]
 })
 export class MarketplaceModule {}

@@ -1,18 +1,30 @@
-<ng-container *ngIf="!(loading$ | async)">
+<ng-container *ngIf="form">
   <event-edit @slideUpList [form]="form" [invitations]="invitations$ | async">
     <ng-container [ngSwitch]="type">
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
         <mat-card [formGroup]="meta" fxLayout="column">
-          <mat-form-field appearance="outline">
-            <mat-label>Select the title to display</mat-label>
-            <mat-select formControlName="titleId">
-              <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
-                {{ title.main.title.international }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <ng-container *ngIf="(titles$ | async) as titles else loading">
+            <mat-form-field appearance="outline">
+              <mat-label>Select the title to display</mat-label>
+              <mat-select formControlName="titleId">
+                <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.hostedVideo">
+                  <ng-container *ngIf="title.hostedVideo else noVideo">
+                    {{ title.main.title.international }}
+                  </ng-container>
+                  <ng-template #noVideo>
+                    <span class="text-disabled">{{ title.main.title.international }}</span>
+                    <span> - </span>
+                    <span class="text-warn">Upload video first.</span>
+                  </ng-template>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="50"></mat-spinner>
+          </ng-template>
         </mat-card>
       </ng-container>
       <!-- Meeting -->
@@ -22,6 +34,19 @@
           <mat-form-field appearance="outline">
             <mat-label>Link to a video call</mat-label>
             <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
+            <mat-error *ngIf="form.get('meta').get('callUrl').hasError('pattern')">Please fill in a url (e.g. https://meet.google.com/xyz)</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Organized By</mat-label>
+            <mat-select formControlName="organizerId">
+              <ng-container *ngFor="let member of members$ | async">
+                <mat-option [value]="member.uid">{{ member | displayName }}</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
           </mat-form-field>
         </mat-card>
       </ng-container>

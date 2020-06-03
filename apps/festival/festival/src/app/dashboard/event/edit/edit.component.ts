@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
@@ -6,7 +6,9 @@ import { EventEditComponent } from '@blockframes/event/layout/edit/edit.componen
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable, Subscription, combineLatest, BehaviorSubject } from 'rxjs';
+import { UserService } from '@blockframes/user/+state';
+import { User } from '@blockframes/auth/+state';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
@@ -21,10 +23,10 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  loading$ = new BehaviorSubject(true);
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
+  members$: Observable<User[]>;
   type: EventTypes;
 
   @ViewChild(EventEditComponent) editCmpt: EventEditComponent;
@@ -33,19 +35,17 @@ export class EditComponent implements OnInit, OnDestroy {
     private service: EventService,
     private movieService: MovieService,
     private invitationService: InvitationService,
+    private userService: UserService,
     private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    const orgId$ = this.orgQuery.selectActiveId();
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    this.invitations$ = combineLatest([ orgId$, eventId$ ]).pipe(
-      switchMap(([orgId, eventId]) => {
-        const queryFn = ref => ref.where('fromOrg.id', '==', orgId).where('docId', '==', eventId)
-        return this.invitationService.valueChanges(queryFn);
-      }),
+    this.invitations$ = eventId$.pipe(
+      switchMap((eventId) => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', eventId)))
     );
       
     // will be executed only if "screening" as Observable are lazy
@@ -53,12 +53,16 @@ export class EditComponent implements OnInit, OnDestroy {
       switchMap(org => this.movieService.getValue(org.movieIds))
     );
 
+    this.members$ = this.orgQuery.selectActive().pipe(
+      switchMap(org => this.userService.valueChanges(org.userIds))
+    )
+
     this.sub = eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     ).subscribe(event => {
       this.type = event.type;
       this.form = new EventForm(event);
-      this.loading$.next(false);
+      this.cdr.markForCheck();
     });
   }
 

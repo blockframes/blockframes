@@ -6,6 +6,10 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { mergeDeep } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -15,6 +19,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class TunnelSummaryComponent {
   form = this.tunnel.form;
+  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+    map(status => status === 'accepted' || status === 'submitted')
+  )
 
   constructor(
     private tunnel: MovieTunnelComponent,
@@ -23,7 +30,9 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService) {
+    private dynTitle: DynamicTitleService,
+    private routerQuery: RouterQuery
+  ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
   public getPath(segment: string) {
@@ -33,9 +42,11 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = this.form.value;
-      movie.main.storeConfig.status = 'submitted';
-      await this.service.update({ ...this.query.getActive(), ...movie });
+      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const currentApp = getCurrentApp(this.routerQuery);
+      movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.main.storeConfig.appAccess.catalog = true;
+      await this.service.update(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
@@ -44,7 +55,7 @@ export class TunnelSummaryComponent {
       })
     } else {
       // Log the invalid forms
-      console.error(this.findInvalidControlsRecursive(this.form))
+      /* console.error(this.findInvalidControlsRecursive(this.form)) */
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
   }

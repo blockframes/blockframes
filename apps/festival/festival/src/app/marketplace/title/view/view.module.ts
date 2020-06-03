@@ -11,8 +11,9 @@ import { ViewComponent } from './view.component';
 import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
-import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
+import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
+import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -20,18 +21,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 
-const routes = [{
-  path: '',
-  component: ViewComponent,
-  children: [{
+const routes = [
+  {
     path: '',
-    redirectTo: 'main',
-    pathMatch: 'full'
-  }, {
-    path: 'main',
-    loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
-  }]
-}];
+    component: ViewComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'main',
+        pathMatch: 'full'
+      },
+      {
+        path: 'main',
+        loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+      }
+    ]
+  }
+];
 
 @NgModule({
   declarations: [ViewComponent],
@@ -41,8 +47,9 @@ const routes = [{
     MovieViewLayoutModule,
     ImageReferenceModule,
     MovieHeaderModule,
-    WishlistButtonModule,
     OrgChipModule,
+    WishlistButtonModule,
+    PromotionalLinksModule,
 
     // Material
     MatChipsModule,
@@ -53,4 +60,4 @@ const routes = [{
     RouterModule.forChild(routes)
   ]
 })
-export class MovieViewModule { }
+export class MovieViewModule {}

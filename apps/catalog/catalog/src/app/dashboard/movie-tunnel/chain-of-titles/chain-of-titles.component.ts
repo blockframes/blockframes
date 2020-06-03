@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef } from "@blockframes/utils/media/media.firestore";
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

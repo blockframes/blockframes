@@ -3,7 +3,7 @@
     <auth-signin-form (opened)="isSignin=true" (submited)="signin($event)"></auth-signin-form>
   </mat-sidenav>
   <mat-sidenav-content backgroundAsset="login_signin.webp" test-id="switch-mode" [fxLayoutAlign]="align">
-    <button class="mat-elevation-z0" mat-icon-button mat-fab (click)="refreshState()">
+    <button class="mat-elevation-z0 active" mat-icon-button mat-fab (click)="refreshState()">
       <mat-icon [svgIcon]="isSignin ? 'arrow_forward' : 'arrow_back'"></mat-icon>
     </button>
   </mat-sidenav-content>
@@ -11,3 +11,12 @@
     <auth-signup-form (opened)="isSignin=false" (submited)="signup($event)"></auth-signup-form>
   </mat-sidenav>
 </mat-sidenav-container>
+
+
+<ng-template #customSnackBarTemplate>
+  <div class="custom-snackbar-message">
+    An account already exists for this email address.<br/> 
+    If you don't remember your password, <a routerLink="../email-verification">please reset it</a> or try searching in your past emails. <br/>
+    You might have received an invitation containing credentials to join Archipel.
+  </div>
+</ng-template>

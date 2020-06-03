@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 })
 export class TitleDetailsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
-  public form = new MovieForm();
+  public form: MovieForm;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,7 +28,7 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.movieQuery.selectActive().subscribe(movie => {
-      this.form.patchValue(movie);
+      this.form = new MovieForm(movie);
       this.cdr.markForCheck();
     });
   }

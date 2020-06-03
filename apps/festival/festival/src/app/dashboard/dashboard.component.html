@@ -1,10 +1,5 @@
 <layout-dashboard hideSearchbar>
   <aside fxLayout="column" fxLayoutAlign="space-between">
-    <mat-toolbar>
-      <a class="logo" routerLink=".">
-        <img asset="archipel_market.png" alt="Archipel Content Logo" />
-      </a>
-    </mat-toolbar>
     <mat-nav-list fxFlex>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
@@ -16,16 +11,22 @@
       </a>
       <a mat-list-item routerLink="event" routerLinkActive="active" test-id="calendar">
         <mat-icon matListIcon svgIcon="calendar"></mat-icon>
-        <span matLine><b>My Schedule</b></span>
+        <span matLine><b>My Events</b></span>
       </a>
+      <ng-container *ngIf="canAccessMarketplace(org$ | async)">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="search_table"></mat-icon>
+          <span matLine><b>Buyer's Platform</b></span>
+        </a>
+      </ng-container>
     </mat-nav-list>
     <mat-nav-list *ngIf="org$ | async as org">
       <mat-divider></mat-divider>
       <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-        <img matListAvatar [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Organization logo"/>
-        <span matLine>{{ org | orgName }}</span>
-        <span matLine>
-          <small class="mat-caption">{{ org.activity }}</small>
+        <img matListAvatar [ref]="org.logo" asset="empty_organization_sidenav.webp" alt="Organization logo"/>
+        <span mat-line>{{ org | orgName }}
+          <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</small>
         </span>
       </a>
     </mat-nav-list>

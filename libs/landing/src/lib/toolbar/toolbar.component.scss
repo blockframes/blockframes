@@ -1,20 +1,5 @@
-mat-toolbar {
-  transition: background-color 500ms ease-in-out;
-}
-
-.transparent-toolbar {
-  background-color: transparent;
-  color: white;
-  border: none;
-}
-
 .logo {
-  height: 48px;
   margin-right: 96px;
-
-  img {
-    height: 100%;
-  }
 }
 
 #demo-link {

@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding: 16px 24px; 
+  padding: 16px 24px;
 }
 
 h1 {
@@ -17,6 +17,8 @@ section {
 
 h5 {
   text-transform: uppercase;
+  margin: 0;
+  opacity: 0.5;
 }
 
 user-card {

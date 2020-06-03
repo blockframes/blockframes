@@ -1,10 +1,34 @@
-<mat-card>
-  <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
-  <mat-card-header>
-    <mat-card-title>{{ org | orgName }}</mat-card-title>
-    <mat-card-subtitle>{{ org.activity | toLabel: 'orgActivity' | async }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content class="org-info">
-    <p class="mat-caption">{{ org | orgAddress }}</p>
-  </mat-card-content>
-</mat-card>
+<a matRipple [routerLink]="org.id">
+  <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
+</a>
+<div fxLayout="column" fxLayoutAlign="center center">
+  <h5>{{ org | orgName }}</h5>
+  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity' | async) || "-" }}</span>
+</div>
+<mat-tab-group headerPosition="below" mat-align-tabs="center">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon svgIcon="profile"></mat-icon>
+    </ng-template>
+    <div class="tab-content">
+      <p class="mat-caption">{{ (org.addresses.main.country | translateSlug: 'TERRITORIES') || "-" }}</p>
+      <p class="mat-caption" i18n>
+        {{ movies.length }} film{ movies.length, plural, =0 {} =1 {} other {s} } in line-up
+      </p>
+      <p class="mat-caption" i18n>
+        {{ org.userIds.length }} employee{ org.userIds.length, plural, =0 {} =1 {} other {s} }
+      </p>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon svgIcon="film"></mat-icon>
+    </ng-template>
+    <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
+    <div class="tab-content">
+      <p class="mat-caption">{{ movies[0]?.main.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[1]?.main.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[2]?.main.title.international || "-"}}</p>
+    </div>
+  </mat-tab>
+</mat-tab-group>

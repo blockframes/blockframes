@@ -28,13 +28,13 @@
       </ng-template>
     </button>
     <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
-      (click)="submitSelectedMovies()">
-      <ng-container *ngIf="submittedTitles === 0 else submitinprogress">
+      (click)="publishSelectedMovies()">
+      <ng-container *ngIf="publishedTitles === 0 else publishinprogress">
         <mat-icon svgIcon="archipel_content"></mat-icon>
         <span>Publish to Marketplace</span>
       </ng-container>
-      <ng-template #submitinprogress>
-        <span>Submitting... {{ submittedTitles }} / {{ selection.selected.length}}</span>
+      <ng-template #publishinprogress>
+        <span>Publishing... {{ publishedTitles }} / {{ selection.selected.length}}</span>
         <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
@@ -53,13 +53,13 @@
     <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox [disabled]="processedTitles > 0" (change)="$event ? masterToggle() : null"
         [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()"
-        [aria-label]="checkboxLabel()">
+        [aria-label]="checkboxLabel()" color="primary">
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
       <mat-checkbox [disabled]="processedTitles > 0" (click)="$event.stopPropagation()"
         (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
-        [aria-label]="checkboxLabel(row)">
+        [aria-label]="checkboxLabel(row)" color="primary">
       </mat-checkbox>
     </td>
   </ng-container>
@@ -88,7 +88,7 @@
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.promotionalElements.poster[0].media as poster; else noposter">
-        <img class="poster" [imgRef]="poster" alt="Movie Poster" placeholderAsset="empty_poster.webp">
+        <img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp">
       </ng-container>
       <ng-template #noposter>
         --
@@ -125,10 +125,10 @@
       <ng-container *ngIf="element.movie.id; else create">
         <button mat-icon-button color="accent" [disabled]="isSaveOrUpdateDisabledForTitle(element)"
           (click)="updateMovie(element)"><mat-icon svgIcon="access_time"></mat-icon></button>
-        <button mat-stroked-button color="primary" [disabled]="!isTitleValidForSubmit(element)"
-          (click)="submitMovie(element)">
+        <button mat-stroked-button color="primary" [disabled]="!isTitleValidForPublish(element)"
+          (click)="publishMovie(element)">
           <mat-icon svgIcon="archipel_content"></mat-icon>
-          <span>Submit to Archipel Content</span>
+          <span>Publish to Marketplace</span>
         </button>
         <!-- TODO #2648 for deploy festival v0 -->
 <!--         <button mat-icon-button color="primary" [routerLink]="['/c/o/dashboard/titles/', element.movie.id ]" target='_blank'>

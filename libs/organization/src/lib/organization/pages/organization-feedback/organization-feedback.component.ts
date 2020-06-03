@@ -20,11 +20,13 @@ export class OrganizationFeedbackComponent implements OnInit {
     private service: InvitationService,
     private authQuery: AuthQuery,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const uid = this.authQuery.userId;
-    this.invitations = await this.service.getValue(ref => ref.where('fromUser.uid', '==', uid)) as any;
+    this.invitations = await this.service.getValue(ref => ref.where('mode', '==', 'request')
+      .where('type', '==', 'joinOrganization')
+      .where('fromUser.uid', '==', uid)) as any;
   }
 
   public removeInvitation() {

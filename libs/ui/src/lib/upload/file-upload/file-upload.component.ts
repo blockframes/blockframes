@@ -4,13 +4,14 @@ import {
   HostListener,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
 
 @Component({
   selector: 'file-upload',
@@ -40,7 +41,7 @@ export class FileUploadComponent {
   public state: 'waiting' | 'hovering' | 'uploading' | 'success' = 'waiting';
 
 
-  constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar) { }
+  constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef) { }
 
   @HostListener('drop', ['$event'])
   // TODO: issue#875, use DragEvent type
@@ -105,7 +106,7 @@ export class FileUploadComponent {
       if (this.return === 'string') {
         this.storeUploaded.emit(this.downloadURL);
       } else {
-        this.storeUploaded.emit(createImgRef({ url: this.downloadURL, originalFileName: file.name }));
+        this.storeUploaded.emit(createImgRef({ urls: { original: this.downloadURL } }));
       }
     }
 
@@ -115,5 +116,12 @@ export class FileUploadComponent {
       this.uploaded.emit(buffer);
     });
     reader.readAsArrayBuffer(file);
+  }
+
+  async delete() {
+    this.state = 'uploading';
+    await this.afStorage.storage.refFromURL(this.downloadURL).delete();
+    this.state = 'waiting';
+    this.cdr.markForCheck();
   }
 }

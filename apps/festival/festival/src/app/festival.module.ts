@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
+import { FestivalAppGuard } from './festival-app.guard';
+import { NoAuthGuard } from '@blockframes/auth/guard/no-auth.guard';
 
 // TODO: Add AppGuard
 
@@ -9,6 +11,7 @@ const routes: Routes = createRoutes({
   appName: 'festival',
   landing: {
     path: '',
+    canActivate: [NoAuthGuard],
     loadChildren: () => import('./landing/landing.module').then(m => m.FestivalLandingModule)
   },
   appsRoutes: [
@@ -19,13 +22,13 @@ const routes: Routes = createRoutes({
     },
     {
       path: 'marketplace',
-      canActivate: [MovieCollectionGuard /*, CatalogAppGuard*/],
+      canActivate: [FestivalAppGuard, MovieCollectionGuard],
       canDeactivate: [MovieCollectionGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
       path: 'dashboard',
-      canActivate: [/*CatalogAppGuard*/],
+      canActivate: [FestivalAppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {
@@ -47,4 +50,4 @@ const routes: Routes = createRoutes({
     preloadingStrategy: PreloadAllModules
   })],
 })
-export class FestivalModule {}
+export class FestivalModule { }

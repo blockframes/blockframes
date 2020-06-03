@@ -34,15 +34,21 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
       this.orgQuery.selectActiveId(),
       this.permissionQuery.isAdmin$
     ]).pipe(
-      filter(([user]) => !!user.uid),
+      filter(([user]) => !!user && !!user.uid),
       switchMap(([ user, orgId, isAdmin ]) => {
         if (isAdmin) {
           return combineLatest([
+            this.service.syncCollection(ref => ref.where('fromOrg.id', '==', orgId)),
             this.service.syncCollection(ref => ref.where('toOrg.id', '==', orgId)),
-            this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid))
+
+            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid)),
+            this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
           ])
         } else {
-          return this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid))
+          return combineLatest([
+            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid)),
+            this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
+          ])
         }
       })
     )

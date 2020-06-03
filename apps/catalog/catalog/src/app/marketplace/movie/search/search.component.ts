@@ -39,11 +39,10 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.storeConfig.add('accepted');
     // On catalog, we want only movie available for catalog
     this.filterForm.appAccess.add('catalog');
-    this.dynTitle.setPageTitle('Titles')
+    this.dynTitle.setPageTitle('Library');
     const movies$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      startWith(this.filterForm.value),
       switchMap(_ => this.filterForm.search()),
       pluck('hits'),
       map(results => results.map(movie => movie.objectID)),

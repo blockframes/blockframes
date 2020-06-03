@@ -1,19 +1,18 @@
+// Angular
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/+state';
-import { CartService } from '@blockframes/cart/+state/cart.service';
-import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+
+// Blockframes
+import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+state';
+
+// RxJs
 import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface CarouselSection {
   title: string;
-  subline: string;
-  hasMovies$: Observable<boolean>;
+  movieCount$: Observable<number>;
   movies$: Observable<Movie[]>;
 }
-
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -22,103 +21,45 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  /** Observable to fetch all movies from the store */
-  public moviesBySections$: Observable<CarouselSection[]>;
+
   public sections: CarouselSection[];
 
-  constructor(
-    private movieService: MovieService,
-    private movieQuery: MovieQuery,
-    private cartService: CartService,
-    private snackbar: MatSnackBar,
-    private analytics: FireAnalytics,
-    private catalogCartQuery: CatalogCartQuery,
-  ) { }
+  private sub: Subscription;
+
+  constructor(private movieService: MovieService, private movieQuery: MovieQuery) { }
 
   ngOnInit() {
-    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
+    this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
         filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival
       });
     }
-    const hasMovies = (status: MovieMain['status']) => {
-      return this.movieQuery.hasMovies(movies => movies.main.status === status);
-    }
     this.sections = [
       {
-        title: 'New Films',
-        subline: 'Discover our latest releases',
-        hasMovies$: this.movieQuery.hasMovies(movies => movies.main.productionYear >= 2018),
-        movies$: this.movieQuery.selectAll({
-          filterBy: movies => movies.main. productionYear >= 2018 && movies.main.storeConfig.appAccess.festival
-        })
+        title: 'New films',
+        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival })
       },
       {
-        title: 'Post-Production Films',
-        subline: 'Brand new projects with great potential',
-        hasMovies$: hasMovies('post-production'),
-        movies$: selectMovies('post-production')
+        title: 'In production',
+        movieCount$: selectMovies('shooting').pipe(map(movies => movies.length)),
+        movies$: selectMovies('shooting')
       },
       {
-        title: 'Completed Films',
-        subline: 'Explore our selection of fresh or library titles',
-        hasMovies$: hasMovies('finished'),
+        title: 'Completed films',
+        movieCount$: selectMovies('finished').pipe(map(movies => movies.length)),
         movies$: selectMovies('finished')
-      }
+      },
+      {
+        title: 'In development',
+        movieCount$: selectMovies('financing').pipe(map(movies => movies.length)),
+        movies$: selectMovies('financing')
+      },
     ];
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
-
-  public layout(index: number) {
-    return index % 2 === 0 ? 'row' : 'row-reverse';
-  }
-
-  public alignment(index: number) {
-    return index % 2 === 0 ? 'start start' : 'start end';
-  }
-
-  public toggle$(movieId: string) {
-    return this.catalogCartQuery.isAddedToWishlist(movieId);
-  }
-
-  public addToWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('addedToWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
-  }
-
-  public removeFromWishlist(movie: Movie, event: Event) {
-    event.stopPropagation();
-    this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('removedFromWishlist', {
-      movieId: movie.id,
-      movieTitle: movie.main.title.original,
-    });
-  }
-
-  public getBanner(movie: Movie): string {
-    const movieElement = movie.promotionalElements.banner;
-    return movieElement && movieElement.media && movieElement.media.url;
-  }
-
-  // TODO 1880 country short code
-  public getMainInfo(movie: Movie) {
-    const { originCountries, totalRunTime, genres } = movie.main;
-    return [
-      originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
-      genres.slice(0, 2).map(genre => getLabelBySlug('GENRES', genre)).join(', '),
-    ].filter(value => !!value).join(' | ');
-  }
-
 }

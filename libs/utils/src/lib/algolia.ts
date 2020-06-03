@@ -3,7 +3,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
 import { ExtractSlug } from './static-model/staticModels';
-import { FormList } from './form';
+import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 
 // @ts-ignore
@@ -66,11 +66,12 @@ export interface AlgoliaUser {
  * Create a FormList that create user with mail if no user exist
  * It's used by algolia-chips-autocomplete components to enter mail that have no user for example
  */
-export function createAlgoliaUserForm() {
+export function createAlgoliaUserForm(validators?: Validator) {
   const createAlogliaUser = (user: (string | Partial<AlgoliaUser>)) => {
     return typeof user === 'string' ? { email: user } : user;
   }
-  return FormList.factory<AlgoliaUser, FormControl>([], user => new FormControl(createAlogliaUser(user)))
+  const factory = user => new FormControl(createAlogliaUser(user));
+  return FormList.factory<AlgoliaUser, FormControl>([], factory, validators)
 }
 
 export interface AlgoliaOrg {

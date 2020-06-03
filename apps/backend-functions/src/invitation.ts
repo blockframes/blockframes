@@ -1,8 +1,14 @@
 import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { db, functions, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
-import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './internals/invitations/organizations';
+import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
+import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
+import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { getOrCreateUserByMail } from './internals/users';
+import { ErrorResultResponse } from './utils';
+import { CallableContext } from "firebase-functions/lib/providers/https";
+import { App } from '@blockframes/utils/apps';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -30,24 +36,24 @@ export async function onInvitationWrite(
   // We consolidate invitation document here.
   let needUpdate = false;
   if (invitationDoc.fromOrg?.id && !invitationDoc.fromOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.fromOrg.id}`);
     invitationDoc.fromOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
 
   if (invitationDoc.toOrg?.id && !invitationDoc.toOrg?.denomination.full) {
-    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg?.id}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${invitationDoc.toOrg.id}`);
     invitationDoc.toOrg = createPublicOrganizationDocument(org);
     needUpdate = true;
   }
 
-  if (invitationDoc.fromUser?.uid && !invitationDoc.fromUser.email) {
+  if (invitationDoc.fromUser?.uid && (!invitationDoc.fromUser.firstName || !invitationDoc.fromUser.email)) {
     const user = await getUser(invitationDoc.fromUser?.uid);
     invitationDoc.fromUser = createPublicUserDocument(user);
     needUpdate = true;
   }
 
-  if (invitationDoc.toUser?.uid && !invitationDoc.toUser.email) {
+  if (invitationDoc.toUser?.uid && (!invitationDoc.toUser.firstName || !invitationDoc.toUser.email)) {
     const user = await getUser(invitationDoc.toUser?.uid);
     invitationDoc.toUser = createPublicUserDocument(user);
     needUpdate = true;
@@ -58,8 +64,8 @@ export async function onInvitationWrite(
     switch (invitationDoc.type) {
       case 'joinOrganization':
         invitationDoc.mode === 'invitation'
-          ? await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
-          : await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+          ? await onInvitationToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
+          : await onRequestToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
         break;
       case 'attendEvent':
         /**
@@ -81,4 +87,43 @@ export async function onInvitationWrite(
     console.error('Invitation management thrown: ', e);
     throw e;
   }
+}
+
+interface UserInvitation {
+  emails: string[];
+  invitation: Partial<InvitationBase<any>>;
+  app?: App;
+}
+
+/**
+ * Invite a list of user by email.
+ * @dev this function polyfills the Promise.allSettled
+ */
+export const inviteUsers = (data: UserInvitation, context: CallableContext): Promise<any> => {
+  return new Promise(async (res) => {
+
+    if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+    const user = await getDocument<PublicUser>(`users/${context.auth.uid}`);
+    if (!user.orgId) { throw new Error('Permission denied: missing org id.'); }
+
+    const promises: ErrorResultResponse[] = [];
+    const invitation = createInvitation(data.invitation);
+    for (const email of data.emails) {
+      getOrCreateUserByMail(email, user.orgId, invitation.type, data.app)
+        .then(u => createPublicUser(u))
+        .then(toUser => {
+          invitation.toUser = toUser;
+          const id = db.collection('invitations').doc().id;
+          invitation.id = id;
+        })
+        .then(_ => db.collection('invitations').doc(invitation.id).set(invitation))
+        .then(result => promises.push({ result, error: '' }))
+        .catch(error => promises.push({ result: undefined, error }))
+        .then(lastIndex => {
+          if (lastIndex === data.emails.length) {
+            res(promises)
+          }
+        });
+    }
+  })
 }

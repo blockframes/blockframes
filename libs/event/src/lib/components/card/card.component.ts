@@ -16,7 +16,6 @@ export class CardComponent {
   get class() {
     return `event-card ${this.event.type} ${this.size}`;
   }
-
 }
 
 @Pipe({ name: 'screeningBackground', pure: true })

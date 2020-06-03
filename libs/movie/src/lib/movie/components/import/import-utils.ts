@@ -19,7 +19,7 @@ export interface MovieImportState {
 export interface RightsImportState {
   distributionRight: DistributionRight;
   errors?: SpreadsheetImportError[];
-  movieTitle: String;
+  movieTitle: string;
   movieInternalRef?: string;
   movieId: string;
 }

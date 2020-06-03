@@ -4,9 +4,10 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ImgAssetModule } from '@blockframes/ui/theme';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingModule } from '@blockframes/landing/landing.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -30,20 +31,26 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 
-const routes = [{
-  path: '',
-  component: CatalogLandingPageComponent,
-  children: [{
+const routes = [
+  {
     path: '',
-    // loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
-  }, {
-    path: 'about',
-    // loadChildren: () => import()
-  }, {
-    path: 'faq',
-    // loadChildren: () => import()
-  }]
-}];
+    component: CatalogLandingPageComponent,
+    children: [
+      {
+        path: ''
+        // loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+      },
+      {
+        path: 'about'
+        // loadChildren: () => import()
+      },
+      {
+        path: 'faq'
+        // loadChildren: () => import()
+      }
+    ]
+  }
+];
 
 @NgModule({
   declarations: [
@@ -56,9 +63,10 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    ImgAssetModule,
+    AppLogoModule,
     TelInputModule,
     LandingModule,
+    ImageReferenceModule,
 
     // Material
     MatSidenavModule,

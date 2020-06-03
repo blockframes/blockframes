@@ -1,20 +1,37 @@
 <mat-sidenav-container>
   <mat-sidenav id="dashboard-navbar" mode="over">
+    <mat-toolbar fxLayout fxLayoutAlign="space-between center">
+      <a routerLink=".">
+        <app-logo theme="dark"></app-logo>
+      </a>
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+      </button>
+    </mat-toolbar>
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
+        <a routerLink=".">
+          <app-logo></app-logo>
+        </a>
         <ng-content select="header"></ng-content>
+        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
+          <mat-icon
+            svgIcon="heart_fill"
+            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          </mat-icon>
+        </a>
         <div fxLayout="row" fxLayoutGap="24px">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
-          <a mat-icon-button routerLink="invitations">
+          <a mat-icon-button routerLink="invitations" test-id="invitations-link">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
               <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
@@ -31,7 +48,6 @@
               <mat-icon svgIcon="bell"></mat-icon>
             </ng-template>
           </a>
-          <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
           <auth-widget></auth-widget>
         </div>
       </header>

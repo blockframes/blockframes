@@ -8,15 +8,15 @@ import { difference } from 'lodash';
 import { functions, db, getUser } from './internals/firebase';
 import { deleteObject, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationCanAccessApp } from './templates/mail';
+import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer, algolia } from './environments/environment';
+import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, Module } from '@blockframes/utils/apps';
-import { getAdminIds } from './data/internals';
+import { app, Module, getAppName } from '@blockframes/utils/apps';
+import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -24,15 +24,8 @@ function notifUser(toUserId: string, notificationType: NotificationType, org: Or
   return createNotification({
     toUserId,
     type: notificationType,
-    user: {
-      firstName: user.firstName,
-      lastName: user.lastName
-    },
-    organization: {
-      id: org.id,
-      denomination: org.denomination,
-      logo: org.logo,
-    }
+    user: createPublicUserDocument(user),
+    organization: createPublicOrganizationDocument(org)
   });
 }
 
@@ -79,12 +72,17 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
+    let appAccessChanged = false;
     for (const a of app) {
       const accessChanged = (module: Module) => {
-        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module]  === false);
+        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
       }
-      return accessChanged('dashboard') || accessChanged('marketplace');
+      if (accessChanged('dashboard') || accessChanged('marketplace')) {
+        appAccessChanged = true;
+      }
     }
+
+    return appAccessChanged;
   }
   return false;
 }
@@ -93,38 +91,33 @@ function hasOrgAppAccessChanged(before: OrganizationDocument, after: Organizatio
 async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
   if (hasOrgAppAccessChanged(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
-    await sendMail(organizationRequestedAccessToApp(after.id))
+    const mailRequest = await organizationRequestedAccessToApp(after);
+    const from = await getFromEmail(after);
+    await sendMail(mailRequest, from);
   }
 }
 
-export function onOrganizationCreate(
+export async function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
-  const org = snap.data();
-  const orgID = context.params.orgID;
+  const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
-
+  const emailRequest = await organizationCreated(org);
+  const from = await getFromEmail(org);
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(organizationCreated(org.id)),
+    sendMail(emailRequest, from),
     // Update algolia's index
-    storeSearchableOrg(orgID, org.denomination.full)
+    storeSearchableOrg(org)
   ]);
 }
 
-const RELAYER_CONFIG: RelayerConfig = {
-  ...relayer,
-  mnemonic
-};
-export async function onOrganizationUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-): Promise<any> {
+export async function onOrganizationUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
@@ -146,23 +139,30 @@ export async function onOrganizationUpdate(
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
-  const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
 
-  const { id, userIds } = before as OrganizationDocument;
-  const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()! as PublicUser); // TODO use laurent's code after the merge of PR #698
+  const { userIds } = before as OrganizationDocument;
+  const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName));
+    const urlToUse = await getAppUrl(after);
+    const from = await getFromEmail(after);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, admin.firstName, urlToUse), from);
 
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
+      organization: createPublicOrganizationDocument(before),
       type: 'organizationAcceptedByArchipelContent'
     });
     await triggerNotifications([notification]);
   }
 
+  const RELAYER_CONFIG: RelayerConfig = {
+    ...relayer,
+    mnemonic
+  };
+  const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
   if (blockchainBecomeEnabled) {
     const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
@@ -183,13 +183,13 @@ export async function onOrganizationUpdate(
   }
 
   // Update algolia's index
-  await storeSearchableOrg(after.id, after.denomination.full)
+  await storeSearchableOrg(after)
 
   return Promise.resolve(true); // no-op by default
 }
 
 export function onOrganizationDelete(
-  snap: FirebaseFirestore.DocumentSnapshot,
+  _: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
   // Update algolia's index
@@ -202,7 +202,15 @@ export const accessToAppChanged = async (
 
   const adminIds = await getAdminIds(orgId);
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
-  await Promise.all(admins.map(admin => sendMail(organizationCanAccessApp(admin.email))));
+  const from = await getFromEmail(orgId);
+  const appKey = await getOrgAppKey(orgId);
+  const appName = getAppName(appKey)
+  const appUrl = await getAppUrl(orgId);
+  
+  await Promise.all(admins.map(admin => {
+    const template = organizationAppAccessChanged(admin, appName.label, appUrl);
+    return sendMailFromTemplate(template, from)
+  }));
 
   return {
     error: '',

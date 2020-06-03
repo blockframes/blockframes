@@ -7,15 +7,6 @@ landing-toolbar {
   z-index: 2;
 }
 
-.transparent-toolbar {
-  background-color: transparent;
-  transition-duration: 0;
-}
-
-.plain-toolbar {
-  transition-duration: 1000ms;
-}
-
 @include layout-bp(xs) {
   .offer {
     font-size: 30px;

@@ -9,7 +9,7 @@
         {{ invitations | statusLength: 'pending' }} unanswered
       </small>
     </span>
-    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)">
+    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)" test-id="invitation-copy">
       <mat-icon svgIcon="copy"></mat-icon>
     </button>
   </mat-list-item>

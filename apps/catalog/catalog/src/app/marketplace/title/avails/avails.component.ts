@@ -9,6 +9,7 @@ import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
 import { staticModels, TerritoriesLabel } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
+import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -58,7 +59,9 @@ export class MarketplaceMovieAvailsComponent {
   public async applyAvailsFilter() {
     try {
       // TODO: bind every controls to the form to avoid tricky error handling => ISSUE#1942
-      if (this.availsForm.invalid || !this.availsForm.value.licenseType.length) {
+      // Check if terms are valid, throw an error in the snackbar if not
+      areTermsValid(this.availsForm.value.terms);
+      if (!this.availsForm.value.licenseType.length) {
         throw new Error('Please fill all the required fields (Terms and Media)');
       }
 

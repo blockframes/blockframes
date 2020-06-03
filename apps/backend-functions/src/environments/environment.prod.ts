@@ -7,7 +7,19 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { factoryContract, backupBucket, relayer, appUrl, sentryDsn, bigQueryAnalyticsTable, centralOrgID } from '@env';
+export { 
+  factoryContract,
+  backupBucket,
+  relayer,
+  appUrlContent,
+  appUrlMarket,
+  sentryDsn,
+  bigQueryAnalyticsTable,
+  centralOrgID
+} from '@env';
+
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;
@@ -19,3 +31,6 @@ export const algolia = {
 
 export const adminEmail = functions.config().admin.email;
 export const adminPassword = functions.config().admin.password;
+
+export const jwplayerSecret = functions.config().jwplayer.secret;
+export const jwplayerKey = functions.config().jwplayer.key;

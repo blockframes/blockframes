@@ -18,19 +18,22 @@ header, section {
 }
 
 header {
+  background-image: url('/assets/images/profil_banner.webp');
+  background-size: cover;
   padding: 48px;
-  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
-    height: 170px;
-    width: 170px;
+    min-height: 170px;
+    min-width: 170px;
+    max-height: 300px;
+    max-width: 300px;
     border-radius: 50%;
-    border: 1px solid var(--foreground-divider);
   }
   article {
     max-width: 50%;
     margin-left: 24px;
     h4 {
       margin-bottom: 0;
+      text-transform: uppercase;
     }
     h2 {
       margin-bottom: 8px;
@@ -42,7 +45,7 @@ header {
 }
 
 nav {
-  margin-bottom: 16px;
+  margin: 0 24px;
 }
 
 .org-info {

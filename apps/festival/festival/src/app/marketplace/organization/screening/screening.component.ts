@@ -21,7 +21,12 @@ export class ScreeningComponent implements OnInit {
 
   ngOnInit(): void {
     this.events$ = this.parent.org$.pipe(
-      switchMap(org => this.service.queryByType(['screening'], ref => ref.where('ownerId', '==', org.id)))
+      switchMap(org => {
+        const query = ref => ref.where('ownerId', '==', org.id)
+          .orderBy('meta.titleId').where('meta.titleId', '>', '')
+          .orderBy('end').startAt(new Date());
+        return this.service.queryByType(['screening'], query);
+      }),
     );
   }
 

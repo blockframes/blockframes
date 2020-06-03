@@ -1,29 +1,44 @@
 @import '~@angular/flex-layout/mq';
 
 header {
-  width: 100%;
-  mat-toolbar {
-    .sort {
-      padding-right: 16px;
+  padding: 48px;
+  background-image: url('/assets/images/banner_header_page.webp');
+  background-position: center center;
+  background-size: cover;
+
+  h1 {
+    text-align: center;
+    font-size: 3rem;
+  }
+  section {
+    padding: 20px 20px 0;
+    .search {
+      width: 100%;
+      margin-top: 24px;
     }
   }
 }
 
 section {
-  padding: 20px 20px;
-  h1 {
-    text-transform: capitalize;
-  }
+  padding: 24px;
 }
 
 aside {
   position: sticky;
-  top: calc(var(--toolbarHeight) + 20px);
+  top: 16px;
   mat-card {
-    width: 450px;
+    width: 380px;
     max-height: calc(100vh - var(--toolbarHeight) - 40px);
     overflow: auto;
   }
+}
+
+article {
+  width: 100%;
+}
+
+span.mat-body-2 {
+  margin-bottom: 16px;
 }
 
 @include layout-bp(lt-md) {

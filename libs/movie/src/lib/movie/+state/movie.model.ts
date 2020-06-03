@@ -26,7 +26,7 @@ import {
   DocumentMeta,
   LanguageRecord
 } from './movie.firestore';
-import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';

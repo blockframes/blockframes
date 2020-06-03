@@ -3,7 +3,18 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Components
 import { SessionComponent } from './session.component';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
+import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
+
+// Materials
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -11,6 +22,16 @@ import { SessionComponent } from './session.component';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    // Components
+    ImageReferenceModule,
+    DisplayNameModule,
+    EventTimeModule,
+    OrgNameModule,
+    EventPlayerModule,
+    // Materials
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: SessionComponent }])
   ]
 })

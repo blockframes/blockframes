@@ -1,5 +1,5 @@
 <figure>
-  <img [imgRef]="poster" placeholderAsset="empty_poster.webp" alt="Movie Poster" />
+  <img [ref]="poster" asset="empty_poster.webp" alt="Movie Poster" />
   <figcaption>
     <h3 *ngIf="title.international">{{ title.international }}</h3>
     <p class="mat-caption" *ngIf="title.original">{{ title.original }}</p>

@@ -11,8 +11,12 @@ title-filter {
 }
 
 movie-card {
-  max-width: 25%;
-  padding-bottom: 24px;
+  max-width: 30%;
+  padding-bottom: 40px;
+}
+
+mat-icon[matPrefix] {
+  margin-right: 12px;
 }
 
 @include layout-bp(xs) {

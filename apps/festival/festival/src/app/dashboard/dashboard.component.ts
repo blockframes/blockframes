@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationQuery, OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-dashboard',
@@ -11,5 +11,9 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 export class DashboardComponent {
   public org$ = this.orgQuery.selectActive();
 
-  constructor(private orgQuery: OrganizationQuery) {}
+  constructor(private orgQuery: OrganizationQuery) { }
+
+  canAccessMarketplace(org: OrganizationDocumentWithDates): boolean {
+    return org.appAccess.festival?.marketplace;
+  }
 }

@@ -35,16 +35,16 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
 export class HeaderComponent {
 
   public movieView: MovieHeaderView;
-
   public movie: Movie;
 
-  @HostBinding('style.backgroundImage') background: string;
+  @HostBinding('style.background-image') background: string;
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {
       this.movie = movie;
       this.movieView = createMovieView(movie);
-      this.background = `url(${this.movieView.banner.media.url})`
+      //TODO#2655: implement image-set directive to handle image size here
+      this.background = `url(${this.movieView.banner.media.urls.original})`
     }
   }
 }

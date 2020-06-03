@@ -1,0 +1,40 @@
+<!-- Has pending invitation -->
+<ng-container *ngIf="invit; else noInvitation">
+  <ng-container *ngIf="invit | hasAction else displayStatus">
+    <button mat-button test-id="invitation-accept" (click)="accept(invit)">
+      <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon svgIcon="check_circle"></mat-icon>
+        Accept
+      </div>
+    </button>
+    <button mat-button test-id="invitation-refuse" (click)="decline(invit)">
+      <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon svgIcon="close"></mat-icon>
+        Refuse
+      </div>
+    </button>
+  </ng-container>
+  <ng-template #displayStatus>
+    <div class="status" [ngSwitch]="invit.status">
+      <span class="primary" *ngSwitchCase="'accepted'">Accepted</span>
+      <span class="warn" *ngSwitchCase="'declined'">Declined</span>
+      <span *ngSwitchCase="'pending'">Pending</span>
+    </div>
+  </ng-template>
+</ng-container>
+
+<ng-template #noInvitation>
+  <!-- TODO : Use ng-content here -->
+  <button test-id="invitation-request" mat-button (click)="request(event)">
+    <mat-icon svgIcon="calendar"></mat-icon>
+    <ng-container [ngSwitch]="event | eventTime">
+      <ng-container  *ngSwitchCase="'early'">
+        <span *ngIf="event.isPrivate">Ask for Invitation</span>
+        <span *ngIf="!event.isPrivate">Add to my calendar</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'onTime'">
+        <span>Session has already started, request access</span>
+      </ng-container>
+    </ng-container>
+  </button>
+</ng-template>

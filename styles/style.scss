@@ -33,16 +33,8 @@ a {
   color: inherit;
 }
 
-
-
 .important {
   color: mat-color($mat-dark-bf-orange, 400);
-}
-
-.banner {
-  border-top: 1px solid mat-color($mat-dark-bf-blue, 200);
-  border-bottom: 1px solid mat-color($mat-dark-bf-blue, 200);
-  box-shadow: 0 0 4px 4px mat-color($mat-dark-bf-blue, 200, 0.5);
 }
 
 .dark-theme p.bf-dark-text,
@@ -69,11 +61,6 @@ a {
   color: mat-color($bf-dark-foreground, blue-icon);
 }
 
-/** Used for Terms and Condition of Use links. */
-.terms-link {
-  color: mat-color($bf-dark-foreground, blue-icon);
-  cursor: pointer;
-}
 
 main {
   height: 100%;

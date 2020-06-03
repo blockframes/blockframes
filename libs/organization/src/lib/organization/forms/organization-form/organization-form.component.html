@@ -8,11 +8,13 @@
       <mat-card-content fxLayout="column">
         <article formGroupName="denomination">
           <mat-form-field appearance="outline">
+            <!-- TODO #2860 implements denomination.public -->
             <!-- Here is missing an input for the public name of an organization,
             we always have to decide how we will handle that -->
             <mat-label>Company Name</mat-label>
-            <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()"/>
+            <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
           </mat-form-field>
+          <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
           <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
         </article>
         <mat-form-field appearance="outline">
@@ -30,16 +32,16 @@
     </mat-card>
 
     <!-- Company Logo -->
-    <mat-card>
+    <mat-card *ngIf="!disableCropper">
       <mat-card-header>
         <mat-card-title>Company Logo</mat-card-title>
         <mat-card-subtitle>Upload your Logo</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper ratio="square" storagePath="logo" formControlName="logo">
+        <drop-cropper ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
           <h3 type>Logo</h3>
           <p class="mat-body-2" dimensions>Recommended : 512 x 512 px</p>
-          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+          <p class="mat-caption" format>Accepted Formats : jpg, png</p>
         </drop-cropper>
       </mat-card-content>
     </mat-card>

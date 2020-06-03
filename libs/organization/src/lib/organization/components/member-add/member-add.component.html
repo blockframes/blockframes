@@ -3,7 +3,7 @@
   <p>Invite your co-workers to join your company so that they can use the application.</p>
 
   <ng-container *ngFor="let control of form.controls; let i = index; let last = last; let first = first">
-    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
       <mat-form-field appearance="outline" class="email">
         <mat-label>Email Address</mat-label>
         <input matInput type="email" placeholder="name@example.com" aria-label="Email" [formControl]="control" />
@@ -13,23 +13,31 @@
         </mat-error>
       </mat-form-field>
       <!-- Add / Delete -->
-      <button class="mat-elevation-z0 action" *ngIf="!first" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
-        <mat-icon svgIcon="trash"></mat-icon>
-      </button>
-      <button class="mat-elevation-z0 action" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
-        <mat-icon svgIcon="add"></mat-icon>
-      </button>
+      <div fxLayout="row" fxLayoutAlign="center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center" fxLayoutGap="16px">
+        <button
+          *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)"
+          matTooltip="Remove a Member" aria-label="Remove a Member" class="action">
+          Remove email
+        </button>
+        <button
+        *ngIf="last" mat-flat-button color="primary" (click)="form.add()"
+        matTooltip="Add a Member" aria-label="Add a Member" class="action">
+          Add email
+        </button>
+      </div>
     </mat-card-content>
   </ng-container>
   <div fxLayout="row" fxLayoutAlign="center">
-    <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
-      <mat-icon svgIcon="send"></mat-icon>
-      <ng-container *ngIf="form.controls.length === 1 else several">
-        <span>Send invitation</span>
-      </ng-container>
-      <ng-template #several>
-        <span>Send invitations</span>
-      </ng-template>
-    </button>
+    <ng-container *ngIf="!(isSending$ | async); else sendingInvitations">
+      <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
+        <mat-icon svgIcon="send"></mat-icon>
+        <span i18n>Send invitation{ form.controls.length, plural, =1 {} other {s} }</span>
+      </button>
+    </ng-container>
+    <ng-template #sendingInvitations>
+      <button @slideUp mat-flat-button disabled>
+        <span i18n>Sending the invitation{ form.controls.length, plural, =1 {} other {s} }, please wait a few seconds</span>
+      </button>
+    </ng-template>
   </div>
 </mat-card>

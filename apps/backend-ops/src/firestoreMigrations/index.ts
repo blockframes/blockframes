@@ -17,12 +17,17 @@ import * as v0016 from './0016';
 import * as v0017 from './0017';
 import * as v0018 from './0018';
 import * as v0019 from './0019';
+import * as v0020 from './0020';
+import * as v0021 from './0021';
 import * as v0022 from './0022';
+import * as v0023 from './0023';
+import * as v0024 from './0024';
+import * as v0025 from './0025';
 
-import { Firestore } from '../admin';
+import { Firestore, Storage } from '../admin';
 
 export interface IMigration {
-  upgrade: (db: Firestore) => Promise<any>;
+  upgrade: (db: Firestore, storage: Storage) => Promise<any>;
 }
 
 export interface IMigrationWithVersion extends IMigration {
@@ -49,7 +54,12 @@ export const MIGRATIONS = {
   17: v0017,
   18: v0018,
   19: v0019,
+  20: v0020,
+  21: v0021,
   22: v0022,
+  23: v0023,
+  24: v0024,
+  25: v0025,
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));

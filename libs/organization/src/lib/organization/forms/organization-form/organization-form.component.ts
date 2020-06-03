@@ -4,6 +4,8 @@ import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { orgActivity } from '../../+state/organization.firestore';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'organization-form',
@@ -13,13 +15,19 @@ import { orgActivity } from '../../+state/organization.firestore';
 })
 export class OrganizationFormComponent {
   activities = orgActivity;
+
+  public storagePath = `orgs/${this.query.getActiveId()}/logo`;
   @Input() form: OrganizationForm;
 
-  constructor(private service: OrganizationService) { }
+  // TODO#2914 Reenable the cropper here when we found a solution
+  @Input() @boolean disableCropper = false;
 
-  get bankAccounts() {
-    return this.form.get('bankAccounts');
-  }
+  constructor(private service: OrganizationService, private query: OrganizationQuery) { }
+
+  // ISSUE#2692
+  // get bankAccounts() {
+  //   return this.form.get('bankAccounts');
+  // }
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {

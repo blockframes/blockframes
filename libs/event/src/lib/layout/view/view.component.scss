@@ -1,3 +1,19 @@
 header {
   padding: 40px;
+  background-image: url('/assets/images/banner_empty.png');
+  background-position: center center;
+  background-size: cover;
+}
+
+h6 {
+  text-transform: uppercase;
+}
+
+pre {
+  text-align: center;
+  margin-top: 0;
+}
+
+section {
+  padding: 24px;
 }

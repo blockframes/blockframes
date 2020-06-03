@@ -8,6 +8,8 @@ import { MarketplaceQuery } from '../+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { Router, NavigationEnd } from '@angular/router';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
+import { InvitationQuery } from '@blockframes/invitation/+state/invitation.query';
 
 @Component({
   selector: 'catalog-layout',
@@ -23,6 +25,8 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentWishlist$: Observable<Wishlist>;
   public wishlistCount$: Observable<number>;
   public cartCount$ = this.marketplaceQuery.selectCount();
+  public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
+  public notificationCount$ = this.notificationQuery.selectCount();
 
   @ViewChild('sidenav') sidenav: MatSidenav;
   @ViewChild('content') sidenavContent: MatSidenavContent;
@@ -30,6 +34,8 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private marketplaceQuery: MarketplaceQuery,
     private catalogCartQuery: CatalogCartQuery,
+    private invitationQuery: InvitationQuery,
+    private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
     private router: Router

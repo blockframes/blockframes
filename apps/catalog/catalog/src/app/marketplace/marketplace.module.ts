@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 
@@ -9,7 +8,6 @@ import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.gua
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
@@ -21,6 +19,16 @@ const routes: Routes = [{
     {
       path: 'home',
       loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+    },
+    {
+      path: 'notifications',
+      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      data: { animation: 'notifications' }
+    },
+    {
+      path: 'invitations',
+      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      data: { animation: 'invitations' }
     },
     {
       path: 'about',
@@ -41,10 +49,6 @@ const routes: Routes = [{
     {
       path: 'search',
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
-    },
-    {
-      path: 'activity',   // List of notifications
-      loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
     },
     {
       path: 'selection',
@@ -70,8 +74,8 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        canActivate: [OrganizationContractListGuard, ContractsRightListGuard],
+        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard],
         loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       }, {
         path: ':contractId',

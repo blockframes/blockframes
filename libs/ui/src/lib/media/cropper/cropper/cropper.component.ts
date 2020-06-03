@@ -1,23 +1,20 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError} from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-/*import { HttpClient } from '@angular/common/http';*/
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { storage as firebaseStorage } from 'firebase';
+import { ImgRefForm } from '../../image-reference/image-reference.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
 const mediaRatio = {
-  square: 1/1,
-  banner: 16/9,
-  poster: 4/3,
-  still: 7/5
+  square: 1 / 1,
+  banner: 16 / 9,
+  poster: 3 / 4,
+  still: 7 / 5
 }
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
@@ -35,17 +32,12 @@ function b64toBlob(data: string) {
   return new Blob([ab], { type });
 }
 
-/*function blobToFile(blob: Blob, fileName: string): File {
-  const picture = new File([blob], fileName, { type: "image/png" })
-  return picture;
-}*/
-
 /** Check if the path is a file path */
-function isFile(imgRef: ImgRef): boolean {
-  if (!imgRef || !imgRef.ref) {
+function isFile(ref: string): boolean {
+  if (!ref) {
     return false;
   }
-  const part = imgRef.ref.split('.');
+  const part = ref.split('.');
   const last = part.pop();
   return part.length >= 1 && !last.includes('/');
 }
@@ -54,30 +46,39 @@ function isFile(imgRef: ImgRef): boolean {
   selector: 'drop-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   viewProviders: [DropZoneDirective],
-  animations: [zoom, zoomDelay, check, finalZoom],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => CropperComponent),
-    multi: true
-  }]
+  animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements ControlValueAccessor, OnDestroy {
+export class CropperComponent implements OnDestroy {
+
+  ////////////////////////
+  // Private Variables //
+  //////////////////////
+
   private ref: AngularFireStorageReference;
-  private folder: string;
   private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   private sub = new Subscription;
+
+  ///////////////////////
+  // Public Variables //
+  /////////////////////
+
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
   cropRatio: string;
   parentWidth: number;
   prev: CropStep;
-  url$: Observable<string | null>;
+  previewUrl: Observable<string | null>;
   percentage$: Observable<number>;
+  resizing = false;
 
-  // inputs
+  /////////////
+  // Inputs //
+  ///////////
+
   @Input() set ratio(ratio: string) {
     if (!mediaRatio.hasOwnProperty(ratio)) {
       console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(mediaRatio).join(', ')}`);
@@ -87,58 +88,22 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
+  @Input() form?: ImgRefForm;
   @Input() setWidth?: number;
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
-  uploaded: (ref: ImgRef) => void;
-  deleted: () => void;
 
-  constructor(private storage: AngularFireStorage, /*private http: HttpClient,*/ private _renderer: Renderer2, private _elementRef: ElementRef) { }
-
-  //////////////////////////
-  // ControlValueAccessor //
-  //////////////////////////
-
-  //  Triggered when the parent form field is initialized or updated (parent -> component)
-  writeValue(path: ImgRef): void {
-    if (isFile(path)) {
-      this.folder = this.storagePath;
-      this.ref = this.storage.ref(path.ref);
-      this.url$ = this.ref.getDownloadURL().pipe(
-        catchError(err => {
-          this.nextStep('drop');
-          return of('');
-        })
-      )
-      this.nextStep('show');
-    } else {
-      this.folder = this.storagePath;
-      this.nextStep('drop');
-    }
-  }
-
-  // update the parent form field when there is change in the component (component -> parent)
-  registerOnChange(fn: any): void {
-    this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn(createImgRef());
-  }
-
-  registerOnTouched(fn: any): void {
-    return;
-  }
+  constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   ///////////
   // Steps //
   ///////////
 
-
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
-    // TODO#1149: fix resize - upload original picture
-    // this.storage.ref(`${this.folder}/original`).put(this.file);
     this.nextStep('crop');
   }
 
@@ -147,61 +112,43 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     this.croppedImage = event.base64;
   }
 
-  // upload
-  cropIt() {
+  /**
+   * Upload the image
+   */
+  async cropIt() {
     try {
       if (!this.croppedImage) {
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.ref = this.storage.ref(`${this.folder}/${this.fileName}`);
+      this.ref = this.storage.ref(`${this.storagePath}/original/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(() => {
+        finalize(async () => {
+          // const url = await this.ref.getDownloadURL().toPromise();
+          // this.form.get('urls').get('original').setValue(url)
           this.nextStep('upload_complete')
         })
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
   async goToShow() {
-    // TODO#2451: switch back to angularFire storage ref when bug on getMetadata() is fixed.
-    const ref = firebaseStorage().ref(`${this.folder}/${this.fileName}`);
-    const metadata = await ref.getMetadata();
-    this.url$ = this.ref.getDownloadURL().pipe(
-      catchError(err => of(''))
-    )
-
-    this.sub = this.url$.subscribe(url => this.uploaded(createImgRef({
-      url,
-      ref: metadata.fullPath,
-      originalFileName: this.file.name
-    })));
+    this.previewUrl = this.getDownloadUrl(this.ref);
     this.nextStep('show');
   }
 
-  // TODO#1149: fix resize - get original picture
-  /*
-  async resize(url: string) {
-    if (!this.file) {
-      // const name = url.split('%2F').pop();
-      const blob = await this.http.get(url, { responseType: 'blob' }).toPromise();
-      // this.file = blobToFile(blob, name);
-      this.file = blobToFile(blob, 'original');
-    }
-    this.nextStep('crop');
-  }
-  */
-
   delete() {
-    this.ref.delete().subscribe(() => {
-      this.deleted()
+    const deleteSubscription$ = this.previewUrl.subscribe(path => {
+      // this.storage.storage.refFromURL(path).delete();
+      // this.form.reset();
       this.nextStep('drop');
     });
+    this.sub.add(deleteSubscription$);
   }
 
   nextStep(name: CropStep) {
@@ -209,8 +156,14 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     this.step.next(name);
   }
 
+  /** Returns an observable of the download url of an image based on its reference */
+  private getDownloadUrl(ref: AngularFireStorageReference): Observable<string> {
+    return ref.getDownloadURL().pipe(
+      catchError(err => of(''))
+    )
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 }
-

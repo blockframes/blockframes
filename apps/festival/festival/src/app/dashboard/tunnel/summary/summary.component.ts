@@ -4,6 +4,10 @@ import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
+import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { mergeDeep } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -13,6 +17,9 @@ import { FormGroup, FormArray } from '@angular/forms';
 })
 export class TunnelSummaryComponent {
   form = this.tunnel.form;
+  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+    map(status => status === 'accepted' || status === 'submitted')
+  )
 
   constructor(
     private tunnel: MovieTunnelComponent,
@@ -21,7 +28,8 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-  ) {}
+    private routerQuery: RouterQuery
+  ) { }
 
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
@@ -30,27 +38,29 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = this.form.value;
-      movie.main.storeConfig.status = 'accepted'; // Specific to this application
-      await this.service.update({...this.query.getActive(), ...movie});
+      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const currentApp = getCurrentApp(this.routerQuery);
+      movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.main.storeConfig.appAccess.festival = true;
+      await this.service.update(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         const movieId = this.query.getActiveId();
-        this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
+        this.router.navigate(['../../../../title', movieId, 'details'], { relativeTo: this.route })
       })
     } else {
       // Log the invalid forms
-      console.error(this.findInvalidControlsRecursive(this.form))
+      /* console.error(this.findInvalidControlsRecursive(this.form)) */
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
   }
 
   /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-  public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
-    const invalidControls:string[] = [];
-    const recursiveFunc = (form:FormGroup|FormArray) => {
-      Object.keys(form.controls).forEach(field => { 
+  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray): string[] {
+    const invalidControls: string[] = [];
+    const recursiveFunc = (form: FormGroup | FormArray) => {
+      Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
           invalidControls.push(field);
@@ -59,7 +69,7 @@ export class TunnelSummaryComponent {
           recursiveFunc(control);
         } else if (control instanceof FormArray) {
           recursiveFunc(control);
-        }        
+        }
       });
     }
     recursiveFunc(formToInvestigate);

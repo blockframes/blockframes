@@ -1,8 +1,8 @@
-<header class="overlay dark-contrast-theme" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start start"
+<header class="overlay dark-contrast-theme" fxLayout="row" fxLayoutGap="20px"
     *ngIf="movieView">
     <!-- Breadcrumbs and Poster -->
     <!-- ATM we use the first image, but we will use geo localisation to determine which one to use -->
-    <img fxHide.lt-md [imgRef]="movieView.poster.media" placeholderAsset="empty_poster.webp" class="poster">
+    <img fxHide.lt-md [ref]="movieView.poster.media" asset="empty_poster.webp" class="poster">
     <!-- Descriptions -->
     <div fxLayout="column" fxLayoutAlign="space-between start">
         <div class="movie-details">

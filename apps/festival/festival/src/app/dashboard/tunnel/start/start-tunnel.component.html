@@ -1,5 +1,5 @@
 <mat-toolbar class="flex-container">
-  <img asset="archipel_market.png"  alt="Archipel Content Logo" class="item-center" />
+  <img asset="archipel_market.png"  alt="Archipel Market Logo" class="item-center" />
   <span class="item-right">
     <ng-container *ngIf="!loading else isLoading">
       <a mat-icon-button [routerLink]="routeBeforeTunnel">
@@ -22,7 +22,7 @@
 
     <h5>Files you need</h5>
     <p class="mat-caption">
-      Poster(s), banner image, still photos and chain of titles.
+      Poster(s), banner image and still photos.
       You will also need to provide the links to the promo reel, screener and trailer.
     </p>
   </mat-sidenav>
@@ -37,7 +37,7 @@
         <ng-container *ngFor="let content of cardContents">
           <mat-card>
             <article fxLayout="column" fxLayoutAlign="center center">
-              <img [asset]="content.img" alt="Archipel Content Logo">
+              <img [asset]="content.img">
               <div>
                 <h3>{{ content.title }}</h3>
               </div>

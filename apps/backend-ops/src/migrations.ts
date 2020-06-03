@@ -5,7 +5,7 @@
 import { backup, Firestore, loadAdminServices, restore } from './admin';
 import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
-import { appUrl } from '@env';
+import { appUrlContent } from '@env';
 import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
 
 export const VERSION_ZERO = 2;
@@ -48,7 +48,7 @@ function selectAndOrderMigrations(afterVersion: number): IMigrationWithVersion[]
 
 export async function migrate(withBackup: boolean = true) {
   console.info('start the migration process...');
-  const { db } = loadAdminServices();
+  const { db, storage } = loadAdminServices();
 
   try {
     await startMaintenance();
@@ -63,7 +63,7 @@ export async function migrate(withBackup: boolean = true) {
 
     if (withBackup) {
       console.info('backup the database before doing anything');
-      await backup(appUrl);
+      await backup(appUrlContent);
       console.info('backup done, moving on to the migrations...');
     } else {
       console.warn('⚠️ skipping the backup before running migrations, are you sure?');
@@ -75,7 +75,7 @@ export async function migrate(withBackup: boolean = true) {
 
     for (const migration of migrations) {
       console.info(`applying migration: ${migration.version}`);
-      await migration.upgrade(db);
+      await migration.upgrade(db, storage);
       console.info(`done applying migration: ${migration.version}`);
     }
 
@@ -83,12 +83,12 @@ export async function migrate(withBackup: boolean = true) {
   } catch (e) {
     console.error(e);
     console.error('the migration failed, revert\'ing!');
-    await restore(appUrl);
+    await restore(appUrlContent);
     throw e;
   } finally {
     if (withBackup) {
       console.info('running a backup post-migration');
-      await backup(appUrl);
+      await backup(appUrlContent);
       console.info('done with the backup post-migration');
     }
     await endMaintenance();

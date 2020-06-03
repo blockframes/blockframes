@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { mergeDeep } from '@blockframes/utils/helpers';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -32,7 +33,7 @@ const steps: TunnelStep[] = [{
   time: 10,
   routes: [{
     path: 'technical-info',
-    label: 'Technical Info.'
+    label: 'Technical Information'
   }, {
     path: 'images',
     label: 'Promotional Images'
@@ -86,10 +87,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    const movie = createMovie({
-      ...this.query.getActive(),
-      ...this.form.value
-    });
+    const movie = mergeDeep(this.query.getActive(), this.form.value);
     await this.service.update(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();

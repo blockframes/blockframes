@@ -1,5 +1,17 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { User } from '@blockframes/auth/+state/auth.store';
+// Angular
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+
+// Interface
+import { User } from '@blockframes/auth/+state';
+
+function createUserView(user: Partial<User>) {
+  return {
+    avatar: user.avatar,
+    name: `${user.firstName} ${user.lastName}`,
+    position: user.position || '',
+    email: user.email
+  }
+}
 
 @Component({
   selector: 'user-card',
@@ -7,12 +19,10 @@ import { User } from '@blockframes/auth/+state/auth.store';
   styleUrls: ['./card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CardComponent implements OnInit {
-
-  @Input() user: User;
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class CardComponent {
+  public userView;
+  @Input()
+  set user(user: User) {
+    this.userView = createUserView(user);
+  };
 }

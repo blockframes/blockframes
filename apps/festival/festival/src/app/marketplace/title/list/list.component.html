@@ -1,4 +1,4 @@
-<title-list [titles$]="movieSearchResults$">
+<title-list [titles]="movieSearchResults$ | async">
 
   <!-- SORT -->
   <ng-template titleSort>
@@ -37,9 +37,9 @@
 
     <ng-template filter label="Sales Agents">
       <algolia-chips-autocomplete
-        index="movie"
-        displayWithPath="value"
-        facet="orgName"
+        index="org"
+        displayWithPath="name"
+        [filters]="['appAccess:festival', 'appModule:dashboard']"
         [form]="filterForm.sellers"
         label="Search for a Sales Agent"
         placeholder="Organization name"
@@ -62,7 +62,7 @@
       <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
     </ng-template>
 
-    <ng-template filter label="Minimal Budget">
+    <ng-template filter label="Minimum Budget">
       <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
     </ng-template>
 
@@ -76,16 +76,5 @@
     </movie-card>
 
   </ng-template>
-
-
-  <!-- LIST ITEM CARD -->
-  <ng-template titleListItem let-title>
-
-    <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
-    <!-- TODO use the real movie list item if it exists-->
-    <p>{{title.main.title.original}}</p>
-
-  </ng-template>
-
 
 </title-list>

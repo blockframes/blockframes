@@ -1,18 +1,22 @@
 <ng-container [ngSwitch]="state">
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
-    <label>
-        <mat-icon color="primary" class="material-icons-outlined" svgIcon="download"></mat-icon>
+    <label class="upload-button-container">
+      <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
+        <img asset="add_files.webp" alt="upload image" />
+      </button>
       <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
     </label>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[format]"></ng-content>
-    <p class="mat-caption">Drag and drop a file here or <button mat-button color="primary" (click)="fileExplorer.click()">Browse</button></p>
+    <p class="mat-caption">Drag and drop a file here or
+      <button mat-button color="primary" (click)="fileExplorer.click()">browse</button>
+    </p>
   </section>
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <mat-icon svgIcon="import"></mat-icon>
+    <img asset="add_files.webp" alt="upload image" />
   </section>
 
   <!-- Uploading -->
@@ -28,8 +32,15 @@
   <!-- Success -->
   <section *ngSwitchCase="'success'">
     <h3>Success !!</h3>
-    <a *ngIf="downloadURL as url" [href]="url" target="_blank" rel="noopener">
-      <button mat-button>Download Me!</button>
-    </a>
+    <ng-container *ngIf="downloadURL as url">
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
+        <a mat-button [href]="url" target="_blank" rel="noopener">
+          Download Me!
+        </a>
+        <button mat-mini-fab color="warn">
+          <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete current file"></mat-icon>
+        </button>
+      </div>
+    </ng-container>
   </section>
 </ng-container>
