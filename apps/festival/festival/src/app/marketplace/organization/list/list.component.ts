@@ -19,7 +19,9 @@ export class ListComponent {
 
   constructor(private service: OrganizationService) {
     this.orgs$ = this.service
-      .valueChanges(ref => ref.where('appAccess.festival.dashboard', '==', true))
+      .valueChanges(ref => ref
+        .where('appAccess.festival.dashboard', '==', true)
+        .where('status', '==', 'accepted'))
       .pipe(map(orgs => orgs.filter(org => org.id !== centralOrgID)));
   }
 }

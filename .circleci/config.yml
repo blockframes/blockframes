@@ -238,6 +238,7 @@ jobs:
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
+            sleep 180 && # wait 3 minutes for google to acknowledge the new functions.
             cp firestore.rules.regular firestore.rules &&
             npx firebase use prod &&
             npx firebase deploy --only firestore:rules
@@ -266,6 +267,7 @@ jobs:
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
+            sleep 180 && # wait 3 minutes for google to acknowledge the new functions.
             cp firestore.rules.regular firestore.rules &&
             npx firebase use staging &&
             npx firebase deploy --only firestore:rules

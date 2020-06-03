@@ -1,4 +1,4 @@
-import { FormEntity } from '@blockframes/utils/form';
+import { FormEntity, urlValidators } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
@@ -42,7 +42,7 @@ function createMetaControl(event: Event): MeetingForm | ScreeningForm | FormGrou
 export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
-    callUrl: new FormControl(meeting.callUrl),
+    callUrl: new FormControl(meeting.callUrl, urlValidators),
     organizerId: new FormControl(meeting.organizerId),
     description: new FormControl(meeting.description),
   }

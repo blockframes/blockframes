@@ -154,7 +154,7 @@ export const onMovieUpdateEvent = onDocumentUpdate(
  */
 export const onMovieDeleteEvent = onDocumentDelete(
   'movies/{movieId}',
-  logErrors(onMovieDelete)
+  onMovieDelete
 )
 
 //------------------------------------------------

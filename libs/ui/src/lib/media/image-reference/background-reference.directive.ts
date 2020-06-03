@@ -3,6 +3,7 @@ import { ImgRef } from '@blockframes/utils/media/media.firestore';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ThemeService } from '@blockframes/ui/theme';
+import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Directive({
   selector: '[backgroundRef]'
@@ -13,12 +14,12 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   private ref$ = new BehaviorSubject('');
   private assetUrl$: Observable<string>;
 
-  @HostBinding('style.backgroundImage') src: string;
+  @HostBinding('style.backgroundImage') src: SafeStyle;
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set backgroundRef(path: ImgRef) {
-    if(!path){
+    if (!path) {
       this.ref$.next('');
     } try {
       this.ref$.next(path.urls.original);
@@ -34,7 +35,8 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   constructor(
     private theme: ThemeService,
     private cdr: ChangeDetectorRef,
-  ) {}
+    private sanitazier: DomSanitizer
+  ) { }
 
   ngOnInit() {
     this.assetUrl$ = combineLatest([this.theme.theme$, this.asset$]).pipe(
@@ -43,9 +45,9 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
     this.sub = combineLatest([
       this.ref$,
       this.assetUrl$
-    ]).subscribe(([ ref, assetUrl ]) => {
+    ]).subscribe(([ref, assetUrl]) => {
       if (ref || assetUrl) {
-        this.src = `url(${ref || assetUrl})`;
+        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${ref}), url(${assetUrl})`);
         this.cdr.markForCheck();
       }
     })

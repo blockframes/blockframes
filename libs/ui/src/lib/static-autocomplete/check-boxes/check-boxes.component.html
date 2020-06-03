@@ -1,5 +1,5 @@
 <ng-container *ngFor="let item of items">
-  <mat-checkbox (change)="handleChange($event)" [value]="item.slug">
+  <mat-checkbox (change)="handleChange($event)" [value]="item.slug" color="primary">
     {{item.label}}
   </mat-checkbox>
 </ng-container>

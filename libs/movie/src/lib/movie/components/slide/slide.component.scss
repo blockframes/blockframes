@@ -4,6 +4,24 @@
   padding: 80px 100px;
 }
 
+h4 {
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h2 {
+  margin-bottom: 8px;
+}
+
+movie-title-features {
+  margin-bottom: 40px;
+}
+
+p {
+  max-width: 60%;
+  margin-top: 32px;
+}
+
 @media only screen and (max-width: 1000px) {
   .overlay {
     padding: 0;

@@ -47,13 +47,13 @@ export async function onInvitationWrite(
     needUpdate = true;
   }
 
-  if (invitationDoc.fromUser?.uid && !invitationDoc.fromUser.email) {
+  if (invitationDoc.fromUser?.uid && (!invitationDoc.fromUser.firstName || !invitationDoc.fromUser.email)) {
     const user = await getUser(invitationDoc.fromUser?.uid);
     invitationDoc.fromUser = createPublicUserDocument(user);
     needUpdate = true;
   }
 
-  if (invitationDoc.toUser?.uid && !invitationDoc.toUser.email) {
+  if (invitationDoc.toUser?.uid && (!invitationDoc.toUser.firstName || !invitationDoc.toUser.email)) {
     const user = await getUser(invitationDoc.toUser?.uid);
     invitationDoc.toUser = createPublicUserDocument(user);
     needUpdate = true;

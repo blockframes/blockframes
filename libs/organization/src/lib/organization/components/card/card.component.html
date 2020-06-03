@@ -13,10 +13,10 @@
     <div class="tab-content">
       <p class="mat-caption">{{ (org.addresses.main.country | translateSlug: 'TERRITORIES') || "-" }}</p>
       <p class="mat-caption" i18n>
-        {{ org.movieIds.length }} film{ org.movieIds.length, plural, =0 {} =1 {} other {s} } in line-up
+        {{ movies.length }} film{ movies.length, plural, =0 {} =1 {} other {s} } in line-up
       </p>
       <p class="mat-caption" i18n>
-        {{ org.userIds.length }} employee{ org.movieIds.length, plural, =0 {} =1 {} other {s} }
+        {{ org.userIds.length }} employee{ org.userIds.length, plural, =0 {} =1 {} other {s} }
       </p>
     </div>
   </mat-tab>
