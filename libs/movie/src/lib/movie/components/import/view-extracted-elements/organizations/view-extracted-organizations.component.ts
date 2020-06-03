@@ -67,20 +67,34 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
       }
 
+      const importErrors = {
+        org,
+        newOrg,
+        errors: [],
+      } as OrganizationsImportState;
+
       let superAdmin = createUser();
       if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
         const [existingSuperAdmin] = await this.userService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.superAdminEmail] as string));
         if (!!existingSuperAdmin) {
           superAdmin = existingSuperAdmin;
+
+          if (superAdmin.orgId) {
+            if (newOrg || superAdmin.orgId !== org.id) {
+              // Cannot set user as superAdmin because he already belongs to an org
+              importErrors.errors.push({
+                type: 'error',
+                field: 'superAdmin.email',
+                name: 'Super Admin email',
+                reason: 'User already belongs to another org',
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          }
         }
       }
 
-      const importErrors = {
-        org,
-        newOrg,
-        superAdmin,
-        errors: [],
-      } as OrganizationsImportState;
+      importErrors.superAdmin = superAdmin;
 
       if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
         /**

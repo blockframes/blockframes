@@ -109,14 +109,22 @@ export class TableExtractedOrganizationsComponent implements OnInit {
    */
   private async addOrganization(importState: OrganizationsImportState): Promise<boolean> {
     const [firstApp] = getOrgAppAccess(importState.org);
-    const newUser: PublicUser = await this.authService.createUser(
-      importState.superAdmin.email,
-      importState.org.denomination.full,
-      firstApp
-    );
+    const superAdmin = importState.superAdmin;
+
+    // If user does not exists already
+    if (!superAdmin.uid) {
+      const newUser: PublicUser = await this.authService.createUser(
+        importState.superAdmin.email,
+        importState.org.denomination.full,
+        firstApp
+      );
+
+      superAdmin.uid = newUser.uid;
+    }
+
     importState.org.status = 'accepted';
 
-    await this.orgService.addOrganization(importState.org, newUser);
+    await this.orgService.addOrganization(importState.org, superAdmin);
     const data = this.rows.data;
 
     importState.errors.push({
