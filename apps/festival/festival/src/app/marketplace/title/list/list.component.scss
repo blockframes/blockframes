@@ -15,6 +15,10 @@ movie-card {
   padding-bottom: 40px;
 }
 
+mat-icon[matPrefix] {
+  margin-right: 12px;
+}
+
 @include layout-bp(xs) {
   movie-card {
     max-width: 65%;

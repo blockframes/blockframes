@@ -19,9 +19,9 @@
 </ng-template> -->
 
 
-<!-- we use class="dark-theme" to override theme style of the header because it always has a "dark" background image -->
-<header id="nav" class="dark-theme">
-  <h1 class="mat-headline">On the market today</h1>
+<!-- we use class="dark-contrast-theme" to override theme style of the header because it always has a "dark" background image -->
+<header id="nav" class="dark-contrast-theme">
+  <h1 class="mat-display-2">On the market today</h1>
   <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="32px">
 
     <span class="search">
@@ -62,9 +62,9 @@
     <ng-container *ngIf="titles; else loading">
       <ng-container *ngIf="titles.length else empty">
         <div fxLayout="row" fxLayoutAlign="end start">
-          <h6 i18n *ngIf="titles.length as count">
+          <span i18n *ngIf="titles.length as count" class="mat-body-2">
             There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}} available.
-          </h6>
+          </span>
         </div>
       </ng-container>
         <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
