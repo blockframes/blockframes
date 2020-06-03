@@ -12,7 +12,6 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
   private asset$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
-  placeholder: string;
 
   @HostBinding('src') src: string;
 
