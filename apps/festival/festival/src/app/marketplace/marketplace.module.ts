@@ -15,6 +15,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 const routes: Routes = [{
@@ -110,6 +111,7 @@ const routes: Routes = [{
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatButtonModule,
   ]
 })
 export class MarketplaceModule {}

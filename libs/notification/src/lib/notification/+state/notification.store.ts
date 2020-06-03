@@ -106,7 +106,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         };
       case 'invitationToAttendEventAccepted':
 
-      // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
         this.getDocument<Event>(`events/${notification.docId}`).then(event => {
           this.update(notification.id, newNotification => {
             return {
@@ -119,7 +119,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
-          imgRef: notification.user.avatar,
+          imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/dashboard/event/${notification.docId}`
         };
@@ -138,6 +138,25 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
+          imgRef: notification.user?.avatar || notification.organization?.logo,
+          placeholderUrl: 'profil_user.webp',
+          url: `/c/o/dashboard/event/${notification.docId}`
+        };
+      case 'requestToAttendEventSent':
+
+        // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
+        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+          this.update(notification.id, newNotification => {
+            return {
+              ...newNotification,
+              message: `Your request to attend event "${event.title}" have been sent.`
+            };
+          });
+        });
+
+        return {
+          date: toDate(notification.date),
+          message: `Your request to attend event "${notification.docId}" have been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/dashboard/event/${notification.docId}`

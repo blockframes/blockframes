@@ -31,3 +31,6 @@ export const algolia = {
 
 export const adminEmail = functions.config().admin.email;
 export const adminPassword = functions.config().admin.password;
+
+export const jwplayerSecret = functions.config().jwplayer.secret;
+export const jwplayerKey = functions.config().jwplayer.key;

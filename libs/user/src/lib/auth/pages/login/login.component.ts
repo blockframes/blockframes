@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('customSnackBarTemplate') customSnackBarTemplate: TemplateRef<any>;
 
   public isSignin = true;
-  private snackbarDuration = 4000;
+  private snackbarDuration = 8000;
 
   constructor(
     private service: AuthService,
@@ -43,7 +43,9 @@ export class LoginComponent implements OnInit {
     }
     try {
       const { email, password } = signinForm.value;
-      await this.service.signin(email, password);
+      await this.service.signin(email.trim(), password);
+      // Reset page title to default
+      this.dynTitle.setPageTitle();
       this.router.navigate(['c']);
     } catch (err) {
       console.error(err); // let the devs see what happened
@@ -58,7 +60,9 @@ export class LoginComponent implements OnInit {
     }
     try {
       const { email, password, firstName, lastName } = signupForm.value;
-      await this.service.signup(email, password, { ctx: { firstName, lastName } });
+      await this.service.signup(email.trim(), password, { ctx: { firstName, lastName } });
+      // Reset page title to default
+      this.dynTitle.setPageTitle();
       this.router.navigate(['c']);
     } catch (err) {
 

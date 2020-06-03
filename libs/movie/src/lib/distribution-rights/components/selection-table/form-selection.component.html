@@ -6,7 +6,8 @@
               <mat-checkbox (change)="masterToggle()"
               [checked]="selection.hasValue() && isAllSelected"
               [indeterminate]="selection.hasValue() && !isAllSelected"
-              aria-label="select all movies">
+              aria-label="select all movies"
+              color="primary">
               </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let element">
@@ -14,7 +15,8 @@
               (click)="$event.stopPropagation()"
               (change)="toggle(element)"
               [checked]="selection.isSelected(element)"
-              aria-label="select one movie">
+              aria-label="select one movie"
+              color="primary">
               </mat-checkbox>
             </td>
           </ng-container>

@@ -1,5 +1,5 @@
 <section *ngIf="hasLink" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="24px">
-  <ng-container *ngFor="let link of links | promotionalLinks: movie | slice:0:2">
+  <ng-container *ngFor="let link of links | promotionalLinks: movie | slice:0:1">
     <a mat-button [href]="link.url" target="_blank">
       <mat-icon [svgIcon]="link.icon"></mat-icon>
       <span>{{ link.label }}</span>
@@ -10,7 +10,7 @@
     <span>More</span>
   </a>
   <mat-menu #more>
-    <ng-container *ngFor="let link of links  | promotionalLinks: movie | slice:2">
+    <ng-container *ngFor="let link of links  | promotionalLinks: movie | slice:1">
       <a mat-button [href]="link.url" target="_blank">
         <mat-icon [svgIcon]="link.icon"></mat-icon>
         <span>{{ link.label }}</span>

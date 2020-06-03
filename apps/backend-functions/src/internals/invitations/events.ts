@@ -99,10 +99,7 @@ async function onInvitationToAnEventCreate({
         throw new Error('Org can not create requests for events, reserved to users only');
     }
   } else if (!!fromUser) {
-    /**
-     * @dev No need to create a notification because fromOrg and user recipient
-     * will already get the invitation displayed on front end.
-     */
+
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
@@ -115,6 +112,17 @@ async function onInvitationToAnEventCreate({
         throw new Error('User can not create invitations for events, reserved to orgs only.');
       case 'request':
       default:
+
+        // Notification to request sender, letting him know that his request have been sent
+        const notification = createNotification({
+          toUserId: fromUser.uid,
+          user: fromUser,
+          docId,
+          type: 'requestToAttendEventSent'
+        });
+
+        await triggerNotifications([notification]);
+
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
           const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);

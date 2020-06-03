@@ -6,6 +6,7 @@ import { InvitationItemModule } from '../../components/item/item.module';
 import { MatListModule } from '@angular/material/list';
 
 import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [ListComponent],
@@ -15,6 +16,7 @@ import { FilterByDateModule } from '@blockframes/utils/pipes/filter-by-date.pipe
     FilterByDateModule,
     InvitationItemModule,
     MatListModule,
+    MatDividerModule
   ]
 })
 export class InvitationListModule { }

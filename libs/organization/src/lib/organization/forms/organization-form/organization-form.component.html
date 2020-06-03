@@ -32,7 +32,7 @@
     </mat-card>
 
     <!-- Company Logo -->
-    <mat-card>
+    <mat-card *ngIf="!disableCropper">
       <mat-card-header>
         <mat-card-title>Company Logo</mat-card-title>
         <mat-card-subtitle>Upload your Logo</mat-card-subtitle>

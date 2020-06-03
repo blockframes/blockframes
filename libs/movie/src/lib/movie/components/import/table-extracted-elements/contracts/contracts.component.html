@@ -10,7 +10,7 @@
       </ng-container>
       <ng-template #createinprogress>
         <span>Creating... {{ processedContracts }} / {{ selection.selected.length}} </span>
-        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>   
+        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
       </ng-template>
     </button>
   </p>
@@ -42,12 +42,12 @@
   <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
       <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()" color="primary">
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)" color="primary">
       </mat-checkbox>
     </td>
   </ng-container>
@@ -69,7 +69,7 @@
 
   <ng-container matColumnDef="contract.parties">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Parties </th>
-    <td mat-cell *matCellDef="let element"> 
+    <td mat-cell *matCellDef="let element">
       <ul *ngIf="element.contract.parties else noparties">
         <li *ngFor="let partyDetails of element.contract.parties">{{ partyDetails.party.displayName }} ( {{ partyDetails.party.role }} )</li>
       </ul>
@@ -81,14 +81,14 @@
 
   <ng-container matColumnDef="contract.lastVersion.status">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-    <td mat-cell *matCellDef="let element"> 
+    <td mat-cell *matCellDef="let element">
       {{ element.contract.lastVersion.status | toLabel: 'contractStatus' | async  }}
     </td>
   </ng-container>
 
   <ng-container matColumnDef="contract.lastVersion.id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>
-    <td mat-cell *matCellDef="let element"> 
+    <td mat-cell *matCellDef="let element">
       v-{{ element.contract.lastVersion.id }}
     </td>
   </ng-container>
