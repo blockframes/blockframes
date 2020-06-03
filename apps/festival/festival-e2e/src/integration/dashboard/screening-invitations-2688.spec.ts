@@ -11,10 +11,13 @@ import {
   PARTICIPANT_2_NAME,
 } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
+import { MOVIES } from '@blockframes/e2e/utils/movies';
 
 // Pages
 import { FestivalMarketplaceHomePage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, EventEditPage } from '../../support/pages/dashboard/index';
+
+const MOVIE_TITLE = MOVIES[3].title.international;
 
 describe('User invites other users to his screening', () => {
   beforeEach(() => {
@@ -28,7 +31,7 @@ describe('User invites other users to his screening', () => {
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
     p3.addEventTitle(EVENTNAME);
     p3.selectDate(NOW);
-    p3.selectMovie();
+    p3.selectMovie(MOVIE_TITLE);
     p3.inviteUser([USER_2.email, USER_3.email]);
     // We need to wait to fetch the invited user
     p3.copyGuests();

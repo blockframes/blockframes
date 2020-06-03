@@ -17,8 +17,11 @@ import {
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW, TOMORROW, EVENTNAME, USER_1, USER_2, ORG_NAME } from '../../fixtures/data';
+import { MOVIES } from '@blockframes/e2e/utils/movies';
+import FestivalMarketplaceNotifications from '../../support/pages/marketplace/FestivalMarketplaceNotificationsPage';
 
 let tomorrow = TOMORROW;
+const MOVIE_TITLE = MOVIES[3].title.international;
 
 describe('User create a screening', () => {
   beforeEach(() => {
@@ -34,7 +37,7 @@ describe('User create a screening', () => {
     p3.addEventTitle(EVENTNAME);
     p3.checkPrivate();
     p3.selectDate(NOW);
-    p3.selectMovie();
+    p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
   it('User creates a public screening, that taking place right now', () => {
@@ -44,7 +47,7 @@ describe('User create a screening', () => {
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
     p3.addEventTitle(EVENTNAME);
     p3.selectDate(NOW);
-    p3.selectMovie();
+    p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
   it('User creates a private screening, that taking place tomorrow', () => {
@@ -55,7 +58,7 @@ describe('User create a screening', () => {
     p3.addEventTitle(EVENTNAME);
     p3.checkPrivate();
     p3.selectDate(tomorrow);
-    p3.selectMovie();
+    p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
   it('User creates a private screening, that taking place tomorrow', () => {
@@ -65,7 +68,7 @@ describe('User create a screening', () => {
     const p3: EventEditPage = p2.createDetailedEvent(tomorrow);
     p3.addEventTitle(EVENTNAME);
     p3.selectDate(tomorrow);
-    p3.selectMovie();
+    p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
 
@@ -100,7 +103,7 @@ describe('User create a screening', () => {
   it('Verify that request is accepted', () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
-    const p2: FestivalInvitationsPage = p1.goToInvitations();
-    p2.assertInvitationIsAccepted();
+    const p2: FestivalMarketplaceNotifications = p1.goToNotifications();
+    p2.verifyNotification(ORG_NAME, true);
   });
 });
