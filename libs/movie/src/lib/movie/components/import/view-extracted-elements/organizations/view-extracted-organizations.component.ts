@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional, ApplicationModule } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -9,11 +9,22 @@ import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { Module } from '@blockframes/utils/apps';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { ImageUploader } from '@blockframes/utils/media/media.service';
 
 enum SpreadSheetOrganization {
   fullDenomination,
   publicDenomination,
-  orgEmail,
+  email,
+  logo,
+  activity,
+  fiscalNumber,
+  street,
+  city,
+  zipCode,
+  region,
+  country,
+  phoneNumber,
   superAdminEmail,
   catalogAccess,
   festivalAccess,
@@ -38,6 +49,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
     private userService: UserService,
+    private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
@@ -59,8 +71,8 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       // Create/retreive the org
       let org = createOrganization();
       let newOrg = true;
-      if (spreadSheetRow[SpreadSheetOrganization.orgEmail]) {
-        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.orgEmail] as string));
+      if (spreadSheetRow[SpreadSheetOrganization.email]) {
+        const [existingOrg] = await this.organizationService.getValue(ref => ref.where('email', '==', spreadSheetRow[SpreadSheetOrganization.email] as string));
         if (!!existingOrg) {
           org = existingOrg;
           newOrg = false;
@@ -101,47 +113,98 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         * @dev We process this data only if this is for a new org
         */
         if (newOrg) {
-
-          // DENOMINATION
-          if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
-            importErrors.org.denomination.full = spreadSheetRow[SpreadSheetOrganization.fullDenomination].trim();
-          }
-
-          if (spreadSheetRow[SpreadSheetOrganization.publicDenomination]) {
-            importErrors.org.denomination.public = spreadSheetRow[SpreadSheetOrganization.publicDenomination].trim();
-          }
-
-          // EMAIL
-          if (spreadSheetRow[SpreadSheetOrganization.orgEmail]) {
-            importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.orgEmail].trim().toLowerCase();
-          }
-
           // SUPER ADMIN
           if (spreadSheetRow[SpreadSheetOrganization.superAdminEmail]) {
             importErrors.superAdmin.email = spreadSheetRow[SpreadSheetOrganization.superAdminEmail].trim().toLowerCase();
           }
+        }
 
-          // APP ACCESS
-          if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
-            const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
-            if (module1) {
-              importErrors.org.appAccess.catalog[module1] = true;
-            }
-            if (module2) {
-              importErrors.org.appAccess.catalog[module2] = true;
-            }
+        // DENOMINATION
+        if (spreadSheetRow[SpreadSheetOrganization.fullDenomination]) {
+          importErrors.org.denomination.full = spreadSheetRow[SpreadSheetOrganization.fullDenomination].trim();
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.publicDenomination]) {
+          importErrors.org.denomination.public = spreadSheetRow[SpreadSheetOrganization.publicDenomination].trim();
+        }
+
+        // EMAIL
+        if (spreadSheetRow[SpreadSheetOrganization.email]) {
+          importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.email].trim().toLowerCase();
+        }
+
+        // LOGO 
+        if (spreadSheetRow[SpreadSheetOrganization.logo]) {
+          org.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetOrganization.logo]);
+        }
+
+        // ORG INFOS
+        if (spreadSheetRow[SpreadSheetOrganization.activity]) {
+          importErrors.org.activity = spreadSheetRow[SpreadSheetOrganization.activity];
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.fiscalNumber]) {
+          importErrors.org.fiscalNumber = spreadSheetRow[SpreadSheetOrganization.fiscalNumber];
+        }
+
+        // ADDRESS
+        if (spreadSheetRow[SpreadSheetOrganization.street]) {
+          importErrors.org.addresses.main.street = spreadSheetRow[SpreadSheetOrganization.street];
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.city]) {
+          importErrors.org.addresses.main.city = spreadSheetRow[SpreadSheetOrganization.city];
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.zipCode]) {
+          importErrors.org.addresses.main.zipCode = spreadSheetRow[SpreadSheetOrganization.zipCode];
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.region]) {
+          importErrors.org.addresses.main.region = spreadSheetRow[SpreadSheetOrganization.region];
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.country]) {
+          const country = getCodeIfExists('TERRITORIES', spreadSheetRow[SpreadSheetOrganization.country] as ExtractCode<'TERRITORIES'>);
+              if (country) {
+                importErrors.org.addresses.main.country = country;
+              } else {
+                importErrors.errors.push({
+                  type: 'warning',
+                  field: 'addresses.main.country',
+                  name: 'Country',
+                  reason: `${spreadSheetRow[SpreadSheetOrganization.country]} not found in territories list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+          
+        }
+
+        if (spreadSheetRow[SpreadSheetOrganization.phoneNumber]) {
+          importErrors.org.addresses.main.phoneNumber = spreadSheetRow[SpreadSheetOrganization.phoneNumber];
+        }
+
+        // APP ACCESS
+        if (spreadSheetRow[SpreadSheetOrganization.catalogAccess]) {
+          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.catalogAccess].split(this.separator).map(m => m.trim().toLowerCase());
+          if (module1) {
+            importErrors.org.appAccess.catalog[module1] = true;
           }
-
-          if (spreadSheetRow[SpreadSheetOrganization.festivalAccess]) {
-            const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.festivalAccess].split(this.separator).map(m => m.trim().toLowerCase());
-            if (module1) {
-              importErrors.org.appAccess.festival[module1] = true;
-            }
-            if (module2) {
-              importErrors.org.appAccess.festival[module2] = true;
-            }
+          if (module2) {
+            importErrors.org.appAccess.catalog[module2] = true;
           }
         }
+
+        if (spreadSheetRow[SpreadSheetOrganization.festivalAccess]) {
+          const [module1, module2]: Module[] = spreadSheetRow[SpreadSheetOrganization.festivalAccess].split(this.separator).map(m => m.trim().toLowerCase());
+          if (module1) {
+            importErrors.org.appAccess.festival[module1] = true;
+          }
+          if (module2) {
+            importErrors.org.appAccess.festival[module2] = true;
+          }
+        }
+
 
         ///////////////
         // VALIDATION
@@ -224,6 +287,16 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
       });
     }
 
+    // ACTIVITY
+    if (!organization.activity) {
+      errors.push({
+        type: 'warning',
+        field: 'organization.activity',
+        name: 'Activity',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
 
     return importErrors;
   }

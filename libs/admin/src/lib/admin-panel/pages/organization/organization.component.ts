@@ -154,8 +154,4 @@ export class OrganizationComponent implements OnInit {
     return `/c/o/organization/${orgId}/view/members`;
   }
 
-  public getOrgEditPath(orgId: string) {
-    return `/c/o/organization/${orgId}/view/org`;
-  }
-
 }
