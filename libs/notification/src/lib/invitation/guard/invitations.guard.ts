@@ -34,7 +34,7 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
       this.orgQuery.selectActiveId(),
       this.permissionQuery.isAdmin$
     ]).pipe(
-      filter(([user]) => !!user.uid),
+      filter(([user]) => !!user && !!user.uid),
       switchMap(([ user, orgId, isAdmin ]) => {
         if (isAdmin) {
           return combineLatest([
