@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Output, EventEmitter, TemplateRef, ContentChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ContentChild, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AcceptConditionsDirective } from './accept-conditions.directive';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'auth-accept-conditions',
@@ -13,8 +14,10 @@ export class AcceptConditionsComponent {
   @ContentChild(AcceptConditionsDirective)
   acceptConditions: AcceptConditionsDirective;
 
-  @Output() termsOfUseChecked = new EventEmitter<boolean>()
-  public isTermsOfUseChecked = false;
+  public isConditionChecked = false;
+
+  /** Hold the boolean control of the parent form for the checkbox */
+  @Input() control: FormControl;
 
   constructor(private dialog: MatDialog) {}
 
@@ -23,9 +26,9 @@ export class AcceptConditionsComponent {
     this.dialog.open(conditions, { maxHeight: '80vh' })
   }
 
-  public toggleTermsOfUse() {
-    this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
-    this.termsOfUseChecked.emit(this.isTermsOfUseChecked)
+  public toggleCondition() {
+    this.isConditionChecked = !this.isConditionChecked;
+    this.control.setValue(this.isConditionChecked);
   }
 
 }
