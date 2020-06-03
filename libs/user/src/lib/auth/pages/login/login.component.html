@@ -2,8 +2,8 @@
   <mat-sidenav #signinSidenav [opened]="!isSignin" mode="side" position="end">
     <auth-signin-form (opened)="isSignin=true" (submited)="signin($event)"></auth-signin-form>
   </mat-sidenav>
-  <mat-sidenav-content backgroundAsset="login_signin.webp" test-id="switch-mode" [fxLayoutAlign]="align">
-    <button class="mat-elevation-z0 active" mat-icon-button mat-fab (click)="refreshState()">
+  <mat-sidenav-content bgAsset="login_signin.webp" test-id="switch-mode" [fxLayoutAlign]="align">
+    <button class="mat-elevation-z0" mat-icon-button mat-fab (click)="refreshState()">
       <mat-icon [svgIcon]="isSignin ? 'arrow_forward' : 'arrow_back'"></mat-icon>
     </button>
   </mat-sidenav-content>
