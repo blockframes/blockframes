@@ -51,7 +51,7 @@ describe('User invites other users to his screening', () => {
     cy.wait(1000);
   });
 
-  it(`${PARTICIPANT_2_NAME} in and accepts her invitations and logs out`, () => {
+  it(`${PARTICIPANT_2_NAME} logs in and refuse her invitations and logs out`, () => {
     signIn(USER_3);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
