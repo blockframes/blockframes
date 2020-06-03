@@ -40,14 +40,6 @@ let currentID = 0;
 export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
 export const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
-export function formatAmPm(date: Date, toLowerCase?: boolean) {
-  let hours = date.getHours();
-  const amPM = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour 0 should be 12
-  return toLowerCase ? hours + ' ' + amPM.toLowerCase() : hours + ' ' + amPM;
-}
-
 export function getTomorrowDay(date: Date) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const tomorrowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
