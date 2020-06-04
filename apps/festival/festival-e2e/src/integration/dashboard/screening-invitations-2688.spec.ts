@@ -45,20 +45,20 @@ describe('User invites other users to his screening', () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
-    cy.wait(500)
+    cy.wait(2000)
     p2.acceptInvitationScreening();
     // Wait for post request to finish
-    cy.wait(1000);
+    cy.wait(2000);
   });
 
   it(`${PARTICIPANT_2_NAME} logs in and refuse her invitations and logs out`, () => {
     signIn(USER_3);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
-    cy.wait(500);
+    cy.wait(2000);
     p2.refuseInvitationScreening();
     // Wait for post request to finish
-    cy.wait(1000);
+    cy.wait(2000);
   });
 
   it('Event create logs in and verifies the accepted invitations', () => {
