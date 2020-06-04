@@ -38,6 +38,11 @@ export const onUserCreate = functions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
 
+  export const onUserCreateDocument = onDocumentCreate(
+    '/users/{userID}',
+    users.onUserCreateDocument
+  );
+
 export const onUserUpdate = onDocumentUpdate(
   '/users/{userID}',
   users.onUserUpdate

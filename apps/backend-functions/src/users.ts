@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userFirstConnexion } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
@@ -103,9 +103,34 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
+
+export async function onUserCreateDocument(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+  ;
+  const after = change.after.data() as PublicUser;
+
+  if (!!after.firstName) {
+    // User setted his firstName for the first time
+    // Send an informative email to c8 admin 
+    const mailRequest = await userFirstConnexion(after);
+    const from = await getSendgridFrom();
+    await sendMail(mailRequest, from);
+  }
+
+  return true;
+}
+
 export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
+
+
+  if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
+    // User setted his firstName for the first time
+    // Send an informative email to c8 admin 
+    const mailRequest = await userFirstConnexion(after);
+    const from = await getSendgridFrom();
+    await sendMail(mailRequest, from);
+  }
 
   const promises: Promise<any>[] = [];
 
