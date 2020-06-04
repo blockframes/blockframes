@@ -22,12 +22,6 @@ mat-checkbox {
   margin-right: 5px;
 }
 
-.terms-link {
-  color: #9eb1ff;
-  cursor: pointer;
-  font-weight: 500;
-}
-
 @include layout-bp(lg) {
   form {
     height: 80%;
