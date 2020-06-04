@@ -9,7 +9,7 @@ import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 const NAVIGATION = ['Title Information', 'Budget, Quotas, Critics'];
 
 const BUDGET_RANGE = 'Less than $1 million';
-const QUOTAS = ['EOF', 'A-list Cast'];
+const QUOTAS = ['EOF'];
 const COUNTRIES = ['Japan', 'France'];
 const PARTIAL_COUNTRIES = ['jap', 'fr'];
 const METRIC = '#Admissions';
