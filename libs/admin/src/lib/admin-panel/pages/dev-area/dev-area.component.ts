@@ -12,7 +12,7 @@ import { firebase } from '@env';
 export class DevAreaComponent implements OnInit {
   public token: string;
   public projectId = firebase.projectId;
-  public firebaseConsoleLink: string = `https://console.firebase.google.com/project/${firebase.projectId}/database/`;
+  public firebaseConsoleLink = `https://console.firebase.google.com/project/${firebase.projectId}/database/`;
 
   constructor(
     private afAuth: AngularFireAuth,
