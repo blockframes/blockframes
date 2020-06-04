@@ -11,7 +11,7 @@ import { firebase } from '@env';
 })
 export class DevAreaComponent implements OnInit {
   public token: string;
-  public projectId: string = firebase.projectId;
+  public projectId = firebase.projectId;
   public firebaseConsoleLink: string = `https://console.firebase.google.com/project/${firebase.projectId}/database/`;
 
   constructor(
