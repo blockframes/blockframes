@@ -18,8 +18,8 @@ export default class EventEditPage {
     cy.get('event-edit time-picker[formControlName=end]').get('tbody').contains(date.getDate()).click();
   }
 
-  checkPrivate() {
-    cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').check({ force: true })
+  uncheckPrivate() {
+    cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').uncheck({ force: true });
   }
 
   selectMovie(movieName: string) {
