@@ -6,8 +6,8 @@ export let TOMORROW = new Date(NOW);
 export const ORG_NAME = 'Curtis, Klein and Romero';
 export const EVENTNAME = 'test screening';
 
-export const PARTICIPANT_1_NAME = 'John Bryant';
-export const PARTICIPANT_2_NAME = 'Sarah Gregory';
+export const PARTICIPANT_1_NAME = 'Bryant John';
+export const PARTICIPANT_2_NAME = 'Gregory Sarah';
 
 // wendy.baker@curtis-klein-and-romero.fake.cascade8.com
 export const USER_1: Partial<User> = USERS[45];
