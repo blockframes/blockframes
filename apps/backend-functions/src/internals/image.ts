@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import { set } from 'lodash';
-import { imgSizeDirectory } from '@blockframes/utils/media/media.firestore';
+import { imgSizeDirectory, getImgSize } from '@blockframes/utils/media/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -71,27 +71,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   await bucket.file(filePath).download({ destination: tmpFilePath });
 
   // Define the sizes (here width) depending of the image format (defined by the directory)
-  let sizes: {
-    original: number;
-    xs: number;
-    md: number;
-    lg: number;
-  };
-
-  if (directory.includes('avatar')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 300 };
-  } else if (directory.includes('logo')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 300 };
-  } else if (directory.includes('poster')) {
-    sizes = { original: 0, xs: 200, md: 400, lg: 600 };
-  } else if (directory.includes('banner')) {
-    sizes = { original: 0, xs: 300, md: 600, lg: 1200 };
-  } else if (directory.includes('still')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 200 };
-  } else {
-    console.warn('No bucket directory, exiting function');
-    return false;
-  }
+  const sizes = getImgSize(directory);
 
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
