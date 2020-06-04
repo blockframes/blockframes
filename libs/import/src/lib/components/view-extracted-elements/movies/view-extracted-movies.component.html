@@ -8,11 +8,11 @@
     <section class="result-tables">
       <ng-container *ngIf="moviesToCreate.data.length">
         <h3>Titles to Create</h3>
-        <import-table-extracted-movies [rows]="moviesToCreate" mode="create"></import-table-extracted-import>
+        <import-table-extracted-movies [rows]="moviesToCreate" mode="create"></import-table-extracted-movies>
       </ng-container>
       <ng-container *ngIf="moviesToUpdate.data.length">
         <h3>Titles to Update & Submit</h3>
-        <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-import>
+        <import-table-extracted-movies [rows]="moviesToUpdate" mode="update"></import-table-extracted-movies>
       </ng-container>
     </section>
   </ng-container>
