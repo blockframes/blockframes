@@ -12,10 +12,4 @@ export class SignupFormComponent {
   @Output() submited = new EventEmitter();
 
   public signupForm = new SignupForm();
-  public isTermsChecked: boolean;
-
-  /** Check the value of the boolean outputed by TermsAndConditionsComponent */
-  public checkTermsOfUse(checked: boolean) {
-    this.isTermsChecked = checked;
-  }
 }
