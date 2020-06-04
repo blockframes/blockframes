@@ -51,7 +51,7 @@ export class ImportSpreadsheetComponent implements OnInit {
     } else if (this.fileType.value === 'contracts') {
       sheetRange = 'A1:DD100';
     } else if (this.fileType.value === 'organizations') {
-      sheetRange = 'A1:Z100';
+      sheetRange = 'A10:Z100';
     } else {
       sheetRange = 'A10:AD100';
     }
