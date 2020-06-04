@@ -6,6 +6,10 @@ mat-card {
   min-width: 300px;
   .mat-card-content {
     padding-left: 20px;
+
+    .separator {
+      margin-top: 12px;
+    }
   }
   a {
     margin-bottom: 10px;
