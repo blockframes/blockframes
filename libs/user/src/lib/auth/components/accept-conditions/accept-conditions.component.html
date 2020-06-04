@@ -1,9 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="center">
-  <mat-checkbox test-id="checkbox" (change)="toggleTermsOfUse()" color="primary">
-    <span>I accept the&nbsp;</span>
-    <a mat-button (click)="openTermsOfUse(displayConditions)" class="terms-link">Terms and Conditions of Use</a>.
-  </mat-checkbox>
-</div>
+<mat-checkbox test-id="checkbox" (change)="toggleCondition()" color="primary">
+  <span class="mat-caption"><ng-content select="[conditionText]"></ng-content>&nbsp;
+    <a (click)="openTermsOfUse(displayConditions)" class="terms-link">
+      <ng-content select="[conditionLink]"></ng-content>
+    </a>.
+  </span>
+</mat-checkbox>
 
 <ng-template #displayConditions>
   <ng-container *ngTemplateOutlet="acceptConditions.tpl"></ng-container>

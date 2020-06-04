@@ -31,6 +31,7 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
+import { PrivacyPolicyModule } from './components/privacy-policy/privacy-policy.module';
 
 // Guards
 import { IdentityGuard } from './guard/identity.guard';
@@ -63,6 +64,7 @@ export const AuthRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     TermsConditionsModule,
+    PrivacyPolicyModule,
     AcceptConditionsModule,
     PasswordConfirmModule,
     ImageReferenceModule,

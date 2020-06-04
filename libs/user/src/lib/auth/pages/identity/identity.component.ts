@@ -4,7 +4,6 @@ import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -21,18 +20,19 @@ export class IdentityComponent implements OnInit {
   public creating = false;
   public appName: string;
   public form = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
     email: new FormControl({ value: this.query.user.email, disabled: true }, Validators.email),
-    generatedPassword: new FormControl(''),
-    newPassword: new PasswordControl()
+    generatedPassword: new FormControl('', Validators.required),
+    newPassword: new PasswordControl(),
+    termsOfUse: new FormControl(false, Validators.requiredTrue),
+    privacyPolicy: new FormControl(false, Validators.requiredTrue),
   });
 
   public isTermsChecked: boolean;
 
   constructor(
     private service: AuthService,
-    private db: AngularFirestore,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
     private router: Router,
@@ -79,10 +79,5 @@ export class IdentityComponent implements OnInit {
       this.creating = false;
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
-  }
-
-  /** Check the value of the boolean outputed by TermsAndConditionsComponent */
-  public checkTermsOfUse(checked: boolean) {
-    this.isTermsChecked = checked;
   }
 }
