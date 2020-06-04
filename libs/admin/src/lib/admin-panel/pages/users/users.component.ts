@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
+import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 
 @Component({
   selector: 'admin-users',
@@ -17,6 +19,7 @@ export class UsersComponent implements OnInit {
     'org': 'Organization',
     'position': 'Position',
     'email': 'Email',
+    'lastConnexion': 'Last connexion',
     'edit': 'Edit',
   };
 
@@ -28,18 +31,25 @@ export class UsersComponent implements OnInit {
     'org',
     'position',
     'email',
+    'lastConnexion',
     'edit',
   ];
   public rows: any[] = [];
   constructor(
     private userService: UserService,
     private cdRef: ChangeDetectorRef,
+    private adminService: AdminService,
+    private adminQuery: AdminQuery,
   ) { }
 
   async ngOnInit() {
+    // Temp
+    this.adminService.loadAnalyticsData();
+
     const users = await this.userService.getAllUsers();
     this.rows = users.map(u => ({
       ...u,
+      lastConnexion: this.adminQuery.getLastConnexion(u.uid),
       edit: {
         id: u.uid,
         link: `/c/o/admin/panel/user/${u.uid}`,
@@ -49,6 +59,7 @@ export class UsersComponent implements OnInit {
         link: `/c/o/admin/panel/organization/${u.orgId}`,
       }
     }));
+
     this.cdRef.markForCheck();
   }
 
