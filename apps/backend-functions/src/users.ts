@@ -193,6 +193,8 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
   const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
   await sendMailFromTemplate(template, from);
 
+  // We don't have the time to wait for the trigger onUserCreate,
+  // So we create it here first.
   await db.collection('users').doc(newUser.user.uid).set(newUser.user);
   return newUser.user;
 }
