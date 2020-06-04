@@ -20,7 +20,7 @@ const hasImportErrors = (importState: MovieImportState, type: string = 'error'):
 };
 
 @Component({
-  selector: 'movie-table-extracted-movies',
+  selector: 'import-table-extracted-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

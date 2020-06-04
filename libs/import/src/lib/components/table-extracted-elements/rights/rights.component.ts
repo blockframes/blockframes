@@ -17,7 +17,7 @@ const hasImportErrors = (importState: RightsImportState, type: string = 'error')
 };
 
 @Component({
-  selector: 'movie-table-extracted-rights',
+  selector: 'import-table-extracted-rights',
   templateUrl: './rights.component.html',
   styleUrls: ['./rights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

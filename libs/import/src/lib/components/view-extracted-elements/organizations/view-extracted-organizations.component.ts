@@ -31,7 +31,7 @@ enum SpreadSheetOrganization {
 }
 
 @Component({
-  selector: 'movie-view-extracted-organizations',
+  selector: 'import-view-extracted-organizations',
   templateUrl: './view-extracted-organizations.component.html',
   styleUrls: ['./view-extracted-organizations.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

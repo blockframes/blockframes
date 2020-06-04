@@ -18,7 +18,7 @@ const hasImportErrors = (importState: OrganizationsImportState, type: string = '
 };
 
 @Component({
-  selector: 'movie-table-extracted-organizations',
+  selector: 'import-table-extracted-organizations',
   templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

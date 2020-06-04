@@ -8,11 +8,11 @@
     <section class="result-tables">
       <ng-container *ngIf="contractsToUpdate.data.length">
         <h3>Contracts to Update</h3>
-        <movie-table-extracted-contracts [rows]="contractsToUpdate" mode="update"></movie-table-extracted-contracts>
+        <import-table-extracted-contracts [rows]="contractsToUpdate" mode="update"></import-table-extracted-contracts>
       </ng-container>
       <ng-container *ngIf="contractsToCreate.data.length">
         <h3>Contracts to Create</h3>
-        <movie-table-extracted-contracts [rows]="contractsToCreate" mode="create"></movie-table-extracted-contracts>
+        <import-table-extracted-contracts [rows]="contractsToCreate" mode="create"></import-table-extracted-contracts>
       </ng-container>
     </section>
   </ng-container>

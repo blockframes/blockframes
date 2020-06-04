@@ -13,7 +13,7 @@ export interface SpreadsheetImportEvent {
 }
 
 @Component({
-  selector: 'movie-import-spreadsheet',
+  selector: 'import-import-spreadsheet',
   templateUrl: './import-spreadsheet.component.html',
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

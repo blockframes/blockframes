@@ -36,7 +36,7 @@ enum SpreadSheetDistributionRight {
 
 
 @Component({
-  selector: 'movie-view-extracted-rights',
+  selector: 'import-view-extracted-rights',
   templateUrl: './view-extracted-rights.component.html',
   styleUrls: ['./view-extracted-rights.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

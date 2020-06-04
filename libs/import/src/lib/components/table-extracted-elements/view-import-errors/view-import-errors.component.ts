@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SpreadsheetImportError } from '../../../import-utils';
 
 @Component({
-  selector: 'movie-view-import-errors',
+  selector: 'import-view-import-errors',
   templateUrl: './view-import-errors.component.html',
   styleUrls: ['./view-import-errors.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

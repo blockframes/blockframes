@@ -1,8 +1,8 @@
-<movie-import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></movie-import-spreadsheet>
-<movie-view-extracted-movies *ngIf="fileType === 'movies'" #viewExtractedMoviesComponent></movie-view-extracted-movies>
-<movie-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedContractsComponent></movie-view-extracted-contracts>
-<movie-view-extracted-rights *ngIf="fileType === 'rights'" #viewExtractedRightsComponent></movie-view-extracted-rights>
-<movie-view-extracted-organizations *ngIf="fileType === 'organizations'" #viewExtractedOrganizationsComponent></movie-view-extracted-organizations>
+<import-import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></import-import-spreadsheet>
+<import-view-extracted-movies *ngIf="fileType === 'movies'" #viewExtractedMoviesComponent></import-view-extracted-movies>
+<import-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedContractsComponent></import-view-extracted-contracts>
+<import-view-extracted-rights *ngIf="fileType === 'rights'" #viewExtractedRightsComponent></import-view-extracted-rights>
+<import-view-extracted-organizations *ngIf="fileType === 'organizations'" #viewExtractedOrganizationsComponent></import-view-extracted-organizations>
 <section *ngIf="fileType" fxLayout="column" fxLayoutAlign="center center">
   <p>Please make sure everything is correct. Once you submit your titles they will instantaneously appear on the Archipel Market platform.</p>
   <button mat-stroked-button color="warn" (click)="back()">

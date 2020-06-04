@@ -43,7 +43,7 @@ enum SpreadSheetContractTitle {
 }
 
 @Component({
-  selector: 'movie-view-extracted-contracts',
+  selector: 'import-view-extracted-contracts',
   templateUrl: './view-extracted-contracts.component.html',
   styleUrls: ['./view-extracted-contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

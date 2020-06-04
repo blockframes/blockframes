@@ -104,7 +104,7 @@ enum SpreadSheetMovie {
 }
 
 @Component({
-  selector: 'movie-view-extracted-movies',
+  selector: 'import-view-extracted-movies',
   templateUrl: './view-extracted-movies.component.html',
   styleUrls: ['./view-extracted-movies.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default

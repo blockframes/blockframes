@@ -16,7 +16,7 @@ const hasImportErrors = (importState: ContractsImportState, type: string = 'erro
 };
 
 @Component({
-  selector: 'movie-table-extracted-contracts',
+  selector: 'import-table-extracted-contracts',
   templateUrl: './contracts.component.html',
   styleUrls: ['./contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
