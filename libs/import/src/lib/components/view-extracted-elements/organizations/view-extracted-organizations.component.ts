@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { OrganizationsImportState } from '../../import-utils';
+import { OrganizationsImportState } from '../../../import-utils';
 import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
@@ -30,7 +30,6 @@ enum SpreadSheetOrganization {
   festivalAccess,
 }
 
-// @TODO (#2920) move the import folder
 @Component({
   selector: 'movie-view-extracted-organizations',
   templateUrl: './view-extracted-organizations.component.html',

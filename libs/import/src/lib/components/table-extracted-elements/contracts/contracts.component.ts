@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { ContractsImportState, SpreadsheetImportError } from '../../import-utils';
+import { ContractsImportState, SpreadsheetImportError } from '../../../import-utils';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;

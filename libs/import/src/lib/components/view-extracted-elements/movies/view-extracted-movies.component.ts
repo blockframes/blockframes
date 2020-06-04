@@ -40,7 +40,7 @@ import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/media/media.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MovieImportState } from '../../import-utils';
+import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { UserService } from '@blockframes/user/+state/user.service';

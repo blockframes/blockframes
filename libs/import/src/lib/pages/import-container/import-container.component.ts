@@ -1,11 +1,11 @@
 import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
-import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ViewExtractedMoviesComponent } from '../view-extracted-elements/movies/view-extracted-movies.component';
-import { ViewExtractedContractsComponent } from '../view-extracted-elements/contract/view-extracted-contracts.component';
-import { ViewExtractedRightsComponent } from '../view-extracted-elements/rights/view-extracted-rights.component';
-import { ViewExtractedOrganizationsComponent } from '../view-extracted-elements/organizations/view-extracted-organizations.component';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { ViewExtractedMoviesComponent } from '../../components/view-extracted-elements/movies/view-extracted-movies.component';
+import { ViewExtractedContractsComponent } from '../../components/view-extracted-elements/contract/view-extracted-contracts.component';
+import { ViewExtractedRightsComponent } from '../../components/view-extracted-elements/rights/view-extracted-rights.component';
+import { ViewExtractedOrganizationsComponent } from '../../components/view-extracted-elements/organizations/view-extracted-organizations.component';
+import { SpreadsheetImportEvent } from '../../components/import-spreadsheet/import-spreadsheet.component';
 
 @Component({
   selector: 'movie-import-container',

@@ -10,7 +10,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createTerms } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { RightsImportState } from '../../import-utils';
+import { RightsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 
 enum SpreadSheetDistributionRight {

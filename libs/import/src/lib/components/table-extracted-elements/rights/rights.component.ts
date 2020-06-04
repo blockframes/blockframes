@@ -9,7 +9,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { RightsImportState, SpreadsheetImportError } from '../../import-utils';
+import { RightsImportState, SpreadsheetImportError } from '../../../import-utils';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
 
 const hasImportErrors = (importState: RightsImportState, type: string = 'error'): boolean => {

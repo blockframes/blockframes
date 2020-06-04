@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SpreadsheetImportError } from '../../import-utils';
+import { SpreadsheetImportError } from '../../../import-utils';
 
 @Component({
   selector: 'movie-view-import-errors',

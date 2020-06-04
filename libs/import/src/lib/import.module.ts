@@ -13,14 +13,15 @@ import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
 import { UploadModule } from '@blockframes/ui/upload';
-import { ViewExtractedElementsModule } from './view-extracted-elements/view-extracted-elements.module';
+import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
 
 // Components
-import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
-import { ImportContainerComponent } from './import-container/import-container.component';
+import { ImportContainerComponent } from './pages/import-container/import-container.component';
+import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
 
 // Guards
-import { MovieOrganizationListGuard } from '../../guards/movie-organization-list.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+
 
 const routes: Routes = [
   {
@@ -54,4 +55,4 @@ const routes: Routes = [
     ViewExtractedElementsModule,
   ]
 })
-export class ImportMovieModule { }
+export class ImportModule { }

@@ -13,7 +13,7 @@ import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/sche
 import { Intercom } from 'ng-intercom';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ContractsImportState } from '../../import-utils';
+import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
 
 
