@@ -15,7 +15,7 @@ export default class FestivalInvitationsPage {
   }
 
   refuseInvitationScreening() {
-    cy.get('festival-invitation invitation-list invitation-item button[test-id=invitation-refuse]').click()
+    cy.get('festival-invitation invitation-list invitation-item button[test-id=invitation-refuse]').click();
   }
 
   assertInvitationIsAccepted() {

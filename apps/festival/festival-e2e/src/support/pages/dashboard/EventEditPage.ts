@@ -22,9 +22,9 @@ export default class EventEditPage {
     cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').check({ force: true })
   }
 
-  selectMovie() {
+  selectMovie(movieName: string) {
     cy.get('event-edit mat-select[formControlName=titleId]').click();
-    cy.get('mat-option').first().click();
+    cy.get('mat-option').contains(movieName).click();
   }
 
   inviteUser(email: string | string[]) {
@@ -46,7 +46,8 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]').click()
+    cy.get('button[test-id=event-save]').click();
+    cy.wait(500);
   }
 
   goToDashboard() {

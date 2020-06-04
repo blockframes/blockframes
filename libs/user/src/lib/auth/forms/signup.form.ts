@@ -8,6 +8,7 @@ interface SignUp {
   firstName: string,
   lastName: string,
   termsOfUseChecked: boolean
+  privacyPolicyChecked: boolean
 }
 
 function createSignup(params?: Partial<SignUp>): SignUp {
@@ -17,6 +18,7 @@ function createSignup(params?: Partial<SignUp>): SignUp {
     firstName: '',
     lastName: '',
     termsOfUseChecked: false,
+    privacyPolicyChecked: false,
     ...(params || {})
   } as SignUp
 }
@@ -26,9 +28,10 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
   return {
     email: new FormControl(signup.email, [Validators.required, Validators.email]),
     password: new PasswordControl(signup.password),
-    firstName: new FormControl(signup.firstName),
-    lastName: new FormControl(signup.lastName),
-    termsOfUseChecked: new FormControl(signup.termsOfUseChecked)
+    firstName: new FormControl(signup.firstName, Validators.required),
+    lastName: new FormControl(signup.lastName, Validators.required),
+    termsOfUseChecked: new FormControl(signup.termsOfUseChecked, Validators.requiredTrue),
+    privacyPolicyChecked: new FormControl(signup.privacyPolicyChecked, Validators.requiredTrue),
   }
 }
 

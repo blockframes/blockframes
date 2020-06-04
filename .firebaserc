@@ -19,7 +19,8 @@
     "max": "blockframes-max",
     "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
-    "dajung": "blockframes-dajung"
+    "dajung": "blockframes-dajung",
+    "remco": "blockframes-remco"
   },
   "targets": {
     "blockframes": {
@@ -186,6 +187,16 @@
           "blockframes-dajung"
         ]
       }
-    }
+    },
+    "blockframes-remco": {
+      "hosting": {
+        "catalog": [
+          "blockframes-remco"
+        ],
+        "festival": [
+          "blockframes-remco"
+        ]
+      }
+    },
   }
 }
