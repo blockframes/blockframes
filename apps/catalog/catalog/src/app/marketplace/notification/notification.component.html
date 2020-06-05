@@ -1,6 +1,8 @@
 <ng-container *ngIf="hasNotifications$ | async; else noFeed">
   <h1>Activity Feed</h1>
-  <notification-list [notifications]="notifications$ | async"></notification-list>
+  <mat-card>
+    <notification-list [notifications]="notifications$ | async"></notification-list>
+  </mat-card>
 </ng-container>
 
 <ng-template #noFeed>
