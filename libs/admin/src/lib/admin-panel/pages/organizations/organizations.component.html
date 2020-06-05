@@ -1,33 +1,35 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organizations</h1>
-
-<bf-table-filter 
-  [source]="rows" 
-  [columns]="versionColumns" 
-  [initialColumns]="initialColumns" 
-  [filterPredicate]="filterPredicate"
-  showFilter
-  showLoader
-  showPaginator>
-  <ng-template colRef="logo" let-logo>
-    <ng-container *ngIf="logo; else nologo">
-      <img class="logo" [ref]="logo"  asset="empty_poster.webp">
-    </ng-container>
-    <ng-template #nologo>
-      --
-    </ng-template>
-  </ng-template>
-  <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-  </ng-template>
-  <ng-template colRef="denomination" let-denomination>
-    {{ denomination.full }}
-  </ng-template>
-  <ng-template colRef="appAccess" let-appAccess>
-    <ul>
-      <ng-container *ngFor="let access of appAccess | keyvalue">
-        <li>{{ access.key }}-dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
-        <li>{{ access.key }}-marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
-      </ng-container>
-    </ul>
-  </ng-template>
-</bf-table-filter>
+<section fxLayout="row" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button mat-flat-button color="primary" routerLink="/c/o/dashboard/import">
+      <span>Import orgs</span><mat-icon svgIcon="arrow_downward"></mat-icon>
+    </button>
+    <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+      [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+      <ng-template colRef="logo" let-logo>
+        <ng-container *ngIf="logo; else nologo">
+          <img class="logo" [ref]="logo" asset="empty_poster.webp">
+        </ng-container>
+        <ng-template #nologo>
+          --
+        </ng-template>
+      </ng-template>
+      <ng-template colRef="edit" let-edit>
+        <a mat-icon-button [routerLink]="edit.link">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </a>
+      </ng-template>
+      <ng-template colRef="denomination" let-denomination>
+        {{ denomination.full }}
+      </ng-template>
+      <ng-template colRef="appAccess" let-appAccess>
+        <ul>
+          <ng-container *ngFor="let access of appAccess | keyvalue">
+            <li>{{ access.key }}-dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
+            <li>{{ access.key }}-marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
+          </ng-container>
+        </ul>
+      </ng-template>
+    </bf-table-filter>
+  </article>
+</section>

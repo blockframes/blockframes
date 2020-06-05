@@ -88,6 +88,9 @@
     },
     "landing": {
       "tags": []
+    },
+    "import": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

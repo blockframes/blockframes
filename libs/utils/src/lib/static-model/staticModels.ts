@@ -597,6 +597,7 @@ export interface CurrencyWithLabel {
  * @param array
  * @param scope
  * @param key
+ * @deprecated unused
  */
 export function hasSlug<S extends Scope, code extends ExtractSlug<S>>(array: string[], scope: Scope, key: code): boolean {
   return array.includes(getCodeIfExists(scope, key));
