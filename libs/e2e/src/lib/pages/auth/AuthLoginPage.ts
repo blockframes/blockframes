@@ -85,7 +85,11 @@ export default class AuthLoginPage {
   }
 
   public clickTermsAndCondition() {
-    cy.get('auth-accept-conditions [test-id="checkbox"] input').check({ force: true });
+    cy.get('auth-accept-conditions [test-id="checkbox"] input').first().check({ force: true });
+  }
+
+  public clickPrivacyPolicy() {
+    cy.get('auth-accept-conditions [test-id="checkbox"] input').last().check({ force: true });
   }
 
   public clickSignupToOrgHome() {
@@ -94,7 +98,7 @@ export default class AuthLoginPage {
   }
 
   public clickSignup() {
-    cy.get('auth-signup-form button[type=submit]').click();
+    cy.get('auth-signup-form button[type=submit]').click({ force: true });
   }
 
   public assertStayInLoginView() {

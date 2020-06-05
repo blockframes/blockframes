@@ -7,7 +7,7 @@ export default class FestivalMarketplaceOrganizationTitlePage {
     cy.get('festival-marketplace-organization-title', { timeout: 30000 });
   }
 
-  clickOnSalesAgents() {
+  clickOnScreeningSchedule() {
     cy.get('festival-marketplace-organization-view a').contains(NAV_SCREENING).click();
     return new FestivalScreeningPage();
   }

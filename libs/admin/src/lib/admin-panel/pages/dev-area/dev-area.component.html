@@ -1,0 +1,35 @@
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Deveveloppers Area </h1>
+<h4>Don't feel alone anymore...</h4>
+<section fxLayout="row" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Usefull links</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <li>
+            <a href="https://e2e.blockframes.io/" target="_blank">
+              <mat-icon svgIcon="check"></mat-icon><span matLine>End to End (e2e) test results</span>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.notion.so/cascade8/Get-started-e02fdf56211d40dc84670540bbe8783f" target="_blank">
+              <mat-icon svgIcon="document"></mat-icon><span matLine>Documentation on notion.so</span>
+            </a>
+          </li>
+          <li>
+            <a [href]="firebaseConsoleLink" target="_blank">
+              <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Go to "{{ projectId }}" firebase web console</span>
+            </a>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <div *ngIf="token">
+      Token for the REST API: <textarea rows="10" cols="100">{{ token }}</textarea>
+    </div>
+  </article>
+</section>

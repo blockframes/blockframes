@@ -1,4 +1,4 @@
-export default class FestivalMarketplaceNotifications {
+export default class FestivalMarketplaceNotificationsPage {
   constructor() {
     cy.get('festival-marketplace-notification')
   }

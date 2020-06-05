@@ -6,7 +6,7 @@ import {
   USER_1,
   USER_2,
   USER_3,
-  EVENTNAME,
+  PRIVATE_EVENTNAME,
   PARTICIPANT_1_NAME,
   PARTICIPANT_2_NAME,
 } from '../../fixtures/data'
@@ -29,7 +29,7 @@ describe('User invites other users to his screening', () => {
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
-    p3.addEventTitle(EVENTNAME);
+    p3.addEventTitle(PRIVATE_EVENTNAME);
     p3.selectDate(NOW);
     p3.selectMovie(MOVIE_TITLE);
     p3.inviteUser([USER_2.email, USER_3.email]);

@@ -9,6 +9,7 @@ import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom } from '@blockframes/utils/apps';
+import { sendFirstConnexionEmail } from './internals/users';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -103,9 +104,20 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
+export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+  const after = snap.data() as PublicUser;
+  if (!!after.firstName) { await sendFirstConnexionEmail(after) }
+  return true;
+}
+
 export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
+
+
+  if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
+    await sendFirstConnexionEmail(after);
+  }
 
   const promises: Promise<any>[] = [];
 

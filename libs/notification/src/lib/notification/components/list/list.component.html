@@ -2,11 +2,11 @@
   <ng-container *ngFor="let timeFrame of timeFrames">
     <!-- For a time frame -->
     <ng-container *ngIf="(notifications | filterByDate: timeFrame) as notificationList">
-      
+
       <h2 *ngIf="notificationList.length">
         {{ timeFrame | labelByDate }}
       </h2>
-  
+
       <!-- Display all notifications -->
       <ng-container *ngFor="let notification of notificationList">
         <ng-template
@@ -14,6 +14,9 @@
           [ngTemplateOutletContext]="{ $implicit: notification }">
         </ng-template>
       </ng-container>
+      <div class="divider" *ngIf="notificationList.length">
+        <mat-divider inset></mat-divider>
+      </div>
 
     </ng-container>
   </ng-container>

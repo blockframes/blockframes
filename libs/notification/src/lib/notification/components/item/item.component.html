@@ -5,6 +5,16 @@
   <span matLine>
     <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
   </span>
-  <button mat-button (click)="markAsRead(notification)">Mark as read</button>
-  <a mat-button [routerLink]="notification.url">More details</a>
+  <button mat-button (click)="markAsRead(notification)">
+    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon svgIcon="read"></mat-icon>
+      Mark as read
+    </div>
+  </button>
+  <a mat-button [routerLink]="notification.url">
+    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon svgIcon="dot_menu"></mat-icon>
+      More
+    </div>
+  </a>
 </mat-list-item>

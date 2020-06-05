@@ -156,6 +156,7 @@ const organizationCreatedTemplate = (orgId: string, appUrl: string = appUrlConte
 
 /**
  * @param orgId
+ * @param appUrl
  */
 const organizationRequestAccessToAppTemplate = (orgId: string, appUrl: string = appUrlContent) =>
   `
@@ -163,6 +164,18 @@ const organizationRequestAccessToAppTemplate = (orgId: string, appUrl: string = 
 
   Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} or go to ${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
   `;
+
+
+/**
+ * @param user
+ * @TODO (#2826) add application used when first connecting
+ */
+const userFirstConnexionTemplate = (user: PublicUser) =>
+  `
+  User ${user.firstName} ${user.lastName} connected for the first time to the app.
+
+  Email: ${user.email}.
+  `;  
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
 export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
@@ -184,6 +197,14 @@ export async function organizationRequestedAccessToApp(org: OrganizationDocument
     to: adminEmail,
     subject: 'An organization requested access to an app',
     text: organizationRequestAccessToAppTemplate(org.id, urlToUse)
+  };
+}
+
+export async function userFirstConnexion(user: PublicUser): Promise<EmailRequest> {
+  return {
+    to: adminEmail,
+    subject: 'New user connexion',
+    text: userFirstConnexionTemplate(user)
   };
 }
 

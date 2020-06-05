@@ -7,5 +7,5 @@ export {
   EventEditPage,
   EventPage,
   FestivalDashboardHomePage,
-  FestivalInvitationsPage
+  FestivalInvitationsPage,
 };

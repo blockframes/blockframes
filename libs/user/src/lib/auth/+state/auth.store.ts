@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
-import { createImgRef, ImgRef } from '@blockframes/utils/media/media.firestore';
+import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';

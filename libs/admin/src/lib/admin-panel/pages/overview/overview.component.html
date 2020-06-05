@@ -61,11 +61,13 @@
           <mat-icon svgIcon="mail"></mat-icon><span matLine>Emails</span>
         </a>
       </li>
+      <li>
+        <a routerLink="../dev-area">
+          <mat-icon class="unicorn" svgIcon="unicorn"></mat-icon><span matLine>Developpers playground</span>
+        </a>
+      </li>
     </ul>
 
-    <div *ngIf="token">
-      Token for the REST API: <textarea rows="10" cols="100">{{ token }}</textarea>
-    </div>
   </article>
 
 </section>

@@ -43,6 +43,7 @@ import { UserComponent } from './pages/user/user.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
+import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -63,7 +64,8 @@ export const panelRoutes: Routes = [
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
-  { path: 'mails', component: MailsComponent }
+  { path: 'mails', component: MailsComponent },
+  { path: 'dev-area', component: DevAreaComponent }
 ];
 @NgModule({
   imports: [
@@ -108,6 +110,7 @@ export const panelRoutes: Routes = [
     EventsComponent,
     EventComponent,
     MailsComponent,
+    DevAreaComponent,
   ]
 })
 export class AdminPanelModule { }
