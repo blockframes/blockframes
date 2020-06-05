@@ -179,12 +179,16 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
     throw new Error('unhandled filePath:' + filePath);
   }
 
-  // Clean document that reference this image
-  const docData: any = await getDocument(`${collection}/${id}`);
-  const value = { ref: '', urls: [] };
-  const updated = set(docData, fieldToUpdate, value);
-  const docRef = db.collection(collection).doc(id);
-  await docRef.update(updated);
+  try {
+    // Clean document that reference this image
+    const docData: any = await getDocument(`${collection}/${id}`);
+    const value = { ref: '', urls: [] };
+    const updated = set(docData, fieldToUpdate, value);
+    const docRef = db.collection(collection).doc(id);
+    await docRef.update(updated);
+  } catch (e) {
+    console.log(`Error while updating image references in document "${collection}/${id}" : ${e.message}`);
+  }
 
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
   imgSizeDirectory.forEach(async (sizeDir: string) => {
