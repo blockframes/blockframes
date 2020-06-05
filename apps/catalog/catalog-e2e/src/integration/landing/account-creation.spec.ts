@@ -30,6 +30,7 @@ describe('User can create new account', () => {
     const p1 = new AuthLoginPage();
     p1.fillSignup(USER);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
     p2.assertMoveToOrgHomepage();
   });
@@ -40,6 +41,7 @@ describe('Try with each fields except one', () => {
     const p1 = new AuthLoginPage();
     p1.fillSignupExceptOne(USER, 'email');
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   });
@@ -49,6 +51,7 @@ describe('Try with each fields except one', () => {
     const newEmail = `name${Date.now()}@cypress.com`;
     p1.fillSignupExceptOne(USER, 'name', newEmail);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   });
@@ -58,6 +61,7 @@ describe('Try with each fields except one', () => {
     const newEmail = `surname${Date.now()}@cypress.com`;
     p1.fillSignupExceptOne(USER, 'surname', newEmail);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   });
@@ -67,6 +71,7 @@ describe('Try with each fields except one', () => {
     const newEmail = `pwd${Date.now()}@cypress.com`;
     p1.fillSignupExceptOne(USER, 'password', newEmail);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   });
@@ -76,6 +81,7 @@ describe('Try with each fields except one', () => {
     const newEmail =`pwdC${Date.now()}@cypress.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   });
@@ -86,6 +92,7 @@ describe('Try email address', () => {
     const p1 = new AuthLoginPage();
     p1.fillSignup(USER);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   })
@@ -94,6 +101,7 @@ describe('Try email address', () => {
     p1.fillEmailInSignup(WRONG_EMAIL_FORM);
     p1.fillSignupExceptOne(USER, 'email');
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   })
@@ -106,6 +114,7 @@ describe('Try password', () => {
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.fillPasswordConfirmInSignup(WRONG_PASSWORD);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   })
@@ -118,6 +127,7 @@ describe('Try password', () => {
     p1.fillPasswordInSignup(SHORT_PASSWORD);
     p1.fillPasswordConfirmInSignup(SHORT_PASSWORD);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   })
@@ -130,6 +140,7 @@ describe('Try password', () => {
     p1.fillPasswordInSignup(LONG_PASSWORD);
     p1.fillPasswordConfirmInSignup(LONG_PASSWORD);
     p1.clickTermsAndCondition();
+    p1.clickPrivacyPolicy();
     p1.clickSignup();
     p1.assertStayInLoginView();
   })
