@@ -35,15 +35,11 @@ export class Layout implements OnInit, OnDestroy {
 
   constructor(private el: ElementRef) { }
 
-
-  ngOnInit() {
+  async ngOnInit() {
     const el = this.el.nativeElement;
-    if (ResizeObserver) {
-      this.observer = new ResizeObserver(([entry]) => this.width.next(entry.contentRect.width));
-      this.observer.observe(el);
-    } else {
-      // do something with window:resize
-    }
+    const resizeObs = (ResizeObserver in window) ? (await import('@juggle/resize-observer')).ResizeObserver : ResizeObserver;
+    this.observer = new resizeObs(([entry]) => this.width.next(entry.contentRect.width));
+    this.observer.observe(el);
     this.width = new BehaviorSubject<number>(this.el.nativeElement.clientWidth);
     this.layout$ = this.width.asObservable().pipe(
       map(width => getLayoutGrid(width)),
@@ -51,6 +47,7 @@ export class Layout implements OnInit, OnDestroy {
       shareReplay(1)
     );
   }
+
   ngOnDestroy() {
     this.observer.unobserve(this.el.nativeElement);
   }

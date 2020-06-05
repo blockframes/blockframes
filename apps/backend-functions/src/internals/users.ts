@@ -4,9 +4,9 @@ import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
 import { getDocument } from '../data/internals';
-import { userInvite } from '../templates/mail';
+import { userInvite, userFirstConnexion } from '../templates/mail';
 import { auth } from './firebase';
-import { sendMailFromTemplate } from './email';
+import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
 
 interface UserProposal {
@@ -62,5 +62,15 @@ export const createUserFromEmail = async (email: string): Promise<{ user: Public
   });
 
   return { user: { uid: user.uid, email }, password };
+};
 
+/**
+ * User setted his firstName for the first time
+ * Send an informative email to c8 admin 
+ * @param user 
+ */
+export const sendFirstConnexionEmail = async (user: PublicUser): Promise<any> => {
+  const mailRequest = await userFirstConnexion(user);
+  const from = await getSendgridFrom();
+  return sendMail(mailRequest, from);
 };

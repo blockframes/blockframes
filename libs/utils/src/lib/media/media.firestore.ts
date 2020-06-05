@@ -37,7 +37,6 @@ export function getImgSize(url: string) {
   } else if (url.includes('still')) {
     return { original: 0, xs: 50, md: 100, lg: 200 };
   } else {
-    console.warn('No bucket directory, exiting function');
-    return false;
+    throw new Error('No bucket directory, exiting function');
   }
 }
