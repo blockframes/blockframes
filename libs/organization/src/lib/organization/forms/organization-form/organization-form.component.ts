@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { orgActivity } from '../../+state/organization.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
@@ -12,7 +11,6 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormComponent {
-  activities = orgActivity;
 
   public storagePath = `orgs/${this.query.getActiveId()}/logo`;
   @Input() form: OrganizationForm;

@@ -25,7 +25,7 @@ export class OrganizationComponent implements OnInit {
   public app = app;
   public members: any[];
   public notifyCheckbox = new FormControl(false);
-  public storagePath : string;
+  public storagePath: string;
 
   public versionColumnsMovies = {
     'id': 'Id',
@@ -112,17 +112,20 @@ export class OrganizationComponent implements OnInit {
 
     const update = {
       denomination: this.orgForm.get('denomination').value,
-      email:this.orgForm.get('email').value,
+      email: this.orgForm.get('email').value,
+      addresses: this.orgForm.get('addresses').value,
+      activity: this.orgForm.get('activity').value,
+      fiscalNumber: this.orgForm.get('fiscalNumber').value,
       status: this.orgForm.get('status').value,
       appAccess: this.orgForm.appAccess.value,
     }
 
     // @TODO (#2987) (check org import via excel)
     await this.organizationService.update(this.orgId, update);
-    if(this.notifyCheckbox.value){
+    if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);
     }
-    
+
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
@@ -166,7 +169,7 @@ export class OrganizationComponent implements OnInit {
   public async uniqueOrgName() {
     const orgName = this.orgForm.get('denomination').get('full').value
     const unique = await this.organizationService.uniqueOrgName(orgName);
-    if(!unique){
+    if (!unique) {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
     }
   }

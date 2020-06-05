@@ -8,8 +8,8 @@ import { AddressForm } from '@blockframes/organization/forms/organization.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormAddressComponent {
-
-  constructor() {}
-
   @Input() form: AddressForm;
+
+  constructor() { }
+
 }

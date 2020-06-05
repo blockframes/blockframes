@@ -1,10 +1,10 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
 <section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
-  <article fxLayout="column" fxLayoutAlign="space-between start">
+  <article fxLayout="column" fxLayoutAlign="space-between start" fxFlex="45">
     <h4>{{ org.denomination.full }} <ng-container *ngIf="org.denomination.public">({{ org.denomination.public }})</ng-container></h4>
     <organization-display [organization]="org"></organization-display>
   </article>
-  <article *ngIf="orgForm" fxLayout="column" fxLayoutAlign="space-between start">
+  <article *ngIf="orgForm" fxLayout="column" fxFlex="45">
     <form [formGroup]="orgForm" fxLayout="column">
 
        <!-- Contact Information -->
@@ -39,22 +39,39 @@
         </mat-card-content>
       </mat-card>
 
-    <!-- Company Logo -->
-    <mat-card >
-      <mat-card-header>
-        <mat-card-title>Company Logo</mat-card-title>
-        <mat-card-subtitle>Upload company Logo</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <drop-cropper ratio="square" [storagePath]="storagePath" [form]="orgForm.get('logo')">
-          <h3 type>Logo</h3>
-          <p class="mat-body-2">Recommended : 512 x 512 px</p>
-          <p class="mat-caption">Accepted Formats : jpg, png</p>
-        </drop-cropper>
-      </mat-card-content>
-    </mat-card>
+      <!-- Company Logo -->
+      <mat-card class="company-logo">
+        <mat-card-header>
+          <mat-card-title>Company Logo</mat-card-title>
+          <mat-card-subtitle>Upload company Logo</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <drop-cropper ratio="square" [storagePath]="storagePath" [form]="orgForm.get('logo')">
+            <h3 type>Logo</h3>
+            <p class="mat-body-2">Recommended : 512 x 512 px</p>
+            <p class="mat-caption">Accepted Formats : jpg, png</p>
+          </drop-cropper>
+        </mat-card-content>
+      </mat-card>
 
-      <!-- Contact Information -->
+      <!-- Legal Entity -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Company Description</mat-card-title>
+        </mat-card-header>
+        <mat-card-content fxLayout="column">
+          <organization-form-description [activity]="orgForm.get('activity')" [fiscalNumber]="orgForm.get('fiscalNumber')" ></organization-form-description>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Headquarters Address -->
+      <mat-card class="company-address">
+        <mat-card-content>
+          <organization-form-address [form]="orgForm.get('addresses').get('main')"></organization-form-address>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Admin settings -->
       <mat-card>
         <mat-card-header>
           <mat-card-title>Admin settings</mat-card-title>
