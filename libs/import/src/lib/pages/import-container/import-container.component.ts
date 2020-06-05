@@ -8,7 +8,7 @@ import { ViewExtractedOrganizationsComponent } from '../../components/view-extra
 import { SpreadsheetImportEvent } from '../../components/import-spreadsheet/import-spreadsheet.component';
 
 @Component({
-  selector: 'import-import-container',
+  selector: 'import-container',
   templateUrl: './import-container.component.html',
   styleUrls: ['./import-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

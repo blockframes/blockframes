@@ -2,7 +2,7 @@
 <section fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" routerLink="/c/o/dashboard/import">
-      Import orgs <mat-icon svgIcon="arrow_downward"></mat-icon>
+      <span>Import orgs</span><mat-icon svgIcon="arrow_downward"></mat-icon>
     </button>
     <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
       [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
@@ -15,7 +15,7 @@
         </ng-template>
       </ng-template>
       <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link">
+        <a mat-icon-button [routerLink]="edit.link">
           <mat-icon svgIcon="pencil"></mat-icon>
         </a>
       </ng-template>

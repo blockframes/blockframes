@@ -1,4 +1,4 @@
-<import-import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></import-import-spreadsheet>
+<import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></import-spreadsheet>
 <import-view-extracted-movies *ngIf="fileType === 'movies'" #viewExtractedMoviesComponent></import-view-extracted-movies>
 <import-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedContractsComponent></import-view-extracted-contracts>
 <import-view-extracted-rights *ngIf="fileType === 'rights'" #viewExtractedRightsComponent></import-view-extracted-rights>
