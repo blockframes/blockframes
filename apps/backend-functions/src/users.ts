@@ -1,15 +1,16 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
 import { getDocument, getFromEmail } from './data/internals';
-import { getSendgridFrom } from '@blockframes/utils/apps';
-import { sendFirstConnexionEmail } from './internals/users';
+import { getSendgridFrom, sendgridUrl, App } from '@blockframes/utils/apps';
+import { templateIds } from '@env';
+import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -174,4 +175,37 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
   }
 
   await sendMail(sendContactEmail(`${user.firstName} ${user.lastName}`, user.email, subject, message), from);
+}
+
+
+/**
+ * Create an user.
+ * Used in admin panel by blockframes admins only
+ * @param data 
+ * @param context 
+ */
+export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
+  const { email, orgName, app } = data;
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const blockframesAdmin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
+  if (!blockframesAdmin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+
+  if (!email) {
+    throw new Error('Email is mandatory for creating user');
+  }
+
+  const newUser = await createUserFromEmail(email);
+
+  const urlToUse = sendgridUrl[app];
+  const from = getSendgridFrom(app);
+
+  const templateId = templateIds.user.credentials.joinOrganization[app];
+  const template = userInvite(email, newUser.password, orgName, urlToUse, templateId);
+  await sendMailFromTemplate(template, from);
+
+  // We don't have the time to wait for the trigger onUserCreate,
+  // So we create it here first.
+  await db.collection('users').doc(newUser.user.uid).set(newUser.user);
+  return newUser.user;
 }

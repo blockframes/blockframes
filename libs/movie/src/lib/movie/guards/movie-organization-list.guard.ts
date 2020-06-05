@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard } from 'akita-ng-fire';
-import { MovieState, MovieService, MovieQuery, MovieStore } from '../+state';
+import { MovieState, MovieService, MovieStore } from '../+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
@@ -10,7 +10,6 @@ export class MovieOrganizationListGuard extends CollectionGuard<MovieState> {
 
   constructor(
     service: MovieService,
-    private query: MovieQuery,
     private organizationQuery: OrganizationQuery,
     private store: MovieStore,
   ) {

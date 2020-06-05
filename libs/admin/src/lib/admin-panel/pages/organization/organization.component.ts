@@ -162,10 +162,6 @@ export class OrganizationComponent implements OnInit {
     return `/c/o/organization/${orgId}/view/members`;
   }
 
-  public getOrgEditPath(orgId: string) {
-    return `/c/o/organization/${orgId}/view/org`;
-  }
-
   public async uniqueOrgName() {
     const orgName = this.orgForm.get('denomination').get('full').value
     const unique = await this.organizationService.uniqueOrgName(orgName);
@@ -173,5 +169,4 @@ export class OrganizationComponent implements OnInit {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
     }
   }
-
 }

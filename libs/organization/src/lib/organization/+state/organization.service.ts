@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
@@ -13,7 +13,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { createPermissions } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService, OrganizationMember, createOrganizationMember } from '@blockframes/user/+state';
+import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
 import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
 import { network, baseEnsDomain } from '@env';
@@ -71,11 +71,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * create related documents (permissions, apps permissions, user...).
   */
   async onCreate(org: Organization, { write }: WriteOptions) {
-    const user = this.authQuery.user;
     const orgId: string = org.id;
     const permissions = createPermissions({
       id: orgId,
-      roles: { [user.uid]: 'superAdmin' }
+      roles: { [org.userIds[0]]: 'superAdmin' }
     });
 
     return Promise.all([
@@ -84,11 +83,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>) {
-    const user = this.authQuery.user;
+  public async addOrganization(organization: Partial<Organization>, user: User | PublicUser = this.authQuery.user): Promise<string> {
     const newOrganization = createOrganization({
-      userIds: [user.uid],
       ...organization,
+      userIds: [user.uid],
     });
 
     const orgId = await this.add(newOrganization);

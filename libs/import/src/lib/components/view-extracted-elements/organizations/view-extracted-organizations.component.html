@@ -1,0 +1,24 @@
+<article>
+  <h1>Import Organizations</h1>
+  <section class="help-section" fxLayout="column" fxLayoutAlign="center">
+    <p>Please select the organizations and admins to create.</p>
+    <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
+  </section>
+  <ng-container *ngIf="orgsToUpdate.data.length || orgsToCreate.data.length else isLoading">
+    <section class="result-tables">
+      <ng-container *ngIf="orgsToUpdate.data.length">
+        <h3>Organizations to Update</h3>
+        <import-table-extracted-organizations [rows]="orgsToUpdate" mode="update"></import-table-extracted-organizations>
+      </ng-container>
+      <ng-container *ngIf="orgsToCreate.data.length">
+        <h3>Organizations to Create</h3>
+        <import-table-extracted-organizations [rows]="orgsToCreate" mode="create"></import-table-extracted-organizations>
+      </ng-container>
+    </section>
+  </ng-container>
+  <ng-template #isLoading>
+    <section fxLayout="column" fxLayoutAlign="center center">
+      <mat-spinner></mat-spinner>
+    </section>
+  </ng-template>
+</article>
