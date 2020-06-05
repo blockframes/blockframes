@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { db } from './internals/firebase';
-import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userFirstConnexion } from './templates/mail';
+import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
@@ -9,6 +9,7 @@ import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom } from '@blockframes/utils/apps';
+import { sendFirstConnexionEmail } from './internals/users';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -103,19 +104,9 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-
-export async function onUserCreateDocument(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
-  ;
-  const after = change.after.data() as PublicUser;
-
-  if (!!after.firstName) {
-    // User setted his firstName for the first time
-    // Send an informative email to c8 admin 
-    const mailRequest = await userFirstConnexion(after);
-    const from = await getSendgridFrom();
-    await sendMail(mailRequest, from);
-  }
-
+export async function onUserCreateDocument(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
+  const after = snap.data() as PublicUser;
+  if (!!after.firstName) { await sendFirstConnexionEmail(after) }
   return true;
 }
 
@@ -125,11 +116,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
 
 
   if ((before.firstName === undefined || before.firstName === '') && !!after.firstName) {
-    // User setted his firstName for the first time
-    // Send an informative email to c8 admin 
-    const mailRequest = await userFirstConnexion(after);
-    const from = await getSendgridFrom();
-    await sendMail(mailRequest, from);
+    await sendFirstConnexionEmail(after);
   }
 
   const promises: Promise<any>[] = [];
