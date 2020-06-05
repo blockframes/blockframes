@@ -44,7 +44,7 @@ export class UsersComponent implements OnInit {
 
   async ngOnInit() {
     // Temp
-    this.adminService.loadAnalyticsData();
+    this.adminService.getAnalyticsActiveUsers();
 
     const users = await this.userService.getAllUsers();
     this.rows = users.map(u => ({

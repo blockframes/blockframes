@@ -74,6 +74,9 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
 export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
 
+/** Trigger: REST call bigQuery to fetch analytics active users */
+export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery.getAnalyticsActiveUsers));
+
 //--------------------------------
 //      Player  Management      //
 //--------------------------------
