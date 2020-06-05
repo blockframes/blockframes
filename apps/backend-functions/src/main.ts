@@ -38,6 +38,11 @@ export const onUserCreate = functions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
 
+export const onUserCreateDocument = onDocumentCreate(
+  '/users/{userID}',
+  users.onUserCreateDocument
+);
+
 export const onUserUpdate = onDocumentUpdate(
   '/users/{userID}',
   users.onUserUpdate
@@ -73,9 +78,9 @@ export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 //      Player  Management      //
 //--------------------------------
 
-export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
+export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
+export const uploadVideo = functions.https.onCall(logErrors(uploadToJWPlayer));
 
 /**
  * Trigger: REST call to the /admin app
