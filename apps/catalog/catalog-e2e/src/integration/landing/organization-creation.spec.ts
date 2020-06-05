@@ -57,6 +57,7 @@ function createNewUserAndNavigate(user: Partial<User>) {
   const p2: AuthLoginPage = p1.clickSignup();
   p2.fillSignup(user);
   p2.clickTermsAndCondition();
+  p2.clickPrivacyPolicy();
   return p2.clickSignupToOrgHome();
 }
 
