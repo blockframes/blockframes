@@ -108,6 +108,8 @@ describe('User create a screening', () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
+    // Wait notifications
+    cy.wait(5000);
     p2.verifyNotification(ORG_NAME, true);
   });
 
