@@ -20,7 +20,8 @@
     "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
     "dajung": "blockframes-dajung",
-    "remco": "blockframes-remco"
+    "remco": "blockframes-remco",
+    "sebastian": "blockframes-sebastian"
   },
   "targets": {
     "blockframes": {
@@ -198,5 +199,12 @@
         ]
       }
     },
+    "blockframes-sebastian": {
+      "hosting": {
+        "festival": [
+          "blockframes-sebastian"
+        ]
+      }
+    }
   }
 }
