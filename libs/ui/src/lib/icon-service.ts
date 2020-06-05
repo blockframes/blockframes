@@ -201,6 +201,7 @@ export const icons = [
     name: 'radio_box_marked',
     url: 'assets/icons/radio_box_marked.svg'
   },
+  { name: 'read', url: 'assets/icons/read.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
