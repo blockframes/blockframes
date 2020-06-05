@@ -20,7 +20,7 @@
     <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
   <ng-template colRef="denomination" let-denomination>
-    {{ denomination.full }}
+    {{ denomination.full }} <ng-container *ngIf="denomination.public">({{ denomination.public }})</ng-container>
   </ng-template>
   <ng-template colRef="appAccess" let-appAccess>
     <ul>

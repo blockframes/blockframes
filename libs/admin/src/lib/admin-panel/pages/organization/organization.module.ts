@@ -19,6 +19,7 @@ import { OrganizationComponent } from './organization.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
     OrganizationDisplayModule,
     TableFilterModule,
     ImageReferenceModule,
+    CropperModule,
   ],
   declarations: [
     OrganizationComponent,

@@ -15,6 +15,8 @@ import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember } from '@blockframes/user/+state';
 import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
+import { network, baseEnsDomain } from '@env';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -148,5 +150,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const users = await Promise.all(promises);
     const role = await this.permissionsService.getValue(orgId);
     return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
+  }
+
+  public async uniqueOrgName(orgName: string) : Promise<boolean> {
+    let uniqueOnEthereum = false;
+    let uniqueOnFirestore = false;
+  
+    const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
+    const provider = getProvider(network);
+    const orgEthAddress = await provider.resolveName(orgENS);
+    uniqueOnEthereum = !orgEthAddress ? true : false;
+    uniqueOnFirestore = await this.orgNameExist(orgName).then(exist => !exist);
+    return uniqueOnEthereum && uniqueOnFirestore;
   }
 }
