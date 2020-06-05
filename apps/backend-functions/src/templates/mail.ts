@@ -168,6 +168,7 @@ const organizationRequestAccessToAppTemplate = (orgId: string, appUrl: string = 
 
 /**
  * @param user
+ * @TODO (#2826) add application used when first connecting
  */
 const userFirstConnexionTemplate = (user: PublicUser) =>
   `
