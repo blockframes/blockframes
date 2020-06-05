@@ -23,32 +23,45 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrCreateUserByMail = async (email: string, orgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
+export const getOrInviteUserByMail = async (email: string, orgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
 
   try {
     const { uid } = await auth.getUserByEmail(email);
     const user = await getDocument<PublicUser>(`users/${uid}`);
     return user || { uid, email }
   } catch {
-    const password = generatePassword();
+    const newUser = await createUserFromEmail(email);
 
-    // User does not exists, send them an email.
-    const user = await auth.createUser({
-      email,
-      password,
-      emailVerified: true,
-      disabled: false
-    });
-
+    // User does not exists, send him an email.
     const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
     const urlToUse = sendgridUrl[app];
     const from = getSendgridFrom(app);
 
     const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, password, org.denomination.full, urlToUse, templateId);
+    const template = userInvite(email, newUser.password, org.denomination.full, urlToUse, templateId);
     await sendMailFromTemplate(template, from);
-    return { uid: user.uid, email };
+    return newUser.user;
   }
+};
+
+
+/**
+ * Creates an user from email address
+ * @param email 
+ */
+export const createUserFromEmail = async (email: string): Promise<{ user: PublicUser, password: string }> => {
+
+  const password = generatePassword();
+
+  // User does not exists, send them an email.
+  const user = await auth.createUser({
+    email,
+    password,
+    emailVerified: true,
+    disabled: false
+  });
+
+  return { user: { uid: user.uid, email }, password };
 };
 
 /**

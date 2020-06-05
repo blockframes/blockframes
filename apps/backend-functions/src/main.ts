@@ -29,6 +29,13 @@ import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
 import { onFileUploadEvent, onImageDeletion } from './internals/image';
 
+//--------------------------------
+//    Users Management    //
+//--------------------------------
+
+/** Trigger: REST call to invite a list of users by email. */
+export const createUser = functions.https.onCall(logErrors(users.createUser));
+
 /**
  * Trigger: when user creates an account.
  *
@@ -61,6 +68,10 @@ export const onUserDelete = onDocumentDelete(
 /** Trigger: REST call to send a reset password link to a user. */
 export const sendResetPasswordEmail = functions.https
   .onCall(users.startResetPasswordEmail);
+
+//--------------------------------
+//        Misc Management       //
+//--------------------------------
 
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
