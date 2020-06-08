@@ -1,7 +1,7 @@
 import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError, startWith, filter } from 'rxjs/operators';
+import { catchError, startWith, filter } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -50,7 +50,7 @@ function isFile(ref: string): boolean {
   viewProviders: [DropZoneDirective],
   animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements OnDestroy, OnInit {
+export class CropperComponent implements OnInit, OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -134,14 +134,11 @@ export class CropperComponent implements OnDestroy, OnInit {
       }
       this.nextStep('upload');
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.ref = this.storage.ref(`${this.storagePath}/original/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
-      this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(async () => {
-          this.nextStep('upload_complete')
-        })
-      );
+      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`)
+      this.form.blob.setValue(blob);
+
     } catch (err) {
       console.error(err);
     }
@@ -153,12 +150,9 @@ export class CropperComponent implements OnDestroy, OnInit {
   }
 
   delete() {
-    const deleteSubscription$ = this.previewUrl.subscribe(path => {
-      this.storage.storage.refFromURL(path).delete();
-      this.form.reset();
-      this.nextStep('drop');
-    });
-    this.sub.add(deleteSubscription$);
+    this.form.delete.setValue(true);
+    this.form.newRef.setValue('');
+    this.nextStep('drop');
   }
 
   nextStep(name: CropStep) {
