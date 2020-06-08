@@ -1,7 +1,7 @@
 <mat-list-item>
   <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture" />
   <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo" />
-  <p matLine class="mat-body-1">
+  <p *ngIf="!(xs$ | async)" matLine class="mat-body-1">
     {{ invitation.message }}
   </p>
   <span matLine>
@@ -17,3 +17,8 @@
     </div>
   </a>
 </mat-list-item>
+<ng-container *ngIf="xs$ | async">
+  <p class="mat-body-1">
+    {{ invitation.message }}
+  </p>
+</ng-container>

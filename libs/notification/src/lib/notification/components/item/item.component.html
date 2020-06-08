@@ -1,7 +1,7 @@
 
 <mat-list-item>
   <img matListAvatar [asset]="notification.placeholderUrl" [ref]="notification.imgRef" alt="Notification picture"/>
-  <p matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+  <p *ngIf="!(xs$ | async)" matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
   <span matLine>
     <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
   </span>
@@ -18,3 +18,6 @@
     </div>
   </a>
 </mat-list-item>
+<ng-container *ngIf="xs$ | async">
+  <p class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
+</ng-container>

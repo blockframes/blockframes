@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Notification, NotificationService } from '../../+state';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'notification-item',
@@ -10,7 +11,9 @@ import { Notification, NotificationService } from '../../+state';
 export class ItemComponent implements OnInit {
 
   @Input() notification: Notification;
-  constructor(private service: NotificationService) { }
+  public xs$ = this.breakpointsService.xs;
+
+  constructor(private service: NotificationService, private breakpointsService: BreakpointsService) { }
 
   ngOnInit(): void {
   }
