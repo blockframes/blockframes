@@ -12,6 +12,9 @@ function createImgRefControl(reference: ImgRef) {
       md: new FormControl(urls.md),
       lg: new FormControl(urls.lg)
     }),
+    blob: new FormControl(),
+    newRef: new FormControl(''),
+    delete: new FormControl(false)
   }
 }
 
@@ -26,4 +29,7 @@ export class ImgRefForm extends FormEntity<ImgRefControl> {
 
   get ref() { return this.get('ref') }
   get urls() { return this.get('urls') }
+  get blob() { return this.get('blob') }
+  get newRef() { return this.get('newRef') }
+  get delete() { return this.get('delete') }
 }
