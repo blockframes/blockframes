@@ -149,14 +149,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `Your request to attend event "${event.title}" have been sent.`
+              message: `Your request to attend event "${event.title}" has been sent.`
             };
           });
         });
 
         return {
           date: toDate(notification.date),
-          message: `Your request to attend event "${notification.docId}" have been sent.`,
+          message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `/c/o/dashboard/event/${notification.docId}`

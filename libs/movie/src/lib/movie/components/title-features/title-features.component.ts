@@ -11,7 +11,7 @@ interface TitleFeature {
 
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
     const convertedGenres = movie.main?.genres.map(genre => getLabelBySlug('GENRES', genre));
-    const convertedRunTime = `${movie.main?.totalRunTime} min`;
+    const convertedRunTime = typeof movie.main?.totalRunTime === 'string' ? 'TBD' : `${movie.main?.totalRunTime} min`;
     const convertedOriginalLanguages = movie.main?.originalLanguages.map(language => getLabelBySlug('LANGUAGES', language));
     const convertedOriginCountries = movie.main?.originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
     const statusLabel = getLabelBySlug('MOVIE_STATUS', movie.main?.status);
