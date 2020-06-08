@@ -64,14 +64,13 @@ export class ProfileViewComponent implements OnInit {
 
         if (avatar.delete.value) {
           this.storage.ref(ref).delete();
-          avatar.ref.setValue('');
+          user.avatar.ref = '';
           avatar.delete.setValue(false);
         } else if (!!blob) {
           if (ref !== '') {
             this.storage.ref(ref).delete();
           }
           this.storage.ref(newRef).put(blob);
-          avatar.ref.setValue(newRef);
         }
 
         delete user.avatar['blob'];

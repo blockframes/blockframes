@@ -1,7 +1,7 @@
 import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { DropZoneDirective } from '../drop-zone.directive'
-import { catchError, startWith, filter } from 'rxjs/operators';
+import { DropZoneDirective } from '../drop-zone.directive';
+import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -15,7 +15,7 @@ const mediaRatio = {
   banner: 16 / 9,
   poster: 3 / 4,
   still: 7 / 5
-}
+};
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -86,7 +86,7 @@ export class CropperComponent implements OnInit, OnDestroy {
     this.cropRatio = mediaRatio[ratio];
     const el: HTMLElement = this._elementRef.nativeElement;
     this.parentWidth = el.clientWidth;
-    this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
+    this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`);
   }
   @Input() form?: ImgRefForm;
   @Input() setWidth?: number;
@@ -98,15 +98,11 @@ export class CropperComponent implements OnInit, OnDestroy {
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   ngOnInit() {
-    const sub = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      filter(imgRef => imgRef.ref)
-    ).subscribe(imgRef => {
-      this.previewUrl = of(imgRef.urls.original);
-      this.step.next('show');
-    });
-
-    this.sub.add(sub);
+    // show current image
+    if (this.form.ref.value !== '') {
+      this.ref = this.storage.ref(this.form.ref.value);
+      this.goToShow();
+    }
   }
 
   ///////////
@@ -124,21 +120,19 @@ export class CropperComponent implements OnInit, OnDestroy {
     this.croppedImage = event.base64;
   }
 
-  /**
-   * Upload the image
-   */
   async cropIt() {
     try {
       if (!this.croppedImage) {
         throw new Error('No image cropped yet');
       }
-      this.nextStep('upload');
+
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
       const blob = b64toBlob(this.croppedImage);
 
-      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`)
-      this.form.blob.setValue(blob);
+      this.nextStep('show');
 
+      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
+      this.form.blob.setValue(blob);
     } catch (err) {
       console.error(err);
     }
@@ -150,6 +144,10 @@ export class CropperComponent implements OnInit, OnDestroy {
   }
 
   delete() {
+    if (this.croppedImage) {
+      this.croppedImage = '';
+    }
+
     this.form.delete.setValue(true);
     this.form.newRef.setValue('');
     this.nextStep('drop');
