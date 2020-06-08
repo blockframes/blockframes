@@ -6,7 +6,7 @@ import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-m
 
 @Component({
   selector: 'festival-root',
-  template: '<router-outlet></router-outlet><safari-banner><safari-banner>',
+  template: '<router-outlet></router-outlet><cookie-banner></cookie-banner><safari-banner><safari-banner>',
   styles: [':host{ display: block; height: 100vh; }'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

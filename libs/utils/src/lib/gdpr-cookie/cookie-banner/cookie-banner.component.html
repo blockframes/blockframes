@@ -1,0 +1,11 @@
+<mat-card *ngIf="!hasAccepted">
+  <mat-card-content fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center">
+    <p fxFlex="shrink">By continuing to browse this site, you are agreeing with our
+      <a href="javascript:void(0)" (click)="openPrivacyPolicy()">privacy policy</a>
+      and the use of cookies,
+      whose purpose is to provide personalize content, deliver our services and monitor analytics.
+      You can change your cookie preferences at any time.</p>
+    <button fxFlex="1 0 auto" mat-button>Change preferences</button>
+    <button fxFlex="1 0 auto" mat-flat-button color="primary" (click)="userAcceptedCookies()">Accept cookies</button>
+  </mat-card-content>
+</mat-card>

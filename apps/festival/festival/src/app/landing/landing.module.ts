@@ -12,7 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-
+import { CookieFormModule } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie-form.module';
 
 @NgModule({
   declarations: [LandingComponent],
@@ -21,6 +21,8 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     LandingModule,
     ImageReferenceModule,
+    CookieFormModule,
+
     // Material
     MatToolbarModule,
     MatButtonModule,

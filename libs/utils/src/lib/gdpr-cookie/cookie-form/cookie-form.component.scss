@@ -1,0 +1,15 @@
+mat-card {
+  mat-card-content {
+    a {
+      text-decoration: underline;
+    }
+    mat-checkbox {
+      margin: 0 16px;
+    }
+    mat-divider {
+      margin: 16px;
+      position: inherit;
+      width: auto;
+    }
+  }
+}

@@ -44,6 +44,7 @@ import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
+import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -79,6 +80,7 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
     FestivalModule,
 
     SafariBannerModule,
+    CookieBannerModule,
   ],
   providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
   bootstrap: [AppComponent]

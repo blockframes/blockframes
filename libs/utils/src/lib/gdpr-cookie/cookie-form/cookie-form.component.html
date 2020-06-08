@@ -1,0 +1,83 @@
+<mat-card>
+  <mat-card-content>
+
+    <section>
+      <h3>CASCADE 8, publisher of ARCHIPEL MARKET</h3>
+      <p>We value your privacy.</p>
+
+      <p>You can set your consent preferences and determine how you want your data to be used based on the purposes below.
+      You may set your preferences for us independently from those of third-party partners.
+      Each purpose has a description so that you know how we and partners use your data.</p>
+    </section>
+
+    <section>
+      <mat-radio-group aria-label="Select an option">
+        <mat-radio-button value="1">Option 1</mat-radio-button>
+        <mat-radio-button value="2">Option 2</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-checkbox (change)="masterToggle($event)">Reject All</mat-checkbox>
+      <mat-checkbox [checked]="true">Accept All</mat-checkbox>
+
+      <mat-divider></mat-divider>
+
+      <h5>CASCADE 8</h5>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Information storage and access</p>
+        <mat-slide-toggle [checked]="form.get('cascade8').value" name="cascade8" (change)="toggleCookie($event)"></mat-slide-toggle>
+      </div>
+      <p class="mat-caption">The storage of information, such as images, content or credentials for better performances and automatic log in.</p>
+
+      <h5>THIRD PARTY PARTNERS</h5>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Analytics and behavioral measures</p>
+        <mat-slide-toggle checked></mat-slide-toggle>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Communication service</p>
+        <mat-slide-toggle checked></mat-slide-toggle>
+      </div>
+    </section>
+    <section>
+      <mat-divider></mat-divider>
+
+      <p>You can set consent preferences for each individual third-party company below.</p>
+
+      <p>Expand each company list item to see what purposes they use data for to help make your choices.
+      In some cases, companies may disclose that they use your data without asking for your consent,
+      based on their legitimate interests.</p>
+
+      <mat-checkbox>Reject All</mat-checkbox>
+      <mat-checkbox>Accept All</mat-checkbox>
+    </section>
+    <section>
+      <mat-divider></mat-divider>
+
+      <h5>GOOGLE</h5>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
+        <mat-slide-toggle [checked]="form.get('google').value" name="google" (change)="toggleCookie($event)"></mat-slide-toggle>
+      </div>
+      <h5>INTERCOM</h5>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>
+        <mat-slide-toggle [checked]="form.get('intercom').value" name="intercom" (change)="toggleCookie($event)"></mat-slide-toggle>
+      </div>
+
+      <h5>YANDEX</h5>
+      <div fxLayout="row" fxLayoutAlign="space-between">
+        <p>Yandex is used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
+        <mat-slide-toggle [checked]="form.get('yandex').value" name="yandex" (change)="toggleCookie($event)"></mat-slide-toggle>
+      </div>
+    </section>
+
+    <section fxLayout="row" fxLayoutAlign="center center">
+      <button mat-flat-button color="primary">Save and quit</button>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <a href="javascript:void(0)" class="mat-caption">Privacy Policy</a>
+
+  </mat-card-content>
+</mat-card>
