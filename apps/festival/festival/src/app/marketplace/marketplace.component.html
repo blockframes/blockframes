@@ -25,6 +25,13 @@
         <mat-icon mat-list-icon svgIcon="heart_fill"></mat-icon>
         <span mat-line><b>My Wishlist</b></span>
       </a>
+      <ng-container *ngIf="canAccessDashboard(org$ | async)">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/dashboard/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+          <span matLine><b>My Dashboard</b></span>
+        </a>
+      </ng-container>
     </mat-nav-list>
   </aside>
 
