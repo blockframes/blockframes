@@ -138,6 +138,8 @@ export class CropperComponent implements OnInit, OnDestroy {
       })
       this.form.markAsDirty();
 
+      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
+      this.form.blob.setValue(blob);
     } catch (err) {
       console.error(err);
     }
