@@ -64,7 +64,7 @@ const queryAnalyticsActiveUsers = `
   SELECT
     count(*) as page_view, 
     user_id,
-    MIN(event_date) as fist_connexion,
+    MIN(event_date) as first_connexion,
     MAX(event_date) as last_connexion
   FROM
     \`${bigQueryAnalyticsTable}*\`,

@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core';
 import { StoreConfig, Store } from '@datorama/akita';
 
+
+export interface ConnectedUserInfo {
+  uid : string;
+  firstConnexion: Date;
+  lastConnexion: Date;
+  pageView: number;
+}
+
 export interface AdminState {
   analytics: {
-    connectedUsers: any[]
+    connectedUsers: ConnectedUserInfo[]
   }
 }
 

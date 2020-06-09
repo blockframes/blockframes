@@ -19,6 +19,7 @@ export class UsersComponent implements OnInit {
     'org': 'Organization',
     'position': 'Position',
     'email': 'Email',
+    'firstConnexion': 'First connexion',
     'lastConnexion': 'Last connexion',
     'edit': 'Edit',
   };
@@ -31,6 +32,7 @@ export class UsersComponent implements OnInit {
     'org',
     'position',
     'email',
+    'firstConnexion',
     'lastConnexion',
     'edit',
   ];
@@ -43,12 +45,13 @@ export class UsersComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // Temp
-    this.adminService.getAnalyticsActiveUsers();
+    // @TODO (#2952) Temp => moove to  a guard
+    await this.adminService.loadAnalyticsData();
 
     const users = await this.userService.getAllUsers();
     this.rows = users.map(u => ({
       ...u,
+      firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
       lastConnexion: this.adminQuery.getLastConnexion(u.uid),
       edit: {
         id: u.uid,
