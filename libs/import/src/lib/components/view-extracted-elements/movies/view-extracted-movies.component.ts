@@ -818,7 +818,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
           const promotionalElement = createPromotionalElement({
             label: 'Banner',
-            media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
+            media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
             ratio: 'rectangle'
           });
 

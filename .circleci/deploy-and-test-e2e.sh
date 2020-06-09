@@ -25,8 +25,8 @@ npx ng build backend-ops --configuration=$ENV
 echo "prepare the ci for testing"
 npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
 
-echo "wait 3 minutes for google to acknowledge the new functions."
-sleep 180
+echo "wait for maintenance mode to end (slightly more than 8 minutes)"
+sleep 500
 
 npm run e2e:catalog && test1=$? || test1=$?
 npm run e2e:festival && test2=$? || test2=$?
