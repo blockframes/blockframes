@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
@@ -38,7 +38,9 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
+      // This is handled by a backend function
+      delete movie.promotionalElements; // @TODO (##2987)
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.festival = true;

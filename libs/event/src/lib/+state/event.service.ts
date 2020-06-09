@@ -52,6 +52,7 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
+  private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
     protected store: EventStore,
@@ -66,22 +67,16 @@ export class EventService extends CollectionService<EventState> {
     super(store);
   }
 
-  /** Gets analytics for one event and sync them. */
-  public syncEventAnalytics() {
-    return combineLatest([
-      this.query.selectActiveId(),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([eventId, analyticsIds]) => !analyticsIds.includes(eventId)),
-      switchMap(([eventId]) => {
-        this.store.analytics.setActive(eventId);
-        const f = this.functions.httpsCallable('getEventAnalytics');
-        return f({ eventIds: [eventId] });
-      }),
-      tap(analytics => {
-        this.store.analytics.upsertMany(analytics);
-      })
-    )
+  public async queryAnalytics(eventId: string): Promise<EventsAnalytics> {
+    if (this.analytics[eventId]) {
+      return this.analytics[eventId];
+    } else {
+      const f = this.functions.httpsCallable('getEventAnalytics');
+      const analytics = await f({ eventIds: [eventId] }).toPromise();
+      const eventAnalytics = analytics.find(a => a.eventId === eventId);
+      this.analytics[eventId] = eventAnalytics;
+      return eventAnalytics;
+    }
   }
 
   /** Verify if the current user / organisation is ownr of an event */

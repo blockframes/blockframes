@@ -31,7 +31,9 @@ export class OrganizationComponent implements OnInit {
         if (this.organizationForm.invalid) {
           throw new Error('Your organization profile informations are not valid');
         }
-        this.service.update(this.query.getActiveId(), this.organizationForm.value);
+        const org = this.organizationForm.value;
+        delete org.logo; // @TODO (##2987)
+        this.service.update(this.query.getActiveId(), org);
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }
     } catch (error) {
