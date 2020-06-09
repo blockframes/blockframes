@@ -65,7 +65,8 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   const directory = dirname(filePath);
   const workingDir = join(tmpdir(), 'tmpFiles');
-  const tmpFilePath = join(workingDir, 'source.webp');
+  const tmpFileName = ` ${Math.random().toString(36).substring(7)}-${new Date().getTime()}.webp`;
+  const tmpFilePath = join(workingDir, tmpFileName);
 
   // Ensure directory exists with fs.ensureDir
   await ensureDir(workingDir);
