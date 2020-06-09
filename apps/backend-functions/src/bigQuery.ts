@@ -117,8 +117,6 @@ async function executeQuery(query: any) {
   const options = {
     query,
     timeoutMs: 100000,
-    // useLegacySql: false,
-    //location: 'US',
   };
 
   return bigqueryClient.query(options);
