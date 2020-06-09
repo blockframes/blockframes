@@ -2,7 +2,7 @@ import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
-import { OrgAppAccess, createOrgAppAccess } from '@blockframes/utils/apps';
+import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 
 
 type Timestamp = firestore.Timestamp;
@@ -147,4 +147,12 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
 
 export function orgName(org: PublicOrganization){
   return org.denomination.public || org.denomination.full
+}
+
+/**
+ * This check if org have access to a specific module in at least one app
+ * @param org 
+ */
+export function canAccessModule(module: Module, org: OrganizationDocument) {
+  return app.some(a => org.appAccess[a]?.[module])
 }

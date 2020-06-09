@@ -3,13 +3,13 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument, PublicUser } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db, getUser } from "../firebase";
-import { getAdminIds, getDocument, canAccessModule } from "../../data/internals";
+import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails";
 import { getAppName, getSendgridFrom, App, sendgridUrl } from "@blockframes/utils/apps";
-import { orgName } from "@blockframes/organization/+state/organization.firestore";
+import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 
 
 function getEventLink(org: OrganizationDocument) {
