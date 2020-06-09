@@ -39,9 +39,8 @@ export class EventReviewComponent implements OnInit {
       switchMap((eventId: string) => this.service.queryAnalytics(eventId)),
       filter(analytics => !!analytics),
       map(analytics => {
-        return analytics.eventUsers.map(event =>
-          ({ ...event, name: `${event.firstName} ${event.lastName}` })
-        );
+        const transformEvent = (event: EventAnalytics) => ({ ...event, name: `${event.firstName} ${event.lastName}` });
+        return analytics.eventUsers.map(transformEvent);
       })
     );
 
