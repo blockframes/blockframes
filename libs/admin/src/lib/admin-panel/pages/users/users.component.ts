@@ -45,7 +45,7 @@ export class UsersComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    // @TODO (#2952) Temp => moove to  a guard
+    // @TODO (#2952) Move to a guard if stats are needed on another pages
     await this.adminService.loadAnalyticsData();
 
     const users = await this.userService.getAllUsers();
