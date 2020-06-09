@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { getValue } from '@blockframes/utils/helpers';
+import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
 import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
@@ -37,6 +37,8 @@ export class UsersComponent implements OnInit {
     'edit',
   ];
   public rows: any[] = [];
+  public userListLoaded = false;
+
   constructor(
     private userService: UserService,
     private cdRef: ChangeDetectorRef,
@@ -63,6 +65,7 @@ export class UsersComponent implements OnInit {
       }
     }));
 
+    this.userListLoaded = true;
     this.cdRef.markForCheck();
   }
 
@@ -77,6 +80,20 @@ export class UsersComponent implements OnInit {
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  public exportTable() {
+    const exportedRows = this.rows.map(r => ({
+      uid: r.uid,
+      firstName: r.firstName,
+      lastName: r.lastName,
+      orgId: r.orgId,
+      position: r.position,
+      email: r.email,
+      firstConnexion: r.firstConnexion,
+      lastConnexion: r.lastConnexion,
+    }))
+    downloadCsvFromJson(exportedRows, 'user-list');
   }
 
 }
