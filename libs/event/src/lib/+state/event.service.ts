@@ -52,6 +52,7 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
+  private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
     protected store: EventStore,
@@ -64,6 +65,18 @@ export class EventService extends CollectionService<EventState> {
     private orgQuery: OrganizationQuery,
   ) {
     super(store);
+  }
+
+  public async queryAnalytics(eventId: string): Promise<EventsAnalytics> {
+    if (this.analytics[eventId]) {
+      return this.analytics[eventId];
+    } else {
+      const f = this.functions.httpsCallable('getEventAnalytics');
+      const analytics = await f({ eventIds: [eventId] }).toPromise();
+      const eventAnalytics = analytics.find(a => a.eventId === eventId);
+      this.analytics[eventId] = eventAnalytics;
+      return eventAnalytics;
+    }
   }
 
   /** Gets analytics for one event and sync them. */
