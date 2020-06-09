@@ -2,14 +2,13 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Event } from '@blockframes/event/+state';
 import { Invitation } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap, map, filter, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
 
 const columns = {
-  firstName: 'First Name',
-  lastName: 'Last Name',
+  name: 'Name',
   email: 'Email Address'
 };
 
@@ -20,8 +19,6 @@ const columns = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventReviewComponent implements OnInit {
-
-  private sub: Subscription;
   event$: Observable<Event>;
   invitations$: Observable<Invitation[]>;
   analytics$ : Observable<EventAnalytics[]>;
@@ -41,7 +38,10 @@ export class EventReviewComponent implements OnInit {
     this.analytics$ = this.eventId$.pipe(
       switchMap((eventId: string) => this.service.queryAnalytics(eventId)),
       filter(analytics => !!analytics),
-      map(analytics => analytics.eventUsers)
+      map(analytics => {
+        const transformEvent = (event: EventAnalytics) => ({ ...event, name: `${event.firstName} ${event.lastName}` });
+        return analytics.eventUsers.map(transformEvent);
+      })
     );
 
     this.event$ = this.eventId$.pipe(
