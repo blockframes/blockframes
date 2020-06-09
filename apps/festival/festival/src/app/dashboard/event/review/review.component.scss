@@ -9,8 +9,9 @@ img {
   width: 320px;
 }
 
-mat-card {
+.attendees {
   width: 550px;
+  margin-bottom: 24px;
   h2 {
     margin-top: 16px;
   }
@@ -30,7 +31,7 @@ bf-table-filter {
 }
 
 @include layout-bp(xs) {
-  mat-card {
+  .attendees {
     width: 300px;
   }
 }
