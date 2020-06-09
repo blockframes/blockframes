@@ -54,6 +54,7 @@ export class ProfileViewComponent implements OnInit {
       } else {
         const uid = this.authQuery.userId;
         const user = this.profileForm.value;
+        delete user.avatar; // @TODO (##2987)
         this.authService.update({ uid, ...user });
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }
