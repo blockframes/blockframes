@@ -145,7 +145,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
 export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
 
-  // TODO here we might need to handle deletion of other file types
+  // TODO here we might need to handle deletion of other file types (issue#3017)
 
   // If the type of the data is not an image, exit the function
   if (!data.contentType?.includes('image')) {
@@ -153,9 +153,7 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
     return false;
   }
 
-  // we don't want to resize a vector image because:
-  // 1) vector are resizable at will by design
-  // 2) it will crash the resize program
+  // we don't want to execute this function on the watermark
   if (data.contentType === 'image/svg+xml') {
     console.log('File is an SVG image, exiting function');
     return false;
