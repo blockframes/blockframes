@@ -79,24 +79,6 @@ export class EventService extends CollectionService<EventState> {
     }
   }
 
-  /** Gets analytics for one event and sync them. */
-  public syncEventAnalytics() {
-    return combineLatest([
-      this.query.selectActiveId(),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([eventId, analyticsIds]) => !analyticsIds.includes(eventId)),
-      switchMap(([eventId]) => {
-        this.store.analytics.setActive(eventId);
-        const f = this.functions.httpsCallable('getEventAnalytics');
-        return f({ eventIds: [eventId] });
-      }),
-      tap(analytics => {
-        this.store.analytics.upsertMany(analytics);
-      })
-    )
-  }
-
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
     const isUser = event.ownerId === this.authQuery.userId;
