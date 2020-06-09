@@ -48,7 +48,7 @@
         <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
           <span class="still mat-body-2">Still # {{i + 1}}</span>
           <drop-cropper
-            [storagePath]="stillPath"
+            [storagePath]="'movies/' + movie.id + '/promotionalElements.still_photo.' + i + '.media'"
             ratio="still"
             [form]="control.get('media')">
             <h3 type>Stills</h3>
@@ -63,7 +63,7 @@
             <span>Delete Still</span>
           </footer>
           <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Remove a director form">
+            <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Add a director form">
               <mat-icon svgIcon="add"></mat-icon>
             </button>
             <span>Add Still</span>
