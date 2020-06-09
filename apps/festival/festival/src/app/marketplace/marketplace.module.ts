@@ -10,6 +10,7 @@ import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -106,6 +107,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     ImageReferenceModule,
+    OrgAccessModule,
 
     // Material
     MatListModule,
