@@ -10,6 +10,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: EventReviewComponent }])
   ]
 })
