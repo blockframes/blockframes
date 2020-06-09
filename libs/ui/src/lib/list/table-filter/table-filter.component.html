@@ -40,7 +40,7 @@
       </ng-template>
     </div>
   </ng-container>
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
 </div>
 
 <!-- Fallback if no template is provided for a column -->
