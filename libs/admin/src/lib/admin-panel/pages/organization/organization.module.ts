@@ -22,6 +22,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormAddressModule } from '@blockframes/organization/forms/organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '@blockframes/organization/forms/organization-form-description/organization-form-description.module';
+import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { OrganizationFormDescriptionModule } from '@blockframes/organization/for
     CropperModule,
     OrganizationFormAddressModule,
     OrganizationFormDescriptionModule,
+    MemberRepertoryModule,
   ],
   declarations: [
     OrganizationComponent,

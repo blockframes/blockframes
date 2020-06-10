@@ -4,7 +4,8 @@
     [source]="members"
     [columns]="memberColumns"
     [initialColumns]="initialColumns"
-    showPaginator >
+    showPaginator
+    [showFilter]="showFilter" >
     <ng-template colRef="firstName" let-firstName>
       <b>{{ firstName }}</b>
     </ng-template>
@@ -22,6 +23,12 @@
         (updatedToAdmin)="updatedToAdmin.emit(uid)"
         (updatedToMember)="updatedToMember.emit(uid)">
       </member-permissions>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+    </ng-template>
+    <ng-template colRef="avatar" let-avatar>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
     </ng-template>
   </bf-table-filter>
   <h6>What is “Grant permissions”?</h6>

@@ -5,14 +5,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { OrganizationFormModule } from '@blockframes/organization/forms/organization-form/organization-form.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
-import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
+import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 
 // Components
 import { MemberComponent } from './member.component';
-import { MemberRepertoryComponent } from '@blockframes/organization/components/member-repertory/member-repertory.component';
 import { MemberRequestComponent } from '@blockframes/organization/components/member-request/member-request.component';
 import { MemberPendingComponent } from '@blockframes/organization/components/member-pending/member-pending.component';
 import { MemberAddComponent } from '@blockframes/organization/components/member-add/member-add.component';
@@ -20,8 +20,6 @@ import { MemberAddComponent } from '@blockframes/organization/components/member-
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-// Material
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -32,7 +30,6 @@ import { MatListModule } from '@angular/material/list';
 @NgModule({
   declarations: [
     MemberComponent,
-    MemberRepertoryComponent,
     MemberRequestComponent,
     MemberPendingComponent,
     MemberAddComponent
@@ -45,7 +42,7 @@ import { MatListModule } from '@angular/material/list';
     ImageReferenceModule,
     TableFilterModule,
     AvatarListModule,
-    MemberPermissionsModule,
+    MemberRepertoryModule,
 
     // Material
     MatButtonModule,

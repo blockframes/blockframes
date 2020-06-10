@@ -121,21 +121,17 @@
         <mat-icon svgIcon="eye"></mat-icon>
       </a>
     </h2>
-    <bf-table-filter
-      [source]="members"
-      [columns]="versionColumnsMembers"
-      [initialColumns]="initialColumnsMembers"
-      [filterPredicate]="filterPredicateMembers"
-      showFilter
-      showLoader
-      showPaginator>
-      <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </ng-template>
-      <ng-template colRef="avatar" let-avatar>
-        <img class="poster" [ref]="avatar" asset="empty_poster.webp">
-      </ng-template>
-    </bf-table-filter>
+    <member-repertory
+      [members]="members"
+      [isSuperAdmin]="true"
+      [showFilter]="true"
+      [memberColumns]="memberColumns"
+      [memberColumnsIndex]="memberColumnsIndex"
+      (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+      (updatedToAdmin)="updateRole($event, 'admin')"
+      (updatedToMember)="updateRole($event, 'member')">
+    </member-repertory>
   </article>
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <h2>Movies</h2>

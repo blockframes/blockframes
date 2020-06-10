@@ -6,10 +6,7 @@ import { MemberPermissionsComponent } from './member-permissions.component';
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
-// Material
 import { MatMenuModule } from '@angular/material/menu';
-import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -23,8 +20,6 @@ import { MatListModule } from '@angular/material/list';
     MatIconModule,
 
     MatMenuModule,
-    MatListModule,
-
   ],
   exports: [
     MemberPermissionsComponent
