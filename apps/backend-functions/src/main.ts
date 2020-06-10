@@ -27,7 +27,7 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent, onImageDeletion } from './internals/image';
+import { onFileUploadEvent, onFileDeletion } from './internals/image';
 
 //--------------------------------
 //    Users Management    //
@@ -250,4 +250,4 @@ export const onFileUpload = functions.storage.object().onFinalize(data => onFile
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onImageDeletion(data))
+export const onFileDelete = functions.storage.object().onDelete(data => onFileDeletion(data))
