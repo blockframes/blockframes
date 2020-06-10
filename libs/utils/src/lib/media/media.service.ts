@@ -1,32 +1,96 @@
 import { Injectable } from "@angular/core";
-import { AngularFireStorage } from "@angular/fire/storage";
-import { HttpClient } from "@angular/common/http";
-import { createImgRef, ImgRef } from "./media.model";
+import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
 import { sanitizeFileName } from "../file-sanitizer";
+import { MediaStore } from "./media.store";
+import { MediaQuery } from "./media.query";
+
+
 
 @Injectable({ providedIn: 'root' })
-export class ImageUploader {
+export class MediaService {
+
+  private tasks: Record<string, AngularFireUploadTask>;
 
   constructor(
-    private afStorage: AngularFireStorage,
-    private httpClient: HttpClient,
+    private store: MediaStore,
+    private query: MediaQuery,
+    private storage: AngularFireStorage,
   ) { }
 
-  /**
-   * Fetchs a remote image and uploads it to firestore
-   * @param imageUrl
-   * @param afPath
-   */
-  public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef | undefined> {
-    try {
-      const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
-      const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
-      const url = await snapshot.ref.getDownloadURL();
-      const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ urls: { original: url }, ref: meta.fullPath });
-    } catch (error) {
-      return;
+  /** Check if a file exists in the **Firebase storage** */
+  exists(path: string) {
+    return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
+  }
+
+  async uploadBlob(path: string, data: Blob, fileName: string) {
+    return this.upload(path, data, fileName);
+  }
+
+  async uploadFile(path: string, file: File) {
+    return this.upload(path, file, file.name);
+  }
+
+  private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
+    const exists = await this.exists(path);
+
+    if (exists) {
+      throw new Error(`Upload Error : there is already a file @ ${path}, please delete it before uploading a new file!`);
+    }
+
+    const isUploading = this.query.isUploading(fileName);
+    if (isUploading) {
+      throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
+    }
+
+    const task = this.storage.upload(path, fileOrBlob, {name: sanitizeFileName(fileName)});
+
+    this.store.upsert(fileName, {
+      status: 'uploading',
+      progress: 0,
+    });
+
+    task.percentageChanges().subscribe(p => this.store.update(fileName, {progress: p}));
+
+    this.tasks[fileName] = task;
+
+    task.then(
+      // on success
+      () => {
+        this.store.update(fileName, {status: 'succeeded'});
+        delete this.tasks[fileName];
+      },
+
+      // on error (cancelled is treated by firebase as an error)
+      () => {
+        this.store.update(fileName, {status: 'canceled'});
+        delete this.tasks[fileName];
+      }
+    );
+  }
+
+  pause(fileName: string) {
+    if (this.query.hasEntity(fileName)) {
+      this.tasks[fileName].pause();
+      this.store.update(fileName, { status: 'paused' });
     }
   }
 
+  resume(fileName: string) {
+    if (this.query.hasEntity(fileName)) {
+      this.tasks[fileName].resume();
+      this.store.update(fileName, { status: 'uploading' });
+    }
+  }
+
+  cancel(fileName: string) {
+    if (this.query.hasEntity(fileName)) {
+      this.tasks[fileName].cancel();
+      this.store.update(fileName, { status: 'canceled' });
+    }
+  }
+
+  /** Remove every `succeeded` and `canceled` upload */
+  clear() {
+    this.store.remove(upload => upload.status === 'succeeded' || upload.status === 'canceled');
+  }
 }

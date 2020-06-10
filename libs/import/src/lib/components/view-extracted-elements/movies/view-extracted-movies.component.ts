@@ -38,7 +38,7 @@ import { createStakeholder } from '@blockframes/utils/common-interfaces/identity
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
-import { ImageUploader } from '@blockframes/utils/media/media.service';
+import { ImageUploader } from '@blockframes/utils/media/image-uploader.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
