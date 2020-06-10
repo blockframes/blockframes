@@ -8,6 +8,7 @@ import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
+import { cleanDeprecatedData } from './clean';
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
@@ -16,11 +17,16 @@ export async function prepareForTesting() {
 
   console.info('Restoring backup...');
   await restore(appUrlContent);
-  console.info('backup restored!');
+  console.info('Backup restored!');
 
   console.info('Preparing the database...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('database ready for testing...');
+
+  // Cleaning process
+  console.info('Cleaning unused data...')
+  await cleanDeprecatedData();
+  console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
