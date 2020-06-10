@@ -17,15 +17,15 @@ beforeEach(() => {
 });
 
 describe('Test wishlist icon from library page', () => {
-  it.skip('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
+  it('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
     const p2 = new HomePage();
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
     cy.wait(2000);
     MOVIENAMELIST.forEach(movieName => {
-      cy.wait(2000);
       p3.clickWishlistButton(movieName);
+      cy.wait(2000);
     });
 
     // Go to wishlist and verify movies are here
@@ -106,6 +106,7 @@ describe('Test wishlist icon from movie view page', () => {
 
       // Remove two movies from view page
       MOVIENAMELIST.forEach(movieName => {
+        cy.wait(5000);
         const p4: ViewPage = p3.selectMovie(movieName);
         p4.clickWishListButton();
         p4.openSideNav();
