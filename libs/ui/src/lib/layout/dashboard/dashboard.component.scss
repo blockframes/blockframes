@@ -26,6 +26,10 @@ mat-sidenav-content {
   main {
     height: 100%;
     overflow: auto;
+
+    .page {
+      min-height: 100%;
+    }
   }
 }
 

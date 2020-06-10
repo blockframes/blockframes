@@ -12,6 +12,7 @@ import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
+import { FooterModule } from '../footer/footer.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -36,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ScrollingModule,
     MatLayoutModule,
     AppLogoModule,
+    FooterModule,
 
     // Material
     MatToolbarModule,
