@@ -7,6 +7,11 @@ section {
   }
 }
 
+.mat-icon-button {
+  width: 48px;
+  margin-bottom: 8px;
+}
+
 .add-files-icon {
   width: 100%;
 }
@@ -35,4 +40,16 @@ section {
 
 caption {
   width: 100%;
+}
+
+h3, .mat-body-2 {
+  margin: 0;
+}
+
+p {
+  margin-bottom: 8px;
+}
+
+a {
+  color: var(--primary);
 }

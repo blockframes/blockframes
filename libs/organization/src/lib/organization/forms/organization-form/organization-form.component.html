@@ -35,7 +35,7 @@
     <mat-card *ngIf="!disableCropper">
       <mat-card-header>
         <mat-card-title>Company Logo</mat-card-title>
-        <mat-card-subtitle>Upload your Logo</mat-card-subtitle>
+        <mat-card-subtitle class="mat-caption">Upload your Logo</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <drop-cropper ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
