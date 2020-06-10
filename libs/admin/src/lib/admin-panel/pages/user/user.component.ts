@@ -4,6 +4,8 @@ import { User } from '@blockframes/auth/+state/auth.store';
 import { UserAdminForm } from '../../forms/user-admin.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { UserRole } from '@blockframes/permissions/+state';
 
 @Component({
   selector: 'admin-user',
@@ -14,11 +16,14 @@ import { UserService } from '@blockframes/user/+state/user.service';
 export class UserComponent implements OnInit {
   public userId = '';
   public user: User;
+  public userOrg: Organization;
+  public userOrgRole: UserRole;
   public isUserBlockframesAdmin = false;
   public userForm: UserAdminForm;
 
   constructor(
     private userService: UserService,
+    private organizationService: OrganizationService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -28,6 +33,11 @@ export class UserComponent implements OnInit {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
       this.user = await this.userService.getUser(this.userId);
+      if(this.user.orgId){
+        this.userOrg = await this.organizationService.getValue(this.user.orgId);
+        this.userOrgRole = await this.organizationService.getMemberRole(this.user.orgId, this.user.uid);
+      }
+      
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
       this.cdRef.markForCheck();
@@ -64,10 +74,6 @@ export class UserComponent implements OnInit {
     this.isUserBlockframesAdmin = !this.isUserBlockframesAdmin;
     await this.userService.setBlockframesAdmin(this.isUserBlockframesAdmin, this.userId);
     this.cdRef.markForCheck();
-  }
-
-  public getOrgEditPath(orgId: string) {
-    return `/c/o/organization/${orgId}/view/org`;
   }
 
   public getOrgPath(orgId: string) {

@@ -1,10 +1,16 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organizations</h1>
 <section fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" routerLink="/c/o/dashboard/import">
-      <span>Import orgs</span><mat-icon svgIcon="arrow_downward"></mat-icon>
-    </button>
-    <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+    <div>
+      <button mat-flat-button color="primary" routerLink="/c/o/dashboard/import">
+        <span>Import orgs</span><mat-icon svgIcon="arrow_downward"></mat-icon>
+      </button>
+      <button [disabled]="!orgListLoaded" mat-flat-button color="primary" (click)="exportTable()">
+        <span>Export to CSV</span><mat-icon svgIcon="arrow_upward"></mat-icon>
+      </button>
+    </div>
+
+    <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="100"
       [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
       <ng-template colRef="logo" let-logo>
         <ng-container *ngIf="logo; else nologo">
@@ -19,8 +25,11 @@
           <mat-icon svgIcon="pencil"></mat-icon>
         </a>
       </ng-template>
-      <ng-template colRef="denomination" let-denomination>
-        {{ denomination.full }}
+      <ng-template colRef="denomination.full" let-denominationFull>
+        {{ denominationFull }}
+      </ng-template>
+      <ng-template colRef="denomination.public" let-denominationPublic>
+        {{ denominationPublic }}
       </ng-template>
       <ng-template colRef="appAccess" let-appAccess>
         <ul>
