@@ -28,16 +28,13 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel main page and fill all the fields and navigate to storyline page', () => {
-  it.skip('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel storyline page', () => {
+  it('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel storyline page', () => {
     const p1 = new TunnelMainPage();
 
     // Content Type
     p1.clickContentType();
     p1.selectContentType(CONTENT_TYPES[0]);
     p1.assertContentTypeExists(CONTENT_TYPES[0]);
-    p1.clickFreshness();
-    p1.selectFreshness(CONTENT_TYPES[1]);
-    p1.assertFreshnessExists(CONTENT_TYPES[1]);
     p1.clickProductionStatus();
     p1.selectProductionStatus(CONTENT_TYPES[2]);
     p1.assertProductionStatusExists(CONTENT_TYPES[2]);
