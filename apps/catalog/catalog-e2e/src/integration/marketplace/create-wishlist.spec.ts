@@ -6,8 +6,8 @@ import { USERS } from '@blockframes/e2e/utils/users';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 
-// Select user: wayne.massey@hart-caldwell.fake.cascade8.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[2];
+// Select user: john.bryant@love-and-sons.fake.cascade8.com
+const LOGIN_CREDENTIALS: Partial<User> = USERS[4];
 
 const MOVIENAMELIST: string[] = MOVIES.map(movie => movie.title.international);
 
@@ -48,12 +48,13 @@ describe('Test wishlist icon from library page', () => {
 });
 
 describe('Test wishlist icon from movie view page', () => {
-  it.skip('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
+  it('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
     const p2 = new HomePage();
 
     // Add movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
     MOVIENAMELIST.forEach(movieName => {
+      cy.wait(5000);
       const p4: ViewPage = p3.selectMovie(movieName);
       p4.clickWishListButton();
       p4.openSideNav();
@@ -78,7 +79,7 @@ describe('Test wishlist icon from movie view page', () => {
   });
 
   describe('Test wishlist removal icon from everywhere', () => {
-    it.skip(`Login into an existing account, add and remove a movie from home page, add and remove
+    it(`Login into an existing account, add and remove a movie from home page, add and remove
     two movies from their view page and add and remove two movies from line-up page.`, () => {
       const p2 = new HomePage();
 
