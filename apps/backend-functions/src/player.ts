@@ -3,7 +3,7 @@ import { db, admin } from './internals/firebase';
 import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument } from './data/types';
-import { jwplayerSecret, jwplayerKey } from './environments/environment';
+import { jwplayerSecret, jwplayerKey, linkDuration } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
@@ -94,16 +94,17 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  // TODO right now we are creating a link that expires at the end of the event
-  // TODO we should discuss with François and Vincent of the best strategy for the expiring time of links
-  // TODO issue#2653
+  // we need expiry date in UNIX Timestamp (aka seconds), JS Date give use milliseconds,
+  // so we need to divide by 1000 to get back seconds
+  // we then add the duration in seconds to get the final expiry date
+  const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `manifests/${movie.hostedVideo}.m3u8:${event.end.seconds}:${jwplayerSecret}`;
+  const toSign = `manifests/${movie.hostedVideo}.m3u8:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${event.end.seconds}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${expires}&sig=${signature}`;
 
   return {
     error: '',
@@ -153,9 +154,12 @@ export const uploadToJWPlayer = async (
     }
   }
 
+  // * This duration (2 hours) is different than the video url duration above
+  // * This is only the time we give to the JWPlayer server
+  // * to download the movie from our firebase storage
   // it's better to use Date here instead of firestore.Timestamp since
-  // this value will be fed back to 'new Date()' inside the Google system
-  // using firestore.Timestamp was causing error about the date being in the past
+  // this value will be fed back to 'new Date()' inside the Google system,
+  // using firestore.Timestamp was causing an error about the date being in the past
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
   const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});

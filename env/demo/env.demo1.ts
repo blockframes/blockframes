@@ -162,3 +162,7 @@ export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.eve
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+// JWPlayer video link duration (in seconds)
+// ======================
+export const linkDuration = 18000; // 60 seconds * 60 min * 5 hours
