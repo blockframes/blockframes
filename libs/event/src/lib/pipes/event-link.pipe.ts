@@ -1,23 +1,22 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { getCurrentModule } from '@blockframes/utils/apps';
 import { Event } from '../+state/event.model';
-import { EventService } from '../+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Pipe({ name: 'eventLink', pure: false })
 export class EventLinkPipe implements PipeTransform {
-  constructor(private service: EventService) {}
+  constructor(private routeQuery: RouterQuery) {}
   transform(event: Event, prefix: string = '.'): string[] {
-    if (this.service.isOwner(event)) {
-      if (event.end.getTime() < Date.now()) {
-        return [prefix, event.id];
-      } else {
-        return [prefix, event.id, 'edit'];
-      }
-    } else {
-      if (event.start.getTime() < Date.now() && event.end.getTime() > Date.now()) {
-        return [prefix, event.id, 'session'];
-      } else {
-        return [prefix, event.id];
-      }
+    const { url } = this.routeQuery.getValue().state;
+    const module = getCurrentModule(url);
+    const eventStarted = event.start.getTime() < Date.now();
+    const eventEnded = event.end.getTime() < Date.now();
+    if (module === 'dashboard') {
+      return eventEnded ? [prefix, event.id] : [prefix, event.id, 'edit'];
+    }
+    if (module === 'marketplace') {
+      const inSession = eventStarted && !eventEnded;
+      return inSession ? [prefix, event.id, 'session'] : [prefix, event.id];
     }
   }
 }
