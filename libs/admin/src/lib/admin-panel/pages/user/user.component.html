@@ -13,7 +13,7 @@
             <li><b class="bf-dark-text">Position</b> {{ user.position }}</li>
             <li><b class="bf-dark-text">Phone Number</b> {{ user.phoneNumber }}</li>
           </ul>
-          <h3>Other informations</h3>
+          <h3>Organization infos</h3>
           <ul>
             <li *ngIf="userOrg">
               <b class="bf-dark-text">Organization </b>
@@ -25,12 +25,24 @@
             <li *ngIf="userOrgRole">
               <b class="bf-dark-text">User Role </b>
               <span>{{ userOrgRole }}</span>
+              <member-permissions 
+                [uid]="userId"
+                icon="pencil"
+                (memberRemoved)="removeMember($event)"
+                (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+                (updatedToAdmin)="updateRole($event, 'admin')"
+                (updatedToMember)="updateRole($event, 'member')">
+              >
+            </member-permissions>
             </li>
+          </ul>
+          <h3>Other settings</h3>
+          <ul>
             <li>
               <b class="bf-dark-text">Blockframes admin</b>
               <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'accept': 'cross'"></mat-icon>
               <button mat-flat-button color="primary" (click)="setBlockframesAdmin()">
-                <span>{{ isUserBlockframesAdmin? 'Remove from admins' : 'Set admin' }}</span>
+                <span>{{ isUserBlockframesAdmin? 'Remove from Blockframes admins' : 'Set Blockframes admin' }}</span>
               </button>
             </li>
           </ul>

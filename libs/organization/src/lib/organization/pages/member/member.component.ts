@@ -64,7 +64,7 @@ export class MemberComponent implements OnInit {
     this.invitationService.declineInvitation(invitation);
   }
 
-  public deleteInvitation(invitation: Invitation){
+  public deleteInvitation(invitation: Invitation) {
     this.invitationService.remove(invitation.id);
   }
 
@@ -79,19 +79,9 @@ export class MemberComponent implements OnInit {
   }
 
   /** Update user role. */
-  public updateRole(uid: string, role: UserRole) {
-    if (this.permissionQuery.hasAlreadyThisRole(uid, role)) {
-      return this.snackBar.open('This user already has this role.', 'close', { duration: 2000 });
-    }
-    try {
-      if (!this.hasLastSuperAdmin(uid, role)) {
-        throw new Error('There must be at least one Super Admin in the organization.');
-      }
-      this.permissionService.updateMemberRole(uid, role);
-      this.snackBar.open('Role updated.', 'close', { duration: 2000 });
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 2000 });
-    }
+  public async updateRole(uid: string, role: UserRole) {
+    const message = await this.permissionService.updateMemberRole(uid, role);
+    return this.snackBar.open(message, 'close', { duration: 2000 });
   }
 
   public removeMember(uid: string) {

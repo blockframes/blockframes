@@ -8,7 +8,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
+import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 
+// Components
 import { MemberComponent } from './member.component';
 import { MemberRepertoryComponent } from '@blockframes/organization/components/member-repertory/member-repertory.component';
 import { MemberRequestComponent } from '@blockframes/organization/components/member-request/member-request.component';
@@ -43,6 +45,7 @@ import { MatListModule } from '@angular/material/list';
     ImageReferenceModule,
     TableFilterModule,
     AvatarListModule,
+    MemberPermissionsModule,
 
     // Material
     MatButtonModule,
