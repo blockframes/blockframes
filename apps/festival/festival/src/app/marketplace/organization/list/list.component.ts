@@ -19,9 +19,9 @@ export class ListComponent {
 
   constructor(private service: OrganizationService) {
     this.orgs$ = this.service
-      .valueChanges(ref => ref
+      .queryWithMovies(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter(org => org.id !== centralOrgID)));
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
   }
 }
