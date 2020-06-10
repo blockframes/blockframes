@@ -29,8 +29,22 @@ import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
 import { onFileUploadEvent, onFileDeletion } from './internals/image';
 
+
 //--------------------------------
-//    Users Management    //
+//    Configuration             //
+//--------------------------------
+
+/** 
+ * Runtime options for heavy functions 
+ * @dev linked to #2531 (Changing functions REGION)
+ */
+const runtimeOpts = {
+  timeoutSeconds: 300,
+  memory: '1GB'
+} as functions.RuntimeOptions
+
+//--------------------------------
+//    Users Management          //
 //--------------------------------
 
 /** Trigger: REST call to invite a list of users by email. */
@@ -99,7 +113,7 @@ export const uploadVideo = functions.https.onCall(logErrors(uploadToJWPlayer));
  *  - Backups / Restore the database
  *  - Quorum Deploy & setup a movie smart-contract
  */
-export const admin = functions.https.onRequest(adminApp);
+export const admin = functions.runWith(runtimeOpts).https.onRequest(adminApp);
 
 //--------------------------------
 //   Permissions  Management    //
