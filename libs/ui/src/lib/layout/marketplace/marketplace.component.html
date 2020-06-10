@@ -54,8 +54,10 @@
     </app-bar>
 
     <!-- CONTENT -->
-    <main cdkScrollable fxFlex fxLayout="column" [@routeAnimation]="prepareRoute()">
-      <router-outlet></router-outlet>
+    <main fxFlex cdkScrollable>
+      <div class="page" [@routeAnimation]="prepareRoute()">
+        <router-outlet></router-outlet>
+      </div>
       <bf-footer></bf-footer>
     </main>
 
