@@ -4,6 +4,7 @@ import FestivalOrganizationListPage from './FestivalOrganizationListPage';
 import FestivalMarketplaceOrganizationTitlePage from './FestivalMarketplaceOrganizationTitlePage';
 import FestivalScreeningPage from './FestivalScreeningPage';
 import FestivalMarketplaceCalendarPage from './FestivalMarketplaceCalendarPage';
+import FestivalMarketplaceEventPage from './FestivalMarketplaceEventPage';
 import FestivalMarketplaceScreeningPage from './FestivalMarketplaceScreeningPage';
 
 export {
@@ -13,5 +14,6 @@ export {
   FestivalMarketplaceHomePage,
   FestivalMarketplaceNotificationsPage,
   FestivalMarketplaceCalendarPage,
+  FestivalMarketplaceEventPage,
   FestivalMarketplaceScreeningPage
 }

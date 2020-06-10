@@ -22,6 +22,10 @@ export default class EventEditPage {
     cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').uncheck({ force: true });
   }
 
+  checkAllDay() {
+    cy.get('event-edit mat-checkbox[test-id=all-day]').find('input').check({ force: true });
+  }
+
   selectMovie(movieName: string) {
     cy.get('event-edit mat-select[formControlName=titleId]').click();
     cy.get('mat-option').contains(movieName).click();
