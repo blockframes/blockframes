@@ -10,7 +10,7 @@ import {
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createPermissions } from '../../permissions/+state/permissions.model';
+import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
@@ -150,10 +150,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
   }
 
-  public async uniqueOrgName(orgName: string) : Promise<boolean> {
+  public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
+    const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
+    const role = await this.permissionsService.getValue(org.id);
+    return role.roles[uid];
+  }
+
+  public async uniqueOrgName(orgName: string): Promise<boolean> {
     let uniqueOnEthereum = false;
     let uniqueOnFirestore = false;
-  
+
     const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
     const provider = getProvider(network);
     const orgEthAddress = await provider.resolveName(orgENS);

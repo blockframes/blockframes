@@ -15,17 +15,21 @@
           </ul>
           <h3>Other informations</h3>
           <ul>
-            <li>
+            <li *ngIf="userOrg">
               <b class="bf-dark-text">Organization </b>
-              <a [routerLink]="getOrgPath(user.orgId)">{{ user.orgId }}</a>
-              <button mat-icon-button color="accent" [routerLink]="getOrgEditPath(user.orgId)">
+              <span>{{ userOrg | orgName }} ({{ userOrg.id }})</span>
+              <button mat-icon-button color="primary" [routerLink]="getOrgPath(userOrg.id)">
                 <mat-icon svgIcon="eye"></mat-icon>
               </button>
+            </li>
+            <li *ngIf="userOrgRole">
+              <b class="bf-dark-text">User Role </b>
+              <span>{{ userOrgRole }}</span>
             </li>
             <li>
               <b class="bf-dark-text">Blockframes admin</b>
               <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'accept': 'cross'"></mat-icon>
-              <button mat-flat-button color="accent" (click)="setBlockframesAdmin()">
+              <button mat-flat-button color="primary" (click)="setBlockframesAdmin()">
                 <span>{{ isUserBlockframesAdmin? 'Remove from admins' : 'Set admin' }}</span>
               </button>
             </li>
