@@ -110,15 +110,8 @@ export class OrganizationComponent implements OnInit {
       return;
     }
 
-    const update = {
-      denomination: this.orgForm.get('denomination').value,
-      email: this.orgForm.get('email').value,
-      addresses: this.orgForm.get('addresses').value,
-      activity: this.orgForm.get('activity').value,
-      fiscalNumber: this.orgForm.get('fiscalNumber').value,
-      status: this.orgForm.get('status').value,
-      appAccess: this.orgForm.appAccess.value,
-    }
+    const { denomination, email, addresses, activity, fiscalNumber, status, appAccess } = this.orgForm.value;
+    const update = { denomination, email, addresses, activity, fiscalNumber, status, appAccess };
 
     // @TODO (#2987) (check org import via excel)
     await this.organizationService.update(this.orgId, update);
