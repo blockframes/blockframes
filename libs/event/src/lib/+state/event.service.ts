@@ -7,11 +7,10 @@ import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { EventQuery } from './event.query';
 import { Observable, combineLatest } from 'rxjs';
-import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -59,8 +58,6 @@ export class EventService extends CollectionService<EventState> {
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
     private invitationService: InvitationService,
-    private permissionQuery: PermissionsQuery,
-    private query: EventQuery,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
@@ -82,8 +79,8 @@ export class EventService extends CollectionService<EventState> {
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
     const isUser = event.ownerId === this.authQuery.userId;
-    const isOrgAdmin = (event.ownerId === this.orgQuery.getActiveId()) && this.permissionQuery.isUserAdmin();
-    return isUser || isOrgAdmin;
+    const isFromOrg = event.ownerId === this.orgQuery.getActiveId();
+    return isUser || isFromOrg;
   }
 
   /** Create the permission */
