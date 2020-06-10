@@ -31,22 +31,6 @@ const routes: Routes = [{
       data: { animation: 'invitations' }
     },
     {
-      path: 'about',
-      loadChildren: () => import('./landing/about/about.module').then(m => m.AboutModule)
-    },
-    {
-      path: 'who-are-we',
-      loadChildren: () => import('./landing/team/team.module').then(m => m.TeamModule)
-    },
-    {
-      path: 'contact',
-      loadChildren: () => import('./landing/contact/contact.module').then(m => m.ContactModule)
-    },
-    {
-      path: 'terms',
-      loadChildren: () => import('./landing/privacy/privacy.module').then(m => m.PrivacyModule)
-    },
-    {
       path: 'search',
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
@@ -96,7 +80,23 @@ const routes: Routes = [{
         }
       ],
       data: { redirect: '/c/o/marketplace/home' }
-    }
+    },
+    {
+      path: 'about',
+      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
+    },
+    {
+      path: 'who-are-we',
+      loadChildren: () => import('@blockframes/ui/static-informations/team/team.module').then(m => m.TeamModule)
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    },
   ]
 }, {
   path: 'tunnel',

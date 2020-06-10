@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 
 // Blockframes
-import { getAppName } from '@blockframes/utils/apps';
 import { getAppLocation } from '@blockframes/utils/helpers';
 
 // Libs
@@ -19,7 +18,7 @@ import { map } from 'rxjs/operators';
 export class FooterComponent implements OnInit {
   public section$: Observable<'dashboard' | 'marketplace'>;
 
-  constructor(private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) {}
+  constructor(private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
