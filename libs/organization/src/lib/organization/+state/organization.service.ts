@@ -9,12 +9,20 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions, Query, queryChanges } from 'akita-ng-fire';
 import { createPermissions } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { QueryFn } from '@angular/fire/firestore/interfaces';
+
+const orgQuery = (queryFn: QueryFn) : Query<Organization> => ({
+  path: 'orgs',
+  queryFn,
+  movies: (org: Organization) => org.movieIds.map(movieId =>({path: `movies/${movieId}`})),
+});
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -78,6 +86,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return Promise.all([
       this.permissionsService.add(permissions, { write }),
     ]);
+  }
+
+  public queryWithMovies(queryFn: QueryFn) {
+    const query = orgQuery(queryFn);
+    return queryChanges.call(this, query);
   }
 
   /** Add a new organization */
