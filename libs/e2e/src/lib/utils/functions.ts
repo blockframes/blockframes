@@ -40,7 +40,7 @@ let currentID = 0;
 export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
 export const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
-export function getTomorrowDay(date: Date) {
+export function getTomorrowDayName(date: Date) {
   const tomorrowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
   return tomorrowDay;
 }
