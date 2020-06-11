@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'festival-main',
@@ -12,7 +13,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
 
-  constructor(private movieQuery: MovieQuery) { }
+  constructor(private movieQuery: MovieQuery, private numberPipe: DecimalPipe) { }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
     return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets);
@@ -51,7 +52,6 @@ export class MainComponent {
   }
 
   public budgetRange({ from, to }) {
-    const formatter = new Intl.NumberFormat();
-    return (from && to) ? `$ ${formatter.format(from)} - ${formatter.format(to)}` : '';
+    return (from && to) ? `$ ${this.numberPipe.transform(from)} - ${this.numberPipe.transform(to)}` : '';
   }
 }

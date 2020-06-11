@@ -14,7 +14,7 @@
         <pre class="mat-body-1">{{ event | eventRange }}</pre>
         <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
         <ng-container *ngIf="(invitation$ | async)?.status === 'accepted'">
-          <a mat-button routerLink="./session">Join the {{ event.type }}</a>
+          <a mat-button routerLink="./session" class="join-btn">Access {{ event.type | titlecase }} Room</a>
         </ng-container>
       </ng-container>
 
