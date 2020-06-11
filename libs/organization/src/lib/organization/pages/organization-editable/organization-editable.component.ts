@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrganizationQuery, OrganizationService, Organization } from '../../+state';
-import { PermissionsQuery } from '../../permissions/+state';
+import { PermissionsQuery } from '@blockframes/permissions/+state';
 import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,7 +10,6 @@ import { startWith, tap } from 'rxjs/operators';
   selector: 'organization-editable',
   templateUrl: './organization-editable.component.html',
   styleUrls: ['./organization-editable.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationEditableComponent implements OnInit {
   public opened = false;

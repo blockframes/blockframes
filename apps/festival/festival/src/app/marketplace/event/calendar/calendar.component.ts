@@ -36,6 +36,7 @@ export class EventCalendarComponent implements OnInit {
       filterBy: ({ type, status }) => type === 'attendEvent' && status === 'accepted'
     }).pipe(
       map(invitations => invitations.map(i => i.docId)),
+      map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated
       switchMap(eventIds => this.service.queryDocs(eventIds))
     );
     const filters$ = this.filter.valueChanges.pipe(startWith(this.filter.value))

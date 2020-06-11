@@ -1,23 +1,36 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Users</h1>
-
-<bf-table-filter 
-  [source]="rows" 
-  [columns]="versionColumns" 
-  [initialColumns]="initialColumns" 
-  [filterPredicate]="filterPredicate"
-  showFilter
-  showLoader
-  showPaginator>
-  <ng-template colRef="avatar" let-avatar>
-    <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
-  </ng-template>
-  <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-  </ng-template>
-  <ng-template colRef="org" let-org>
-    <a [routerLink]="org.link">{{ org.id }}</a>
-  </ng-template>
-  <ng-template colRef="position" let-position>
-    {{ position ? position : '--' }}
-  </ng-template>
-</bf-table-filter>
+<section fxLayout="row" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button [disabled]="!userListLoaded" mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span><mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+    <bf-table-filter 
+      [source]="rows" 
+      [columns]="versionColumns" 
+      [initialColumns]="initialColumns" 
+      [filterPredicate]="filterPredicate"
+      showFilter
+      [pageSize]="100"
+      showLoader
+      showPaginator>
+      <ng-template colRef="avatar" let-avatar>
+        <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
+      </ng-template>
+      <ng-template colRef="edit" let-edit>
+        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </ng-template>
+      <ng-template colRef="org" let-org>
+        <a [routerLink]="org.link">{{ org.id }}</a>
+      </ng-template>
+      <ng-template colRef="position" let-position>
+        {{ position ? position : '--' }}
+      </ng-template>
+      <ng-template colRef="firstConnexion" let-firstConnexion>
+        {{ firstConnexion | date }}
+      </ng-template>
+      <ng-template colRef="lastConnexion" let-lastConnexion>
+        {{ lastConnexion | date }}
+      </ng-template>
+    </bf-table-filter>
+  </article>
+</section>

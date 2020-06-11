@@ -24,6 +24,7 @@ import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -92,6 +93,7 @@ export const panelRoutes: Routes = [
     TermDateModule,
     ToLabelModule,
     TranslateSlugModule,
+    OrgNameModule,
   ],
   declarations: [
     OverviewComponent,
