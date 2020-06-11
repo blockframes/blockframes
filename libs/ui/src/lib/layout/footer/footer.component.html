@@ -1,7 +1,7 @@
 <div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
   <app-logo></app-logo>
   <!-- ATM there is no about page for festival -->
-  <ng-container *ngIf="!isFestival">
+  <ng-container *ngIf="'catalog' | app">
     <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
   </ng-container>
   <a mat-button [routerLink]="['/c/o/'+section+'/contact']">Contact us</a>

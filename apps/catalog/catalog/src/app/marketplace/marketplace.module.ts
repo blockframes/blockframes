@@ -9,6 +9,7 @@ import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 const routes: Routes = [{
   path: '',
@@ -96,7 +97,19 @@ const routes: Routes = [{
       ],
       data: { redirect: '/c/o/marketplace/home' }
     },
-  ]
+    {
+      path: 'tunnel',
+      canActivate: [TunnelGuard],
+      children: [{
+        path: 'contract/:contractId',
+        canActivate: [ActiveContractGuard],
+        canDeactivate: [ActiveContractGuard],
+        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+        data: {
+          redirect: '/c/o/dashboard/selection'
+        }
+      }]
+    }]
 }];
 
 @NgModule({

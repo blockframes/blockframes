@@ -18,12 +18,9 @@ import { map } from 'rxjs/operators';
 export class FooterComponent implements OnInit {
   public section$: Observable<'dashboard' | 'marketplace'>;
 
-  public isFestival = false;
-
   constructor(private routerQuery: RouterQuery) { }
 
   ngOnInit() {
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
-    this.isFestival = this.routerQuery.getData<string>('app') === 'festival' ? true : false;
   }
 }
