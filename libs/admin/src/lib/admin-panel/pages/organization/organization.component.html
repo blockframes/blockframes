@@ -115,9 +115,6 @@
 <hr />
 <section  fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
-    <h2>
-      <span>Members</span>
-    </h2>
     <member-repertory
       [members]="members"
       [isSuperAdmin]="true"
@@ -130,6 +127,33 @@
       (updatedToMember)="updateRole($event, 'member')">
     </member-repertory>
   </article>
+  
+  <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <member-pending *ngIf="invitationsMember.length > 0"
+        [invitations]="invitationsMember"
+        (declined)="deleteInvitation($event)"
+        [isAdmin]="true">
+      </member-pending>
+    </article>
+  </ng-container>
+  
+  <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <member-request *ngIf="invitations.length > 0"
+        (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)"
+        [invitations]="invitations"
+        [isAdmin]="true">
+      </member-request>
+    </article>
+  </ng-container>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <member-add [orgId]="orgId"></member-add>
+  </article>
+</section>
+<hr />
+<section  fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <h2>Movies</h2>
     <bf-table-filter

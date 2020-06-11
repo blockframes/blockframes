@@ -10,6 +10,8 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
+import { Observable } from 'rxjs';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -27,6 +29,9 @@ export class OrganizationComponent implements OnInit {
   public members: any[];
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
+
+  public invitationsFromOrganization$: Observable<Invitation[]>;
+  public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   public versionColumnsMovies = {
     'id': 'Id',
@@ -70,6 +75,7 @@ export class OrganizationComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
+    private invitationService: InvitationService,
   ) { }
 
   async ngOnInit() {
@@ -89,6 +95,25 @@ export class OrganizationComponent implements OnInit {
     }));
 
     await this.loadMembers();
+
+    const queryFn1 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'invitation').where('fromOrg.id', '==', this.orgId).where('status', '==', 'pending');
+    const queryFn2 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'request').where('toOrg.id', '==', this.orgId).where('status', '==', 'pending');
+
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+
+  }
+
+  public acceptInvitation(invitation: Invitation) {
+    this.invitationService.acceptInvitation(invitation);
+  }
+
+  public declineInvitation(invitation: Invitation) {
+    this.invitationService.declineInvitation(invitation);
+  }
+
+  public deleteInvitation(invitation: Invitation) {
+    this.invitationService.remove(invitation.id);
   }
 
   private async loadMembers(){

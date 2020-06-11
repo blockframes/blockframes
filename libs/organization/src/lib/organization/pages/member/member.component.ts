@@ -17,6 +17,7 @@ import { OrganizationService } from '@blockframes/organization/+state';
 })
 export class MemberComponent implements OnInit {
   public orgName: string = this.query.getActive().denomination.full;
+  public orgId: string = this.query.getActiveId();
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;
@@ -45,11 +46,10 @@ export class MemberComponent implements OnInit {
 
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
-    const id = this.query.getActiveId();
 
     if (this.permissionQuery.isUserAdmin()) {
-      const queryFn1 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'invitation').where('fromOrg.id', '==', id).where('status', '==', 'pending');
-      const queryFn2 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'request').where('toOrg.id', '==', id).where('status', '==', 'pending');
+      const queryFn1 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'invitation').where('fromOrg.id', '==', this.orgId).where('status', '==', 'pending');
+      const queryFn2 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'request').where('toOrg.id', '==', this.orgId).where('status', '==', 'pending');
 
       this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
       this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
