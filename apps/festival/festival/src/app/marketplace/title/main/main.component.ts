@@ -51,6 +51,7 @@ export class MainComponent {
   }
 
   public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
+    const formatter = new Intl.NumberFormat();
+    return (from && to) ? `$ ${formatter.format(from)} - ${formatter.format(to)}` : '';
   }
 }
