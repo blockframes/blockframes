@@ -9,6 +9,7 @@ import { organizationStatus } from '@blockframes/organization/+state/organizatio
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
+import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 
 @Component({
   selector: 'admin-organization',
@@ -49,31 +50,26 @@ export class OrganizationComponent implements OnInit {
     'edit',
   ];
 
-  public versionColumnsMembers = {
-    'uid': 'Id',
-    'avatar': 'Avatar',
-    'email': 'Email',
-    'firstName': 'FirstName',
-    'lastName': 'LastName',
-    'role': 'Org role',
-    'edit': 'Edit',
+  public memberColumns = {
+    userId: 'Id',
+    firstName: 'First Name',
+    avatar: 'Avatar',
+    lastName: 'Last Name',
+    email: 'Email Address',
+    position: 'Position',
+    role: 'Permissions',
+    edit: 'Edit',
   };
 
-  public initialColumnsMembers: string[] = [
-    'uid',
-    'avatar',
-    'email',
-    'firstName',
-    'lastName',
-    'role',
-    'edit',
-  ];
+  public memberColumnsIndex = ['userId', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+
   constructor(
     private organizationService: OrganizationService,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private permissionService: PermissionsService,
   ) { }
 
   async ngOnInit() {
@@ -92,15 +88,19 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
+    await this.loadMembers();
+  }
+
+  private async loadMembers(){
     const members = await this.organizationService.getMembers(this.orgId);
     this.members = members.map(m => ({
       ...m,
+      userId: m.uid,
       edit: {
         id: m.uid,
         link: `/c/o/admin/panel/user/${m.uid}`,
       }
     }));
-
     this.cdRef.markForCheck();
   }
 
@@ -135,24 +135,9 @@ export class OrganizationComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  filterPredicateMembers(data: any, filter) {
-    const columnsToFilter = [
-      'uid',
-      'email',
-      'firstName',
-      'lastName',
-      'role'
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
-  }
 
   public getMoviePath(movieId: string, segment: string = 'main') {
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
-  }
-
-  public getOrgMemberPath(orgId: string) {
-    return `/c/o/organization/${orgId}/view/members`;
   }
 
   public async uniqueOrgName() {
@@ -160,6 +145,23 @@ export class OrganizationComponent implements OnInit {
     const unique = await this.organizationService.uniqueOrgName(orgName);
     if (!unique) {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
+    }
+  }
+
+  /** Update user role. */
+  public async updateRole(uid: string, role: UserRole) {
+    const message = await this.permissionService.updateMemberRole(uid, role);
+    await this.loadMembers();
+    return this.snackBar.open(message, 'close', { duration: 2000 });
+  }
+
+  public async removeMember(uid: string) {
+    try {
+      this.organizationService.removeMember(uid);
+      await this.loadMembers();
+      this.snackBar.open('Member removed.', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
 }
