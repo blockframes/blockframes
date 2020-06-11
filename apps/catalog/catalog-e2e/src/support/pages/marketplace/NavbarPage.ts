@@ -29,6 +29,7 @@ export default abstract class NavbarPage {
   }
 
   public assertNoWishListCount(count: number) {
+    cy.wait(2000);
     cy.get('catalog-layout a[test-id=heart-icon]').should('not.contain', count || 0);
   }
 

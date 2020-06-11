@@ -1,8 +1,10 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
+
+type Timeout = NodeJS.Timeout;
 
 declare const jwplayer: any;
 
@@ -13,8 +15,9 @@ declare const jwplayer: any;
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventPlayerComponent implements AfterViewInit {
+export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   private player: any;
+  private timeout: Timeout;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -52,6 +55,15 @@ export class EventPlayerComponent implements AfterViewInit {
     if (!!error) {
       console.log('ERROR');
     } else {
+
+      const signedUrl = new URL(result);
+      const expires = signedUrl.searchParams.get('exp');
+      const timestamp = parseInt(expires, 10); // unix timestamp in seconds
+      const millisecondTimestamp = timestamp * 1000; // js timestamp in milliseconds
+      const refreshCountdown = millisecondTimestamp - Date.now();
+
+      this.timeout = setTimeout(() => window.location.reload(), refreshCountdown);
+
       this.player = jwplayer('player');
       this.player.setup({
         file: result,
@@ -66,5 +78,9 @@ export class EventPlayerComponent implements AfterViewInit {
     const watermarkUrl = this.authQuery.user.watermark.urls.original;
     await this.loadScript();
     this.initPlayer(watermarkUrl);
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timeout);
   }
 }
