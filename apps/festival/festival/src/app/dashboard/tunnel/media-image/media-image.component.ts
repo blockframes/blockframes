@@ -14,8 +14,6 @@ export class MediaImageComponent {
   constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) {}
 
   public movie = this.movieQuery.getActive();
-  public bannerPath = `movies/${this.movie.id}/promotionalElements.banner.media`;
-  public posterPath = `movies/${this.movie.id}/promotionalElements.poster.0.media`;
 
   get promotionalElements() {
     return this.form.get('promotionalElements')

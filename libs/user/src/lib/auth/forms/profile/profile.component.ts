@@ -8,7 +8,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent {
-  public storagePath = `users/${this.authQuery.userId}/avatar`;
+  public uid = this.authQuery.userId;
 
   @Input() form: ProfileForm;
   constructor(private authQuery: AuthQuery){}

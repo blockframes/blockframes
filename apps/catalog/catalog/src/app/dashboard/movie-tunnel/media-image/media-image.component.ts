@@ -13,8 +13,6 @@ export class MediaImageComponent {
   form = this.tunnel.form;
 
   public movie = this.movieQuery.getActive();
-  public bannerPath = `movies/${this.movie.id}/promotionalElements.banner.media`;
-  public posterPath = `movies/${this.movie.id}/promotionalElements.poster.0.media`;
 
   constructor(
     private tunnel: MovieTunnelComponent,

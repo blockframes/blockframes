@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/storage';
 // Blockframes
-import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie, PromotionalElement } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MoviePromotionalElementsForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
+import { MediaService } from '@blockframes/utils/media/media.service';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -70,7 +71,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private storage: AngularFireStorage
+    private media: MediaService
   ) { }
 
   async ngOnInit() {
@@ -102,53 +103,30 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     );
   }
 
-  private async handleUpdatePromotionalImages(moviePromotionalElementsForm: MoviePromotionalElementsForm, promotionalElements) {
+  private async uploadMedias(movieData: Movie, movieForm: MovieForm) {
+    
+    const mediaPaths = movieForm.get('promotionalElements').mediaPaths;
+    
+    const result = this.media.extractMediaForm(movieForm, mediaPaths);
 
-    const banner = moviePromotionalElementsForm.get('banner');
-    const bannerMedia = banner.get('media');
-    this.saveImage(bannerMedia, promotionalElements.banner.media);
+    const values = result[0];
+    const extractedForms = result[1];
 
-    const posters = moviePromotionalElementsForm.get('poster');
-    Object.keys(posters.controls).forEach(key => {
-      const poster = posters.get(key);
-      const posterMedia = poster.get('media');
-      this.saveImage(posterMedia, promotionalElements.poster[key].media);
-    });
-
-    const still_photos = moviePromotionalElementsForm.get('still_photo');
-    Object.keys(still_photos.controls).forEach(key => {
-      const still_photo = still_photos.get(key);
-      const still_photoMedia = still_photo.get('media');
-      this.saveImage(still_photoMedia, promotionalElements.still_photo[key].media);
-    });
+    this.media.handleMediaForm(extractedForms);
 
   }
 
-  private saveImage(imageForm, mediaData) {
+  private removePaths(movieData: Movie) {
+    const promotionalElements = movieData.promotionalElements;
+    this.remove(promotionalElements.banner.media)
+    promotionalElements.poster.forEach(poster => this.remove(poster.media))
+    promotionalElements.still_photo.forEach(still_photo => this.remove(still_photo.media))
+  }
 
-    const blob = imageForm.blob.value;
-    const ref = imageForm.ref.value;
-    const newRef = imageForm.newRef.value;
-
-    if (imageForm.delete.value) {
-      this.storage.ref(ref).delete();
-      imageForm.get('ref').setValue('');
-    } else if (!!blob) {
-      if (ref !== '') {
-        this.storage.ref(ref).delete();
-      }
-
-      this.storage.ref(newRef).put(blob);
-      imageForm.ref.setValue(newRef);
-    }
-
-    imageForm.blob.setValue('');
-    imageForm.newRef.setValue('');
-    imageForm.delete.setValue(false);
-
+  private remove(mediaData) {
+    delete mediaData.delete;
     delete mediaData.blob;
     delete mediaData.newRef;
-    delete mediaData.delete;
-
   }
+
 }

@@ -6,6 +6,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormComponent } from './profile.component';
 
+import { ReferencePathModule } from '@blockframes/utils/pipes/reference-path.pipe';
+
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
     FlexLayoutModule,
     CropperModule,
     ReactiveFormsModule,
+    ReferencePathModule,
     // Material
     MatCardModule,
     MatFormFieldModule,

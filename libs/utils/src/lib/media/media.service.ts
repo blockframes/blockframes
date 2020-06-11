@@ -8,6 +8,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
 import { UploadFile } from "./media.firestore";
+import * as objectPath from 'object-path';
 
 // Blockframes
 import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
@@ -151,5 +152,50 @@ export class MediaService {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
     }
+  }
+  
+  public extractMediaForm(form, extractPaths: string[]) {
+    
+    const value = form.value;
+    const extracted = {};
+
+    extractPaths.forEach(path => {
+
+      extracted[path] = objectPath.get(form, path);
+      const pathWithoutControls = path.split('controls.').join('');
+      objectPath.del(value, pathWithoutControls);
+
+    });
+
+    return [ value, extracted ];
+  }
+
+  public handleMediaForm(form) {
+
+    for (const key in form) {
+
+      if (form[key].delete.value) {
+
+        // this.media.removeFile(media.ref.value);
+        form[key].ref.setValue('');
+
+      } else if (!!form[key].blob.value) {
+
+        if (form[key].ref.value !== '') {
+          // this.media.removeFile(media.ref.value);
+        }
+
+        const newRef = form[key].newRef.value;
+        const fileName = newRef.substr(newRef.lastIndexOf('/') + 1);
+        // this.media.uploadBlob(media.newRef.value, media.blob, fileName);
+        form[key].ref.setValue(form[key].newRef.value);
+      }
+
+      form[key].blob.setValue('');
+      form[key].newRef.setValue('');
+      form[key].delete.setValue(false);
+
+    }
+
   }
 }

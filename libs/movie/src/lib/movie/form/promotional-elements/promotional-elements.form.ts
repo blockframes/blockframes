@@ -74,4 +74,20 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
+
+  get mediaPaths(): string[] {
+    const paths = [];
+    
+    paths.push('controls.promotionalElements.controls.banner.controls.media');
+
+    Object.keys(this.get('poster').controls).forEach(key => {
+      paths.push(`controls.promotionalElements.controls.poster.controls.${key}.controls.media`);
+    });
+
+    Object.keys(this.get('still_photo').controls).forEach(key => {
+      paths.push(`controls.promotionalElements.controls.still_photo.controls.${key}.controls.media`);
+    });
+
+    return paths;
+  }
 }
