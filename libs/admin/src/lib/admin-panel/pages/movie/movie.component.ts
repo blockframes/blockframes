@@ -89,7 +89,7 @@ export class MovieComponent implements OnInit {
 
   public async updateAppAccess() {
     if (this.movieAppAccessForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 5000});
+      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
     this.movie.main.storeConfig.appAccess = this.movieAppAccessForm.value;
@@ -136,6 +136,10 @@ export class MovieComponent implements OnInit {
 
   public getContractPath(contractId: string) {
     return `/c/o/admin/panel/contract/${contractId}`;
+  }
+
+  public posterName(i: number): string {
+    return `Movie poster n°${i + 1}`;
   }
 
 }

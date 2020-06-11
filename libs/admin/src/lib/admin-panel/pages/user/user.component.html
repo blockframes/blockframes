@@ -49,6 +49,7 @@
         </article>
       </mat-card-content>
     </mat-card>
+    <admin-image-sizes [imgRef]="user.avatar"></admin-image-sizes>
   </article>
   <article *ngIf="userForm" fxLayout="column" fxLayoutAlign="space-between start">
     <form [formGroup]="userForm" fxLayout="column">

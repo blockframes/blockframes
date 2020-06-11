@@ -91,7 +91,15 @@
       </bf-table-filter>
     </mat-card>
   </article>
+  <mat-card *ngIf="movie">
+    <h2>Promotional Elements :</h2>
 
+    <admin-image-sizes *ngIf="movie.promotionalElements.banner.media" title="Movie banner" [imgRef]="movie.promotionalElements.banner.media"></admin-image-sizes>
+    <ng-container *ngFor="let poster of movie.promotionalElements.poster; let i = index; let last = last">
+      <admin-image-sizes [title]="posterName(i)" [imgRef]="poster.media"></admin-image-sizes>
+    </ng-container>
+  </mat-card>
+  
   <mat-card *ngIf="movie">
     <h2>Movie private config :</h2>
 

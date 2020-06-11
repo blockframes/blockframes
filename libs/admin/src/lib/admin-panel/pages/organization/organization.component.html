@@ -3,6 +3,8 @@
   <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
     <h4>{{ org.denomination.full }} <ng-container *ngIf="org.denomination.public">({{ org.denomination.public }})</ng-container></h4>
     <organization-display [organization]="org"></organization-display>
+
+    <admin-image-sizes [imgRef]="org.logo"></admin-image-sizes>
   </article>
   <article *ngIf="orgForm" fxLayout="column" class="main-article">
     <form [formGroup]="orgForm" fxLayout="column">
