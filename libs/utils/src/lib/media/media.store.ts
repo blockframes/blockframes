@@ -8,6 +8,13 @@ export interface UploadState {
   progress: number;
 }
 
+export function isUploading(upload: UploadState) {
+  return upload.status === 'uploading' || upload.status === 'paused';
+}
+
+export function isDone(upload: UploadState) {
+  return upload.status === 'succeeded' || upload.status === 'canceled';
+}
 export interface MediaState extends EntityState<UploadState> {
 }
 

@@ -1,10 +1,8 @@
 import { Injectable } from "@angular/core";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { sanitizeFileName } from "../file-sanitizer";
-import { MediaStore } from "./media.store";
+import { MediaStore, isUploading } from "./media.store";
 import { MediaQuery } from "./media.query";
-
-
+import { UploadFile } from "./media.firestore";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -22,11 +20,15 @@ export class MediaService {
     return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
   }
 
-  async uploadBlob(path: string, data: Blob, fileName: string) {
-    return this.upload(path, data, fileName);
+  uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> | Promise<void>[] {
+    if (Array.isArray(uploadFiles)) {
+      return uploadFiles.map(uploadFile => this.uploadBlob(uploadFile) as Promise<void>);
+    } else {
+      return this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+    }
   }
 
-  async uploadFile(path: string, file: File) {
+  uploadFile(path: string, file: File) {
     return this.upload(path, file, file.name);
   }
 
@@ -37,12 +39,12 @@ export class MediaService {
       throw new Error(`Upload Error : there is already a file @ ${path}, please delete it before uploading a new file!`);
     }
 
-    const isUploading = this.query.isUploading(fileName);
-    if (isUploading) {
+    const uploading = this.query.isUploading(fileName);
+    if (uploading) {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path, fileOrBlob, {name: sanitizeFileName(fileName)});
+    const task = this.storage.upload(path, fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
@@ -69,21 +71,21 @@ export class MediaService {
   }
 
   pause(fileName: string) {
-    if (this.query.hasEntity(fileName)) {
+    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
       this.tasks[fileName].pause();
       this.store.update(fileName, { status: 'paused' });
     }
   }
 
   resume(fileName: string) {
-    if (this.query.hasEntity(fileName)) {
+    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
       this.tasks[fileName].resume();
       this.store.update(fileName, { status: 'uploading' });
     }
   }
 
   cancel(fileName: string) {
-    if (this.query.hasEntity(fileName)) {
+    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
       this.tasks[fileName].cancel();
       this.store.update(fileName, { status: 'canceled' });
     }
@@ -91,6 +93,6 @@ export class MediaService {
 
   /** Remove every `succeeded` and `canceled` upload */
   clear() {
-    this.store.remove(upload => upload.status === 'succeeded' || upload.status === 'canceled');
+    this.store.remove(upload => isUploading(upload));
   }
 }
