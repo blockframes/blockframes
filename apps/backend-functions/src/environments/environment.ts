@@ -17,7 +17,6 @@ export {
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgID,
-  linkDuration,
 } from '@env';
 
 import { firebase } from '@env';

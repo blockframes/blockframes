@@ -1,9 +1,9 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db, admin } from './internals/firebase';
-import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
+import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument } from './data/types';
-import { jwplayerSecret, jwplayerKey, linkDuration } from './environments/environment';
+import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';

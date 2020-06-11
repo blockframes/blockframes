@@ -66,7 +66,3 @@ export const relayer = {
 
 export const backupBucket = 'demo3-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
-
-// JWPlayer video link duration (in seconds)
-// ======================
-export const linkDuration = 18000; // 60 seconds * 60 min * 5 hours
