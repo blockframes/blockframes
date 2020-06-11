@@ -21,9 +21,9 @@
     [ngClass]="segment.cssClass"
     (mousedown)="startDragToCreate(segment, $event, segmentElement)"
   >
-    
+
     <div class="cal-time" *ngIf="isTimeLabel">
-      {{ segment.date | calendarDate:'weekViewHour':locale }}
+      <span class="mat-caption">{{ segment.date | calendarDate:'weekViewHour':locale }}</span>
     </div>
   </div>
 </ng-template>

@@ -58,3 +58,6 @@ export interface EventsAnalytics {
   eventId: string,
   eventUsers: EventAnalytics[]
 }
+
+// This variable define the duration (in seconds) of a video link before it expires
+export const linkDuration = 60 * 60 * 5; // 5 hours in seconds = 60 seconds * 60 minutes * 5 = 18 000 seconds

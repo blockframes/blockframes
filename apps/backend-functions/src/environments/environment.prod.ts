@@ -7,7 +7,7 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { 
+export {
   factoryContract,
   backupBucket,
   relayer,
@@ -15,7 +15,7 @@ export {
   appUrlMarket,
   sentryDsn,
   bigQueryAnalyticsTable,
-  centralOrgID
+  centralOrgID,
 } from '@env';
 
 import { firebase } from '@env';

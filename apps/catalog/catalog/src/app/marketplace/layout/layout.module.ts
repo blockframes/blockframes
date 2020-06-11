@@ -26,6 +26,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
 // Components
 import { LayoutComponent } from './layout.component';
+import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 
 @NgModule({
   declarations: [LayoutComponent],
@@ -48,10 +49,11 @@ import { LayoutComponent } from './layout.component';
 
     // Libraries
     AppLogoModule,
+    FooterModule,
 
     // Widgets
     SearchWidgetModule,
     AuthWidgetModule
   ]
 })
-export class LayoutModule {}
+export class LayoutModule { }
