@@ -9,6 +9,7 @@ import { FooterComponent } from './footer.component';
 
 // Blockframes
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
+import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     RouterModule,
     AppLogoModule,
+    AppPipeModule,
 
     // Material
     MatButtonModule
