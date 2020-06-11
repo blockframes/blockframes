@@ -5,7 +5,6 @@ import { LayoutModule } from './layout/layout.module';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
