@@ -21,7 +21,7 @@ export async function prepareForTesting() {
 
   console.info('Preparing the database...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
-  console.info('database ready for testing...');
+  console.info('Database ready for testing!');
 
   // Cleaning process
   console.info('Cleaning unused data...')
@@ -44,7 +44,7 @@ export async function restoreShortcut() {
 export async function upgrade() {
   console.info('Preparing the database...');
   await migrate(true);
-  console.info('database ready for deploy...');
+  console.info('Database ready for deploy!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
