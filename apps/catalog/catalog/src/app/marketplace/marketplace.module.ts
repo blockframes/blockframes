@@ -5,11 +5,11 @@ import { LayoutModule } from './layout/layout.module';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 const routes: Routes = [{
   path: '',
@@ -21,6 +21,22 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
+      path: 'about',
+      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+    },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    },
+    {
       path: 'notifications',
       loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
@@ -29,22 +45,6 @@ const routes: Routes = [{
       path: 'invitations',
       loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
       data: { animation: 'invitations' }
-    },
-    {
-      path: 'about',
-      loadChildren: () => import('./landing/about/about.module').then(m => m.AboutModule)
-    },
-    {
-      path: 'who-are-we',
-      loadChildren: () => import('./landing/team/team.module').then(m => m.TeamModule)
-    },
-    {
-      path: 'contact',
-      loadChildren: () => import('./landing/contact/contact.module').then(m => m.ContactModule)
-    },
-    {
-      path: 'terms',
-      loadChildren: () => import('./landing/privacy/privacy.module').then(m => m.PrivacyModule)
     },
     {
       path: 'search',
@@ -96,20 +96,20 @@ const routes: Routes = [{
         }
       ],
       data: { redirect: '/c/o/marketplace/home' }
-    }
-  ]
-}, {
-  path: 'tunnel',
-  canActivate: [TunnelGuard],
-  children: [{
-    path: 'contract/:contractId',
-    canActivate: [ActiveContractGuard],
-    canDeactivate: [ActiveContractGuard],
-    loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-    data: {
-      redirect: '/c/o/dashboard/selection'
     },
-  }]
+    {
+      path: 'tunnel',
+      canActivate: [TunnelGuard],
+      children: [{
+        path: 'contract/:contractId',
+        canActivate: [ActiveContractGuard],
+        canDeactivate: [ActiveContractGuard],
+        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+        data: {
+          redirect: '/c/o/dashboard/selection'
+        }
+      }]
+    }]
 }];
 
 @NgModule({

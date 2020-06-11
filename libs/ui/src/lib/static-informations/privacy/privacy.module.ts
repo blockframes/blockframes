@@ -4,12 +4,12 @@ import { RouterModule } from '@angular/router';
 
 // Pages
 import { PrivacyComponent } from './privacy.component';
-import { TermsConditionsModule } from '@blockframes/auth/components/terms-conditions/terms-conditions.module';
+import { PrivacyPolicyModule } from '@blockframes/auth/components/privacy-policy/privacy-policy.module';
 
 @NgModule({
   declarations: [PrivacyComponent],
   imports: [
-    TermsConditionsModule,
+    PrivacyPolicyModule,
     RouterModule.forChild([
       {
         path: '',
