@@ -40,7 +40,7 @@
           <ul>
             <li>
               <b class="bf-dark-text">Blockframes admin : </b>
-              <a [routerLink]="['./']"  (click)="setBlockframesAdmin()">
+              <a class="blockframes-admin-link" (click)="setBlockframesAdmin()">
                 <span>{{ isUserBlockframesAdmin? 'remove' : 'add' }}</span>
                 <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
               </a>
