@@ -6,6 +6,7 @@ export type UploadStatus = 'uploading' | 'paused' | 'succeeded' | 'canceled';
 export interface UploadState {
   status: UploadStatus;
   progress: number;
+  id: string
 }
 
 export function isUploading(upload: UploadState) {

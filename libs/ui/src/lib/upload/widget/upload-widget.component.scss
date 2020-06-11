@@ -1,0 +1,36 @@
+:host,
+div,
+mat-expansion-panel {
+  width: 100%;
+}
+
+mat-divider {
+  width: 95%;
+}
+
+.content {
+  overflow: auto;
+  height: 100%;
+  padding: 0px 32px;
+  max-height: 500px;
+}
+
+.sub-header {
+  padding-top: 16px;
+}
+
+img {
+  width: 42px;
+}
+
+mat-icon {
+  width: 18px;
+}
+
+.succeeded {
+  color: var(--primary);
+}
+
+.canceled {
+  color: var(--warn);
+}

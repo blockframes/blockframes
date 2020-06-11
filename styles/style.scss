@@ -75,6 +75,11 @@ main {
   z-index: 1;
 }
 
+.upload-widget {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
 // SCROLL
 .dark-theme {
   /* width */

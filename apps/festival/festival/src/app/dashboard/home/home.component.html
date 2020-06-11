@@ -1,3 +1,4 @@
+<input type="file" (change)="dev()" #file multiple />
 <ng-container *ngIf="(hasMovies$ | async) else noMovie">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>

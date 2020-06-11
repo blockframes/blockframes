@@ -1,18 +1,36 @@
+// Angular
 import { Injectable } from "@angular/core";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { MediaStore, isUploading } from "./media.store";
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
+// State
+import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
 import { UploadFile } from "./media.firestore";
+
+// Blockframes
+import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
-  private tasks: Record<string, AngularFireUploadTask>;
+  private tasks: Record<string, AngularFireUploadTask> = {};
+
+  private overlayOptions = {
+    height: '400px',
+    width: '500px',
+    panelClass: 'upload-widget',
+    positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
+  }
+
+  public overlayRef: OverlayRef;
 
   constructor(
     private store: MediaStore,
     private query: MediaQuery,
     private storage: AngularFireStorage,
+    private overlay: Overlay
   ) { }
 
   /** Check if a file exists in the **Firebase storage** */
@@ -20,24 +38,31 @@ export class MediaService {
     return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
   }
 
-  uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> | Promise<void>[] {
+  uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> {
+
     if (Array.isArray(uploadFiles)) {
-      // here we need to force the type to Promise<void>,
-      // because we know that inside the map the current uploadFile is not an Array
-      // so this.uploadBlob will return a Promise<void> and not a Promise<void>[]
-      // but TypeScript did not know that, and it was causing a linter error
-      return uploadFiles.map(uploadFile => this.uploadBlob(uploadFile) as Promise<void>);
+      uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
       return this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
     }
   }
 
-  uploadFile(path: string, file: File) {
-    return this.upload(path, file, file.name);
+  uploadFile(path: string, file: File | FileList) {
+
+    if (file instanceof File) {
+      return this.upload(path, file, file.name);
+    } else {
+      const promises = [];
+      for (let index = 0; index < file.length; index++) {
+        promises.push(this.upload(path, file.item(index), file.item(index).name))
+      }
+      return Promise.all(promises);
+    }
   }
 
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const exists = await this.exists(path);
+    const exists = await this.exists(path.concat(fileName));
+    this.showWidget();
 
     if (exists) {
       throw new Error(`Upload Error : there is already a file @ ${path}, please delete it before uploading a new file!`);
@@ -48,27 +73,27 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path, fileOrBlob);
+    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
       progress: 0,
     });
 
-    task.percentageChanges().subscribe(p => this.store.update(fileName, {progress: p}));
+    task.percentageChanges().subscribe(p => this.store.update(fileName, { progress: p }));
 
     this.tasks[fileName] = task;
 
     task.then(
       // on success
       () => {
-        this.store.update(fileName, {status: 'succeeded'});
+        this.store.update(fileName, { status: 'succeeded' });
         delete this.tasks[fileName];
       },
 
-      // on error (cancelled is treated by firebase as an error)
+      // on error (canceled is treated by firebase as an error)
       () => {
-        this.store.update(fileName, {status: 'canceled'});
+        this.store.update(fileName, { status: 'canceled' });
         delete this.tasks[fileName];
       }
     );
@@ -96,7 +121,23 @@ export class MediaService {
   }
 
   /** Remove every `succeeded` and `canceled` upload */
-  clear() {
-    this.store.remove(upload => isUploading(upload));
+  clear(fileName?: string) {
+    if (fileName) {
+      this.store.remove(upload => upload.id === fileName)
+    } else {
+      this.store.remove(upload => isDone(upload));
+    }
+  }
+
+  public detachWidget() {
+    this.overlayRef.detach()
+    delete this.overlayRef;
+  }
+
+  private showWidget() {
+    if (!this.overlayRef) {
+      this.overlayRef = this.overlay.create(this.overlayOptions);
+      this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
+    }
   }
 }
