@@ -21,6 +21,22 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
+      path: 'about',
+      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+    },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    },
+    {
       path: 'notifications',
       loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
@@ -81,35 +97,7 @@ const routes: Routes = [{
       ],
       data: { redirect: '/c/o/marketplace/home' }
     },
-    {
-      path: 'about',
-      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
-    },
-    {
-      path: 'who-are-we',
-      loadChildren: () => import('@blockframes/ui/static-informations/team/team.module').then(m => m.TeamModule)
-    },
-    {
-      path: 'contact',
-      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
-    },
-    {
-      path: 'terms',
-      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
-    },
   ]
-}, {
-  path: 'tunnel',
-  canActivate: [TunnelGuard],
-  children: [{
-    path: 'contract/:contractId',
-    canActivate: [ActiveContractGuard],
-    canDeactivate: [ActiveContractGuard],
-    loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-    data: {
-      redirect: '/c/o/dashboard/selection'
-    },
-  }]
 }];
 
 @NgModule({
