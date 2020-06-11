@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 
 @Component({
   selector: 'admin-organization',
@@ -94,10 +95,11 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
-    await this.loadMembers();
+    this.members = await this.getMembers();
+    this.cdRef.markForCheck();
 
-    const queryFn1 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'invitation').where('fromOrg.id', '==', this.orgId).where('status', '==', 'pending');
-    const queryFn2 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'request').where('toOrg.id', '==', this.orgId).where('status', '==', 'pending');
+    const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
+    const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
 
     this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
     this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
@@ -116,9 +118,9 @@ export class OrganizationComponent implements OnInit {
     this.invitationService.remove(invitation.id);
   }
 
-  private async loadMembers(){
+  private async getMembers(){
     const members = await this.organizationService.getMembers(this.orgId);
-    this.members = members.map(m => ({
+    return members.map(m => ({
       ...m,
       userId: m.uid,
       edit: {
@@ -126,7 +128,6 @@ export class OrganizationComponent implements OnInit {
         link: `/c/o/admin/panel/user/${m.uid}`,
       }
     }));
-    this.cdRef.markForCheck();
   }
 
   public async update() {
@@ -176,14 +177,16 @@ export class OrganizationComponent implements OnInit {
   /** Update user role. */
   public async updateRole(uid: string, role: UserRole) {
     const message = await this.permissionService.updateMemberRole(uid, role);
-    await this.loadMembers();
+    this.members = await this.getMembers();
+    this.cdRef.markForCheck();
     return this.snackBar.open(message, 'close', { duration: 2000 });
   }
 
   public async removeMember(uid: string) {
     try {
       this.organizationService.removeMember(uid);
-      await this.loadMembers();
+      this.members = await this.getMembers();
+      this.cdRef.markForCheck();
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

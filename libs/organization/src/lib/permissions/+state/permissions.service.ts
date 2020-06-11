@@ -82,22 +82,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   private async _updateMemberRole(uid: string, role: UserRole) {
     const orgId = this.query.getActiveId();
     const permissions = await this.getValue(orgId);
-
-    switch (role) {
-      case 'superAdmin':
-        permissions.roles[uid] = 'superAdmin';
-        break;
-      case 'admin':
-        permissions.roles[uid] = 'admin';
-        break;
-      case 'member':
-        permissions.roles[uid] = 'member';
-        break;
-      default:
-        throw new Error(`User with id : ${uid} have no role.`);
-    }
-
-
+    permissions.roles[uid] = role;
     return this.update(orgId, { roles: permissions.roles });
   }
 }

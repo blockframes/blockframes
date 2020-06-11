@@ -8,6 +8,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 
 @Component({
   selector: 'member-edit',
@@ -48,8 +49,8 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     if (this.permissionQuery.isUserAdmin()) {
-      const queryFn1 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'invitation').where('fromOrg.id', '==', this.orgId).where('status', '==', 'pending');
-      const queryFn2 = ref => ref.where('type', '==', 'joinOrganization').where('mode', '==', 'request').where('toOrg.id', '==', this.orgId).where('status', '==', 'pending');
+      const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
+      const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
 
       this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
       this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
