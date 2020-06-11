@@ -127,7 +127,7 @@ export async function delay(ms: number) {
 
 
 export function downloadCsvFromJson(data: object[], fileName = 'my-file') {
-  const replacer = (_: any, value: any) => value === null ? '' : value;
+  const replacer = (_: any, value: object) => value === null ? '' : value;
   const header = Object.keys(data[0]);
   const csv = data.map((row: object) => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','));
   csv.unshift(header.join(','));
