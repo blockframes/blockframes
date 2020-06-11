@@ -24,18 +24,6 @@ export default class TunnelMainPage {
     cy.get('catalog-movie-tunnel-main movie-form-content-type mat-select[test-id=content-type]').contains(contentType);
   }
 
-  public clickFreshness() {
-    cy.get('catalog-movie-tunnel-main movie-form-content-type mat-select[test-id=freshness]').click();
-  }
-
-  public selectFreshness(freshness: string) {
-    cy.get('mat-option').contains(freshness).click();
-  }
-
-  public assertFreshnessExists(freshness: string) {
-    cy.get('catalog-movie-tunnel-main movie-form-content-type mat-select[test-id=freshness]').contains(freshness);
-  }
-
   public clickProductionStatus() {
     cy.get('catalog-movie-tunnel-main movie-form-content-type mat-select[test-id=production-status]').click();
   }
