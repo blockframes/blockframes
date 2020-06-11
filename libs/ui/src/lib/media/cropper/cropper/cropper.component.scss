@@ -1,10 +1,22 @@
 section {
   width: 100%;
   text-align: center;
+  border: solid 1px var(--foreground-divider);
+  padding: 24px 0;
+  border-radius: 10px;
   article {
     width: 100%;
     text-align: center;
   }
+}
+
+a {
+  color: var(--primary);
+}
+
+.mat-icon-button {
+  width: 48px;
+  margin-bottom: 8px;
 }
 
 .add-files-icon {

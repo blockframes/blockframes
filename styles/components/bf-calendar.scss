@@ -5,13 +5,13 @@
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
-  
+
 
   @include cal-theme(
     (
       bg-primary: mat-color($background, background),
       bg-secondary: mat-color($background, background),
-      weekend-color: mat-color($accent),
+      weekend-color: mat-color($primary),
       bg-active: mat-color($background, hover),
       border-color: mat-color($foreground, divider),
       gray: mat-color($background, unselected-chip),
@@ -38,6 +38,19 @@
       z-index: 2;
       position: sticky;
       top: 0;
+      // Typography of h5 for day in calendar
+      b {
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      // Typography of mat-caption for month and number in calendar
+      span {
+        font-size: 13px;
+        line-height: 21px;
+        font-weight: 400;
+      }
     }
 
     ///////////
@@ -45,8 +58,8 @@
     ///////////
 
     // Resize handler
-    .cal-day-column {    
-      // Resize top/bottom    
+    .cal-day-column {
+      // Resize top/bottom
       .cal-resize-handle {
         height: 6px;
         width: calc(100% - 4px);
