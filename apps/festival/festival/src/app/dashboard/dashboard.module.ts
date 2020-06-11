@@ -78,21 +78,17 @@ const routes: Routes = [{
       }]
     },
     {
-      path: 'about',
-      loadChildren: () => import('@blockframes/ui/static-informations/about/about.module').then(m => m.AboutModule)
-    },
-    {
-      path: 'who-are-we',
-      loadChildren: () => import('@blockframes/ui/static-informations/team/team.module').then(m => m.TeamModule)
-    },
-    {
       path: 'contact',
       loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
     },
     {
       path: 'terms',
-      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
     },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
+    }
   ]
 },
 {
@@ -115,9 +111,6 @@ const routes: Routes = [{
   }]
 },
 ];
-
-
-
 
 @NgModule({
   declarations: [DashboardComponent],

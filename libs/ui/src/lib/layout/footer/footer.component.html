@@ -1,8 +1,11 @@
 <div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
   <app-logo></app-logo>
-  <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
+  <!-- ATM there is no about page for festival -->
+  <ng-container *ngIf="!isFestival">
+    <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
+  </ng-container>
   <a mat-button [routerLink]="['/c/o/'+section+'/contact']">Contact us</a>
   <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Legal Term</a>
-  <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Privacy Policy</a>
+  <a mat-button [routerLink]="['/c/o/'+section+'/privacy']">Privacy Policy</a>
 </div>
 <span class="mat-body-2">© 2020 Archipel Content Paris</span>

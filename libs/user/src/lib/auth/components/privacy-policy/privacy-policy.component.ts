@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -6,5 +7,9 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrls: ['./privacy-policy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-export class PrivacyPolicyComponent {}
+export class PrivacyPolicyComponent {
+  public isFestival: boolean;
+  constructor(private routerQuery: RouterQuery) {
+    this.isFestival = this.routerQuery.getData<string>('app') === 'festival' ? true : false;
+  }
+}

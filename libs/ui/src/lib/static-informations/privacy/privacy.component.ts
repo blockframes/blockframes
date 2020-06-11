@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 @Component({
-  selector: 'catalog-privacy',
-  template: '<auth-terms-conditions></auth-terms-conditions>',
+  selector: 'bf-privacy',
+  template: '<auth-privacy-policy></auth-privacy-policy>',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrivacyComponent {}
