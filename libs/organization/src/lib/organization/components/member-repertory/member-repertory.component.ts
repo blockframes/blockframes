@@ -10,7 +10,7 @@ import { UserRole } from '@blockframes/permissions/+state/permissions.model';
 })
 export class MemberRepertoryComponent {
   @Input() members: OrganizationMember[];
-
+  @Input() showFilter = false;
   @Input() isSuperAdmin: boolean;
 
   @Output() memberRemoved = new EventEmitter<string>();
@@ -19,7 +19,7 @@ export class MemberRepertoryComponent {
   @Output() updatedToAdmin = new EventEmitter<string>();
   @Output() updatedToMember = new EventEmitter<string>();
 
-  public memberColumns = {
+  @Input() memberColumns = {
     firstName: 'First Name',
     lastName: 'Last Name',
     email: 'Email Address',
@@ -27,10 +27,10 @@ export class MemberRepertoryComponent {
     role: 'Permissions'
   };
 
+  @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
+
   get initialColumns() {
-    return this.isSuperAdmin
-    ? [ 'firstName', 'lastName', 'email', 'position', 'role', 'uid' ]
-    : [ 'firstName', 'lastName', 'email', 'position', 'role' ]
+    return this.isSuperAdmin ? [...this.memberColumnsIndex, 'uid'] : this.memberColumnsIndex;
   }
 
   public displayRole(role: UserRole) {

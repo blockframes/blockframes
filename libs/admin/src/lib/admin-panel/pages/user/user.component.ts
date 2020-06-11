@@ -5,7 +5,7 @@ import { UserAdminForm } from '../../forms/user-admin.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
-import { UserRole } from '@blockframes/permissions/+state';
+import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 
 @Component({
   selector: 'admin-user',
@@ -27,6 +27,7 @@ export class UserComponent implements OnInit {
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
+    private permissionService: PermissionsService,
   ) { }
 
   async ngOnInit() {
@@ -78,5 +79,22 @@ export class UserComponent implements OnInit {
 
   public getOrgPath(orgId: string) {
     return `/c/o/admin/panel/organization/${orgId}`;
+  }
+
+  /** Update user role. */
+  public async updateRole(uid: string, role: UserRole) {
+    const message = await this.permissionService.updateMemberRole(uid, role);
+    this.userOrgRole = role;
+    this.cdRef.markForCheck();
+    return this.snackBar.open(message, 'close', { duration: 2000 });
+  }
+
+  public removeMember(uid: string) {
+    try {
+      this.organizationService.removeMember(uid);
+      this.snackBar.open('Member removed.', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 }
