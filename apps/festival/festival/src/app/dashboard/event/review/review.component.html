@@ -20,6 +20,7 @@
             [initialColumns]="initialColumns"
             [columns]="columns"
             [source]="analytics">
+            <ng-template colRef="name" let-name>{{ name | titlecase }}</ng-template>
           </bf-table-filter>
         </mat-card>
       </section>
