@@ -1,10 +1,11 @@
 import { loadAdminServices } from './admin';
-import { NotificationDocument } from '@blockframes/notification/types';
+import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { User } from '@blockframes/user/types';
+import { User } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 
+/** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
   const { db } = loadAdminServices();
 

@@ -17,6 +17,9 @@
       color: mat-color($foreground, secondary-text);
       font-weight: bold;
     }
+    .mat-card-subtitle.mat-caption {
+      font-size: 13px;
+    }
     .mat-card-header-text {
       margin: 0;
     }
