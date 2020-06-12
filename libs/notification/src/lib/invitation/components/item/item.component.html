@@ -12,7 +12,8 @@
   <invitation-action [invitation]="invitation"></invitation-action>
   <a
     mat-button
-    [routerLink]="invitation.type === 'joinOrganization' ? ['../../organization', invitation.toOrg.id, 'view', 'members'] : ['../event/', invitation.docId]">
+    [routerLink]="invitation.type === 'joinOrganization' ? ['../../organization', invitation.toOrg.id, 'view', 'members'] : ['../event/', invitation.docId]"
+  >
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
       <mat-icon svgIcon="dot_menu"></mat-icon>
       More
