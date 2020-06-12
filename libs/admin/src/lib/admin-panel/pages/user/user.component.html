@@ -8,35 +8,50 @@
           <h4>{{ user.firstName }} {{ user.lastName }}</h4>
           <h3>Main infos</h3>
           <ul>
-            <li><b class="bf-dark-text">Id</b> {{ user.uid }}</li>
-            <li><b class="bf-dark-text">Email</b> {{ user.email }}</li>
-            <li><b class="bf-dark-text">Position</b> {{ user.position }}</li>
-            <li><b class="bf-dark-text">Phone Number</b> {{ user.phoneNumber }}</li>
+            <li><b class="bf-dark-text">Id : </b> {{ user.uid }}</li>
+            <li><b class="bf-dark-text">Email : </b> {{ user.email }}</li>
+            <li><b class="bf-dark-text">Position : </b> {{ user.position }}</li>
+            <li><b class="bf-dark-text">Phone Number : </b> {{ user.phoneNumber }}</li>
           </ul>
-          <h3>Other informations</h3>
+          <h3>Organization infos</h3>
           <ul>
             <li *ngIf="userOrg">
-              <b class="bf-dark-text">Organization </b>
+              <b class="bf-dark-text">Organization : </b>
               <span>{{ userOrg | orgName }} ({{ userOrg.id }})</span>
               <button mat-icon-button color="primary" [routerLink]="getOrgPath(userOrg.id)">
                 <mat-icon svgIcon="eye"></mat-icon>
               </button>
             </li>
             <li *ngIf="userOrgRole">
-              <b class="bf-dark-text">User Role </b>
+              <b class="bf-dark-text">User Role : </b>
               <span>{{ userOrgRole }}</span>
+              <member-permissions 
+                [uid]="userId"
+                icon="pencil"
+                (memberRemoved)="removeMember($event)"
+                (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+                (updatedToAdmin)="updateRole($event, 'admin')"
+                (updatedToMember)="updateRole($event, 'member')">
+                >
+              </member-permissions>
             </li>
+          </ul>
+          <h3>Other settings</h3>
+          <ul>
             <li>
-              <b class="bf-dark-text">Blockframes admin</b>
-              <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'accept': 'cross'"></mat-icon>
-              <button mat-flat-button color="primary" (click)="setBlockframesAdmin()">
-                <span>{{ isUserBlockframesAdmin? 'Remove from admins' : 'Set admin' }}</span>
-              </button>
+              <b class="bf-dark-text">Blockframes admin : </b>
+              <a class="blockframes-admin-link" (click)="setBlockframesAdmin()">
+                <span>{{ isUserBlockframesAdmin? 'remove' : 'add' }}</span>
+                <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
+              </a>
             </li>
           </ul>
         </article>
       </mat-card-content>
     </mat-card>
+    <admin-image-sizes [imgRef]="user.avatar">
+      <h3>Image sizes</h3>
+    </admin-image-sizes>
   </article>
   <article *ngIf="userForm" fxLayout="column" fxLayoutAlign="space-between start">
     <form [formGroup]="userForm" fxLayout="column">

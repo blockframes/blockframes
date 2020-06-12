@@ -45,7 +45,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === 'pending')),
-      tap(wishlist => this.hasWishlist = !!wishlist.movieIds.length),
+      tap(wishlist => this.hasWishlist = !!wishlist?.movieIds.length),
       filter(wishlist => !!wishlist?.movies?.length)
     ).subscribe(wishlist => {
       this.dataSource = new MatTableDataSource(wishlist.movies)

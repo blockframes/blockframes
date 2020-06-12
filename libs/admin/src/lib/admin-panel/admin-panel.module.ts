@@ -25,6 +25,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
+import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -94,6 +96,8 @@ export const panelRoutes: Routes = [
     ToLabelModule,
     TranslateSlugModule,
     OrgNameModule,
+    MemberPermissionsModule,
+    ImageSizesModule,
   ],
   declarations: [
     OverviewComponent,

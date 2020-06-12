@@ -4,7 +4,8 @@
     [source]="members"
     [columns]="memberColumns"
     [initialColumns]="initialColumns"
-    showPaginator >
+    showPaginator
+    [showFilter]="showFilter" >
     <ng-template colRef="firstName" let-firstName>
       <b>{{ firstName }}</b>
     </ng-template>
@@ -15,29 +16,19 @@
       {{ displayRole(role) }}
     </ng-template>
     <ng-template colRef="uid" let-uid>
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon svgIcon="more_vert"></mat-icon>
-      </button>
-      <mat-menu #menu>
-        <button mat-menu-item [matMenuTriggerFor]="subMenu">
-          Grant Permissions
-        </button>
-        <button mat-menu-item (click)="memberRemoved.emit(uid)">
-          <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
-          <span>Remove from Company</span>
-        </button>
-      </mat-menu>
-      <mat-menu #subMenu>
-        <button mat-menu-item (click)="updatedToSuperAdmin.emit(uid)">
-          Super Admin
-        </button>
-        <button mat-menu-item (click)="updatedToAdmin.emit(uid)">
-          Admin
-        </button>
-        <button mat-menu-item (click)="updatedToMember.emit(uid)">
-          Member
-        </button>
-      </mat-menu>
+      <member-permissions 
+        [uid]="uid"
+        (memberRemoved)="memberRemoved.emit(uid)"
+        (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)"
+        (updatedToAdmin)="updatedToAdmin.emit(uid)"
+        (updatedToMember)="updatedToMember.emit(uid)">
+      </member-permissions>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+    </ng-template>
+    <ng-template colRef="avatar" let-avatar>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
     </ng-template>
   </bf-table-filter>
   <h6>What is “Grant permissions”?</h6>

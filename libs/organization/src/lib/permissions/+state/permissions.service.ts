@@ -20,29 +20,6 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     super(store);
   }
 
-  /** Update role of a member of the organization */
-  public async updateMemberRole(uid: string, role: UserRole) {
-    const orgId = this.query.getActiveId();
-    const permissions = await this.getValue(orgId);
-
-    switch (role) {
-      case 'superAdmin':
-        permissions.roles[uid] = 'superAdmin';
-        break;
-      case 'admin':
-        permissions.roles[uid] = 'admin';
-        break;
-      case 'member':
-        permissions.roles[uid] = 'member';
-        break;
-      default:
-        throw new Error(`User with id : ${uid} have no role.`);
-    }
-
-
-    return this.update(orgId, { roles: permissions.roles });
-  }
-
   /**
    * Takes a document (movie or contract), create relative permissions
    * and add them to documentPermissions subcollection.
@@ -73,5 +50,39 @@ export class PermissionsService extends CollectionService<PermissionsState> {
         tx.set(contractPermissionsRef, contractPermissions)
       })
     })
+  }
+
+  /** Ensures that there is always at least one super Admin in the organization. */
+  public hasLastSuperAdmin(uid: string, role: UserRole) {
+    if (role !== 'superAdmin' && this.query.isUserSuperAdmin(uid)) {
+      const superAdminNumber = this.query.superAdminCount;
+      return superAdminNumber > 1 ? true : false;
+    } else {
+      return true;
+    }
+  }
+
+  /** Update user role. */
+  public async updateMemberRole(uid: string, role: UserRole): Promise<string> {
+    if (this.query.hasAlreadyThisRole(uid, role)) {
+      return 'This user already has this role.';
+    }
+    try {
+      if (!this.hasLastSuperAdmin(uid, role)) {
+        throw new Error('There must be at least one Super Admin in the organization.');
+      }
+      await this._updateMemberRole(uid, role);
+      return 'Role updated';
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  /** Update role of a member of the organization */
+  private async _updateMemberRole(uid: string, role: UserRole) {
+    const orgId = this.query.getActiveId();
+    const permissions = await this.getValue(orgId);
+    permissions.roles[uid] = role;
+    return this.update(orgId, { roles: permissions.roles });
   }
 }

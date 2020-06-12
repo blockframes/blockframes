@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FooterModule } from '@blockframes/ui/layout/footer/footer.module';
 
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
 
@@ -45,9 +46,10 @@ const material = [
     SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
+    FooterModule,
     ...material
   ],
   exports: [LayoutComponent]
 })
 
-export class LayoutModule {}
+export class LayoutModule { }

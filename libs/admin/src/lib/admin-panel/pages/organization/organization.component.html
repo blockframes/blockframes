@@ -3,6 +3,10 @@
   <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
     <h4>{{ org.denomination.full }} <ng-container *ngIf="org.denomination.public">({{ org.denomination.public }})</ng-container></h4>
     <organization-display [organization]="org"></organization-display>
+
+    <admin-image-sizes [imgRef]="org.logo">
+      <h3>Image sizes</h3>
+    </admin-image-sizes>
   </article>
   <article *ngIf="orgForm" fxLayout="column" class="main-article">
     <form [formGroup]="orgForm" fxLayout="column">
@@ -115,28 +119,45 @@
 <hr />
 <section  fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
-    <h2>
-      <span>Members</span>
-      <a [routerLink]="getOrgMemberPath(orgId)">
-        <mat-icon svgIcon="eye"></mat-icon>
-      </a>
-    </h2>
-    <bf-table-filter
-      [source]="members"
-      [columns]="versionColumnsMembers"
-      [initialColumns]="initialColumnsMembers"
-      [filterPredicate]="filterPredicateMembers"
-      showFilter
-      showLoader
-      showPaginator>
-      <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </ng-template>
-      <ng-template colRef="avatar" let-avatar>
-        <img class="poster" [ref]="avatar" asset="empty_poster.webp">
-      </ng-template>
-    </bf-table-filter>
+    <member-repertory
+      [members]="members"
+      [isSuperAdmin]="true"
+      [showFilter]="true"
+      [memberColumns]="memberColumns"
+      [memberColumnsIndex]="memberColumnsIndex"
+      (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+      (updatedToAdmin)="updateRole($event, 'admin')"
+      (updatedToMember)="updateRole($event, 'member')">
+    </member-repertory>
   </article>
+  
+  <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <member-pending *ngIf="invitationsMember.length > 0"
+        [invitations]="invitationsMember"
+        (declined)="deleteInvitation($event)"
+        [isAdmin]="true">
+      </member-pending>
+    </article>
+  </ng-container>
+  
+  <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <member-request *ngIf="invitations.length > 0"
+        (declined)="declineInvitation($event)"
+        (accepted)="acceptInvitation($event)"
+        [invitations]="invitations"
+        [isAdmin]="true">
+      </member-request>
+    </article>
+  </ng-container>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <member-add [orgId]="orgId"></member-add>
+  </article>
+</section>
+<hr />
+<section  fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <h2>Movies</h2>
     <bf-table-filter
