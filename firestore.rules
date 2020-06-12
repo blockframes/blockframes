@@ -351,7 +351,7 @@ service cloud.firestore {
       allow delete: if userHasValidOrg()
         && ( 
           existingData().ownerId == userId() // Current user is event owner
-          || ( existingData().ownerId == userOrgId() && isOrgAdmin(userOrgId()) ) // Or Org of current user is the event owner and current user is orgAdmin
+          || ( existingData().ownerId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
         );
 		}
 
