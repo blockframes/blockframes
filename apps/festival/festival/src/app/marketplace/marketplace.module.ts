@@ -85,15 +85,27 @@ const routes: Routes = [{
         canDeactivate: [EventActiveGuard],
         data: { animation: 'event-view' },
         children: [{
-            path: '',
-            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
-          }, {
-            path: 'session',
-            canActivate: [SessionGuard],
-            loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
-          },
+          path: '',
+          loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
+        }, {
+          path: 'session',
+          canActivate: [SessionGuard],
+          loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
+        },
         ]
       }]
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+    },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
     }
   ]
 }];
@@ -116,4 +128,4 @@ const routes: Routes = [{
     MatButtonModule,
   ]
 })
-export class MarketplaceModule {}
+export class MarketplaceModule { }
