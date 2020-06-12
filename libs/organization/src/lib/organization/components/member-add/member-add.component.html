@@ -3,7 +3,7 @@
   <p class="mat-caption">Invite your co-workers to join your company so that they can use the application.</p>
 
   <ng-container *ngFor="let control of form.controls; let i = index; let last = last; let first = first">
-    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center" fxLayoutGap="16px">
       <mat-form-field appearance="outline" class="email">
         <mat-label>Email Address</mat-label>
         <input matInput type="email" placeholder="name@example.com" aria-label="Email" [formControl]="control" />
@@ -13,18 +13,16 @@
         </mat-error>
       </mat-form-field>
       <!-- Add / Delete -->
-      <div fxLayout="row" fxLayoutAlign="center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center" fxLayoutGap="16px">
-        <button
-          *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)"
-          matTooltip="Remove a Member" aria-label="Remove a Member" class="action">
-          Remove email
-        </button>
-        <button
-        *ngIf="last" mat-flat-button color="primary" (click)="form.add()"
-        matTooltip="Add a Member" aria-label="Add a Member" class="action">
-          Add email
-        </button>
-      </div>
+      <button
+        *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)"
+        matTooltip="Remove a Member" aria-label="Remove a Member" class="action">
+        Remove email
+      </button>
+      <button
+      *ngIf="last" mat-flat-button color="primary" (click)="form.add()"
+      matTooltip="Add a Member" aria-label="Add a Member" class="action">
+        Add email
+      </button>
     </mat-card-content>
   </ng-container>
   <div fxLayout="row" fxLayoutAlign="center">
