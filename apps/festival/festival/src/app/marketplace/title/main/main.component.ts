@@ -51,6 +51,10 @@ export class MainComponent {
     );
   }
 
+  public hasTerritory({ budget }: Movie) {
+    return !!(budget.boxOffice.some(movie => movie.territory));
+  }
+
   public budgetRange({ from, to }) {
     return (from && to) ? `$ ${formatNumber(from, 'en-US')} - ${formatNumber(to, 'en-US')}` : '';
   }
