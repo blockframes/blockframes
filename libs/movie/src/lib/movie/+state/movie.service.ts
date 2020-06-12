@@ -56,11 +56,11 @@ export class MovieService extends CollectionService<MovieState> {
     return this.runTransaction(async write => {
       const ref = this.getRef(movie.id);
       const snap = await write.get(ref);
-      const movieDoc = snap.data() as Movie;
+      const movieDoc = createMovie(snap.data());
       // Update the images reference with the latest value from firestore
-      movie.promotionalElements.banner = movieDoc.promotionalElements.banner || { label: 'banner', media: createImgRef() };
-      movie.promotionalElements.poster = movieDoc.promotionalElements.poster || [];
-      movie.promotionalElements.still_photo = movieDoc.promotionalElements.still_photo || [];
+      for (const key of ['banner', 'poster', 'still_photo']) {
+        movie.promotionalElements[key] = movieDoc.promotionalElements[key];
+      }
       return this.update(movie, { write });
     });
   }
