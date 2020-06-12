@@ -44,6 +44,7 @@ const heavyConfig = {
   memory: '1GB'
 } as functions.RuntimeOptions
 
+
 //--------------------------------
 //    Users Management          //
 //--------------------------------
