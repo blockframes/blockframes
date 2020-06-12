@@ -10,5 +10,4 @@ import { ImgRef } from '@blockframes/utils/media/media.model';
 })
 export class ImageSizeComponent  {
   @Input() imgRef: ImgRef;
-  @Input() title = 'Image sizes';
 }

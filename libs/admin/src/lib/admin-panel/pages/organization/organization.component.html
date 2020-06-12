@@ -4,7 +4,9 @@
     <h4>{{ org.denomination.full }} <ng-container *ngIf="org.denomination.public">({{ org.denomination.public }})</ng-container></h4>
     <organization-display [organization]="org"></organization-display>
 
-    <admin-image-sizes [imgRef]="org.logo"></admin-image-sizes>
+    <admin-image-sizes [imgRef]="org.logo">
+      <h3>Image sizes</h3>
+    </admin-image-sizes>
   </article>
   <article *ngIf="orgForm" fxLayout="column" class="main-article">
     <form [formGroup]="orgForm" fxLayout="column">

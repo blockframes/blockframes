@@ -6,9 +6,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageSizeComponent } from './image-sizes.component';
 import { MatCardModule } from '@angular/material/card';
 
+// Pipes
+import { ImgSizePipe } from './images-sizes.pipe';
+
 @NgModule({
   declarations: [
     ImageSizeComponent,
+    ImgSizePipe,
   ],
   imports: [
     CommonModule,
@@ -16,7 +20,8 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
   ],
   exports: [
-    ImageSizeComponent
+    ImageSizeComponent,
+    ImgSizePipe
   ]
 })
 export class ImageSizesModule { }

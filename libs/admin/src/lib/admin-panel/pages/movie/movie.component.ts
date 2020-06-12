@@ -138,8 +138,4 @@ export class MovieComponent implements OnInit {
     return `/c/o/admin/panel/contract/${contractId}`;
   }
 
-  public posterName(i: number): string {
-    return `Movie poster n°${i + 1}`;
-  }
-
 }
