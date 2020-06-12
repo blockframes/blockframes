@@ -104,3 +104,22 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   }
 
 }
+
+function extractMedia(value: object) {
+
+  let media = [];
+
+  for (const key in value) {
+    if (key === 'media') {
+      if (!!value[key]) {
+        media.push(value[key]);
+      }
+      delete value[key];
+    } else if (typeof value[key] === 'object' && !!value[key]) {
+      const childMedia = extractMedia(value[key]);
+      media = media.concat(childMedia);
+    }
+  }
+
+  return media;
+}

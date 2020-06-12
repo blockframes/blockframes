@@ -7,9 +7,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile } from "./media.firestore";
-import * as objectPath from 'object-path';
-import { ImgRefForm } from "@blockframes/ui/media/image-reference/image-reference.form";
+import { UploadFile, ImgRef } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
@@ -162,69 +160,27 @@ export class MediaService {
 
   }
 
-  public handleMediaForms(form) {
+  public uploadOrDeleteMedia(medias: ImgRef[]) {
 
-    const medias = searchForMediaRef(form);
-
-    medias.forEach(form => {
-      if (form.delete.value) {
+    medias.forEach(imgRef => {
+      if (imgRef.delete && imgRef.ref) {
   
+        console.log('removing media: ', imgRef);
         // this.media.removeFile(media.ref.value);
-        form.ref.setValue('');
   
-      } else if (!!form.blob.value) {
+      } else if (!!imgRef.blob) {
   
-        if (form.ref.value !== '') {
+        if (imgRef.ref !== '') {
+          console.log('removing old media: ', imgRef);
           // this.media.removeFile(media.ref.value);
         }
   
-        const newRef = form.newRef.value;
-        const fileName = newRef.substr(newRef.lastIndexOf('/') + 1);
+        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
+        console.log('uploading new media: ', imgRef);
         // this.media.uploadBlob(media.newRef.value, media.blob, fileName);
-        form.ref.setValue(form.newRef.value);
       }
-  
-      form.blob.setValue('');
-      form.newRef.setValue('');
-      form.delete.setValue(false);
+
     })
   
   }
-
-  public removeMediaValues(formValue) {
-
-    for (const key in formValue) {
-      if (key === 'media') {
-        delete formValue[key];
-      } else if (typeof formValue[key] === 'object' && !!formValue[key]) {
-        this.removeMediaValues(formValue[key]);
-      }
-    }
-  
-    return formValue;
-  
-  }
-
-}
-
-function searchForMediaRef(object: any): ImgRefForm[] {
-  let imgRefs = [];
-
-  if ("controls" in object) {
-    for (const key in object.controls) {
-      const control = object.controls[key]
-      if (isImgRef(control)) {
-        imgRefs.push(control);
-      } else if (typeof control === 'object' && !!control) { // null is an object
-        const childRefs = searchForMediaRef(control);
-        imgRefs = imgRefs.concat(childRefs);
-      }
-    }
-  }
-  
-  return imgRefs;
-}
-
-function isImgRef(object): boolean {
-  return object?.constructor?.name === 'ImgRefForm' ? true : false;
 }

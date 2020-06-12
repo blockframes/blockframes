@@ -9,6 +9,9 @@ export interface ImgRef {
     md?: string;
     lg?: string;
   };
+  blob?: any;
+  delete?: boolean;
+  newRef?: string;
 }
 
 // @todo(#3063) remove this interface
