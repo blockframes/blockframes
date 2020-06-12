@@ -23,7 +23,12 @@ export class ViewComponent implements OnInit {
   navLinks = [{
     path: 'main',
     label: 'Main Information'
-  }];
+  },
+  {
+    path: 'screenings',
+    label: 'Upcoming Screenings'
+  }
+  ];
 
   promoLinks = [
     'promo_reel_link',

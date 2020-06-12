@@ -34,6 +34,10 @@ const routes = [
       {
         path: 'main',
         loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+      },
+      {
+        path: 'screenings',
+        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
       }
     ]
   }
