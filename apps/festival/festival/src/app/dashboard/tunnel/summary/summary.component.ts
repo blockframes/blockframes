@@ -39,12 +39,10 @@ export class TunnelSummaryComponent {
   public async submit() {
     if (this.form.valid) {
       const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
-      // This is handled by a backend function
-      delete movie.promotionalElements; // @TODO (##2987)
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.festival = true;
-      await this.service.update(movie);
+      await this.service.save(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
