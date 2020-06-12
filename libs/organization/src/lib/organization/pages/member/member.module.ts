@@ -7,6 +7,7 @@ import { MemberRepertoryModule } from '@blockframes/organization/components/memb
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
 import { MemberAddModule } from '@blockframes/organization/components/member-add/member-add.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { MemberComponent } from './member.component';
@@ -21,6 +22,7 @@ import { MemberComponent } from './member.component';
     MemberPendingModule,
     MemberRequestModule,
     MemberAddModule,
+    FlexLayoutModule,
     RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })
