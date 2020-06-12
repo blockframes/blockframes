@@ -1,8 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/storage';
 // Blockframes
-import { MovieService, MovieQuery, Movie, PromotionalElement } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
