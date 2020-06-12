@@ -18,7 +18,7 @@ const chartInfo = [
   },
   {
     eventName: 'promoReelOpened',
-    title: 'Clicks on promotional elements',
+    title: 'Clicks on promo elements',
     icon: 'specific_delivery_list'
   }
 ] as const;

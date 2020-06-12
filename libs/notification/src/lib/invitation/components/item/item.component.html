@@ -10,7 +10,10 @@
     </small>
   </span>
   <invitation-action [invitation]="invitation"></invitation-action>
-  <a mat-button [routerLink]="['../event/', invitation.docId]">
+  <a
+    mat-button
+    [routerLink]="invitation | eventLink"
+  >
     <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
       <mat-icon svgIcon="dot_menu"></mat-icon>
       More
