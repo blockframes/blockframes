@@ -5,7 +5,6 @@ import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
@@ -57,7 +56,6 @@ export class EventService extends CollectionService<EventState> {
     protected store: EventStore,
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private invitationService: InvitationService,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
@@ -86,12 +84,6 @@ export class EventService extends CollectionService<EventState> {
   /** Create the permission */
   async onCreate(event: Event, { write }: WriteOptions) {
     return this.permissionsService.addDocumentPermissions(event.id, write);
-  }
-
-  /** Remove all invitations & notifications linked to this event */
-  async onDelete(id: string, { write }: WriteOptions) {
-    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', id));
-    await this.invitationService.remove(invitations.map(e => e.id), { write });
   }
 
   formatToFirestore(event: Event) {
