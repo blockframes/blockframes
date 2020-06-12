@@ -28,6 +28,7 @@ import { createNotificationsForEventsToStart } from './internals/invitations/eve
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
 import { onFileUploadEvent, onFileDeletion } from './internals/image';
+import { onEventDelete } from './event';
 
 //--------------------------------
 //    Users Management    //
@@ -122,6 +123,15 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
 export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
+);
+
+//--------------------------------
+//    Events Management          //
+//--------------------------------
+
+export const onEventDeleteEvent = onDocumentDelete(
+  'events/{eventID}',
+  logErrors(onEventDelete)
 );
 
 /** Trigger: REST call to invite a list of users by email. */
