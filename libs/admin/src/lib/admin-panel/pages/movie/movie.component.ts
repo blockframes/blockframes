@@ -89,7 +89,7 @@ export class MovieComponent implements OnInit {
 
   public async updateAppAccess() {
     if (this.movieAppAccessForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 5000});
+      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
     this.movie.main.storeConfig.appAccess = this.movieAppAccessForm.value;
