@@ -43,6 +43,8 @@ import { FestivalModule } from './festival.module';
 import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
+import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -74,7 +76,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     YandexMetricaModule.forRoot(yandexId),
 
     // Router
-    FestivalModule
+    FestivalModule,
+
+    SafariBannerModule,
   ],
   providers: [ScreenTrackingService, UserTrackingService],
   bootstrap: [AppComponent]
