@@ -5,13 +5,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'catalog-contact-page',
-  templateUrl: './contact-page.component.html',
-  styleUrls: ['./contact-page.component.scss'],
+  selector: 'bf-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-export class ContactPageComponent implements OnInit {
+export class ContactComponent implements OnInit {
   public form = new FormGroup({
     subject: new FormControl('', Validators.required),
     message: new FormControl('', Validators.required)

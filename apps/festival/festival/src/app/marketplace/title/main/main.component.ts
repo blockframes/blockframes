@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'festival-main',
@@ -51,6 +52,6 @@ export class MainComponent {
   }
 
   public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
+    return (from && to) ? `$ ${formatNumber(from, 'en-US')} - ${formatNumber(to, 'en-US')}` : '';
   }
 }

@@ -4,7 +4,7 @@ mat-form-field {
 
 drop-cropper {
   display: block;
-  width: 100%;
+  width: 30%;
 }
 
 mat-card {
@@ -12,6 +12,21 @@ mat-card {
   margin-bottom: 24px;
 }
 
+.mat-card-header .mat-card-title {
+  margin-bottom: 16px;
+  &.title {
+    margin-bottom: 4px;
+  }
+}
+
 h5 {
   text-transform: uppercase;
+}
+
+h3, p.mat-body-2 {
+  margin: 0;
+}
+
+p.mat-caption {
+  margin-bottom: 8px;
 }

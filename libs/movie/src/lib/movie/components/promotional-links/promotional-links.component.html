@@ -1,20 +1,26 @@
 <section *ngIf="hasLink" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="24px">
   <ng-container *ngFor="let link of links | promotionalLinks: movie | slice:0:1">
-    <a mat-button [href]="link.url" target="_blank">
-      <mat-icon [svgIcon]="link.icon"></mat-icon>
-      <span>{{ link.label }}</span>
-    </a>
+    <div fxLayoutAlign="center center">
+      <a mat-icon-button [href]="link.url" target="_blank">
+        <mat-icon [svgIcon]="link.icon"></mat-icon>
+      </a>
+      <span class="mat-caption">{{ link.label }}</span>
+    </div>
   </ng-container>
-  <a mat-button *ngIf="(links | promotionalLinks: movie).length > 2" [matMenuTriggerFor]="more">
-    <mat-icon svgIcon="more_horiz"></mat-icon>
-    <span>More</span>
-  </a>
+  <div fxLayoutAlign="center center">
+    <button mat-icon-button *ngIf="(links | promotionalLinks: movie).length > 2" [matMenuTriggerFor]="more">
+      <mat-icon svgIcon="more_horiz"></mat-icon>
+    </button>
+    <span class="mat-caption">More</span>
+  </div>
   <mat-menu #more>
     <ng-container *ngFor="let link of links  | promotionalLinks: movie | slice:1">
-      <a mat-button [href]="link.url" target="_blank">
-        <mat-icon [svgIcon]="link.icon"></mat-icon>
-        <span>{{ link.label }}</span>
-      </a>
+      <div fxLayoutAlign="start center">
+        <a mat-icon-button [href]="link.url" target="_blank">
+          <mat-icon [svgIcon]="link.icon"></mat-icon>
+        </a>
+        <span class="mat-caption">{{ link.label }}</span>
+      </div>
     </ng-container>
   </mat-menu>
 </section>

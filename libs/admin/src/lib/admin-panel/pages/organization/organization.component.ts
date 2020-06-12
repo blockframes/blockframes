@@ -9,6 +9,10 @@ import { organizationStatus } from '@blockframes/organization/+state/organizatio
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
+import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
+import { Observable } from 'rxjs';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 
 @Component({
   selector: 'admin-organization',
@@ -26,6 +30,9 @@ export class OrganizationComponent implements OnInit {
   public members: any[];
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
+
+  public invitationsFromOrganization$: Observable<Invitation[]>;
+  public invitationsToJoinOrganization$: Observable<Invitation[]>;
 
   public versionColumnsMovies = {
     'id': 'Id',
@@ -49,31 +56,27 @@ export class OrganizationComponent implements OnInit {
     'edit',
   ];
 
-  public versionColumnsMembers = {
-    'uid': 'Id',
-    'avatar': 'Avatar',
-    'email': 'Email',
-    'firstName': 'FirstName',
-    'lastName': 'LastName',
-    'role': 'Org role',
-    'edit': 'Edit',
+  public memberColumns = {
+    userId: 'Id',
+    firstName: 'First Name',
+    avatar: 'Avatar',
+    lastName: 'Last Name',
+    email: 'Email Address',
+    position: 'Position',
+    role: 'Permissions',
+    edit: 'Edit',
   };
 
-  public initialColumnsMembers: string[] = [
-    'uid',
-    'avatar',
-    'email',
-    'firstName',
-    'lastName',
-    'role',
-    'edit',
-  ];
+  public memberColumnsIndex = ['userId', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+
   constructor(
     private organizationService: OrganizationService,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private permissionService: PermissionsService,
+    private invitationService: InvitationService,
   ) { }
 
   async ngOnInit() {
@@ -92,16 +95,39 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
+    this.members = await this.getMembers();
+    this.cdRef.markForCheck();
+
+    const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
+    const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
+
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+
+  }
+
+  public acceptInvitation(invitation: Invitation) {
+    this.invitationService.acceptInvitation(invitation);
+  }
+
+  public declineInvitation(invitation: Invitation) {
+    this.invitationService.declineInvitation(invitation);
+  }
+
+  public deleteInvitation(invitation: Invitation) {
+    this.invitationService.remove(invitation.id);
+  }
+
+  private async getMembers(){
     const members = await this.organizationService.getMembers(this.orgId);
-    this.members = members.map(m => ({
+    return members.map(m => ({
       ...m,
+      userId: m.uid,
       edit: {
         id: m.uid,
         link: `/c/o/admin/panel/user/${m.uid}`,
       }
     }));
-
-    this.cdRef.markForCheck();
   }
 
   public async update() {
@@ -135,24 +161,9 @@ export class OrganizationComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  filterPredicateMembers(data: any, filter) {
-    const columnsToFilter = [
-      'uid',
-      'email',
-      'firstName',
-      'lastName',
-      'role'
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
-  }
 
   public getMoviePath(movieId: string, segment: string = 'main') {
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
-  }
-
-  public getOrgMemberPath(orgId: string) {
-    return `/c/o/organization/${orgId}/view/members`;
   }
 
   public async uniqueOrgName() {
@@ -160,6 +171,25 @@ export class OrganizationComponent implements OnInit {
     const unique = await this.organizationService.uniqueOrgName(orgName);
     if (!unique) {
       this.orgForm.get('denomination').get('full').setErrors({ notUnique: true });
+    }
+  }
+
+  /** Update user role. */
+  public async updateRole(uid: string, role: UserRole) {
+    const message = await this.permissionService.updateMemberRole(uid, role);
+    this.members = await this.getMembers();
+    this.cdRef.markForCheck();
+    return this.snackBar.open(message, 'close', { duration: 2000 });
+  }
+
+  public async removeMember(uid: string) {
+    try {
+      this.organizationService.removeMember(uid);
+      this.members = await this.getMembers();
+      this.cdRef.markForCheck();
+      this.snackBar.open('Member removed.', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
 }

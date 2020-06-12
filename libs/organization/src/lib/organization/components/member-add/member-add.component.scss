@@ -15,6 +15,10 @@ mat-card-content {
   }
 }
 
+p.mat-caption {
+  margin-bottom: 24px;
+}
+
 @include layout-bp(xs) {
   .email {
     width: 100%;
