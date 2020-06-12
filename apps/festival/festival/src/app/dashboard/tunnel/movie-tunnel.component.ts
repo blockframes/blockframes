@@ -103,30 +103,4 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     );
   }
 
-  private async uploadMedias(movieData: Movie, movieForm: MovieForm) {
-    
-    const mediaPaths = movieForm.get('promotionalElements').mediaPaths;
-    
-    const result = this.media.extractMediaForm(movieForm, mediaPaths);
-
-    const values = result[0];
-    const extractedForms = result[1];
-
-    this.media.handleMediaForm(extractedForms);
-
-  }
-
-  private removePaths(movieData: Movie) {
-    const promotionalElements = movieData.promotionalElements;
-    this.remove(promotionalElements.banner.media)
-    promotionalElements.poster.forEach(poster => this.remove(poster.media))
-    promotionalElements.still_photo.forEach(still_photo => this.remove(still_photo.media))
-  }
-
-  private remove(mediaData) {
-    delete mediaData.delete;
-    delete mediaData.blob;
-    delete mediaData.newRef;
-  }
-
 }
