@@ -13,6 +13,6 @@ export class PromotionalLinksComponent {
   @Input() links: string[];
 
   get hasLink(): boolean {
-    return this.links.some(link => !!this.movie.promotionalElements[link].media.url);
+    return this.links.some(link => !!this.movie.promotionalElements[link]?.media?.urls.original);
   }
 }
