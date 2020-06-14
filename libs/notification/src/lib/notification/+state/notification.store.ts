@@ -7,6 +7,8 @@ import { MovieQuery } from '@blockframes/movie/+state';
 import { Event } from '@blockframes/event/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { orgName } from '@blockframes/organization/+state';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentModule } from '@blockframes/utils/apps';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -17,12 +19,17 @@ const initialState = {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'notifications' })
 export class NotificationStore extends EntityStore<NotificationState, Notification> {
-  constructor(private movieQuery: MovieQuery, private firestore: AngularFirestore) {
+  constructor(
+    private movieQuery: MovieQuery,
+    private firestore: AngularFirestore,
+    private routerQuery: RouterQuery
+  ) {
     super(initialState);
   }
 
   public formatNotification(notification: Notification): Partial<Notification> {
     const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
+    const module = getCurrentModule(this.routerQuery.getValue().state.url);
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -121,7 +128,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${this.notificationSubject(notification)} has accepted your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/dashboard/event/${notification.docId}`
+          url: `/c/o/${module}/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
 
@@ -140,7 +147,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `${this.notificationSubject(notification)} has declined your invitation to event "${notification.docId}".`,
           imgRef: notification.user?.avatar || notification.organization?.logo,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/dashboard/event/${notification.docId}`
+          url: `/c/o/${module}/event/${notification.docId}`
         };
       case 'requestToAttendEventSent':
 
@@ -159,7 +166,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           message: `Your request to attend event "${notification.docId}" has been sent.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
-          url: `/c/o/dashboard/event/${notification.docId}`
+          url: `/c/o/${module}/event/${notification.docId}`
         };
       default:
         return {
