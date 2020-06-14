@@ -10,6 +10,7 @@ import {
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
+import { getMediaUrl } from '@blockframes/ui/media/media.model';
 
 function createMovieView(movie: Movie) {
   return {
@@ -44,7 +45,7 @@ export class HeaderComponent {
       this.movie = movie;
       this.movieView = createMovieView(movie);
       //TODO#2655: implement image-set directive to handle image size here
-      this.background = `url(${this.movieView.banner.media.urls.original})`
+      this.background = `url(${getMediaUrl(this.movieView.banner.media)})`
     }
   }
 }

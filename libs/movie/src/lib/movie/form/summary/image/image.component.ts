@@ -22,10 +22,10 @@ export class MovieSummaryImageComponent implements OnInit {
   }
 
   get posterHasNoValue() {
-    return !this.promotionalElements.get('poster').controls[0].controls['media'].value.urls.original;
+    return !this.promotionalElements.get('poster').controls[0].controls['media'].value.urls?.original;
   }
 
   get photoHasNoValue() {
-    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].value.urls.original;
+    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].value.urls?.original;
   }
 }
