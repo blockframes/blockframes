@@ -1,4 +1,4 @@
-<section *ngIf="hasLink" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
+<section fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="24px">
   <ng-container *ngFor="let link of links | promotionalLinks: movie | slice:0:1">
     <a mat-button [href]="link.url" target="_blank">
       <mat-icon [svgIcon]="link.icon"></mat-icon>
