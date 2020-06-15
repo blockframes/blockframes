@@ -51,6 +51,20 @@ export class MovieService extends CollectionService<MovieState> {
     return movie;
   }
 
+  // @TODO (#2987): Update image on save instead of merging then on save
+  save(movie: Movie) {
+    return this.runTransaction(async write => {
+      const ref = this.getRef(movie.id);
+      const snap = await write.get(ref);
+      const movieDoc = createMovie(snap.data());
+      // Update the images reference with the latest value from firestore
+      for (const key of ['banner', 'poster', 'still_photo']) {
+        movie.promotionalElements[key] = movieDoc.promotionalElements[key];
+      }
+      return this.update(movie, { write });
+    });
+  }
+
   async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)

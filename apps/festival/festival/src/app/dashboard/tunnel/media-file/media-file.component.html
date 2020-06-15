@@ -31,6 +31,7 @@
           test-id="scenario"
           [path]="scenarioPath"
           uploadOnFirestore="true"
+          return="imgRef"
           accept="['.pdf']"
           [types]="['application/pdf']"
           (storeUploaded)="importPDF($event, 'scenario')">
