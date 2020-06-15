@@ -80,8 +80,13 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
-    await this.service.save(movie);
+
+    const [ value, media ] = extractMedia(this.form.value);
+    this.media.uploadOrDeleteMedia(media);
+
+    const movie: Movie = mergeDeep(this.query.getActive(), value);
+    console.log('saving movie: ', movie);
+    // await this.service.update(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
@@ -105,21 +110,24 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
 }
 
-function extractMedia(value: object) {
+function extractMedia(origin: any) {
+  const value = Object.assign({}, origin);
+  const media = extractMediaValue(value);
+  return [ value, media ];
+}
 
+function extractMediaValue(value) {
   let media = [];
-
-  for (const key in value) {
+   for (const key in value) {
     if (key === 'media') {
       if (!!value[key]) {
         media.push(value[key]);
       }
       delete value[key];
     } else if (typeof value[key] === 'object' && !!value[key]) {
-      const childMedia = extractMedia(value[key]);
+      const childMedia = extractMediaValue(value[key]);
       media = media.concat(childMedia);
     }
   }
-
   return media;
 }

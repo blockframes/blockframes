@@ -131,9 +131,12 @@ export class CropperComponent implements OnInit, OnDestroy {
 
       this.nextStep('show');
 
-      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
-      this.form.blob.setValue(blob);
-      this.form.delete.setValue(false);
+      this.form.patchValue({
+        newRef: `${this.storagePath}/original/${this.fileName}`,
+        blob: blob,
+        delete: false
+      })
+
     } catch (err) {
       console.error(err);
     }
@@ -149,9 +152,12 @@ export class CropperComponent implements OnInit, OnDestroy {
       this.croppedImage = '';
     }
 
-    this.form.delete.setValue(true);
-    this.form.newRef.setValue('');
-    this.form.blob.setValue('');
+    this.form.patchValue({
+      newRef: '',
+      blob: '',
+      delete: true
+    })
+
     this.nextStep('drop');
   }
 
