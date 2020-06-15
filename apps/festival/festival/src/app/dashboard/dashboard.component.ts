@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationQuery, OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-dashboard',

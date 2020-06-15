@@ -40,3 +40,9 @@ export function getImgSize(url: string) {
     throw new Error('No bucket directory, exiting function');
   }
 }
+
+export interface UploadFile {
+  ref: string,
+  data: Blob,
+  fileName: string,
+}
