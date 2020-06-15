@@ -1,7 +1,7 @@
-<span class="mat-display-1">How it works?</span>
+<h1 class="mat-display-1">How it works?</h1>
 <mat-tab-group animationDuration="1000ms" selectedIndex="0">
   <mat-tab [label]="tabNames[0]">
-    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
       <img class="perspective-image" fxHide.xs [src]="tabTitle[0].imgSrc" alt="seller image"/>
       <div>
         <h3>{{ tabTitle[0].title }}</h3>
@@ -11,7 +11,7 @@
       </div>
     </article>
     <h5>Features</h5>
-    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="24px" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of sellerFeatures">
         <img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image">
         <div>
@@ -22,7 +22,7 @@
     </article>
   </mat-tab>
   <mat-tab [label]="tabNames[1]">
-    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
       <img class="perspective-image" fxHide.xs [src]="tabTitle[1].imgSrc" alt="buyer image"/>
       <div>
         <h3>{{ tabTitle[1].title }}</h3>

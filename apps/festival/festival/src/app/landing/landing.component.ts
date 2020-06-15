@@ -39,7 +39,7 @@ export class LandingComponent {
   public sellerFeatures = [
     {
       title: 'Showcase your company & film details',
-      imgAsset: 'filmpage.webp',
+      imgAsset: 'showcase.webp',
       description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
     },
     {
