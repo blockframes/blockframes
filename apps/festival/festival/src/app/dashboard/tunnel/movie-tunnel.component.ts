@@ -83,10 +83,8 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
     const [ value, media ] = extractMedia(this.form.value);
     this.media.uploadOrDeleteMedia(media);
-
     const movie: Movie = mergeDeep(this.query.getActive(), value);
-    console.log('saving movie: ', movie);
-    // await this.service.update(movie);
+    await this.service.save(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;

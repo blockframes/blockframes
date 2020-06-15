@@ -111,6 +111,10 @@ export class MediaService {
     );
   }
 
+  removeFile(path: string) {
+    this.storage.ref(path).delete();
+  }
+
   pause(fileName: string) {
     if (fileName in this.tasks && this.query.hasEntity(fileName)) {
       this.tasks[fileName].pause();
@@ -152,34 +156,24 @@ export class MediaService {
       this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
     }
   }
-  
-  public extractMediaForm(form, extractPaths: string[]) {
-    
-    const value = form.value;
-    const extracted = {};
 
-  }
-
-  public uploadOrDeleteMedia(medias: ImgRef[]) {
-
+  uploadOrDeleteMedia(medias: ImgRef[]) {
     medias.forEach(imgRef => {
-      if (imgRef.delete && imgRef.ref) {
-  
-        console.log('removing media: ', imgRef);
-        // this.media.removeFile(media.ref.value);
-  
+      if (imgRef.delete && imgRef.ref) {  
+        this.removeFile(imgRef.ref);
       } else if (!!imgRef.blob) {
-  
         if (imgRef.ref !== '') {
-          console.log('removing old media: ', imgRef);
-          // this.media.removeFile(media.ref.value);
+          this.removeFile(imgRef.ref);
         }
-  
         const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
-        console.log('uploading new media: ', imgRef);
-        // this.media.uploadBlob(media.newRef.value, media.blob, fileName);
-      }
+        const file: UploadFile = {
+          ref: imgRef.newRef,
+          data: imgRef.blob,
+          fileName: fileName
+        }
 
+        this.uploadBlob(file);
+      }
     })
   
   }
