@@ -52,7 +52,7 @@ export class MainComponent {
   }
 
   public hasTerritory({ budget }: Movie) {
-    return !!(budget.boxOffice.some(movie => movie.territory));
+    return (budget.boxOffice.some(movie => movie.territory));
   }
 
   public budgetRange({ from, to }) {
