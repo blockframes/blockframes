@@ -3,7 +3,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 import { ViewComponent } from '../view/view.component';
 import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-screening',
@@ -23,9 +23,10 @@ export class ScreeningComponent implements OnInit {
     this.events$ = this.parent.org$.pipe(
       switchMap(org => {
         const query = ref => ref.where('ownerId', '==', org.id)
-          .orderBy('meta.titleId').where('meta.titleId', '>', '')
           .orderBy('end').startAt(new Date());
-        return this.service.queryByType(['screening'], query);
+        return this.service.queryByType(['screening'], query).pipe(
+          map(events => events.filter(event => !!event.meta.titleId))
+        );
       }),
     );
   }
