@@ -25,6 +25,7 @@ export class ImageUploader {
       const meta = await snapshot.ref.getMetadata();
       return createImgRef({ urls: { original: url }, ref: meta.fullPath });
     } catch (error) {
+      console.error(`Upload fail because of`, error);
       return;
     }
   }

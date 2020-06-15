@@ -22,6 +22,10 @@ export class MediaService {
 
   uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> | Promise<void>[] {
     if (Array.isArray(uploadFiles)) {
+      // here we need to force the type to Promise<void>,
+      // because we know that inside the map the current uploadFile is not an Array
+      // so this.uploadBlob will return a Promise<void> and not a Promise<void>[]
+      // but TypeScript did not know that, and it was causing a linter error
       return uploadFiles.map(uploadFile => this.uploadBlob(uploadFile) as Promise<void>);
     } else {
       return this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
