@@ -6,8 +6,4 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrls: ['./terms-conditions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
-export class TermsConditionsComponent {
-
-  constructor() {}
-}
+export class TermsConditionsComponent {}

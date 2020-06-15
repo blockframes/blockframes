@@ -22,13 +22,14 @@ export default class FestivalMarketplaceHomePage {
     cy.get('layout-marketplace a').contains('Sales Agents').click();
     return new FestivalOrganizationListPage();
   }
-  goToNotifications() {
-    cy.visit('/c/o/marketplace/notifications');
-    return new FestivalMarketplaceNotifications()
-  }
 
   goToInvitations() {
     cy.get('app-bar a[test-id=invitations-link]').click();
     return new FestivalInvitationsPage()
+  }
+
+  goToNotifications() {
+    cy.get('app-bar a[test-id=notifications-link]').click();
+    return new FestivalMarketplaceNotifications();
   }
 }

@@ -29,16 +29,29 @@
         </mat-form-field>
       </ng-container>
       <password-confirm formControlName="newPassword"></password-confirm>
-      <auth-accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
-        <ng-template authConditions>
-          <auth-terms-conditions></auth-terms-conditions>
-        </ng-template>
-      </auth-accept-conditions>
+      <div>
+        <auth-accept-conditions [control]="form.get('termsOfUse')">
+          <span conditionText>I hereby accept Archipel Market</span>
+          <span conditionLink>Terms and Conditions</span>
+          <ng-template authConditions>
+            <auth-terms-conditions></auth-terms-conditions>
+          </ng-template>
+        </auth-accept-conditions>
+      </div>
+      <div>
+        <auth-accept-conditions [control]="form.get('privacyPolicy')">
+          <span conditionText>I hereby accept the process of my personal data and declare to know</span>
+          <span conditionLink>conditions of such processing and my rights under GDPR regulation</span>
+          <ng-template authConditions>
+            <auth-privacy-policy></auth-privacy-policy>
+          </ng-template>
+        </auth-accept-conditions>
+      </div>
     </form>
   </mat-card>
 
   <ng-container *ngIf="!creating else creatingAccount">
-    <button @slideDown (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">
+    <button @slideDown (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="form.invalid">
       Sign up
     </button>
   </ng-container>

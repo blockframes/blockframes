@@ -60,6 +60,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() initialColumns: string[];
   @Input() link: string;
   @Input() showLoader = false;
+  @Input() pageSize = 10;
   @Input() filterPredicate: any;
   @Input() set source(data: any[]) {
     this.dataSource = new MatTableDataSource(data);

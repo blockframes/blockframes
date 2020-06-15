@@ -24,6 +24,9 @@ import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
+import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -43,6 +46,7 @@ import { UserComponent } from './pages/user/user.component';
 import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
+import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -63,7 +67,8 @@ export const panelRoutes: Routes = [
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
-  { path: 'mails', component: MailsComponent }
+  { path: 'mails', component: MailsComponent },
+  { path: 'dev-area', component: DevAreaComponent }
 ];
 @NgModule({
   imports: [
@@ -90,6 +95,9 @@ export const panelRoutes: Routes = [
     TermDateModule,
     ToLabelModule,
     TranslateSlugModule,
+    OrgNameModule,
+    MemberPermissionsModule,
+    ImageSizesModule,
   ],
   declarations: [
     OverviewComponent,
@@ -108,6 +116,7 @@ export const panelRoutes: Routes = [
     EventsComponent,
     EventComponent,
     MailsComponent,
+    DevAreaComponent,
   ]
 })
 export class AdminPanelModule { }

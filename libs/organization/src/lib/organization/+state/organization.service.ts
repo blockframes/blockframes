@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { AuthQuery, User } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
@@ -9,12 +9,21 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { createPermissions } from '../../permissions/+state/permissions.model';
+import { CollectionConfig, CollectionService, WriteOptions, Query, queryChanges } from 'akita-ng-fire';
+import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { UserService, OrganizationMember, createOrganizationMember } from '@blockframes/user/+state';
+import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
+import { network, baseEnsDomain } from '@env';
+import { QueryFn } from '@angular/fire/firestore/interfaces';
+
+const orgQuery = (queryFn: QueryFn) : Query<Organization> => ({
+  path: 'orgs',
+  queryFn,
+  movies: (org: Organization) => org.movieIds.map(movieId =>({path: `movies/${movieId}`})),
+});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -69,11 +78,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
    * create related documents (permissions, apps permissions, user...).
   */
   async onCreate(org: Organization, { write }: WriteOptions) {
-    const user = this.authQuery.user;
     const orgId: string = org.id;
     const permissions = createPermissions({
       id: orgId,
-      roles: { [user.uid]: 'superAdmin' }
+      roles: { [org.userIds[0]]: 'superAdmin' }
     });
 
     return Promise.all([
@@ -81,12 +89,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     ]);
   }
 
+  public queryWithMovies(queryFn: QueryFn) {
+    const query = orgQuery(queryFn);
+    return queryChanges.call(this, query);
+  }
+
   /** Add a new organization */
-  public async addOrganization(organization: Partial<Organization>) {
-    const user = this.authQuery.user;
+  public async addOrganization(organization: Partial<Organization>, user: User | PublicUser = this.authQuery.user): Promise<string> {
     const newOrganization = createOrganization({
-      userIds: [user.uid],
       ...organization,
+      userIds: [user.uid],
     });
 
     const orgId = await this.add(newOrganization);
@@ -148,5 +160,23 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const users = await Promise.all(promises);
     const role = await this.permissionsService.getValue(orgId);
     return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
+  }
+
+  public async getMemberRole(_org: Organization | string, uid): Promise<UserRole> {
+    const org = typeof _org === 'string' ? await this.getValue(_org) : _org;
+    const role = await this.permissionsService.getValue(org.id);
+    return role.roles[uid];
+  }
+
+  public async uniqueOrgName(orgName: string): Promise<boolean> {
+    let uniqueOnEthereum = false;
+    let uniqueOnFirestore = false;
+
+    const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
+    const provider = getProvider(network);
+    const orgEthAddress = await provider.resolveName(orgENS);
+    uniqueOnEthereum = !orgEthAddress ? true : false;
+    uniqueOnFirestore = await this.orgNameExist(orgName).then(exist => !exist);
+    return uniqueOnEthereum && uniqueOnFirestore;
   }
 }

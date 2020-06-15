@@ -138,9 +138,9 @@
       <ul>
         <li *ngIf="movie.budget.estimatedBudget.from && movie.budget.estimatedBudget.to"><strong>Budget </strong>
           <span>{{ budgetRange(movie.budget.estimatedBudget) }}</span></li>
-        <li *ngIf="movie.budget.boxOffice.length > 0"><strong>Box Office </strong>
+        <li *ngIf="movie.budget.boxOffice.length > 0 && hasTerritory(movie)"><strong>Box Office </strong>
           <span *ngFor="let boxOffice of movie.budget.boxOffice; let isLast = last">
-            {{ boxOffice.value }} {{ boxOffice.unit | toLabel: 'unitBox' | async }}
+            {{ boxOffice.value | number }} {{ boxOffice.unit | toLabel: 'unitBox' | async }}
             ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}}){{ isLast ? '' : ', ' }}
           </span>
         </li>

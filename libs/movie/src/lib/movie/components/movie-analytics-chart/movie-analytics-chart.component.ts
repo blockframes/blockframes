@@ -2,6 +2,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { lineChartOptions } from './default-chart-options';
 import { MovieQuery } from '../../+state';
+import { switchMap, map, startWith, delay } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 
 const chartInfo = [
   {
@@ -16,7 +18,7 @@ const chartInfo = [
   },
   {
     eventName: 'promoReelOpened',
-    title: 'Clicks on promotional elements',
+    title: 'Clicks on promo elements',
     icon: 'specific_delivery_list'
   }
 ] as const;
@@ -59,7 +61,20 @@ export class MovieAnalyticsChartComponent {
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
-  public isLoading$ = this.movieQuery.analytics.selectLoading();
+
+  public delayTime$ = new BehaviorSubject(20000);
+  public loadingState$ = combineLatest([
+    this.movieQuery.analytics.selectLoading(),
+    this.delayTime$,
+  ]).pipe(
+    switchMap(([ isLoading, delayTime ]) => {
+      return of(isLoading).pipe(
+        delay(delayTime),
+        map(loading => loading ? 'failed' : 'success'),
+        startWith('loading')
+      )
+    }),
+  );
 
   @Input() set analyticsData(data: MovieAnalytics[]) {
     if (data) {
@@ -83,6 +98,10 @@ export class MovieAnalyticsChartComponent {
 
   constructor(private movieQuery: MovieQuery) {
     this.lineChartOptions = lineChartOptions;
+  }
+
+  refresh() {
+    this.delayTime$.next(20000);
   }
 
   // get date by period for x, get sum of hits each day by event for y

@@ -13,6 +13,7 @@ import { MovieImageModule } from './movie-image.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [CardComponent],
@@ -26,7 +27,8 @@ import { MatButtonModule } from '@angular/material/button';
     MovieFeatureModule,
     MovieImageModule,
     MatButtonModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatRippleModule
   ]
 })
 export class MovieCardModule { }

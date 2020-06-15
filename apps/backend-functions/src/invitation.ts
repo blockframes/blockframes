@@ -5,7 +5,7 @@ import { onInvitationToJoinOrgUpdate, onRequestToJoinOrgUpdate } from './interna
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 import { InvitationBase, createInvitation } from '@blockframes/invitation/+state/invitation.firestore';
 import { createPublicUser, PublicUser } from '@blockframes/user/+state/user.firestore';
-import { getOrCreateUserByMail } from './internals/users';
+import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
@@ -109,7 +109,7 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation(data.invitation);
     for (const email of data.emails) {
-      getOrCreateUserByMail(email, user.orgId, invitation.type, data.app)
+      getOrInviteUserByMail(email, user.orgId, invitation.type, data.app)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;

@@ -6,7 +6,7 @@ export default class FestivalOrganizationListPage {
   }
 
   clickOnOrganization(orgName: string) {
-    cy.get('festival-organization-list org-card', { timeout: 30000 }).contains(orgName).click();
+    cy.get('festival-organization-list org-card', { timeout: 30000 }).contains(orgName).parent().parent().find('a').click();
     return new FestivalMarketplaceOrganizationTitlePage();
   }
 }

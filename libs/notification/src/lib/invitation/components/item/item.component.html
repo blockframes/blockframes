@@ -1,7 +1,7 @@
 <mat-list-item>
   <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture" />
   <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo" />
-  <p matLine class="mat-body-1">
+  <p *ngIf="!(xs$ | async)" matLine class="mat-body-1">
     {{ invitation.message }}
   </p>
   <span matLine>
@@ -10,5 +10,18 @@
     </small>
   </span>
   <invitation-action [invitation]="invitation"></invitation-action>
-  <a mat-button [routerLink]="['../event/', invitation.docId]">More details</a>
+  <a
+    mat-button
+    [routerLink]="invitation | eventLink"
+  >
+    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon svgIcon="dot_menu"></mat-icon>
+      More
+    </div>
+  </a>
 </mat-list-item>
+<ng-container *ngIf="xs$ | async">
+  <p class="mat-body-1">
+    {{ invitation.message }}
+  </p>
+</ng-container>

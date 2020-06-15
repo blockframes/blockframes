@@ -13,9 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Component
 import { SignupFormComponent } from './signup-form.component';
+import { PrivacyPolicyModule } from '../privacy-policy/privacy-policy.module';
 
 
 @NgModule({
@@ -28,13 +30,15 @@ import { SignupFormComponent } from './signup-form.component';
     PasswordConfirmModule,
     AcceptConditionsModule,
     TermsConditionsModule,
+    PrivacyPolicyModule,
 
     // Material
     MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatCheckboxModule
   ],
 })
 export class SignupFormModule {}

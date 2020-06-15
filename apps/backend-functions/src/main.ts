@@ -27,7 +27,30 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent, onImageDeletion } from './internals/image';
+import { onFileUploadEvent, onFileDeletion } from './internals/image';
+import { onEventDelete } from './event';
+
+
+//--------------------------------
+//    Configuration             //
+//--------------------------------
+
+/** 
+ * Runtime options for heavy functions 
+ * @dev linked to #2531 (Changing functions REGION)
+ */
+const heavyConfig = {
+  timeoutSeconds: 300,
+  memory: '1GB'
+} as functions.RuntimeOptions
+
+
+//--------------------------------
+//    Users Management          //
+//--------------------------------
+
+/** Trigger: REST call to invite a list of users by email. */
+export const createUser = functions.https.onCall(logErrors(users.createUser));
 
 /**
  * Trigger: when user creates an account.
@@ -37,6 +60,11 @@ import { onFileUploadEvent, onImageDeletion } from './internals/image';
 export const onUserCreate = functions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
+
+export const onUserCreateDocument = onDocumentCreate(
+  '/users/{userID}',
+  users.onUserCreateDocument
+);
 
 export const onUserUpdate = onDocumentUpdate(
   '/users/{userID}',
@@ -57,6 +85,10 @@ export const onUserDelete = onDocumentDelete(
 export const sendResetPasswordEmail = functions.https
   .onCall(users.startResetPasswordEmail);
 
+//--------------------------------
+//        Misc Management       //
+//--------------------------------
+
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
 
@@ -69,13 +101,16 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
 export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
 
+/** Trigger: REST call bigQuery to fetch analytics active users */
+export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery.getAnalyticsActiveUsers));
+
 //--------------------------------
 //      Player  Management      //
 //--------------------------------
 
-export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
+export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
+export const uploadVideo = functions.https.onCall(logErrors(uploadToJWPlayer));
 
 /**
  * Trigger: REST call to the /admin app
@@ -83,7 +118,7 @@ export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
  *  - Backups / Restore the database
  *  - Quorum Deploy & setup a movie smart-contract
  */
-export const admin = functions.https.onRequest(adminApp);
+export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
 
 //--------------------------------
 //   Permissions  Management    //
@@ -103,6 +138,15 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
 export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
+);
+
+//--------------------------------
+//    Events Management          //
+//--------------------------------
+
+export const onEventDeleteEvent = onDocumentDelete(
+  'events/{eventID}',
+  logErrors(onEventDelete)
 );
 
 /** Trigger: REST call to invite a list of users by email. */
@@ -234,4 +278,4 @@ export const onFileUpload = functions.storage.object().onFinalize(data => onFile
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onImageDeletion(data))
+export const onFileDelete = functions.storage.object().onDelete(data => onFileDeletion(data))

@@ -2,16 +2,26 @@ mat-form-field {
   width: 100%;
 }
 
-drop-cropper {
-  display: block;
-  width: 100%;
-}
-
 mat-card {
   padding: 24px 16px;
   margin-bottom: 24px;
 }
 
+.mat-card-header .mat-card-title {
+  margin-bottom: 16px;
+  &.title {
+    margin-bottom: 4px;
+  }
+}
+
 h5 {
   text-transform: uppercase;
+}
+
+h3, p.mat-body-2 {
+  margin: 0;
+}
+
+p.mat-caption {
+  margin-bottom: 8px;
 }

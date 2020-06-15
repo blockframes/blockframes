@@ -1,9 +1,18 @@
 <figure (mouseenter)="hasOverlay = true" (mouseleave)="hasOverlay = false">
-  <img [ref]="movie | movieImage: size" asset="empty_poster.webp" alt="Movie Illustration" />
-  <div fxLayout="column" fxLayoutAlign="center center" class="overlay" *ngIf="hasOverlay" @scaleIn>
+  <ng-container *ngIf="!(ltLg$ | async) else forTouchScreen">
+    <img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration" />
+    <div fxLayout="column" fxLayoutAlign="center center" class="overlay" *ngIf="hasOverlay" @scaleIn>
+      <wishlist-button [movieId]="movie.id" small></wishlist-button>
+      <a mat-button @scaleIn color="primary" [routerLink]="link"> View More </a>
+    </div>
+  </ng-container>
+  <!-- Mobile and tablet view -->
+  <ng-template #forTouchScreen>
+    <a matRipple [routerLink]="link">
+      <img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration" />
+    </a>
     <wishlist-button [movieId]="movie.id" small></wishlist-button>
-    <a mat-button @scaleIn color="primary" [routerLink]="link"> View More </a>
-  </div>
+  </ng-template>
 </figure>
 <article [class]="size">
   <h6>{{ movie.main.title.international }}</h6>

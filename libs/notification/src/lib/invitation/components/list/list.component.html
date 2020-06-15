@@ -1,12 +1,12 @@
 <mat-list>
-  <ng-container *ngFor="let timeFrame of timeFrames">
+  <ng-container *ngFor="let timeFrame of timeFrames; let first=first; let last=last">
     <!-- For a time frame -->
     <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
-      
-      <h2 *ngIf="invitationList.length">
+
+      <p class="mat-body-2" *ngIf="invitationList.length">
         {{ timeFrame | labelByDate }}
-      </h2>
-  
+      </p>
+
       <!-- Display all invitations -->
       <ng-container *ngFor="let invitation of invitationList">
         <ng-template
@@ -14,6 +14,9 @@
           [ngTemplateOutletContext]="{ $implicit: invitation }">
         </ng-template>
       </ng-container>
+      <div class="divider" *ngIf="invitationList.length">
+        <mat-divider inset></mat-divider>
+      </div>
 
     </ng-container>
   </ng-container>

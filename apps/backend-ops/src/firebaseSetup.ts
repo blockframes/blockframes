@@ -16,11 +16,16 @@ export async function prepareForTesting() {
 
   console.info('Restoring backup...');
   await restore(appUrlContent);
-  console.info('backup restored!');
+  console.info('Backup restored!');
 
   console.info('Preparing the database...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
-  console.info('database ready for testing...');
+  console.info('Database ready for testing!');
+
+  // @todo(#3066) Reactivate Cleaning process when unit tested
+  // console.info('Cleaning unused data...')
+  // await cleanDeprecatedData();
+  // console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -38,7 +43,7 @@ export async function restoreShortcut() {
 export async function upgrade() {
   console.info('Preparing the database...');
   await migrate(true);
-  console.info('database ready for deploy...');
+  console.info('Database ready for deploy!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();

@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
-import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
 import { SigninFormModule } from '../../components/signin-form/signin-form.module';
 import { SignupFormModule } from '../../components/signup-form/signup-form.module';
 
@@ -15,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Component
 import { LoginComponent } from './login.component';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 
 @NgModule({
@@ -24,7 +24,7 @@ import { LoginComponent } from './login.component';
     FlexLayoutModule,
     SigninFormModule,
     SignupFormModule,
-    BackgroundAssetModule,
+    ImageReferenceModule,
 
     // Material
     MatSnackBarModule,

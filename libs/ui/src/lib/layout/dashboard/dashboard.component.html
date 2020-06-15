@@ -35,7 +35,7 @@
             </ng-template>
           </a>
           <!-- Notifications -->
-          <a mat-icon-button routerLink="notifications">
+          <a mat-icon-button routerLink="notifications" test-id="notifications-link">
             <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
               <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
@@ -47,9 +47,13 @@
         </div>
       </header>
     </app-bar>
+    
     <!-- CONTENT -->
-      <main cdkScrollable fxFlex>
+    <main cdkScrollable fxFlex>
+      <div class="page">
         <router-outlet></router-outlet>
-      </main>
+      </div>
+      <bf-footer></bf-footer>
+    </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

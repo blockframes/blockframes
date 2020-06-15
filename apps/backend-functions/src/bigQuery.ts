@@ -5,6 +5,7 @@ import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
 import { omit } from 'lodash';
+import { db } from './internals/firebase';
 
 const queryMovieAnalytics = `
   SELECT
@@ -32,6 +33,7 @@ const queryMovieAnalytics = `
   ORDER BY
     event_name, event_date
 `
+
 /** Query to get analytics of the number of views for the festival app event sessions pages
  * for an array of eventId
  */
@@ -56,6 +58,22 @@ GROUP BY
   event_name, event_date, eventId, eventIdPage, userId
 ORDER BY
   event_name, event_date
+`
+
+const queryAnalyticsActiveUsers = `
+  SELECT
+    count(*) as page_view, 
+    user_id,
+    MIN(event_date) as first_connexion,
+    MAX(event_date) as last_connexion
+  FROM
+    \`${bigQueryAnalyticsTable}*\`,
+    UNNEST(event_params) AS params
+  WHERE event_name = 'pageView'
+  AND user_id is not null
+  GROUP BY user_id
+  ORDER BY last_connexion DESC
+  LIMIT 1000
 `
 
 async function executeQueryEventAnalytics(query: any, eventIds: string[]) {
@@ -93,11 +111,22 @@ async function executeQueryMovieAnalytics(query: any, movieIds: string[], daysPe
   return bigqueryClient.query(options);
 }
 
+async function executeQuery(query: any) {
+  const bigqueryClient = new BigQuery();
+
+  const options = {
+    query,
+    timeoutMs: 100000,
+  };
+
+  return bigqueryClient.query(options);
+}
+
 /** Sorts events into two periods. */
 const groupEventsPerDayRange = (events: MovieEventAnalytics[], daysPerRange: number) => {
   const now = new Date();
   const startCurrentRange = subDays(now, daysPerRange);
-  const parseDate = (event: MovieEventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
+  const parseDate = (event: MovieEventAnalytics) => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
     current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
     past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
@@ -213,5 +242,24 @@ export const requestMovieAnalytics = async (
     }
   } else {
     throw new Error(`Insufficient permission to get this movie's analytics.`);
+  }
+};
+
+export const getAnalyticsActiveUsers = async (
+  _: any,
+  context: CallableContext
+): Promise<any[]> => {
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
+  if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
+
+  const [rows] = await executeQuery(queryAnalyticsActiveUsers);
+
+  if (rows !== undefined && rows.length >= 0) {
+    console.log(rows);
+    return rows;
+  } else {
+    throw new Error('Unexepected error.');
   }
 };

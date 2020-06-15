@@ -10,11 +10,13 @@ import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 const routes: Routes = [{
@@ -83,15 +85,27 @@ const routes: Routes = [{
         canDeactivate: [EventActiveGuard],
         data: { animation: 'event-view' },
         children: [{
-            path: '',
-            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
-          }, {
-            path: 'session',
-            canActivate: [SessionGuard],
-            loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
-          },
+          path: '',
+          loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
+        }, {
+          path: 'session',
+          canActivate: [SessionGuard],
+          loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
+        },
         ]
       }]
+    },
+    {
+      path: 'contact',
+      loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
+    },
+    {
+      path: 'terms',
+      loadChildren: () => import('@blockframes/ui/static-informations/terms/terms.module').then(m => m.TermsModule)
+    },
+    {
+      path: 'privacy',
+      loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
     }
   ]
 }];
@@ -105,11 +119,13 @@ const routes: Routes = [{
     FlexLayoutModule,
     MarketplaceLayoutModule,
     ImageReferenceModule,
+    OrgAccessModule,
 
     // Material
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    MatButtonModule,
   ]
 })
-export class MarketplaceModule {}
+export class MarketplaceModule { }

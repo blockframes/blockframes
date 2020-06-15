@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { ThemeService } from './theme.service';
 
 @Pipe({name: 'asset'})

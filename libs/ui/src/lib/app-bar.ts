@@ -141,7 +141,7 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
 @Component({
   selector: 'app-menu',
   template: `
-    <button mat-icon-button (click)="toggle()">
+    <button test-id="menu" mat-icon-button (click)="toggle()">
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
   `

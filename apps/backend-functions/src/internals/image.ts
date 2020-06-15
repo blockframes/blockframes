@@ -5,8 +5,8 @@ import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import { set } from 'lodash';
-import { imgSizeDirectory } from '@blockframes/utils/media/media.firestore';
 import { getDocument } from '../data/internals';
+import { imgSizeDirectory, getImgSize, ImgSizeDirectory } from '@blockframes/utils/media/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -65,34 +65,15 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   const directory = dirname(filePath);
   const workingDir = join(tmpdir(), 'tmpFiles');
-  const tmpFilePath = join(workingDir, 'source.webp');
+  const tmpFileName = ` ${Math.random().toString(36).substring(7)}-${new Date().getTime()}.webp`;
+  const tmpFilePath = join(workingDir, tmpFileName);
 
   // Ensure directory exists with fs.ensureDir
   await ensureDir(workingDir);
   await bucket.file(filePath).download({ destination: tmpFilePath });
 
   // Define the sizes (here width) depending of the image format (defined by the directory)
-  let sizes: {
-    original: number;
-    xs: number;
-    md: number;
-    lg: number;
-  };
-
-  if (directory.includes('avatar')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 300 };
-  } else if (directory.includes('logo')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 300 };
-  } else if (directory.includes('poster')) {
-    sizes = { original: 0, xs: 200, md: 400, lg: 600 };
-  } else if (directory.includes('banner')) {
-    sizes = { original: 0, xs: 300, md: 600, lg: 1200 };
-  } else if (directory.includes('still')) {
-    sizes = { original: 0, xs: 50, md: 100, lg: 200 };
-  } else {
-    console.warn('No bucket directory, exiting function');
-    return false;
-  }
+  const sizes = getImgSize(directory);
 
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
@@ -162,7 +143,21 @@ async function resize(data: functions.storage.ObjectMetadata) {
   return remove(workingDir);
 }
 
-export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
+export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
+
+  // TODO here we might need to handle deletion of other file types (issue#3017)
+
+  // If the type of the data is not an image, exit the function
+  if (!data.contentType?.includes('image')) {
+    console.log(`File ${data.contentType} is not an image, exiting function`);
+    return false;
+  }
+
+  // we don't want to execute this function on the watermark
+  if (data.contentType === 'image/svg+xml') {
+    console.log('File is an SVG image, exiting function');
+    return false;
+  }
 
   // Get all the needed information from the data (bucket, path, file name and directory)
   const bucket = admin.storage().bucket(data.bucket);
@@ -172,12 +167,13 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
     throw new Error('undefined data.name!');
   }
 
-  const filePathElements = filePath.split('/')
-  const [collection, id, fieldToUpdate] = filePathElements;
+  const filePathElements = filePath.split('/');
 
   if (filePathElements.length !== 5) {
     throw new Error('unhandled filePath:' + filePath);
   }
+
+  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
 
   try {
     // Clean document that reference this image
@@ -191,14 +187,18 @@ export async function onImageDeletion(data: functions.storage.ObjectMetadata) {
   }
 
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
-  imgSizeDirectory.forEach(async (sizeDir: string) => {
-    const path = `${filePathElements[0]}/${filePathElements[1]}/${filePathElements[2]}/${sizeDir}/${filePathElements[4]}`;
-    const exists = await bucket.file(path).exists();
-    if (exists) {
-      await bucket.file(path).delete();
-      return true;
-    } else {
-      throw new Error(`${path}: couldn't be found`)
-    }
-  })
+  imgSizeDirectory.filter(sizeDir => sizeDir !== uploadedSize)
+    .forEach(async (sizeDir : ImgSizeDirectory) => {
+      const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${fileName}`;
+      const [exists] = await bucket.file(path).exists();
+      if (exists) {
+        await bucket.file(path).delete();
+        return true;
+      } else {
+        // if file does not exist everything is fine since we where trying to delete it
+        console.log(`${path}: couldn't be found, file might have been previously deleted : doing nothing`);
+        return false;
+      }
+    });
+  return false;
 }

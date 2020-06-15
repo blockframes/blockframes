@@ -5,13 +5,11 @@ import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { EventQuery } from './event.query';
 import { Observable, combineLatest } from 'rxjs';
-import { filter, switchMap, tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -52,54 +50,40 @@ const eventQueries = {
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
+  private analytics: Record<string, EventsAnalytics> = {};
 
   constructor(
     protected store: EventStore,
     private functions: AngularFireFunctions,
     private permissionsService: PermissionsService,
-    private invitationService: InvitationService,
-    private permissionQuery: PermissionsQuery,
-    private query: EventQuery,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
     super(store);
   }
 
-  /** Gets analytics for one event and sync them. */
-  public syncEventAnalytics() {
-    return combineLatest([
-      this.query.selectActiveId(),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([eventId, analyticsIds]) => !analyticsIds.includes(eventId)),
-      switchMap(([eventId]) => {
-        this.store.analytics.setActive(eventId);
-        const f = this.functions.httpsCallable('getEventAnalytics');
-        return f({ eventIds: [eventId] });
-      }),
-      tap(analytics => {
-        this.store.analytics.upsertMany(analytics);
-      })
-    )
+  public async queryAnalytics(eventId: string): Promise<EventsAnalytics> {
+    if (this.analytics[eventId]) {
+      return this.analytics[eventId];
+    } else {
+      const f = this.functions.httpsCallable('getEventAnalytics');
+      const analytics = await f({ eventIds: [eventId] }).toPromise();
+      const eventAnalytics = analytics.find(a => a.eventId === eventId);
+      this.analytics[eventId] = eventAnalytics;
+      return eventAnalytics;
+    }
   }
 
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
     const isUser = event.ownerId === this.authQuery.userId;
-    const isOrgAdmin = (event.ownerId === this.orgQuery.getActiveId()) && this.permissionQuery.isUserAdmin();
-    return isUser || isOrgAdmin;
+    const isFromOrg = event.ownerId === this.orgQuery.getActiveId();
+    return isUser || isFromOrg;
   }
 
   /** Create the permission */
   async onCreate(event: Event, { write }: WriteOptions) {
     return this.permissionsService.addDocumentPermissions(event.id, write);
-  }
-
-  /** Remove all invitations & notifications linked to this event */
-  async onDelete(id: string, { write }: WriteOptions) {
-    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', id));
-    await this.invitationService.remove(invitations.map(e => e.id), { write });
   }
 
   formatToFirestore(event: Event) {

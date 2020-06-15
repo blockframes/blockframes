@@ -4,7 +4,7 @@
     <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center">
       <ng-container *ngIf="event.movie else noMovie">
         <ng-container *ngIf="showSession else showVideo">
-          <article class="dark-contrast-theme screen" [backgroundRef]="event.movie.promotionalElements.banner.media">
+          <article class="dark-contrast-theme screen" [bgRef]="event.movie.promotionalElements.banner.media">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
               <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
               <h4>{{ event.org | orgName }} presents</h4>
