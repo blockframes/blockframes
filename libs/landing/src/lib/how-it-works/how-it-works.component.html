@@ -11,7 +11,7 @@
       </div>
     </article>
     <h5>Features</h5>
-    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayoutGap="24px" fxLayout.lt-md="column">
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of sellerFeatures">
         <img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image">
         <div>
@@ -43,7 +43,7 @@
     </article>
   </mat-tab>
 </mat-tab-group>
-<section fxLayout="column" fxLayoutAlign="start center" class="join-section">
+<section fxLayout="column" fxLayoutAlign="start center" class="join-section" fxLayoutGap="40px">
   <p class="mat-display-2 interested">Interested? Join now!</p>
   <a mat-flat-button color="accent" routerLink="/auth/connexion">
     <span>Sign up</span>
