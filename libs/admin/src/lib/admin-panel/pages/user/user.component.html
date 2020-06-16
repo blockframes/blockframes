@@ -45,6 +45,13 @@
                 <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
               </a>
             </li>
+            <li>
+              <b class="bf-dark-text">Password : </b>
+              <a class="blockframes-admin-link" (click)="sendPasswordResetEmail()">
+                <span>Send reset password email</span>
+                <mat-icon svgIcon="mail"></mat-icon>
+              </a>
+            </li>
           </ul>
         </article>
       </mat-card-content>
