@@ -70,7 +70,7 @@
               </li>
             </ng-container>
             <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
-              <h5 class="separator">COMPANY CREDITS</h5>
+              <h5>COMPANY CREDITS</h5>
               <ng-container *ngIf="movie.main.stakeholders as stakeholders">
                 <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Executive Producer{stakeholders.executiveProducer.length, plural,=1 {} other {s}}</strong>
                   <span> {{ getStakeholder(movie, 'executiveProducer') }}</span></li>
