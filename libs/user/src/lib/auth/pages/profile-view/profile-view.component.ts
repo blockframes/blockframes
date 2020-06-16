@@ -10,7 +10,8 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { extractMedia } from '@blockframes/utils/media/media.model';
+import { MediaService } from '@blockframes/utils/media/media.service';
 
 @Component({
   selector: 'auth-profile-view',
@@ -32,7 +33,7 @@ export class ProfileViewComponent implements OnInit {
     private authService: AuthService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private storage: AngularFireStorage
+    private mediaService: MediaService
   ) {
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
@@ -55,28 +56,8 @@ export class ProfileViewComponent implements OnInit {
         throw new Error('Your profile informations are not valid.')
       } else {
         const uid = this.authQuery.userId;
-        const user = this.profileForm.value;
-
-        const avatar = this.profileForm.get('avatar');
-        const blob = avatar.blob.value;
-        const ref = avatar.ref.value;
-        const newRef = avatar.newRef.value;
-
-        if (avatar.delete.value) {
-          this.storage.ref(ref).delete();
-          user.avatar.ref = '';
-          avatar.delete.setValue(false);
-        } else if (!!blob) {
-          if (ref !== '') {
-            this.storage.ref(ref).delete();
-          }
-          this.storage.ref(newRef).put(blob);
-        }
-
-        delete user.avatar['blob'];
-        delete user.avatar['newRef'];
-        delete user.avatar['delete'];
-
+        const [ user, media ] = extractMedia(this.profileForm.value);
+        this.mediaService.uploadOrDeleteMedia(media);
         this.authService.update({ uid, ...user });
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }

@@ -8,6 +8,9 @@ const referencesPaths = {
     },
     profile: {
         avatar: (uid: string) => `users/${uid}/avatar`
+    },
+    organization: {
+      logo: (id: string) => `orgs/${id}/logo`
     }
 }
 type ReferencePath = typeof referencesPaths;

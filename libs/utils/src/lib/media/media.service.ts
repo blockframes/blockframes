@@ -171,10 +171,8 @@ export class MediaService {
           data: imgRef.blob,
           fileName: fileName
         }
-
         this.uploadBlob(file);
       }
     })
-  
   }
 }

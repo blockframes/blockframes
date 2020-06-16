@@ -136,6 +136,7 @@ export class CropperComponent implements OnInit, OnDestroy {
         blob: blob,
         delete: false
       })
+      this.form.markAsDirty();
 
     } catch (err) {
       console.error(err);
@@ -157,6 +158,7 @@ export class CropperComponent implements OnInit, OnDestroy {
       blob: '',
       delete: true
     })
+    this.form.markAsDirty();
 
     this.nextStep('drop');
   }

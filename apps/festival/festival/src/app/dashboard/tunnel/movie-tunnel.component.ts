@@ -1,6 +1,5 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AngularFireStorage } from '@angular/fire/storage';
 // Blockframes
 import { MovieService, MovieQuery, Movie, PromotionalElement } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
@@ -10,8 +9,8 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { MoviePromotionalElementsForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 import { MediaService } from '@blockframes/utils/media/media.service';
+import { extractMedia } from '@blockframes/utils/media/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -80,7 +79,6 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-
     const [ value, media ] = extractMedia(this.form.value);
     this.media.uploadOrDeleteMedia(media);
     const movie: Movie = mergeDeep(this.query.getActive(), value);
@@ -106,26 +104,4 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     );
   }
 
-}
-
-function extractMedia(origin: any) {
-  const value = Object.assign({}, origin);
-  const media = extractMediaValue(value);
-  return [ value, media ];
-}
-
-function extractMediaValue(value) {
-  let media = [];
-   for (const key in value) {
-    if (key === 'media') {
-      if (!!value[key]) {
-        media.push(value[key]);
-      }
-      delete value[key];
-    } else if (typeof value[key] === 'object' && !!value[key]) {
-      const childMedia = extractMediaValue(value[key]);
-      media = media.concat(childMedia);
-    }
-  }
-  return media;
 }
