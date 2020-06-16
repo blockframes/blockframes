@@ -20,6 +20,8 @@ export class ListComponent implements OnInit {
     const query = ref => ref
       .orderBy('end').startAt(new Date());
     this.events$ = this.service.queryByType(['screening'], query).pipe(
+      // We can't filter by meta.titleId directly in the query because
+      // firestore supports only one orderBy if it uses .where()
       map(events => events.filter(event => !!event.meta.titleId))
     );
   }

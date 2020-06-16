@@ -25,6 +25,8 @@ export class ScreeningComponent implements OnInit {
         const query = ref => ref.where('ownerId', '==', org.id)
           .orderBy('end').startAt(new Date());
         return this.service.queryByType(['screening'], query).pipe(
+          // We can't filter by meta.titleId directly in the query because
+          // firestore supports only one orderBy if it uses .where()
           map(events => events.filter(event => !!event.meta.titleId))
         );
       }),
