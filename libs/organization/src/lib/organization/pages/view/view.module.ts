@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { UserGuard } from '@blockframes/user/guard/user.guard';
+
+// Modules
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
+// Components
 import { OrganizationViewComponent } from './view.component';
 
 // Material
@@ -44,6 +48,7 @@ const routes = [{
     ImageReferenceModule,
     OrgAddressModule,
     ToLabelModule,
+    OrgNameModule,
     // Material
     MatTabsModule,
     MatButtonModule,
