@@ -7,6 +7,14 @@ landing-toolbar {
   z-index: 2;
 }
 
+h4, p.mat-display-2 {
+  margin: 0;
+}
+
+h4 {
+  text-transform: uppercase;
+}
+
 @include layout-bp(xs) {
   .offer {
     font-size: 30px;
