@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
@@ -38,11 +38,11 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.festival = true;
-      await this.service.update(movie);
+      await this.service.save(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {

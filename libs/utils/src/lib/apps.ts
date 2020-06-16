@@ -37,6 +37,17 @@ export function getCurrentApp(routerQuery: any): App {
   return routerQuery.getValue().state?.root.data.app;
 }
 
+export function getCurrentModule(path: string): Module | 'landing' {
+  const fragments = path.split('/');
+  if (fragments.includes('marketplace')) {
+    return 'marketplace'
+  } else if (fragments.includes('dashboard')) {
+    return 'dashboard';
+  } else {
+    return 'landing';
+  }
+}
+
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
@@ -143,3 +154,4 @@ export function getSendgridFrom(a?: App): EmailData {
     return sendgridEmailsFrom[a] || sendgridEmailsFrom.default;
   }
 }
+

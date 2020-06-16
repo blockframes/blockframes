@@ -9,7 +9,7 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/media/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { App, getOrgAppAccess, getSendgridFrom, app, sendgridUrl, Module } from '@blockframes/utils/apps';
+import { App, getOrgAppAccess, getSendgridFrom, sendgridUrl } from '@blockframes/utils/apps';
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 
 export function getCollection<T>(path: string): Promise<T[]> {
@@ -124,10 +124,3 @@ export async function getFromEmail(_org: OrganizationDocument | string): Promise
   return getSendgridFrom(key);
 }
 
-/**
- * This check if org have access to a specific module in at least one app
- * @param org 
- */
-export function canAccessModule(module: Module, org: OrganizationDocument) {
-  return app.some(a => org.appAccess[a]?.[module])
-}

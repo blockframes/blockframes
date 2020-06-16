@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { getValue } from '@blockframes/utils/helpers';
+import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { AdminService } from '@blockframes/admin/admin/+state/admin.service';
+import { AdminQuery } from '@blockframes/admin/admin/+state/admin.query';
 
 @Component({
   selector: 'admin-users',
@@ -17,6 +19,8 @@ export class UsersComponent implements OnInit {
     'org': 'Organization',
     'position': 'Position',
     'email': 'Email',
+    'firstConnexion': 'First connexion',
+    'lastConnexion': 'Last connexion',
     'edit': 'Edit',
   };
 
@@ -28,18 +32,29 @@ export class UsersComponent implements OnInit {
     'org',
     'position',
     'email',
+    'firstConnexion',
+    'lastConnexion',
     'edit',
   ];
   public rows: any[] = [];
+  public userListLoaded = false;
+
   constructor(
     private userService: UserService,
     private cdRef: ChangeDetectorRef,
+    private adminService: AdminService,
+    private adminQuery: AdminQuery,
   ) { }
 
   async ngOnInit() {
+    // @TODO (#2952) Move to a guard if stats are needed on another pages
+    await this.adminService.loadAnalyticsData();
+
     const users = await this.userService.getAllUsers();
     this.rows = users.map(u => ({
       ...u,
+      firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
+      lastConnexion: this.adminQuery.getLastConnexion(u.uid),
       edit: {
         id: u.uid,
         link: `/c/o/admin/panel/user/${u.uid}`,
@@ -49,6 +64,8 @@ export class UsersComponent implements OnInit {
         link: `/c/o/admin/panel/organization/${u.orgId}`,
       }
     }));
+
+    this.userListLoaded = true;
     this.cdRef.markForCheck();
   }
 
@@ -63,6 +80,20 @@ export class UsersComponent implements OnInit {
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  public exportTable() {
+    const exportedRows = this.rows.map(r => ({
+      uid: r.uid,
+      firstName: r.firstName,
+      lastName: r.lastName,
+      orgId: r.orgId,
+      position: r.position,
+      email: r.email,
+      firstConnexion: r.firstConnexion,
+      lastConnexion: r.lastConnexion,
+    }))
+    downloadCsvFromJson(exportedRows, 'user-list');
   }
 
 }

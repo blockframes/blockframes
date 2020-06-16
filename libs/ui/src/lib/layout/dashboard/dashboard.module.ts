@@ -12,6 +12,7 @@ import { DashboardComponent } from './dashboard.component';
 
 import { AppBarModule } from '../../app-bar';
 import { AppLogoModule } from '../app-logo/app-logo.module';
+import { FooterModule } from '../footer/footer.module';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -43,6 +44,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AppBarModule,
     ScrollingModule,
     AppLogoModule,
+    FooterModule,
     // Material
     MatButtonModule,
     MatDividerModule,

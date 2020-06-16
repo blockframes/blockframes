@@ -1,14 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { EventQuery, Event } from '@blockframes/event/+state';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Event } from '@blockframes/event/+state';
 import { Invitation } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap, map, filter, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
+import { EventAnalytics } from '@blockframes/event/+state/event.firestore';
 
 const columns = {
-  firstName: 'First Name',
-  lastName: 'Last Name',
+  name: 'Name',
   email: 'Email Address'
 };
 
@@ -18,35 +18,34 @@ const columns = {
   styleUrls: ['./review.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventReviewComponent implements OnInit, OnDestroy {
-
-  private sub: Subscription;
+export class EventReviewComponent implements OnInit {
   event$: Observable<Event>;
   invitations$: Observable<Invitation[]>;
-  analytics$ = this.query.analytics.selectActive().pipe(
-    filter(analytics => !!analytics),
-    map(analytics => analytics.eventUsers)
-  );
+  analytics$ : Observable<EventAnalytics[]>;
+  eventId$: Observable<string>;
 
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
   constructor(
     private service: EventService,
-    private query: EventQuery,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.sub = this.service.syncEventAnalytics().subscribe();
-    this.event$ = this.route.params.pipe(
-      pluck('eventId'),
+    this.eventId$ = this.route.params.pipe(pluck('eventId'));
+
+    this.analytics$ = this.eventId$.pipe(
+      switchMap((eventId: string) => this.service.queryAnalytics(eventId)),
+      filter(analytics => !!analytics),
+      map(analytics => {
+        const transformEvent = (event: EventAnalytics) => ({ ...event, name: `${event.firstName} ${event.lastName}` });
+        return analytics.eventUsers.map(transformEvent);
+      })
+    );
+
+    this.event$ = this.eventId$.pipe(
       switchMap((eventId: string) => this.service.valueChanges(eventId))
     );
   }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
 }

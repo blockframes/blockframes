@@ -3,8 +3,6 @@ import { combineLatest, BehaviorSubject, Subscription, of, Observable } from 'rx
 import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
 
-declare const ResizeObserver;
-
 interface LayoutGrid {
   columns: number;
   gutter: number;
@@ -37,8 +35,8 @@ export class Layout implements OnInit, OnDestroy {
 
   async ngOnInit() {
     const el = this.el.nativeElement;
-    const resizeObs = (ResizeObserver in window) ? (await import('@juggle/resize-observer')).ResizeObserver : ResizeObserver;
-    this.observer = new resizeObs(([entry]) => this.width.next(entry.contentRect.width));
+    const ResizeObserver = (window as any).ResizeObserver || (await import('@juggle/resize-observer')).ResizeObserver;
+    this.observer = new ResizeObserver(([entry]) => this.width.next(entry.contentRect.width));
     this.observer.observe(el);
     this.width = new BehaviorSubject<number>(this.el.nativeElement.clientWidth);
     this.layout$ = this.width.asObservable().pipe(

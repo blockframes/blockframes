@@ -12,8 +12,4 @@ export class DashboardComponent {
   public org$ = this.orgQuery.selectActive();
 
   constructor(private orgQuery: OrganizationQuery) { }
-
-  canAccessMarketplace(org: OrganizationDocumentWithDates): boolean {
-    return org.appAccess.festival?.marketplace;
-  }
 }

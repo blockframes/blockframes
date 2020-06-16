@@ -13,7 +13,7 @@ export default class HomePage extends NavbarPage {
   }
 
   public clickFirstWishlistButton() {
-    cy.get('catalog-home mat-carousel').first().find('button[test-id=heart-icon]').first().click( { force: true });
+    cy.get('catalog-home bf-slider').first().find('button[test-id=heart-button]').first().click();
     cy.wait(2000);
   }
 }

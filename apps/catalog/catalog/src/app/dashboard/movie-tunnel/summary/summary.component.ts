@@ -10,6 +10,7 @@ import { getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
+import { Movie } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -42,11 +43,11 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.catalog = true;
-      await this.service.update(movie);
+      await this.service.save(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {

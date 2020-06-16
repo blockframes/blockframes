@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
-import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -87,8 +87,8 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    const movie = mergeDeep(this.query.getActive(), this.form.value);
-    await this.service.update(movie);
+    const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
+    await this.service.save(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
