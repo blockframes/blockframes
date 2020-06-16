@@ -30,8 +30,23 @@ import { sendTestMail } from './internals/email';
 import { onFileUploadEvent, onFileDeletion } from './internals/image';
 import { onEventDelete } from './event';
 
+
 //--------------------------------
-//    Users Management    //
+//    Configuration             //
+//--------------------------------
+
+/** 
+ * Runtime options for heavy functions 
+ * @dev linked to #2531 (Changing functions REGION)
+ */
+const heavyConfig = {
+  timeoutSeconds: 300,
+  memory: '1GB'
+} as functions.RuntimeOptions
+
+
+//--------------------------------
+//    Users Management          //
 //--------------------------------
 
 /** Trigger: REST call to invite a list of users by email. */
@@ -103,7 +118,7 @@ export const uploadVideo = functions.https.onCall(logErrors(uploadToJWPlayer));
  *  - Backups / Restore the database
  *  - Quorum Deploy & setup a movie smart-contract
  */
-export const admin = functions.https.onRequest(adminApp);
+export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
 
 //--------------------------------
 //   Permissions  Management    //
