@@ -102,7 +102,7 @@ export class CropperComponent implements OnDestroy, OnInit {
       startWith(this.form.value),
       filter(imgRef => imgRef.ref)
     ).subscribe(imgRef => {
-      this.previewUrl = of(imgRef.urls.original);
+      this.previewUrl = of(imgRef.urls?.original);
       this.step.next('show');
     });
 
