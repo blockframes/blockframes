@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('file') ctrl: ElementRef<HTMLInputElement>;
   dev() {
     const file = this.ctrl.nativeElement.files
-    this.mediaService.uploadFile(`dev-max/`, file)
+    this.mediaService.uploadFile(`dev-max/${Math.random().toString()}`, file)
   }
 
   ngOnInit() {

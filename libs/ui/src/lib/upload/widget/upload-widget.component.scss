@@ -2,6 +2,14 @@
 div,
 mat-expansion-panel {
   width: 100%;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  z-index: 2;
+  top: 8px;
+  right: 8px;
 }
 
 mat-divider {

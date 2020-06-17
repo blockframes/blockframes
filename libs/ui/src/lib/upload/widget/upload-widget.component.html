@@ -1,10 +1,10 @@
+<button mat-icon-button (click)="close()" class="close-btn">
+  <mat-icon svgIcon="cross_circle"></mat-icon>
+</button>
 <mat-accordion *ngIf="(items$ | async).length as itemCount" class="mat-card">
   <mat-expansion-panel expanded>
     <mat-expansion-panel-header i18n>Uploading {{ itemCount }} item{ itemCount,
       plural, =1 {} other {s} }
-      <button mat-icon-button (click)="close()">
-        <mat-icon svgIcon="cross_circle"></mat-icon>
-      </button>
     </mat-expansion-panel-header>
 
     <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="24px" class="content">
