@@ -8,7 +8,7 @@ export function extractMedia(origin: any) {
   return [value, media];
 }
 
-function extractMediaValue(value: object) {
+function extractMediaValue(value: any) {
   let media: ImgRef[] = [];
   for (const key in value) {
     if (isMedia(value[key])) {
@@ -24,6 +24,6 @@ function extractMediaValue(value: object) {
   return media;
 }
 
-function isMedia(obj: object): boolean {
+function isMedia(obj: any): boolean {
   return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
 }
