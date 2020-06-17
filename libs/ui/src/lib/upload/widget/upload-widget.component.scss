@@ -9,7 +9,11 @@ mat-expansion-panel {
   position: absolute;
   z-index: 2;
   top: 8px;
-  right: 8px;
+  right: 24px;
+}
+
+.sub-header {
+  padding-top: 8px;
 }
 
 mat-divider {
@@ -19,16 +23,12 @@ mat-divider {
 .content {
   overflow: auto;
   height: 100%;
-  padding: 0px 32px;
+  padding: 0px 8px;
   max-height: 500px;
 }
 
-.sub-header {
-  padding-top: 16px;
-}
-
 img {
-  width: 42px;
+  width: 50px;
 }
 
 mat-icon {
