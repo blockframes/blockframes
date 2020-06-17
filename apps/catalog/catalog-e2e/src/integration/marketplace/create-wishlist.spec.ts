@@ -81,7 +81,7 @@ describe('Test wishlist icon from movie view page', () => {
   });
 
   describe('Test wishlist removal icon from everywhere', () => {
-    it(`Login into an existing account, add and remove a movie from home page, add and remove
+    it.skip(`Login into an existing account, add and remove a movie from home page, add and remove
     two movies from their view page and add and remove two movies from line-up page.`, () => {
       const p2 = new HomePage();
 
