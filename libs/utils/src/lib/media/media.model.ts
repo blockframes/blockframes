@@ -1,3 +1,5 @@
+import { ImgRef } from './media.firestore';
+
 export * from './media.firestore';
 
 export function extractMedia(origin: any) {
@@ -7,7 +9,7 @@ export function extractMedia(origin: any) {
 }
 
 function extractMediaValue(value) {
-  let media = [];
+  let media: ImgRef[] = [];
   for (const key in value) {
     if (isMedia(value[key])) {
       if (!!value[key]) {
@@ -23,11 +25,5 @@ function extractMediaValue(value) {
 }
 
 function isMedia(obj: object): boolean {
-  let bool = false;
-  if (typeof obj === 'object' && !!obj) {
-    if (obj.hasOwnProperty('ref') && obj.hasOwnProperty('urls')) {
-      bool = true;
-    }
-  }
-  return bool;
+  return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
 }

@@ -10,7 +10,7 @@ const referencesPaths = {
         avatar: (uid: string) => `users/${uid}/avatar`
     },
     organization: {
-      logo: (id: string) => `orgs/${id}/logo`
+        logo: (id: string) => `orgs/${id}/logo`
     }
 }
 type ReferencePath = typeof referencesPaths;
