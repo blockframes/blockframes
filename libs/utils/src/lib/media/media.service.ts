@@ -65,6 +65,13 @@ export class MediaService {
     }
   }
 
+    /**
+   * @description This function handles the upload process for one or many files. Make sure that
+   * the oath param doesn't include the filename.
+   * @param path should only have the path and not the file name in it
+   * @param fileOrBlob
+   * @param fileName
+   */
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
     const exists = await this.exists(path.concat(fileName));
     this.showWidget();
