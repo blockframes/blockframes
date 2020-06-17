@@ -3,6 +3,7 @@ import { ImgRef, getImgSize, imgSizeDirectory } from '@blockframes/utils/media/m
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
+import { getMediaUrl } from '../media.model';
 
 @Directive({
   selector: 'img[ref], img[asset]'
@@ -24,17 +25,16 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       this.ref$.next('');
     }
     try {
-      if (path.ref) {
+      if (path.ref && path.urls) {
         const sizes = getImgSize(path.ref);
         const imgSizesNoOriginal = imgSizeDirectory.filter(size => size !== 'original');
         const srcset = imgSizesNoOriginal
-          .map(size => {
-            return `${path.urls[size]} ${sizes[size]}w`;
-          })
+          .map(size => `${path.urls[size]} ${sizes[size]}w`)
           .join(', ');
         this.srcset$.next(srcset);
       }
-      this.ref$.next(path.urls.original);
+      const url = getMediaUrl(path);
+      this.ref$.next(url);
     } catch (err) {
       this.ref$.next('');
     }
@@ -66,8 +66,8 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
     this.sub = combineLatest([this.asset$, theme$, this.ref$, this.srcset$]).subscribe(
       ([asset, theme, ref, srcset]) => {
-        this.src = ref || `assets/${this.type}/${theme}/${asset}`;
         if (srcset) this.srcset = srcset;
+        this.src = ref || `assets/${this.type}/${theme}/${asset}`;
         this.cdr.markForCheck();
       }
     );
