@@ -7,7 +7,7 @@ import { UserQuery } from '@blockframes/user/+state/user.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
-import { OrganizationService } from '@blockframes/organization/+state';
+import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 
 @Component({
@@ -18,7 +18,7 @@ import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
 })
 export class MemberComponent implements OnInit {
   public orgName: string = this.query.getActive().denomination.full;
-  public orgId: string = this.query.getActiveId();
+  public org: Organization = this.query.getActive();
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;
@@ -49,8 +49,8 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     if (this.permissionQuery.isUserAdmin()) {
-      const queryFn1 = buildJoinOrgQuery(this.orgId, 'invitation');
-      const queryFn2 = buildJoinOrgQuery(this.orgId, 'request');
+      const queryFn1 = buildJoinOrgQuery(this.org.id, 'invitation');
+      const queryFn2 = buildJoinOrgQuery(this.org.id, 'request');
 
       this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
       this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
