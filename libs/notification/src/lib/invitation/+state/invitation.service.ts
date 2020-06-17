@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationQuery, createPublicOrganization, OrganizationService } from '@blockframes/organization/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { OrganizationQuery, createPublicOrganization, OrganizationService, Organization } from '@blockframes/organization/+state';
+import { AuthQuery, User } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
 import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
@@ -79,7 +79,7 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   request(who: 'user' | 'org', id: string) {
     return {
-      from: (fromType: 'user' | 'org') => ({
+      from: (fromType: 'user' | 'org', from?: User | Organization) => ({
         to: async (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
           const base = { mode: 'request', type, docId } as Partial<Invitation>
           if (who === 'user') {
@@ -88,9 +88,9 @@ export class InvitationService extends CollectionService<InvitationState> {
             base['toOrg'] = createPublicOrganization({ id });
           }
           if (fromType === 'user') {
-            base['fromUser'] = this.authQuery.user;
+            base['fromUser'] = createPublicUser(from || this.authQuery.user);
           } else if (fromType === 'org') {
-            base['fromOrg'] = createPublicOrganization(this.orgQuery.getActive());
+            base['fromOrg'] = createPublicOrganization(from || this.orgQuery.getActive());
           }
           const invitation = createInvitation(base);
           await this.add(invitation, { write });
@@ -106,13 +106,13 @@ export class InvitationService extends CollectionService<InvitationState> {
    */
   invite(who: 'user' | 'org', idOrEmails: string | string[]) {
     return {
-      from: (fromType: 'user' | 'org') => ({
+      from: (fromType: 'user' | 'org', from?: User | Organization) => ({
         to: (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
           const base = { mode: 'invitation', type, docId } as Partial<Invitation>
           if (fromType === 'user') {
-            base['fromUser'] = createPublicUser(this.authQuery.user);
+            base['fromUser'] = createPublicUser(from || this.authQuery.user);
           } else if (fromType === 'org') {
-            base['fromOrg'] = createPublicOrganization(this.orgQuery.getActive());
+            base['fromOrg'] = createPublicOrganization(from || this.orgQuery.getActive());
           }
           const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
           // We use mergeMap to keep all subscriptions in memory (switchMap unsubscribe automatically)

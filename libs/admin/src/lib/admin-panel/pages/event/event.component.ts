@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService } from '@blockframes/organization/+state';
+import { User } from '@blockframes/user/+state/user.model';
 
 @Component({
   selector: 'admin-event',
@@ -41,15 +42,18 @@ export class EventComponent implements OnInit {
         this.setEventOwner();
         if (this.event.type === 'screening') {
           const titleId = this.event.meta.titleId;
-          this.movieService.getValue(titleId as string)
-            .then(t => {
-              this.movie = t;
-              return t;
-            })
-            .then(_ => this.cdRef.markForCheck())
-            .catch(_ => {
-              this.snackBar.open('Error while loading movie private config', 'close', { duration: 5000 });
-            });
+          if (titleId) {
+            this.movieService.getValue(titleId as string)
+              .then(t => {
+                this.movie = t;
+                return t;
+              })
+              .then(_ => this.cdRef.markForCheck())
+              .catch(_ => {
+                this.snackBar.open('Error while loading movie', 'close', { duration: 5000 });
+              });
+          }
+
         }
         return e;
       }));

@@ -12,9 +12,9 @@
     <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
   <ng-template colRef="start" let-start>
-    {{ start.toDate() | date: 'medium'}}
+    {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="end" let-start>
-    {{ start.toDate() | date: 'medium'}}
+  <ng-template colRef="end" let-end>
+    {{ end | date: 'medium'}}
   </ng-template>
 </bf-table-filter>
