@@ -1,14 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Observable } from 'rxjs';
 import { Event } from '@blockframes/event/+state/event.model';
 import { MovieService, Movie } from '@blockframes/movie/+state';
-import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { User } from '@blockframes/user/+state/user.model';
 
 @Component({
   selector: 'admin-event',
@@ -18,47 +13,36 @@ import { User } from '@blockframes/user/+state/user.model';
 })
 export class EventComponent implements OnInit {
   public eventId = '';
-  public event$: Observable<Event>;
-  private event: Event;
+  public event: Event;
   public movie: Movie;
-  public eventOwner: string;
-
+ 
   constructor(
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private eventService: EventService,
     private movieService: MovieService,
     private snackBar: MatSnackBar,
-    private userService: UserService,
-    private orgService: OrganizationService,
   ) {
   }
 
-  ngOnInit() {
-    this.route.params.subscribe(async params => {
-      this.eventId = params.eventId;
-      this.event$ = this.eventService.syncDoc({ id: this.eventId }).pipe(map(e => {
-        this.event = e;
-        this.setEventOwner();
-        // @TODO (#2952) use async await @see https://github.com/blockframes/blockframes/pull/3100#discussion_r441452093y
-        if (this.event.type === 'screening') {
-          const titleId = this.event.meta.titleId;
-          if (titleId) {
-            this.movieService.getValue(titleId as string)
-              .then(t => {
-                this.movie = t;
-                return t;
-              })
-              .then(_ => this.cdRef.markForCheck())
-              .catch(_ => {
-                this.snackBar.open('Error while loading movie', 'close', { duration: 5000 });
-              });
-          }
+  async ngOnInit() {
 
+    this.eventId = this.route.snapshot.paramMap.get('eventId');
+    this.event = await this.eventService.getValue(this.eventId);
+
+    if (this.event.type === 'screening') {
+      const titleId = this.event.meta.titleId as string;
+      if (titleId) {
+        try {
+          this.movie = await this.movieService.getValue(titleId);
+        } catch (err) {
+          this.snackBar.open('Error while loading movie', 'close', { duration: 5000 });
         }
-        return e;
-      }));
-    });
+      } else {
+        this.snackBar.open('No title id defined for this screening event..', 'close', { duration: 5000 });
+      }
+    }
+    this.cdRef.markForCheck();
   }
 
   public getMovieTunnelPath(movieId: string) {
@@ -67,20 +51,6 @@ export class EventComponent implements OnInit {
 
   public getMovieAdminPath(movieId: string) {
     return `/c/o/admin/panel/movie/${movieId}`;
-  }
-
-  public getCalendarPath() {
-    return `/c/o/dashboard/event`;
-  }
-
-  public async setEventOwner() {
-    if (this.event.type === 'screening') { // should be an OrgId if type is screening
-      const org = await this.orgService.getValue(this.event.ownerId);
-      this.eventOwner = `Organization ${org.denomination.full} ( ${org.id} )`;
-    } else {
-      const user = await this.userService.getUser(this.event.ownerId);
-      this.eventOwner = `User ${user.firstName} ${user.lastName} ( ${user.uid} )`;
-    }
   }
 
 }

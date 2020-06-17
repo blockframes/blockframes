@@ -1,0 +1,38 @@
+<h2>Informations</h2>
+<mat-card>
+  <h5>Access</h5>
+  <div fxLayout fxLayoutGap="16px">
+    <a [routerLink]="getEventPath('dashboard')">
+      <span>Dashboard </span>
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
+    <a [routerLink]="getEventPath('marketplace')">
+      <span>Marketplace </span>
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
+  </div>
+  <h5>Owner</h5>
+  <p *ngIf="org">
+    <a [routerLink]="getOrgPath(org.id)">
+      <span>{{ org | orgName:'long' }}</span>
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
+  </p>
+  <h5>Type</h5>
+  <p>{{ event.type }}</p>
+</mat-card>
+
+<h2>Details</h2>
+<mat-card>
+  <h5>Event Title</h5>
+  <p>{{ event.title }}</p>
+  <h5>Is Private</h5>
+  <p>{{ event.isPrivate ? 'Yes' : 'No' }}</p>
+  <h5>Date & Time</h5>
+  <pre class="mat-body-1">{{ event | eventRange }}</pre>
+</mat-card>
+
+<h2>Invitations</h2>
+<mat-card *ngIf="invitations$ | async as invitations">
+  <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
+</mat-card>
