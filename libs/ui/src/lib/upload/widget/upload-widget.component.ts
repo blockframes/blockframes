@@ -43,5 +43,6 @@ export class UploadWidgetComponent {
 
   close() {
     this.mediaService.detachWidget()
+    this.mediaService.clear();
   }
 }

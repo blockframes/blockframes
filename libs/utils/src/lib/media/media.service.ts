@@ -38,25 +38,30 @@ export class MediaService {
     return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
   }
 
-  uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> {
+  uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
 
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      return this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+      this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
     }
   }
-
+  /**
+   * @description This function handles the upload process for one or many files. Make sure that
+   * the oath param doesn't include the filename.
+   * @param path should only have the path and not the file name in it
+   * @param file
+   */
   uploadFile(path: string, file: File | FileList) {
 
     if (file instanceof File) {
-      return this.upload(path, file, file.name);
+      this.upload(path, file, file.name);
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
         promises.push(this.upload(path, file.item(index), file.item(index).name))
       }
-      return Promise.all(promises);
+      Promise.all(promises);
     }
   }
 
@@ -120,10 +125,10 @@ export class MediaService {
     }
   }
 
-  /** Remove every `succeeded` and `canceled` upload */
+  /** Remove a single file from the store or remove all if no param is given*/
   clear(fileName?: string) {
     if (fileName) {
-      this.store.remove(upload => upload.id === fileName)
+      this.store.remove(fileName)
     } else {
       this.store.remove(upload => isDone(upload));
     }
