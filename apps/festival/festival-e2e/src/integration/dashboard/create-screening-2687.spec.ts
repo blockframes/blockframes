@@ -31,25 +31,23 @@ describe('User create a screening', () => {
     tomorrow = new Date(NOW);
   });
 
-  it('User creates a private screening, that taking place right now', () => {
+  it('User creates a private screening, that taking place tomorrow', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
     p3.addEventTitle(PRIVATE_EVENTNAME);
-    p3.selectDate(NOW);
     p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
 
-  it('User creates a public screening, that taking place right now', () => {
+  it('User creates a public screening, that taking place tomorrow', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
     p3.addEventTitle(PUBLIC_EVENTNAME);
     p3.uncheckPrivate();
-    p3.selectDate(NOW);
     p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
@@ -60,7 +58,6 @@ describe('User create a screening', () => {
     const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(tomorrow);
     p3.addEventTitle(PRIVATE_EVENTNAME);
-    p3.selectDate(tomorrow);
     p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
@@ -71,7 +68,6 @@ describe('User create a screening', () => {
     const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(tomorrow);
     p3.addEventTitle(PRIVATE_EVENTNAME);
-    p3.selectDate(tomorrow);
     p3.selectMovie(MOVIE_TITLE);
     p3.saveEvent();
   });
@@ -109,7 +105,7 @@ describe('User create a screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
-    cy.wait(5000);
+    cy.wait(8000);
     p2.verifyNotification(ORG_NAME, true);
   });
 
@@ -125,6 +121,7 @@ describe('User create a screening', () => {
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
     const p6: FestivalMarketplaceScreeningPage = p5.clickOnEvent(MOVIE_TITLE);
+    cy.wait(5000);
     p6.assertScreeningExist(MOVIE_TITLE);
   });
 });

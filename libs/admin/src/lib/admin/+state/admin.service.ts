@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AdminStore } from './admin.store';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   constructor(
     protected store: AdminStore,
     private functions: AngularFireFunctions,
+    private auth: AngularFireAuth,
   ) { }
 
   public async loadAnalyticsData() {
@@ -26,5 +28,14 @@ export class AdminService {
   private getAnalyticsActiveUsers(): Promise<any[]> {
     const f = this.functions.httpsCallable('getAnalyticsActiveUsers');
     return f({}).toPromise();
+  }
+
+  /**
+  * Send email from Google Firebase to reset password
+  * @dev This is the "hard" reset password link, sent directly from Google.
+  * @param email 
+  */
+  public sendPasswordResetEmail(email: string): Promise<void> {
+    return this.auth.sendPasswordResetEmail(email);
   }
 }

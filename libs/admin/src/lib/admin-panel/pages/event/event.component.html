@@ -9,8 +9,8 @@
   <h3 *ngIf="eventOwner">Owner : {{ eventOwner }}</h3>
   <ul>
     <li><strong>Type :</strong> {{ event.type }}</li>
-    <li><strong>From :</strong> {{ event.start.toDate() | date: 'medium'}}</li>
-    <li><strong>To :</strong> {{ event.end.toDate() | date: 'medium'}}</li>
+    <li><strong>From :</strong> {{ event.start | date: 'medium'}}</li>
+    <li><strong>To :</strong> {{ event.end | date: 'medium'}}</li>
   </ul>
 
   <ng-container *ngIf="movie else spinner">

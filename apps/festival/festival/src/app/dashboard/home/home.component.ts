@@ -15,13 +15,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   public movieAnalytics$: Observable<MovieAnalytics[]>;
-  public hasMovies$ : Observable<boolean>;
+  public hasMovies$: Observable<boolean>;
 
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
     private orgQuery: OrganizationQuery
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();

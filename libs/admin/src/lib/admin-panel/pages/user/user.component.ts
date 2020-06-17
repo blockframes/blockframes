@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
+import { AdminService } from '@blockframes/admin/admin/+state';
 
 @Component({
   selector: 'admin-user',
@@ -28,17 +29,18 @@ export class UserComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
+    private adminService: AdminService,
   ) { }
 
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
       this.user = await this.userService.getUser(this.userId);
-      if(this.user.orgId){
+      if (this.user.orgId) {
         this.userOrg = await this.organizationService.getValue(this.user.orgId);
         this.userOrgRole = await this.organizationService.getMemberRole(this.user.orgId, this.user.uid);
       }
-      
+
       this.userForm = new UserAdminForm(this.user);
       this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
       this.cdRef.markForCheck();
@@ -96,5 +98,10 @@ export class UserComponent implements OnInit {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
+  }
+
+  public async sendPasswordResetEmail() {
+    await this.adminService.sendPasswordResetEmail(this.user.email);
+    this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
   }
 }

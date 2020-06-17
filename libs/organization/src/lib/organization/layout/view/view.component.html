@@ -12,7 +12,7 @@
       </div>
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
-          <span>{{ org.denomination.full }}</span>
+          <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
         <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
@@ -27,7 +27,7 @@
     <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />
     <article fxLayout="column" fxLayoutAlign="start start">
       <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
-      <span class="mat-display-2">{{ org.denomination.full }}</span>
+      <span class="mat-display-2">{{ org | orgName }}</span>
       <h2>
         <span>{{ org.addresses.main.street | titlecase }}</span>
         <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
