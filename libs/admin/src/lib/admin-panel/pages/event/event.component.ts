@@ -40,6 +40,7 @@ export class EventComponent implements OnInit {
       this.event$ = this.eventService.syncDoc({ id: this.eventId }).pipe(map(e => {
         this.event = e;
         this.setEventOwner();
+        // @TODO (#2952) use async await @see https://github.com/blockframes/blockframes/pull/3100#discussion_r441452093y
         if (this.event.type === 'screening') {
           const titleId = this.event.meta.titleId;
           if (titleId) {
