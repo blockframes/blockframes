@@ -10,20 +10,24 @@ section {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border: dashed 3px rgba(50, 50, 50, 0.3);
+  border: solid 1px var(--foreground-divider);
   border-radius: 5px;
   font-size: 1.5rem;
   transition: border 0.2s ease-in-out;
 }
 
 .upload-button-container {
-  height: 60px;
   button {
-    width: 60px;
+    width: 48px;
+    margin-bottom: 8px;
     img {
       width: 100%;
     }
   }
+}
+
+p.mat-caption a {
+  color: var(--primary);
 }
 
 mat-icon {
