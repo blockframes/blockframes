@@ -17,11 +17,11 @@
         <ng-container *ngFor="let item of items$ | async">
           <ng-container [ngSwitch]="item.status">
 
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayoutGap="8px">
               <img [src]="getFileType(item.id)">
 
               <div fxLayout="column" fxLayoutAlign="start start">
-                <caption class="caption">{{item.id | maxLength: 30}}</caption>
+                <caption class="caption">{{item.id | maxLength: 25}}</caption>
                 <mat-progress-bar [value]="item.progress" *ngIf="item.status !== 'canceled'"></mat-progress-bar>
 
                 <!-- Finished -->
