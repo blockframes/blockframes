@@ -108,8 +108,10 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
 
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation(data.invitation);
+    const fromOrgId = (invitation.fromUser?.orgId || invitation.fromOrg?.id || user.orgId);
+
     for (const email of data.emails) {
-      getOrInviteUserByMail(email, user.orgId, invitation.type, data.app)
+      getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app)
         .then(u => createPublicUser(u))
         .then(toUser => {
           invitation.toUser = toUser;
