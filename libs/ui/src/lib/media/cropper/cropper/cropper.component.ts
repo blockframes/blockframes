@@ -10,6 +10,8 @@ import { ImgRefForm } from '../../image-reference/image-reference.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
+type MediaRatio = typeof mediaRatio;
+type MediaRatioType = keyof MediaRatio;
 const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
@@ -68,7 +70,7 @@ export class CropperComponent implements OnInit, OnDestroy {
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
-  cropRatio: string;
+  cropRatio: number;
   parentWidth: number;
   prev: CropStep;
   previewUrl: Observable<string | null>;
@@ -79,14 +81,8 @@ export class CropperComponent implements OnInit, OnDestroy {
   // Inputs //
   ///////////
 
-  @Input() set ratio(ratio: string) {
-    if (!mediaRatio.hasOwnProperty(ratio)) {
-      console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(mediaRatio).join(', ')}`);
-    }
+  @Input() set ratio(ratio: MediaRatioType) {
     this.cropRatio = mediaRatio[ratio];
-    const el: HTMLElement = this._elementRef.nativeElement;
-    this.parentWidth = el.clientWidth;
-    this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`);
   }
   @Input() form?: ImgRefForm;
   @Input() setWidth?: number;
