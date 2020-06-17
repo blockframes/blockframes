@@ -17,7 +17,7 @@
           <ul>
             <li *ngIf="userOrg">
               <b class="bf-dark-text">Organization : </b>
-              <span>{{ userOrg | orgName }} ({{ userOrg.id }})</span>
+              <span>{{ userOrg | orgName:'long' }}</span>
               <button mat-icon-button color="primary" [routerLink]="getOrgPath(userOrg.id)">
                 <mat-icon svgIcon="eye"></mat-icon>
               </button>
@@ -43,6 +43,13 @@
               <a class="blockframes-admin-link" (click)="setBlockframesAdmin()">
                 <span>{{ isUserBlockframesAdmin? 'remove' : 'add' }}</span>
                 <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'star_fill': 'star'"></mat-icon>
+              </a>
+            </li>
+            <li>
+              <b class="bf-dark-text">Password : </b>
+              <a class="blockframes-admin-link" (click)="sendPasswordResetEmail()">
+                <span>Send reset password email</span>
+                <mat-icon svgIcon="mail"></mat-icon>
               </a>
             </li>
           </ul>
