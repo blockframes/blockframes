@@ -73,7 +73,7 @@ export class CropperComponent implements OnInit, OnDestroy {
   cropRatio: number;
   parentWidth: number;
   prev: CropStep;
-  previewUrl: Observable<string | null>;
+  previewUrl$: Observable<string | null>;
   percentage$: Observable<number>;
   resizing = false;
 
@@ -143,7 +143,7 @@ export class CropperComponent implements OnInit, OnDestroy {
   }
 
   async goToShow() {
-    this.previewUrl = this.getDownloadUrl(this.ref);
+    this.previewUrl$ = this.getDownloadUrl(this.ref);
     this.nextStep('show');
   }
 
