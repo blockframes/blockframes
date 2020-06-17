@@ -20,7 +20,7 @@ export interface PublicOrganization {
 }
 
 /** Document model of an Organization */
-interface OrganizationBase<D> extends PublicOrganization{
+interface OrganizationBase<D> extends PublicOrganization {
   activity: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
@@ -145,8 +145,8 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   }
 }
 
-export function orgName(org: PublicOrganization){
-  return org.denomination.public || org.denomination.full
+export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
+  return org.denomination[type] || org.denomination.full;
 }
 
 /**

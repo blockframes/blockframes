@@ -4,7 +4,7 @@
   <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
     <mat-card>
       <h2>
-        {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+        {{ movie.main.title.international }} ({{ movie.main.internalRef || 'missing internal ref' }})
         <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
           <mat-icon svgIcon="eye"></mat-icon>
         </button>

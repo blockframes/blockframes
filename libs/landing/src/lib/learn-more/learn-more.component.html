@@ -10,7 +10,7 @@
     </p>
   </article>
   <form fxLayout="column" [formGroup]="form" (ngSubmit)="sendRequest(form)">
-    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column"  fxLayoutGap="24px">
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
         <input matInput type="text" placeholder="First name" formControlName="firstName" required />
@@ -26,7 +26,7 @@
         </mat-error>
       </mat-form-field>
     </article>
-    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
       <mat-form-field appearance="outline">
         <mat-label>Company name</mat-label>
         <input matInput type="text" placeholder="Company name" formControlName="companyName" required />
@@ -44,7 +44,7 @@
         </mat-error>
       </mat-form-field>
     </article>
-    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+    <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" placeholder="Email" formControlName="email" required />

@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Event, EventService } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { slideDown } from '@blockframes/utils/animations/fade';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-event-list',
@@ -17,9 +18,12 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     const query = ref => ref
-      .orderBy('meta.titleId').where('meta.titleId', '>', '')
       .orderBy('end').startAt(new Date());
-    this.events$ = this.service.queryByType(['screening'], query);
+    this.events$ = this.service.queryByType(['screening'], query).pipe(
+      // We can't filter by meta.titleId directly in the query because
+      // firestore supports only one orderBy if it uses .where()
+      map(events => events.filter(event => !!event.meta.titleId))
+    );
   }
 
 }
