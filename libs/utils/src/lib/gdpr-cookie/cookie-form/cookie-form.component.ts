@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { CookiesConsentForm } from './cookie.form';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { CookiesConsent, CookiesConsentForm } from './cookie.form';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Subscription } from 'rxjs';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatDialog } from '@angular/material/dialog';
+import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 
 @Component({
   selector: 'cookie-form',
@@ -10,26 +11,30 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
   styleUrls: ['./cookie-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CookieFormComponent implements OnInit, OnDestroy {
+export class CookieFormComponent {
 
   form = new CookiesConsentForm();
 
-  sub: Subscription;
+  constructor(
+    private dialog: MatDialog,
+  ) { }
 
-  ngOnInit() {
-    console.log(this.form);
-    this.sub = this.form.valueChanges.subscribe(a => console.log(a)); // TODO REMOVE THAT
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
-  masterToggle(event: MatCheckboxChange) {
-    
+  masterToggle(event: MatRadioChange) {
+    this.form.patchAllValue(event.value);
+    Object.keys(this.form.controls)
+      .forEach(controlName => this.form.get(controlName as keyof CookiesConsent).setValue(event.value));
   }
 
   toggleCookie(event: MatSlideToggleChange) {
-    this.form.get(event.source.name as 'cascade8' | 'google' | 'intercom' | 'yandex').setValue(event.checked);
+    this.form.get(event.source.name as keyof CookiesConsent).setValue(event.checked);
+  }
+
+  save() {
+    console.log('save'); // TODO DISABLE EVERY 3RD PARTIES IF NEEDED
+  }
+
+  /** Opens a dialog with terms of use and privacy policy given by the parent. */
+  public openPrivacyPolicy() {
+    this.dialog.open(PrivacyPolicyComponent, { maxHeight: '80vh' })
   }
 }
