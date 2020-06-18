@@ -124,12 +124,12 @@ export class CropperComponent implements OnInit, OnDestroy {
       const blob = b64toBlob(this.croppedImage);
 
       this.nextStep('show');
-
+      const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
       this.form.patchValue({
         path: `${this.storagePath}/original/`,
         blob: blob,
         delete: false,
-        fileName: this.file.name
+        fileName: fileName
       })
       this.form.markAsDirty();
 

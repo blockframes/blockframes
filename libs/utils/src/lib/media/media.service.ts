@@ -44,8 +44,7 @@ export class MediaService {
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      const sanitizedFileName = sanitizeFileName(uploadFiles.fileName).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName, sanitizedFileName);
+      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
     }
   }
   /**
@@ -57,13 +56,11 @@ export class MediaService {
   uploadFile(path: string, file: File | FileList) {
 
     if (file instanceof File) {
-      const sanitizedFileName = sanitizeFileName(file.name);
-      this.upload(path, file, sanitizedFileName, file.name);
+      this.upload(path, file, file.name);
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
-        const sanitizedFileName = sanitizeFileName(file.item(index).name);
-        promises.push(this.upload(path, file.item(index), file.item(index).name, sanitizedFileName))
+        promises.push(this.upload(path, file.item(index), file.item(index).name));
       }
       Promise.all(promises);
     }
@@ -76,7 +73,9 @@ export class MediaService {
    * @param fileOrBlob
    * @param fileName
    */
-  private async upload(path: string, fileOrBlob: Blob | File, fileName: string, sanitizedFileName: string) {
+  private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
+    let sanitizedFileName: string = sanitizeFileName(fileName);
+
     const exists = await this.exists(path.concat(sanitizedFileName));
     this.showWidget();
 
