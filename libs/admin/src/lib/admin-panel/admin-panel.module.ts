@@ -27,6 +27,9 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
 import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
+import { OverviewModule } from './pages/overview/overview.module';
+import { InvitationsModule } from './pages/invitations/invitations.module';
+import { EventModule } from './pages/event/event.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -47,8 +50,7 @@ import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
-import { EventModule } from './pages/event/event.module';
-import { OverviewModule } from './pages/overview/overview.module';
+import { InvitationsComponent } from './pages/invitations/invitations.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -69,6 +71,7 @@ export const panelRoutes: Routes = [
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
+  { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent }
 ];
@@ -102,6 +105,7 @@ export const panelRoutes: Routes = [
     MemberPermissionsModule,
     ImageSizesModule,
     OverviewModule,
+    InvitationsModule,
   ],
   declarations: [
     MoviesComponent,
