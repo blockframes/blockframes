@@ -40,20 +40,19 @@ const formats = {
     height: 160,
     width: 120
   }
-} as const;
+};
 
 export type Formats = keyof typeof formats;
 
 export function getRatio(format: Formats) {
-  // @ts-ignore
-  const { height, width } = format[format];
-  return width/height;
+  const { height, width } = formats[format];
+  return width / height;
 }
 
 // @todo(#3063) Remove this verifier
 export function isOldImgRef(ref: ImgRef | OldImgRef): ref is OldImgRef {
   return 'url' in ref;
-} 
+}
 
 // @todo(#3063) Update this function to unsupport oldImgRef
 export function getMediaUrl(ref: ImgRef | OldImgRef) {
