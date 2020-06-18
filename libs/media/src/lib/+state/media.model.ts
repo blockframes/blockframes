@@ -43,9 +43,9 @@ const formats = {
 } as const;
 
 export type Formats = keyof typeof formats;
+type RatioNumber = { height: number, width: number };
 
 export function getRatio(format: Formats) {
-  type RatioNumber = { height: number, width: number };
   const { height, width }: RatioNumber = format[format];
   return width/height;
 }
