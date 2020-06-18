@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
 import { EventService, Event } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
