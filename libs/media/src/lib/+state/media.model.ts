@@ -43,10 +43,10 @@ const formats = {
 } as const;
 
 export type Formats = keyof typeof formats;
-type RatioNumber = { height: number, width: number };
 
 export function getRatio(format: Formats) {
-  const { height, width }: RatioNumber = format[format];
+  // @ts-ignore
+  const { height, width } = format[format];
   return width/height;
 }
 
