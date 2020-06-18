@@ -1,14 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
-import { EventService, Event } from '@blockframes/event/+state/';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { OrganizationService, orgName } from '@blockframes/organization/+state';
+import { EventService } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-
-// @TODO (#2952) find better name and location
-export interface InvitationDetailed extends Invitation {
-  org: Organization,
-  event: Event,
-};
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { InvitationDetailed } from '../../components/guest-table/guest-table.component';
+import { getHost } from '@blockframes/invitation/pipes/host.pipe';
 
 @Component({
   selector: 'admin-invitations',
@@ -19,26 +16,28 @@ export interface InvitationDetailed extends Invitation {
 export class InvitationsComponent implements OnInit {
 
   public invitations: InvitationDetailed[];
-  
-  public columns : string[] = [
+
+  public columns: string[] = [
     'id',
     'org',
     'event.id',
     'event.title',
     'event.start',
     'event.end',
+    'event.type',
     'date',
     'toUser.firstName',
     'toUser.lastName',
     'mode',
     'status',
     'toUser.email',
-  ]; 
+  ]; //  type movie poster movie name
 
   constructor(
     private invitationService: InvitationService,
     private orgService: OrganizationService,
     private eventService: EventService,
+    private movieService: MovieService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -47,8 +46,20 @@ export class InvitationsComponent implements OnInit {
 
     const orgs = invitations.map(async i => {
       const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
-      invitation.org = await this.orgService.getValue(invitation.fromOrg.id);
+
+      invitation.org = await this.orgService.getValue(getHost(invitation, 'org').id);
       invitation.event = await this.eventService.getValue(invitation.docId);
+
+      if (invitation.event.type === 'screening') {
+        const titleId = invitation.event.meta.titleId as string;
+        if (titleId) {
+          try {
+            invitation.movie = await this.movieService.getValue(titleId);
+          } catch (err) {
+            console.log(`Error while loading movie for event : ${invitation.event.id}`);
+          }
+        }
+      }
       return invitation;
     })
 
@@ -58,7 +69,7 @@ export class InvitationsComponent implements OnInit {
 
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
-      id : i.id,
+      id: i.id,
       org: orgName(i.org),
       event: i.event.title,
       date: i.date,
