@@ -45,12 +45,4 @@ export class EventComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public getMovieTunnelPath(movieId: string) {
-    return `/c/o/dashboard/tunnel/movie/${movieId}`;
-  }
-
-  public getMovieAdminPath(movieId: string) {
-    return `/c/o/admin/panel/movie/${movieId}`;
-  }
-
 }

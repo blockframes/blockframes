@@ -94,8 +94,4 @@ export class MoviesComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getPath(movieId: string, segment: string = 'main') {
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
-  }
-
 }

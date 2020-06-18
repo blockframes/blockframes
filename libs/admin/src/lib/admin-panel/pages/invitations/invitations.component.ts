@@ -3,11 +3,15 @@ import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
 import { EventService, Event } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { getHost } from '@blockframes/invitation/pipes/host.pipe';
+import { PublicUser } from '@blockframes/user/types';
+import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 
 // @TODO (#2952) find better name and location
 export interface InvitationDetailed extends Invitation {
   org: Organization,
   event: Event,
+  guest?: PublicUser,
 };
 
 @Component({
@@ -19,8 +23,8 @@ export interface InvitationDetailed extends Invitation {
 export class InvitationsComponent implements OnInit {
 
   public invitations: InvitationDetailed[];
-  
-  public columns : string[] = [
+
+  public columns: string[] = [
     'id',
     'org',
     'event.id',
@@ -28,12 +32,12 @@ export class InvitationsComponent implements OnInit {
     'event.start',
     'event.end',
     'date',
-    'toUser.firstName',
-    'toUser.lastName',
+    'guest.firstName',
+    'guest.lastName',
     'mode',
     'status',
-    'toUser.email',
-  ]; 
+    'guest.email',
+  ];
 
   constructor(
     private invitationService: InvitationService,
@@ -47,7 +51,7 @@ export class InvitationsComponent implements OnInit {
 
     const orgs = invitations.map(async i => {
       const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
-      invitation.org = await this.orgService.getValue(invitation.fromOrg.id);
+      invitation.org = await this.orgService.getValue(getHost(invitation, 'org').id);
       invitation.event = await this.eventService.getValue(invitation.docId);
       return invitation;
     })
@@ -58,12 +62,12 @@ export class InvitationsComponent implements OnInit {
 
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
-      id : i.id,
+      id: i.id,
       org: orgName(i.org),
       event: i.event.title,
       date: i.date,
-      guest: `${i.toUser.firstName} ${i.toUser.lastName}`,
-      email: i.toUser.email,
+      guest: `${getGuest(i, 'user').firstName} ${getGuest(i, 'user').lastName}`,
+      email: getGuest(i, 'user').email,
       mode: i.mode,
       status: i.status,
     }))

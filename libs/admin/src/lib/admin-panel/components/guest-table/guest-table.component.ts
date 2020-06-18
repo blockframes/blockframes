@@ -1,6 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { Invitation } from '@blockframes/invitation/+state';
+import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { getValue } from '@blockframes/utils/helpers';
+import { InvitationDetailed } from '../../pages/invitations/invitations.component';
 
 @Component({
   selector: 'invitation-guest-table',
@@ -9,6 +11,7 @@ import { getValue } from '@blockframes/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuestTableComponent implements OnInit {
+  public _invitations: Invitation[] | InvitationDetailed[];
 
   public headers = {
     'id': 'Id',
@@ -17,24 +20,32 @@ export class GuestTableComponent implements OnInit {
     'event.start': 'Event start',
     'event.end': 'Event end',
     'date': 'Invitation date',
-    'toUser.firstName': 'FirstName',
-    'toUser.lastName': 'LastName',
+    'guest.firstName': 'FirstName',
+    'guest.lastName': 'LastName',
     'mode': 'Type',
     'status': 'Status',
-    'toUser.email': 'Email'
+    'guest.email': 'Email'
   };
 
   @Input() initialColumns: string[] = [
     'id',
     'date',
-    'toUser.firstName',
-    'toUser.lastName',
+    'guest.firstName',
+    'guest.lastName',
     'mode',
     'status',
-    'toUser.email',
+    'guest.email',
   ];
 
-  @Input() invitations: Invitation[ ];
+  @Input() set invitations(invitations: InvitationDetailed[]) {
+    if (invitations) {
+      this._invitations = invitations.map(i => {
+        const invitation = { ...i } as InvitationDetailed;
+        invitation.guest = getGuest(invitation, 'user');
+        return invitation;
+      });
+    }
+  }
 
   ngOnInit() {
     // @TODO (#2952) WIP
@@ -48,18 +59,13 @@ export class GuestTableComponent implements OnInit {
       'org.denomination.public',
       'event.title',
       'date',
-      'toUser.firstName',
-      'toUser.lastName',
+      'guest.firstName',
+      'guest.lastName',
       'mode',
       'status',
-      'toUser.email',
+      'guest.email',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-
-  public getEventPath(eventId: string) {
-    return `/c/o/admin/panel/event/${eventId}`;
-  }
-
 }

@@ -2,22 +2,22 @@
 <mat-card>
   <h5>Access</h5>
   <div fxLayout fxLayoutGap="16px">
-    <a [routerLink]="getEventPath('dashboard')">
+    <a [routerLink]="['/c/o','dashboard', 'event', event.id]">
       <span>Dashboard </span>
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
-    <a [routerLink]="getEventPath('marketplace')">
+    <a [routerLink]="['/c/o','marketplace', 'event', event.id]">
       <span>Marketplace </span>
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </div>
   <h5>Owner</h5>
-  <p *ngIf="org">
-    <a [routerLink]="getOrgPath(org.id)">
+  <ng-container *ngIf="org">
+    <a [routerLink]="['/c/o/admin/panel/organization', org.id]">
       <span>{{ org | orgName:'long' }}</span>
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
-  </p>
+  </ng-container>
   <h5>Type</h5>
   <p>{{ event.type }}</p>
 </mat-card>

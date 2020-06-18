@@ -115,10 +115,6 @@ export class MovieComponent implements OnInit {
 
   }
 
-  public getMovieTunnelPath(movieId: string) {
-    return `/c/o/dashboard/tunnel/movie/${movieId}`;
-  }
-
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
@@ -130,12 +126,5 @@ export class MovieComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getRightPath(rightId: string, movieId: string) {
-    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
-  }
-
-  public getContractPath(contractId: string) {
-    return `/c/o/admin/panel/contract/${contractId}`;
-  }
 
 }

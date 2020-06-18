@@ -35,14 +35,4 @@ export class EventInfoComponent implements OnInit {
   async ngOnInit() {
     this.org = await this.orgService.getValue(this.event.ownerId);
   }
-
-
-  public getEventPath(module: Module) {
-    return `/c/o/${module}/event/${this._event.id}`;
-  }
-
-  public getOrgPath(orgId: string) {
-    return `/c/o/admin/panel/organization/${orgId}`;
-  }
-
 }
