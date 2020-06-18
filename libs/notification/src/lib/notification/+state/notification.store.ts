@@ -64,7 +64,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           url: `/c/o/organization/${notification.organization.id}/view/members`,
         };
       case 'newContract':
-        const organizationName = orgName(notification.organization.denomination) || 'Organization with no name';
+        const organizationName = orgName(notification.organization) || 'Organization with no name';
         return {
           date: toDate(notification.date),
           message: `${organizationName} submitted a contract.`,

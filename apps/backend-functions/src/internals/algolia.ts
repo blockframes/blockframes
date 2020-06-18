@@ -49,7 +49,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
 
   const orgRecord: AlgoliaRecordOrganization = {
     objectID: org.id,
-    name: orgName(org.denomination),
+    name: orgName(org),
     appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
   };
