@@ -32,6 +32,7 @@ function getIntercomOptions(user) {
 export class IntercomAppModule {
 
   constructor(query: AuthQuery, public intercom: Intercom) {
+    console.log('hello I\'m the intercom service!');
     if (intercomId) {
       query.user$.pipe(
         distinctUntilChanged((oldUser, newUser) => !!oldUser === !!newUser) // Trigger only when the user login/logout
