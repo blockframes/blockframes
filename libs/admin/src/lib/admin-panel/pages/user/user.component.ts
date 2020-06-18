@@ -79,10 +79,6 @@ export class UserComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  public getOrgPath(orgId: string) {
-    return `/c/o/admin/panel/organization/${orgId}`;
-  }
-
   /** Update user role. */
   public async updateRole(uid: string, role: UserRole) {
     const message = await this.permissionService.updateMemberRole(uid, role);

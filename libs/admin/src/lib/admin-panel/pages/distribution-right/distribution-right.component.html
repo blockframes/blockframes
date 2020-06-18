@@ -2,15 +2,15 @@
 <article *ngIf="right" id="right-section" fxLayout="column" fxLayoutAlign="start start">
   <h2>
     <strong>Movie : </strong>
-    <a [routerLink]="getMoviePath(movieId)">{{ movieId }}</a>
-    <a [routerLink]="getMovieTunnelPath(movieId)">
+    <a [routerLink]="['/c/o/admin/panel/movie', movieId]">{{ movieId }}</a>
+    <a [routerLink]="['/c/o/dashboard/tunnel/movie', movieId]">
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </h2>
   <h2 *ngIf="contract">
     <strong>Contract : </strong>
-    <a [routerLink]="getContractPath(contract.id)">{{ contract.id }}</a>
-    <a [routerLink]="getContractTunnelPath(contract)">
+    <a [routerLink]="['/c/o/admin/panel/contract', contract.id]">{{ contract.id }}</a>
+    <a [routerLink]="['/c/o/marketplace/tunnel/contract', contract.id, contract.type]">
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </h2>

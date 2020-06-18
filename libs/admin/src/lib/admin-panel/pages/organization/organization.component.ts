@@ -161,11 +161,6 @@ export class OrganizationComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-
-  public getMoviePath(movieId: string, segment: string = 'main') {
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
-  }
-
   public async uniqueOrgName() {
     const orgName = this.orgForm.get('denomination').get('full').value
     const unique = await this.organizationService.uniqueOrgName(orgName);

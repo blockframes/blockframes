@@ -59,7 +59,6 @@ export class InvoicesComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
@@ -85,10 +84,6 @@ export class InvoicesComponent implements OnInit {
     // @TODO 
     console.log(`retreiving : ${legalDocumentId}`);
     return '#';
-  }
-
-  public getOrgPath(orgId: string) {
-    return `/c/o/admin/panel/organization/${orgId}`;
   }
 
 }

@@ -9,10 +9,10 @@
   showLoader
   showPaginator>
   <ng-template colRef="rightLink" let-rightLink>
-    <a target="_blank" [routerLink]="getRightPath(rightLink.id, rightLink.movieId)" routerLinkActive="active">{{ rightLink.id }}</a>
+    <a target="_blank" [routerLink]="['/c/o/admin/panel/right',rightLink.id, 'm', rightLink.movieId]" routerLinkActive="active">{{ rightLink.id }}</a>
   </ng-template>
   <ng-template colRef="movieId" let-id>
-    <a target="_blank" [routerLink]="getMoviePath(id)" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a>
+    <a target="_blank" [routerLink]="['/c/o/dashboard/tunnel/movie', id]" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a>
   </ng-template>
   <ng-template colRef="right.publicId" let-publicId>
     {{ publicId ? publicId : '-- '}}
