@@ -10,8 +10,8 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { extractMedia } from '@blockframes/utils/media/media.model';
-import { MediaService } from '@blockframes/utils/media/media.service';
+import { extractMedia } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Component({
   selector: 'auth-profile-view',

@@ -2,7 +2,7 @@ import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalEle
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form'
+import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
 
 // Promotional Element LINK
 

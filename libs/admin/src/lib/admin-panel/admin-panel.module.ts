@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
@@ -26,7 +26,7 @@ import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
-import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
+import { ImageSizesModule } from '@blockframes/media/components/image-sizes/image-sizes.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';

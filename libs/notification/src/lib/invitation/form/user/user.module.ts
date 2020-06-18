@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserComponent } from './user.component';
-import { ImageReferenceModule } from '@blockframes/ui/media'
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module'
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
 

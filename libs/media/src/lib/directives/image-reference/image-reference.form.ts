@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore'
+import { ImgRef, createImgRef } from '../../+state//media.firestore'
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
@@ -13,9 +13,8 @@ function createImgRefControl(reference: ImgRef) {
       lg: new FormControl(urls.lg)
     }),
     blob: new FormControl(),
-    path: new FormControl(''),
-    delete: new FormControl(false),
-    fileName: new FormControl('')
+    newRef: new FormControl(''),
+    delete: new FormControl(false)
   }
 }
 
@@ -31,6 +30,6 @@ export class ImgRefForm extends FormEntity<ImgRefControl> {
   get ref() { return this.get('ref') }
   get urls() { return this.get('urls') }
   get blob() { return this.get('blob') }
-  get path() { return this.get('path') }
+  get newRef() { return this.get('newRef') }
   get delete() { return this.get('delete') }
 }

@@ -57,7 +57,8 @@
       "@blockframes/event/*": ["libs/event/src/lib/*"],
       "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
-      "@blockframes/import": ["libs/import/src/index.ts"]
+      "@blockframes/import": ["libs/import/src/index.ts"],
+      "@blockframes/media/*": ["libs/media/src/lib/*"]
     }
   },
   "angularCompilerOptions": {

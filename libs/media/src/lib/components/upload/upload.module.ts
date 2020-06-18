@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileUploadComponent } from './file-upload/file-upload.component';
-import { ButtonUploadComponent } from './button-upload/button-upload.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '../media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '../../directives/image-reference/image-reference.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -24,12 +23,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ImageReferenceModule
   ],
   declarations: [
-    FileUploadComponent,
-    ButtonUploadComponent
+    FileUploadComponent
   ],
   exports: [
-    FileUploadComponent,
-    ButtonUploadComponent
+    FileUploadComponent
   ]
 })
 export class UploadModule { }

@@ -1,10 +1,10 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getMediaUrl } from '../media.model';
+import { getMediaUrl } from '../../+state/media.model';
 
 @Directive({
   selector: '[bgRef], [bgAsset]'

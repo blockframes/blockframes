@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RightListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';

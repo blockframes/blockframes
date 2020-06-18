@@ -6,10 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Library
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
-import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';

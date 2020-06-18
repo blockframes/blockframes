@@ -3,8 +3,8 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { extractMedia } from '@blockframes/utils/media/media.model';
-import { MediaService } from '@blockframes/utils/media/media.service';
+import { extractMedia } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Component({
   selector: 'organization-edit',

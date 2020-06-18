@@ -6,7 +6,7 @@ import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
 import { set } from 'lodash';
 import { getDocument } from '../data/internals';
-import { imgSizeDirectory, getImgSize, ImgSizeDirectory } from '@blockframes/utils/media/media.firestore';
+import { imgSizeDirectory, getImgSize, ImgSizeDirectory } from '@blockframes/media/+state/media.firestore';
 
 /**
  * This function is executed on every files uploaded on the storage.

@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { createImgRef } from '@blockframes/utils/media/media.firestore';
+import { createImgRef } from '@blockframes/media/+state/media.firestore';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -14,8 +14,8 @@ import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { MediaService } from '@blockframes/utils/media/media.service';
-import { extractMedia } from '@blockframes/utils/media/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { extractMedia } from '@blockframes/media/+state/media.model';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 

@@ -10,7 +10,7 @@ import {
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { getMediaUrl } from '@blockframes/ui/media/media.model';
+import { getMediaUrl } from '@blockframes/media/+state/media.model';
 
 function createMovieView(movie: Movie) {
   return {
