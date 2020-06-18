@@ -40,7 +40,18 @@ export class GuestTableComponent implements OnInit {
   }
 
   filterPredicateMovies(data: any, filter) {
-    const columnsToFilter = this.initialColumns;
+    const columnsToFilter = [
+      'id',
+      'org.denomination.full',
+      'org.denomination.public',
+      'event.title',
+      'date',
+      'toUser.firstName',
+      'toUser.lastName',
+      'mode',
+      'status',
+      'toUser.email',
+    ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
