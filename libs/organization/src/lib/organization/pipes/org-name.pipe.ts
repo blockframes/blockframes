@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { orgName, Denomination } from '../+state';
+import { Organization, orgName } from '../+state';
 
 @Pipe({ name: 'orgName', pure: true })
 export class OrgNamePipe implements PipeTransform {
-  transform(denomination: Denomination, display: 'public' | 'full' | 'long' = 'public') {
+  transform(org: Organization, display: 'public' | 'full' | 'long' = 'public') {
     if (display === 'long') {
-      return `${orgName(denomination, 'full')} ${denomination.public ? ` (${orgName(denomination, 'public')})` : ''}`;
+      return `${orgName(org, 'full')} ${org.denomination.public ? ` (${orgName(org, 'public')})` : ''}`;
     } else {
-      return orgName(denomination, display);
+      return orgName(org, display);
     }
   }
 }

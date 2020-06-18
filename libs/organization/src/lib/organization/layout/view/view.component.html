@@ -12,7 +12,7 @@
       </div>
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
-          <span>{{ org.denomination | orgName }}</span>
+          <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
         <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo" />

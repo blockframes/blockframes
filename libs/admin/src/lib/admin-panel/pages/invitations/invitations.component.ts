@@ -4,6 +4,7 @@ import { OrganizationService, Organization, orgName } from '@blockframes/organiz
 import { EventService, Event } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
 
+// @TODO (#2952) find better name and location
 export interface InvitationDetailed extends Invitation {
   org: Organization,
   event: Event,
@@ -21,16 +22,18 @@ export class InvitationsComponent implements OnInit {
   
   public columns : string[] = [
     'id',
-    'org.denomination',
-    'event.title',
+    'org',
     'event.id',
+    'event.title',
+    'event.start',
+    'event.end',
     'date',
     'toUser.firstName',
     'toUser.lastName',
     'mode',
     'status',
     'toUser.email',
-  ];
+  ]; 
 
   constructor(
     private invitationService: InvitationService,
@@ -56,7 +59,7 @@ export class InvitationsComponent implements OnInit {
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
       id : i.id,
-      org: orgName(i.org.denomination),
+      org: orgName(i.org),
       event: i.event.title,
       date: i.date,
       guest: `${i.toUser.firstName} ${i.toUser.lastName}`,

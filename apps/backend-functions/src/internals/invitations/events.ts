@@ -81,7 +81,7 @@ async function onInvitationToAnEventCreate({
      * will already get the invitation displayed on front end.
      */
     const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
-    const senderName = orgName(org.denomination);
+    const senderName = orgName(org);
     const link = getEventLink(org);
     const urlToUse = sendgridUrl[appKey];
     const appName = getAppName(appKey);
@@ -125,7 +125,7 @@ async function onInvitationToAnEventCreate({
 
         return Promise.all(recipients.map(recipient => {
           console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient.email}`);
-          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org.denomination), appName.label, recipient, event.title, link, urlToUse);
+          const templateRequest = requestToAttendEventFromUser(fromUser.firstName!, orgName(org), appName.label, recipient, event.title, link, urlToUse);
           return sendMailFromTemplate(templateRequest, from);
         }))
     }

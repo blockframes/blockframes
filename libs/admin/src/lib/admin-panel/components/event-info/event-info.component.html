@@ -14,7 +14,7 @@
   <h5>Owner</h5>
   <p *ngIf="org">
     <a [routerLink]="getOrgPath(org.id)">
-      <span>{{ org.denomination | orgName:'long' }}</span>
+      <span>{{ org | orgName:'long' }}</span>
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </p>

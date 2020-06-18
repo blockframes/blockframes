@@ -12,9 +12,11 @@ export class GuestTableComponent implements OnInit {
 
   public headers = {
     'id': 'Id',
-    'org.denomination': 'Org',
+    'org': 'Org',
     'event.title': 'Event',
-    'date': 'Date',
+    'event.start': 'Event start',
+    'event.end': 'Event end',
+    'date': 'Invitation date',
     'toUser.firstName': 'FirstName',
     'toUser.lastName': 'LastName',
     'mode': 'Type',

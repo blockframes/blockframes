@@ -39,7 +39,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
     const from = getSendgridFrom(app);
 
     const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, newUser.password, orgName(fromOrg.denomination), urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId);
     await sendMailFromTemplate(template, from);
     return newUser.user;
   }
