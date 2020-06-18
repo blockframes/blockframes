@@ -15,7 +15,7 @@
     <a target="_blank" [routerLink]="getLegalDocument(id)" routerLinkActive="active"> {{ id }}</a>
   </ng-template>
   <ng-template colRef="buyerId" let-id>
-    <a target="_blank" [routerLink]="getOrgPath(id)" routerLinkActive="active"> {{ id }}</a>
+    <a target="_blank" [routerLink]="['/c/o/admin/panel/organization', id]" routerLinkActive="active"> {{ id }}</a>
   </ng-template>
   <ng-template colRef="emittedDate" let-emittedDate>
     {{ emittedDate | date: 'short' }}

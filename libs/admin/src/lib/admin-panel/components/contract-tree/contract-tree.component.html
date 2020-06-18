@@ -30,14 +30,14 @@
 <ng-template #treeNode let-node>
   <ng-container *ngIf="node.id === contract.id else displaywithLink">
     <strong>{{ node.id }} ({{ node.contract.type }})</strong>
-    <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(node.contract)">
+    <button mat-icon-button color="accent" [routerLink]="['/c/o/marketplace/tunnel/contract', node.contract.id, node.contract.type]">
       <mat-icon svgIcon="eye"></mat-icon>
     </button>
   </ng-container>
   <ng-template #displaywithLink>
-    <a [routerLink]="getContractPath(node.id)" routerLinkActive="active"> {{ node.id }}
+    <a [routerLink]="['/c/o/admin/panel/contract', node.id]" routerLinkActive="active"> {{ node.id }}
       ({{ node.contract.type }})</a>
-    <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(node.contract)">
+    <button mat-icon-button color="accent" [routerLink]="['/c/o/marketplace/tunnel/contract', node.contract.id, node.contract.type]">
       <mat-icon svgIcon="eye"></mat-icon>
     </button>
   </ng-template>

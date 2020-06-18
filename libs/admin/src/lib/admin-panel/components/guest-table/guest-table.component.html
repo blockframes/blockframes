@@ -13,7 +13,7 @@
     {{ org | orgName }}
   </ng-template>
   <ng-template colRef="event.id" let-eventId>
-    <a [routerLink]="getEventPath(eventId)">
+    <a [routerLink]="['/c/o/admin/panel/event', eventId]">
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </ng-template>

@@ -1,11 +1,20 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationService, orgName } from '@blockframes/organization/+state';
-import { EventService } from '@blockframes/event/+state/';
+import { InvitationService, Invitation } from '@blockframes/invitation/+state';
+import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
+import { EventService, Event } from '@blockframes/event/+state/';
 import { downloadCsvFromJson } from '@blockframes/utils/helpers';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { InvitationDetailed } from '../../components/guest-table/guest-table.component';
 import { getHost } from '@blockframes/invitation/pipes/host.pipe';
+import { PublicUser } from '@blockframes/user/types';
+import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
+import { MovieService, Movie } from '@blockframes/movie/+state';
+
+// @TODO (#2952) find better name and location
+export interface InvitationDetailed extends Invitation {
+  org: Organization,
+  event: Event,
+  guest?: PublicUser,
+  movie?: Movie,
+};
 
 @Component({
   selector: 'admin-invitations',
@@ -26,12 +35,12 @@ export class InvitationsComponent implements OnInit {
     'event.end',
     'event.type',
     'date',
-    'toUser.firstName',
-    'toUser.lastName',
+    'guest.firstName',
+    'guest.lastName',
     'mode',
     'status',
-    'toUser.email',
-  ]; //  type movie poster movie name
+    'guest.email',
+  ];
 
   constructor(
     private invitationService: InvitationService,
@@ -46,7 +55,6 @@ export class InvitationsComponent implements OnInit {
 
     const orgs = invitations.map(async i => {
       const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
-
       invitation.org = await this.orgService.getValue(getHost(invitation, 'org').id);
       invitation.event = await this.eventService.getValue(invitation.docId);
 
@@ -73,8 +81,8 @@ export class InvitationsComponent implements OnInit {
       org: orgName(i.org),
       event: i.event.title,
       date: i.date,
-      guest: `${i.toUser.firstName} ${i.toUser.lastName}`,
-      email: i.toUser.email,
+      guest: `${getGuest(i, 'user').firstName} ${getGuest(i, 'user').lastName}`,
+      email: getGuest(i, 'user').email,
       mode: i.mode,
       status: i.status,
     }))

@@ -307,14 +307,6 @@ export class ContractComponent implements OnInit {
     return getCodeBySlug('MOVIE_CURRENCIES', currency);
   }
 
-  public getRightPath(rightId: string, movieId: string) {
-    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
-  }
-
-  public getContractTunnelPath(contract: Contract) {
-    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
-  }
-
   /**
    * @dev this method uses titles.price to update global contract price
    */

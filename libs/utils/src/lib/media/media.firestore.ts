@@ -1,7 +1,7 @@
 export type ImgSizeDirectory = 'lg' | 'md' | 'xs' | 'original';
 export const imgSizeDirectory: ImgSizeDirectory[] = ['lg', 'md', 'xs', 'original'];
 
-// TODO(#3088) blob, delete and newRef shouldnt be in firestore; these values are only used to determine what to do with the image on update of Form
+// TODO(#3088) blob, delete and path shouldnt be in firestore; these values are only used to determine what to do with the image on update of Form
 export interface ImgRef {
   ref: string;
   urls: {
@@ -12,7 +12,8 @@ export interface ImgRef {
   };
   blob?: any;
   delete?: boolean;
-  newRef?: string;
+  path?: string;
+  fileName?: string;
 }
 
 // @todo(#3063) remove this interface
@@ -52,7 +53,7 @@ export function getImgSize(url: string) {
 }
 
 export interface UploadFile {
-  ref: string,
+  path: string,
   data: Blob,
-  fileName: string,
+  fileName: string
 }

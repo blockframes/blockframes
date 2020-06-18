@@ -2,7 +2,7 @@
 <ng-container *ngIf="contract$ | async as contract">
   <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract)">
+      <button mat-flat-button color="accent" [routerLink]="['/c/o/marketplace/tunnel/contract', contract.id, contract.type]">
         <mat-icon svgIcon="eye"></mat-icon>
         <span>Tunnel view</span>
       </button>
@@ -179,7 +179,7 @@
         <ng-template colRef="rights" let-rights>
           <ul *ngIf="rights.length else norights">
             <li *ngFor="let right of rights">
-              <a target="_blank" [routerLink]="getRightPath(right.id, right.movie)" routerLinkActive="active"> {{ right.id }}</a>
+              <a target="_blank" [routerLink]="['/c/o/admin/panel/right',right.id, 'm', right.movie]" routerLinkActive="active"> {{ right.id }}</a>
             </li>
           </ul>
           <ng-template #norights>

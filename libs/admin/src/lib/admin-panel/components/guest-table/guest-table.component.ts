@@ -2,18 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Invitation } from '@blockframes/invitation/+state';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { getValue } from '@blockframes/utils/helpers';
-import { Event } from '@blockframes/event/+state/';
-import { Organization } from '@blockframes/organization/+state';
-import { Movie } from '@blockframes/movie/+state';
-import { PublicUser } from '@blockframes/user/types';
-
-// @TODO (#2952) find better name and location
-export interface InvitationDetailed extends Invitation {
-  org: Organization,
-  event?: Event,
-  movie?: Movie,
-  guest?: PublicUser,
-};
+import { InvitationDetailed } from '../../pages/invitations/invitations.component';
 
 @Component({
   selector: 'invitation-guest-table',
@@ -79,9 +68,4 @@ export class GuestTableComponent implements OnInit {
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-
-  public getEventPath(eventId: string) {
-    return `/c/o/admin/panel/event/${eventId}`;
-  }
-
 }

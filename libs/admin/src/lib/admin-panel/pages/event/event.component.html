@@ -7,10 +7,10 @@
       <h2>Screening information</h2>
       <mat-card-content fxLayout="column">
         <h5>Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})</h5>
-        <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movie.id)">
+        <button mat-icon-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="eye"></mat-icon>
         </button>
-        <button mat-icon-button color="accent" [routerLink]="getMovieAdminPath(movie.id)">
+        <button mat-icon-button color="accent" [routerLink]="['/c/o/admin/panel/movie', movie.id]">
           <mat-icon svgIcon="pencil"></mat-icon>
         </button>
       </mat-card-content>

@@ -18,7 +18,7 @@
             <li *ngIf="userOrg">
               <b class="bf-dark-text">Organization : </b>
               <span>{{ userOrg | orgName:'long' }}</span>
-              <button mat-icon-button color="primary" [routerLink]="getOrgPath(userOrg.id)">
+              <button mat-icon-button color="primary" [routerLink]="['/c/o/admin/panel/organization', userOrg.id]">
                 <mat-icon svgIcon="eye"></mat-icon>
               </button>
             </li>
