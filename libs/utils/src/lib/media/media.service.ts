@@ -7,7 +7,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile } from "./media.firestore";
+import { UploadFile, ImgRef } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
@@ -111,6 +111,10 @@ export class MediaService {
     );
   }
 
+  removeFile(path: string) {
+    this.storage.ref(path).delete();
+  }
+
   pause(fileName: string) {
     if (fileName in this.tasks && this.query.hasEntity(fileName)) {
       this.tasks[fileName].pause();
@@ -151,5 +155,24 @@ export class MediaService {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
     }
+  }
+
+  uploadOrDeleteMedia(medias: ImgRef[]) {
+    medias.forEach(imgRef => {
+      if (imgRef.delete && imgRef.ref) {  
+        this.removeFile(imgRef.ref);
+      } else if (!!imgRef.blob) {
+        if (imgRef.ref !== '') {
+          this.removeFile(imgRef.ref);
+        }
+        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
+        const file: UploadFile = {
+          ref: imgRef.newRef,
+          data: imgRef.blob,
+          fileName: fileName
+        }
+        this.uploadBlob(file);
+      }
+    })
   }
 }
