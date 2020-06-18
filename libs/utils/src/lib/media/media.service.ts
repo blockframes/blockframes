@@ -74,8 +74,7 @@ export class MediaService {
    * @param fileName
    */
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    let sanitizedFileName: string = sanitizeFileName(fileName);
-
+    const sanitizedFileName: string = sanitizeFileName(fileName);
     const exists = await this.exists(path.concat(sanitizedFileName));
     this.showWidget();
 
