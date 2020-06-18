@@ -1,18 +1,36 @@
+// Angular
 import { Injectable } from "@angular/core";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
-import { MediaStore, isUploading } from "./media.store";
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+
+// State
+import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile } from "./media.firestore";
+import { UploadFile, ImgRef } from "./media.firestore";
+
+// Blockframes
+import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
-  private tasks: Record<string, AngularFireUploadTask>;
+  private tasks: Record<string, AngularFireUploadTask> = {};
+
+  private overlayOptions = {
+    height: '400px',
+    width: '500px',
+    panelClass: 'upload-widget',
+    positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
+  }
+
+  public overlayRef: OverlayRef;
 
   constructor(
     private store: MediaStore,
     private query: MediaQuery,
     private storage: AngularFireStorage,
+    private overlay: Overlay
   ) { }
 
   /** Check if a file exists in the **Firebase storage** */
@@ -20,24 +38,43 @@ export class MediaService {
     return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
   }
 
-  uploadBlob(uploadFiles: UploadFile | UploadFile[]): Promise<void> | Promise<void>[] {
+  uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
+
     if (Array.isArray(uploadFiles)) {
-      // here we need to force the type to Promise<void>,
-      // because we know that inside the map the current uploadFile is not an Array
-      // so this.uploadBlob will return a Promise<void> and not a Promise<void>[]
-      // but TypeScript did not know that, and it was causing a linter error
-      return uploadFiles.map(uploadFile => this.uploadBlob(uploadFile) as Promise<void>);
+      uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      return this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+      this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+    }
+  }
+  /**
+   * @description This function handles the upload process for one or many files. Make sure that
+   * the oath param doesn't include the filename.
+   * @param path should only have the path and not the file name in it
+   * @param file
+   */
+  uploadFile(path: string, file: File | FileList) {
+
+    if (file instanceof File) {
+      this.upload(path, file, file.name);
+    } else {
+      const promises = [];
+      for (let index = 0; index < file.length; index++) {
+        promises.push(this.upload(path, file.item(index), file.item(index).name))
+      }
+      Promise.all(promises);
     }
   }
 
-  uploadFile(path: string, file: File) {
-    return this.upload(path, file, file.name);
-  }
-
+    /**
+   * @description This function handles the upload process for one or many files. Make sure that
+   * the oath param doesn't include the filename.
+   * @param path should only have the path and not the file name in it
+   * @param fileOrBlob
+   * @param fileName
+   */
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const exists = await this.exists(path);
+    const exists = await this.exists(path.concat(fileName));
+    this.showWidget();
 
     if (exists) {
       throw new Error(`Upload Error : there is already a file @ ${path}, please delete it before uploading a new file!`);
@@ -48,30 +85,34 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path, fileOrBlob);
+    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
       progress: 0,
     });
 
-    task.percentageChanges().subscribe(p => this.store.update(fileName, {progress: p}));
+    task.percentageChanges().subscribe(p => this.store.update(fileName, { progress: p }));
 
     this.tasks[fileName] = task;
 
     task.then(
       // on success
       () => {
-        this.store.update(fileName, {status: 'succeeded'});
+        this.store.update(fileName, { status: 'succeeded' });
         delete this.tasks[fileName];
       },
 
-      // on error (cancelled is treated by firebase as an error)
+      // on error (canceled is treated by firebase as an error)
       () => {
-        this.store.update(fileName, {status: 'canceled'});
+        this.store.update(fileName, { status: 'canceled' });
         delete this.tasks[fileName];
       }
     );
+  }
+
+  removeFile(path: string) {
+    this.storage.ref(path).delete();
   }
 
   pause(fileName: string) {
@@ -95,8 +136,43 @@ export class MediaService {
     }
   }
 
-  /** Remove every `succeeded` and `canceled` upload */
-  clear() {
-    this.store.remove(upload => isUploading(upload));
+  /** Remove a single file from the store or remove all if no param is given*/
+  clear(fileName?: string) {
+    if (fileName) {
+      this.store.remove(fileName)
+    } else {
+      this.store.remove(upload => isDone(upload));
+    }
+  }
+
+  public detachWidget() {
+    this.overlayRef.detach()
+    delete this.overlayRef;
+  }
+
+  private showWidget() {
+    if (!this.overlayRef) {
+      this.overlayRef = this.overlay.create(this.overlayOptions);
+      this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
+    }
+  }
+
+  uploadOrDeleteMedia(medias: ImgRef[]) {
+    medias.forEach(imgRef => {
+      if (imgRef.delete && imgRef.ref) {  
+        this.removeFile(imgRef.ref);
+      } else if (!!imgRef.blob) {
+        if (imgRef.ref !== '') {
+          this.removeFile(imgRef.ref);
+        }
+        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
+        const file: UploadFile = {
+          ref: imgRef.newRef,
+          data: imgRef.blob,
+          fileName: fileName
+        }
+        this.uploadBlob(file);
+      }
+    })
   }
 }

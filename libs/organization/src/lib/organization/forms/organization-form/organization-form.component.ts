@@ -12,7 +12,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class OrganizationFormComponent {
 
-  public storagePath = `orgs/${this.query.getActiveId()}/logo`;
+  public orgId = this.query.getActiveId();
   @Input() form: OrganizationForm;
 
   // TODO#2914 Reenable the cropper here when we found a solution

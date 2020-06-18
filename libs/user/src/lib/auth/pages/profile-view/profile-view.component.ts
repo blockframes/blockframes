@@ -10,6 +10,8 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { extractMedia } from '@blockframes/utils/media/media.model';
+import { MediaService } from '@blockframes/utils/media/media.service';
 
 @Component({
   selector: 'auth-profile-view',
@@ -30,7 +32,8 @@ export class ProfileViewComponent implements OnInit {
     private tunnelService: TunnelService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private mediaService: MediaService
   ) {
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
@@ -41,7 +44,7 @@ export class ProfileViewComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.profileForm = new ProfileForm(this.authQuery.user)
+    this.profileForm = new ProfileForm(this.authQuery.user);
     this.organization$ = this.organizationQuery.selectActive();
     this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
@@ -53,8 +56,8 @@ export class ProfileViewComponent implements OnInit {
         throw new Error('Your profile informations are not valid.')
       } else {
         const uid = this.authQuery.userId;
-        const user = this.profileForm.value;
-        delete user.avatar; // @TODO (##2987)
+        const [ user, media ] = extractMedia(this.profileForm.value);
+        this.mediaService.uploadOrDeleteMedia(media);
         this.authService.update({ uid, ...user });
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }

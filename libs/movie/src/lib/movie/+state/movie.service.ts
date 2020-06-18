@@ -14,6 +14,8 @@ import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { MediaService } from '@blockframes/utils/media/media.service';
+import { extractMedia } from '@blockframes/utils/media/media.model';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -26,6 +28,7 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private userService: UserService,
     private orgService: OrganizationService,
+    private mediaService: MediaService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -51,17 +54,11 @@ export class MovieService extends CollectionService<MovieState> {
     return movie;
   }
 
-  // @TODO (#2987): Update image on save instead of merging then on save
   save(movie: Movie) {
     return this.runTransaction(async write => {
-      const ref = this.getRef(movie.id);
-      const snap = await write.get(ref);
-      const movieDoc = createMovie(snap.data());
-      // Update the images reference with the latest value from firestore
-      for (const key of ['banner', 'poster', 'still_photo']) {
-        movie.promotionalElements[key] = movieDoc.promotionalElements[key];
-      }
-      return this.update(movie, { write });
+      const [ value, media ] = extractMedia(movie);
+      this.mediaService.uploadOrDeleteMedia(media);
+      return this.update(value, { write });
     });
   }
 

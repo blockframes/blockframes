@@ -8,6 +8,9 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { MediaImageComponent } from './media-image.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+//Pipes
+import { ReferencePathModule } from '@blockframes/utils/pipes/reference-path.pipe';
+
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,6 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
     TunnelPageModule,
     CropperModule,
     FlexLayoutModule,
+    ReferencePathModule,
     // Material
     MatCardModule,
     MatIconModule,
