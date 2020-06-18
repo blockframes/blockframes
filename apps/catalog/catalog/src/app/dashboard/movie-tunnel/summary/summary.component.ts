@@ -11,8 +11,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
-import { MediaService } from '@blockframes/utils/media/media.service';
-import { extractMedia } from '@blockframes/utils/media/media.model';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -34,8 +32,7 @@ export class TunnelSummaryComponent {
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery,
-    private media: MediaService
+    private routerQuery: RouterQuery
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
@@ -46,9 +43,7 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const [ value, media ] = extractMedia(this.form.value);
-      this.media.uploadOrDeleteMedia(media);
-      const movie: Movie = mergeDeep(this.query.getActive(), value);
+      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.catalog = true;

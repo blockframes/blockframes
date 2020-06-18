@@ -5,6 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { extractMedia } from '@blockframes/utils/media/media.model';
 import { MediaService } from '@blockframes/utils/media/media.service';
+
 @Component({
   selector: 'organization-edit',
   templateUrl: './organization.component.html',
@@ -24,7 +25,6 @@ export class OrganizationComponent implements OnInit {
   ngOnInit() {
     const organization = this.query.getActive();
     this.organizationForm = new OrganizationForm(organization);
-
   }
 
   public update() {

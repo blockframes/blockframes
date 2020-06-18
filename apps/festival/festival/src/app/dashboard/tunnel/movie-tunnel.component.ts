@@ -9,8 +9,6 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { MediaService } from '@blockframes/utils/media/media.service';
-import { extractMedia } from '@blockframes/utils/media/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -69,8 +67,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private media: MediaService
+    private dialog: MatDialog
   ) { }
 
   async ngOnInit() {
@@ -79,9 +76,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    const [ value, media ] = extractMedia(this.form.value);
-    this.media.uploadOrDeleteMedia(media);
-    const movie: Movie = mergeDeep(this.query.getActive(), value);
+    const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
     await this.service.save(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();

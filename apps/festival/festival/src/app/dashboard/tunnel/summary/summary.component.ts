@@ -8,8 +8,6 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
-import { MediaService } from '@blockframes/utils/media/media.service';
-import { extractMedia } from '@blockframes/utils/media/media.model';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -30,8 +28,7 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private routerQuery: RouterQuery,
-    private media: MediaService
+    private routerQuery: RouterQuery
   ) { }
 
   public getPath(segment: string) {
@@ -41,9 +38,7 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const [ value, media ] = extractMedia(this.form.value);
-      this.media.uploadOrDeleteMedia(media);
-      const movie: Movie = mergeDeep(this.query.getActive(), value);
+      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.festival = true;

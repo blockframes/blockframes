@@ -1,6 +1,7 @@
 export type ImgSizeDirectory = 'lg' | 'md' | 'xs' | 'original';
 export const imgSizeDirectory: ImgSizeDirectory[] = ['lg', 'md', 'xs', 'original'];
 
+// TODO(#3088) blob, delete and newRef shouldnt be in firestore; these values are only used to determine what to do with the image on update of Form
 export interface ImgRef {
   ref: string;
   urls: {

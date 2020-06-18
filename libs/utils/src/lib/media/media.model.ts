@@ -12,9 +12,7 @@ function extractMediaValue(value: any) {
   let media: ImgRef[] = [];
   for (const key in value) {
     if (isMedia(value[key])) {
-      if (!!value[key]) {
-        media.push(value[key]);
-      }
+      media.push(value[key]);
       delete value[key];
     } else if (typeof value[key] === 'object' && !!value[key]) {
       const childMedia = extractMediaValue(value[key]);

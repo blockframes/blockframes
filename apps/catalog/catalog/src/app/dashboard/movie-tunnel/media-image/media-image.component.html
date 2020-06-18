@@ -48,7 +48,7 @@
         <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
           <span class="still mat-body-2">Still # {{i + 1}}</span>
           <drop-cropper
-            [storagePath]="'movies/' + movie.id + '/promotionalElements.still_photo.' + i + '.media'"
+            [storagePath]="movie.id | ref: 'movie' : 'still'"
             ratio="still"
             [form]="control.get('media')">
             <h3 type>Stills</h3>
