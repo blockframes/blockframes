@@ -7,6 +7,7 @@
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
     "hugo": "blockframes-hugo",
+    "george": "blockframes-george",
     "yohann": "blockframes-yohann",
     "vincent": "blockframes-vincent",
     "pl": "blockframes-pl-2",
@@ -82,7 +83,9 @@
         "catalog": [
           "blockframes-francois"
         ],
-        "festival": ["blockframes-francois"]
+        "festival": [
+          "blockframes-francois"
+        ]
       }
     },
     "blockframes-bruce": {
@@ -206,6 +209,19 @@
         ],
         "festival": [
           "blockframes-sebastian"
+        ]
+      }
+    },
+    "blockframes-george": {
+      "hosting": {
+        "storybook": [
+          "blockframes-george-storybook"
+        ],
+        "catalog": [
+          "blockframes-george"
+        ],
+        "festival": [
+          "blockframes-george-festival"
         ]
       }
     }
