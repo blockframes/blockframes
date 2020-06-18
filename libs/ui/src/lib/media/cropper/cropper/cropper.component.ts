@@ -1,7 +1,7 @@
 import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError, startWith, filter } from 'rxjs/operators';
+import { DropZoneDirective } from '../drop-zone.directive';
+import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -10,12 +10,14 @@ import { ImgRefForm } from '../../image-reference/image-reference.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
+type MediaRatio = typeof mediaRatio;
+type MediaRatioType = keyof MediaRatio;
 const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
   poster: 3 / 4,
   still: 7 / 5
-}
+};
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
@@ -50,7 +52,7 @@ function isFile(ref: string): boolean {
   viewProviders: [DropZoneDirective],
   animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements OnDestroy, OnInit {
+export class CropperComponent implements OnInit, OnDestroy {
 
   ////////////////////////
   // Private Variables //
@@ -68,10 +70,10 @@ export class CropperComponent implements OnDestroy, OnInit {
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
-  cropRatio: string;
+  cropRatio: number;
   parentWidth: number;
   prev: CropStep;
-  previewUrl: Observable<string | null>;
+  previewUrl$: Observable<string | null>;
   percentage$: Observable<number>;
   resizing = false;
 
@@ -79,14 +81,8 @@ export class CropperComponent implements OnDestroy, OnInit {
   // Inputs //
   ///////////
 
-  @Input() set ratio(ratio: string) {
-    if (!mediaRatio.hasOwnProperty(ratio)) {
-      console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(mediaRatio).join(', ')}`);
-    }
+  @Input() set ratio(ratio: MediaRatioType) {
     this.cropRatio = mediaRatio[ratio];
-    const el: HTMLElement = this._elementRef.nativeElement;
-    this.parentWidth = el.clientWidth;
-    this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
   @Input() form?: ImgRefForm;
   @Input() setWidth?: number;
@@ -98,15 +94,11 @@ export class CropperComponent implements OnDestroy, OnInit {
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   ngOnInit() {
-    const sub = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      filter(imgRef => imgRef.ref)
-    ).subscribe(imgRef => {
-      this.previewUrl = of(imgRef.urls?.original);
-      this.step.next('show');
-    });
-
-    this.sub.add(sub);
+    // show current image
+    if (this.form.ref.value) {
+      this.ref = this.storage.ref(this.form.ref.value);
+      this.goToShow();
+    }
   }
 
   ///////////
@@ -124,41 +116,50 @@ export class CropperComponent implements OnDestroy, OnInit {
     this.croppedImage = event.base64;
   }
 
-  /**
-   * Upload the image
-   */
   async cropIt() {
     try {
       if (!this.croppedImage) {
         throw new Error('No image cropped yet');
       }
-      this.nextStep('upload');
+
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.ref = this.storage.ref(`${this.storagePath}/original/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
-      this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
-        finalize(async () => {
-          this.nextStep('upload_complete')
-        })
-      );
+      this.nextStep('show');
+
+      this.form.patchValue({
+        newRef: `${this.storagePath}/original/${this.fileName}`,
+        blob: blob,
+        delete: false
+      })
+      this.form.markAsDirty();
+
+      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
+      this.form.blob.setValue(blob);
+      this.form.delete.setValue(false);
     } catch (err) {
       console.error(err);
     }
   }
 
   async goToShow() {
-    this.previewUrl = this.getDownloadUrl(this.ref);
+    this.previewUrl$ = this.getDownloadUrl(this.ref);
     this.nextStep('show');
   }
 
   delete() {
-    const deleteSubscription$ = this.previewUrl.subscribe(path => {
-      this.storage.storage.refFromURL(path).delete();
-      this.form.reset();
-      this.nextStep('drop');
-    });
-    this.sub.add(deleteSubscription$);
+    if (this.croppedImage) {
+      this.croppedImage = '';
+    }
+
+    this.form.patchValue({
+      newRef: '',
+      blob: '',
+      delete: true
+    })
+    this.form.markAsDirty();
+
+    this.nextStep('drop');
   }
 
   nextStep(name: CropStep) {

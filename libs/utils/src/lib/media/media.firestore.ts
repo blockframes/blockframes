@@ -1,6 +1,7 @@
 export type ImgSizeDirectory = 'lg' | 'md' | 'xs' | 'original';
 export const imgSizeDirectory: ImgSizeDirectory[] = ['lg', 'md', 'xs', 'original'];
 
+// TODO(#3088) blob, delete and newRef shouldnt be in firestore; these values are only used to determine what to do with the image on update of Form
 export interface ImgRef {
   ref: string;
   urls: {
@@ -9,6 +10,9 @@ export interface ImgRef {
     md?: string;
     lg?: string;
   };
+  blob?: any;
+  delete?: boolean;
+  newRef?: string;
 }
 
 // @todo(#3063) remove this interface

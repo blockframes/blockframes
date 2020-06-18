@@ -101,6 +101,18 @@
                     "Bf Footer"
                 ]
             }
+        },
+        {
+            "path": "libs/ui/src/lib/upload/widget/widget.component.ts",
+            "zeplinNames": [
+                "Component/Popup/Upload-items"
+            ],
+            "storybook": {
+                "kind": "Bf Upload Widget",
+                "storybook": [
+                    "Bf Upload Widget"
+                ]
+            }
         }
     ],
     "github": {

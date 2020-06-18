@@ -105,7 +105,7 @@ describe('User create a screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
-    cy.wait(5000);
+    cy.wait(8000);
     p2.verifyNotification(ORG_NAME, true);
   });
 
@@ -121,6 +121,7 @@ describe('User create a screening', () => {
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
     const p6: FestivalMarketplaceScreeningPage = p5.clickOnEvent(MOVIE_TITLE);
+    cy.wait(5000);
     p6.assertScreeningExist(MOVIE_TITLE);
   });
 });
