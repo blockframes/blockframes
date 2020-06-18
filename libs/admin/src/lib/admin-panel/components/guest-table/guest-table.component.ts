@@ -10,8 +10,10 @@ import { getValue } from '@blockframes/utils/helpers';
 })
 export class GuestTableComponent implements OnInit {
 
-  public versionColumnsMovies = {
+  public headers = {
     'id': 'Id',
+    'org.denomination': 'Org',
+    'event.title': 'Event',
     'date': 'Date',
     'toUser.firstName': 'FirstName',
     'toUser.lastName': 'LastName',
@@ -20,7 +22,7 @@ export class GuestTableComponent implements OnInit {
     'toUser.email': 'Email'
   };
 
-  public initialColumnsMovies: string[] = [
+  @Input() initialColumns: string[] = [
     'id',
     'date',
     'toUser.firstName',
@@ -32,24 +34,19 @@ export class GuestTableComponent implements OnInit {
 
   @Input() invitations: Invitation[ ];
 
-
   ngOnInit() {
     // @TODO (#2952) WIP
     console.log(this.invitations);
   }
 
-
   filterPredicateMovies(data: any, filter) {
-    const columnsToFilter = [
-      'id',
-      'date',
-      'toUser.firstName',
-      'toUser.lastName',
-      'mode',
-      'status',
-      'toUser.email',
-    ];
+    const columnsToFilter = this.initialColumns;
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
+
+  public getEventPath(eventId: string) {
+    return `/c/o/admin/panel/event/${eventId}`;
+  }
+
 }

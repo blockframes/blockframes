@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // Materials
-import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { InvitationsComponent } from './invitations.component';
@@ -14,7 +16,9 @@ import { GuestTableModule } from '../../components/guest-table/guest-table.modul
 @NgModule({
   imports: [
     CommonModule,
-    MatCardModule,
+    FlexLayoutModule,
+    MatIconModule,
+    MatButtonModule,
     RouterModule,
     GuestTableModule,
   ],

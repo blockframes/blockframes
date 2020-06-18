@@ -1,12 +1,20 @@
 <bf-table-filter
   [source]="invitations"
-  [columns]="versionColumnsMovies"
-  [initialColumns]="initialColumnsMovies"
+  [columns]="headers"
+  [initialColumns]="initialColumns"
   [filterPredicate]="filterPredicateMovies"
   showFilter
   showLoader
   showPaginator>
   <ng-template colRef="date" let-date>
     {{ date | date: 'medium'}}
+  </ng-template>
+  <ng-template colRef="org.denomination" let-denomination>
+    {{ denomination | orgName}}
+  </ng-template>
+  <ng-template colRef="event.id" let-eventId>
+    <a [routerLink]="getEventPath(eventId)">
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
   </ng-template>
 </bf-table-filter>

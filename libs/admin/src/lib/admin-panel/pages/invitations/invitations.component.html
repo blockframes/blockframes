@@ -1,5 +1,9 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> >Invitations</h1>
-
-<mat-card *ngIf="invitations$ | async as invitations">
-  <invitation-guest-table [invitations]="invitations"></invitation-guest-table>
-</mat-card>
+<section fxLayout="row" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span><mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+    <invitation-guest-table [initialColumns]="columns" [invitations]="invitations"></invitation-guest-table>
+  </article>
+</section>

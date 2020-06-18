@@ -1,6 +1,13 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
-import { Observable } from 'rxjs';
+import { OrganizationService, Organization, orgName } from '@blockframes/organization/+state';
+import { EventService, Event } from '@blockframes/event/+state/';
+import { downloadCsvFromJson } from '@blockframes/utils/helpers';
+
+export interface InvitationDetailed extends Invitation {
+  org: Organization,
+  event: Event,
+};
 
 @Component({
   selector: 'admin-invitations',
@@ -10,12 +17,54 @@ import { Observable } from 'rxjs';
 })
 export class InvitationsComponent implements OnInit {
 
-  invitations$: Observable<Invitation[]>
+  public invitations: InvitationDetailed[];
   
-  constructor(private invitationService: InvitationService) { }
+  public columns : string[] = [
+    'id',
+    'org.denomination',
+    'event.title',
+    'event.id',
+    'date',
+    'toUser.firstName',
+    'toUser.lastName',
+    'mode',
+    'status',
+    'toUser.email',
+  ];
+
+  constructor(
+    private invitationService: InvitationService,
+    private orgService: OrganizationService,
+    private eventService: EventService,
+    private cdRef: ChangeDetectorRef,
+  ) { }
 
   async ngOnInit() {
-    this.invitations$ = this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent'));
+    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'));
+
+    const orgs = invitations.map(async i => {
+      const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
+      invitation.org = await this.orgService.getValue(invitation.fromOrg.id);
+      invitation.event = await this.eventService.getValue(invitation.docId);
+      return invitation;
+    })
+
+    this.invitations = await Promise.all(orgs);
+    this.cdRef.markForCheck();
+  }
+
+  public exportTable() {
+    const exportedRows = this.invitations.map(i => ({
+      id : i.id,
+      org: orgName(i.org.denomination),
+      event: i.event.title,
+      date: i.date,
+      guest: `${i.toUser.firstName} ${i.toUser.lastName}`,
+      email: i.toUser.email,
+      mode: i.mode,
+      status: i.status,
+    }))
+    downloadCsvFromJson(exportedRows, 'invitations-list');
   }
 
 }

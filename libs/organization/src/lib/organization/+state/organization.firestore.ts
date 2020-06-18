@@ -7,7 +7,7 @@ import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/util
 
 type Timestamp = firestore.Timestamp;
 
-interface Denomination {
+export interface Denomination {
   full: string;
   public?: string;
 }
@@ -145,8 +145,8 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   }
 }
 
-export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
-  return org.denomination[type] || org.denomination.full;
+export function orgName(denomination: Denomination, type: 'public' | 'full' = 'public') {
+  return denomination[type] || denomination.full;
 }
 
 /**
