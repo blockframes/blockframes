@@ -59,7 +59,6 @@ export class CropperComponent implements OnInit, OnDestroy {
   //////////////////////
 
   private ref: AngularFireStorageReference;
-  private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   private sub = new Subscription;
 
@@ -122,21 +121,18 @@ export class CropperComponent implements OnInit, OnDestroy {
         throw new Error('No image cropped yet');
       }
 
-      this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
       const blob = b64toBlob(this.croppedImage);
 
       this.nextStep('show');
 
       this.form.patchValue({
-        newRef: `${this.storagePath}/original/${this.fileName}`,
+        path: `${this.storagePath}/original/`,
         blob: blob,
-        delete: false
+        delete: false,
+        fileName: this.file.name
       })
       this.form.markAsDirty();
 
-      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
-      this.form.blob.setValue(blob);
-      this.form.delete.setValue(false);
     } catch (err) {
       console.error(err);
     }
@@ -153,8 +149,9 @@ export class CropperComponent implements OnInit, OnDestroy {
     }
 
     this.form.patchValue({
-      newRef: '',
+      path: '',
       blob: '',
+      fileName: '',
       delete: true
     })
     this.form.markAsDirty();

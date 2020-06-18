@@ -11,6 +11,7 @@ import { UploadFile, ImgRef } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -43,7 +44,8 @@ export class MediaService {
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+      const sanitizedFileName = sanitizeFileName(uploadFiles.fileName).replace(/(\.[\w\d_-]+)$/i, '.webp');
+      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName, sanitizedFileName);
     }
   }
   /**
@@ -55,11 +57,13 @@ export class MediaService {
   uploadFile(path: string, file: File | FileList) {
 
     if (file instanceof File) {
-      this.upload(path, file, file.name);
+      const sanitizedFileName = sanitizeFileName(file.name);
+      this.upload(path, file, sanitizedFileName, file.name);
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
-        promises.push(this.upload(path, file.item(index), file.item(index).name))
+        const sanitizedFileName = sanitizeFileName(file.item(index).name);
+        promises.push(this.upload(path, file.item(index), file.item(index).name, sanitizedFileName))
       }
       Promise.all(promises);
     }
@@ -72,8 +76,8 @@ export class MediaService {
    * @param fileOrBlob
    * @param fileName
    */
-  private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const exists = await this.exists(path.concat(fileName));
+  private async upload(path: string, fileOrBlob: Blob | File, fileName: string, sanitizedFileName: string) {
+    const exists = await this.exists(path.concat(sanitizedFileName));
     this.showWidget();
 
     if (exists) {
@@ -85,7 +89,7 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
+    const task = this.storage.upload(path.concat(sanitizedFileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
@@ -165,11 +169,10 @@ export class MediaService {
         if (imgRef.ref !== '') {
           this.removeFile(imgRef.ref);
         }
-        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
         const file: UploadFile = {
-          ref: imgRef.newRef,
+          path: imgRef.path,
           data: imgRef.blob,
-          fileName: fileName
+          fileName: imgRef.fileName
         }
         this.uploadBlob(file);
       }
