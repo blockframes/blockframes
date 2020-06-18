@@ -124,6 +124,8 @@ export class CropperComponent implements OnInit, OnDestroy {
       const blob = b64toBlob(this.croppedImage);
 
       this.nextStep('show');
+
+      // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
       this.form.patchValue({
         path: `${this.storagePath}/original/`,
