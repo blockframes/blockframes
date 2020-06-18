@@ -6,4 +6,7 @@
   showFilter
   showLoader
   showPaginator>
+  <ng-template colRef="date" let-date>
+    {{ date | date: 'medium'}}
+  </ng-template>
 </bf-table-filter>
