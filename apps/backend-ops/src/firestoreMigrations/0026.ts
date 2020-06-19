@@ -11,22 +11,26 @@ import { PublicOrganization } from 'apps/backend-functions/src/data/types';
  */
 export async function upgrade(db: Firestore, storage: Storage) {
 
-  await db
-    .collection('users')
-    .get()
-    .then(async users => await updateUsers(users, storage));
+  try {
+    await db
+      .collection('users')
+      .get()
+      .then(async users => updateUsers(users, storage));
 
-  await db
-    .collection('orgs')
-    .get()
-    .then(async orgs => await updateOrganizations(orgs, storage));
+    await db
+      .collection('orgs')
+      .get()
+      .then(async orgs => updateOrganizations(orgs, storage));
 
-  await db
-    .collection('movies')
-    .get()
-    .then(async movies => await updateMovies(movies, storage));
+    await db
+      .collection('movies')
+      .get()
+      .then(async movies => updateMovies(movies, storage));
 
-  console.log('Updating ImgRef in users, organizations and movies done.');
+    console.log('Updating ImgRef in users, organizations and movies done.');
+  } catch (error) {
+    console.log(`An error happened: ${error.message}`);
+  }
 }
 
 async function updateUsers(
