@@ -9,7 +9,6 @@ import { MarketplaceComponent } from './marketplace.component';
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { SessionGuard } from '@blockframes/event/guard/session.guard';
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
 // Material
@@ -118,7 +117,6 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
-    ImageReferenceModule,
     OrgAccessModule,
 
     // Material

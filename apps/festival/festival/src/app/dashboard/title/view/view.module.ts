@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
@@ -46,7 +46,7 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     // Blockframes
-    ImageReferenceModule,
+    ImgModule,
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
