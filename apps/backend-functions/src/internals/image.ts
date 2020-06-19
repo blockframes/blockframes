@@ -1,6 +1,5 @@
-import { db, functions } from './firebase';
 import { tmpdir } from 'os';
-import { join, dirname, basename, extname } from 'path';
+import { join, dirname, basename } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
@@ -20,38 +19,28 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
     return false;
   }
 
-  // we don't want to resize a vector image because:
-  // 1) vector are resizable at will by design
-  // 2) it will crash the resize program
-  if (data.contentType === 'image/svg+xml') {
-    console.log('File is an SVG image, exiting function');
-    return false;
-  }
+export async function resize(ref: string) {
+  // // Get all the needed information from the data (bucket, path, file name and directory)
+  // const bucket = admin.storage().bucket(data.bucket);
+  // const filePath = data.name;
 
-  try {
-    // Resize the image
-    await resize(data);
+  // if (filePath === undefined) {
+  //   throw new Error('undefined data.name!');
+  // }
 
-    return true;
-  } catch (err) {
-    // TODO: Add sentry to handle errors
-    console.log(err.message);
-    console.log(err);
-    return false;
-  }
-}
+  // const filePathElements = filePath.split('/');
 
-async function resize(data: functions.storage.ObjectMetadata) {
+  // if (filePathElements.length !== 5) {
+  //   throw new Error('unhandled filePath:' + filePath);
+  // }
 
-  // Get all the needed information from the data (bucket, path, file name and directory)
-  const bucket = admin.storage().bucket(data.bucket);
-  const filePath = data.name;
+  // const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
 
-  if (filePath === undefined) {
-    throw new Error('undefined data.name!');
-  }
+  // if (uploadedSize !== 'original') {
+  //   console.info('skipping upload that is not "original": ' + uploadedSize);
+  //   return false;
+  // }
 
-  const filePathElements = filePath.split('/');
 
   if (filePathElements.length !== 5) {
     throw new Error('unhandled filePath:' + filePath);
@@ -67,13 +56,23 @@ async function resize(data: functions.storage.ObjectMetadata) {
   const workingDir = join(tmpdir(), 'tmpFiles');
   const tmpFileName = ` ${Math.random().toString(36).substring(7)}-${new Date().getTime()}.webp`;
   const tmpFilePath = join(workingDir, tmpFileName);
-
   // Ensure directory exists with fs.ensureDir
   await ensureDir(workingDir);
-  await bucket.file(filePath).download({ destination: tmpFilePath });
+
+  const bucket = admin.storage().bucket();
+  const originalImage = bucket.file(ref);
+  const [ exists ] = await originalImage.exists();
+
+  if (!exists) {
+    throw new Error(`Resize Error : The image to resize (${ref}) does not exists!`);
+  }
+
+  await originalImage.download({ destination: tmpFilePath });
 
   // Define the sizes (here width) depending of the image format (defined by the directory)
-  const sizes = getImgSize(directory);
+  const sizes = getImgSize(ref);
+  const path = dirname(ref);
+  const fileName = basename(ref);
 
   const uploaded: { key: string, url: string }[] = [];
 
@@ -153,30 +152,30 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
       uploaded.push({ key, url: signedUrl });
     }
-  });
+  );
 
-  await Promise.all(promises);
+  await Promise.all(uploadPromises);
 
-  await db.runTransaction(async tx => {
-    const doc = await tx.get(db.doc(`${collection}/${id}`));
-    const docData = await doc.data();
+  // await db.runTransaction(async tx => {
+  //   const doc = await tx.get(db.doc(`${collection}/${id}`));
+  //   const docData = await doc.data();
 
-    if (docData === undefined) {
-      throw new Error(`Data is undefined for document ${collection}/${id}`);
-    }
+  //   if (docData === undefined) {
+  //     throw new Error('Data is undefined');
+  //   }
 
-    // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
-    // TODO#2882
-    const urls: Record<string, string> = {};
-    for (const { key, url } of uploaded) {
-      urls[key] = url;
-    }
+  //   // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
+  //   // TODO#2882
+  //   const urls: Record<string, string> = {};
+  //   for (const { key, url } of uploaded) {
+  //     urls[key] = url;
+  //   }
 
-    const value = { ref: filePath, urls };
+  //   const value = { ref: filePath, urls };
 
-    const updated = set(docData, fieldToUpdate, value);
-    return tx.set(doc.ref, updated);
-  });
+  //   const updated = set(docData, fieldToUpdate, value);
+  //   return tx.set(doc.ref, updated);
+  // });
 
   // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);

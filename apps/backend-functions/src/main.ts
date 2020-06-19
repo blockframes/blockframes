@@ -27,7 +27,7 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent, onFileDeletion } from './internals/image';
+import { onFileUploadEvent, onFileDeleteEvent } from './media';
 import { onEventDelete } from './event';
 
 
@@ -35,8 +35,8 @@ import { onEventDelete } from './event';
 //    Configuration             //
 //--------------------------------
 
-/** 
- * Runtime options for heavy functions 
+/**
+ * Runtime options for heavy functions
  * @dev linked to #2531 (Changing functions REGION)
  */
 const heavyConfig = {
@@ -278,4 +278,4 @@ export const onFileUpload = functions.runWith(heavyConfig).storage.object().onFi
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onFileDeletion(data))
+export const onFileDelete = functions.storage.object().onDelete(data => onFileDeleteEvent(data))
