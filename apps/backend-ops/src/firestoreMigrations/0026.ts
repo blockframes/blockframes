@@ -11,15 +11,15 @@ import { PublicOrganization } from 'apps/backend-functions/src/data/types';
  */
 export async function upgrade(db: Firestore, storage: Storage) {
 
-   await db
-       .collection('users')
-       .get()
-       .then(async users => await updateUsers(users, storage));
+  await db
+    .collection('users')
+    .get()
+    .then(async users => await updateUsers(users, storage));
 
-   await db
-       .collection('orgs')
-       .get()
-       .then(async orgs => await updateOrganizations(orgs, storage));
+  await db
+    .collection('orgs')
+    .get()
+    .then(async orgs => await updateOrganizations(orgs, storage));
 
   await db
     .collection('movies')
@@ -66,10 +66,10 @@ export async function updateMovies(
         const value: PromotionalElement | PromotionalElement[] = movieData.promotionalElements[key];
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
-            movieData.promotionalElements[key][i] = await updateMovieField( value[i], 'media', storage);
+            movieData.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
           }
         } else {
-          movieData.promotionalElements[key] = await updateMovieField( value, 'media', storage);
+          movieData.promotionalElements[key] = await updateMovieField(value, 'media', storage);
         }
       }
     }
@@ -77,19 +77,19 @@ export async function updateMovies(
     for (const key in movieData.salesCast) {
       const value: Credit[] = movieData.salesCast[key];
       for (let i = 0; i < value.length; i++) {
-        movieData.salesCast[key][i] = await updateMovieField( value[i], 'avatar', storage);
+        movieData.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
       }
     }
 
     for (const key in movieData.main.stakeholders) {
       const value: Credit[] = movieData.main.stakeholders[key];
       for (let i = 0; i < value.length; i++) {
-        movieData.main.stakeholders[key][i] = await updateMovieField( value[i], 'logo', storage);
+        movieData.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
       }
     }
 
     for (let i = 0; i < movieData.main.directors.length; i++) {
-      movieData.main.directors[i] = await updateMovieField( movieData.main.directors[i], 'avatar', storage);
+      movieData.main.directors[i] = await updateMovieField(movieData.main.directors[i], 'avatar', storage);
     }
     await movie.ref.set(movieData);
   })
