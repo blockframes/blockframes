@@ -2,7 +2,7 @@
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
-      <img class="add-files-icon" asset="add_files.webp" alt="upload image" />
+      <bf-img class="add-files-icon" asset="add_files.webp" alt="upload image"></bf-img>
     </button>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[dimensions]"></ng-content>
