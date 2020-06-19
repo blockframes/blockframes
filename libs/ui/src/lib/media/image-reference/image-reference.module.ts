@@ -4,8 +4,8 @@ import { ImageReferenceDirective } from './image-reference.directive';
 import { ImgModule } from '../img/img.module';
 
 @NgModule({
-  declarations: [ImageReferenceDirective, BackgroundReferenceDirective],
+  declarations: [BackgroundReferenceDirective],
   imports: [ImgModule],
-  exports: [ImageReferenceDirective, BackgroundReferenceDirective, ImgModule]
+  exports: [ImgModule, BackgroundReferenceDirective]
 })
 export class ImageReferenceModule {}
