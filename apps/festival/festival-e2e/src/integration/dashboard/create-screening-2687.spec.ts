@@ -8,7 +8,8 @@ import {
   FestivalScreeningPage,
   FestivalMarketplaceNotificationsPage,
   FestivalMarketplaceCalendarPage,
-  FestivalMarketplaceScreeningPage
+  FestivalMarketplaceScreeningPage,
+  FestivalMarketplaceEventPage
 } from '../../support/pages/marketplace/index';
 import {
   FestivalDashboardHomePage,
@@ -120,7 +121,7 @@ describe('User create a screening', () => {
     p4.clickAddToCalendar();
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
-    const p6: FestivalMarketplaceScreeningPage = p5.clickOnEvent(MOVIE_TITLE);
+    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(MOVIE_TITLE);
     cy.wait(5000);
     p6.assertScreeningExist(MOVIE_TITLE);
   });
