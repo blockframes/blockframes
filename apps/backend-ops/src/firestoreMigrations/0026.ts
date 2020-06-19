@@ -3,6 +3,7 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { PromotionalElement, Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from 'apps/backend-functions/src/data/types';
+import { createImgRef } from '@blockframes/utils/media/media.model';
 
 
 
@@ -16,12 +17,20 @@ export async function upgrade(db: Firestore, storage: Storage) {
       .collection('users')
       .get()
       .then(async users => updateUsers(users, storage));
+  } catch (error) {
+    console.log(`An error happened while updating users: ${error.message}`);
+  }
 
+  try {
     await db
       .collection('orgs')
       .get()
       .then(async orgs => updateOrganizations(orgs, storage));
+  } catch (error) {
+    console.log(`An error happened while updating orgs: ${error.message}`);
+  }
 
+  try {
     await db
       .collection('movies')
       .get()
@@ -29,7 +38,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
 
     console.log('Updating ImgRef in users, organizations and movies done.');
   } catch (error) {
-    console.log(`An error happened: ${error.message}`);
+    console.log(`An error happened while updating movies: ${error.message}`);
   }
 }
 
@@ -122,7 +131,6 @@ const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
   return org;
 };
 
-
 async function updateImgRef(
   element: PublicUser | PublicOrganization | Credit | PromotionalElement,
   key: 'logo' | 'avatar' | 'media',
@@ -130,33 +138,37 @@ async function updateImgRef(
   // get the current ref
   const media = element[key]; // get old ImgRef format
 
-  // get the old file
-  const { ref } = media as { ref: string, url: string };
+  if (!!media) {
+    // get the old file
+    const { ref } = media as { ref: string, url: string };
 
-  if (!!ref) {
-    const fileName = ref.split('/').pop();
-    const fileNameParts = fileName.split('.');
-    const extension = fileNameParts[fileNameParts.length - 1];
+    if (!!ref) {
+      const fileName = ref.split('/').pop();
+      const fileNameParts = fileName.split('.');
+      const extension = fileNameParts[fileNameParts.length - 1];
 
-    const newFileName = `${fileName.substr(0, fileName.length - extension.length)}png`;
-    console.log(`New filename is : ${newFileName}`)
+      const newFileName = `${fileName.substr(0, fileName.length - extension.length)}png`;
+      console.log(`New filename is : ${newFileName}`)
 
-    // Set the new folder in the bucket
-    const newPngFile = ref.replace('/original/', '/fallback/').replace(fileName, newFileName);
-    const bucket = storage.bucket(getStorageBucketName());
+      // Set the new folder in the bucket
+      const newPngFile = ref.replace('/original/', '/fallback/').replace(fileName, newFileName);
+      const bucket = storage.bucket(getStorageBucketName());
 
-    const output = bucket.file(newPngFile);
-    const [exists] = await output.exists();
+      const output = bucket.file(newPngFile);
+      const [exists] = await output.exists();
 
-    // if the file doesn't exists in our storage bucket
-    if (exists) {
-      // Get the signedUrl to update the field in the database
-      const [signedUrl] = await output.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' })
-      media.urls.fallback = signedUrl;
-    } else {
-      console.log(`File ${newPngFile} does not exists.`)
+      // if the file doesn't exists in our storage bucket
+      if (exists) {
+        // Get the signedUrl to update the field in the database
+        const [signedUrl] = await output.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' })
+        media.urls.fallback = signedUrl;
+      } else {
+        console.log(`File ${newPngFile} does not exists.`)
+      }
     }
+    return media;
+  } else {
+    // imgref is undefined, creating blank one
+    return createImgRef(media);
   }
-
-  return media;
 }
