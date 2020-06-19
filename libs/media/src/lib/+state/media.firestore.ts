@@ -31,7 +31,14 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
   };
 }
 
-export function getImgSize(url: string) {
+export interface ImageSizes {
+  original: number;
+  xs: number;
+  md: number;
+  lg: number;
+}
+
+export function getImgSize(url: string): ImageSizes {
   if (url.includes('avatar')) {
     return { original: 0, xs: 50, md: 100, lg: 300, fallback: 1024 };
   } else if (url.includes('logo')) {
