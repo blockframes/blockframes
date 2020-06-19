@@ -20,7 +20,6 @@ export function isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc): boolea
   if (startedAt) {
     return true;
   }
-  throw new Error(
-    'Unexpected cases for maintenance check! please check the _META/_MAINTENANCE document.'
-  );
+  // We shouldn't throw here else if this happen it create cache issues
+  console.error('Unexpected cases for maintenance check! please check the _META/_MAINTENANCE document.');
 }
