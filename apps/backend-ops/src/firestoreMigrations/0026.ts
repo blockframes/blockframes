@@ -11,15 +11,15 @@ import { PublicOrganization } from 'apps/backend-functions/src/data/types';
  */
 export async function upgrade(db: Firestore, storage: Storage) {
 
-  /* await db
+   await db
        .collection('users')
        .get()
        .then(async users => await updateUsers(users, storage));
- 
+
    await db
        .collection('orgs')
        .get()
-       .then(async orgs => await updateOrganizations(orgs, storage));*/
+       .then(async orgs => await updateOrganizations(orgs, storage));
 
   await db
     .collection('movies')
@@ -27,6 +27,30 @@ export async function upgrade(db: Firestore, storage: Storage) {
     .then(async movies => await updateMovies(movies, storage));
 
   console.log('Updating ImgRef in users, organizations and movies done.');
+}
+
+async function updateUsers(
+  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  storage: Storage
+) {
+  return Promise.all(
+    users.docs.map(async doc => {
+      const updatedUser = await updateUserAvatar(doc.data() as PublicUser, storage);
+      await doc.ref.set(updatedUser);
+    })
+  );
+}
+
+async function updateOrganizations(
+  organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  storage: Storage
+) {
+  return Promise.all(
+    organizations.docs.map(async doc => {
+      const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+      await doc.ref.set(updatedOrg);
+    })
+  );
 }
 
 export async function updateMovies(
@@ -42,10 +66,10 @@ export async function updateMovies(
         const value: PromotionalElement | PromotionalElement[] = movieData.promotionalElements[key];
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
-            movieData.promotionalElements[key][i] = await updateMovieField(movieData.id, `promotionalElements.${key}[${i}]`, value[i], 'media', storage);
+            movieData.promotionalElements[key][i] = await updateMovieField( value[i], 'media', storage);
           }
         } else {
-          movieData.promotionalElements[key] = await updateMovieField(movieData.id, `promotionalElements.${key}`, value, 'media', storage);
+          movieData.promotionalElements[key] = await updateMovieField( value, 'media', storage);
         }
       }
     }
@@ -53,19 +77,19 @@ export async function updateMovies(
     for (const key in movieData.salesCast) {
       const value: Credit[] = movieData.salesCast[key];
       for (let i = 0; i < value.length; i++) {
-        movieData.salesCast[key][i] = await updateMovieField(movieData.id, `salesCast.${key}`, value[i], 'avatar', storage);
+        movieData.salesCast[key][i] = await updateMovieField( value[i], 'avatar', storage);
       }
     }
 
     for (const key in movieData.main.stakeholders) {
       const value: Credit[] = movieData.main.stakeholders[key];
       for (let i = 0; i < value.length; i++) {
-        movieData.main.stakeholders[key][i] = await updateMovieField(movieData.id, `main.stakeholders.${key}`, value[i], 'logo', storage);
+        movieData.main.stakeholders[key][i] = await updateMovieField( value[i], 'logo', storage);
       }
     }
 
     for (let i = 0; i < movieData.main.directors.length; i++) {
-      movieData.main.directors[i] = await updateMovieField(movieData.id, `main.directors[${i}]`, movieData.main.directors[i], 'avatar', storage);
+      movieData.main.directors[i] = await updateMovieField( movieData.main.directors[i], 'avatar', storage);
     }
     await movie.ref.set(movieData);
   })
@@ -74,19 +98,28 @@ export async function updateMovies(
 }
 
 async function updateMovieField(
-  movieID: string,
-  fieldName: string,
   value: Credit | PromotionalElement,
   imgRefFieldName: 'avatar' | 'logo' | 'media',
   storage: Storage) {
-  const mediaDestination = `movies/${movieID}/${fieldName}.${imgRefFieldName}`;
-  const newImageRef = await updateImgRef(mediaDestination, value, imgRefFieldName, storage);
+  const newImageRef = await updateImgRef(value, imgRefFieldName, storage);
   value[imgRefFieldName] = newImageRef;
   return value;
 }
 
+const updateUserAvatar = async (user: PublicUser, storage: Storage) => {
+  const newImageRef = await updateImgRef(user, 'avatar', storage);
+  user.avatar = newImageRef;
+  return user;
+};
+
+const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
+  const newImageRef = await updateImgRef(org, 'logo', storage);
+  org.logo = newImageRef;
+  return org;
+};
+
+
 async function updateImgRef(
-  destinationFolder: string,
   element: PublicUser | PublicOrganization | Credit | PromotionalElement,
   key: 'logo' | 'avatar' | 'media',
   storage: Storage) {
@@ -95,27 +128,30 @@ async function updateImgRef(
 
   // get the old file
   const { ref } = media as { ref: string, url: string };
-  const fileName = ref.split('/').pop();
-  const fileNameParts = fileName.split('.');
-  const extension = fileNameParts[fileNameParts.length - 1];
 
-  const newFileName = `${fileName.substr(0, fileName.length - extension.length)}png`;
-  console.log(`New filename is : ${newFileName}`)
+  if (!!ref) {
+    const fileName = ref.split('/').pop();
+    const fileNameParts = fileName.split('.');
+    const extension = fileNameParts[fileNameParts.length - 1];
 
-  // Set the new folder in the bucket
-  const newPngFile = `${destinationFolder}/fallback/${newFileName}`;
-  const bucket = storage.bucket(getStorageBucketName());
+    const newFileName = `${fileName.substr(0, fileName.length - extension.length)}png`;
+    console.log(`New filename is : ${newFileName}`)
 
-  const output = bucket.file(newPngFile);
-  const [exists] = await output.exists();
+    // Set the new folder in the bucket
+    const newPngFile = ref.replace('/original/', '/fallback/').replace(fileName, newFileName);
+    const bucket = storage.bucket(getStorageBucketName());
 
-  // if the file doesn't exists in our storage bucket
-  if (exists) {
-    // Get the signedUrl to update the field in the database
-    const signedUrl = await output.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' })
-    media.fallback = signedUrl;
-  } else {
-    console.log(`File ${newPngFile} does not exists.`)
+    const output = bucket.file(newPngFile);
+    const [exists] = await output.exists();
+
+    // if the file doesn't exists in our storage bucket
+    if (exists) {
+      // Get the signedUrl to update the field in the database
+      const [signedUrl] = await output.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' })
+      media.urls.fallback = signedUrl;
+    } else {
+      console.log(`File ${newPngFile} does not exists.`)
+    }
   }
 
   return media;
