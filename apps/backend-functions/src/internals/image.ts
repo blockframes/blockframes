@@ -155,8 +155,6 @@ async function resize(data: functions.storage.ObjectMetadata) {
     }
   });
 
-  // const uploaded = await Promise.all(uploadPromises);
-
   await db.runTransaction(async tx => {
     const doc = await tx.get(db.doc(`${collection}/${id}`));
     const docData = await doc.data();
