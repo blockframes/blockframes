@@ -1,6 +1,6 @@
 import { db, functions } from './firebase';
 import { tmpdir } from 'os';
-import { join, dirname } from 'path';
+import { join, dirname, basename, extname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
@@ -42,6 +42,7 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
 }
 
 async function resize(data: functions.storage.ObjectMetadata) {
+
   // Get all the needed information from the data (bucket, path, file name and directory)
   const bucket = admin.storage().bucket(data.bucket);
   const filePath = data.name;
@@ -75,13 +76,62 @@ async function resize(data: functions.storage.ObjectMetadata) {
   // Define the sizes (here width) depending of the image format (defined by the directory)
   const sizes = getImgSize(directory);
 
+  const uploaded: {key: string, url: string}[] = [];
+
   // Iterate on each item of sizes array to generate all wanted resized images
-  const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
+  await Object.entries(sizes).map(async ([key, size]) => {
     const resizedImgName = fileName;
     const resizedImgPath = join(workingDir, `${key}_${resizedImgName}`);
     let destination: string;
 
-    if (size !== 0) {
+    // Original : this is the file that as been uploaded,
+    // we don't need to do anything beside creating an access url
+    if (key === 'original') {
+      // Here we handle the original and generate a signed url (access token)
+      destination = join(directory, fileName);
+      const file = bucket.file(destination);
+      const [signedUrl] = await file.getSignedUrl({
+        action: 'read',
+        expires: '01-01-3000',
+        version: 'v2'
+      });
+
+      uploaded.push({ key, url: signedUrl });
+
+    // Fallback : we need to convert the uploaded file into a png
+    // and also generate an access url
+    } else if (key === 'fallback') {
+
+      const pngFileName = basename(resizedImgName, extname(resizedImgName)) + '.png'
+      const pngImagePath = join(workingDir, `${key}_${pngFileName}`);
+      destination = join(directory.replace('original', key), pngFileName);
+
+      // Use sharp to convert to png
+      await sharp(tmpFilePath)
+      .png()
+      .toFile(pngImagePath);
+
+      const file = bucket.file(destination);
+      const [signedUrl] = await file.getSignedUrl({
+        action: 'read',
+        expires: '01-01-3000',
+        version: 'v2'
+      });
+
+      // Then upload the converted image to the bucket
+      await bucket.upload(pngImagePath, {
+        destination
+      });
+
+      uploaded.push({ key, url: signedUrl });
+
+    // For any other keys ('xs', 'md', 'lg') we need to resize to the good size
+    // (size = 0 is only for 'original' and 'fallback')
+    // and also generate an access url
+    } else {
+      if (size === 0) {
+        throw new Error(`${key} size should not be 0, (0 should be only for 'original' or 'fallback') !`);
+      }
       // In this condition, we need to resize the image
       destination = join(directory.replace('original', key), resizedImgName);
       // Use sharp to resize : take a path, resize to wanted size, save file to a new path
@@ -101,22 +151,11 @@ async function resize(data: functions.storage.ObjectMetadata) {
         destination
       });
 
-      return { key, url: signedUrl };
-    } else {
-      // Here we handle the original and generate a signed url (access token)
-      destination = join(directory, fileName);
-      const file = bucket.file(destination);
-      const [signedUrl] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2'
-      });
-
-      return { key, url: signedUrl };
+      uploaded.push({ key, url: signedUrl });
     }
   });
 
-  const uploaded = await Promise.all(uploadPromises);
+  // const uploaded = await Promise.all(uploadPromises);
 
   await db.runTransaction(async tx => {
     const doc = await tx.get(db.doc(`${collection}/${id}`));
@@ -178,7 +217,7 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
   try {
     // Clean document that reference this image
     const docData: any = await getDocument(`${collection}/${id}`);
-    const value = { ref: '', urls: [] };
+    const value = { ref: '', urls: {} };
     const updated = set(docData, fieldToUpdate, value);
     const docRef = db.collection(collection).doc(id);
     await docRef.update(updated);
@@ -189,7 +228,9 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
   imgSizeDirectory.filter(sizeDir => sizeDir !== uploadedSize)
     .forEach(async (sizeDir : ImgSizeDirectory) => {
-      const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${fileName}`;
+      // if sizeDir is 'fallback' we convert file name from 'image.webp' to 'image.png'
+      const imageFileName = sizeDir !== 'fallback' ? fileName : basename(fileName, extname(fileName)) + '.png'
+      const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${imageFileName}`;
       const [exists] = await bucket.file(path).exists();
       if (exists) {
         await bucket.file(path).delete();
