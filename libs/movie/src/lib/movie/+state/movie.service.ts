@@ -15,7 +15,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMedia } from '@blockframes/media/+state/media.model';
+import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -56,7 +56,7 @@ export class MovieService extends CollectionService<MovieState> {
 
   save(movie: Movie) {
     return this.runTransaction(async write => {
-      const [ value, media ] = extractMedia(movie);
+      const [ value, media ] = extractToBeUpdatedMedia(movie);
       this.mediaService.uploadOrDeleteMedia(media);
       return this.update(value, { write });
     });

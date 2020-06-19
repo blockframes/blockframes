@@ -10,7 +10,7 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { extractMedia } from '@blockframes/media/+state/media.model';
+import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Component({
@@ -56,7 +56,7 @@ export class ProfileViewComponent implements OnInit {
         throw new Error('Your profile informations are not valid.')
       } else {
         const uid = this.authQuery.userId;
-        const [ user, media ] = extractMedia(this.profileForm.value);
+        const [ user, media ] = extractToBeUpdatedMedia(this.profileForm.value);
         this.mediaService.uploadOrDeleteMedia(media);
         this.authService.update({ uid, ...user });
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
