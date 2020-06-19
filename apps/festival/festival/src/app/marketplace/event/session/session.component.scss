@@ -27,7 +27,7 @@ section {
   width: 100%;
   background-color: var(--background-slider);
   text-align: center;
-  img {
+  bf-img {
     width: 100%;
   }
 }
@@ -47,7 +47,7 @@ section {
     height: 100%;
     background-color: var(--background);
     // Organization Logo
-    img.organizationLogo {
+    bf-img.organizationLogo {
       height: 80px;
       width: 80px;
       border-radius: 50%;

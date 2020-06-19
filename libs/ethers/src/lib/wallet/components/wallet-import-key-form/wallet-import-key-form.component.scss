@@ -9,14 +9,14 @@ section {
       width: 100%;
     }
   }
-  img {
+  bf-img {
     margin-bottom: 80px;
   }
 }
 
 @include layout-bp(xs) {
   section {
-    img {
+    bf-img {
       width: 250px;
       margin-bottom: 30px;
     }

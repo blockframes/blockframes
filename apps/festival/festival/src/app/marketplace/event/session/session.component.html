@@ -6,7 +6,7 @@
         <ng-container *ngIf="showSession else showVideo">
           <article class="dark-contrast-theme screen" [bgRef]="event.movie.promotionalElements.banner.media">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
+              <bf-img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo"></bf-img>
               <h4>{{ event.org | orgName }} presents</h4>
               <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
               <h2>by {{ event.movie.main.directors | displayName }}</h2>
@@ -25,7 +25,7 @@
           </article>
         </ng-template>
 
-        <img asset="screening_now.webp" alt="Cinema room">
+        <bf-img asset="screening_now.webp" alt="Cinema room"></bf-img>
       </ng-container>
 
       <ng-template #noMovie>
@@ -50,7 +50,7 @@
         </div>
       </article>
       <!-- TODO update the picture here with Mathilde's picture, she needs to validate with Marie to create it -->
-      <img asset="meeting.webp" alt="Meeting room">
+      <bf-img asset="meeting.webp" alt="Meeting room"></bf-img>
 
     </section>
   </ng-container>

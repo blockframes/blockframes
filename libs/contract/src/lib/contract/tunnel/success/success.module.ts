@@ -4,13 +4,13 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { SuccessComponent } from "./success.component";
 import { RouterModule } from "@angular/router";
 import { MatButtonModule } from "@angular/material/button";
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 
 @NgModule({
     imports: [
         CommonModule,
         FlexLayoutModule,
-        ImageReferenceModule,
+        ImgModule,
         RouterModule.forChild([{ path: '', component: SuccessComponent }]),
         MatButtonModule
     ],

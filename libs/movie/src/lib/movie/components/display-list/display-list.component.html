@@ -3,7 +3,7 @@
   <ng-container matColumnDef="picture">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let movie">
-      <img *ngIf="movie.promotionalElements.poster[0].media as poster" [imgRef]="poster" />
+      <bf-img *ngIf="movie.promotionalElements.poster[0].media as poster" [ref]="poster"></bf-img>
     </td>
   </ng-container>
 
