@@ -3,8 +3,8 @@ import { BackgroundReferenceDirective } from './background-reference.directive';
 import { ImgModule } from '../img/img.module';
 
 @NgModule({
-  declarations: [BackgroundReferenceDirective],
+  declarations: [ImageReferenceDirective, BackgroundReferenceDirective],
   imports: [ImgModule],
-  exports: [ImgModule, BackgroundReferenceDirective]
+  exports: [ImageReferenceDirective, BackgroundReferenceDirective, ImgModule]
 })
 export class ImageReferenceModule {}
