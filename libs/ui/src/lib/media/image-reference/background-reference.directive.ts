@@ -49,11 +49,12 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
       this.assetUrl$
     ]).subscribe(([ref, assetUrl]) => {
       if (ref) {
-        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${ref}))`);
+        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${ref})`);
+        this.cdr.markForCheck();
       } else if (assetUrl) {
         this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${assetUrl})`);
+        this.cdr.markForCheck();
       }
-      this.cdr.markForCheck();
     })
   }
 
