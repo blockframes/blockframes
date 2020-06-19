@@ -5,6 +5,7 @@ import FestivalMarketplaceOrganizationTitlePage from './FestivalMarketplaceOrgan
 import FestivalScreeningPage from './FestivalScreeningPage';
 import FestivalMarketplaceCalendarPage from './FestivalMarketplaceCalendarPage';
 import FestivalMarketplaceScreeningPage from './FestivalMarketplaceScreeningPage';
+import FestivalMarketplaceEventPage from './FestivalMarketplaceEventPage';
 
 export {
   FestivalOrganizationListPage,
@@ -13,5 +14,6 @@ export {
   FestivalMarketplaceHomePage,
   FestivalMarketplaceNotificationsPage,
   FestivalMarketplaceCalendarPage,
-  FestivalMarketplaceScreeningPage
+  FestivalMarketplaceScreeningPage,
+  FestivalMarketplaceEventPage
 }

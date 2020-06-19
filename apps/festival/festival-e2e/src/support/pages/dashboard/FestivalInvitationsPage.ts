@@ -1,3 +1,5 @@
+import FestivalMarketplaceEventPage from "../marketplace/FestivalMarketplaceEventPage";
+
 const ACCEPTED = 'Accepted';
 
 export default class FestivalInvitationsPage {
@@ -20,5 +22,10 @@ export default class FestivalInvitationsPage {
 
   assertInvitationIsAccepted() {
     cy.get('festival-invitation invitation-list invitation-item').contains(ACCEPTED);
+  }
+
+  clickMore() {
+    cy.get('festival-invitation [test-id=more]').first().click();
+    return new FestivalMarketplaceEventPage();
   }
 }

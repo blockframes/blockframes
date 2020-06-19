@@ -11,7 +11,7 @@
               <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
               <h2>by {{ event.movie.main.directors | displayName }}</h2>
               <span class="mat-caption">Screening now</span>
-              <button mat-flat-button color="accent" (click)="showSession = false">
+              <button test-id="play" mat-flat-button color="accent" (click)="showSession = false">
                 <mat-icon svgIcon="play"></mat-icon>
                 <span>Play</span>
               </button>
