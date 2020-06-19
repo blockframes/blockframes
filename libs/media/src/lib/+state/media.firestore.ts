@@ -16,12 +16,6 @@ export interface ImgRef {
   fileName?: string;
 }
 
-// @todo(#3063) remove this interface
-export interface OldImgRef {
-  ref: string;
-  url: string;
-}
-
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
   const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
   return {

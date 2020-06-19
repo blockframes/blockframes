@@ -4,7 +4,6 @@ import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getMediaUrl } from '../../+state/media.model';
 
 @Directive({
   selector: '[bgRef], [bgAsset]'
@@ -23,7 +22,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
     if(!path){
       this.ref$.next('');
     } try {
-      const url = getMediaUrl(path);
+      const url = path.urls.original;
       this.ref$.next(url);
     } catch (err) {
       this.ref$.next('')

@@ -3,7 +3,6 @@ import { ImgRef, getImgSize, imgSizeDirectory } from '../../+state/media.firesto
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
-import { getMediaUrl } from '../../+state/media.model';
 
 @Directive({
   selector: 'img[ref], img[asset]'
@@ -33,7 +32,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
           .join(', ');
         this.srcset$.next(srcset);
       }
-      const url = getMediaUrl(path);
+      const url = path.urls.original;
       this.ref$.next(url);
     } catch (err) {
       this.ref$.next('');
