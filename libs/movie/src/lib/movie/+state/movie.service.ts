@@ -56,7 +56,7 @@ export class MovieService extends CollectionService<MovieState> {
 
   save(movie: Movie) {
     return this.runTransaction(async write => {
-      const [ value, media ] = extractMedia(movie);
+      const [ value, media ] = extractToBeUpdatedMedia(movie);
       this.mediaService.uploadOrDeleteMedia(media);
       return this.update(value, { write });
     });

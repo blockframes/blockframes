@@ -56,7 +56,7 @@ export class ProfileViewComponent implements OnInit {
         throw new Error('Your profile informations are not valid.')
       } else {
         const uid = this.authQuery.userId;
-        const [ user, media ] = extractMedia(this.profileForm.value);
+        const [ user, media ] = extractToBeUpdatedMedia(this.profileForm.value);
         this.mediaService.uploadOrDeleteMedia(media);
         this.authService.update({ uid, ...user });
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
