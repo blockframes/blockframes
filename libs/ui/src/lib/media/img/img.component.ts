@@ -75,7 +75,7 @@ export class ImgComponent implements OnInit, OnDestroy {
         this.assetSrc = `assets/${this.type}/${theme}/${asset}`;
         this.assetFallback = `assets/${this.type}/${theme}-fallback/${asset.replace('.webp', '.png')}`;
       } else {
-        this.assetFallback = `assets/${this.type}/${theme}-fallback/${asset}`;
+        this.assetFallback = `assets/${this.type}/${theme}/${asset}`;
       }
       this.cdr.markForCheck();
     });
