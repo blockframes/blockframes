@@ -5,6 +5,7 @@ export interface ImgRef {
   ref: string;
   urls: {
     original: string;
+    fallback?: string;
     xs?: string;
     md?: string;
     lg?: string;
