@@ -84,7 +84,7 @@ describe('User invites other users to his private screening', () => {
     p2.verifyNotification(PARTICIPANT_2_NAME, false);
   });
 
-  it('Pamela logs, go on event page, asserts she can\'t access to the video and force the url', () => {
+  it('Pamela logs in, go on event page, asserts she can\'t access to the video and force the url', () => {
     signIn(USER_4);
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
