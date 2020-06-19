@@ -15,7 +15,7 @@ import {
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 
 
 @NgModule({
@@ -30,7 +30,8 @@ import { MovieTitleFeaturesModule } from '../title-features/title-features.modul
     FlexLayoutModule,
     DisplayNameModule,
     ImageReferenceModule,
-    MovieTitleFeaturesModule
+    MovieTitleFeaturesModule,
+    ImgModule
   ],
   exports: [
     HeaderComponent,

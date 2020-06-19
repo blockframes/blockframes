@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationCardComponent } from './card.component';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { OrgAddressModule } from '../../pipes/org-address.pipe';
 import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
@@ -22,7 +22,7 @@ import { MatRippleModule } from '@angular/material/core';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImgModule,
     ToLabelModule,
     OrgNameModule,
     OrgAddressModule,
