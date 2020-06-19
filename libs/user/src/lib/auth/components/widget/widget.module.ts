@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AuthWidgetComponent } from './widget.component';
 
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -27,7 +27,7 @@ const material = [
     RouterModule,
     FlexLayoutModule,
     OverlayWidgetModule,
-    ImageReferenceModule,
+    ImgModule,
     ...material
   ],
   declarations: [AuthWidgetComponent],
