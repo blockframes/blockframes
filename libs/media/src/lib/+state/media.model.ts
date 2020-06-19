@@ -27,7 +27,7 @@ function isMedia(obj: any): boolean {
 }
 
 function mediaNeedsUpdate(obj: ImgRef): boolean {
-  return obj.delete || (obj.path && obj.blob);
+  return obj.delete || (!!obj.path && !!obj.blob);
 } 
 
 const formats = {
