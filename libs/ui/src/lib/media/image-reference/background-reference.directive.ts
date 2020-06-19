@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getMediaUrl } from '../media.model';
+import { getMediaUrl, getAssetPath } from '../media.model';
 
 @Directive({
   selector: '[bgRef], [bgAsset]'
@@ -42,16 +42,18 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.assetUrl$ = combineLatest([this.theme.theme$, this.asset$]).pipe(
-      map(([theme, asset]) => asset ? `assets/images/${theme}/${asset}` : '')
+      map(([theme, asset]) => asset ? getAssetPath(asset, theme, 'images') : '')
     );
     this.sub = combineLatest([
       this.ref$,
       this.assetUrl$
     ]).subscribe(([ref, assetUrl]) => {
-      if (ref || assetUrl) {
-        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${ref}), url(${assetUrl})`);
-        this.cdr.markForCheck();
+      if (ref) {
+        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${ref}))`);
+      } else if (assetUrl) {
+        this.src = this.sanitazier.bypassSecurityTrustStyle(`url(${assetUrl})`);
       }
+      this.cdr.markForCheck();
     })
   }
 
