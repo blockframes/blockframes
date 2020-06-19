@@ -1,11 +1,19 @@
 picture {
     width: inherit;
     height: inherit;
+    min-height: inherit;
+    min-width: inherit;
+    max-height: inherit;
+    max-width: inherit;
     border-radius: inherit;
 
-    bf-img {
+    img {
         width: inherit;
         height: inherit;
+        min-height: inherit;
+        min-width: inherit;
+        max-height: inherit;
+        max-width: inherit;
         border-radius: inherit;
     }
 }
