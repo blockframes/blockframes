@@ -1,9 +1,9 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ImgRef, getImgSize, imgSizeDirectory } from '@blockframes/utils/media/media.firestore';
+import { ImgRef, getImgSize, imgSizeDirectory } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
-import { getMediaUrl } from '../media.model';
+import { getMediaUrl } from '../../+state/media.model';
 
 @Directive({
   selector: 'img[ref], img[asset]'
@@ -53,7 +53,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Can force a local theme

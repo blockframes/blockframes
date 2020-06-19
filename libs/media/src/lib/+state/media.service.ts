@@ -10,8 +10,7 @@ import { MediaQuery } from "./media.query";
 import { UploadFile, ImgRef } from "./media.firestore";
 
 // Blockframes
-import { UploadWidgetComponent } from '@blockframes/ui/upload/widget/upload-widget.component';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -44,7 +43,7 @@ export class MediaService {
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
+      this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
     }
   }
   /**
@@ -60,22 +59,21 @@ export class MediaService {
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
-        promises.push(this.upload(path, file.item(index), file.item(index).name));
+        promises.push(this.upload(path, file.item(index), file.item(index).name))
       }
       Promise.all(promises);
     }
   }
 
-    /**
-   * @description This function handles the upload process for one or many files. Make sure that
-   * the oath param doesn't include the filename.
-   * @param path should only have the path and not the file name in it
-   * @param fileOrBlob
-   * @param fileName
-   */
+  /**
+ * @description This function handles the upload process for one or many files. Make sure that
+ * the oath param doesn't include the filename.
+ * @param path should only have the path and not the file name in it
+ * @param fileOrBlob
+ * @param fileName
+ */
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const sanitizedFileName: string = sanitizeFileName(fileName);
-    const exists = await this.exists(path.concat(sanitizedFileName));
+    const exists = await this.exists(path.concat(fileName));
     this.showWidget();
 
     if (exists) {
@@ -87,7 +85,7 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path.concat(sanitizedFileName), fileOrBlob);
+    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
@@ -161,16 +159,17 @@ export class MediaService {
 
   uploadOrDeleteMedia(medias: ImgRef[]) {
     medias.forEach(imgRef => {
-      if (imgRef.delete && imgRef.ref) {  
+      if (imgRef.delete && imgRef.ref) {
         this.removeFile(imgRef.ref);
       } else if (!!imgRef.blob) {
         if (imgRef.ref !== '') {
           this.removeFile(imgRef.ref);
         }
+        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
         const file: UploadFile = {
-          path: imgRef.path,
+          ref: imgRef.newRef,
           data: imgRef.blob,
-          fileName: imgRef.fileName
+          fileName: fileName
         }
         this.uploadBlob(file);
       }

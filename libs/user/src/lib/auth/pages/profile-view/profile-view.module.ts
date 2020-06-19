@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules 
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
 import { PasswordFormModule } from '@blockframes/auth/forms/password/password.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';

@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
-import { UploadModule } from '@blockframes/ui/upload';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
 
 // Components
@@ -42,6 +43,7 @@ const routes: Routes = [
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forChild(routes),
 
     // Material

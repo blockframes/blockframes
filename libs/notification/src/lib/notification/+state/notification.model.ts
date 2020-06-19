@@ -1,5 +1,5 @@
 import { NotificationDocument } from "./notification.firestore";
-import { ImgRef } from "@blockframes/utils/media/media.firestore";
+import { ImgRef } from "@blockframes/media/+state/media.firestore";
 
 // export type Notification = NotificationDocument;
 

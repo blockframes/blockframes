@@ -1,12 +1,12 @@
 import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { DropZoneDirective } from '../drop-zone.directive';
+import { DropZoneDirective } from './drop-zone.directive';
 import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { ImgRefForm } from '../../image-reference/image-reference.form';
+import { ImgRefForm } from '../../directives/image-reference/image-reference.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -59,6 +59,7 @@ export class CropperComponent implements OnInit, OnDestroy {
   //////////////////////
 
   private ref: AngularFireStorageReference;
+  private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   private sub = new Subscription;
 
@@ -121,20 +122,21 @@ export class CropperComponent implements OnInit, OnDestroy {
         throw new Error('No image cropped yet');
       }
 
+      this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
       const blob = b64toBlob(this.croppedImage);
 
       this.nextStep('show');
 
-      // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
       this.form.patchValue({
-        path: `${this.storagePath}/original/`,
+        newRef: `${this.storagePath}/original/${this.fileName}`,
         blob: blob,
-        delete: false,
-        fileName: fileName
+        delete: false
       })
       this.form.markAsDirty();
 
+      this.form.newRef.setValue(`${this.storagePath}/original/${this.fileName}`);
+      this.form.blob.setValue(blob);
+      this.form.delete.setValue(false);
     } catch (err) {
       console.error(err);
     }
@@ -151,9 +153,8 @@ export class CropperComponent implements OnInit, OnDestroy {
     }
 
     this.form.patchValue({
-      path: '',
+      newRef: '',
       blob: '',
-      fileName: '',
       delete: true
     })
     this.form.markAsDirty();

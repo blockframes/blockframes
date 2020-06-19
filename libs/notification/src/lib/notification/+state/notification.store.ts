@@ -1,7 +1,7 @@
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
-import { ImgRef, createImgRef } from '@blockframes/utils/media/media.model';
+import { ImgRef, createImgRef } from '@blockframes/media/+state/media.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { Event } from '@blockframes/event/+state';

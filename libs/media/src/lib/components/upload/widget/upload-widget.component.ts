@@ -2,9 +2,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { MediaService } from '@blockframes/utils/media/media.service';
-import { MediaQuery } from '@blockframes/utils/media/media.query';
-import { UploadState } from '@blockframes/utils/media/media.store';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { MediaQuery } from '@blockframes/media/+state/media.query';
+import { UploadState } from '@blockframes/media/+state/media.store';
 
 // RxJs
 import { Observable } from 'rxjs';

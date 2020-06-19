@@ -11,7 +11,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
-import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef, createImgRef } from '../../../+state/media.firestore';
 
 @Component({
   selector: 'file-upload',

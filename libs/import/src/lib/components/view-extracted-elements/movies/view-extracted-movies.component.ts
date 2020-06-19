@@ -38,7 +38,7 @@ import { createStakeholder } from '@blockframes/utils/common-interfaces/identity
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
-import { ImageUploader } from '@blockframes/utils/media/image-uploader.service';
+import { ImageUploader } from '@blockframes/media/+state/image-uploader.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
@@ -196,6 +196,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
 
         // POSTER (Poster)
+        // TODO issue 3091
         const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
         const moviePoster = createPromotionalElement({
           label: 'Poster',
