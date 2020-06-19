@@ -11,6 +11,7 @@ import { UploadFile, ImgRef } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -43,7 +44,7 @@ export class MediaService {
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      this.upload(uploadFiles.ref, uploadFiles.data, uploadFiles.fileName);
+      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
     }
   }
   /**
@@ -59,7 +60,7 @@ export class MediaService {
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
-        promises.push(this.upload(path, file.item(index), file.item(index).name))
+        promises.push(this.upload(path, file.item(index), file.item(index).name));
       }
       Promise.all(promises);
     }
@@ -73,11 +74,13 @@ export class MediaService {
  * @param fileName
  */
   private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const exists = await this.exists(path.concat(fileName));
+    const sanitizedFileName: string = sanitizeFileName(fileName);
+    const exists = await this.exists(path.concat(sanitizedFileName));
+
     this.showWidget();
 
     if (exists) {
-      throw new Error(`Upload Error : there is already a file @ ${path}, please delete it before uploading a new file!`);
+      throw new Error(`Upload Error : there is already a file @ ${sanitizedFileName}, please delete it before uploading a new file!`);
     }
 
     const uploading = this.query.isUploading(fileName);
@@ -165,11 +168,10 @@ export class MediaService {
         if (imgRef.ref !== '') {
           this.removeFile(imgRef.ref);
         }
-        const fileName = imgRef.newRef.substr(imgRef.newRef.lastIndexOf('/') + 1);
         const file: UploadFile = {
-          ref: imgRef.newRef,
+          path: imgRef.path,
           data: imgRef.blob,
-          fileName: fileName
+          fileName: imgRef.fileName
         }
         this.uploadBlob(file);
       }

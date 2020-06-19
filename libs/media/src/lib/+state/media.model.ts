@@ -2,20 +2,20 @@ import { ImgRef, OldImgRef } from './media.firestore';
 
 export * from './media.firestore';
 
-export function extractMedia(origin: any) {
+export function extractToBeUpdatedMedia(origin: any) {
   const value = Object.assign({}, origin);
-  const media = extractMediaValue(value);
+  const media = extractToBeUpdatedMediaValue(value);
   return [value, media];
 }
 
-function extractMediaValue(value: any) {
+function extractToBeUpdatedMediaValue(value: any) {
   let media: ImgRef[] = [];
   for (const key in value) {
-    if (isMedia(value[key])) {
+    if (isMedia(value[key]) && mediaNeedsUpdate(value[key])) {
       media.push(value[key]);
       delete value[key];
     } else if (typeof value[key] === 'object' && !!value[key]) {
-      const childMedia = extractMediaValue(value[key]);
+      const childMedia = extractToBeUpdatedMediaValue(value[key]);
       media = media.concat(childMedia);
     }
   }
@@ -26,6 +26,9 @@ function isMedia(obj: any): boolean {
   return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
 }
 
+function mediaNeedsUpdate(obj: ImgRef): boolean {
+  return obj.delete || (obj.path && obj.blob);
+} 
 
 const formats = {
   avatar: {
