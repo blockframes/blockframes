@@ -11,17 +11,30 @@ import { Overlay } from '@angular/cdk/overlay';
 describe('Media Service', () => {
 
   let spectator: SpectatorService<MediaService>;
+
   const createService = createServiceFactory({
     service: MediaService,
-    providers: [MediaStore, mockProvider(Overlay, {
-      position: () => {global: () => {bottom: () => {left: jest.fn()}}}
+    providers: [mockProvider(Overlay, {
+      position: () => {
+        return {
+          global: () => {
+            return {
+              bottom: () => {
+                return {
+                  left: () => true
+                }
+              }
+            }
+          }
+        }
+      }
     })],
-    mocks: [MediaQuery, AngularFireStorage]
+    mocks: [MediaStore, MediaQuery, AngularFireStorage]
   });
 
 
   beforeEach(() => spectator = createService());
-  
+
 
   test('Exists', () => {
     expect(spectator.service).toBeDefined();
