@@ -79,7 +79,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   const uploaded: {key: string, url: string}[] = [];
 
   // Iterate on each item of sizes array to generate all wanted resized images
-  await Object.entries(sizes).map(async ([key, size]) => {
+  const promises = Object.entries(sizes).map(async ([key, size]) => {
     const resizedImgName = fileName;
     const resizedImgPath = join(workingDir, `${key}_${resizedImgName}`);
     let destination: string;
@@ -155,12 +155,14 @@ async function resize(data: functions.storage.ObjectMetadata) {
     }
   });
 
+  await Promise.all(promises);
+
   await db.runTransaction(async tx => {
     const doc = await tx.get(db.doc(`${collection}/${id}`));
     const docData = await doc.data();
 
     if (docData === undefined) {
-      throw new Error('Data is undefined');
+      throw new Error(`Data is undefined for document ${collection}/${id}`);
     }
 
     // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
