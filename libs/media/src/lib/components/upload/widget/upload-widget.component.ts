@@ -1,10 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 
 // Blockframes
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { MediaQuery } from '@blockframes/media/+state/media.query';
-import { UploadState } from '@blockframes/media/+state/media.store';
+import { UploadState, MediaStore, isDone } from '@blockframes/media/+state/media.store';
+import { REFERENCES } from '@blockframes/media/+state/media.tasks';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -17,12 +17,42 @@ import { Observable } from 'rxjs';
 })
 export class UploadWidgetComponent {
 
-  items$: Observable<UploadState[]> = this.mediaQuery.selectAll();
+  items$: Observable<UploadState[]> = this.query.selectAll();
 
-  constructor(private mediaService: MediaService, private mediaQuery: MediaQuery) { }
+  constructor(
+    @Inject(REFERENCES) private ref,
+    private query: MediaQuery,
+    private store: MediaStore
+  ) { }
 
-  delegateAction(fileName: string, action: 'pause' | 'resume' | 'cancel' | 'clear') {
-    this.mediaService[action](fileName);
+  pause(fileName: string) {
+    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
+      this.ref.tasks[fileName].pause();
+      this.store.update(fileName, { status: 'paused' });
+    }
+  }
+
+  resume(fileName: string) {
+    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
+      this.ref.tasks[fileName].resume();
+      this.store.update(fileName, { status: 'uploading' });
+    }
+  }
+
+  cancel(fileName: string) {
+    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
+      this.ref.tasks[fileName].cancel();
+      this.store.update(fileName, { status: 'canceled' });
+    }
+  }
+  
+  /** Remove a single file from the store or remove all if no param is given*/
+  clear(fileName?: string) {
+    if (fileName) {
+      this.store.remove(fileName)
+    } else {
+      this.store.remove(upload => isDone(upload));
+    }
   }
 
   getFileType(file: string) {
@@ -41,8 +71,4 @@ export class UploadWidgetComponent {
     }
   }
 
-  close() {
-    this.mediaService.detachWidget()
-    this.mediaService.clear();
-  }
 }
