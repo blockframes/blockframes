@@ -1,46 +1,12 @@
 import { tmpdir } from 'os';
-import { join, dirname, basename } from 'path';
+import { join, dirname, basename, extname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import { set, get } from 'lodash';
-import { getDocument } from '../data/internals';
-import { imgSizeDirectory, getImgSize, ImgSizeDirectory } from '@blockframes/media/+state/media.firestore';
+import { ImageSizes, getImgSize, imgSizeDirectory } from '@blockframes/media/+state/media.firestore.ts';
 
-/**
- * This function is executed on every files uploaded on the storage.
- * Here we use it to resize images, but it can also be used to perform
- * any kind of image manipulation (like blur, crop...).
- */
-export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
-  // If the type of the data is not an image, exit the function
-  if (!data.contentType?.includes('image')) {
-    console.log(`File ${data.contentType} is not an image, exiting function`);
-    return false;
-  }
 
 export async function resize(ref: string) {
-  // // Get all the needed information from the data (bucket, path, file name and directory)
-  // const bucket = admin.storage().bucket(data.bucket);
-  // const filePath = data.name;
-
-  // if (filePath === undefined) {
-  //   throw new Error('undefined data.name!');
-  // }
-
-  // const filePathElements = filePath.split('/');
-
-  // if (filePathElements.length !== 5) {
-  //   throw new Error('unhandled filePath:' + filePath);
-  // }
-
-  // const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
-
-  // if (uploadedSize !== 'original') {
-  //   console.info('skipping upload that is not "original": ' + uploadedSize);
-  //   return false;
-  // }
-
 
   if (filePathElements.length !== 5) {
     throw new Error('unhandled filePath:' + filePath);
@@ -74,108 +40,44 @@ export async function resize(ref: string) {
   const path = dirname(ref);
   const fileName = basename(ref);
 
-  const uploaded: { key: string, url: string }[] = [];
-
   // Iterate on each item of sizes array to generate all wanted resized images
-  const promises = Object.entries(sizes).map(async ([key, size]) => {
-    const resizedImgName = fileName;
-    const resizedImgPath = join(workingDir, `${key}_${resizedImgName}`);
-    let destination: string;
+  const uploadPromises = imgSizeDirectory.map(async key => {
 
-    // Original : this is the file that as been uploaded,
-    // we don't need to do anything beside creating an access url
-    if (key === 'original') {
-      // Here we handle the original and generate a signed url (access token)
-      destination = join(directory, fileName);
-      const file = bucket.file(destination);
-      const [signedUrl] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2'
-      });
+      const currentSize = sizes[key as keyof ImageSizes];
 
-      uploaded.push({ key, url: signedUrl });
-
-      // Fallback : we need to convert the uploaded file into a png
-      // and also generate an access url
-    } else if (key === 'fallback') {
-
-      const pngFileName = basename(resizedImgName, extname(resizedImgName)) + '.png'
-      const pngImagePath = join(workingDir, `${key}_${pngFileName}`);
-      destination = join(directory.replace('original', key), pngFileName);
-
-      // Use sharp to convert to png
-      await sharp(tmpFilePath)
-        .png()
-        .resize(size, null, { withoutEnlargement: true })
-        .toFile(pngImagePath);
-
-      const file = bucket.file(destination);
-      const [signedUrl] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2'
-      });
-
-      // Then upload the converted image to the bucket
-      await bucket.upload(pngImagePath, {
-        destination
-      });
-
-      uploaded.push({ key, url: signedUrl });
-
-      // For any other keys ('xs', 'md', 'lg') we need to resize to the good size
-      // (size = 0 is only for 'original' and 'fallback')
-      // and also generate an access url
-    } else {
-      if (size === 0) {
-        throw new Error(`${key} size should not be 0, (0 should be only for 'original' or 'fallback') !`);
+      if (currentSize === 0) {
+        throw new Error(`Resize Error : Cannot resize image ${ref} for size ${currentSize} because width is 0`);
       }
-      // In this condition, we need to resize the image
-      destination = join(directory.replace('original', key), resizedImgName);
-      // Use sharp to resize : take a path, resize to wanted size, save file to a new path
-      await sharp(tmpFilePath)
-        .resize(size)
-        .toFile(resizedImgPath);
 
-      const file = bucket.file(destination);
-      const [signedUrl] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2'
-      });
+      const resizedImgName = fileName;
+      const resizedImgPath = join(workingDir, `${key}_${resizedImgName}`);
 
-      // Then upload the resized image on the bucket
-      await bucket.upload(resizedImgPath, {
-        destination
-      });
+        // In this condition, we need to resize the image
+        const destination = join(path.replace('original', key), resizedImgName);
+        // Use sharp to resize : take a path, resize to wanted size, save file to a new path
+        await sharp(tmpFilePath)
+          .resize(currentSize)
+          .toFile(resizedImgPath);
 
-      uploaded.push({ key, url: signedUrl });
+        // Then upload the resized image on the bucket
+        await bucket.upload(resizedImgPath, { destination });
     }
   );
 
+  const uploadFallback = async () => {
+
+    const fallbackImgName = basename(fileName, extname(fileName)) + '.png';
+    const fallbackImgPath = join(workingDir, `fallback_${fallbackImgName}`);
+    const storageDestination = join(path.replace('original', 'fallback'), fallbackImgName);
+
+    await sharp(tmpFilePath).png().toFile(fallbackImgPath);
+
+    await bucket.upload(fallbackImgPath, { destination: storageDestination });
+  }
+
+  uploadPromises.push(uploadFallback());
+
   await Promise.all(uploadPromises);
-
-  // await db.runTransaction(async tx => {
-  //   const doc = await tx.get(db.doc(`${collection}/${id}`));
-  //   const docData = await doc.data();
-
-  //   if (docData === undefined) {
-  //     throw new Error('Data is undefined');
-  //   }
-
-  //   // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
-  //   // TODO#2882
-  //   const urls: Record<string, string> = {};
-  //   for (const { key, url } of uploaded) {
-  //     urls[key] = url;
-  //   }
-
-  //   const value = { ref: filePath, urls };
-
-  //   const updated = set(docData, fieldToUpdate, value);
-  //   return tx.set(doc.ref, updated);
-  // });
 
   // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);

@@ -11,6 +11,8 @@ import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
+import { imgSizeDirectory } from '@blockframes/media/+state/media.model';
+import { resize } from './internals/image';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -141,6 +143,31 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     promises.push(upsertWatermark(after));
   }
 
+  // AVATAR
+  if (
+    !!before.avatar && !!after.avatar &&
+    (before.avatar as any).original.ref !== (after.avatar as any).original.ref
+  ) {
+
+    const bucket = admin.storage().bucket();
+
+    // image was deleted
+    if ( (after.avatar as any).original.ref === '') {
+
+      // delete every image size
+      imgSizeDirectory.forEach(key => {
+        promises.push(bucket.file((after.avatar as any)[key].ref).delete());
+      });
+
+      // delete fallback image
+      promises.push(bucket.file((after.avatar as any).fallback.ref).delete());
+
+    // image was created or updated
+    } else {
+      promises.push(resize((after.avatar as any).original.ref));
+    }
+  }
+
   return Promise.all(promises);
 }
 
@@ -181,8 +208,8 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
 /**
  * Create an user.
  * Used in admin panel by blockframes admins only
- * @param data 
- * @param context 
+ * @param data
+ * @param context
  */
 export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
   const { email, orgName, app } = data;
