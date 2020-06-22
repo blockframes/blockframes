@@ -52,6 +52,8 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
  */
 export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
 
+  // TODO MANUALLY CREATING A FOLDER IN STORAGE CRASH EVERYTHING !
+
   // get the needed values
   const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(data);
 
