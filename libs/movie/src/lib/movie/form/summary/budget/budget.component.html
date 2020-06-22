@@ -12,10 +12,15 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li fxLayout="row" fxFlexAlign="start center">
-      <strong>Box Office </strong>
-      <mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value" id="currency-icon"></mat-icon>
-      <missing-control [control]="boxOffice.get('value')" [link]="link">
-      </missing-control>
+      <strong>Box Office&nbsp;</strong>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
+        <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
+      </ng-container>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
+        <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
+      </ng-container>
+      <missing-control [control]="boxOffice.get('value')" [link]="link"></missing-control>
+      <span>&nbsp;</span>
       <ng-container *ngIf="boxOffice.get('territory').value">
         <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
       </ng-container>
