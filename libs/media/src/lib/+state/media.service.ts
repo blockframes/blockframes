@@ -1,6 +1,6 @@
 // Angular
-import { Injectable } from "@angular/core";
-import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
+import { Injectable, Inject } from "@angular/core";
+import { AngularFireStorage } from "@angular/fire/storage";
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
@@ -8,18 +8,18 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
 import { UploadFile, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
-import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
-import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
 import { map, takeWhile } from "rxjs/operators";
+import { REFERENCES } from'./media.tasks';
+
+// Blockframes
+import { delay } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
-
-  private tasks: Record<string, AngularFireUploadTask> = {};
 
   private overlayOptions = {
     height: '400px',
@@ -31,12 +31,23 @@ export class MediaService {
   public overlayRef: OverlayRef;
 
   constructor(
+    @Inject(REFERENCES) private ref,
     private store: MediaStore,
     private query: MediaQuery,
     private db: AngularFirestore,
     private storage: AngularFireStorage,
     private overlay: Overlay
-  ) { }
+  ) {
+    this.query.selectCount(task => task.status !== 'succeeded').subscribe(async (processingTasksCount) => {
+      const totalTasksCount = Object.keys(this.ref.tasks).length
+      if (totalTasksCount > 0 && processingTasksCount === 0) {
+        delay(5000).then(() => {
+          this.detachWidget();
+          this.store.remove(upload => isDone(upload));
+        });
+      }
+    })
+  }
 
   /** Check if a file exists in the **Firebase storage** */
   async exists(path: string, fileName: string): Promise<boolean> {
@@ -115,19 +126,19 @@ export class MediaService {
 
     task.percentageChanges().subscribe(p => this.store.update(fileName, { progress: p }));
 
-    this.tasks[fileName] = task;
+    this.ref.tasks[fileName] = task;
 
     task.then(
       // on success
       () => {
         this.store.update(fileName, { status: 'succeeded' });
-        delete this.tasks[fileName];
+        delete this.ref.tasks[fileName];
       },
 
       // on error (canceled is treated by firebase as an error)
       () => {
         this.store.update(fileName, { status: 'canceled' });
-        delete this.tasks[fileName];
+        delete this.ref.tasks[fileName];
       }
     );
   }
@@ -147,45 +158,16 @@ export class MediaService {
     }
   }
 
-  pause(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].pause();
-      this.store.update(fileName, { status: 'paused' });
-    }
-  }
-
-  resume(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].resume();
-      this.store.update(fileName, { status: 'uploading' });
-    }
-  }
-
-  cancel(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].cancel();
-      this.store.update(fileName, { status: 'canceled' });
-    }
-  }
-
-  /** Remove a single file from the store or remove all if no param is given*/
-  clear(fileName?: string) {
-    if (fileName) {
-      this.store.remove(fileName)
-    } else {
-      this.store.remove(upload => isDone(upload));
-    }
-  }
-
   public detachWidget() {
     this.overlayRef.detach()
     delete this.overlayRef;
   }
 
-  private showWidget() {
+  private async showWidget() {
     if (!this.overlayRef) {
+      const widget = await import('../components/upload/widget/upload-widget.component').then(c => c.UploadWidgetComponent);
       this.overlayRef = this.overlay.create(this.overlayOptions);
-      this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
+      this.overlayRef.attach(new ComponentPortal(widget));
     }
   }
 
