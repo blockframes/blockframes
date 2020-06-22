@@ -23,7 +23,7 @@ describe('Test wishlist icon from library page', () => {
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
-    cy.wait(2000);
+    cy.wait(5000);
     MOVIENAMELIST.forEach(movieName => {
       p3.clickWishlistButton(movieName);
       cy.wait(2000);
@@ -31,7 +31,7 @@ describe('Test wishlist icon from library page', () => {
 
     // Go to wishlist and verify movies are here
     const p4: WishlistPage = p3.clickWishlist();
-    cy.wait(2000);
+    cy.wait(5000);
     MOVIENAMELIST.forEach(movieName => {
       p4.assertMovieInCurrentWishlist(movieName);
     });
@@ -66,6 +66,7 @@ describe('Test wishlist icon from movie view page', () => {
 
     // Go to wishlist and verify movies are here
     const p5: WishlistPage = p3.clickWishlist();
+    cy.wait(2000);
     MOVIENAMELIST.forEach(movieName => {
       p5.assertMovieInCurrentWishlist(movieName);
     });
@@ -85,7 +86,7 @@ describe('Test wishlist icon from movie view page', () => {
       p2.assertWishListCountIsOne();
 
       const p3: SearchPage = p2.clickViewTheLibrary();
-
+      cy.wait(5000);
       // LINE-UP PAGE
 
       // Add two movies from line-up page
