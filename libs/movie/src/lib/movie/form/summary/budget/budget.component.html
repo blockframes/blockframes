@@ -12,7 +12,7 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li fxLayout="row" fxFlexAlign="start center">
-      <strong>Box Office &nbsp;</strong>
+      <strong>Box Office </strong>
       <mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value" id="currency-icon"></mat-icon>
       <missing-control [control]="boxOffice.get('value')" [link]="link">
       </missing-control>
@@ -52,6 +52,7 @@
       <ng-template #display>
         <missing-control [control]="review.get('journalName')" [link]="link"></missing-control>
         "<missing-control [control]="review.get('criticQuote')" [link]="link"></missing-control>"
+        (<missing-control [control]="review.get('revueLink')" [link]="link"></missing-control>)
       </ng-template>
     </li>
   </ng-container>

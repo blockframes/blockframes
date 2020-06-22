@@ -9,7 +9,7 @@
 <ng-template #notRequired>
   <ng-container *ngIf="!control.value else content">
     <a [routerLink]="link" class="missing-control">
-      Missing{{ isLast ? '' : ', ' }}
+      <span>Missing{{ isLast ? '' : ', ' }}</span>
     </a>
   </ng-container>
 </ng-template>
