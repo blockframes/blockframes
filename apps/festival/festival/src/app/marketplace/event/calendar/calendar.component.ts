@@ -33,7 +33,8 @@ export class EventCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     const allEvents$ = this.invitationQuery.selectAll({
-      filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
+      // filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
+      filterBy: ({ type, status }) => type === 'attendEvent' && status === 'accepted'
     }).pipe(
       map(invitations => invitations.map(i => i.docId)),
       map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated

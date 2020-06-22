@@ -19,7 +19,6 @@
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
     <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
-      <div matBadge="!" matBadgeSize="large" matBadgeColor="accent"></div>
       <event-card [event]="event" size="small"></event-card>
     </a>
   </ng-template>
