@@ -27,9 +27,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     try {
       if (path.ref && path.urls) {
         const sizes = getImgSize(path.ref);
-        const imgSizesNoOriginal = imgSizeDirectory.filter(size => size !== 'original');
-        const srcset = imgSizesNoOriginal
-          .map(size => `${path.urls[size]} ${sizes[size]}w`)
+        const srcset = imgSizeDirectory.map(size => `${path.urls[size]} ${sizes[size]}w`)
           .join(', ');
         this.srcset$.next(srcset);
       }
