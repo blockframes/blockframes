@@ -8,6 +8,6 @@ export default class FestivalMarketplaceScreeningPage {
   }
 
   runVideo() {
-    cy.get('festival-session video').click({ force: true });
+    cy.get('festival-session video', { timeout: 30000 }).click({ force: true });
   }
 }
