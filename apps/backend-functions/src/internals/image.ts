@@ -109,6 +109,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
       // Use sharp to convert to png
       await sharp(tmpFilePath)
       .png()
+      .resize(size, null, { withoutEnlargement: true})
       .toFile(pngImagePath);
 
       const file = bucket.file(destination);
