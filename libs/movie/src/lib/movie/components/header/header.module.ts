@@ -15,8 +15,6 @@ import {
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-
 
 @NgModule({
   declarations: [
@@ -31,7 +29,6 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     DisplayNameModule,
     ImageReferenceModule,
     MovieTitleFeaturesModule,
-    ImageReferenceModule
   ],
   exports: [
     HeaderComponent,
