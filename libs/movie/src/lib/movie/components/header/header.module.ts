@@ -15,7 +15,7 @@ import {
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 
 @NgModule({

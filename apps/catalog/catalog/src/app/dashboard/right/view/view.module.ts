@@ -7,7 +7,7 @@ import { ViewComponent } from './view.component';
 
 // Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';

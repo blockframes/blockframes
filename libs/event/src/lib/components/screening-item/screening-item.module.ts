@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScreeningItemComponent } from './screening-item.component';
 import { EventRangeModule } from '../../pipes/event-range.pipe';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
 // Material

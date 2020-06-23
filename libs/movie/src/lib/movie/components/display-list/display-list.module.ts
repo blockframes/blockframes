@@ -1,7 +1,7 @@
 import { MovieDisplayListComponent } from './display-list.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 // Materials
 import { MatTableModule } from '@angular/material/table';

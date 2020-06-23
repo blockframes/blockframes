@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card.component';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
 import { FlexLayoutModule } from '@angular/flex-layout';
 

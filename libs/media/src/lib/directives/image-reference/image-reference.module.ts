@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BackgroundReferenceDirective } from './background-reference.directive';
-import { ImageReferenceDirective } from './image-reference.directive';
-import { ImgModule } from '../img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 @NgModule({
   declarations: [BackgroundReferenceDirective],

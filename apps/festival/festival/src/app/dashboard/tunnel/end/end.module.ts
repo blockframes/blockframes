@@ -7,7 +7,7 @@ import { EndTunnelComponent } from './end.component';
 // Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 @NgModule({
   declarations: [EndTunnelComponent],

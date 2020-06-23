@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
 import { PasswordFormModule } from '@blockframes/auth/forms/password/password.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';

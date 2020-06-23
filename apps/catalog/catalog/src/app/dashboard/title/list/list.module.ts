@@ -10,7 +10,7 @@ import { TitleListComponent } from './list.component';
 // Blockframes
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

@@ -1,4 +1,4 @@
-import { ImgRef, OldImgRef } from './media.firestore';
+import { ImgRef } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 
 export * from './media.firestore';
@@ -29,7 +29,7 @@ function isMedia(obj: any): boolean {
 
 function mediaNeedsUpdate(obj: ImgRef): boolean {
   return obj.delete || (!!obj.path && !!obj.blob);
-} 
+}
 
 const formats = {
   avatar: {
@@ -50,22 +50,12 @@ export type Formats = keyof typeof formats;
 
 export function getRatio(format: Formats) {
   const { height, width } = format[format];
-  return width/height;
+  return width / height;
 }
 
-// @todo(#3063) Remove this verifier
-export function isOldImgRef(ref: ImgRef | OldImgRef): ref is OldImgRef {
-  return 'url' in ref;
-} 
-
-// @todo(#3063) Update this function to unsupport oldImgRef
-export function getMediaUrl(ref: ImgRef | OldImgRef) {
+export function getMediaUrl(ref: ImgRef) {
   if (ref) {
-    if (isOldImgRef(ref)) {
-      return ref.url;
-    } else {
-      return isSafari() ? ref.urls.fallback : ref.urls.original;
-    }
+    return isSafari() ? ref.urls.fallback : ref.urls.original;
   }
 }
 
@@ -77,6 +67,6 @@ export function getAssetPath(asset: string, theme: 'dark' | 'light', type: 'imag
       ? `assets/${type}/${theme}-fallback/${asset.replace('.webp', '.png')}`
       : `assets/${type}/${theme}/${asset}`
   } else {
-    return`assets/${type}/${theme}/${asset}`;
+    return `assets/${type}/${theme}/${asset}`;
   }
 }

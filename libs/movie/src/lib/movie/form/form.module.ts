@@ -19,11 +19,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { UploadModule } from '@blockframes/ui/upload';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 
 // Forms Modules
 import { MovieFormFestivalPrizesModule } from './festival-prizes/festival-prizes.module';

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 import { DurationModule }from '@blockframes/utils/pipes/duration.pipe'
 
 // Material

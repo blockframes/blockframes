@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { ImgRef, getImgSize, imgSizeDirectory } from '@blockframes/utils/media/media.model';
-import { getMediaUrl } from '../media.model';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
+import { getMediaUrl, getImgSize, ImgRef, imgSizeDirectory } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',

@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 // Materials
 import { MatCardModule } from '@angular/material/card';

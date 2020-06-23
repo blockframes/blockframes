@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImgModule } from '@blockframes/media/components/img/img.module';
 
 // Materials
 import { MatCardModule } from '@angular/material/card';
