@@ -1,11 +1,10 @@
-import { Component, Input, Renderer2, ElementRef, OnDestroy, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, Renderer2, ElementRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from './drop-zone.directive';
 import { catchError } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRefForm } from '../../directives/image-reference/image-reference.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
@@ -52,7 +51,7 @@ function isFile(ref: string): boolean {
   viewProviders: [DropZoneDirective],
   animations: [zoom, zoomDelay, check, finalZoom]
 })
-export class CropperComponent implements OnInit, OnDestroy {
+export class CropperComponent implements OnInit {
 
   ////////////////////////
   // Private Variables //
@@ -60,7 +59,6 @@ export class CropperComponent implements OnInit, OnDestroy {
 
   private ref: AngularFireStorageReference;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
-  private sub = new Subscription;
 
   ///////////////////////
   // Public Variables //
@@ -170,11 +168,8 @@ export class CropperComponent implements OnInit, OnDestroy {
   /** Returns an observable of the download url of an image based on its reference */
   private getDownloadUrl(ref: AngularFireStorageReference): Observable<string> {
     return ref.getDownloadURL().pipe(
-      catchError(err => of(''))
+      catchError(_ => of(''))
     )
   }
 
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
-  }
 }

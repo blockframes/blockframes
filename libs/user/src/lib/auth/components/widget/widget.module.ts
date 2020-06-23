@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { AuthWidgetComponent } from './widget.component';
 
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module'
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material

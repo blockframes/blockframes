@@ -1,4 +1,5 @@
-import { ImgRef, OldImgRef } from './media.firestore';
+import { ImgRef } from './media.firestore';
+import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 
 export * from './media.firestore';
 
@@ -28,7 +29,7 @@ function isMedia(obj: any): boolean {
 
 function mediaNeedsUpdate(obj: ImgRef): boolean {
   return obj.delete || (!!obj.path && !!obj.blob);
-} 
+}
 
 const formats = {
   avatar: {
@@ -43,7 +44,7 @@ const formats = {
     height: 160,
     width: 120
   }
-};
+} as const;
 
 export type Formats = keyof typeof formats;
 
@@ -52,12 +53,18 @@ export function getRatio(format: Formats) {
   return width / height;
 }
 
-// @todo(#3063) Remove this verifier
-export function isOldImgRef(ref: ImgRef | OldImgRef): ref is OldImgRef {
-  return 'url' in ref;
+export function getMediaUrl(ref: ImgRef) {
+  return isSafari() ? ref.urls.fallback : ref.urls.original;
 }
 
-// @todo(#3063) Update this function to unsupport oldImgRef
-export function getMediaUrl(ref: ImgRef | OldImgRef) {
-  return isOldImgRef(ref) ? ref.url : ref.urls.original;
+/** Used this only for background to let the browser deal with that with picture */
+export function getAssetPath(asset: string, theme: 'dark' | 'light', type: 'images' | 'logo' = 'images') {
+  const format = asset.split('.').pop();
+  if (format === 'webp') {
+    return isSafari()
+      ? `assets/${type}/${theme}-fallback/${asset.replace('.webp', '.png')}`
+      : `assets/${type}/${theme}/${asset}`
+  } else {
+    return `assets/${type}/${theme}/${asset}`;
+  }
 }

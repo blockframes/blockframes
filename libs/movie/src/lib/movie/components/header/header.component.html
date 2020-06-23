@@ -2,7 +2,7 @@
     *ngIf="movieView">
     <!-- Breadcrumbs and Poster -->
     <!-- ATM we use the first image, but we will use geo localisation to determine which one to use -->
-    <img fxHide.lt-md [ref]="movieView.poster.media" asset="empty_poster.webp" class="poster">
+    <bf-img fxHide.lt-md [ref]="movieView.poster.media" asset="empty_poster.webp" alt="Movie Poster" class="poster"></bf-img>
     <!-- Descriptions -->
     <div fxLayout="column" fxLayoutAlign="space-between start">
         <div class="movie-details">
