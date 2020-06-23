@@ -7,6 +7,7 @@ import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_RO
 import { BUDGET_RANGE, EARNING, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
 import { INFO_FORMATS, INFO_LANGUAGE } from "./5-technical-info";
 import { FILES_LINKS } from "./7-files";
+import { VALUATION } from "./9-valuation";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
@@ -52,4 +53,7 @@ export const summaryTest = () => {
 
   // Files and links
   p1.assertLinks(FILES_LINKS);
+
+  // Evaluation
+  p1.assertEvaluation(VALUATION);
 };
