@@ -10,9 +10,6 @@ import {
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { getMediaUrl, getAssetPath } from '@blockframes/ui/media/media.model';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { getAssetPath, getMediaUrl } from '@blockframes/media/+state/media.model';
 
@@ -42,7 +39,7 @@ export class HeaderComponent {
   public movieView: MovieHeaderView;
   public movie: Movie;
 
-  constructor(private sanitazier: DomSanitizer) {}
+  constructor(private sanitazier: DomSanitizer) { }
 
   @HostBinding('style.backgroundImage') background: SafeStyle;
   @Input('movie')
