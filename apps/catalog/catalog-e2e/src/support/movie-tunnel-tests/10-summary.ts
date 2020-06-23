@@ -3,6 +3,7 @@ import { TunnelSummaryPage } from "../pages/dashboard";
 // Tests variables
 import { CONTENT_TYPES, DIRECTORS, MAIN_COUNTRIES, MEDIA, MAIN_LANGUAGES, GENRE, CAST_MEMBERS, FESTIVALS, AWARDS, PREMIERE, YEAR } from "./1-main";
 import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
+import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_ROLES, CREW_MEMBERS } from "./3-credits";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
@@ -25,4 +26,11 @@ export const summaryTest = () => {
   // 2-Storyline
   p1.assertStoryline([SYNOPSIS, KEY_ASSETS]);
   p1.assertStoryline(KEYWORDS);
+
+  // 3-Credits
+  p1.assertCredit([PRODUCTION_YEAR, CREDITS_ROLES[0]]);
+  p1.assertCredit(STAKEHOLDERS);
+  p1.assertCredit(CREDITS_COUNTRIES);
+  p1.assertCredit(PRODUCERS);
+  p1.assertCredit(CREW_MEMBERS);
 };

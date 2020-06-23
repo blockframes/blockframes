@@ -45,4 +45,10 @@ export default class TunnelSummaryPage {
       cy.get('catalog-summary-tunnel movie-summary-story').contains(field);
     });
   }
+
+  public assertCredit(fields: string[]) {
+    fields.forEach(field => {
+      cy.get('catalog-summary-tunnel movie-summary-credit').contains(field);
+    });
+  }
 }
