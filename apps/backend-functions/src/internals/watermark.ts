@@ -33,9 +33,7 @@ export async function _upsertWatermark(user: PublicUser): Promise<ImgRef> {
 
   const watermarkImgRef = {
     ref,
-    urls: {
-      original: signedUrl,
-    },
+    url: signedUrl,
   }
 
   return watermarkImgRef;

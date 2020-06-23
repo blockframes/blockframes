@@ -1,21 +1,15 @@
 import { ImgRef, createImgRef } from '../../+state//media.firestore'
-import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { HostedMediaForm } from '../media/media.form';
 
 function createImgRefControl(reference: ImgRef) {
-  const { ref, urls } = createImgRef(reference);
+  const imgRef = createImgRef(reference);
   return {
-    ref: new FormControl(ref),
-    urls: new FormGroup({
-      original: new FormControl(urls.original),
-      xs: new FormControl(urls.xs),
-      md: new FormControl(urls.md),
-      lg: new FormControl(urls.lg)
-    }),
-    blob: new FormControl(),
-    path: new FormControl(''),
-    delete: new FormControl(false),
-    fileName: new FormControl('')
+    original: new HostedMediaForm(imgRef.original),
+    fallback: new HostedMediaForm(imgRef.fallback),
+    xs: new HostedMediaForm(imgRef.xs),
+    md: new HostedMediaForm(imgRef.md),
+    lg: new HostedMediaForm(imgRef.lg),
   }
 }
 
@@ -28,9 +22,9 @@ export class ImgRefForm extends FormEntity<ImgRefControl> {
     super(control);
   }
 
-  get ref() { return this.get('ref') }
-  get urls() { return this.get('urls') }
-  get blob() { return this.get('blob') }
-  get path() { return this.get('path') }
-  get delete() { return this.get('delete') }
+  get original() { return this.get('original') }
+  get fallback() { return this.get('fallback') }
+  get xs() { return this.get('xs') }
+  get md() { return this.get('md') }
+  get lg() { return this.get('lg') }
 }
