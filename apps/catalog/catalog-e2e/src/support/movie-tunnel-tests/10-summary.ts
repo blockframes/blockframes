@@ -4,6 +4,7 @@ import { TunnelSummaryPage } from "../pages/dashboard";
 import { CONTENT_TYPES, DIRECTORS, MAIN_COUNTRIES, MEDIA, MAIN_LANGUAGES, GENRE, CAST_MEMBERS, FESTIVALS, AWARDS, PREMIERE, YEAR } from "./1-main";
 import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
 import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_ROLES, CREW_MEMBERS } from "./3-credits";
+import { BUDGET_RANGE, EARNING, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
@@ -33,4 +34,9 @@ export const summaryTest = () => {
   p1.assertCredit(CREDITS_COUNTRIES);
   p1.assertCredit(PRODUCERS);
   p1.assertCredit(CREW_MEMBERS);
+
+  // Budget
+  p1.assertBudget([BUDGET_RANGE, EARNING, RATING, CRITIC]);
+  p1.assertBudget(BUDGET_COUNTRIES);
+  p1.assertBudget(QUOTAS);
 };
