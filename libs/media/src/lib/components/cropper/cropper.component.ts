@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { ImgRefForm } from '../../directives/image-reference/image-reference.form';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -81,7 +81,7 @@ export class CropperComponent implements OnInit {
   @Input() set ratio(ratio: MediaRatioType) {
     this.cropRatio = mediaRatio[ratio];
   }
-  @Input() form?: ImgRefForm;
+  @Input() form?: HostedMediaForm;
   @Input() setWidth?: number;
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
@@ -92,8 +92,8 @@ export class CropperComponent implements OnInit {
 
   ngOnInit() {
     // show current image
-    if (this.form.original.ref.value) {
-      this.ref = this.storage.ref(this.form.original.ref.value);
+    if (this.form.ref.value) {
+      this.ref = this.storage.ref(this.form.ref.value);
       this.goToShow();
     }
   }
