@@ -1,15 +1,15 @@
 import { TunnelTechnicalInfoPage, TunnelBudgetPage } from "../pages/dashboard";
 
-const BUDGET_RANGE = 'Less than $1 million';
-const QUOTAS = ['EOF'];
-const BUDGET_COUNTRIES = ['Japan', 'France'];
-const BUDGET_PARTIAL_COUNTRIES = ['jap', 'fr'];
-const METRIC = 'admissions';
-const EARNING = '120000';
-const RATING = 'Tous publics';
-const JOURNAL_NAME = 'NY Times';
-const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
-const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
+export const BUDGET_RANGE = 'Less than $1 million';
+export const QUOTAS = ['EOF'];
+export const BUDGET_COUNTRIES = ['Japan', 'France'];
+export const BUDGET_PARTIAL_COUNTRIES = ['jap', 'fr'];
+export const METRIC = 'admissions';
+export const EARNING = '120000';
+export const RATING = 'Tous publics';
+export const JOURNAL_NAME = 'NY Times';
+export const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
+export const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
 
 export const budgetTest = () => {
   const p1 = new TunnelBudgetPage();

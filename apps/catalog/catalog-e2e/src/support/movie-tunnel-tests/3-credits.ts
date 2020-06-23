@@ -1,16 +1,16 @@
 import { TunnelCreditsPage, TunnelBudgetPage } from "../pages/dashboard";
 
-const PRODUCTION_YEAR = '2006';
-const STAKEHOLDERS = ['Realitism Films', 'Backup Media', 'Parabola Films', 'Beauvoir Films'];
-const CREDITS_COUNTRIES = ['France', 'Germany', 'Canada', 'China'];
-const CREDITS_PARTIAL_COUNTRIES = ['Fra', 'Ger', 'can', 'chin'];
-const PRODUCTION = 'production';
-const CO_PRODUCTION = 'co-production';
-const PRODUCERS = ['Grégory', 'Bernard'];
-const PRODUCER = 'producer';
-const CREW_MEMBERS = ['Laure', 'Mercier', 'Sindika', 'Dokolo'];
-const CREW_MEMBER = 'crew-member';
-const CREDITS_ROLES = ['Executive Producer', 'Score Composer', 'Costume Designer'];
+export const PRODUCTION_YEAR = '2006';
+export const STAKEHOLDERS = ['Realitism Films', 'Backup Media', 'Parabola Films', 'Beauvoir Films'];
+export const CREDITS_COUNTRIES = ['France', 'Germany', 'Canada', 'China'];
+export const CREDITS_PARTIAL_COUNTRIES = ['Fra', 'Ger', 'can', 'chin'];
+export const PRODUCTION = 'production';
+export const CO_PRODUCTION = 'co-production';
+export const PRODUCERS = ['Grégory', 'Bernard'];
+export const PRODUCER = 'producer';
+export const CREW_MEMBERS = ['Laure', 'Mercier', 'Sindika', 'Dokolo'];
+export const CREW_MEMBER = 'crew-member';
+export const CREDITS_ROLES = ['Executive Producer', 'Score Composer', 'Costume Designer'];
 
 export const creditsTest = () => {
   const p1 = new TunnelCreditsPage();

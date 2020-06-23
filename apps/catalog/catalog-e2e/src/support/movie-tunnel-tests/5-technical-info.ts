@@ -1,8 +1,8 @@
 import { TunnelTechnicalInfoPage, TunnelPromotionalImagesPage } from "../pages/dashboard";
 
-const INFO_FORMATS = ['1.66', 'SD', 'Color', 'Dolby SR'];
-const INFO_PARTIAL_LANGUAGE = 'en';
-const INFO_LANGUAGE = 'English';
+export const INFO_FORMATS = ['1.66', 'SD', 'Color', 'Dolby SR'];
+export const INFO_PARTIAL_LANGUAGE = 'en';
+export const INFO_LANGUAGE = 'English';
 
 export const technicalInfoTest = () => {
   const p1 = new TunnelTechnicalInfoPage();

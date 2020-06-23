@@ -1,22 +1,22 @@
 import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard";
 
-const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
-const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
-const MAIN_PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
-const MAIN_COUNTRIES = ['France', 'Poland', 'Italy'];
-const MEDIA = 'Pay TV';
-const DATE = '10/10/2007';
-const DISTRIBUTORS = ['Caroline de Monaco', 'Monica Bellucci'];
-const MAIN_PARTIAL_LANGUAGES = ['fr', 'en'];
-const MAIN_LANGUAGES = ['French', 'English'];
-const GENRE = 'Documentary';
-const RUNTIME = '87';
-const CAST_MEMBERS = ['Karl', 'Lagerfeld', 'Nicole', 'Kidman'];
-const MAIN_ROLES = ['Lead Role', 'Secondary Role'];
-const FESTIVALS = ['Berlin Film Festival', 'Zurich Film Festival'];
-const AWARDS = ['Opening Film', 'Nominee Best New Documentary Film'];
-const PREMIERE = 'World';
-const YEAR = '2007';
+export const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
+export const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
+export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
+export const MAIN_COUNTRIES = ['France', 'Poland', 'Italy'];
+export const MEDIA = 'Pay TV';
+export const DATE = '10/10/2007';
+export const DISTRIBUTORS = ['Caroline de Monaco', 'Monica Bellucci'];
+export const MAIN_PARTIAL_LANGUAGES = ['fr', 'en'];
+export const MAIN_LANGUAGES = ['French', 'English'];
+export const GENRE = 'Documentary';
+export const RUNTIME = '87';
+export const CAST_MEMBERS = ['Karl', 'Lagerfeld', 'Nicole', 'Kidman'];
+export const MAIN_ROLES = ['Lead Role', 'Secondary Role'];
+export const FESTIVALS = ['Berlin Film Festival', 'Zurich Film Festival'];
+export const AWARDS = ['Opening Film', 'Nominee Best New Documentary Film'];
+export const PREMIERE = 'World';
+export const YEAR = '2007';
 
 export const mainTest = () => {
   const p1 = new TunnelMainPage();

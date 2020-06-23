@@ -1,6 +1,6 @@
 import { TunnelStorylinePage, TunnelCreditsPage } from "../pages/dashboard";
 
-const KEYWORDS = ['Karl Lagerfeld', 'Fashion'];
+export const KEYWORDS = ['Karl Lagerfeld', 'Fashion'];
 
 export const storylineTest = () => {
   const p1 = new TunnelStorylinePage();

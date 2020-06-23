@@ -1,7 +1,7 @@
 import { createFakeScript, randomID } from "@blockframes/e2e/utils/functions";
 import { TunnelChainOfTitlesPage, TunnelFilesPage } from "../pages/dashboard";
 
-const FILES_LINKS = [
+export const FILES_LINKS = [
   'https://www.promo_reel.com',
   'https://www.screener_link.com',
   'https://www.youtube.com/watch?v=n22yzBmr5sY',
