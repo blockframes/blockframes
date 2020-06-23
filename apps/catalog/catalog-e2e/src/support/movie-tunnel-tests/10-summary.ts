@@ -5,10 +5,12 @@ import { CONTENT_TYPES, DIRECTORS, MAIN_COUNTRIES, MEDIA, MAIN_LANGUAGES, GENRE,
 import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
 import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_ROLES, CREW_MEMBERS } from "./3-credits";
 import { BUDGET_RANGE, EARNING, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
+import { INFO_FORMATS, INFO_LANGUAGE } from "./5-technical-info";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
 const DATE = '10/10/07';
+const SUBTITLED = 'Subtitled';
 
 export const summaryTest = () => {
   const p1 = new TunnelSummaryPage();
@@ -39,4 +41,8 @@ export const summaryTest = () => {
   p1.assertBudget([BUDGET_RANGE, EARNING, RATING, CRITIC]);
   p1.assertBudget(BUDGET_COUNTRIES);
   p1.assertBudget(QUOTAS);
+
+  // Technical info
+  p1.assertTechnicalInfo(INFO_FORMATS);
+  p1.assertTechnicalInfo([INFO_LANGUAGE, SUBTITLED]);
 };

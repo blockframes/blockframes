@@ -57,4 +57,10 @@ export default class TunnelSummaryPage {
       cy.get('catalog-summary-tunnel movie-summary-budget').contains(field);
     });
   }
+
+  public assertTechnicalInfo(fields: string[]) {
+    fields.forEach(field => {
+      cy.get('catalog-summary-tunnel movie-summary-technical-information').contains(field);
+    });
+  }
 }
