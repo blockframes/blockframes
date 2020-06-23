@@ -10,7 +10,8 @@ import {
   promotionalImagesTest,
   filesTest,
   chainOfTitlesTest,
-  valuationTest
+  valuationTest,
+  summaryTest
 } from '../../support/movie-tunnel-tests';
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
@@ -65,5 +66,11 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     valuationTest();
   });
 
-  // TODO: issue #2124 summary test
+  // Summary page
+  it('Verifies that every field of summary page is matching the inputs, save and verify the movie is saved', () => {
+    summaryTest();
+    // Reload and relaunch test to make sure the movie has been saved
+    cy.reload();
+    summaryTest();
+  });
 });

@@ -1,17 +1,19 @@
 import { TunnelStorylinePage, TunnelCreditsPage } from "../pages/dashboard";
 
-const KEYWORDS = ['Karl Lagerfeld', 'Fashion'];
+export const KEYWORDS = ['Karl Lagerfeld', 'Fashion'];
+export const SYNOPSIS = 'An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.';
+export const KEY_ASSETS = 'One of the few films presenting Karl Lagerfeld.';
 
 export const storylineTest = () => {
   const p1 = new TunnelStorylinePage();
 
   // Synopsis
-  p1.fillSynopsis('An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.');
-  p1.assertSynopsisExists('An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.');
+  p1.fillSynopsis(SYNOPSIS);
+  p1.assertSynopsisExists(SYNOPSIS);
 
   // Key Assets
-  p1.fillKeyAssets('One of the few films presenting Karl Lagerfeld.');
-  p1.assertKeyAssetsExists('One of the few films presenting Karl Lagerfeld.');
+  p1.fillKeyAssets(KEY_ASSETS);
+  p1.assertKeyAssetsExists(KEY_ASSETS);
 
   // Keywords
   KEYWORDS.forEach(KEYWORD => {

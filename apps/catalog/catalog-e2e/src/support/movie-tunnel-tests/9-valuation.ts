@@ -1,6 +1,6 @@
 import { TunnelValuationPage, TunnelSummaryPage } from "../pages/dashboard";
 
-const VALUATION = 'B';
+export const VALUATION = 'B';
 
 export const valuationTest = () => {
   const p1 = new TunnelValuationPage();
