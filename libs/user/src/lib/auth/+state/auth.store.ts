@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createImgRef, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';
@@ -20,7 +20,7 @@ export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
     avatar: createImgRef(user.avatar),
-    watermark: createImgRef(user.watermark),
+    watermark: createHostedMedia(user.watermark),
   } as User;
 }
 

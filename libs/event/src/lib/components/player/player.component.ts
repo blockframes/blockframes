@@ -79,7 +79,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    const watermarkUrl = this.authQuery.user.watermark.urls?.original;
+    const watermarkUrl = this.authQuery.user.watermark.url;
     await this.loadScript();
     this.initPlayer(watermarkUrl);
   }

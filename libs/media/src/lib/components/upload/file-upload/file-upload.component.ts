@@ -11,7 +11,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
-import { ImgRef, createImgRef } from '../../../+state/media.firestore';
+import { ImgRef, createImgRef, HostedMedia, createHostedMedia } from '../../../+state/media.firestore';
 
 @Component({
   selector: 'file-upload',
@@ -33,7 +33,7 @@ export class FileUploadComponent {
   /** emit the current file as a Uint8Array */
   @Output() public uploaded = new EventEmitter<Uint8Array>();
   /** event emited when the firestore upload is complete */
-  @Output() public storeUploaded = new EventEmitter<string | ImgRef>();
+  @Output() public storeUploaded = new EventEmitter<string | HostedMedia>();
 
   public task: AngularFireUploadTask;
   public percentage: Observable<number>;
@@ -106,7 +106,7 @@ export class FileUploadComponent {
       if (this.return === 'string') {
         this.storeUploaded.emit(this.downloadURL);
       } else {
-        this.storeUploaded.emit(createImgRef({ urls: { original: this.downloadURL } }));
+        this.storeUploaded.emit(createHostedMedia({ url: this.downloadURL }));
       }
     }
 
