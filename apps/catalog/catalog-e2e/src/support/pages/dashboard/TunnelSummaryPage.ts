@@ -2,12 +2,17 @@ import TitlesDetailsPage from "./TitlesDetailsPage";
 
 export default class TunnelSummaryPage {
   constructor() {
-    cy.get('catalog-summary-tunnel');
+    cy.get('catalog-summary-tunnel', { timeout: 30000 });
   }
 
   public clickSubmit() {
     cy.get('catalog-summary-tunnel button[test-id=submit]').click();
     return new TitlesDetailsPage();
+  }
+
+  public clickSave() {
+    cy.get('catalog-movie-tunnel button[test-id=movie-save]').click();
+    cy.wait(1000);
   }
 
   public assertMainFields(fields: string[]) {

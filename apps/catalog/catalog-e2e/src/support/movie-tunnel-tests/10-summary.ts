@@ -9,7 +9,7 @@ import { INFO_FORMATS, INFO_LANGUAGE } from "./5-technical-info";
 import { FILES_LINKS } from "./7-files";
 import { VALUATION } from "./9-valuation";
 // Change cause of difference of typo
-CONTENT_TYPES[0] = 'Tv Film';
+const TV_FILM = 'Tv Film';
 const RUNTIME = '1h 27m';
 const DATE = '10/10/07';
 const SUBTITLED = 'Subtitled';
@@ -18,7 +18,7 @@ export const summaryTest = () => {
   const p1 = new TunnelSummaryPage();
 
   // 1-Main
-  p1.assertMainFields(CONTENT_TYPES);
+  p1.assertMainFields([TV_FILM, CONTENT_TYPES[1], CONTENT_TYPES[2], CONTENT_TYPES[3], CONTENT_TYPES[4]]);
   p1.assertMainFields(DIRECTORS);
   p1.assertCountriesOfOriginFields([MAIN_COUNTRIES[0], MEDIA, DATE]);
   p1.assertMainInformation(MAIN_LANGUAGES);
@@ -56,4 +56,7 @@ export const summaryTest = () => {
 
   // Evaluation
   p1.assertEvaluation(VALUATION);
+
+  // Save the movie
+  p1.clickSave();
 };

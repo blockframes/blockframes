@@ -66,8 +66,11 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     valuationTest();
   });
 
-    // Summary page
-    it('Verifies that every field of summary page is matching the inputs', () => {
-      summaryTest();
-    });
+  // Summary page
+  it('Verifies that every field of summary page is matching the inputs, save and verify the movie is saved', () => {
+    summaryTest();
+    // Reload and relaunch test to make sure the movie has been saved
+    cy.reload();
+    summaryTest();
+  });
 });
