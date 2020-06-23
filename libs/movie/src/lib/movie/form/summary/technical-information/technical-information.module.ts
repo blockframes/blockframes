@@ -4,6 +4,7 @@ import { MovieSummaryTechnicalInformationComponent } from './technical-informati
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 import { RouterModule } from '@angular/router';
+import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
 
 @NgModule({
   declarations: [MovieSummaryTechnicalInformationComponent],
@@ -11,7 +12,8 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     RouterModule,
     TranslateSlugModule,
-    MissingControlModule
+    MissingControlModule,
+    VersionPipeModule
   ],
   exports: [MovieSummaryTechnicalInformationComponent]
 })
