@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { createImgRef, ImgRef } from '@blockframes/media/+state/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
