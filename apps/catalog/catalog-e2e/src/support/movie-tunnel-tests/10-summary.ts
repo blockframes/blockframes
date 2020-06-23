@@ -2,6 +2,7 @@ import { TunnelSummaryPage } from "../pages/dashboard";
 
 // Tests variables
 import { CONTENT_TYPES, DIRECTORS, MAIN_COUNTRIES, MEDIA, MAIN_LANGUAGES, GENRE, CAST_MEMBERS, FESTIVALS, AWARDS, PREMIERE, YEAR } from "./1-main";
+import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
@@ -10,7 +11,7 @@ const DATE = '10/10/07';
 export const summaryTest = () => {
   const p1 = new TunnelSummaryPage();
 
-  // Main
+  // 1-Main
   p1.assertMainFields(CONTENT_TYPES);
   p1.assertMainFields(DIRECTORS);
   p1.assertCountriesOfOriginFields([MAIN_COUNTRIES[0], MEDIA, DATE]);
@@ -20,4 +21,8 @@ export const summaryTest = () => {
   p1.assertFestivalPrizes(FESTIVALS);
   p1.assertFestivalPrizes(AWARDS);
   p1.assertFestivalPrizes([PREMIERE, YEAR]);
+
+  // 2-Storyline
+  p1.assertStoryline([SYNOPSIS, KEY_ASSETS]);
+  p1.assertStoryline(KEYWORDS);
 };
