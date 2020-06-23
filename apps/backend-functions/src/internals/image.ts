@@ -3,7 +3,7 @@ import { join, dirname, basename, extname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import { ImageSizes, getImgSize, imgSizeDirectory } from '@blockframes/media/+state/media.firestore.ts';
+import { getImgSize, imgSizeDirectory, ImgSizeDirectory } from '@blockframes/media/+state/media.firestore.ts';
 
 
 export async function resize(ref: string) {
@@ -43,7 +43,7 @@ export async function resize(ref: string) {
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = imgSizeDirectory.map(async key => {
 
-      const currentSize = sizes[key as keyof ImageSizes];
+      const currentSize = sizes[key as ImgSizeDirectory];
 
       if (currentSize === 0) {
         throw new Error(`Resize Error : Cannot resize image ${ref} for size ${currentSize} because width is 0`);

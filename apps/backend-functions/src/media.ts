@@ -46,13 +46,13 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
 
 /**
  * This function is executed on every files uploaded on the storage.
+ *
  * It should **only** link the storage file to the firestore.
+ *
  * Updating the firestore will cause an update event that will
  * eventually trigger post-processing (like image resize).
  */
 export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
-
-  // TODO MANUALLY CREATING A FOLDER IN STORAGE CRASH EVERYTHING !
 
   // get the needed values
   const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(data);
@@ -80,7 +80,9 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
 
 /**
  * This function is executed on every files deleted from the storage.
+ *
  * It should **only** unlink the storage file from the firestore.
+ *
  * Updating the firestore will cause an update event that will
  * eventually trigger post-processing (like deleting other image size).
  * @note To unlink in firestore we don't delete the keys (`ref` and `url`)
