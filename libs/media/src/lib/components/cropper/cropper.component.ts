@@ -92,8 +92,8 @@ export class CropperComponent implements OnInit {
 
   ngOnInit() {
     // show current image
-    if (this.form.ref.value) {
-      this.ref = this.storage.ref(this.form.ref.value);
+    if (this.form.original.ref.value) {
+      this.ref = this.storage.ref(this.form.original.ref.value);
       this.goToShow();
     }
   }

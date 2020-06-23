@@ -21,9 +21,9 @@ export class ImageUploader {
     try {
       const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
       const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
-      const url = await snapshot.ref.getDownloadURL();
-      const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ urls: { original: url }, ref: meta.fullPath });
+      const url: string = await snapshot.ref.getDownloadURL();
+      const meta: { fullPath: string} = await snapshot.ref.getMetadata();
+      return createImgRef({ original: { ref: meta.fullPath, url }});
     } catch (error) {
       console.error(`Upload fail because of`, error);
       return;
