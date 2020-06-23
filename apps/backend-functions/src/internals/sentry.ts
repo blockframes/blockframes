@@ -1,9 +1,9 @@
 import { init as sentryInit, flush as sentryFlush, captureException } from '@sentry/node';
-import { sentryDsn } from '../environments/environment';
+import { sentryDsn, sentryEnv } from '../environments/environment';
 
 if (!!sentryDsn) {
   console.info("using sentry:", sentryDsn, "to log errors");
-  sentryInit({ dsn: sentryDsn });
+  sentryInit({ dsn: sentryDsn, environment: sentryEnv });
 }
 
 /**

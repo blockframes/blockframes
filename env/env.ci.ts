@@ -12,6 +12,7 @@ export const persistenceSettings = {
 // Analytics
 // =========
 
+export const sentryEnv = undefined;
 export const sentryDsn = undefined;
 
 // Firebase
