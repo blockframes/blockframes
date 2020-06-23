@@ -33,6 +33,8 @@ export class EventCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     const allEvents$ = this.invitationQuery.selectAll({
+      // Todo Add event pending also in calendar but change css (add a badge on the event-card if event == pending)
+      // filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
       filterBy: ({ type, status }) => type === 'attendEvent' && status === 'accepted'
     }).pipe(
       map(invitations => invitations.map(i => i.docId)),

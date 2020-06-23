@@ -4,7 +4,6 @@ import { CardComponent, ScreeningBackgroundPipe } from './card.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 
-
 @NgModule({
   declarations: [CardComponent, ScreeningBackgroundPipe],
   exports: [CardComponent],

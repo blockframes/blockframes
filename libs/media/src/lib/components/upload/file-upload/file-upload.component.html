@@ -10,20 +10,20 @@
     <ng-content select="[type]"></ng-content>
     <ng-content select="[format]"></ng-content>
     <p class="mat-caption">Drag and drop a file here or
-      <button mat-button color="primary" (click)="fileExplorer.click()">browse</button>
+      <a (click)="fileExplorer.click()">browse</a>
     </p>
   </section>
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <img asset="add_files.webp" alt="upload image" />
+    <img asset="add_files.webp" alt="upload image" class="picture-hover"/>
   </section>
 
   <!-- Uploading -->
   <section *ngSwitchCase="'uploading'">
     <div class="progress" *ngIf="(percentage | async) as pct">
       <mat-progress-bar mode="determinate" [value]="pct"></mat-progress-bar>
-      <p>{{ pct | number: '1.0-0' }} %</p>
+      <p class="mat-caption">{{ pct | number: '1.0-0' }} %</p>
     </div>
 
     <button mat-button (click)="task.cancel()">Cancel</button>
@@ -31,11 +31,11 @@
 
   <!-- Success -->
   <section *ngSwitchCase="'success'">
-    <h3>Success !!</h3>
+    <h3>Your file is successfully uploaded</h3>
     <ng-container *ngIf="downloadURL as url">
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="start center">
-        <a mat-button [href]="url" target="_blank" rel="noopener">
-          Download Me!
+      <div fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="start center">
+        <a [href]="url" target="_blank" rel="noopener" class="mat-body-2">
+          You can download it here.
         </a>
         <button mat-mini-fab color="warn">
           <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete current file"></mat-icon>

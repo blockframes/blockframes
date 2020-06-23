@@ -5,15 +5,16 @@
   </li>
   <li>
     <strong>Production Company </strong>
-    <ng-container
-      *ngFor="let producer of main.get('stakeholders').get('executiveProducer').controls; let isLast = last">
+    <ng-container *ngFor="let producer of main.get('stakeholders').get('executiveProducer').controls; let isLast = last">
       <missing-control [control]="producer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="producer.get('countries').value.length">
-        (<ng-container *ngFor="let country of producer.get('countries').value; let last = last">
+        <span> (</span>
+        <span *ngFor="let country of producer.get('countries').value; let last = last">
           <span>{{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}</span>
-        </ng-container>)
+        </span>
+        <span>)</span>
       </ng-container>
-      {{ isLast ? '' : '| '}}
+      <span>{{ isLast ? '' : ', '}}</span>
     </ng-container>
   </li>
   <li>
@@ -26,10 +27,12 @@
       </ng-container>
       <ng-template #displayProducer>
         <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
+        <span>&nbsp;</span>
         <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
-        (<missing-control [control]="producer.get('role')" [link]="link" scope="PRODUCER_ROLES" class="control-role">
-        </missing-control>)
-        {{ isLast ? '' : ', '}}
+        <span *ngIf="producer.get('role').value"> (</span>
+        <missing-control [control]="producer.get('role')" [link]="link" scope="PRODUCER_ROLES" class="control-role"></missing-control>
+        <span *ngIf="producer.get('role').value">)</span>
+        <span>{{ isLast ? '' : ', '}}</span>
       </ng-template>
     </ng-container>
   </li>
@@ -38,13 +41,13 @@
     <ng-container *ngFor="let coProducer of main.get('stakeholders').get('coProducer').controls; let isLast = last">
       <missing-control [control]="coProducer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="coProducer.get('countries').value.length">
-        (
+        <span> (</span>
         <ng-container *ngFor="let country of coProducer.get('countries').value; let last = last">
-          {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+          <span>{{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}</span>
         </ng-container>
-        )
+        <span>)</span>
       </ng-container>
-      {{ isLast ? '' : ', '}}
+      <span>{{ isLast ? '' : ', '}}</span>
     </ng-container>
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
@@ -62,6 +65,7 @@
       </ng-container>
       <ng-template #displayArtist>
         <missing-control [control]="artist.get('firstName')" [link]="link"></missing-control>
+        <span>&nbsp;</span>
         <missing-control [control]="artist.get('lastName')" [link]="link"></missing-control>
       </ng-template>
     </li>
