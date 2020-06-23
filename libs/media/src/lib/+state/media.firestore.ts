@@ -33,15 +33,15 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
 
 export function getImgSize(url: string) {
   if (url.includes('avatar')) {
-    return { original: 0, xs: 50, md: 100, lg: 300, fallback: 0 };
+    return { original: 0, xs: 50, md: 100, lg: 300, fallback: 1024 };
   } else if (url.includes('logo')) {
-    return { original: 0, xs: 50, md: 100, lg: 300, fallback: 0 };
+    return { original: 0, xs: 50, md: 100, lg: 300, fallback: 1024 };
   } else if (url.includes('poster')) {
-    return { original: 0, xs: 200, md: 400, lg: 600, fallback: 0 };
+    return { original: 0, xs: 200, md: 400, lg: 600, fallback: 1024 };
   } else if (url.includes('banner')) {
-    return { original: 0, xs: 300, md: 600, lg: 1200, fallback: 0 };
+    return { original: 0, xs: 300, md: 600, lg: 1200, fallback: 1024 };
   } else if (url.includes('still')) {
-    return { original: 0, xs: 50, md: 100, lg: 200, fallback: 0 };
+    return { original: 0, xs: 50, md: 100, lg: 200, fallback: 1024 };
   } else {
     throw new Error('No bucket directory, exiting function');
   }
