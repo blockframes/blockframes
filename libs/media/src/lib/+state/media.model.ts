@@ -49,14 +49,12 @@ const formats = {
 export type Formats = keyof typeof formats;
 
 export function getRatio(format: Formats) {
-  const { height, width } = format[format];
+  const { height, width } = formats[format];
   return width / height;
 }
 
 export function getMediaUrl(ref: ImgRef) {
-  if (ref) {
-    return isSafari() ? ref.urls.fallback : ref.urls.original;
-  }
+  return isSafari() ? ref.urls.fallback : ref.urls.original;
 }
 
 /** Used this only for background to let the browser deal with that with picture */
