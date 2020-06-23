@@ -12,6 +12,7 @@ import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 // import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 @Component({
   selector: 'auth-profile-view',
@@ -23,6 +24,7 @@ export class ProfileViewComponent implements OnInit {
   public organization$: Observable<Organization>;
   public previousPage: string;
   public profileForm: ProfileForm;
+  public hostedMediaForm: HostedMediaForm;
   public passwordForm = new EditPasswordForm();
   public user$: Observable<User>;
 
@@ -45,6 +47,7 @@ export class ProfileViewComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.profileForm = new ProfileForm(this.authQuery.user);
+    this.hostedMediaForm = new HostedMediaForm(this.authQuery.user.avatar.original);
     this.organization$ = this.organizationQuery.selectActive();
     this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
@@ -60,9 +63,13 @@ export class ProfileViewComponent implements OnInit {
         // const [ user, media ] = extractToBeUpdatedMedia(this.profileForm.value);
         // this.mediaService.uploadOrDeleteMedia(media);
 
+        console.log(this.profileForm.value);
+        console.log(this.hostedMediaForm.value);
+
         // TODO issue#3088
 
-        this.authService.update({ uid, ...this.profileForm.value });
+        // this.authService.update({ uid, ...this.profileForm.value });
+
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }
       // update password
