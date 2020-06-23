@@ -1,33 +1,48 @@
+
+export interface ExternalMedia {
+  /** access url */
+  url: string;
+}
+
+export function createExternalMedia(media?: Partial<ExternalMedia>): ExternalMedia {
+  return {
+    url: '',
+    ...media,
+  }
+}
+
+export interface HostedMedia extends ExternalMedia {
+  /** firebase storage ref *(path)* */
+  ref: string;
+}
+
+export function createHostedMedia(media?: Partial<HostedMedia>): HostedMedia {
+  return {
+    url: '',
+    ref: '',
+    ...media,
+  }
+}
+
 export type ImgSizeDirectory = 'lg' | 'md' | 'xs';
 export const imgSizeDirectory: ImgSizeDirectory[] = ['lg', 'md', 'xs'];
 
-// TODO(#3088) blob, delete and path shouldnt be in firestore; these values are only used to determine what to do with the image on update of Form
 export interface ImgRef {
-  ref: string;
-  urls: {
-    original: string;
-    fallback?: string;
-    xs?: string;
-    md?: string;
-    lg?: string;
-  };
-  blob?: any;
-  delete?: boolean;
-  path?: string;
-  fileName?: string;
+  original: HostedMedia;
+  fallback: HostedMedia;
+  xs?: HostedMedia;
+  md?: HostedMedia;
+  lg?: HostedMedia;
 }
 
-export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
+export function createImgRef(ref?: Partial<ImgRef>): ImgRef {
   return {
-    ref: '',
-    urls: {
-      original: '',
-      xs: '',
-      md: '',
-      lg: '',
-    },
-    ..._ref
+    original: createHostedMedia(),
+    fallback: createHostedMedia(),
+    xs: createHostedMedia(),
+    md: createHostedMedia(),
+    lg: createHostedMedia(),
+    ...ref
   };
 }
 

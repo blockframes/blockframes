@@ -18,7 +18,7 @@ export class MovieSummaryImageComponent implements OnInit {
   }
 
   get bannerHasNoValue() {
-    return !this.promotionalElements.get('banner').get('media').get('urls').get('original').value;
+    return !this.promotionalElements.get('banner').get('media').original.url.value;
   }
 
   get posterHasNoValue() {
