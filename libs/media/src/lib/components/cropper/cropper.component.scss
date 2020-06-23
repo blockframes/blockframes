@@ -17,11 +17,11 @@ a {
 .mat-icon-button {
   width: 48px;
   margin-bottom: 8px;
+  .add-files-icon {
+    width: 100%;
+  }
 }
 
-.add-files-icon {
-  width: 100%;
-}
 
 .mat-button {
   padding: 0;

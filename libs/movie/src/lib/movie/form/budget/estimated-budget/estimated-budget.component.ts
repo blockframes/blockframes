@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { BUDGET_LIST } from '../budget.form';
 
 @Component({
