@@ -6,6 +6,7 @@ import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
 import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_ROLES, CREW_MEMBERS } from "./3-credits";
 import { BUDGET_RANGE, EARNING, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
 import { INFO_FORMATS, INFO_LANGUAGE } from "./5-technical-info";
+import { FILES_LINKS } from "./7-files";
 // Change cause of difference of typo
 CONTENT_TYPES[0] = 'Tv Film';
 const RUNTIME = '1h 27m';
@@ -45,4 +46,10 @@ export const summaryTest = () => {
   // Technical info
   p1.assertTechnicalInfo(INFO_FORMATS);
   p1.assertTechnicalInfo([INFO_LANGUAGE, SUBTITLED]);
+
+  // Promotional images
+  // TODO: create promotional images verification
+
+  // Files and links
+  p1.assertLinks(FILES_LINKS);
 };
