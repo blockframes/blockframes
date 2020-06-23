@@ -129,7 +129,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.urls.original !== after.avatar?.urls.original
+    before.avatar?.original.url !== after.avatar?.original.url
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -146,21 +146,21 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   // AVATAR
   if (
     !!before.avatar && !!after.avatar &&
-    (before.avatar as any).original.ref !== (after.avatar as any).original.ref
+    before.avatar.original.ref !== after.avatar.original.ref
   ) {
 
-    const bucket = admin.storage().bucket();
-
     // image was deleted
-    if ( (after.avatar as any).original.ref === '') {
+    if (after.avatar.original.ref === '') {
+
+      const bucket = admin.storage().bucket();
 
       // delete every image size
       imgSizeDirectory.forEach(key => {
-        promises.push(bucket.file((after.avatar as any)[key].ref).delete());
+        promises.push(bucket.file(after.avatar![key]!.ref).delete());
       });
 
       // delete fallback image
-      promises.push(bucket.file((after.avatar as any).fallback.ref).delete());
+      promises.push(bucket.file(after.avatar.fallback.ref).delete());
 
     // image was created or updated
     } else {
