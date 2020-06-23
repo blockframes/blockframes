@@ -1,6 +1,6 @@
 import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard";
 
-export const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
+export const CONTENT_TYPES = ['TV Film', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
 export const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
 export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
 export const MAIN_COUNTRIES = ['France', 'Poland', 'Italy'];
@@ -26,14 +26,14 @@ export const mainTest = () => {
   p1.selectContentType(CONTENT_TYPES[0]);
   p1.assertContentTypeExists(CONTENT_TYPES[0]);
   p1.clickProductionStatus();
-  p1.selectProductionStatus(CONTENT_TYPES[2]);
-  p1.assertProductionStatusExists(CONTENT_TYPES[2]);
-  p1.fillInternationalTitle(CONTENT_TYPES[3]);
-  p1.assertInternationalTitleExists(CONTENT_TYPES[3]);
-  p1.fillOriginalTitle(CONTENT_TYPES[4]);
-  p1.assertOriginalTitleExists(CONTENT_TYPES[4]);
-  p1.fillReference(CONTENT_TYPES[5]);
-  p1.assertReferenceExists(CONTENT_TYPES[5]);
+  p1.selectProductionStatus(CONTENT_TYPES[1]);
+  p1.assertProductionStatusExists(CONTENT_TYPES[1]);
+  p1.fillInternationalTitle(CONTENT_TYPES[2]);
+  p1.assertInternationalTitleExists(CONTENT_TYPES[2]);
+  p1.fillOriginalTitle(CONTENT_TYPES[3]);
+  p1.assertOriginalTitleExists(CONTENT_TYPES[3]);
+  p1.fillReference(CONTENT_TYPES[4]);
+  p1.assertReferenceExists(CONTENT_TYPES[4]);
 
   // Director
   p1.fillDirectorFirstName(DIRECTORS[0]);
