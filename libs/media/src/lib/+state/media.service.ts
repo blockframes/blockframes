@@ -7,7 +7,8 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile, ImgRef } from "./media.firestore";
+import { UploadFile, HostedMedia } from "./media.firestore";
+import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
@@ -160,21 +161,22 @@ export class MediaService {
     }
   }
 
-  uploadOrDeleteMedia(medias: ImgRef[]) {
-    medias.forEach(imgRef => {
-      if (imgRef.delete && imgRef.ref) {
-        this.removeFile(imgRef.ref);
-      } else if (!!imgRef.blob) {
-        if (imgRef.ref !== '') {
-          this.removeFile(imgRef.ref);
-        }
-        const file: UploadFile = {
-          path: imgRef.path,
-          data: imgRef.blob,
-          fileName: imgRef.fileName
-        }
-        this.uploadBlob(file);
-      }
-    })
-  }
+  // TODO issue#3088
+  // uploadOrDeleteMedia(mediaForms: HostedMediaForm[]) {
+  //   mediaForms.forEach(mediaForm => {
+  //     if (mediaForm.delete.value && !!mediaForm.ref.value) {
+  //       this.removeFile(mediaForm.ref.value);
+  //     } else if (!!mediaForm.blob.value) {
+  //       if (mediaForm.ref.value !== '') {
+  //         this.removeFile(mediaForm.ref.value);
+  //       }
+  //       const file: UploadFile = {
+  //         path: mediaForm.ref.value,
+  //         data: mediaForm.blob.value,
+  //         fileName: mediaForm.fileName.value
+  //       }
+  //       this.uploadBlob(file);
+  //     }
+  //   })
+  // }
 }

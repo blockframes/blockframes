@@ -15,7 +15,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
+// import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -56,9 +56,15 @@ export class MovieService extends CollectionService<MovieState> {
 
   save(movie: Movie) {
     return this.runTransaction(async write => {
-      const [ value, media ] = extractToBeUpdatedMedia(movie);
-      this.mediaService.uploadOrDeleteMedia(media);
-      return this.update(value, { write });
+      // const [ value, media ] = extractToBeUpdatedMedia(movie);
+      // this.mediaService.uploadOrDeleteMedia(media);
+
+      // TODO issue#3088
+      // TODO the movie service should not use the media service
+      // TODO the movie service should just update the movie in firestore
+      // TODO the movie component/tunnel/form/whatever is responsible to upload (use media service)
+
+      return this.update(movie, { write });
     });
   }
 
