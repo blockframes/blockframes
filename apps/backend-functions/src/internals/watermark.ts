@@ -27,9 +27,7 @@ export async function upsertWatermark(user: PublicUser) {
 
   user.watermark = {
     ref,
-    urls: {
-      original: signedUrl,
-    },
+    url: signedUrl,
   }
 
   const userRef = db.collection('users').doc(user.uid);
