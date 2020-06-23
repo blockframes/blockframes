@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-// Modules
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -25,7 +23,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImgModule,
     AppBarModule,
     ToLabelModule,
     TranslateSlugModule,

@@ -26,7 +26,7 @@ section {
   height: 100%;
   width: 100%;
   text-align: center;
-  img {
+  bf-img {
     width: 100%;
     margin-top: 16px;
   }
@@ -47,7 +47,7 @@ section {
     height: 100%;
     background-color: var(--background);
     // Organization Logo
-    img.organizationLogo {
+    bf-img.organizationLogo {
       height: 80px;
       width: 80px;
       border-radius: 50%;

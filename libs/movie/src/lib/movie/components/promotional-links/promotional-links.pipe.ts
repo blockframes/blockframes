@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { getMediaUrl } from '@blockframes/media/+state/media.model';
+import { getMediaUrl } from '@blockframes/ui/media/media.model';
 
 @Pipe({
   name: 'promotionalLinks',

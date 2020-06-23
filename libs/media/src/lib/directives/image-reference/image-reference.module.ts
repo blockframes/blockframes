@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
-import { ImageReferenceDirective } from './image-reference.directive';
 import { BackgroundReferenceDirective } from './background-reference.directive';
+import { ImageReferenceDirective } from './image-reference.directive';
+import { ImgModule } from '../img/img.module';
 
 @NgModule({
-  declarations: [ImageReferenceDirective, BackgroundReferenceDirective],
-  exports: [ImageReferenceDirective, BackgroundReferenceDirective]
+  declarations: [BackgroundReferenceDirective],
+  imports: [ImgModule],
+  exports: [ImgModule, BackgroundReferenceDirective]
 })
 export class ImageReferenceModule {}

@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { AppLogoComponent } from './app-logo.component';
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 
 @NgModule({
-  imports: [ImageReferenceModule, CommonModule],
+  imports: [ImgModule, CommonModule],
   exports: [AppLogoComponent],
   declarations: [AppLogoComponent]
 })

@@ -7,14 +7,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { MatRippleModule } from '@angular/material/core';
 
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { ImgModule } from '@blockframes/ui/media/img/img.module';
 
 @NgModule({
   declarations: [LobbyComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
+    ImgModule,
     // Material
     MatCardModule,
     MatRippleModule,
