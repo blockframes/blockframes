@@ -4,7 +4,7 @@ import { InvitationComponent } from './invitation.component';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { InvitationListModule } from '@blockframes/invitation/components/list/list.module';
 import { MatCardModule } from '@angular/material/card';
 
@@ -14,7 +14,7 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     FlexLayoutModule,
     InvitationListModule,
-    ImgModule,
+    ImageReferenceModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }])
   ]

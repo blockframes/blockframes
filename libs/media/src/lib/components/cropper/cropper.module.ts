@@ -14,7 +14,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 // Components
 import { CropperComponent } from '@blockframes/media/components/cropper/cropper.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [DropZoneDirective, CropperComponent],
@@ -23,7 +23,7 @@ import { ImgModule } from '@blockframes/media/components/img/img.module';
     HttpClientModule,
     FlexLayoutModule,
     ImageCropperModule,
-    ImgModule,
+    ImageReferenceModule,
 
     // Material
     MatIconModule,

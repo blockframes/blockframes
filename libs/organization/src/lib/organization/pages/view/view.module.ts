@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { UserGuard } from '@blockframes/user/guard/user.guard';
 
 // Modules
@@ -45,7 +45,7 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     OrgAddressModule,
     ToLabelModule,
     OrgNameModule,

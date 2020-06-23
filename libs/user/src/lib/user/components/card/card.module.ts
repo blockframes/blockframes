@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CardComponent } from './card.component';
 
 // Blockframes
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 
 @NgModule({
@@ -15,7 +15,7 @@ import { ImgModule } from '@blockframes/media/components/img/img.module';
   exports: [CardComponent],
   imports: [
     CommonModule,
-    ImgModule,
+    ImageReferenceModule,
     FlexLayoutModule,
   ]
 })

@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NotificationComponent } from './notification.component';
 import { NotificationListModule } from '@blockframes/notification/components/list/list.module';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     FlexLayoutModule,
     NotificationListModule,
-    ImgModule,
+    ImageReferenceModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: NotificationComponent }])
   ]

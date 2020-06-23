@@ -19,7 +19,7 @@ import { ViewExtractedElementsModule } from './components/view-extracted-element
 // Components
 import { ImportContainerComponent } from './pages/import-container/import-container.component';
 import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Guards
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
@@ -56,7 +56,7 @@ const routes: Routes = [
     // Librairies
     UploadModule,
     ViewExtractedElementsModule,
-    ImgModule
+    ImageReferenceModule
   ]
 })
 export class ImportModule { }

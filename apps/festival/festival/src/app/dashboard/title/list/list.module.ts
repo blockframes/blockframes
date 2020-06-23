@@ -12,7 +12,7 @@ import { ListComponent } from './list.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +30,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TableFilterModule,
     ToLabelModule,
     DisplayNameModule,
-    ImgModule,
+    ImageReferenceModule,
     // Material
     MatButtonModule,
     MatTabsModule,

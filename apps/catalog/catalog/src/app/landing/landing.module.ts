@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 import { LandingModule } from '@blockframes/landing/landing.module';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -66,7 +66,7 @@ const routes = [
     AppLogoModule,
     TelInputModule,
     LandingModule,
-    ImgModule,
+    ImageReferenceModule,
 
     // Material
     MatSidenavModule,

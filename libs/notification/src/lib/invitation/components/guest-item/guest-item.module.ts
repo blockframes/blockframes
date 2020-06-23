@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GuestItemComponent } from './guest-item.component';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
 import { StatusModule } from '../../pipes/status.pipe';
 import { GuestPipeModule } from '../../pipes/guest.pipe';
@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   exports: [GuestItemComponent],
   imports: [
     CommonModule,
-    ImgModule,
+    ImageReferenceModule,
     DisplayNameModule,
     StatusModule,
     GuestPipeModule,

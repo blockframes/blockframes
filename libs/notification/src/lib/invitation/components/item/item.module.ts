@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ItemComponent } from './item.component';
 import { InvitationActionModule } from '../action/action.module';
 import { EventLinkModule } from '../../pipes/event-link.pipe';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     InvitationActionModule,
     MatListModule,
     MatButtonModule,

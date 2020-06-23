@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -118,7 +118,7 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     DashboardLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     OrgNameModule,
     ToLabelModule,
     OrgAccessModule,

@@ -6,7 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [NoMovieComponent],
@@ -14,7 +14,7 @@ import { ImgModule } from '@blockframes/media/components/img/img.module';
     CommonModule,
     MatCardModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     MatButtonModule,
     RouterModule
   ],

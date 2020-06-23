@@ -16,7 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrganizationDisplayComponent } from './organization-display.component';
 
 // Modules
-import { ImgModule } from '@blockframes/media/components/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   imports: [
@@ -32,7 +32,7 @@ import { ImgModule } from '@blockframes/media/components/img/img.module';
     MatSelectModule,
     MatCheckboxModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
   ],
   declarations: [
     OrganizationDisplayComponent,
