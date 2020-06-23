@@ -13,6 +13,7 @@ export const persistenceSettings = {
 // Analytics
 // =========
 
+export const sentryEnv = 'demo-1';
 export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Firebase

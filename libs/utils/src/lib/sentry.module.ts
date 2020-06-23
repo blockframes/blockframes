@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable, NgModule } from '@angular/core';
-import { sentryDsn } from '@env';
+import { sentryDsn, sentryEnv } from '@env';
 import * as Sentry from '@sentry/browser';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
@@ -28,7 +28,8 @@ export class SentryErrorHandler implements ErrorHandler {
 
 // Init and add the Sentry ErrorHandler.
 Sentry.init({
-  dsn: sentryDsn
+  dsn: sentryDsn,
+  environment: sentryEnv,
 });
 
 @NgModule({

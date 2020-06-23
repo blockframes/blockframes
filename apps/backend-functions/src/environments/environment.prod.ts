@@ -13,6 +13,7 @@ export {
   relayer,
   appUrlContent,
   appUrlMarket,
+  sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgID,
