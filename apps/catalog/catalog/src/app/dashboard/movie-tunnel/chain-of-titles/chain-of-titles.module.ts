@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ChainOfTitlesComponent } from './chain-of-titles.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 // Materials
 import { MatCardModule } from '@angular/material/card';

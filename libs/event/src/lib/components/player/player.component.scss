@@ -18,10 +18,11 @@ event-player {
       div.jw-logo.jw-logo-top-right.jw-reset {
         /* We need to use `!important` because jwplayer style is inline */
         width: 100% !important;
-        height: 20% !important;
+        height: 100% !important;
         margin: 0 !important;
-        background-position: 90% 0%;
+        background-position: 80% 25%;
         background-size: 50%;
+        pointer-events: none;
       }
     }
   }

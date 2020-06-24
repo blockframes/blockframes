@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 // Component
 import { LoginComponent } from './login.component';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 
 @NgModule({

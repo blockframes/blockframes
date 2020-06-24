@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 import { MediaImageComponent } from './media-image.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 

@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from "@blockframes/utils/media/media.firestore";
+import { ImgRef, createImgRef } from "@blockframes/media/+state/media.firestore";
 
 export interface User {
   uid: string;

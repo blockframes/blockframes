@@ -88,7 +88,7 @@
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="element.movie.promotionalElements.poster[0].media as poster; else noposter">
-        <img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp">
+        <bf-img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp"></bf-img>
       </ng-container>
       <ng-template #noposter>
         --

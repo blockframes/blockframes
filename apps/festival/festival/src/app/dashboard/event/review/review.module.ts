@@ -6,7 +6,7 @@ import { EventReviewComponent } from './review.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';

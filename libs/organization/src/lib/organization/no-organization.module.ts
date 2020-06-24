@@ -5,9 +5,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';

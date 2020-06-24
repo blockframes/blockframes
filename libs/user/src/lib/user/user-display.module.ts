@@ -4,8 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -17,12 +17,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },
-  { path: 'view', loadChildren: () => import('@blockframes/auth/pages/profile-view/profile-view.module').then(m => m.ProfileViewModule)},
+  { path: 'view', loadChildren: () => import('@blockframes/auth/pages/profile-view/profile-view.module').then(m => m.ProfileViewModule) },
 ];
 @NgModule({
   imports: [
@@ -48,4 +48,4 @@ export const profileRoutes: Routes = [
   ],
   declarations: [],
 })
-export class UserDisplayModule {}
+export class UserDisplayModule { }

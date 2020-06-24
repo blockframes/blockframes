@@ -16,7 +16,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { KeyManagerListComponent } from "./key-manager-list/key-manager-list.component";
 import { KeyManagerItemComponent } from "./key-manager-item/key-manager-item.component";
-import { UploadModule } from "@blockframes/ui/upload/upload.module";
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { PasswordConfirmModule } from "@blockframes/ui/form/password-confirm/password-confirm.module";
 
 @NgModule({

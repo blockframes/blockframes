@@ -1,7 +1,7 @@
 import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '../../+state/movie.model';
 import { Title } from '../../+state/movie.firestore';
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[movie] movie-banner',

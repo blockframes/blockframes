@@ -26,6 +26,10 @@
           </ng-container>
         </bf-carousel>
         <ng-container *ngIf="i === 0">
+          <div fxLayout="column" fxLayoutAlign="center center" class="upcoming-events-banner dark-contrast-theme">
+            <h1>Don't miss anything<br/>on Archipel Market</h1>
+            <a mat-flat-button color="accent" routerLink="/c/o/marketplace/event">Check out Upcoming Screenings</a>
+          </div>
           <div fxLayout="row" fxLayoutAlign="space-between start" flex class="movie-header-slider">
             <h1>Featured films</h1>
             <a mat-button routerLink="../title" color="primary">

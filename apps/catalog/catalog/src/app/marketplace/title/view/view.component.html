@@ -6,7 +6,7 @@
     <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
       <!-- TODO#1763 get poster by countries from promotionalElements -->
       <div *ngIf="movie.promotionalElements.poster[0].media as poster">
-        <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"/>
+        <bf-img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"></bf-img>
       </div>
       <div class="movie-info">
         <h4>{{ getTitle(movie) }}</h4>

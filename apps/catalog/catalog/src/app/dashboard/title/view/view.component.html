@@ -6,7 +6,7 @@
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
        <!-- TODO#1763 get poster by countries from promotionalElements -->
        <ng-container *ngIf="getPoster(movie) as poster">
-        <img class="movie-poster" [ref]="poster" alt="movie poster"/>
+        <bf-img class="movie-poster" [imgRef]="poster" alt="movie poster"></bf-img>
       </ng-container>
       <div class="movie-info">
         <h4>

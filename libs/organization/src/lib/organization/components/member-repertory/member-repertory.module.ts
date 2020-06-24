@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 // Modules
 import { MemberPermissionsModule } from '../member-permissions/member-permissions.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Components
 import { MemberRepertoryComponent } from './member-repertory.component';

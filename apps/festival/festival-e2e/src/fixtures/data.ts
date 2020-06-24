@@ -16,3 +16,5 @@ export const USER_1: Partial<User> = USERS[45];
 export const USER_2: Partial<User> = USERS[4];
 // sarah.gregory@turner-gray.fake.cascade8.com
 export const USER_3: Partial<User> = USERS[32];
+// pamela.cooper@gillespie-lawrence.fake.cascade8.com
+export const USER_4: Partial<User> = USERS[1];
