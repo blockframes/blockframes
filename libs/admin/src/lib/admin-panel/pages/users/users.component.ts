@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
 
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
-      'id',
+      'uid',
       'firstName',
       'lastName',
       'email',
