@@ -4,8 +4,6 @@ import { AngularFireStorage, AngularFireStorageModule } from '@angular/fire/stor
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { FirebaseApp, AngularFireModule } from '@angular/fire';
 import { firebase } from '@env';
-import { MediaQuery } from './media.query';
-import { MediaStore } from './media.store';
 
 const random = () => (Math.random() + 1).toString(36).substring(7);
 
@@ -24,12 +22,11 @@ describe('Media Service', () => {
   let app: FirebaseApp;
   let afStorage: AngularFireStorage;
   let spectator: SpectatorService<MediaService>;
-  let query: MediaQuery
 
   const createService = createServiceFactory({
     service: MediaService,
     imports: [AngularFireModule.initializeApp(firebase, random()), AngularFireStorageModule],
-    providers: [MediaQuery, MediaStore, mockProvider(Overlay, {
+    providers: [mockProvider(Overlay, {
       position: () => {
         return {
           global: () => {
@@ -53,7 +50,6 @@ describe('Media Service', () => {
     spectator.service.overlayRef = {} as OverlayRef
     app = spectator.inject(FirebaseApp);
     afStorage = spectator.inject(AngularFireStorage);
-    query = spectator.inject(MediaQuery);
   });
 
   afterAll(async () => {
