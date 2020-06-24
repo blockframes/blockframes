@@ -1,7 +1,7 @@
 import { Firestore, Storage } from '../admin';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef } from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
