@@ -4,7 +4,7 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { User } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { createImgRef } from '@blockframes/utils/media/media.model';
+import { createImgRef } from '@blockframes/media/+state/media.firestore';
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
