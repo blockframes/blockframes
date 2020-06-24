@@ -4,7 +4,7 @@ import { join, dirname, basename, extname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import { set } from 'lodash';
+import { set, get } from 'lodash';
 import { getDocument } from '../data/internals';
 import { imgSizeDirectory, getImgSize, ImgSizeDirectory } from '@blockframes/media/+state/media.firestore';
 
@@ -60,7 +60,6 @@ async function resize(data: functions.storage.ObjectMetadata) {
   const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
 
   if (uploadedSize !== 'original') {
-    console.info('skipping upload that is not "original": ' + uploadedSize);
     return false;
   }
 
@@ -76,7 +75,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   // Define the sizes (here width) depending of the image format (defined by the directory)
   const sizes = getImgSize(directory);
 
-  const uploaded: {key: string, url: string}[] = [];
+  const uploaded: { key: string, url: string }[] = [];
 
   // Iterate on each item of sizes array to generate all wanted resized images
   const promises = Object.entries(sizes).map(async ([key, size]) => {
@@ -98,8 +97,8 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
       uploaded.push({ key, url: signedUrl });
 
-    // Fallback : we need to convert the uploaded file into a png
-    // and also generate an access url
+      // Fallback : we need to convert the uploaded file into a png
+      // and also generate an access url
     } else if (key === 'fallback') {
 
       const pngFileName = basename(resizedImgName, extname(resizedImgName)) + '.png'
@@ -108,8 +107,9 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
       // Use sharp to convert to png
       await sharp(tmpFilePath)
-      .png()
-      .toFile(pngImagePath);
+        .png()
+        .resize(size, null, { withoutEnlargement: true })
+        .toFile(pngImagePath);
 
       const file = bucket.file(destination);
       const [signedUrl] = await file.getSignedUrl({
@@ -125,9 +125,9 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
       uploaded.push({ key, url: signedUrl });
 
-    // For any other keys ('xs', 'md', 'lg') we need to resize to the good size
-    // (size = 0 is only for 'original' and 'fallback')
-    // and also generate an access url
+      // For any other keys ('xs', 'md', 'lg') we need to resize to the good size
+      // (size = 0 is only for 'original' and 'fallback')
+      // and also generate an access url
     } else {
       if (size === 0) {
         throw new Error(`${key} size should not be 0, (0 should be only for 'original' or 'fallback') !`);
@@ -217,17 +217,21 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
   try {
     // Clean document that reference this image
     const docData: any = await getDocument(`${collection}/${id}`);
-    const value = { ref: '', urls: {} };
-    const updated = set(docData, fieldToUpdate, value);
-    const docRef = db.collection(collection).doc(id);
-    await docRef.update(updated);
+    // Cleaning references only if current document ref is the one linked into DB
+    const oldImgRef = get(docData, fieldToUpdate);
+    if (oldImgRef.ref === data.name) {
+      const value = { ref: '', urls: {} };
+      const updated = set(docData, fieldToUpdate, value);
+      const docRef = db.collection(collection).doc(id);
+      await docRef.update(updated);
+    }
   } catch (e) {
     console.log(`Error while updating image references in document "${collection}/${id}" : ${e.message}`);
   }
 
   // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
   imgSizeDirectory.filter(sizeDir => sizeDir !== uploadedSize)
-    .forEach(async (sizeDir : ImgSizeDirectory) => {
+    .forEach(async (sizeDir: ImgSizeDirectory) => {
       // if sizeDir is 'fallback' we convert file name from 'image.webp' to 'image.png'
       const imageFileName = sizeDir !== 'fallback' ? fileName : basename(fileName, extname(fileName)) + '.png'
       const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${imageFileName}`;
@@ -237,7 +241,6 @@ export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
         return true;
       } else {
         // if file does not exist everything is fine since we where trying to delete it
-        console.log(`${path}: couldn't be found, file might have been previously deleted : doing nothing`);
         return false;
       }
     });
