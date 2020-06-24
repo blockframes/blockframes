@@ -1,7 +1,7 @@
 import TunnelValuationPage from "./TunnelValuationPage";
 import { uploadFile, assertUploadStatus } from "@blockframes/e2e/utils/functions";
 
-const UPLOAD_STATUS = 'Success';
+const UPLOAD_STATUS = 'Your file is successfully uploaded';
 
 export default class TunnelChainOfTitlesPage {
   constructor() {
