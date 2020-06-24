@@ -45,6 +45,11 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
+  // @todo(#3066) Reactivate Cleaning process when unit tested
+  // console.info('Cleaning unused data...')
+  // await cleanDeprecatedData();
+  // console.info('Data clean and fresh!')
+
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();

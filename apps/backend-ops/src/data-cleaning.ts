@@ -4,6 +4,7 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { User } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
+import { createImgRef } from '@blockframes/utils/media/media.model';
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
@@ -52,13 +53,33 @@ function cleanNotifications(
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  notifications.docs.map(async doc => {
-    const notification = doc.data() as NotificationDocument;
-    const outdatedNotification = !isNotificationValid(notification, existingIds);
-    if (outdatedNotification) {
-      await doc.ref.delete();
-    }
-  });
+
+  let p = Promise.resolve();
+
+  for (const doc of notifications.docs) {
+    p = p.then(async () => {
+      const notification = doc.data() as NotificationDocument;
+      const outdatedNotification = !isNotificationValid(notification, existingIds);
+      if (outdatedNotification) {
+        await doc.ref.delete();
+      } else {
+        // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
+        const notificationTimestamp = notification.date.toMillis();
+        const imagesMigrationTimestamp = Date.parse('2020-06-24T08:00:00');
+        if (notificationTimestamp < imagesMigrationTimestamp) {
+          if (notification.organization) {
+            notification.organization.logo = createImgRef();
+          } else if (notification.user) {
+            notification.user.avatar = createImgRef();
+          }
+          await doc.ref.update(notification);
+        }
+      }
+    })
+
+  }
+
+  return p;
 }
 
 function cleanInvitations(
@@ -129,6 +150,14 @@ function cleanPermissions(
 function isNotificationValid(notification: NotificationDocument, existingIds: string[]): boolean {
   if (!existingIds.includes(notification.toUserId)) return false;
 
+  // Cleaning notifications more than 14 days
+  const notificationTimestamp = notification.date.toMillis();
+  const currentTimestamp = new Date().getTime();
+  const dayInMillis = 1000 * 60 * 60 * 24;
+  if (notificationTimestamp < currentTimestamp - (dayInMillis * 14)) {
+    return false;
+  }
+
   // Since notification have fields depending on its type, we need to check those specific fields
   switch (notification.type) {
     case 'organizationAcceptedByArchipelContent':
@@ -168,6 +197,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
 function isInvitationValid(invitation: InvitationDocument, existingIds: string[]): boolean {
   switch (invitation.type) {
     case 'attendEvent':
+      // @TODO #3175 clean only if event is not already passed
       return (
         (existingIds.includes(invitation.fromOrg?.id) &&
           existingIds.includes(invitation.toUser?.uid) &&
@@ -177,6 +207,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
           existingIds.includes(invitation.docId))
       );
     case 'joinOrganization':
+      // @TODO #3175 clean only if date > 14j and status not pending
       return (
         (existingIds.includes(invitation.fromOrg?.id) && existingIds.includes(invitation.toUser?.uid)) ||
         (existingIds.includes(invitation.fromUser?.uid) && existingIds.includes(invitation.toOrg?.id))
