@@ -1,5 +1,7 @@
 <div [formGroup]="form" class="container">
-  <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker-toggle [for]="picker">
+    <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+  </mat-datepicker-toggle>
 
   <mat-datepicker #picker></mat-datepicker>
   <input class="day mat-input-element" aria-label="Day" size="2"
@@ -9,7 +11,7 @@
     (focus)="picker.open()"
   />
   <input *ngIf="!isAllDay" class="time mat-input-element" type="time" aria-label="Time" size="2"
-    [matAutocomplete]="timing" 
+    [matAutocomplete]="timing"
     formControlName="time"
     (input)="setDate()"
   />

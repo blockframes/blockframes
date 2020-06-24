@@ -13,7 +13,7 @@
     <h5>Features</h5>
     <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of sellerFeatures">
-        <img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image">
+        <bf-img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image"></bf-img>
         <div>
           <h3>{{ feature.title }}</h3>
           <p class="mat-body-1">{{ feature.description }}</p>
@@ -34,7 +34,7 @@
     <h5>Features</h5>
     <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of buyerFeatures">
-        <img class="feature-image" [asset]="feature.imgAsset" alt="buyer feature image">
+        <bf-img class="feature-image" [asset]="feature.imgAsset" alt="buyer feature image"></bf-img>
         <div>
           <h3>{{ feature.title }}</h3>
           <p class="mat-caption">{{ feature.description }}</p>

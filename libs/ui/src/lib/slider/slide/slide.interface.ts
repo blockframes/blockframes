@@ -1,4 +1,4 @@
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef } from '@blockframes/media/+state/media.firestore';
 
 export interface Slide {
   /** Key list manager prob */

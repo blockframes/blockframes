@@ -14,6 +14,7 @@ export {
   relayer,
   appUrlMarket,
   appUrlContent,
+  sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgID,

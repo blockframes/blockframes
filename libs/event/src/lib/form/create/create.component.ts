@@ -29,6 +29,10 @@ export class EventCreateComponent {
   createAndRedirect(redirect: boolean) {
     const event = this.form.value;
     event.ownerId = this.orgQuery.getActiveId();
+    if (event.allDay) {
+      event.start.setHours(0,0,0);
+      event.end.setHours(23,59,59);
+    }
     this.dialogRef.close({ event, redirect });
   }
 }

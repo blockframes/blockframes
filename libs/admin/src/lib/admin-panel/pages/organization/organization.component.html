@@ -174,7 +174,7 @@
       showPaginator>
       <ng-template colRef="promotionalElements.poster" let-posters>
         <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-          <img class="poster" [ref]="poster" asset="empty_poster.webp">
+          <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
         </ng-container>
         <ng-template #noposter>
           --

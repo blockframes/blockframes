@@ -15,7 +15,7 @@
 </ng-template>
 
 <cal-week [viewDate]="viewDate" [events]="events$ | async">
-    
+
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
     <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">

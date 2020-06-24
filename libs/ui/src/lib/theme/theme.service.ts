@@ -2,9 +2,11 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
+export type Theme = 'dark' | 'light';
+
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  _theme = new BehaviorSubject<string>('');
+  _theme = new BehaviorSubject<Theme>(undefined);
   theme$ = this._theme.asObservable();
 
   constructor(@Inject(DOCUMENT) private document: Document) {
@@ -15,18 +17,18 @@ export class ThemeService {
     return this._theme.getValue();
   }
 
-  set theme(mode: string) {
+  set theme(mode: Theme) {
     if (mode) {
       this.setTheme(mode);
       this.saveTheme(mode);
     }
   }
 
-  private saveTheme(mode: string) {
+  private saveTheme(mode: Theme) {
     localStorage.setItem('theme', mode);
   }
 
-  private setTheme(mode: string) {
+  private setTheme(mode: Theme) {
     this.document.body.classList.remove('dark-theme');
     this.document.body.classList.remove('light-theme');
     this.document.body.classList.add(`${mode}-theme`);
@@ -34,8 +36,8 @@ export class ThemeService {
   }
 
   /** Get the current value of the theme */
-  initTheme(mode: 'dark' | 'light') {
-    const theme = isPlatformBrowser(PLATFORM_ID) ? localStorage.getItem('theme') || mode : mode;
+  initTheme(mode: Theme) {
+    const theme = isPlatformBrowser(PLATFORM_ID) ? localStorage.getItem('theme') as Theme || mode : mode;
     this.setTheme(theme);
   }
 }

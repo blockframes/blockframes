@@ -11,4 +11,10 @@ export default class EventPage {
     cy.get('button[test-id=more-details]').click();
     return new EventEditPage();
   }
+
+  createDetailedEventToday(date: Date) {
+    cy.get('div [class=cal-day-columns]').children().eq(date.getDay()).find('mwl-calendar-week-view-hour-segment').first().click();
+    cy.get('button[test-id=more-details]').click();
+    return new EventEditPage();
+  }
 }

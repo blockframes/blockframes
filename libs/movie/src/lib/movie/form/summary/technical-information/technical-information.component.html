@@ -25,12 +25,8 @@
     </ng-container>
     <ng-template #displayVersions>
       <ng-container *ngFor="let version of versionInfo.controls.languages.controls | keyvalue; let isLast = last">
-        {{ version.key | translateSlug: 'LANGUAGES'}}:
-        <ng-container *ngFor="let info of version.value.controls | keyvalue" let isLast=last>
-          <ng-container *ngIf="info.value.value">
-            {{ info.key | translateSlug: 'VERSION_INFO' }}
-          </ng-container>
-        </ng-container>
+        {{ version.key | translateSlug: "LANGUAGES" }} :
+        {{ version.value.value | versionPipe }}
         {{ isLast ? '' : '| ' }}
       </ng-container>
     </ng-template>

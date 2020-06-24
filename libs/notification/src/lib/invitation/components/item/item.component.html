@@ -1,6 +1,6 @@
 <mat-list-item>
-  <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture" />
-  <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo" />
+  <bf-img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture"></bf-img>
+  <bf-img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo"></bf-img>
   <p *ngIf="!(xs$ | async)" matLine class="mat-body-1">
     {{ invitation.message }}
   </p>
@@ -14,7 +14,7 @@
     mat-button
     [routerLink]="invitation | eventLink"
   >
-    <div class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
+    <div test-id="more" class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
       <mat-icon svgIcon="dot_menu"></mat-icon>
       More
     </div>

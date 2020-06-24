@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { ImgRef } from '@blockframes/utils/media/media.firestore';
+import { ImgRef } from '@blockframes/media/+state/media.firestore';
 import { CommonModule } from '@angular/common';
 
 @Pipe({
