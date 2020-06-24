@@ -7,6 +7,7 @@ import { EndTunnelComponent } from './end.component';
 // Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [EndTunnelComponent],
@@ -15,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
     MatButtonModule,
     MatIconModule,
+    ImageReferenceModule,
     RouterModule.forChild([{ path: '', component: EndTunnelComponent }])
   ],
 })

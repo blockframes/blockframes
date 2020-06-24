@@ -1,15 +1,15 @@
 import { TunnelTechnicalInfoPage, TunnelBudgetPage } from "../pages/dashboard";
 
-const BUDGET_RANGE = 'Less than $1 million';
-const QUOTAS = ['EOF'];
-const COUNTRIES = ['Japan', 'France'];
-const PARTIAL_COUNTRIES = ['jap', 'fr'];
-const METRIC = 'admissions';
-const EARNING = '120000';
-const RATING = 'Tous publics';
-const JOURNAL_NAME = 'NY Times';
-const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
-const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
+export const BUDGET_RANGE = 'Less than $1 million';
+export const QUOTAS = ['EOF'];
+export const BUDGET_COUNTRIES = ['Japan', 'France'];
+export const BUDGET_PARTIAL_COUNTRIES = ['jap', 'fr'];
+export const METRIC = 'admissions';
+export const EARNING = '120000';
+export const RATING = 'Tous publics';
+export const JOURNAL_NAME = 'NY Times';
+export const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
+export const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
 
 export const budgetTest = () => {
   const p1 = new TunnelBudgetPage();
@@ -19,9 +19,9 @@ export const budgetTest = () => {
   p1.assertBudgetRangeIsSelected(BUDGET_RANGE);
 
   // Box office
-  p1.fillBoxOfficeCountry(PARTIAL_COUNTRIES[0]);
-  p1.selectBoxOfficeCountry(COUNTRIES[0]);
-  p1.assertBoxOfficeCountryExists(COUNTRIES[0]);
+  p1.fillBoxOfficeCountry(BUDGET_PARTIAL_COUNTRIES[0]);
+  p1.selectBoxOfficeCountry(BUDGET_COUNTRIES[0]);
+  p1.assertBoxOfficeCountryExists(BUDGET_COUNTRIES[0]);
   p1.clickSelectMetric();
   p1.selectMetric(METRIC);
   p1.assertMetricExists(METRIC);
@@ -35,9 +35,9 @@ export const budgetTest = () => {
   });
 
   // Ratings
-  p1.fillRatingsCountry(PARTIAL_COUNTRIES[1]);
-  p1.selectRatingsCountry(COUNTRIES[1]);
-  p1.assertRatingsCountry(COUNTRIES[1]);
+  p1.fillRatingsCountry(BUDGET_PARTIAL_COUNTRIES[1]);
+  p1.selectRatingsCountry(BUDGET_COUNTRIES[1]);
+  p1.assertRatingsCountry(BUDGET_COUNTRIES[1]);
   p1.fillRating(RATING);
   p1.assertRatingExists(RATING);
 

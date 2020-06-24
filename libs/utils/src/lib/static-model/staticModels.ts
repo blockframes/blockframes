@@ -33,7 +33,7 @@ const models = {
     { 'slug': 'banner', 'label': 'Banner' },
     { 'slug': 'still_photo', 'label': 'Stills' },
     { 'slug': 'presentation_deck', 'label': 'Presentation deck' },
-    { 'slug': 'scenario', 'label': 'Scenario' },
+    { 'slug': 'scenario', 'label': 'Script' },
     { 'slug': 'promo_reel_link', 'label': 'Promo reel' },
     { 'slug': 'screener_link', 'label': 'Screener' },
     { 'slug': 'trailer_link', 'label': 'Trailer' },

@@ -7,6 +7,7 @@ import { promotionalImagesTest } from './6-promotional-images';
 import { filesTest } from './7-files';
 import { chainOfTitlesTest } from './8-chain-of-titles';
 import { valuationTest } from './9-valuation';
+import { summaryTest } from './10-summary';
 
 export {
   mainTest,
@@ -17,5 +18,6 @@ export {
   promotionalImagesTest,
   filesTest,
   chainOfTitlesTest,
-  valuationTest
+  valuationTest,
+  summaryTest
 };
