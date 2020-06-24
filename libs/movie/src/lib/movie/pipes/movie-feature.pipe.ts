@@ -18,12 +18,14 @@ export class MovieFeaturePipe implements PipeTransform {
     if (originalLanguages.length > 0) displayedLanguages += getLabelBySlug('LANGUAGES', originalLanguages[0]);
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
+    const isTBC = (totalRunTime && totalRunTime !== 'TBC') ? `${totalRunTime}'` : 'TBC';
+
     return [
       workType ? workType[workType] : '',
       displayedGenres,
       displayedLanguages,
       productionYear,
-      totalRunTime ? `${totalRunTime}'` : ''
+      totalRunTime ? isTBC : ''
     ].filter(v => !!v).join(' | ');
   }
 }

@@ -20,7 +20,8 @@ export class MainComponent {
   }
 
   public getPrize(prize) {
-    const festivalInfo = `${prize.name}  ${prize.year}`;
+    const festivalYear = prize.year ? `${prize.year}` : ''
+    const festivalInfo = `${prize.name}  ${festivalYear}`;
     const premiere = `${prize.premiere} Premiere`;
     return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }

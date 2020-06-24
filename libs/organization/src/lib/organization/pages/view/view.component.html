@@ -5,9 +5,6 @@
       <div class="org-info">
         <h1>{{ org | orgName }}</h1>
         <h3>{{ org.activity | toLabel: 'orgActivity' | async }}</h3>
-        <ng-container *ngIf="user$ | async as user">
-          <h3>{{ user.position }}</h3>
-        </ng-container>
         <p class="mat-body-2">{{ org | orgAddress }}</p>
       </div>
     </article>

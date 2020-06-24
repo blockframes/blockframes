@@ -76,6 +76,10 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
+    if(this.form.invalid) {
+      this.snackBar.open('Movie not correct, check every field', '', { duration: 500 });
+      return;
+    }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
     await this.service.save(movie);
     this.form.markAsPristine();
