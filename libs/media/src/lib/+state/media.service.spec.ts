@@ -14,7 +14,7 @@ const TESTDATA = {
   file: new File([JSON.stringify({ blockframes: 'movies' })], 'test'),
 }
 
-async function prepareStorage(afStorage: AngularFireStorage) {
+function prepareStorage(afStorage: AngularFireStorage) {
   return afStorage.ref(TESTDATA.path.concat(TESTDATA.dataName)).delete().toPromise()
 }
 
@@ -44,12 +44,16 @@ describe('Media Service', () => {
   });
 
 
-  beforeEach(() => {
+  beforeEach(async () => {
     spectator = createService();
     /* We don't want to trigger the modal */
     spectator.service.overlayRef = {} as OverlayRef
     app = spectator.inject(FirebaseApp);
     afStorage = spectator.inject(AngularFireStorage);
+    const exists = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
+    if (exists) {
+      await prepareStorage(afStorage)
+    }
   });
 
   afterAll(async () => {
@@ -61,25 +65,15 @@ describe('Media Service', () => {
     expect(spectator.service).toBeDefined();
   })
 
-  test('Upload a blob to storage and validate it exists', async done => {
-    prepareStorage(afStorage)
-    spectator.service.uploadBlob({ path: TESTDATA.path, data: TESTDATA.blob, fileName: TESTDATA.dataName });
-    let result: boolean;
-    setTimeout(async () => {
-      result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
-      expect(result).toBe(true)
-      done();
-    }, 500)
+  test('Upload a blob to storage and validate it exists', async () => {
+    await spectator.service.uploadBlob({ path: TESTDATA.path, data: TESTDATA.blob, fileName: TESTDATA.dataName });
+    const result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
+    expect(result).toBe(true);
   })
 
-  test('Upload a file to storage and validate it exists', async done => {
-     prepareStorage(afStorage)
-    spectator.service.uploadFile(TESTDATA.path, TESTDATA.file);
-    let result: boolean;
-    setTimeout(async () => {
-      result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.file.name));
-      expect(result).toBe(true)
-      done();
-    }, 500)
+  test('Upload a file to storage and validate it exists', async () => {
+    await spectator.service.uploadFile(TESTDATA.path, TESTDATA.file);
+    const result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.file.name));
+    expect(result).toBe(true);
   })
 });

@@ -44,7 +44,7 @@ export class MediaService {
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
+      return this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
     }
   }
   /**
@@ -56,13 +56,13 @@ export class MediaService {
   uploadFile(path: string, file: File | FileList) {
 
     if (file instanceof File) {
-      this.upload(path, file, file.name);
+     return this.upload(path, file, file.name);
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
         promises.push(this.upload(path, file.item(index), file.item(index).name));
       }
-      Promise.all(promises);
+      return Promise.all(promises);
     }
   }
 
