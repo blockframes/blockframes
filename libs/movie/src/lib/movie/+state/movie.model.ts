@@ -24,9 +24,12 @@ import {
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta,
-  LanguageRecord
+  LanguageRecord,
+  PromotionalExternalMedia,
+  PromotionalImage,
+  PromotionalHostedMedia,
 } from './movie.firestore';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createImgRef, createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -115,23 +118,26 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {},
   initDefault: boolean = true
 ): MoviePromotionalElements {
-  const elements = {
-    trailer: [],
-    still_photo: [],
+  const elements: MoviePromotionalElements = {
     ...params,
-    poster: params.poster && params.poster.length ? params.poster : [],
-    banner: createPromotionalElement(params.banner),
-    presentation_deck: createPromotionalElement(params.presentation_deck),
-    scenario: createPromotionalElement(params.scenario),
-    promo_reel_link: createPromotionalElement(params.promo_reel_link),
-    screener_link: createPromotionalElement(params.screener_link),
-    trailer_link: createPromotionalElement(params.trailer_link),
-    teaser_link: createPromotionalElement(params.teaser_link),
+
+    banner: createPromotionalImage(params.banner),
+    poster: (!!params.poster && !!params.poster.length) ? params.poster : [] as PromotionalImage[],
+    still_photo: [] as PromotionalImage[],
+
+    trailer: [] as PromotionalHostedMedia[],
+    presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
+    scenario: createPromotionalHostedMedia(params.scenario),
+
+    promo_reel_link: createPromotionalExternalMedia(params.promo_reel_link),
+    screener_link: createPromotionalExternalMedia(params.screener_link),
+    trailer_link: createPromotionalExternalMedia(params.trailer_link),
+    teaser_link: createPromotionalExternalMedia(params.teaser_link),
   };
 
   // We want a default poster as we look for the first one
   if (initDefault && (!params.poster || params.poster.length === 0)) {
-    elements.poster.push(createPromotionalElement());
+    elements.poster.push(createPromotionalImage());
   }
 
   return elements;
@@ -147,14 +153,46 @@ export function createMoviePromotionalDescription(
   };
 }
 
-export function createPromotionalElement(
+function createPromotionalElement(
   promotionalElement: Partial<PromotionalElement> = {}
 ): PromotionalElement {
   promotionalElement = promotionalElement || {};
   return {
     label: '',
+    ...promotionalElement
+  }
+}
+
+export function createPromotionalExternalMedia(
+  promotionalExternalMedia: Partial<PromotionalExternalMedia> = {}
+): PromotionalExternalMedia {
+  const promotionalElement = createPromotionalElement(promotionalExternalMedia);
+  return {
+    media: createExternalMedia(promotionalExternalMedia.media),
+    ...promotionalExternalMedia,
     ...promotionalElement,
-    media: createImgRef(promotionalElement.media)
+  };
+}
+
+export function createPromotionalHostedMedia(
+  promotionalHostedMedia: Partial<PromotionalHostedMedia> = {}
+): PromotionalHostedMedia {
+  const promotionalElement = createPromotionalElement(promotionalHostedMedia);
+  return {
+    media: createHostedMedia(promotionalHostedMedia.media),
+    ...promotionalHostedMedia,
+    ...promotionalElement,
+  };
+}
+
+export function createPromotionalImage(
+  promotionalImage: Partial<PromotionalImage> = {}
+): PromotionalImage {
+  const promotionalElement = createPromotionalElement(promotionalImage);
+  return {
+    media: createImgRef(promotionalImage.media),
+    ...promotionalImage,
+    ...promotionalElement,
   };
 }
 

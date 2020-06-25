@@ -109,6 +109,8 @@ export async function onMovieUpdate(
   if (creatorOrg.denomination?.full) {
     return storeSearchableMovie(after, orgName(creatorOrg));
   }
+
+  
 }
 
 /** Checks if the store status is going from draft to submitted. */
