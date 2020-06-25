@@ -8,7 +8,7 @@
     </ng-container>
     <ng-template #banner>
       <ng-container *ngIf="promotionalElements.get('banner').get('media').value as bannerValue">
-        <a [href]="bannerValue.urls.lg" target="_blank">{{ bannerValue.ref | fileName }}</a>
+        <a [href]="bannerValue.lg.url" target="_blank">{{ bannerValue.original.ref | fileName }}</a>
       </ng-container>
     </ng-template>
   </li>
@@ -20,8 +20,8 @@
       </a>
     </ng-container>
     <ng-template #poster>
-      <a [href]="promotionalElements.get('poster').controls[0].controls['media'].value.urls.lg" target="_blank">
-        {{ promotionalElements.get('poster').controls[0].controls['media'].value.ref | fileName }}
+      <a [href]="promotionalElements.get('poster').get('0').get('media').value.lg.url" target="_blank">
+        {{ promotionalElements.get('poster').get('0').get('media').value.original.ref | fileName }}
       </a>
     </ng-template>
   </li>
@@ -34,7 +34,7 @@
     </ng-container>
     <ng-template #photos>
       <ng-container *ngFor="let photo of promotionalElements.get('still_photo').controls; let isLast = last">
-        <a [href]="photo.get('media').get('urls').get('lg').value" target="_blank">
+        <a [href]="photo.get('media').get('lg').get('url').value" target="_blank">
           {{ photo.get('media').get('ref').value | fileName }} {{ isLast ? '' : '| '}}
         </a>
       </ng-container>

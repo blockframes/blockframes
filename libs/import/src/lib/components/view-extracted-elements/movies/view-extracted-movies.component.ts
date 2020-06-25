@@ -200,11 +200,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // POSTER (Poster)
         // TODO issue 3091
         const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
+        const posterKey = `${Object.keys(movie.promotionalElements.poster).length}`
         const moviePoster = createPromotionalImage({
           label: 'Poster',
           media: poster,
         });
-        movie.promotionalElements.poster.push(moviePoster);
+        movie.promotionalElements.poster[posterKey] = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -838,11 +839,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // IMAGE STILLS LINK
         if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
-          movie.promotionalElements.still_photo = [];
+          movie.promotionalElements.still_photo = {};
           for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
             const media = await this.imageUploader.upload(still);
             const element = createPromotionalImage({ label: 'Still', media });
-            movie.promotionalElements.still_photo.push(element);
+            const stillPhotoKey = `${Object.keys(movie.promotionalElements.still_photo).length}`
+            movie.promotionalElements.still_photo[stillPhotoKey] = element;
           }
         } else {
           importErrors.errors.push({
@@ -1076,7 +1078,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.promotionalElements.poster.length === 0) {
+    if (Object.keys(movie.promotionalElements.poster).length === 0) {
       errors.push({
         type: 'error',
         field: 'promotionalElements.poster',

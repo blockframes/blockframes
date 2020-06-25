@@ -6,6 +6,7 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { handleImageChange } from './internals/image';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -110,7 +111,18 @@ export async function onMovieUpdate(
     return storeSearchableMovie(after, orgName(creatorOrg));
   }
 
-  
+  // BANNER
+
+  if (
+    !!before.promotionalElements.banner.media && !!after.promotionalElements.banner.media &&
+    before.promotionalElements.banner.media.original.ref !== after.promotionalElements.banner.media.original.ref
+  ) {
+    await handleImageChange(after.promotionalElements.banner.media);
+  }
+
+  // TODO POSTER
+  // TODO STILL PHOTO
+
 }
 
 /** Checks if the store status is going from draft to submitted. */
