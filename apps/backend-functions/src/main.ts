@@ -27,7 +27,7 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent, onFileDeleteEvent } from './media';
+import { linkFile, unlinkFile } from './media';
 import { onEventDelete } from './event';
 
 
@@ -272,10 +272,10 @@ export const relayerSend = functions.https
 //--------------------------------
 
 /** Trigger: on every file uploaded to the storage. Immediately exit function if contentType is not an image. */
-export const onFileUpload = functions.runWith(heavyConfig).storage.object().onFinalize(data => onFileUploadEvent(data))
+export const onFileUpload = functions.storage.object().onFinalize(data => linkFile(data))
 
 //--------------------------------
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onFileDeleteEvent(data))
+export const onFileDelete = functions.storage.object().onDelete(data => unlinkFile(data))

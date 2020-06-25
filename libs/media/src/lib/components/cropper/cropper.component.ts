@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { FormControl } from '@angular/forms';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -84,8 +85,8 @@ export class CropperComponent implements OnInit {
   @Input() form?: HostedMediaForm;
   @Input() setWidth?: number;
   @Input() storagePath: string;
-  /** Disable fileuploader & delete buttons in 'show' step */
-  @Input() useFileuploader?= true;
+  /** Disable fileUploader & delete buttons in 'show' step */
+  @Input() useFileUploader?= true;
   @Input() useDelete?= true;
 
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
@@ -126,13 +127,15 @@ export class CropperComponent implements OnInit {
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
 
+      console.log('**', this.form.value);
       this.form.patchValue({
-        path: `${this.storagePath}/original/${fileName}`,
+        ref: `${this.storagePath}/original/`,
         blob: blob,
         delete: false,
-        fileName: fileName
+        fileName: fileName,
       })
       this.form.markAsDirty();
+      console.log('**', this.form.value);
 
     } catch (err) {
       console.error(err);
