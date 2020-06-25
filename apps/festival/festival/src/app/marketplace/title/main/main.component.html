@@ -115,12 +115,10 @@
         </ng-container>
         <ng-container *ngIf="movie.salesCast.crew.length > 0">
           <h5>Artistic Crew</h5>
-          <ng-container *ngFor="let role of castRoles">
-            <li>
-              <strong i18n>{{ role.label }} </strong>
-              <span>{{ getCrewMember(movie, role.slug) }}</span>
-            </li>
-          </ng-container>
+          <li *ngFor="let crew of getSalesCrew(movie, 'crew', 'CREW_ROLES')">
+            <strong i18n>{{ crew.label }} </strong>
+            <span>{{ crew.firstName }} {{ crew.lastName }}</span>
+          </li>
         </ng-container>
       </ul>
     </mat-card-content>

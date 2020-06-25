@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
-import { staticModels } from '@blockframes/utils/static-model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { premiereType } from '@blockframes/movie/+state/movie.firestore';
@@ -14,7 +13,6 @@ import { formatNumber } from '@angular/common';
 })
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
-  public castRoles = staticModels.CREW_ROLES;
   constructor(private movieQuery: MovieQuery) { }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
@@ -45,12 +43,14 @@ export class MainComponent {
     }).join(', ');
   }
 
-  public getCrewMember(movie: Movie, role: string) {
-    const result = movie.salesCast.crew.filter(crew => crew.role === role);
-    console.log(result);
-    return result.forEach(crewMember => {
-      console.log(crewMember.firstName);
-      return `${crewMember.firstName} ${crewMember.lastName}`;
+  public getSalesCrew(movie: Movie, role: string, scope: Scope) {
+    return movie.salesCast[role].map(cast => {
+      return {
+          role: cast.role,
+          firstName: cast.firstName,
+          lastName: cast.lastName,
+          label: getLabelBySlug(scope, cast.role)
+        }
     });
   }
 
