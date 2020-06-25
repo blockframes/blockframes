@@ -137,6 +137,10 @@ export const icons = [
     url: 'assets/icons/logo_archipel_content_fill.svg'
   },
   {
+    name: 'logo_archipel_market_fill',
+    url: 'assets/icons/logo_archipel_market_fill.svg'
+  },
+  {
     name: 'logo_blockframes',
     url: 'assets/icons/logo_blockframes.svg'
   },
@@ -259,6 +263,7 @@ export const icons = [
   { name: 'wallet', url: 'assets/icons/wallet.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
   { name: 'wrench', url: 'assets/icons/wrench.svg' },
+  { name: 'marketplace', url: 'assets/icons/marketplace.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];

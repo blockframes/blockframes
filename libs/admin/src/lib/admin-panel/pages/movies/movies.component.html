@@ -11,12 +11,9 @@
     [pageSize]="100"
     showPaginator>
     <ng-template colRef="promotionalElements.poster" let-posters>
-      <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
+      <ng-container *ngIf="posters[0] && posters[0].media as poster;">
         <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
       </ng-container>
-      <ng-template #noposter>
-        --
-      </ng-template>
     </ng-template>
     <ng-template colRef="id" let-id>
       <a target="_blank" [routerLink]="['/c/o/dashboard/tunnel/movie', id, 'main']" routerLinkActive="active"> {{ id }}</a>

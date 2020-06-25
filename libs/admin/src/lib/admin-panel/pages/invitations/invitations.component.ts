@@ -11,6 +11,7 @@ import { MovieService, Movie } from '@blockframes/movie/+state';
 // @TODO (#2952) find better name and location
 export interface InvitationDetailed extends Invitation {
   org: Organization,
+  guestOrg?: Organization,
   event: Event,
   guest?: PublicUser,
   movie?: Movie,
@@ -29,17 +30,20 @@ export class InvitationsComponent implements OnInit {
   public columns: string[] = [
     'id',
     'org',
-    'event.id',
     'event.title',
+    'event.id',
     'event.start',
     'event.end',
     'event.type',
-    'date',
+    'movie',
+    'event.isPrivate',
+    'guest.email',
     'guest.firstName',
     'guest.lastName',
+    'guestOrg',
+    'date',
     'mode',
     'status',
-    'guest.email',
   ];
 
   constructor(
@@ -57,6 +61,10 @@ export class InvitationsComponent implements OnInit {
       const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
       invitation.org = await this.orgService.getValue(getHost(invitation, 'org').id);
       invitation.event = await this.eventService.getValue(invitation.docId);
+      const guestOrgId = getGuest(i, 'user').orgId;
+      if (guestOrgId) {
+        invitation.guestOrg = await this.orgService.getValue(guestOrgId);
+      }
 
       if (invitation.event.type === 'screening') {
         const titleId = invitation.event.meta.titleId as string;
@@ -77,14 +85,22 @@ export class InvitationsComponent implements OnInit {
 
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
-      id: i.id,
-      org: orgName(i.org),
-      event: i.event.title,
-      date: i.date,
-      guest: `${getGuest(i, 'user').firstName} ${getGuest(i, 'user').lastName}`,
-      email: getGuest(i, 'user').email,
-      mode: i.mode,
-      status: i.status,
+      'event id': i.id,
+      'event name': i.event.title,
+      'start date': i.event.start,
+      'end date': i.event.end,
+      'host organization': orgName(i.org),
+      'host org id': i.org.id,
+      'event type': i.event.type,
+      'title': i.movie ? i.movie.main.title.international : '--',
+      'privacy status': i.event.isPrivate ? 'private' : 'public',
+      'invitation date': i.date,
+      'guest email': getGuest(i, 'user').email,
+      'guest first name': getGuest(i, 'user').firstName || '--',
+      'guest last name': getGuest(i, 'user').lastName || '--',
+      'guest organization': i.guestOrg ? orgName(i.guestOrg) : '--',
+      'invitation mode': i.mode,
+      'invitation status': i.status,
     }))
     downloadCsvFromJson(exportedRows, 'invitations-list');
   }

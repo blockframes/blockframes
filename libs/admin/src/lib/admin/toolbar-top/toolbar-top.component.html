@@ -1,8 +1,45 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="admin-toolbar">
 
-  <button mat-button routerLink="/c/o/admin/panel/overview">
+  <button mat-button [matMenuTriggerFor]="homeMenu">
     <mat-icon svgIcon="home"></mat-icon><span matLine></span>
   </button>
+  <mat-menu #homeMenu="matMenu" class="mat-elevation-z6">
+    <mat-list>
+      <button mat-menu-item routerLink="/c/o/admin/panel/overview">
+        <mat-icon svgIcon="home"></mat-icon><span matLine>Admin panel</span>
+      </button>
+      
+
+      <button mat-menu-item [matMenuTriggerFor]="contentMenu">
+        <mat-icon svgIcon="logo_archipel_content_fill"></mat-icon><span matLine>Archipel Content</span>
+      </button>
+      <mat-menu #contentMenu="matMenu" class="mat-elevation-z6">
+        <mat-list>
+          <a mat-menu-item [href]="goToApp('catalog','marketplace')">
+            <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+          </a>
+          <a mat-menu-item [href]="goToApp('catalog','dashboard')">
+            <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+          </a>
+        </mat-list>
+      </mat-menu>
+
+      <button mat-menu-item [matMenuTriggerFor]="marketMenu">
+        <mat-icon svgIcon="logo_archipel_market_fill"></mat-icon><span matLine>Archipel Market</span>
+      </button>
+      <mat-menu #marketMenu="matMenu" class="mat-elevation-z6">
+        <mat-list>
+          <a mat-menu-item [href]="goToApp('festival','marketplace')">
+            <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+          </a>
+          <a mat-menu-item [href]="goToApp('festival','dashboard')">
+            <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+          </a>
+        </mat-list>
+      </mat-menu>
+      
+    </mat-list>
+  </mat-menu>
 
   <button mat-button routerLink="/c/o/admin/panel/users">
     <mat-icon svgIcon="profile"></mat-icon><span matLine>Users</span>
