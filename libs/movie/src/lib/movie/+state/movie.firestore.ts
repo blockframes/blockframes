@@ -143,10 +143,10 @@ export interface PromotionalImage extends PromotionalElement {
 
 export interface MoviePromotionalElements {
   banner: PromotionalImage,
-  poster: PromotionalImage[], // TODO issue#3179
-  still_photo: PromotionalImage[], // TODO issue#3179
+  poster: Record<string, PromotionalImage>,
+  still_photo: Record<string, PromotionalImage>,
 
-  trailer: PromotionalHostedMedia[], // TODO issue#3179
+  trailer: Record<string, PromotionalHostedMedia>,
   presentation_deck: PromotionalHostedMedia,
   scenario: PromotionalHostedMedia,
 
