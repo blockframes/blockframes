@@ -3,11 +3,13 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 
 // Blockframes
 import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+state';
+import { OrganizationService, Organization } from '@blockframes/organization/+state';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OrganizationService, Organization } from '@blockframes/organization/+state';
+
+// env
 import { centralOrgID } from '@env';
 
 interface CarouselSection {
