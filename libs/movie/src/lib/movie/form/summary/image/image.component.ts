@@ -22,10 +22,30 @@ export class MovieSummaryImageComponent implements OnInit {
   }
 
   get posterHasNoValue() {
-    return !this.promotionalElements.get('poster').controls[0].controls['media'].original.get('url').value;
+
+    const keys = Object.keys(this.promotionalElements.get('poster'));
+
+    // if there is no poster
+    if (keys.length === 0) {
+      return true;
+    }
+
+    // or if at least one poster as an empty url
+    return keys.some(key => !this.promotionalElements.get('poster').get(key).get('media').get('original').get('url').value);
+
   }
 
   get photoHasNoValue() {
-    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].original.get('url').value;
+
+    const keys = Object.keys(this.promotionalElements.get('still_photo'));
+
+    // if there is no still photos
+    if (keys.length === 0) {
+      return true;
+    }
+
+    // or if at least one still photo as an empty url
+    return keys.some(key => !this.promotionalElements.get('still_photo').get(key).get('media').get('original').get('url').value);
+
   }
 }
