@@ -16,13 +16,15 @@ export class GuestTableComponent implements OnInit {
   public headers = {
     'id': 'Id',
     'org': 'Org',
-    'event.title': 'Event',
+    'event.id': 'Event id',
+    'event.title': 'Event title',
     'event.start': 'Event start',
     'event.end': 'Event end',
+    'event.type': 'Event type',
     'date': 'Invitation date',
     'guest.firstName': 'FirstName',
     'guest.lastName': 'LastName',
-    'mode': 'Type',
+    'mode': 'Mode',
     'status': 'Status',
     'guest.email': 'Email'
   };
@@ -58,6 +60,7 @@ export class GuestTableComponent implements OnInit {
       'org.denomination.full',
       'org.denomination.public',
       'event.title',
+      'event.type',
       'date',
       'guest.firstName',
       'guest.lastName',

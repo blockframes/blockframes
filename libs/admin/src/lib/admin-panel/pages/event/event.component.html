@@ -1,5 +1,6 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
-<section fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
+<section fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
+  <section fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
 
     <admin-event-info [event]="event"></admin-event-info>
 
@@ -16,4 +17,5 @@
       </mat-card-content>
     </article>
 
+  </section>
 </section>
