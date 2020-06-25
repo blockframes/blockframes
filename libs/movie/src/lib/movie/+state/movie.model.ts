@@ -122,10 +122,10 @@ export function createMoviePromotionalElements(
     ...params,
 
     banner: createPromotionalImage(params.banner),
-    poster: (!!params.poster && !!params.poster.length) ? params.poster : [] as PromotionalImage[],
-    still_photo: [] as PromotionalImage[],
+    poster: (!!params.poster && !!Object.keys(params.poster).length) ? params.poster : {} as Record<string, PromotionalImage>,
+    still_photo: {} as Record<string, PromotionalImage>,
 
-    trailer: [] as PromotionalHostedMedia[],
+    trailer: {} as Record<string, PromotionalHostedMedia>,
     presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
     scenario: createPromotionalHostedMedia(params.scenario),
 
@@ -136,8 +136,8 @@ export function createMoviePromotionalElements(
   };
 
   // We want a default poster as we look for the first one
-  if (initDefault && (!params.poster || params.poster.length === 0)) {
-    elements.poster.push(createPromotionalImage());
+  if (initDefault && (!params.poster || Object.keys(params.poster).length === 0)) {
+    elements.poster['0'] = createPromotionalImage();
   }
 
   return elements;

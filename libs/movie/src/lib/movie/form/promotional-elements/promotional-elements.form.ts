@@ -1,5 +1,5 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalImage, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
@@ -78,15 +78,26 @@ export class MoviePromotionalImageForm extends FormEntity<PromotionalImageContro
 
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
+
+  // records
+  const posterControls: Record<string, MoviePromotionalImageForm> = {};
+  Object.keys(entity.poster).forEach(key => posterControls[key] = new MoviePromotionalImageForm(entity.poster[key]));
+
+  const stillPhotoControls: Record<string, MoviePromotionalImageForm> = {};
+  Object.keys(entity.still_photo).forEach(key => stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]));
+
+  const trailerControls: Record<string, MoviePromotionalHostedMediaForm> = {};
+  Object.keys(entity.trailer).forEach(key => trailerControls[key] = new MoviePromotionalHostedMediaForm(entity.trailer[key]));
+
   return {
 
     // Images
     banner: new MoviePromotionalImageForm(entity.banner),
-    poster: FormList.factory(entity.poster, el => new MoviePromotionalImageForm(el)),
-    still_photo: FormList.factory(entity.still_photo, el => new MoviePromotionalImageForm(el)),
+    poster: new FormGroup(posterControls),
+    still_photo: new FormGroup(posterControls),
 
     // Hosted Media
-    trailer: FormList.factory(entity.trailer, el => new MoviePromotionalHostedMediaForm(el)),
+    trailer: new FormGroup(trailerControls),
     presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
     scenario: new MoviePromotionalHostedMediaForm(entity.scenario),
 
