@@ -12,16 +12,16 @@
   </ng-template>
   <ng-template colRef="org" let-org>
     <a [routerLink]="['/c/o/admin/panel/organization', org.id]">
-      <span>{{ org | orgName }} </span><mat-icon svgIcon="eye"></mat-icon>
+      <span>{{ org | orgName:'long' }} </span><mat-icon svgIcon="eye"></mat-icon>
     </a>
   </ng-template>
   <ng-template colRef="guestOrg" let-guestOrg>
-    <ng-container *ngIf="guestOrg else noorg">
+    <ng-container *ngIf="guestOrg else noOrg">
       <a [routerLink]="['/c/o/admin/panel/organization', guestOrg.id]">
-        <span>{{ guestOrg | orgName }} </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ guestOrg | orgName:'long' }} </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
     </ng-container>
-    <ng-template #noorg>--</ng-template>
+    <ng-template #noOrg>--</ng-template>
   </ng-template>
   <ng-template colRef="event.id" let-eventId>
     <a [routerLink]="['/c/o/admin/panel/event', eventId]">
@@ -38,7 +38,7 @@
     {{ privateEvent ? 'private' : 'public'}}
   </ng-template>
   <ng-template colRef="movie" let-movie>
-    <div *ngIf="movie else nomovie" fxLayout="row">
+    <div *ngIf="movie else noMovie" fxLayout="row">
       <ng-container *ngIf="movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media as poster;">
         <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
       </ng-container>
@@ -46,6 +46,6 @@
         <span>{{ movie.main.title.international }} ({{ movie.main.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
     </div>
-    <ng-template #nomovie>--</ng-template>
+    <ng-template #noMovie>--</ng-template>
   </ng-template>>
 </bf-table-filter>

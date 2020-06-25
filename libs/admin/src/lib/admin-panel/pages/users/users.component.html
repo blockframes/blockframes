@@ -17,7 +17,10 @@
       </a>
     </ng-template>
     <ng-template colRef="org" let-org>
-      <a [routerLink]="org.link">{{ org.id }}</a>
+      <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
+        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
+      </a>
+      <ng-template #noOrg>--</ng-template>
     </ng-template>
     <ng-template colRef="position" let-position>
       {{ position ? position : '--' }}
@@ -27,6 +30,9 @@
     </ng-template>
     <ng-template colRef="lastConnexion" let-lastConnexion>
       {{ lastConnexion | date }}
+    </ng-template>
+    <ng-template colRef="org.addresses.main.country" let-country>
+      {{ country ? country : '--' }}
     </ng-template>
   </bf-table-filter>
 

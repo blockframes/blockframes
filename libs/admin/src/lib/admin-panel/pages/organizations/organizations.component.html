@@ -35,6 +35,9 @@
     <ng-template colRef="denomination.public" let-denominationPublic>
       {{ denominationPublic }}
     </ng-template>
+    <ng-template colRef="addresses.main.country" let-country>
+      {{ country ? country : '--' }}
+    </ng-template>
     <ng-template colRef="appAccess" let-appAccess>
       <ul>
         <ng-container *ngFor="let access of appAccess | keyvalue">

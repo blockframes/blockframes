@@ -1,6 +1,11 @@
 <section fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
-
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+  </article>
   <bf-table-filter
     [source]="rows"
     [columns]="versionColumns"
@@ -45,6 +50,12 @@
     </ng-template>
     <ng-template colRef="main.storeConfig.storeType" let-storeType>
       {{ storeType | toLabel: 'storeType' | async }}
+    </ng-template>
+    <ng-template colRef="org" let-org>
+      <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
+        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
+      </a>
+      <ng-template #noOrg>--</ng-template>
     </ng-template>
   </bf-table-filter>
 </section>

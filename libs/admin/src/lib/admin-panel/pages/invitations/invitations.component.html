@@ -1,7 +1,7 @@
 <section fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Invitations</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="exportTable()">
+    <button [disabled]="!invitationListLoaded" mat-flat-button color="primary" (click)="exportTable()">
       <span>Export to CSV</span>
       <mat-icon svgIcon="arrow_upward"></mat-icon>
     </button>
