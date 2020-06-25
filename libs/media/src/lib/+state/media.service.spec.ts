@@ -28,6 +28,7 @@ describe('Media Service', () => {
 
   const createService = createServiceFactory({
     service: MediaService,
+
     imports: [AngularFireModule.initializeApp(firebase, random()), AngularFireStorageModule],
     providers: [
       mockProvider(Overlay, {

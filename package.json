@@ -110,6 +110,7 @@
     "firebase": "^7.14.1",
     "firebase-admin": "8.10.0",
     "firebase-functions": "^3.6.0",
+    "firebase-mock": "^2.3.2",
     "fs-extra": "^8.1.0",
     "generate-password": "^1.4.2",
     "handlebars": "^4.5.3",
