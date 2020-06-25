@@ -178,10 +178,10 @@ export const onMovieCreateEvent = onDocumentCreate(
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent = onDocumentUpdate(
-  'movies/{movieId}',
-  onMovieUpdate
-)
+export const onMovieUpdateEvent =  functions
+  .runWith(heavyConfig) // movie update can potentially trigger images processing
+  .firestore.document('movies/{movieId}')
+  .onUpdate(skipInMaintenance(onMovieUpdate));
 
 /**
  * Trigger: when a movie is deleted

@@ -1,6 +1,33 @@
-import { HostedMedia, createHostedMedia } from '../../+state//media.firestore'
+import { HostedMedia, createHostedMedia, ExternalMedia, createExternalMedia } from '../../+state//media.firestore'
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+
+// ------------------------------
+//        External Media
+// ------------------------------
+
+function createExternalMediaControl(media: ExternalMedia) {
+  const { url } = createExternalMedia(media);
+  return {
+    url: new FormControl(url),
+  }
+}
+
+export type ExternalMediaControl = ReturnType<typeof createExternalMediaControl>;
+
+export class ExternalMediaForm extends FormEntity<ExternalMediaControl> {
+  constructor(media: Partial<ExternalMedia> = {}) {
+    const externalMedia = createExternalMedia(media);
+    const control = createExternalMediaControl(externalMedia);
+    super(control);
+  }
+
+  get url() { return this.get('url') }
+}
+
+// ------------------------------
+//          Hosted Media
+// ------------------------------
 
 function createHostedMediaControl(media: HostedMedia) {
   const { ref, url } = createHostedMedia(media);
