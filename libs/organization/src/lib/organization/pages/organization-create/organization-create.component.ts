@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 @Component({
   selector: 'organization-create',
@@ -14,6 +15,7 @@ import { OrganizationForm } from '../../forms/organization.form';
 export class OrganizationCreateComponent {
 
   public form = new OrganizationForm();
+  public media = new HostedMediaForm();
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
