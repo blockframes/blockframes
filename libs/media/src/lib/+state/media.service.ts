@@ -7,12 +7,15 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile, HostedMedia } from "./media.firestore";
+import { UploadFile, HostedMedia, ImgRef } from "./media.firestore";
 import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { AngularFirestore } from "@angular/fire/firestore";
+import { get } from 'lodash';
+import { takeWhile } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -31,6 +34,7 @@ export class MediaService {
   constructor(
     private store: MediaStore,
     private query: MediaQuery,
+    private db: AngularFirestore,
     private storage: AngularFireStorage,
     private overlay: Overlay
   ) { }
@@ -40,41 +44,53 @@ export class MediaService {
     return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
   }
 
+  /**
+ * This function handles the upload process for one or many files.
+ *
+ * @note **Make sure that the path param does not include the filename.**
+ * @note **Make sure that the path ends with a `/`.**
+ *
+ */
   uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
 
     if (Array.isArray(uploadFiles)) {
       uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
     } else {
-      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
+      this.upload(uploadFiles.path, uploadFiles.fileName, uploadFiles.data,);
     }
   }
-  /**
-   * @description This function handles the upload process for one or many files. Make sure that
-   * the oath param doesn't include the filename.
-   * @param path should only have the path and not the file name in it
-   * @param file
-   */
+
+ /**
+ * This function handles the upload process for one or many files.
+ *
+ * @note **Make sure that the path param does not include the filename.**
+ * @note **Make sure that the path ends with a `/`.**
+ *
+ */
   uploadFile(path: string, file: File | FileList) {
 
     if (file instanceof File) {
-      this.upload(path, file, file.name);
+      this.upload(path, file.name, file);
     } else {
       const promises = [];
       for (let index = 0; index < file.length; index++) {
-        promises.push(this.upload(path, file.item(index), file.item(index).name));
+        promises.push(this.upload(path, file.item(index).name, file.item(index)));
       }
       Promise.all(promises);
     }
   }
 
   /**
- * @description This function handles the upload process for one or many files. Make sure that
- * the oath param doesn't include the filename.
- * @param path should only have the path and not the file name in it
- * @param fileOrBlob
- * @param fileName
+ * This function handles the upload process for one or many files.
+ *
+ * @note **Make sure that the path param does not include the filename.**
+ * @note **Make sure that the path ends with a `/`.**
+ *
  */
-  private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
+  private async upload(path: string, fileName: string, fileOrBlob: Blob | File,) {
+
+    // TODO create extensive regexp to try to catch and handle any mistakes in path & filename
+
     const sanitizedFileName: string = sanitizeFileName(fileName);
     const exists = await this.exists(path.concat(sanitizedFileName));
 
@@ -115,8 +131,13 @@ export class MediaService {
     );
   }
 
-  removeFile(path: string) {
-    this.storage.ref(path).delete();
+  async removeFile(path: string) {
+    await this.storage.ref(path).delete().toPromise();
+
+    // if we delete an image, we will wait until the deletion of all the sizes
+    if (path.includes('original')) {
+      await this.waitForImageDeletion(path);
+    }
   }
 
   pause(fileName: string) {
@@ -161,22 +182,82 @@ export class MediaService {
     }
   }
 
-  // TODO issue#3088
-  // uploadOrDeleteMedia(mediaForms: HostedMediaForm[]) {
-  //   mediaForms.forEach(mediaForm => {
-  //     if (mediaForm.delete.value && !!mediaForm.ref.value) {
-  //       this.removeFile(mediaForm.ref.value);
-  //     } else if (!!mediaForm.blob.value) {
-  //       if (mediaForm.ref.value !== '') {
-  //         this.removeFile(mediaForm.ref.value);
-  //       }
-  //       const file: UploadFile = {
-  //         path: mediaForm.ref.value,
-  //         data: mediaForm.blob.value,
-  //         fileName: mediaForm.fileName.value
-  //       }
-  //       this.uploadBlob(file);
-  //     }
-  //   })
-  // }
+  async uploadOrDeleteMedia(mediaForms: HostedMediaForm[]) {
+    const promises = mediaForms.map(async mediaForm => {
+
+      // if the file needs to be deleted and we know its path
+      if (mediaForm.delete.value && !!mediaForm.ref.value) {
+
+        console.log('will delete');
+        await this.removeFile(mediaForm.ref.value);
+        console.log('deleted');
+
+      // if we have a blob = the user create or update the file
+      } else if (!!mediaForm.blob.value) {
+
+        // if the file already have a path it means that we are in an update
+        // we first need to delete the old file
+        if (mediaForm.oldRef.value !== '') {
+          console.log('will update');
+          await this.removeFile(mediaForm.oldRef.value);
+        } else {
+          console.log('will create');
+        }
+
+        console.log('will upload');
+
+        // upload the new file
+        const file: UploadFile = {
+          path: mediaForm.ref.value, // be careful, here we can easily have a wrong path
+          data: mediaForm.blob.value,
+          fileName: mediaForm.fileName.value
+        }
+        console.log(file);
+        this.uploadBlob(file);
+      } else {
+        console.log('nothing needs to be done');
+      }
+    });
+    await Promise.all(promises);
+  }
+
+  waitForImageDeletion(path: string) {
+
+    // extract info from the path
+
+    const pathParts = path.split('/');
+    if (pathParts.length < 5) {
+      throw new Error(`Invalid Path : ${path}, path must contain at least 5 parts : collection/id/one-or-more-field/original/fileName`)
+    }
+    const collection = pathParts.shift();
+    const docId = pathParts.shift();
+    pathParts.pop(); // remove filename
+    pathParts.pop(); // remove 'original'
+
+    const fieldToUpdate = pathParts.join('.');
+
+    // listen on the corresponding firestore doc
+    const doc = this.db.collection(collection).doc(docId);
+
+    // create a promise that resolve when all image sizes are empty
+    return new Promise(res => {
+      // listen on every changes of the current document
+      const sub = doc.snapshotChanges().subscribe(action => {
+        const docData = action.payload.data();
+        const image: ImgRef = get(docData, fieldToUpdate);
+        // check if all image size are empty
+        if (
+          !image.original.ref &&
+          !image.fallback.ref &&
+          !image.xs.ref &&
+          !image.md.ref &&
+          !image.lg.ref
+        ) {
+          sub.unsubscribe(); // cancel the observable
+          res(); // resolve the promise
+        }
+      });
+    });
+  }
+
 }

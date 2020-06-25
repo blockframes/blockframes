@@ -11,8 +11,7 @@ import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
-import { imgSizeDirectory } from '@blockframes/media/+state/media.model';
-import { resize } from './internals/image';
+import { handleImageChange } from './internals/image';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -148,24 +147,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     !!before.avatar && !!after.avatar &&
     before.avatar.original.ref !== after.avatar.original.ref
   ) {
-
-    // image was deleted
-    if (after.avatar.original.ref === '') {
-
-      const bucket = admin.storage().bucket();
-
-      // delete every image size
-      imgSizeDirectory.forEach(key => {
-        promises.push(bucket.file(after.avatar![key]!.ref).delete());
-      });
-
-      // delete fallback image
-      promises.push(bucket.file(after.avatar.fallback.ref).delete());
-
-    // image was created or updated
-    } else {
-      promises.push(resize((after.avatar as any).original.ref));
-    }
+    await handleImageChange(after.avatar);
   }
 
   return Promise.all(promises);
