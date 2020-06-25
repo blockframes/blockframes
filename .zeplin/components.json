@@ -113,6 +113,18 @@
                     "Bf Upload Widget"
                 ]
             }
+        },
+        {
+            "path": "libs/organization/src/lib/organization/components/card-minimal/card-minimal.component.ts",
+            "zeplinNames": [
+                "component/card/featured_seller_card"
+            ],
+            "storybook": {
+                "kind": "Organization Minimal Card",
+                "storybook": [
+                    "Organization Minimal Card"
+                ]
+            }
         }
     ],
     "github": {
