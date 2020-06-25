@@ -72,6 +72,7 @@ export async function resize(ref: string) {
   return remove(workingDir);
 }
 
+/** Handle image resizing or image deletion */
 export async function handleImageChange(after: ImgRef) {
 
   // image was deleted
