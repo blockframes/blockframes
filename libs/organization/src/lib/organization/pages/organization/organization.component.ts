@@ -5,6 +5,7 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { MatSnackBar } from '@angular/material/snack-bar';
 // import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 @Component({
   selector: 'organization-edit',
@@ -13,33 +14,32 @@ import { MediaService } from '@blockframes/media/+state/media.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationComponent implements OnInit {
-  public organizationForm;
+  public organizationForm: OrganizationForm;
+  public hostedMediaForm: HostedMediaForm;
 
   constructor(
     private query: OrganizationQuery,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
-    private media: MediaService
+    private mediaService: MediaService
   ) { }
 
   ngOnInit() {
     const organization = this.query.getActive();
     this.organizationForm = new OrganizationForm(organization);
+    this.hostedMediaForm = new HostedMediaForm(organization.logo.original);
   }
 
   public update() {
     try {
-      if (this.organizationForm.dirty) {
+      if (this.organizationForm.dirty || this.hostedMediaForm.dirty) {
         if (this.organizationForm.invalid) {
           throw new Error('Your organization profile informations are not valid');
         }
 
-        // const [ org, media ] = extractToBeUpdatedMedia(this.organizationForm.value);
-        // this.media.uploadOrDeleteMedia(media);
-
-        // TODO issue#3088
-
         this.service.update(this.query.getActiveId(), this.organizationForm.value);
+        this.mediaService.uploadOrDeleteMedia([this.hostedMediaForm]);
+
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }
     } catch (error) {

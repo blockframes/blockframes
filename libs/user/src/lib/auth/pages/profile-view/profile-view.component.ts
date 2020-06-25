@@ -60,14 +60,6 @@ export class ProfileViewComponent implements OnInit {
       } else {
         const uid = this.authQuery.userId;
 
-        // const [ user, media ] = extractToBeUpdatedMedia(this.profileForm.value);
-        // this.mediaService.uploadOrDeleteMedia(media);
-
-        console.log(this.profileForm.value);
-        console.log(this.hostedMediaForm.value);
-
-        // TODO issue#3088
-
         await this.authService.update({ uid, ...this.profileForm.value });
         this.mediaService.uploadOrDeleteMedia([this.hostedMediaForm]);
 
