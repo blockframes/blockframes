@@ -5,6 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 function createHostedMediaControl(media: HostedMedia) {
   const { ref, url } = createHostedMedia(media);
   return {
+    oldRef: new FormControl(ref),
     ref: new FormControl(ref),
     url: new FormControl(url),
     blob: new FormControl(),
@@ -22,6 +23,7 @@ export class HostedMediaForm extends FormEntity<HostedMediaControl> {
     super(control);
   }
 
+  get oldRef() { return this.get('oldRef') }
   get ref() { return this.get('ref') }
   get url() { return this.get('url') }
   get blob() { return this.get('blob') }
