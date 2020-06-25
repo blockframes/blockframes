@@ -11,11 +11,14 @@ const TESTDATA = {
   path: 'unit-test/',
   blob: new Blob([JSON.stringify({ blockframes: 'movies' })], { type: 'application/json' }),
   dataName: 'test',
-  file: new File([JSON.stringify({ blockframes: 'movies' })], 'test'),
-}
+  file: new File([JSON.stringify({ blockframes: 'movies' })], 'test')
+};
 
 function prepareStorage(afStorage: AngularFireStorage) {
-  return afStorage.ref(TESTDATA.path.concat(TESTDATA.dataName)).delete().toPromise()
+  return afStorage
+    .ref(TESTDATA.path.concat(TESTDATA.dataName))
+    .delete()
+    .toPromise();
 }
 
 describe('Media Service', () => {
@@ -26,54 +29,47 @@ describe('Media Service', () => {
   const createService = createServiceFactory({
     service: MediaService,
     imports: [AngularFireModule.initializeApp(firebase, random()), AngularFireStorageModule],
-    providers: [mockProvider(Overlay, {
-      position: () => {
-        return {
-          global: () => {
-            return {
-              bottom: () => {
-                return {
-                  left: () => true
-                }
-              }
-            }
-          }
-        }
-      }
-    })],
+    providers: [
+      mockProvider(Overlay, {
+        position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
+      })
+    ]
   });
-
 
   beforeEach(async () => {
     spectator = createService();
     /* We don't want to trigger the modal */
-    spectator.service.overlayRef = {} as OverlayRef
+    spectator.service.overlayRef = {} as OverlayRef;
     app = spectator.inject(FirebaseApp);
     afStorage = spectator.inject(AngularFireStorage);
     const exists = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
     if (exists) {
-      await prepareStorage(afStorage)
+      await prepareStorage(afStorage);
     }
   });
 
   afterAll(async () => {
-    await prepareStorage(afStorage)
+    await prepareStorage(afStorage);
     app.delete();
   });
 
   test('Service exists', () => {
     expect(spectator.service).toBeDefined();
-  })
+  });
 
   test('Upload a blob to storage and validate it exists', async () => {
-    await spectator.service.uploadBlob({ path: TESTDATA.path, data: TESTDATA.blob, fileName: TESTDATA.dataName });
-    const result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
-    expect(result).toBe(true);
-  })
+    await spectator.service.uploadBlob({
+      path: TESTDATA.path,
+      data: TESTDATA.blob,
+      fileName: TESTDATA.dataName
+    });
+    const test = () => spectator.service.exists(TESTDATA.path.concat(TESTDATA.dataName));
+    await expect(test()).resolves.toBeDefined();
+  });
 
   test('Upload a file to storage and validate it exists', async () => {
     await spectator.service.uploadFile(TESTDATA.path, TESTDATA.file);
-    const result = await spectator.service.exists(TESTDATA.path.concat(TESTDATA.file.name));
-    expect(result).toBe(true);
-  })
+    const test = () => spectator.service.exists(TESTDATA.path.concat(TESTDATA.file.name));
+    await expect(test()).resolves.toBeDefined();
+  });
 });
