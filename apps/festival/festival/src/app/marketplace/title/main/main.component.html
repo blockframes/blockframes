@@ -70,7 +70,7 @@
       <ul>
         <ng-container *ngIf="movie.festivalPrizes.prizes as prizes">
           <li><strong>Festivals </strong></li>
-          <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
+          <li *ngFor="let prize of prizes">{{ getPrize(prize) | titlecase }}</li>
         </ng-container>
       </ul>
     </mat-card-content>
@@ -103,7 +103,7 @@
           </ng-container>
           <ng-container *ngIf="movie.salesCast.producers.length > 0">
             <li><strong i18n>Producer{movie.salesCast.producers.length, plural,=1 {} other {s}}</strong>
-              <span> {{ getSalesCast(movie, 'producers') }}</span></li>
+              <span> {{ getSalesCast(movie, 'producers', 'PRODUCER_ROLES') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.main.stakeholders as stakeholders">
             <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length,
@@ -117,12 +117,11 @@
         <ng-container *ngIf="movie.salesCast.crew.length > 0">
           <h5>Artistic Crew</h5>
           <ng-container *ngFor="let crew of movie.salesCast.crew; let isLast = last">
-            <li *ngIf="crew.role === 'score-composer'"><strong i18n>Score Composer{crew.length, plural,=1 {} other {s}}
-              </strong>
-              <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
-            <li *ngIf="crew.role === 'writer' as writer"><strong i18n>Writer{writer.length, plural,=1 {} other {s}}
-              </strong>
-              <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
+            <!-- <li *ngFor="let role of crew.role">
+              <strong i18n>{{ role }}{role.length, plural,=1 {} other {s}}</strong>
+              <span> {{ getStakeholder(movie, role, 'CREW_ROLES') }}</span>
+            </li> -->
+
           </ng-container>
         </ng-container>
       </ul>

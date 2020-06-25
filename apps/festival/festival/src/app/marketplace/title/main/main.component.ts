@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { premiereType } from '@blockframes/movie/+state/movie.firestore';
 import { formatNumber } from '@angular/common';
 
 @Component({
@@ -12,7 +13,6 @@ import { formatNumber } from '@angular/common';
 })
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
-
   constructor(private movieQuery: MovieQuery) { }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
@@ -22,7 +22,7 @@ export class MainComponent {
   public getPrize(prize) {
     const festivalYear = prize.year ? `${prize.year}` : ''
     const festivalInfo = `${prize.name}  ${festivalYear}`;
-    const premiere = `${prize.premiere} Premiere`;
+    const premiere = `${premiereType[prize.premiere]} Premiere`;
     return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }
 
@@ -35,12 +35,12 @@ export class MainComponent {
     }).join(', ');
   }
 
-  public getSalesCast(movie: Movie, role: string) {
+  public getSalesCast(movie: Movie, role: string, scope: Scope) {
     return movie.salesCast[role].map(cast => {
       return (cast.role && !! cast.role.length)
-        ? `${cast.firstName} ${cast.lastName} (${cast.role})`
+        ? `${cast.firstName} ${cast.lastName} (${getLabelBySlug(scope, cast.role)})`
         : `${cast.firstName} ${cast.lastName}`;
-    });
+    }).join(', ');
   }
 
   public hasBudget({ budget, salesInfo, movieReview}: Movie): boolean {
