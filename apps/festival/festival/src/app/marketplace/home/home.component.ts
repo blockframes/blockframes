@@ -7,6 +7,8 @@ import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+
 // RxJs
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { centralOrgID } from '@env';
 
 interface CarouselSection {
   title: string;
@@ -23,10 +25,14 @@ interface CarouselSection {
 export class HomeComponent implements OnInit, OnDestroy {
 
   public sections: CarouselSection[];
+  public orgs$: Observable<Organization[]>;
 
   private sub: Subscription;
 
-  constructor(private movieService: MovieService, private movieQuery: MovieQuery) { }
+  constructor(
+    private movieService: MovieService,
+    private movieQuery: MovieQuery,
+    private organizationService: OrganizationService) { }
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
@@ -57,6 +63,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         movies$: selectMovies('financing')
       },
     ];
+    this.orgs$  = this.organizationService
+      .queryWithoutMovies(ref => ref
+        .where('appAccess.festival.dashboard', '==', true)
+        .where('status', '==', 'accepted'))
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
   }
 
   ngOnDestroy() {
