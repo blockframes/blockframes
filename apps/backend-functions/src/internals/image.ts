@@ -3,7 +3,7 @@ import { join, dirname, basename, extname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
-import { getImgSize, imgSizeDirectory, ImgSizeDirectory } from '@blockframes/media/+state/media.firestore.ts';
+import { getImgSize, imgSizeDirectory, ImgSizeDirectory, ImgRef } from '@blockframes/media/+state/media.firestore.ts';
 
 
 export async function resize(ref: string) {
@@ -41,7 +41,7 @@ export async function resize(ref: string) {
   const fileName = basename(ref);
 
   // Iterate on each item of sizes array to generate all wanted resized images
-  const uploadPromises = imgSizeDirectory.map(async key => {
+  const uploadPromises = imgSizeDirectory.filter(size => size !== 'fallback').map(async key => {
 
       const currentSize = sizes[key as ImgSizeDirectory];
 
@@ -70,7 +70,7 @@ export async function resize(ref: string) {
     const fallbackImgPath = join(workingDir, `fallback_${fallbackImgName}`);
     const storageDestination = join(path.replace('original', 'fallback'), fallbackImgName);
 
-    await sharp(tmpFilePath).png().toFile(fallbackImgPath);
+    await sharp(tmpFilePath).png().resize({width: sizes.fallback, withoutEnlargement: true}).toFile(fallbackImgPath);
 
     await bucket.upload(fallbackImgPath, { destination: storageDestination });
   }
@@ -83,67 +83,27 @@ export async function resize(ref: string) {
   return remove(workingDir);
 }
 
-export async function onFileDeletion(data: functions.storage.ObjectMetadata) {
+export async function handleImageChange(after: ImgRef) {
 
-  // TODO here we might need to handle deletion of other file types (issue#3017)
+  // image was deleted
+  if (after.original.ref === '') {
 
-  // If the type of the data is not an image, exit the function
-  if (!data.contentType?.includes('image')) {
-    console.log(`File ${data.contentType} is not an image, exiting function`);
-    return false;
-  }
+    const bucket = admin.storage().bucket();
 
-  // we don't want to execute this function on the watermark
-  if (data.contentType === 'image/svg+xml') {
-    console.log('File is an SVG image, exiting function');
-    return false;
-  }
-
-  // Get all the needed information from the data (bucket, path, file name and directory)
-  const bucket = admin.storage().bucket(data.bucket);
-  const filePath = data.name;
-
-  if (filePath === undefined) {
-    throw new Error('undefined data.name!');
-  }
-
-  const filePathElements = filePath.split('/');
-
-  if (filePathElements.length !== 5) {
-    throw new Error('unhandled filePath:' + filePath);
-  }
-
-  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
-
-  try {
-    // Clean document that reference this image
-    const docData: any = await getDocument(`${collection}/${id}`);
-    // Cleaning references only if current document ref is the one linked into DB
-    const oldImgRef = get(docData, fieldToUpdate);
-    if (oldImgRef.ref === data.name) {
-      const value = { ref: '', urls: {} };
-      const updated = set(docData, fieldToUpdate, value);
-      const docRef = db.collection(collection).doc(id);
-      await docRef.update(updated);
-    }
-  } catch (e) {
-    console.log(`Error while updating image references in document "${collection}/${id}" : ${e.message}`);
-  }
-
-  // By filtering out the uploadedSize path, we make sure, that we don't try to delete an already deleted image
-  imgSizeDirectory.filter(sizeDir => sizeDir !== uploadedSize)
-    .forEach(async (sizeDir: ImgSizeDirectory) => {
-      // if sizeDir is 'fallback' we convert file name from 'image.webp' to 'image.png'
-      const imageFileName = sizeDir !== 'fallback' ? fileName : basename(fileName, extname(fileName)) + '.png'
-      const path = `${collection}/${id}/${fieldToUpdate}/${sizeDir}/${imageFileName}`;
-      const [exists] = await bucket.file(path).exists();
-      if (exists) {
-        await bucket.file(path).delete();
-        return true;
+    // delete every image size (including `fallback`)
+    const deletePromises = imgSizeDirectory.map(key => {
+      // avoid to delete if ref is empty
+      if (!after[key]!.ref) {
+        return new Promise(res => res());
       } else {
-        // if file does not exist everything is fine since we where trying to delete it
-        return false;
+        return bucket.file(after[key]!.ref).delete();
       }
     });
-  return false;
+    await Promise.all(deletePromises);
+
+  // image was created or updated
+  } else {
+    await resize(after.original.ref);
+  }
+
 }
