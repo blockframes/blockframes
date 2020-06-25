@@ -2,20 +2,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
 }
 
 a {
   padding: 24px 16px 16px;
-  border-radius: 50%;
   margin-bottom: 16px;
 
-  img {
+  bf-img {
     width: 100%;
     border-radius: 50%;
   }
 }
 
 h5 {
-  text-align: center;
   margin: 0;
 }
