@@ -13,7 +13,6 @@ import {
   onDocumentDelete,
   onDocumentUpdate,
   onDocumentWrite,
-  onOrganizationDocumentUpdate
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -29,6 +28,7 @@ import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
 import { linkFile, unlinkFile } from './media';
 import { onEventDelete } from './event';
+import { skipInMaintenance } from './maintenance';
 
 
 //--------------------------------
@@ -66,10 +66,11 @@ export const onUserCreateDocument = onDocumentCreate(
   users.onUserCreateDocument
 );
 
-export const onUserUpdate = onDocumentUpdate(
-  '/users/{userID}',
-  users.onUserUpdate
-);
+export const onUserUpdate = functions
+  .runWith(heavyConfig) // user update can potentially trigger images processing
+  .firestore.document('/users/{userID}')
+  .onUpdate(skipInMaintenance(users.onUserUpdate));
+
 
 export const onUserDelete = onDocumentDelete(
   '/users/{userID}',
@@ -239,10 +240,10 @@ export const onOrganizationCreateEvent = onDocumentCreate(
 );
 
 /** Trigger: when an organization is updated. */
-export const onOrganizationUpdateEvent = onOrganizationDocumentUpdate( // using `onOrganizationDocumentUpdate` instead of `onDocument` for an increase timout of 540s
-  'orgs/{orgID}',
-  onOrganizationUpdate
-);
+export const onOrganizationUpdateEvent = functions
+  .runWith(heavyConfig) // org update can potentially trigger images processing
+  .firestore.document('orgs/{orgID}')
+  .onUpdate(skipInMaintenance(logErrors(onOrganizationUpdate)));
 
 /** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete(
@@ -271,7 +272,7 @@ export const relayerSend = functions.https
 //         File upload          //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. Immediately exit function if contentType is not an image. */
+/** Trigger: on every file uploaded to the storage. */
 export const onFileUpload = functions.storage.object().onFinalize(data => linkFile(data))
 
 //--------------------------------
