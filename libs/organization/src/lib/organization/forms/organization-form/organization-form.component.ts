@@ -3,9 +3,10 @@ import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 @Component({
-  selector: 'organization-form',
+  selector: '[form] [mediaForm] organization-form',
   templateUrl: './organization-form.component.html',
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,9 +14,11 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class OrganizationFormComponent {
 
   public orgId = this.query.getActiveId();
-  @Input() form: OrganizationForm;
 
-  // TODO#2914 Reenable the cropper here when we found a solution
+  @Input() form: OrganizationForm;
+  @Input() mediaForm: HostedMediaForm;
+
+  // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
   constructor(private service: OrganizationService, private query: OrganizationQuery) { }
