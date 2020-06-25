@@ -1,6 +1,7 @@
 import { db, functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
-import { set } from 'lodash';
+import { get } from 'lodash';
+import { HostedMedia } from '@blockframes/media/+state/media.model';
 
 async function getDocAndPath(data: functions.storage.ObjectMetadata) {
   // the storage path of the file
@@ -52,10 +53,10 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
  * Updating the firestore will cause an update event that will
  * eventually trigger post-processing (like image resize).
  */
-export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
+export async function linkFile(data: functions.storage.ObjectMetadata) {
 
   // get the needed values
-  const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(data);
+  const { filePath, doc, fieldToUpdate } = await getDocAndPath(data);
 
   // create an access url
   const bucket = admin.storage().bucket(data.bucket);
@@ -73,9 +74,8 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
   });
 
   // link the firestore
-  const updatedDocData = set(docData, fieldToUpdate, { ref: filePath, url: signedUrl });
-
-  return doc.set(updatedDocData, { merge: true });
+  // ! this will not work with array in the path like for poster
+  return doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
 }
 
 /**
@@ -89,13 +89,18 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
  * but we simply replace them by an empty string to avoid
  * `cannot read property 'url' of undefined` errors
  */
-export async function onFileDeleteEvent(data: functions.storage.ObjectMetadata) {
+export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
   // get the needed values
   const { doc, docData, fieldToUpdate } = await getDocAndPath(data);
 
-  // unlink the firestore
-  const updatedDocData = set(docData, fieldToUpdate, { ref: '', url: '' });
+  // if firestore wasn't link to this file, we should not unlink it
+  const media: HostedMedia = get(docData, fieldToUpdate);
+  if (data.name !== media.ref) {
+    return;
+  }
 
-  return doc.set(updatedDocData, { merge: true });
+  // unlink the firestore
+  // ! this will not work with array in the path like for poster
+  return doc.update({[fieldToUpdate]: { ref: '', url: '' } });
 }

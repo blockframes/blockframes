@@ -1,5 +1,5 @@
 import { ImgRef } from './media.firestore';
-
+import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 export * from './media.firestore';
 
 // TODO issue#3088
@@ -53,7 +53,18 @@ export function getRatio(format: Formats) {
   return width / height;
 }
 
-// @todo(#3063) Update this function to unsupport oldImgRef
 export function getMediaUrl(ref: ImgRef) {
   return isSafari() ? ref.urls?.fallback : ref.urls?.original;
+}
+
+/** Used this only for background to let the browser deal with that with picture */
+export function getAssetPath(asset: string, theme: 'dark' | 'light', type: 'images' | 'logo' = 'images') {
+  const format = asset.split('.').pop();
+  if (format === 'webp') {
+    return isSafari()
+      ? `assets/${type}/${theme}-fallback/${asset.replace('.webp', '.png')}`
+      : `assets/${type}/${theme}/${asset}`
+  } else {
+    return `assets/${type}/${theme}/${asset}`;
+  }
 }

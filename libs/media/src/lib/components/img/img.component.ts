@@ -27,12 +27,11 @@ export class ImgComponent implements OnInit, OnDestroy {
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set ref(path: ImgRef) {
     try {
-      if (path.ref && path.urls) {
-        this.srcFallback = path.urls.fallback;
-        const sizes = getImgSize(path.ref);
-        const imgSizesNoOriginal = imgSizeDirectory.filter(size => size !== 'original');
-        const srcset = imgSizesNoOriginal
-          .map(size => `${path.urls[size]} ${sizes[size]}w`)
+      if (!!path.fallback.url && !!path.xs.url && !!path.md.url && !!path.lg.url) {
+        this.srcFallback = path.fallback.url;
+        const sizes = getImgSize(path.fallback.url);
+        const srcset = imgSizeDirectory
+          .map(size => `${path[size].url} ${sizes[size]}w`)
           .join(', ');
         this.srcset = srcset;
       } else {
