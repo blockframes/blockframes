@@ -8,17 +8,6 @@ import { getImgSize, imgSizeDirectory, ImgSizeDirectory, ImgRef } from '@blockfr
 
 export async function resize(ref: string) {
 
-  if (filePathElements.length !== 5) {
-    throw new Error('unhandled filePath:' + filePath);
-  }
-
-  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
-
-  if (uploadedSize !== 'original') {
-    return false;
-  }
-
-  const directory = dirname(filePath);
   const workingDir = join(tmpdir(), 'tmpFiles');
   const tmpFileName = ` ${Math.random().toString(36).substring(7)}-${new Date().getTime()}.webp`;
   const tmpFilePath = join(workingDir, tmpFileName);
