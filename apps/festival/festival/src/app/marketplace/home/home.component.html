@@ -26,6 +26,20 @@
           </ng-container>
         </bf-carousel>
         <ng-container *ngIf="i === 0">
+          <!-- Featured Sales Agents -->
+          <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+            <h1>Featured Sales Agents</h1>
+            <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
+              <span>See all</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+          </div>
+          <bf-carousel flex>
+            <ng-container *ngFor="let org of orgs$ | async">
+             <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+            </ng-container>
+          </bf-carousel>
+          <!-- Events Banner -->
           <div fxLayout="column" fxLayoutAlign="center center" class="upcoming-events-banner dark-contrast-theme">
             <h1>Don't miss anything<br/>on Archipel Market</h1>
             <a mat-flat-button color="accent" routerLink="/c/o/marketplace/event">Check out Upcoming Screenings</a>

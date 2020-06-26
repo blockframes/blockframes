@@ -94,6 +94,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return queryChanges.call(this, query);
   }
 
+  public queryWithoutMovies(queryFn: QueryFn) {
+    const query = { path: 'orgs', ...queryFn }
+    return queryChanges.call(this, query);
+  }
+
   /** Add a new organization */
   public async addOrganization(organization: Partial<Organization>, user: User | PublicUser = this.authQuery.user): Promise<string> {
     const newOrganization = createOrganization({
