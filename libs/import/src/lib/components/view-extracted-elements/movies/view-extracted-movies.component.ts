@@ -7,7 +7,6 @@ import {
   createMovieSalesCast,
   createMovieSalesInfo,
   createMovieFestivalPrizes,
-  createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
   createPrize,
@@ -18,7 +17,10 @@ import {
   createMovieStory,
   createDocumentMeta,
   createBoxOffice,
-  createMovieReview
+  createMovieReview,
+  createPromotionalImage,
+  createPromotionalHostedMedia,
+  createPromotionalExternalMedia,
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -198,11 +200,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // POSTER (Poster)
         // TODO issue 3091
         const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
-        const moviePoster = createPromotionalElement({
+        const posterKey = `${Object.keys(movie.promotionalElements.poster).length}`
+        const moviePoster = createPromotionalImage({
           label: 'Poster',
           media: poster,
         });
-        movie.promotionalElements.poster.push(moviePoster);
+        movie.promotionalElements.poster[posterKey] = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -614,7 +617,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalExternalMedia({
             label: 'Screener link',
             media: spreadSheetRow[SpreadSheetMovie.screenerLink],
           });
@@ -631,7 +634,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PROMO REEL LINK
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalExternalMedia({
             label: 'Promo reel link',
             media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
           });
@@ -649,7 +652,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // TRAILER LINK
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalExternalMedia({
             label: 'Trailer link',
             media: spreadSheetRow[SpreadSheetMovie.trailerLink],
           });
@@ -667,7 +670,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PITCH TEASER LINK
         if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalExternalMedia({
             label: 'Pitch teaser link',
             media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
           });
@@ -685,11 +688,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalHostedMedia({
             label: 'Scenario link',
             media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
           });
-
+          // TODO issue#3091
           movie.promotionalElements.scenario = promotionalElement;
         } else {
           importErrors.errors.push({
@@ -817,7 +820,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // IMAGE BANNIERE LINK
         if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalImage({
             label: 'Banner',
             media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
             ratio: 'rectangle'
@@ -836,11 +839,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // IMAGE STILLS LINK
         if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
-          movie.promotionalElements.still_photo = [];
+          movie.promotionalElements.still_photo = {};
           for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
             const media = await this.imageUploader.upload(still);
-            const element = createPromotionalElement({ label: 'Still', media });
-            movie.promotionalElements.still_photo.push(element);
+            const element = createPromotionalImage({ label: 'Still', media });
+            const stillPhotoKey = `${Object.keys(movie.promotionalElements.still_photo).length}`
+            movie.promotionalElements.still_photo[stillPhotoKey] = element;
           }
         } else {
           importErrors.errors.push({
@@ -854,10 +858,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRESENTATION DECK
         if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
-          const promotionalElement = createPromotionalElement({
+          const promotionalElement = createPromotionalHostedMedia({
             label: 'Presentation deck',
             media: spreadSheetRow[SpreadSheetMovie.presentationDeck],
           });
+          // TODO issue#3091
           movie.promotionalElements.presentation_deck = promotionalElement;
         } else {
           importErrors.errors.push({
@@ -1073,7 +1078,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.promotionalElements.poster.length === 0) {
+    if (Object.keys(movie.promotionalElements.poster).length === 0) {
       errors.push({
         type: 'error',
         field: 'promotionalElements.poster',

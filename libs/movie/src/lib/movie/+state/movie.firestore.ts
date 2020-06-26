@@ -17,7 +17,7 @@ import {
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { ImgRef } from "@blockframes/media/+state/media.firestore";
+import { ImgRef, HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
@@ -122,25 +122,38 @@ export interface Prize {
 }
 
 export interface PromotionalElement {
-  label: string,
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
-  media: ImgRef,
+  label: string;
   language?: LanguagesSlug,
   country?: TerritoriesSlug,
 }
 
+export interface PromotionalExternalMedia extends PromotionalElement {
+  media: ExternalMedia,
+}
+
+export interface PromotionalHostedMedia extends PromotionalElement {
+  media: HostedMedia,
+}
+
+export interface PromotionalImage extends PromotionalElement {
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
+  media: ImgRef,
+}
+
 export interface MoviePromotionalElements {
-  trailer: PromotionalElement[],
-  banner: PromotionalElement,
-  poster: PromotionalElement[],
-  still_photo: PromotionalElement[],
-  presentation_deck: PromotionalElement,
-  scenario: PromotionalElement,
-  promo_reel_link: PromotionalElement,
-  screener_link: PromotionalElement,
-  trailer_link: PromotionalElement,
-  teaser_link: PromotionalElement,
+  banner: PromotionalImage,
+  poster: Record<string, PromotionalImage>,
+  still_photo: Record<string, PromotionalImage>,
+
+  trailer: Record<string, PromotionalHostedMedia>,
+  presentation_deck: PromotionalHostedMedia,
+  scenario: PromotionalHostedMedia,
+
+  promo_reel_link: PromotionalExternalMedia,
+  screener_link: PromotionalExternalMedia,
+  trailer_link: PromotionalExternalMedia,
+  teaser_link: PromotionalExternalMedia,
 }
 
 export interface Title {
@@ -226,7 +239,7 @@ export interface MovieOfficialIds {
 export interface MovieMain {
   internalRef?: string,
   title: Title,
-  directors?: Credit[],
+  directors?: Credit[], // TODO issue#3179
   officialIds?: MovieOfficialIds,
   productionYear?: number,
   genres?: GenresSlug[],
