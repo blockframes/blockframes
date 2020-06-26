@@ -11,7 +11,6 @@ import * as invitations from './invitation';
 import {
   onDocumentCreate,
   onDocumentDelete,
-  onDocumentUpdate,
   onDocumentWrite,
 } from './utils';
 import { logErrors } from './internals/sentry';
