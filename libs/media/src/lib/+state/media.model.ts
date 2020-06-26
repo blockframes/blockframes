@@ -1,4 +1,4 @@
-import { ImgRef, ExternalMedia } from './media.firestore';
+import { ImgRef } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 export * from './media.firestore';
 
