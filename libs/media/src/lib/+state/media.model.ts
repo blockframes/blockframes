@@ -1,4 +1,4 @@
-import { ImgRef } from './media.firestore';
+import { ImgRef, ExternalMedia } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 export * from './media.firestore';
 
@@ -53,8 +53,11 @@ export function getRatio(format: Formats) {
   return width / height;
 }
 
-export function getMediaUrl(ref: ImgRef) {
-  return ref.original.url;
+/** Return the url of the original image, unless we are on Safari
+ * were it returns the fallback image instead
+ */
+export function getImageUrl(image: ImgRef) {
+  return isSafari() ? image.fallback.url : image.original.url;
 }
 
 /** Used this only for background to let the browser deal with that with picture */
