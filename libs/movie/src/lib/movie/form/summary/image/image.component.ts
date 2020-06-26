@@ -18,34 +18,48 @@ export class MovieSummaryImageComponent implements OnInit {
   }
 
   get bannerHasNoValue() {
-    return !this.promotionalElements.get('banner').get('media').original.get('url').value;
+    try {
+      return !this.promotionalElements.get('banner').get('media').original.get('url').value;
+    } catch (error) {
+      console.warn(error);
+      return true;
+    }
   }
 
   get posterHasNoValue() {
+    try {
 
-    const keys = Object.keys(this.promotionalElements.get('poster'));
+      const keys = Object.keys(this.promotionalElements.get('poster'));
 
-    // if there is no poster
-    if (keys.length === 0) {
+      // if there is no poster
+      if (keys.length === 0) {
+        return true;
+      }
+
+      // or if at least one poster as an empty url
+      return keys.some(key => !this.promotionalElements.get('poster').get(key).get('media').get('original').get('url').value);
+
+    } catch (error) {
+      console.warn(error);
       return true;
     }
-
-    // or if at least one poster as an empty url
-    return keys.some(key => !this.promotionalElements.get('poster').get(key).get('media').get('original').get('url').value);
-
   }
 
   get photoHasNoValue() {
+    try {
+      const keys = Object.keys(this.promotionalElements.get('still_photo'));
 
-    const keys = Object.keys(this.promotionalElements.get('still_photo'));
+      // if there is no still photos
+      if (keys.length === 0) {
+        return true;
+      }
 
-    // if there is no still photos
-    if (keys.length === 0) {
+      // or if at least one still photo as an empty url
+      return keys.some(key => !this.promotionalElements.get('still_photo').get(key).get('media').get('original').get('url').value);
+
+    } catch (error) {
+      console.warn(error);
       return true;
     }
-
-    // or if at least one still photo as an empty url
-    return keys.some(key => !this.promotionalElements.get('still_photo').get(key).get('media').get('original').get('url').value);
-
   }
 }

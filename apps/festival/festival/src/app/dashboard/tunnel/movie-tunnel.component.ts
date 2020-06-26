@@ -9,6 +9,8 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -61,13 +63,22 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
+  public bannerMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.banner.media.original);
+  // TODO POSTER
+  // TODO STILL PHOTO
+
+  // TODO TRAILER
+  public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
+  public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
+
   public exitRoute: string;
 
   constructor(
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private mediaService: MediaService,
   ) { }
 
   async ngOnInit() {
@@ -81,7 +92,25 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
       return;
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
+
+    // console.log('XXX', movie);
+    // console.log(this.presentationDeckMediaForm.value);
+    // console.log(this.scenarioMediaForm.value);
+
     await this.service.save(movie);
+
+    await this.mediaService.uploadOrDeleteMedia([
+      this.bannerMediaForm,
+      // TODO POSTER
+      // TODO STILL PHOTO
+
+      // TODO TRAILER
+      this.presentationDeckMediaForm,
+      this.scenarioMediaForm,
+    ]);
+
+    // TODO call upload on media service !!!
+
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
