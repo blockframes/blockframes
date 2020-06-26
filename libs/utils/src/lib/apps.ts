@@ -28,7 +28,7 @@ export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
 
-export const sendgridUrl: Record<App, string> = {
+export const applicationUrl: Record<App, string> = {
   festival: appUrlMarket,
   catalog: appUrlContent
 }

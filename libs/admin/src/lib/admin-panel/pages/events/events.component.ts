@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { getValue } from '@blockframes/utils/helpers';
-import { EventService } from '@blockframes/event/+state/event.service';
+import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
+import { EventService, Event } from '@blockframes/event/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 
 @Component({
   selector: 'admin-events',
@@ -15,6 +16,9 @@ export class EventsComponent implements OnInit {
     'type': 'Type',
     'start': 'Start',
     'end': 'End',
+    'attendees': 'Number of attendees',
+    'confirmed': 'Confirmed',
+    'pending': 'Pending',
     'edit': 'Edit',
   };
 
@@ -24,12 +28,17 @@ export class EventsComponent implements OnInit {
     'type',
     'start',
     'end',
+    'attendees',
+    'confirmed',
+    'pending',
     'edit',
   ];
-  public rows: Event[] = [];
+  public rows: any[] = [];
+  public eventListLoaded = false;
 
   constructor(
     private eventService: EventService,
+    private invitationService: InvitationService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -42,11 +51,17 @@ export class EventsComponent implements OnInit {
         id: row.id,
         link: `/c/o/admin/panel/event/${row.id}`,
       }
+
+      const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', row.id));
+      row.attendees = invitations.length;
+      row.confirmed = invitations.filter(i => i.status === 'accepted').length;
+      row.pending = invitations.filter(i => i.status === 'pending').length;
+
       return row;
     });
 
     this.rows = await Promise.all(promises);
-
+    this.eventListLoaded = true;
     this.cdRef.markForCheck();
   }
 
@@ -58,5 +73,20 @@ export class EventsComponent implements OnInit {
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  public exportTable() {
+    const exportedRows = this.rows.map(i => ({
+      'event id': i.id,
+      'event name': i.title,
+      'event type': i.type,
+      'start date': i.start,
+      'end date': i.end,
+      'attendees': i.attendees,
+      'confirmed': i.confirmed,
+      'pending': i.pending,
+      'privacy status': i.isPrivate ? 'private' : 'public',
+    }))
+    downloadCsvFromJson(exportedRows, 'invitations-list');
   }
 }
