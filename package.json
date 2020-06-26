@@ -36,6 +36,7 @@
     "format": "./node_modules/.bin/nx format:write",
     "format:write": "./node_modules/.bin/nx format:write",
     "format:check": "./node_modules/.bin/nx format:check",
+    "migrate:deploy-secrets": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/migrate-bash-secrets.ts",
     "update": "ng update @nrwl/workspace",
     "update:check": "ng update",
     "workspace-schematic": "./node_modules/.bin/nx workspace-schematic",
@@ -46,7 +47,7 @@
     "analyze:marketplace": "webpack-bundle-analyzer dist/apps/catalog/marketplace/stats.json --port=8000",
     "pwm": "pwmetrics --config",
     "bundlesize": "bundlesize",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points; npm run migrate:deploy-secrets",
     "storybook:ui": "npx ng run ui:storybook",
     "storybook:movie": "npx ng run movie:storybook",
     "prerender:festival": "npx ng build festival --prod && npx ng run festival:server --configuration production && npx angular-prerender --browser-target festival:build --server-target festival:server"
