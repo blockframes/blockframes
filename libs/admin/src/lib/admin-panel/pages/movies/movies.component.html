@@ -1,4 +1,4 @@
-<section fxLayout="column">
+<main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
@@ -58,6 +58,6 @@
       <ng-template #noOrg>--</ng-template>
     </ng-template>
   </bf-table-filter>
-</section>
+</main>
 
 

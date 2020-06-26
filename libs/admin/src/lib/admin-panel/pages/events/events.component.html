@@ -1,4 +1,4 @@
-<section fxLayout="column">
+<main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Events</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button [disabled]="!eventListLoaded" mat-flat-button color="primary" (click)="exportTable()">
@@ -21,4 +21,4 @@
       {{ end | date: 'medium'}}
     </ng-template>
   </bf-table-filter>
-</section>
+</main>

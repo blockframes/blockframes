@@ -1,4 +1,4 @@
-<section fxLayout="column">
+<main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
@@ -34,4 +34,4 @@
       </a>
     </ng-template>
   </bf-table-filter>
-</section>
+</main>
