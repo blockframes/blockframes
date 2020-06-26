@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
-import { getAssetPath, getMediaUrl } from '@blockframes/media/+state/media.model';
+import { getAssetPath, getImageUrl } from '@blockframes/media/+state/media.model';
 
 @Directive({
   selector: '[bgRef], [bgAsset]'
@@ -19,11 +19,11 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set bgRef(path: ImgRef) {
-    if(!path){
+  @Input() set bgRef(image: ImgRef) {
+    if(!image){
       this.ref$.next('');
     } try {
-      const url = getMediaUrl(path);
+      const url = getImageUrl(image);
       this.ref$.next(url);
     } catch (err) {
       this.ref$.next('')

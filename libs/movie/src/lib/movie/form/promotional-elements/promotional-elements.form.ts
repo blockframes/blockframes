@@ -1,22 +1,19 @@
-import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalImage, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
+import { MoviePromotionalElements, createMoviePromotionalElements, createPromotionalImage, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
 import { PromotionalImage, PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
-import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { ExternalMediaForm } from '@blockframes/media/directives/media/media.form';
 
 // ------------------------------
 //   Promotional External Media
 // ------------------------------
 
 function createPromotionalExternalMediaControl(promotionalExternalMedia?: Partial<PromotionalExternalMedia>) {
-  const { label, media, language, country } = createPromotionalExternalMedia(promotionalExternalMedia);
+  const { label, media } = createPromotionalExternalMedia(promotionalExternalMedia);
   return {
     label: new FormControl(label),
     media: new ExternalMediaForm(media),
-    language: new FormControl(language),
-    country: new FormControl(country),
   }
 }
 
@@ -33,12 +30,13 @@ export class MoviePromotionalExternalMediaForm extends FormEntity<PromotionalExt
 // ------------------------------
 
 function createPromotionalHostedMediaControl(promotionalHostedMedia?: Partial<PromotionalHostedMedia>) {
-  const { label, media, language, country } = createPromotionalHostedMedia(promotionalHostedMedia);
+  const { label, media } = createPromotionalHostedMedia(promotionalHostedMedia);
   return {
     label: new FormControl(label),
-    media: new HostedMediaForm(media),
-    language: new FormControl(language),
-    country: new FormControl(country),
+    media: new FormGroup({
+      ref: new FormControl(media.ref),
+      url: new FormControl(media.url),
+    }),
   }
 }
 export type PromotionalHostedMediaControl = ReturnType<typeof createPromotionalHostedMediaControl>;
@@ -54,14 +52,12 @@ export class MoviePromotionalHostedMediaForm extends FormEntity<PromotionalHoste
 // ------------------------------
 
 function createPromotionalImageControl(promotionalImage?: Partial<PromotionalImage>) {
-  const { label, size, ratio, media, language, country } = createPromotionalImage(promotionalImage);
+  const { label, size, ratio, media } = createPromotionalImage(promotionalImage);
   return {
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
     media: new ImgRefForm(media),
-    language: new FormControl(language),
-    country: new FormControl(country),
   }
 }
 export type PromotionalImageControl = ReturnType<typeof createPromotionalImageControl>;

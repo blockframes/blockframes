@@ -130,7 +130,7 @@ export class CropperComponent implements OnInit {
       console.log('**', this.form.value);
       this.form.patchValue({
         ref: `${this.storagePath}/original/`,
-        blob: blob,
+        blobOrFile: blob,
         delete: false,
         fileName: fileName,
       })
