@@ -18,7 +18,7 @@ const EMPTY_REF: ImgRef = {
 const rowsConcurrency = 10;
 
 /**
- * Migrate old ImgRef objects to new one.
+ * Migrate old watermarks into new ones (HostedMedia).
  */
 export async function upgrade(db: Firestore, storage: Storage) {
   console.log('//////////////');
