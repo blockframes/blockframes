@@ -3,7 +3,7 @@ import { PublicUser } from "@blockframes/user/types";
 import { createHostedMedia } from "@blockframes/media/+state/media.model";
 
 /**
- * Migrate old ImgRef objects to new one.
+ * Migrate old watermarks into new ones (HostedMedia).
  */
 export async function upgrade(db: Firestore) {
     

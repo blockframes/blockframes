@@ -87,9 +87,9 @@ export async function updatePosterStructure(db: Firestore) {
     const movieData = movieDocSnapshot.data();
 
     if (movieData.main && movieData.main.poster) {
-      const media = createImgRef(movieData.main.poster);
+      const media = createOldImgRef(movieData.main.poster);
 
-      const moviePoster = createPromotionalElement({
+      const moviePoster = createOldPromotionalElement({
         label: 'Poster',
         media,
       });
@@ -115,17 +115,17 @@ export async function upgrade(db: Firestore) {
   await updatePosterStructure(db);
 }
 
-function createPromotionalElement(
-  promotionalElement: Partial<PromotionalElement> = {}
-): PromotionalElement {
+function createOldPromotionalElement(
+  promotionalElement: Partial<OldPromotionalElement> = {}
+): OldPromotionalElement {
   return {
     label: '',
     ...promotionalElement,
-    media: createImgRef(promotionalElement.media)
+    media: createOldImgRef(promotionalElement.media)
   };
 }
 
-export function createImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
+export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
   const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
   return {
     ref: '',
@@ -139,7 +139,7 @@ export function createImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
   };
 }
 
-interface PromotionalElement {
+interface OldPromotionalElement {
   label: string,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
