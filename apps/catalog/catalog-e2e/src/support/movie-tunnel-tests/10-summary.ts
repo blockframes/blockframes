@@ -4,7 +4,7 @@ import { TunnelSummaryPage } from "../pages/dashboard";
 import { CONTENT_TYPES, DIRECTORS, MAIN_COUNTRIES, MEDIA, MAIN_LANGUAGES, GENRE, CAST_MEMBERS, FESTIVALS, AWARDS, PREMIERE, YEAR } from "./1-main";
 import { KEYWORDS, SYNOPSIS, KEY_ASSETS } from "./2-storyline";
 import { PRODUCTION_YEAR, STAKEHOLDERS, CREDITS_COUNTRIES, PRODUCERS, CREDITS_ROLES, CREW_MEMBERS } from "./3-credits";
-import { BUDGET_RANGE, EARNING, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
+import { BUDGET_RANGE, BUDGET_COUNTRIES, RATING, QUOTAS, CRITIC } from "./4-budget";
 import { INFO_FORMATS, INFO_LANGUAGE } from "./5-technical-info";
 import { FILES_LINKS } from "./7-files";
 import { VALUATION } from "./9-valuation";
@@ -13,6 +13,7 @@ const TV_FILM = 'Tv Film';
 const RUNTIME = '1h 27m';
 const DATE = '10/10/07';
 const SUBTITLED = 'Subtitled';
+const EARNING = '120,000';
 
 export const summaryTest = () => {
   const p1 = new TunnelSummaryPage();
