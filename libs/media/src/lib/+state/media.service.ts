@@ -192,8 +192,8 @@ export class MediaService {
         await this.removeFile(mediaForm.ref.value);
         console.log('deleted');
 
-      // if we have a blob = the user create or update the file
-      } else if (!!mediaForm.blob.value) {
+      // if we have a blob = the user created or updated the file
+      } else if (!!mediaForm.blobOrFile.value) {
 
         // if the file already have a path it means that we are in an update
         // we first need to delete the old file
@@ -209,11 +209,11 @@ export class MediaService {
         // upload the new file
         const file: UploadFile = {
           path: mediaForm.ref.value, // be careful, here we can easily have a wrong path
-          data: mediaForm.blob.value,
+          data: mediaForm.blobOrFile.value,
           fileName: mediaForm.fileName.value
         }
         console.log(file);
-        this.uploadBlob(file);
+        this.upload(mediaForm.ref.value, mediaForm.fileName.value, mediaForm.blobOrFile.value);
       } else {
         console.log('nothing needs to be done');
       }
