@@ -1,7 +1,4 @@
 import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
@@ -190,4 +187,36 @@ const updateImgRef = async (
     console.log('Empty ref');
     return EMPTY_REF;
   }
+}
+
+interface ImgRef {
+  ref: string;
+  urls: {
+    original: string;
+    fallback?: string;
+    xs?: string;
+    md?: string;
+    lg?: string;
+  };
+}
+
+interface PublicUser {
+  uid: string;
+  email: string;
+  avatar?: ImgRef;
+  watermark?: ImgRef;
+  firstName?: string;
+  lastName?: string;
+  orgId?: string;
+}
+
+interface PublicOrganization {
+  id: string;
+  denomination: Denomination;
+  logo: ImgRef;
+}
+
+interface Denomination {
+    full: string;
+    public?: string;
 }
