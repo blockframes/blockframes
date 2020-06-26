@@ -1,7 +1,6 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
-import { createPromotionalElement } from '@blockframes/movie/+state/movie.model';
+import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from '@blockframes/utils/static-model';
 
 /**
  * Update stakeholders in movie documents.
@@ -88,9 +87,9 @@ export async function updatePosterStructure(db: Firestore) {
     const movieData = movieDocSnapshot.data();
 
     if (movieData.main && movieData.main.poster) {
-      const media = createImgRef(movieData.main.poster);
+      const media = createOldImgRef(movieData.main.poster);
 
-      const moviePoster = createPromotionalElement({
+      const moviePoster = createOldPromotionalElement({
         label: 'Poster',
         media,
       });
@@ -114,4 +113,48 @@ export async function updatePosterStructure(db: Firestore) {
 export async function upgrade(db: Firestore) {
   await updateStakeholdersMovieStructure(db);
   await updatePosterStructure(db);
+}
+
+function createOldPromotionalElement(
+  promotionalElement: Partial<OldPromotionalElement> = {}
+): OldPromotionalElement {
+  return {
+    label: '',
+    ...promotionalElement,
+    media: createOldImgRef(promotionalElement.media)
+  };
+}
+
+export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
+  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
+  return {
+    ref: '',
+    urls: {
+      original: '',
+      xs: '',
+      md: '',
+      lg: '',
+    },
+    ..._ref
+  };
+}
+
+interface OldPromotionalElement {
+  label: string,
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
+  media: OldImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
+}
+
+interface OldImgRef {
+  ref: string;
+  urls: {
+    original: string;
+    fallback?: string;
+    xs?: string;
+    md?: string;
+    lg?: string;
+  };
 }
