@@ -108,7 +108,7 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    return storeSearchableMovie(after, orgName(creatorOrg));
+    await storeSearchableMovie(after, orgName(creatorOrg));
   }
 
   // BANNER
