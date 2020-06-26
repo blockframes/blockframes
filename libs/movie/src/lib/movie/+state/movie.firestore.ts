@@ -123,8 +123,6 @@ export interface Prize {
 
 export interface PromotionalElement {
   label: string;
-  language?: LanguagesSlug,
-  country?: TerritoriesSlug,
 }
 
 export interface PromotionalExternalMedia extends PromotionalElement {
