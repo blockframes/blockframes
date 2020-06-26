@@ -253,3 +253,21 @@ async function runChunks(docs, cb) {
     await Promise.all(promises);
   }
 }
+
+async function updateMovies(movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
+
+    const links = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link']
+    const legacyKeys = ['originalFileName', 'originalRef', 'ref'];
+
+    movies.docs.map(doc => {
+        const movie = doc.data() as MovieDocument;
+        links.forEach(link => {
+            movie.promotionalElements[link].media = createExternalMedia(movie.promotionalElements[link].media);
+            legacyKeys.forEach(key => delete movie.promotionalElements[link].media[key]);
+        })
+    })
+}
+
+function createExternalMedia(media: Partial<ExternalMedia>) {
+    return { url: media?.url || '' };
+}
