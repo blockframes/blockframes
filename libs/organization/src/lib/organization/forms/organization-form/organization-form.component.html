@@ -14,7 +14,7 @@
             <mat-label>Company Name</mat-label>
             <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
             <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
-            <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
+            <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">This company already exists.</mat-error>
           </mat-form-field>
         </article>
         <mat-form-field appearance="outline">
