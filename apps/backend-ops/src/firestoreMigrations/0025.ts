@@ -5,7 +5,7 @@ import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
-const EMPTY_REF: ImgRef = {
+const EMPTY_REF: OldImgRef = {
   ref: '',
   urls: { original: '' }
 };
@@ -39,7 +39,7 @@ async function updateUsers(
 ) {
   return Promise.all(
     users.docs.map(async doc => {
-      const updatedUser = await updateUserAvatar(doc.data() as PublicUser, storage);
+      const updatedUser = await updateUserAvatar(doc.data() as OldPublicUser, storage);
       await doc.ref.set(updatedUser);
     })
   );
@@ -51,7 +51,7 @@ async function updateOrganizations(
 ) {
   return Promise.all(
     organizations.docs.map(async doc => {
-      const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+      const updatedOrg = await updateOrgLogo(doc.data() as OldPublicOrganization, storage);
       await doc.ref.set(updatedOrg);
     })
   );
@@ -115,14 +115,14 @@ const updateMovieField = async <T extends Credit | PromotionalElement>(
   return value;
 }
 
-const updateUserAvatar = async (user: PublicUser, storage: Storage) => {
+const updateUserAvatar = async (user: OldPublicUser, storage: Storage) => {
   const destinationFolder = `users/${user.uid}/avatar`;
   const newImageRef = await updateImgRef(destinationFolder, user, 'avatar', storage);
   user.avatar = newImageRef;
   return user;
 };
 
-const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
+const updateOrgLogo = async (org: OldPublicOrganization, storage: Storage) => {
   const destinationFolder = `orgs/${org.id}/logo`;
   const newImageRef = await updateImgRef(destinationFolder, org, 'logo', storage);
   org.logo = newImageRef;
@@ -132,10 +132,10 @@ const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
 
 const updateImgRef = async (
   destinationFolder: string,
-  element: PublicUser | PublicOrganization | Credit | PromotionalElement,
+  element: OldPublicUser | OldPublicOrganization | Credit | PromotionalElement,
   key: 'logo' | 'avatar' | 'media',
   storage: Storage
-): Promise<ImgRef> => {
+): Promise<OldImgRef> => {
 
   // get the current ref
   const media = element[key]; // get old ImgRef format
@@ -206,7 +206,7 @@ const updateImgRef = async (
   }
 }
 
-interface ImgRef {
+interface OldImgRef {
   ref: string;
   urls: {
     original: string;
@@ -217,23 +217,23 @@ interface ImgRef {
   };
 }
 
-interface PublicUser {
+interface OldPublicUser {
   uid: string;
   email: string;
-  avatar?: ImgRef;
-  watermark?: ImgRef;
+  avatar?: OldImgRef;
+  watermark?: OldImgRef;
   firstName?: string;
   lastName?: string;
   orgId?: string;
 }
 
-interface PublicOrganization {
+interface OldPublicOrganization {
   id: string;
-  denomination: Denomination;
-  logo: ImgRef;
+  denomination: OldDenomination;
+  logo: OldImgRef;
 }
 
-interface Denomination {
+interface OldDenomination {
     full: string;
     public?: string;
 }
