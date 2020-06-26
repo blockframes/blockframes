@@ -56,7 +56,7 @@ export function userInvite(
   password: string,
   orgName: string,
   pageURL: string = appUrlMarket, // @TODO #3081 appUrlAdmin
-  templateId: string = templateIds.user.credentials.joinOrganization.catalog
+  templateId: string = templateIds.user.credentials.joinOrganization.festival
 ): EmailTemplateRequest {
   const data = {
     userEmail: email,
