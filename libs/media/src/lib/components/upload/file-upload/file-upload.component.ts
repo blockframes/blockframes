@@ -3,51 +3,46 @@ import {
   Input,
   HostListener,
   ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  ChangeDetectorRef
+  OnInit,
 } from '@angular/core';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { Observable } from 'rxjs';
+import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
-import { ImgRef, createImgRef, HostedMedia, createHostedMedia } from '../../../+state/media.firestore';
+import { getMimeType } from '@blockframes/utils/file-sanitizer';
 
 @Component({
-  selector: 'file-upload',
+  selector: '[form] [storagePath] file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadComponent {
+export class FileUploadComponent implements OnInit {
   /** use in the html to specify the input, ex: ['.json', '.png'] */
   @Input() public accept: string[];
   /** mime type, ex: ['image/png', 'application/json'] */
   @Input() public types: string[];
-  /** should we upload the file to firestore */
-  @Input() public uploadOnFirestore = false;
   /** firestore path */
-  @Input() public path: string;
-  /** Define what will be emited by storeUploaded event */
-  @Input() public return = 'string'; // string | imgRef
-  /** emit the current file as a Uint8Array */
-  @Output() public uploaded = new EventEmitter<Uint8Array>();
-  /** event emited when the firestore upload is complete */
-  @Output() public storeUploaded = new EventEmitter<string | HostedMedia>();
+  @Input() storagePath: string;
+  @Input() form: HostedMediaForm;
 
-  public task: AngularFireUploadTask;
-  public percentage: Observable<number>;
-  public downloadURL: string;
-  public state: 'waiting' | 'hovering' | 'uploading' | 'success' = 'waiting';
+  public state: 'waiting' | 'hovering' | 'ready' = 'waiting';
 
+  constructor(private snackBar: MatSnackBar) { }
 
-  constructor(private afStorage: AngularFireStorage, private snackBar: MatSnackBar, private cdr: ChangeDetectorRef) { }
+  ngOnInit() {
+    // show current file
+    if (this.form.oldRef.value) {
+      this.form.patchValue({
+        fileName: this.form.oldRef.value.split('/').pop(),
+      });
+      this.state = 'ready';
+    }
+  }
 
   @HostListener('drop', ['$event'])
   // TODO: issue#875, use DragEvent type
   onDrop($event: any) {
     $event.preventDefault();
-    this.upload($event.dataTransfer.files);
+    this.state = 'ready';
   }
 
   @HostListener('dragover', ['$event'])
@@ -64,7 +59,8 @@ export class FileUploadComponent {
     this.state = 'waiting';
   }
 
-  public async upload(files: FileList) {
+  public selected(files: FileList) {
+    console.log(files);
     if (!files.item(0)) {
       this.snackBar.open('No file found', 'close', { duration: 1000 });
       this.state = 'waiting';
@@ -89,39 +85,25 @@ export class FileUploadComponent {
       return;
     }
 
-    if (this.uploadOnFirestore) {
-      const storagePath = `${this.path}/${sanitizeFileName(file.name)}`;
-      this.task = this.afStorage.upload(storagePath, file);
+    this.state = 'ready';
 
-      // Progress monitoring
-      this.state = 'uploading';
-      this.percentage = this.task.percentageChanges();
-
-      const snapshot = await this.task;
-
-      // Success
-      this.state = 'success';
-      this.downloadURL = await snapshot.ref.getDownloadURL();
-
-      if (this.return === 'string') {
-        this.storeUploaded.emit(this.downloadURL);
-      } else {
-        this.storeUploaded.emit(createHostedMedia({ url: this.downloadURL }));
-      }
-    }
-
-    const reader = new FileReader();
-    reader.addEventListener('loadend', _ => {
-      const buffer = new Uint8Array(reader.result as ArrayBuffer);
-      this.uploaded.emit(buffer);
-    });
-    reader.readAsArrayBuffer(file);
+    this.form.patchValue({
+      ref: this.storagePath,
+      blobOrFile: file,
+      delete: false,
+      fileName: file.name,
+    })
+    this.form.markAsDirty();
   }
 
-  async delete() {
-    this.state = 'uploading';
-    await this.afStorage.storage.refFromURL(this.downloadURL).delete();
+  public reset() {
     this.state = 'waiting';
-    this.cdr.markForCheck();
+
+    this.form.patchValue({
+      blobOrFile: undefined,
+      delete: false,
+      fileName: '',
+    })
+    this.form.markAsDirty();
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDet
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
-import { getMediaUrl, getImgSize, ImgRef, imgSizeDirectory } from '@blockframes/media/+state/media.model';
+import { getImageUrl, getImgSize, ImgRef, imgSizeDirectory } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',
@@ -23,18 +23,18 @@ export class ImgComponent implements OnInit, OnDestroy {
   @Input() alt: string;
 
   /** Set src attribute in img tag with the url stored in firestore.
-   *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set ref(path: ImgRef) {
+   *  If image is wrong, src will be set with provided placeholder or empty string */
+  @Input() set ref(image: ImgRef) {
     try {
-      if (!!path.fallback.url && !!path.xs.url && !!path.md.url && !!path.lg.url) {
-        this.srcFallback = path.fallback.url;
-        const sizes = getImgSize(path.fallback.url);
+      if (!!image.fallback.url && !!image.xs.url && !!image.md.url && !!image.lg.url) {
+        this.srcFallback = image.fallback.url;
+        const sizes = getImgSize(image.fallback.url);
         const srcset = imgSizeDirectory
-          .map(size => `${path[size].url} ${sizes[size]}w`)
+          .map(size => `${image[size].url} ${sizes[size]}w`)
           .join(', ');
         this.srcset = srcset;
       } else {
-        const url = getMediaUrl(path);
+        const url = getImageUrl(image);
         this.srcset = url;
       }
     } catch (err) {
