@@ -3,7 +3,7 @@
   width: 100%;
 }
 
-img.picture-hover {
+bf-img.picture-hover {
   height: 142px;
   opacity: 0.3;
 }
@@ -22,8 +22,9 @@ section {
 }
 
 .upload-button-container {
-  button {
+  button.mat-icon-button {
     width: 48px;
+    height: 55px;
     margin-bottom: 8px;
     bf-img {
       width: 100%;

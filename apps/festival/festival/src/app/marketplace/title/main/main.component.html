@@ -33,8 +33,8 @@
       <ul>
         <li *ngIf="movie.main.genres">
           <strong>Genre </strong>
-          <ng-container *ngFor="let genre of movie.main.genres">
-            <span>{{ genre | translateSlug: 'GENRES' }} </span>
+          <ng-container *ngFor="let genre of movie.main.genres, let isLast=last">
+            <span>{{ genre | translateSlug: 'GENRES' }}{{ isLast ? '' : ', '}} </span>
           </ng-container>
         </li>
         <li *ngIf="movie.main.directors">
@@ -70,7 +70,7 @@
       <ul>
         <ng-container *ngIf="movie.festivalPrizes.prizes as prizes">
           <li><strong>Festivals </strong></li>
-          <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
+          <li *ngFor="let prize of prizes">{{ getPrize(prize) | titlecase }}</li>
         </ng-container>
       </ul>
     </mat-card-content>
@@ -94,8 +94,7 @@
         <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
           <h5>Company Credits</h5>
           <ng-container *ngIf="movie.main.stakeholders as stakeholders">
-            <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Executive
-                Producer{stakeholders.executiveProducer.length, plural,=1 {} other {s}}</strong>
+            <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Production Companies</strong>
               <span> {{ getStakeholder(movie, 'executiveProducer') }}</span></li>
             <li *ngIf="stakeholders.coProducer.length > 0"><strong i18n>Co-Producer{stakeholders.coProducer.length,
                 plural,=1 {} other {s}}</strong>
@@ -103,7 +102,7 @@
           </ng-container>
           <ng-container *ngIf="movie.salesCast.producers.length > 0">
             <li><strong i18n>Producer{movie.salesCast.producers.length, plural,=1 {} other {s}}</strong>
-              <span> {{ getSalesCast(movie, 'producers') }}</span></li>
+              <span> {{ getSalesCast(movie, 'producers', 'PRODUCER_ROLES') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.main.stakeholders as stakeholders">
             <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length,
@@ -116,14 +115,10 @@
         </ng-container>
         <ng-container *ngIf="movie.salesCast.crew.length > 0">
           <h5>Artistic Crew</h5>
-          <ng-container *ngFor="let crew of movie.salesCast.crew; let isLast = last">
-            <li *ngIf="crew.role === 'score-composer'"><strong i18n>Score Composer{crew.length, plural,=1 {} other {s}}
-              </strong>
-              <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
-            <li *ngIf="crew.role === 'writer' as writer"><strong i18n>Writer{writer.length, plural,=1 {} other {s}}
-              </strong>
-              <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
-          </ng-container>
+          <li *ngFor="let crew of getSalesCrew(movie, 'crew', 'CREW_ROLES')">
+            <strong i18n>{{ crew.label }} </strong>
+            <span>{{ crew.firstName }} {{ crew.lastName }}</span>
+          </li>
         </ng-container>
       </ul>
     </mat-card-content>
@@ -136,14 +131,28 @@
     </mat-card-header>
     <mat-card-content>
       <ul>
-        <li *ngIf="movie.budget.estimatedBudget.from && movie.budget.estimatedBudget.to"><strong>Budget </strong>
-          <span>{{ budgetRange(movie.budget.estimatedBudget) }}</span></li>
-        <li *ngIf="movie.budget.boxOffice.length > 0 && hasTerritory(movie)"><strong>Box Office </strong>
-          <span *ngFor="let boxOffice of movie.budget.boxOffice; let isLast = last">
-            {{ boxOffice.value | number }} {{ boxOffice.unit | toLabel: 'unitBox' | async }}
-            ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}}){{ isLast ? '' : ', ' }}
-          </span>
+        <li *ngIf="movie.budget.estimatedBudget.from && movie.budget.estimatedBudget.to">
+          <strong>Budget </strong>
+          <span>{{ budgetRange(movie.budget.estimatedBudget) }}</span>
         </li>
+        <ng-container *ngIf="movie.budget.boxOffice.length > 0 && hasTerritory(movie)">
+          <li *ngFor="let boxOffice of movie.budget.boxOffice">
+            <strong>Box Office </strong>
+            <span>
+              <ng-container *ngIf="boxOffice.unit === 'boxoffice_dollar'">
+                <mat-icon [svgIcon]="'USD'" class="currency-icon"></mat-icon>
+              </ng-container>
+              <ng-container *ngIf="boxOffice.unit === 'boxoffice_euro'">
+                <mat-icon [svgIcon]="'EUR'" class="currency-icon"></mat-icon>
+              </ng-container>
+              {{ boxOffice.value | number }}
+              <ng-container *ngIf="boxOffice.unit === 'admissions'">
+                Admissions
+              </ng-container>
+              ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}})
+            </span>
+          </li>
+        </ng-container>
         <li *ngIf="movie.salesInfo.certifications.length > 0"><strong>Quotas </strong>
           <span
             *ngFor="let quota of movie.salesInfo.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span>

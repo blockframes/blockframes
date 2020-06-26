@@ -33,7 +33,7 @@ function createProfileControls(entity: Partial<User>) {
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
     avatar: new ImgRefForm(profile.avatar),
-    email: new FormControl(profile.email)
+    email: new FormControl({ value: profile.email, disabled: true })
   };
 }
 

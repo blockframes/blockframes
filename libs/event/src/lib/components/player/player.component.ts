@@ -47,6 +47,10 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async initPlayer(watermarkUrl: string) {
+    if (!watermarkUrl) {
+      console.error('We cannot load video without watermark.');
+      return;
+    }
     const { id } = this.eventQuery.getActive();
 
     const callDeploy = this.functions.httpsCallable('privateVideo');
