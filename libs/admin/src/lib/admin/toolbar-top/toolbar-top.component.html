@@ -1,8 +1,45 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="admin-toolbar">
 
-  <button mat-button routerLink="/c/o/admin/panel/overview">
+  <button mat-button [matMenuTriggerFor]="homeMenu">
     <mat-icon svgIcon="home"></mat-icon><span matLine></span>
   </button>
+  <mat-menu #homeMenu="matMenu">
+    <mat-list>
+      <button mat-menu-item routerLink="/c/o/admin/panel/overview">
+        <mat-icon svgIcon="home"></mat-icon><span matLine>Admin panel</span>
+      </button>
+      
+
+      <button mat-menu-item [matMenuTriggerFor]="contentMenu">
+        <mat-icon svgIcon="logo_archipel_content_fill"></mat-icon><span matLine>Archipel Content</span>
+      </button>
+      <mat-menu #contentMenu="matMenu">
+        <mat-list>
+          <a mat-menu-item [href]="goToApp('catalog','marketplace')">
+            <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+          </a>
+          <a mat-menu-item [href]="goToApp('catalog','dashboard')">
+            <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+          </a>
+        </mat-list>
+      </mat-menu>
+
+      <button mat-menu-item [matMenuTriggerFor]="marketMenu">
+        <mat-icon svgIcon="logo_archipel_market_fill"></mat-icon><span matLine>Archipel Market</span>
+      </button>
+      <mat-menu #marketMenu="matMenu">
+        <mat-list>
+          <a mat-menu-item [href]="goToApp('festival','marketplace')">
+            <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+          </a>
+          <a mat-menu-item [href]="goToApp('festival','dashboard')">
+            <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+          </a>
+        </mat-list>
+      </mat-menu>
+      
+    </mat-list>
+  </mat-menu>
 
   <button mat-button routerLink="/c/o/admin/panel/users">
     <mat-icon svgIcon="profile"></mat-icon><span matLine>Users</span>
@@ -19,7 +56,7 @@
   <button mat-button [matMenuTriggerFor]="eventsMenu">
     <mat-icon svgIcon="calendar"></mat-icon><span matLine>Events</span>
   </button>
-  <mat-menu #eventsMenu="matMenu" class="mat-elevation-z6">
+  <mat-menu #eventsMenu="matMenu">
     <mat-list>
       <button mat-menu-item routerLink="/c/o/admin/panel/events">
         <mat-icon svgIcon="calendar"></mat-icon><span matLine>Events list</span>
@@ -33,7 +70,7 @@
   <button mat-button [matMenuTriggerFor]="contractsMenu">
     <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts</span>
   </button>
-  <mat-menu #contractsMenu="matMenu" class="mat-elevation-z6">
+  <mat-menu #contractsMenu="matMenu">
     <mat-list>
       <button mat-menu-item routerLink="/c/o/admin/panel/contracts">
         <mat-icon svgIcon="document"></mat-icon><span matLine>Contracts list</span>
@@ -47,7 +84,7 @@
   <button mat-button [matMenuTriggerFor]="accountingMenu">
     <mat-icon svgIcon="basket"></mat-icon><span matLine>Accounting</span>
   </button>
-  <mat-menu #accountingMenu="matMenu" class="mat-elevation-z6">
+  <mat-menu #accountingMenu="matMenu">
     <mat-list>
       <button mat-menu-item routerLink="/c/o/admin/panel/invoices">
         <mat-icon svgIcon="CAD"></mat-icon><span matLine>Invoices</span>
@@ -68,7 +105,7 @@
   <button mat-button [matMenuTriggerFor]="toolsMenu">
     <mat-icon svgIcon="wrench"></mat-icon><span matLine>Tools</span>
   </button>
-  <mat-menu #toolsMenu="matMenu" class="mat-elevation-z6">
+  <mat-menu #toolsMenu="matMenu">
     <mat-list>
       <button mat-menu-item routerLink="/c/o/admin/panel/mails">
         <mat-icon svgIcon="mail"></mat-icon><span matLine>Emails</span>

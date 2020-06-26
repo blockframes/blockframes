@@ -1,5 +1,5 @@
 
-import { App, getSendgridFrom, sendgridUrl } from '@blockframes/utils/apps';
+import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
@@ -35,7 +35,7 @@ export const getOrInviteUserByMail = async (email: string, fromOrgId: string, in
 
     // User does not exists, send him an email.
     const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
-    const urlToUse = sendgridUrl[app];
+    const urlToUse = applicationUrl[app];
     const from = getSendgridFrom(app);
 
     const templateId = templateIds.user.credentials[invitationType][app];

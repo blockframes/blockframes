@@ -8,7 +8,7 @@ import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
 import { getDocument, getFromEmail } from './data/internals';
-import { getSendgridFrom, sendgridUrl, App } from '@blockframes/utils/apps';
+import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 
@@ -197,7 +197,7 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
   const newUser = await createUserFromEmail(email);
 
-  const urlToUse = sendgridUrl[app];
+  const urlToUse = applicationUrl[app];
   const from = getSendgridFrom(app);
 
   const templateId = templateIds.user.credentials.joinOrganization[app];

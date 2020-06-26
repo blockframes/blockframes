@@ -1,19 +1,41 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
-<section fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
+  <article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
 
     <admin-event-info [event]="event"></admin-event-info>
+    <section>
+      <h2>Invite people</h2>
+      <mat-card>
+        <mat-card-content fxLayout="column">
+          <invitation-form-user [docId]="eventId"></invitation-form-user>
+        </mat-card-content>
+      </mat-card>
 
-    <article *ngIf="event.type === 'screening' && movie">
-      <h2>Screening information</h2>
-      <mat-card-content fxLayout="column">
-        <h5>Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})</h5>
-        <button mat-icon-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="eye"></mat-icon>
-        </button>
-        <button mat-icon-button color="accent" [routerLink]="['/c/o/admin/panel/movie', movie.id]">
-          <mat-icon svgIcon="pencil"></mat-icon>
-        </button>
-      </mat-card-content>
-    </article>
+      <article *ngIf="event.type === 'screening' && movie">
+        <h2>Screening information</h2>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+            </mat-card-title>
+            <ng-container
+              *ngIf="movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media as poster;">
+              <bf-img mat-card-avatar [ref]="poster" asset="empty_poster.webp"></bf-img>
+            </ng-container>
+          </mat-card-header>
 
-</section>
+          <mat-card-content fxLayout="column">
+            <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
+              <span>Dashboard edit </span>
+              <mat-icon svgIcon="eye"></mat-icon>
+            </a>
+            <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
+              <span>Admin edit </span>
+              <mat-icon svgIcon="pencil"></mat-icon>
+            </a>
+          </mat-card-content>
+        </mat-card>
+      </article>
+    </section>
+  </article>
+</main>
