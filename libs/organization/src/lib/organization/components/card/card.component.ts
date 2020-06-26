@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Organization } from '@blockframes/organization/+state';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state';
 
 @Component({
@@ -25,6 +24,6 @@ export class OrganizationCardComponent {
     return this._org;
   }
 
-  constructor(private movieQuery: MovieQuery){}
+  constructor(){}
 
 }
