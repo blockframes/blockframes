@@ -26,9 +26,9 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Company Name</mat-label>
                 <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
+                <mat-error *ngIf="orgForm.get('denomination').hasError('required')">Company name is required</mat-error>
+                <mat-error *ngIf="orgForm.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
               </mat-form-field>
-              <mat-error *ngIf="orgForm.get('denomination').hasError('required')">Company name is required</mat-error>
-              <mat-error *ngIf="orgForm.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Company Public Name</mat-label>
                 <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
