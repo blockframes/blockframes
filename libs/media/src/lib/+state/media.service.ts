@@ -109,7 +109,7 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
+    const task = this.storage.upload(path.concat(sanitizedFileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
@@ -192,9 +192,7 @@ export class MediaService {
       // if the file needs to be deleted and we know its path
       if (mediaForm.delete.value && !!mediaForm.ref.value) {
 
-        console.log('will delete');
         await this.removeFile(mediaForm.ref.value);
-        console.log('deleted');
 
       // if we have a blob = the user created or updated the file
       } else if (!!mediaForm.blobOrFile.value) {
@@ -202,13 +200,12 @@ export class MediaService {
         // if the file already have a path it means that we are in an update
         // we first need to delete the old file
         if (mediaForm.oldRef.value !== '') {
-          console.log('will update');
-          await this.removeFile(mediaForm.oldRef.value);
-        } else {
-          console.log('will create');
+          try {
+            await this.removeFile(mediaForm.oldRef.value);
+          } catch (error) {
+            console.warn('Deletion of previous file failed, but new file will still be uploaded');
+          }
         }
-
-        console.log('will upload');
 
         // upload the new file
         const file: UploadFile = {
@@ -216,10 +213,8 @@ export class MediaService {
           data: mediaForm.blobOrFile.value,
           fileName: mediaForm.fileName.value
         }
-        console.log(file);
         this.upload(mediaForm.ref.value, mediaForm.fileName.value, mediaForm.blobOrFile.value);
       } else {
-        console.log('nothing needs to be done');
       }
     });
     await Promise.all(promises);
