@@ -120,8 +120,29 @@ export async function onMovieUpdate(
     await handleImageChange(after.promotionalElements.banner.media);
   }
 
-  // TODO POSTER
-  // TODO STILL PHOTO
+  const posterPromises = Object.keys(after.promotionalElements.poster).map(key => {
+    if (
+      !!before.promotionalElements.poster[key] && !!after.promotionalElements.poster[key] &&
+      !!before.promotionalElements.poster[key].media && !!after.promotionalElements.poster[key].media &&
+      before.promotionalElements.poster[key].media.original.ref !== after.promotionalElements.poster[key].media.original.ref
+    ) {
+      return handleImageChange(after.promotionalElements.poster[key].media);
+    }
+    return;
+  });
+  await Promise.all(posterPromises);
+
+  const stillPromises = Object.keys(after.promotionalElements.still_photo).map(key => {
+    if (
+      !!before.promotionalElements.still_photo[key] && !!after.promotionalElements.still_photo[key] &&
+      !!before.promotionalElements.still_photo[key].media && !!after.promotionalElements.still_photo[key].media &&
+      before.promotionalElements.still_photo[key].media.original.ref !== after.promotionalElements.still_photo[key].media.original.ref
+    ) {
+      return handleImageChange(after.promotionalElements.still_photo[key].media);
+    }
+    return;
+  });
+  await Promise.all(stillPromises);
 
 }
 
