@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/media/+state/media.firestore";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
@@ -13,16 +12,15 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MediaFileComponent {
   form = this.tunnel.form;
 
-  constructor(
-    private tunnel: MovieTunnelComponent,
-    private movieQuery: MovieQuery,
-    private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Files & links', 'Title information')
-  }
+  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
 
   public movie = this.movieQuery.getActive();
-  public presentationPath = `movie/${this.movie.id}/PresentationDeck`;
-  public scenarioPath = `movie/${this.movie.id}/Scenario`;
+
+  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck.media/`;
+  public presentationMediaForm = this.tunnel.presentationDeckMediaForm;
+
+  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario.media/`;
+  public scenarioMediaForm = this.tunnel.scenarioMediaForm;
 
   get promotionalElements() {
     return this.form.get('promotionalElements');
