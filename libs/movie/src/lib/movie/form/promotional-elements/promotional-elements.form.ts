@@ -90,7 +90,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     // Images
     banner: new MoviePromotionalImageForm(entity.banner),
     poster: new FormGroup(posterControls),
-    still_photo: new FormGroup(posterControls),
+    still_photo: new FormGroup(stillPhotoControls),
 
     // Hosted Media
     trailer: new FormGroup(trailerControls),

@@ -29,7 +29,7 @@ export class MovieSummaryImageComponent implements OnInit {
   get posterHasNoValue() {
     try {
 
-      const keys = Object.keys(this.promotionalElements.get('poster'));
+      const keys = Object.keys(this.promotionalElements.get('poster').value);
 
       // if there is no poster
       if (keys.length === 0) {
@@ -47,7 +47,7 @@ export class MovieSummaryImageComponent implements OnInit {
 
   get photoHasNoValue() {
     try {
-      const keys = Object.keys(this.promotionalElements.get('still_photo'));
+      const keys = Object.keys(this.promotionalElements.get('still_photo').value);
 
       // if there is no still photos
       if (keys.length === 0) {
