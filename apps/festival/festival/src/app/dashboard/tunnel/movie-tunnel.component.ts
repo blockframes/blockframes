@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { FormGroup } from '@angular/forms';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -64,10 +65,14 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   public form = new MovieForm(this.query.getActive());
 
   public bannerMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.banner.media.original);
-  // TODO POSTER
-  // TODO STILL PHOTO
+  public posterMediaForms = new FormGroup({
+    '0': new HostedMediaForm(this.query.getActive().promotionalElements.poster['0'].media.original),
+  });
 
-  // TODO TRAILER
+  public stillPhotoMediaForms = new FormGroup({
+    '0': new HostedMediaForm(this.query.getActive().promotionalElements.still_photo['0'].media.original),
+  });
+
   public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
   public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
 
@@ -89,23 +94,17 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   public async save() {
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    // console.log('XXX', movie);
-    // console.log(this.presentationDeckMediaForm.value);
-    // console.log(this.scenarioMediaForm.value);
-
     await this.service.save(movie);
 
     await this.mediaService.uploadOrDeleteMedia([
       this.bannerMediaForm,
-      // TODO POSTER
-      // TODO STILL PHOTO
 
-      // TODO TRAILER
+      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key) as HostedMediaForm),
+      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key) as HostedMediaForm),
+
       this.presentationDeckMediaForm,
       this.scenarioMediaForm,
     ]);
-
-    // TODO call upload on media service !!!
 
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
