@@ -260,7 +260,7 @@ async function updateMovies(movies: FirebaseFirestore.QuerySnapshot<FirebaseFire
     const legacyKeys = ['originalFileName', 'originalRef', 'ref'];
 
     movies.docs.forEach(doc => {
-        let movie = doc.data() as MovieDocument;
+        const movie = doc.data() as MovieDocument;
         links.forEach(link => {
             movie.promotionalElements[link].media = createExternalMedia(movie.promotionalElements[link].media);
             // DELETE
