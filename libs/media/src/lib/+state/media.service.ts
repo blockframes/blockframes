@@ -40,8 +40,12 @@ export class MediaService {
   ) { }
 
   /** Check if a file exists in the **Firebase storage** */
-  exists(path: string) {
-    return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
+  async exists(path: string, fileName: string): Promise<boolean> {
+
+    return this.storage.ref(path).listAll().toPromise().then((res) => {
+      return res.items.some(item => item.name === fileName);
+    }).catch(() => false);
+
   }
 
   /**
@@ -92,7 +96,7 @@ export class MediaService {
     // TODO create extensive regexp to try to catch and handle any mistakes in path & filename
 
     const sanitizedFileName: string = sanitizeFileName(fileName);
-    const exists = await this.exists(path.concat(sanitizedFileName));
+    const exists = await this.exists(path, sanitizedFileName);
 
     this.showWidget();
 
