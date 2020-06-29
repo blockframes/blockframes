@@ -6,7 +6,7 @@ import { OrganizationFormAddressModule } from '../organization-form-address/orga
 import { OrganizationFormDescriptionModule } from '../organization-form-description/organization-form-description.module';
 import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 import { FormCountryModule } from '@blockframes/ui/form/country/country.module';
-import { ReferencePathModule } from '@blockframes/utils/pipes/reference-path.pipe';
+import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
