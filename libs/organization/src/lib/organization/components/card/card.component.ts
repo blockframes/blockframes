@@ -24,6 +24,4 @@ export class OrganizationCardComponent {
     return this._org;
   }
 
-  constructor(){}
-
 }
