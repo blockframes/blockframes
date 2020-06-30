@@ -91,7 +91,10 @@
     "blockframes-bruce": {
       "hosting": {
         "catalog": [
-          "blockframes-bruce"
+          "catalog-blockframes-bruce"
+        ],
+        "festival": [
+          "festival-blockframes-bruce"
         ]
       }
     },

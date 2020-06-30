@@ -30,7 +30,7 @@ export class MailsComponent implements OnInit {
 
   ngOnInit() {
     this.form = new TestEmailForm();
-    const currentApp = getCurrentApp(this.routerQuery);
+    const currentApp = getCurrentApp(this.routerQuery); // @TODO (#3081)
     const defaultEmailFrom = getSendgridFrom(currentApp);
     this.form.get('from').setValue(defaultEmailFrom);
     this.form.get('to').setValue(this.authQuery.user.email);

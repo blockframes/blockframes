@@ -15,7 +15,8 @@ export type Module = typeof module[number];
 export const appName = {
   catalog: 'Archipel Content',
   festival: 'Archipel Market',
-  blockframes: 'Blockframes'
+  blockframes: 'Blockframes',
+  crm: 'Blockframes CRM'
 };
 
 export const sendgridEmailsFrom = {
