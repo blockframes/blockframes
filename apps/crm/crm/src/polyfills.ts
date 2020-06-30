@@ -58,5 +58,22 @@
 import 'zone.js/dist/zone'; // Included with Angular CLI.
 
 /***************************************************************************************************
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
+ */
+import '@angular/localize/init';
+
+/***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+ /***************************************************************************************************
+ * ALGOLIA CONFIG
+ */
+(window as any).process = {
+  env: { DEBUG: undefined },
+};
+
+/***************************************************************************************************
+* ETHERS
+*/
+(window as any).global = window;

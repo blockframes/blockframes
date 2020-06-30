@@ -4,7 +4,7 @@ import { switchMap, map, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { getOrgModuleAccess, getCurrentApp } from '@blockframes/utils/apps';
+import { getOrgModuleAccess, getCurrentApp, App } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Injectable({
@@ -32,9 +32,13 @@ export class NoAuthGuard extends CollectionGuard<AuthState> {
           switchMap(orgId => orgId ? this.orgService.getValue(orgId) : new Promise<false>(r => r(false))),
           map(org => {
             if (!org) { return '/c/organization'; }
-            const app = getCurrentApp(this.routerQuery);
-            const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
-            return `/c/o/${moduleAccess}/home`;
+            const app = getCurrentApp(this.routerQuery) as App | 'crm';
+            if (app === 'crm') {
+              return '/c/o/admin/panel';
+            } else {
+              const [moduleAccess = 'dashboard'] = getOrgModuleAccess(org, app);
+              return `/c/o/${moduleAccess}/home`;
+            }
           })
         );
       })

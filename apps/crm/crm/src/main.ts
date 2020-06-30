@@ -2,12 +2,22 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { production } from '@env';
+import { akitaConfig, akitaDevtools, enableAkitaProdMode } from '@datorama/akita';
 
-if (environment.production) {
+if (production) {
   enableProdMode();
+  enableAkitaProdMode();
+} else {
+  akitaDevtools();
 }
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+akitaConfig({
+  resettable: true
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  platformBrowserDynamic()
+    .bootstrapModule(AppModule)
+    .catch(err => console.error(err));
+});

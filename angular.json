@@ -1214,8 +1214,22 @@
             "polyfills": "apps/crm/crm/src/polyfills.ts",
             "tsConfig": "apps/crm/crm/tsconfig.app.json",
             "aot": true,
-            "assets": ["apps/crm/crm/src/favicon.ico", "apps/crm/crm/src/assets"],
-            "styles": ["apps/crm/crm/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/crm/crm/src/favicon.ico",
+              "apps/crm/crm/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "apps/crm/crm/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
