@@ -24,6 +24,7 @@ export class EventCalendarComponent implements OnInit {
   filter = new FormControl(this.types);
   events$: Observable<Event[]>;
   viewDate = new Date();
+  public hidden: boolean;
 
   constructor(
     private service: EventService,
@@ -33,9 +34,7 @@ export class EventCalendarComponent implements OnInit {
 
   ngOnInit(): void {
     const allEvents$ = this.invitationQuery.selectAll({
-      // Todo Add event pending also in calendar but change css (add a badge on the event-card if event == pending)
-      // filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
-      filterBy: ({ type, status }) => type === 'attendEvent' && status === 'accepted'
+      filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
     }).pipe(
       map(invitations => invitations.map(i => i.docId)),
       map(eventIds => Array.from(new Set(eventIds))), // Remove duplicated
@@ -46,12 +45,19 @@ export class EventCalendarComponent implements OnInit {
     this.events$ = combineLatest([allEvents$, filters$]).pipe(
       map(([events, types]) => events.filter(e => types.includes(e.type)))
     );
-  }
 
+  }
 
   updateViewDate(date: Date) {
     this.viewDate = date;
     this.cdr.markForCheck();
+  }
+
+  // Hide the matBadge if invitation to the event isn't pending anymore
+  isHidden(event: Event) {
+    const invitation$ = this.invitationQuery.selectEntity(i => i.docId === event.id);
+    invitation$.subscribe(i => i.status === 'pending' ? this.hidden = false : this.hidden = true);
+    return this.hidden;
   }
 
 }
