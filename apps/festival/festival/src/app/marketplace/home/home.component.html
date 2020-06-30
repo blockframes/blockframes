@@ -68,6 +68,10 @@
               </movie-slide>
             </bf-slide>
           </bf-slider>
+            <!-- Featured Sales Agent Banner -->
+            <div *ngFor="let org of featuredOrg$ | async">
+              <org-banner [org]="org"></org-banner>
+            </div>
         </ng-container>
       </article>
     </ng-container>
