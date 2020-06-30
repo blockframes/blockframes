@@ -1227,22 +1227,22 @@
               }
             ],
             "styles": [
-              "node_modules/angular-calendar/css/angular-calendar.css",
               "apps/crm/crm/src/styles.scss"
             ],
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "apps/crm/crm/src/environments/environment.ts",
-                  "with": "apps/crm/crm/src/environments/environment.prod.ts"
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
                 }
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -1260,6 +1260,64 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
             }
           }
         },

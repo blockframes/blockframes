@@ -38,7 +38,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   imports: [
     
     // Angular
-    BrowserModule.withServerTransition({ appId: 'crm-app' }),
+    BrowserModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
