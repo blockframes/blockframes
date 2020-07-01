@@ -7,15 +7,13 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile, HostedMedia, ImgRef } from "./media.firestore";
+import { UploadFile, ImgRef } from "./media.firestore";
 import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
-import { takeWhile } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -95,13 +93,12 @@ export class MediaService {
 
     // TODO create extensive regexp to try to catch and handle any mistakes in path & filename
 
-    const sanitizedFileName: string = sanitizeFileName(fileName);
-    const exists = await this.exists(path, sanitizedFileName);
+    const exists = await this.exists(path, fileName);
 
     this.showWidget();
 
     if (exists) {
-      throw new Error(`Upload Error : there is already a file @ ${sanitizedFileName}, please delete it before uploading a new file!`);
+      throw new Error(`Upload Error : there is already a file @ ${fileName}, please delete it before uploading a new file!`);
     }
 
     const uploading = this.query.isUploading(fileName);
@@ -109,7 +106,7 @@ export class MediaService {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
-    const task = this.storage.upload(path.concat(sanitizedFileName), fileOrBlob);
+    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
 
     this.store.upsert(fileName, {
       status: 'uploading',
@@ -189,10 +186,17 @@ export class MediaService {
   async uploadOrDeleteMedia(mediaForms: HostedMediaForm[]) {
     const promises = mediaForms.map(async mediaForm => {
 
-      // if the file needs to be deleted and we know its path
-      if (mediaForm.delete.value && !!mediaForm.ref.value) {
+      if (!!mediaForm.fileName.value) {
+        // remove every characters after the 100th to avoid file too long error
+        // this way we don't need to sanitize name anymore
+        // (firebase also supports file names with unicode chars)
+        mediaForm.fileName.setValue(mediaForm.fileName.value.substr(0, 100));
+      }
 
-        await this.removeFile(mediaForm.ref.value);
+      // if the file needs to be deleted and we know its path
+      if (mediaForm.delete.value && !!mediaForm.oldRef.value) {
+
+        await this.removeFile(mediaForm.oldRef.value);
 
       // if we have a blob = the user created or updated the file
       } else if (!!mediaForm.blobOrFile.value) {
@@ -208,13 +212,7 @@ export class MediaService {
         }
 
         // upload the new file
-        const file: UploadFile = {
-          path: mediaForm.ref.value, // be careful, here we can easily have a wrong path
-          data: mediaForm.blobOrFile.value,
-          fileName: mediaForm.fileName.value
-        }
-        this.upload(mediaForm.ref.value, mediaForm.fileName.value, mediaForm.blobOrFile.value);
-      } else {
+        await this.upload(mediaForm.ref.value, mediaForm.fileName.value, mediaForm.blobOrFile.value);
       }
     });
     await Promise.all(promises);
