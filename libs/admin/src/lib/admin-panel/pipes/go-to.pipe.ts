@@ -6,7 +6,7 @@ export class GoToAppPipe implements PipeTransform {
   transform(app: App, module: Module, type?: string, id?: string, suffix?: string) {
     let path = '';
     switch (type) {
-      case 'movie':
+      case 'title':
         if (module === 'dashboard') {
           path = `/tunnel/movie/${id}/main`;
         } else {
