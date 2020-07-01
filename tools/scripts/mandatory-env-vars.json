@@ -1,6 +1,5 @@
 {
   "required": [
-    "ETHEREUM_MNEMONIC",
     "CASCADE8_ADMIN",
     "ADMIN_PASSWORD",
     "SENDGRID_API_KEY",
