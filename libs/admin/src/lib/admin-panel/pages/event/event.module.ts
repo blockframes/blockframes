@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 // Modules
 import { EventInfoModule } from '../../components/event-info/event-info.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { GoToModule } from '../../components/go-to/go-to.module';
 
 // Components
 import { EventComponent } from './event.component';
@@ -24,6 +25,7 @@ import { EventComponent } from './event.component';
     FlexLayoutModule,
     EventInfoModule,
     RouterModule,
+    GoToModule,
     MatButtonModule,
     ImageReferenceModule,
     InvitationFormUserModule,

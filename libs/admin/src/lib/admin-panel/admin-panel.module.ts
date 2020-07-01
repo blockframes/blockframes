@@ -30,6 +30,7 @@ import { ImageSizesModule } from '@blockframes/media/components/image-sizes/imag
 import { OverviewModule } from './pages/overview/overview.module';
 import { InvitationsModule } from './pages/invitations/invitations.module';
 import { EventModule } from './pages/event/event.module';
+import { GoToModule } from './components/go-to/go-to.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -106,6 +107,7 @@ export const panelRoutes: Routes = [
     ImageSizesModule,
     OverviewModule,
     InvitationsModule,
+    GoToModule,
   ],
   declarations: [
     MoviesComponent,

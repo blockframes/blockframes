@@ -2,17 +2,14 @@
 <article *ngIf="right" id="right-section" fxLayout="column" fxLayoutAlign="start start">
   <h2>
     <strong>Movie : </strong>
-    <a [routerLink]="['/c/o/admin/panel/movie', movieId]">{{ movieId }}</a>
-    <a [routerLink]="['/c/o/dashboard/tunnel/movie', movieId]">
-      <mat-icon svgIcon="eye"></mat-icon>
-    </a>
+    <span>{{ movieId }} </span>
+    <admin-go-to type="title" [id]="movieId"></admin-go-to>
   </h2>
   <h2 *ngIf="contract">
     <strong>Contract : </strong>
-    <a [routerLink]="['/c/o/admin/panel/contract', contract.id]">{{ contract.id }}</a>
-    <a [routerLink]="['/c/o/marketplace/tunnel/contract', contract.id, contract.type]">
-      <mat-icon svgIcon="eye"></mat-icon>
-    </a>
+    <a [routerLink]="['/c/o/admin/panel/contract', contract.id]"></a>
+    <span>{{ contract.id }} </span>
+    <admin-go-to type="contract" [id]="contract.id" [festival]="false" [suffix]="contract.type" ></admin-go-to>
   </h2>
   <ng-container *ngIf="rightForm else spinner">
     <form [formGroup]="rightForm" fxLayout="column">
