@@ -1,12 +1,13 @@
+import * as requiredVars from './mandatory-env-vars.json';
 import * as firebaseTools from 'firebase-tools';
 import * as dotenv from 'dotenv';
-import { loadSecretsFile } from './lib';
+import { loadSecretsFile } from './secrets-lib';
 
 const dotenvResult = dotenv.config();
 
 // const fileExists = (fileName: string) => existsSync(resolve(process.cwd(), fileName))
 
-if (!process.env.SENDGRID_API_KEY || !process.env.ETHEREUM_MNEMONIC) {
+if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
   // Env config values probably doesn't exist in env
   loadSecretsFile();
 }
@@ -33,6 +34,7 @@ async function setFirebaseConfig() {
  * But need to figure out how to indicate nested objects (more underscores?)
  */
 function getKeyValFormat(): string[] {
+  warnMissingVars();
   const output = [];
   output.push(`sendgrid.api_key=${process.env?.SENDGRID_API_KEY}`);
   output.push(`relayer.mnemonic=${process.env?.ETHEREUM_MNEMONIC}`);
@@ -42,4 +44,12 @@ function getKeyValFormat(): string[] {
   output.push(`admin.password=${process.env?.ADMIN_PASSWORD}`);
   output.push(`admin.email=${process.env?.CASCADE8_ADMIN}`);
   return output;
+}
+
+function warnMissingVars(): void | never {
+  function throwMissingVar(name: string) {
+    throw new Error(`Please ensure the following variable is set in env: ${name}`);
+  }
+  const requiredVarsArray = requiredVars.required;
+  requiredVarsArray.map(key => process.env?.[key] ?? throwMissingVar(key));
 }

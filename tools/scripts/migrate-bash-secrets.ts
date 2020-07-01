@@ -1,5 +1,5 @@
 // TODO: remove secrets.sh from gitignore in next release, maybe remove from postinstall
-import { loadSecretsFile } from './lib';
+import { loadSecretsFile } from './secrets-lib';
 import { existsSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -12,9 +12,11 @@ if (existsSync(envPath)) {
 } else {
   console.log('No .env file detected, running migration...');
   const parsedSecrets = loadSecretsFile();
-  const envArray = Object.keys(parsedSecrets).map(key => {
-    return `${key}="${parsedSecrets[key]}"`;
-  });
+  // const envArray = Object.keys(parsedSecrets).map(key => {
+  //   return `${key}="${parsedSecrets[key]}"`;
+  // });
+  const envArray = Object.entries(parsedSecrets).map(([key, value]) => `${key}="${value}"`);
+
   writeFileSync(envPath, envArray.join('\n'));
   console.log(
     'Migration Complete!\n\nPlease delete your secrets.sh and secrets.template.sh after checking .env file is correct.'

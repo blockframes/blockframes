@@ -46,7 +46,7 @@
     "predeploy": [
       "npm run lint backend-functions",
       "npm run build:backend-functions",
-      "npx ts-node -P tools/tsconfig.tools.json tools/scripts/deploy-function-config.ts"
+      "npm run deploy:functions:config"
     ],
     "source": "dist/apps/backend-functions/"
   },

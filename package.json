@@ -17,6 +17,7 @@
     "build:crm": "npx ng build crm --configuration=\"$ENV\"",
     "build:all": "npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog && npm run build:festival && npm run build:crm",
     "build:all:concurrently": "concurrently 'npm:build:backend-functions' 'npm:build:backend-ops' 'npm:build:catalog' 'npm:build:festival' 'npm:build:crm'",
+    "deploy:functions:config": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/deploy-function-config.ts",
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
     "firebase:emulator": "firebase emulators:start --only firestore",
