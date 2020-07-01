@@ -15,10 +15,10 @@
       </button>
       <mat-menu #contentMenu="matMenu">
         <mat-list>
-          <a mat-menu-item [href]="goToApp('catalog','marketplace')">
+          <a mat-menu-item [href]="'catalog' | goToApp:'marketplace'">
             <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
           </a>
-          <a mat-menu-item [href]="goToApp('catalog','dashboard')">
+          <a mat-menu-item [href]="'catalog' | goToApp:'dashboard'">
             <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
           </a>
         </mat-list>
@@ -29,10 +29,10 @@
       </button>
       <mat-menu #marketMenu="matMenu">
         <mat-list>
-          <a mat-menu-item [href]="goToApp('festival','marketplace')">
+          <a mat-menu-item [href]="'festival' | goToApp:'marketplace'">
             <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
           </a>
-          <a mat-menu-item [href]="goToApp('festival','dashboard')">
+          <a mat-menu-item [href]="'festival' | goToApp:'dashboard'">
             <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
           </a>
         </mat-list>
@@ -98,9 +98,9 @@
     </mat-list>
   </mat-menu>
 
-  <button mat-button routerLink="/c/o/dashboard/import">
+  <a mat-button [href]="'festival' | goToApp:'dashboard':'import'">
     <mat-icon svgIcon="excel"></mat-icon><span matLine>Import</span>
-  </button>
+  </a>
 
   <button mat-button [matMenuTriggerFor]="toolsMenu">
     <mat-icon svgIcon="wrench"></mat-icon><span matLine>Tools</span>

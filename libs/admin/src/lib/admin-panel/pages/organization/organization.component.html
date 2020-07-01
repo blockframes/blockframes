@@ -182,7 +182,8 @@
           </ng-template>
         </ng-template>
         <ng-template colRef="id" let-id>
-          <a target="_blank" [routerLink]="['/c/o/dashboard/tunnel/movie', id, 'main']" routerLinkActive="active"> {{ id }}</a>
+          <span>{{ id }} </span>
+          <admin-go-to type="movie" [id]="id"></admin-go-to>
         </ng-template>
         <ng-template colRef="edit" let-edit>
           <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>

@@ -25,10 +25,10 @@
           </mat-card-header>
 
           <mat-card-content fxLayout="column">
-            <a [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-              <span>Dashboard edit </span>
-              <mat-icon svgIcon="eye"></mat-icon>
-            </a>
+            <article>
+              <span>Standard view/edit </span>
+              <admin-go-to type="movie" [id]="movie.id"></admin-go-to>
+            </article>
             <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
               <span>Admin edit </span>
               <mat-icon svgIcon="pencil"></mat-icon>
