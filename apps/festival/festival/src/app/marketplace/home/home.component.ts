@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
-        filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival
+        filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival && movies.main.storeConfig.status === "accepted"
       });
     }
     this.sections = [

@@ -30,10 +30,6 @@ const routes: Routes = createRoutes({
       path: 'dashboard',
       canActivate: [FestivalAppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-    },
-    {
-      path: 'admin',
-      loadChildren: () => import('@blockframes/admin/admin/admin.module').then(m => m.AdminModule)
     }
   ]
 });

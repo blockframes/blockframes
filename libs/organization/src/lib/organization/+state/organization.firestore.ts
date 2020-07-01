@@ -52,6 +52,7 @@ export const orgActivity = {
   filmCommission: 'Film Commission',
   financialInstitution: 'Financial Institution',
   press: 'Press',
+  inflight: 'Inflight',
 } as const;
 
 type OrgActivity = keyof typeof orgActivity | '';
@@ -151,7 +152,7 @@ export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'publ
 
 /**
  * This check if org have access to a specific module in at least one app
- * @param org 
+ * @param org
  */
 export function canAccessModule(module: Module, org: OrganizationDocument) {
   return app.some(a => org.appAccess[a]?.[module])

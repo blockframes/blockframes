@@ -23,6 +23,10 @@
         <ng-template let-value>{{ value | number }}</ng-template>
       </missing-control>
       <span>&nbsp;</span>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
+        <span>admissions</span>
+        <span>&nbsp;</span>
+      </ng-container>
       <ng-container *ngIf="boxOffice.get('territory').value">
         <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
       </ng-container>

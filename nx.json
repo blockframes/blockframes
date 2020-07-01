@@ -71,6 +71,13 @@
     },
     "media": {
       "tags": []
+    },
+    "crm": {
+      "tags": ["crm"]
+    },
+    "crm-e2e": {
+      "tags": [],
+      "implicitDependencies": ["crm"]
     }
   },
   "tasksRunnerOptions": {
