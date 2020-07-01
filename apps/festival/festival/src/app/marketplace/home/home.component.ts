@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     ];
     this.orgs$  = this.organizationService
-      .queryWithMovies(ref => ref
+      .queryWithoutMovies(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
       .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
