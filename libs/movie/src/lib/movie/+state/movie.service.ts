@@ -56,14 +56,6 @@ export class MovieService extends CollectionService<MovieState> {
 
   save(movie: Movie) {
     return this.runTransaction(async write => {
-      // const [ value, media ] = extractToBeUpdatedMedia(movie);
-      // this.mediaService.uploadOrDeleteMedia(media);
-
-      // TODO issue#3088
-      // TODO the movie service should not use the media service
-      // TODO the movie service should just update the movie in firestore
-      // TODO the movie component/tunnel/form/whatever is responsible to upload (use media service)
-
       return this.update(movie, { write });
     });
   }
