@@ -65,13 +65,10 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   public form = new MovieForm(this.query.getActive());
 
   public bannerMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.banner.media.original);
-  public posterMediaForms = new FormGroup({
-    '0': new HostedMediaForm(this.query.getActive().promotionalElements.poster['0'].media.original),
-  });
 
-  public stillPhotoMediaForms = new FormGroup({
-    '0': new HostedMediaForm(this.query.getActive().promotionalElements.still_photo['0'].media.original),
-  });
+  public posterMediaForms: FormGroup;
+
+  public stillPhotoMediaForms: FormGroup;
 
   public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
   public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
@@ -88,6 +85,14 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   async ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
+
+    const posterMediaRecord: Record<string, HostedMediaForm> = {};
+    Object.keys(this.query.getActive().promotionalElements.poster).forEach(key => posterMediaRecord[key] = new HostedMediaForm(this.query.getActive().promotionalElements.poster[key].media.original));
+    this.posterMediaForms = new FormGroup(posterMediaRecord);
+
+    const stillMediaRecord: Record<string, HostedMediaForm> = {};
+    Object.keys(this.query.getActive().promotionalElements.still_photo).forEach(key => stillMediaRecord[key] = new HostedMediaForm(this.query.getActive().promotionalElements.still_photo[key].media.original));
+    this.stillPhotoMediaForms = new FormGroup(stillMediaRecord);
   }
 
   // Should save movie

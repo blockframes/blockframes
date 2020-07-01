@@ -145,6 +145,8 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   // AVATAR
   if (
     !!before.avatar && !!after.avatar &&
+    !!before.avatar.original && !!after.avatar.original &&
+    !!before.avatar.original.ref && !!after.avatar.original.ref &&
     before.avatar.original.ref !== after.avatar.original.ref
   ) {
     await handleImageChange(after.avatar);

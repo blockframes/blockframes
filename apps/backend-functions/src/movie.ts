@@ -112,18 +112,22 @@ export async function onMovieUpdate(
   }
 
   // BANNER
-
   if (
     !!before.promotionalElements.banner.media && !!after.promotionalElements.banner.media &&
+    !!before.promotionalElements.banner.media.original && !!after.promotionalElements.banner.media.original &&
+    !!before.promotionalElements.banner.media.original.ref && !!after.promotionalElements.banner.media.original.ref &&
     before.promotionalElements.banner.media.original.ref !== after.promotionalElements.banner.media.original.ref
   ) {
     await handleImageChange(after.promotionalElements.banner.media);
   }
 
+  // POSTERs
   const posterPromises = Object.keys(after.promotionalElements.poster).map(key => {
     if (
       !!before.promotionalElements.poster[key] && !!after.promotionalElements.poster[key] &&
       !!before.promotionalElements.poster[key].media && !!after.promotionalElements.poster[key].media &&
+      !!before.promotionalElements.poster[key].media.original && !!after.promotionalElements.poster[key].media.original &&
+      !!before.promotionalElements.poster[key].media.original.ref && !!after.promotionalElements.poster[key].media.original.ref &&
       before.promotionalElements.poster[key].media.original.ref !== after.promotionalElements.poster[key].media.original.ref
     ) {
       return handleImageChange(after.promotionalElements.poster[key].media);
@@ -132,10 +136,13 @@ export async function onMovieUpdate(
   });
   await Promise.all(posterPromises);
 
+  // STILL PHOTOs
   const stillPromises = Object.keys(after.promotionalElements.still_photo).map(key => {
     if (
       !!before.promotionalElements.still_photo[key] && !!after.promotionalElements.still_photo[key] &&
       !!before.promotionalElements.still_photo[key].media && !!after.promotionalElements.still_photo[key].media &&
+      !!before.promotionalElements.still_photo[key].media.original && !!after.promotionalElements.still_photo[key].media.original &&
+      !!before.promotionalElements.still_photo[key].media.original.ref && !!after.promotionalElements.still_photo[key].media.original.ref &&
       before.promotionalElements.still_photo[key].media.original.ref !== after.promotionalElements.still_photo[key].media.original.ref
     ) {
       return handleImageChange(after.promotionalElements.still_photo[key].media);

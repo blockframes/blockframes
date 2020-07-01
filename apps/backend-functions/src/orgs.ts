@@ -189,6 +189,8 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   // LOGO
   if (
     !!before.logo && !!after.logo &&
+    !!before.logo.original && !!after.logo.original &&
+    !!before.logo.original.ref && !!after.logo.original.ref &&
     before.logo.original.ref !== after.logo.original.ref
   ) {
     await handleImageChange(after.logo);
