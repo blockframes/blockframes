@@ -1208,7 +1208,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/crm/crm",
+            "outputPath": "dist/apps/crm",
             "index": "apps/crm/crm/src/index.html",
             "main": "apps/crm/crm/src/main.ts",
             "polyfills": "apps/crm/crm/src/polyfills.ts",

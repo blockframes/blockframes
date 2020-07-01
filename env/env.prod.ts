@@ -18,8 +18,11 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 // Firebase
 // ========
 
-export const appUrlContent = 'https://archipelcontent.com';
-export const appUrlMarket = 'https://archipelmarket.com';
+export const appUrl = {
+  content: 'https://archipelcontent.com',
+  market: 'https://archipelmarket.com',
+  crm: 'https://crm.blockframes.io',
+}
 
 export const firebase = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',

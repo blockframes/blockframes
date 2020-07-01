@@ -3,7 +3,7 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { appUrlContent } from '@env';
+import { appUrl } from '@env';
 import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
@@ -15,7 +15,7 @@ export async function prepareForTesting() {
   console.info('Users synced!');
 
   console.info('Restoring backup...');
-  await restore(appUrlContent);
+  await restore(appUrl.content);
   console.info('Backup restored!');
 
   console.info('Preparing the database...');
@@ -37,7 +37,7 @@ export async function prepareForTesting() {
 }
 
 export async function restoreShortcut() {
-  return restore(appUrlContent);
+  return restore(appUrl.content);
 }
 
 export async function upgrade() {
