@@ -46,6 +46,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=some/path/service-account-for-your-firebas
 We use this to send emails, configure algolia, etc.
 
 We have secrets that we don't share on the public github, these should be stored in the `secrets.sh` file at the root of the project. By default the ops scripts will use the `secrets.template.sh` file that contains an example of the secrets we use.
+\*\*UPDATE: secrets.sh is now deprecated. The new method for storing these secrets is to use a `.env` file. These are simple key="value" pairs, one on each line. The current ops setup is backwards-compatible - so it will still try to parse your secrets.sh and backup secrets.template.sh file. However, this functionality will not remain indefinitley, so you are reccomended to migrate to the new system.
 
 Copy the `secrets.template.sh` to `secrets.sh` and update the values with keys you create on different services.
 
