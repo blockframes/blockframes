@@ -2,35 +2,6 @@ import { ImgRef } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 export * from './media.firestore';
 
-// TODO issue#3088
-// export function extractToBeUpdatedMedia(origin: any) {
-//   const value = Object.assign({}, origin);
-//   const media = extractToBeUpdatedMediaValue(value);
-//   return [value, media];
-// }
-
-// function extractToBeUpdatedMediaValue(value: any) {
-//   let media: ImgRef[] = [];
-//   for (const key in value) {
-//     if (isMedia(value[key]) && mediaNeedsUpdate(value[key])) {
-//       media.push(value[key]);
-//       delete value[key];
-//     } else if (typeof value[key] === 'object' && !!value[key]) {
-//       const childMedia = extractToBeUpdatedMediaValue(value[key]);
-//       media = media.concat(childMedia);
-//     }
-//   }
-//   return media;
-// }
-
-// function isMedia(obj: any): boolean {
-//   return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
-// }
-
-// function mediaNeedsUpdate(obj: ImgRef): boolean {
-//   return obj.delete || (!!obj.path && !!obj.blob);
-// }
-
 const formats = {
   avatar: {
     height: 100,
