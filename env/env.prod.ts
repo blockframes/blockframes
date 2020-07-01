@@ -20,7 +20,7 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 
 export const appUrlContent = 'https://archipelcontent.com';
 export const appUrlMarket = 'https://archipelmarket.com';
-export const appUrlCrm = 'https://crm.blockframes.io'; // @TODO(#3081) TDB
+export const appUrlCrm = 'https://crm.blockframes.io';
 
 export const firebase = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',
