@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { appUrlMarket } from '@env';
+import { appUrl } from '@env';
 
 @Component({
   selector: 'admin-go-to',
@@ -8,7 +8,7 @@ import { appUrlMarket } from '@env';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoToComponent {
-  public appUrlMarket = appUrlMarket;
+  public appUrlMarket = appUrl.market;
   @Input() type = '';
   @Input() id = '';
   @Input() suffix = '';
