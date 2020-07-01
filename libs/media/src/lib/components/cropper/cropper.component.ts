@@ -127,7 +127,6 @@ export class CropperComponent implements OnInit {
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
 
-      console.log('**', this.form.value);
       this.form.patchValue({
         ref: `${this.storagePath}/original/`,
         blobOrFile: blob,
@@ -135,7 +134,6 @@ export class CropperComponent implements OnInit {
         fileName: fileName,
       })
       this.form.markAsDirty();
-      console.log('**', this.form.value);
 
     } catch (err) {
       console.error(err);
