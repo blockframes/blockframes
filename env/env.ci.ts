@@ -18,9 +18,11 @@ export const sentryDsn = undefined;
 // Firebase
 // ========
 
-export const appUrlContent = 'https://blockframes-ci.web.app';
-export const appUrlMarket = 'http://blockframes-ci-festival.web.app';
-export const appUrlCrm  = 'https://blockframes-ci-crm.web.app';
+export const appUrl = {
+  content: 'https://blockframes-ci.web.app',
+  market: 'http://blockframes-ci-festival.web.app',
+  crm: 'https://blockframes-ci-crm.web.app',
+}
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',

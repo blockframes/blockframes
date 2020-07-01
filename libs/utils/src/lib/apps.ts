@@ -4,7 +4,7 @@
 import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
 import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
-import { appUrlMarket, appUrlContent } from "@env";
+import { appUrl } from "@env";
 
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
@@ -30,8 +30,8 @@ export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
 
 export const applicationUrl: Record<App, string> = {
-  festival: appUrlMarket,
-  catalog: appUrlContent
+  festival: appUrl.market,
+  catalog: appUrl.content
 }
 
 export function getCurrentApp(routerQuery: any): App {
