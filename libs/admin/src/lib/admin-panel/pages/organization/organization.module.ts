@@ -28,6 +28,7 @@ import { MemberRequestModule } from '@blockframes/organization/components/member
 import { MemberAddModule } from '@blockframes/organization/components/member-add/member-add.module';
 import { ImageSizesModule } from '@blockframes/media/components/image-sizes/image-sizes.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { GoToModule } from '../../components/go-to/go-to.module';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
     MemberAddModule,
     ImageSizesModule,
     OrgNameModule,
+    GoToModule,
   ],
   declarations: [
     OrganizationComponent,

@@ -14,6 +14,7 @@ import { BlockframesAdminGuard } from '../admin-panel/guard/blockframes-admin.gu
 
 // Mobules
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
+import { GoToAppModule } from '../admin-panel/pipes/go-to.pipe';
 
 // Components
 import { AdminComponent } from './admin/admin.component';
@@ -46,6 +47,7 @@ export const adminRoutes: Routes = [
     MatMenuModule,
     MatToolbarModule,
     MatListModule,
+    GoToAppModule,
     MatIconModule,
     AuthWidgetModule,
     RouterModule.forChild(adminRoutes),

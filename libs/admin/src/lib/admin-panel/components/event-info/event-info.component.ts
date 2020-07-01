@@ -3,7 +3,6 @@ import { Event } from '@blockframes/event/+state/event.model';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { Observable } from 'rxjs';
 import { Organization, OrganizationService } from '@blockframes/organization/+state';
-import { Module } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-event-info',
