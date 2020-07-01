@@ -7,7 +7,7 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 // env
 import { centralOrgID } from '@env';
@@ -28,7 +28,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;
-  public featuredOrg$: Observable<Organization>;
 
   private sub: Subscription;
 
@@ -70,18 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .queryWithMovies(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
-      .pipe(
-        map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID),
-        tap(orgs => {
-          console.log('orgs: ', orgs);
-          this.featuredOrg$ = orgs[0];
-        } )));
-    this.featuredOrg$ = this.organizationService
-      .queryWithMovies(ref => ref
-        .where('appAccess.festival.dashboard', '==', true)
-        .where('status', '==', 'accepted')
-        .limit(1));
-      // .pipe(map(orgs  => orgs.filter((org: Organization) => org.id !== centralOrgID)))
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
   }
 
   ngOnDestroy() {
