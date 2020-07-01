@@ -14,7 +14,7 @@
     </ng-template>
     <ng-template colRef="movieId" let-id>
       <span>{{ id }} </span>
-      <admin-go-to type="movie" [id]="id"></admin-go-to>
+      <admin-go-to type="title" [id]="id"></admin-go-to>
     </ng-template>
     <ng-template colRef="right.publicId" let-publicId>
       {{ publicId ? publicId : '-- '}}

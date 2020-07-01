@@ -5,7 +5,7 @@
     <mat-card>
       <h2>
         {{ movie.main.title.international }} ({{ movie.main.internalRef || 'missing internal ref' }})
-        <admin-go-to type="movie" [id]="movieId"></admin-go-to>
+        <admin-go-to type="title" [id]="movieId"></admin-go-to>
       </h2>
 
       <h4>({{ movie.main.title.original }})</h4>

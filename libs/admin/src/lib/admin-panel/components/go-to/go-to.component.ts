@@ -9,9 +9,9 @@ import { appUrlMarket } from '@env';
 })
 export class GoToComponent {
   public appUrlMarket = appUrlMarket;
-  @Input() type: string = '';
-  @Input() id: string = '';
-  @Input() suffix: string = '';
+  @Input() type = '';
+  @Input() id = '';
+  @Input() suffix = '';
   @Input() festival = true;
   @Input() catalog = true;
 }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
 
 // Modules 
 import { GoToAppModule } from '../../pipes/go-to.pipe';
@@ -23,8 +23,8 @@ import { GoToComponent } from './go-to.component';
   imports: [
     CommonModule,
     MatIconModule,
+    MatButtonModule,
     GoToAppModule,
-    MatListModule,
     MatMenuModule,
   ]
 })
