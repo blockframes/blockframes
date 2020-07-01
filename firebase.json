@@ -48,6 +48,21 @@
           "destination": "/index.html"
         }
       ]
+    },
+    {
+      "target": "crm",
+      "public": "dist/apps/crm/",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
     }
   ],
   "functions": {

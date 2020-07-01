@@ -95,6 +95,9 @@
         ],
         "festival": [
           "festival-blockframes-bruce"
+        ],
+        "crm": [
+          "crm-blockframes-bruce"
         ]
       }
     },

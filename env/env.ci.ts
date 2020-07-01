@@ -20,6 +20,7 @@ export const sentryDsn = undefined;
 
 export const appUrlContent = 'https://blockframes-ci.web.app';
 export const appUrlMarket = appUrlContent;
+export const appUrlCrm  = appUrlContent;
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
