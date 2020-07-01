@@ -13,8 +13,11 @@ export const persistenceSettings = {
 // Firebase
 // ========
 
-export const appUrlContent = 'https://demo2.archipelcontent.com';
-export const appUrlMarket = 'https://demo2.archipelmarket.com';
+export const appUrl = {
+  content: 'https://demo2.archipelcontent.com',
+  market: 'https://demo2.archipelmarket.com',
+  crm: 'https://demo2.crm.blockframes.io',
+}
 
 export const firebase = {
   apiKey: 'AIzaSyBmPF29hs2PPo4-4PjlR__ng-X14URyM7Q',
