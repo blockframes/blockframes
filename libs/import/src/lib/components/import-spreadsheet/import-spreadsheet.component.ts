@@ -51,12 +51,8 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     this.sub = this.excelForm.valueChanges.subscribe(excelFormValue => {
       if (!!excelFormValue.blobOrFile && !!excelFormValue.blobOrFile.name) {
 
-        console.log('it\'s a file', excelFormValue.blobOrFile);
-        // TODO FILE READER THEN SEND BYTES TO SET SHEET RANGE
-
         const reader = new FileReader();
         reader.addEventListener('loadend', _ => {
-          console.log('load end');
           const buffer = new Uint8Array(reader.result as ArrayBuffer);
           this.setSheetRange(buffer);
         });
@@ -83,9 +79,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
     } else {
       sheetRange = 'A10:AD100';
     }
-    console.log('import', sheetRange);
     this.sheets = importSpreadsheet(bytes, sheetRange);
-    console.log(this.sheets);
   }
 
   next(): void {
