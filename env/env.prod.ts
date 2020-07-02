@@ -1,4 +1,5 @@
 export const production = true;
+export const dev = false;
 export const hmr = false;
 
 // TODO issue#1146 AFM CODE
