@@ -10,16 +10,28 @@ import { OrganizationBannerComponent } from './banner.component';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
+
+// Material
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+
+    // Blockframes
     OrgNameModule,
     ImageReferenceModule,
     MovieCardModule,
     MatLayoutModule,
+    MatButtonModule,
+    MatRippleModule,
+
+    // Material
+    MatIconModule
   ],
   declarations: [OrganizationBannerComponent],
   exports: [OrganizationBannerComponent]

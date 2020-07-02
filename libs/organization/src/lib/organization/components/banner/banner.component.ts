@@ -10,18 +10,8 @@ import { Movie } from '@blockframes/movie/+state';
 })
 export class OrganizationBannerComponent {
   
-  _org: Organization;
-  _movies: Movie[] = []
-  
-  @Input()
-  set org(org: Organization) {
-    this._org = org;
-    if (!!org.movies) {
-      this._movies = org.movies
-        .filter(movie => movie?.main.storeConfig.status === 'accepted' && movie?.main.storeConfig.appAccess.festival);
-    }
-  }
-
-  constructor() {}
+  @Input() org;
+  @Input() orgLink: string;
+  @Input() movies: Movie[] = [];
 
 }

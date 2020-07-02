@@ -1,40 +1,27 @@
-<div fxLayout="row" fxLayoutAlign="space-between start" flex class="movie-header-slider">
-    <h1>{{ _org | orgName }}</h1>
-    <a mat-button [routerLink]="'/c/o/marketplace/organization/' + _org.id" color="primary">
-        <span>See all ({{ _movies.length }})</span>
+<header fxLayout fxLayoutAlign="space-between start">
+    <h1>{{ org | orgName }}</h1>
+    <a mat-button [routerLink]="orgLink" color="primary">
+        <span>See all ({{ movies.length }})</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
     </a>
-</div>
-<div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="start start" flex>
-    <section [col]="6">
-        <section fxLayoutAlign="start center">
-            <a mat-button [routerLink]="'/c/o/marketplace/organization/' + _org.id">
-                <bf-img [ref]="_org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+</header>
+<section fxLayout fxLayout.lt-sm="column" flex>
+    <article>
+        <div fxLayoutAlign="start center">
+            <a [col]="3" matRipple [routerLink]="orgLink">
+                <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
             </a>
-            <article>
-                <p>{{ _org | orgName }}</p>
-                <p class="mat-caption">{{ _movies.length }} films</p>
-            </article>
-        </section>
+            <div>
+                <p>{{ org | orgName }}</p>
+                <p class="mat-caption">{{ movies.length }} films</p>
+            </div>
+        </div>
         <!-- TODO add detailed company description -->
-    </section>
+    </article>
 
-    <section [col]="6" fxLayout="column">
-        <div fxLayout="row" fxLayout.lt-sm="column">
-            <ng-container *ngFor="let movie of _movies | slice:0:4; let i = index">
-                <ng-container *ngIf="i % 2 === 0">
-                    <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title' + movie.id">
-                    </movie-card>
-                </ng-container>
-            </ng-container>
-        </div>
-        <div fxLayout="row" fxLayout.lt-sm="column">
-            <ng-container *ngFor="let movie of _movies | slice:0:4; let i = index">
-                <ng-container *ngIf="i % 2 !== 0">
-                    <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title' + movie.id">
-                    </movie-card>
-                </ng-container>
-            </ng-container>
-        </div>
-
-    </section>
-</div>
+    <article fxLayout="row wrap" fxLayoutGap="24px">
+        <ng-container *ngFor="let movie of movies | slice:0:4; let i = index">
+            <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id"></movie-card>
+        </ng-container>
+    </article>
+</section>

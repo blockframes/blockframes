@@ -1,13 +1,29 @@
-bf-img {
-    height: 120px;
-    width: 120px;
+@import '~@angular/flex-layout/mq';
+
+:host {
+    display: block;
 }
 
-section {
-    width: 100% !important;
+header {
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+bf-img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+article {
+    width: 50%;
+}
+
+@include layout-bp(lt-sm) {
+    article {
+        width: 100%;
+    }
 }
 
 movie-card {
-    margin: 12px;
-    width: 100%;
+    width: calc(50% - 24px);
 }
