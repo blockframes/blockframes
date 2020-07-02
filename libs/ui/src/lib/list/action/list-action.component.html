@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutAlign="end start">
+  <button mat-button (click)="markedAll.emit()">
+    <mat-icon svgIcon="read"></mat-icon>
+    <span>Mark all as read</span>
+  </button>
+</div>
+<mat-card>
+  <mat-list role="list">
+    <ng-template [ngTemplateOutlet]="listActionHeader"></ng-template>
+    <mat-divider></mat-divider>
+    <ng-template [ngTemplateOutlet]="listActionPagination"></ng-template>
+  </mat-list>
+</mat-card>
