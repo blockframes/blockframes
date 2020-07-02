@@ -31,9 +31,6 @@ export class FileUploadComponent implements OnInit {
   ngOnInit() {
     // show current file
     if (this.form.oldRef.value) {
-      this.form.patchValue({
-        fileName: this.form.oldRef.value.split('/').pop(),
-      });
       this.state = 'ready';
     }
   }
@@ -60,7 +57,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   public selected(files: FileList) {
-    console.log(files);
     if (!files.item(0)) {
       this.snackBar.open('No file found', 'close', { duration: 1000 });
       this.state = 'waiting';
