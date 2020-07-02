@@ -42,11 +42,11 @@ export interface ImgRef {
 
 export function createImgRef(ref?: Partial<ImgRef>): ImgRef {
   return {
-    original: createHostedMedia(ref.original || {}),
-    fallback: createHostedMedia(ref.fallback || {}),
-    xs: createHostedMedia(ref.xs || {}),
-    md: createHostedMedia(ref.md || {}),
-    lg: createHostedMedia(ref.lg || {}),
+    original: createHostedMedia(ref?.original || {}),
+    fallback: createHostedMedia(ref?.fallback || {}),
+    xs: createHostedMedia(ref?.xs || {}),
+    md: createHostedMedia(ref?.md || {}),
+    lg: createHostedMedia(ref?.lg || {}),
   };
 }
 
