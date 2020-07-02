@@ -80,10 +80,14 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
   Object.keys(entity.poster).forEach(key => posterControls[key] = new MoviePromotionalImageForm(entity.poster[key]));
 
   const stillPhotoControls: Record<string, MoviePromotionalImageForm> = {};
-  Object.keys(entity.still_photo).forEach(key => stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]));
+  for (const key in entity.still_photo) {
+    stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]);
+  }
 
   const trailerControls: Record<string, MoviePromotionalHostedMediaForm> = {};
-  Object.keys(entity.trailer).forEach(key => trailerControls[key] = new MoviePromotionalHostedMediaForm(entity.trailer[key]));
+  for (const key in entity.trailer) {
+    trailerControls[key] = new MoviePromotionalHostedMediaForm(entity.trailer[key]);
+  }
 
   return {
 

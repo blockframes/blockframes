@@ -111,44 +111,31 @@ export async function onMovieUpdate(
     await storeSearchableMovie(after, orgName(creatorOrg));
   }
 
+
   // BANNER
+  const bannerBeforeRef = before.promotionalElements?.banner?.media?.original?.ref;
+  const bannerAfterRef = before.promotionalElements?.banner?.media?.original?.ref;
   if (
-    !!before.promotionalElements.banner.media && !!after.promotionalElements.banner.media &&
-    !!before.promotionalElements.banner.media.original && !!after.promotionalElements.banner.media.original &&
-    !!before.promotionalElements.banner.media.original.ref && !!after.promotionalElements.banner.media.original.ref &&
-    before.promotionalElements.banner.media.original.ref !== after.promotionalElements.banner.media.original.ref
+    !!bannerBeforeRef && !!bannerAfterRef &&
+    bannerBeforeRef !== bannerAfterRef
   ) {
     await handleImageChange(after.promotionalElements.banner.media);
   }
 
   // POSTERs
-  const posterPromises = Object.keys(after.promotionalElements.poster).map(key => {
-    if (
-      !!before.promotionalElements.poster[key] && !!after.promotionalElements.poster[key] &&
-      !!before.promotionalElements.poster[key].media && !!after.promotionalElements.poster[key].media &&
-      !!before.promotionalElements.poster[key].media.original && !!after.promotionalElements.poster[key].media.original &&
-      !!before.promotionalElements.poster[key].media.original.ref && !!after.promotionalElements.poster[key].media.original.ref &&
-      before.promotionalElements.poster[key].media.original.ref !== after.promotionalElements.poster[key].media.original.ref
-    ) {
-      return handleImageChange(after.promotionalElements.poster[key].media);
-    }
-    return;
-  });
+  const posterPromises = Object.keys(after.promotionalElements.poster).filter(key => {
+    const posterBeforeRef = before.promotionalElements?.poster[key]?.media?.original?.ref;
+    const posterAfterRef = after.promotionalElements?.poster[key]?.media?.original?.ref;
+    return !!posterBeforeRef && !!posterAfterRef && posterBeforeRef !== posterAfterRef;
+  }).map(key => handleImageChange(after.promotionalElements.poster[key].media));
   await Promise.all(posterPromises);
 
   // STILL PHOTOs
-  const stillPromises = Object.keys(after.promotionalElements.still_photo).map(key => {
-    if (
-      !!before.promotionalElements.still_photo[key] && !!after.promotionalElements.still_photo[key] &&
-      !!before.promotionalElements.still_photo[key].media && !!after.promotionalElements.still_photo[key].media &&
-      !!before.promotionalElements.still_photo[key].media.original && !!after.promotionalElements.still_photo[key].media.original &&
-      !!before.promotionalElements.still_photo[key].media.original.ref && !!after.promotionalElements.still_photo[key].media.original.ref &&
-      before.promotionalElements.still_photo[key].media.original.ref !== after.promotionalElements.still_photo[key].media.original.ref
-    ) {
-      return handleImageChange(after.promotionalElements.still_photo[key].media);
-    }
-    return;
-  });
+  const stillPromises = Object.keys(after.promotionalElements.still_photo).filter(key => {
+    const stillBeforeRef = before.promotionalElements?.still_photo[key]?.media?.original?.ref;
+    const stillAfterRef = after.promotionalElements?.still_photo[key]?.media?.original?.ref;
+    return !!stillBeforeRef && !!stillAfterRef && stillBeforeRef !== stillAfterRef;
+  }).map(key => handleImageChange(after.promotionalElements.still_photo[key].media));
   await Promise.all(stillPromises);
 
 }
