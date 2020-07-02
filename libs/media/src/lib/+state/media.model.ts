@@ -24,6 +24,10 @@ export function getRatio(format: Formats) {
   return width / height;
 }
 
+export function getFileNameFromPath(path: string) {
+  return path.split('/').pop()
+}
+
 /** Return the url of the original image, unless we are on Safari
  * were it returns the fallback image instead
  */

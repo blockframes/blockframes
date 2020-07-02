@@ -47,15 +47,14 @@ export class MovieSummaryImageComponent implements OnInit {
 
   get photoHasNoValue() {
     try {
-      const keys = Object.keys(this.promotionalElements.get('still_photo').value);
+      const stillPhotos = this.promotionalElements.get('still_photo').value;
+      const keys = Object.keys(stillPhotos);
 
       // if there is no still photos
-      if (keys.length === 0) {
-        return true;
-      }
-
-      // or if at least one still photo as an empty url
-      return keys.some(key => !this.promotionalElements.get('still_photo').get(key).get('media').get('original').get('url').value);
+      return keys.length === 0 ?
+        true :
+        // or if at least one still photo as an empty url
+        keys.some(key => !this.promotionalElements.get('still_photo').value[key].media.original.url.value);
 
     } catch (error) {
       console.warn(error);
