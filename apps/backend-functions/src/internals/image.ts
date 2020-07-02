@@ -59,7 +59,10 @@ export async function resize(ref: string) {
     const fallbackImgPath = join(workingDir, `fallback_${fallbackImgName}`);
     const storageDestination = join(path.replace('original', 'fallback'), fallbackImgName);
 
-    await sharp(tmpFilePath).png().resize({width: sizes.fallback, withoutEnlargement: true}).toFile(fallbackImgPath);
+    await sharp(tmpFilePath) // load the image file into Sharp
+    .png() // convert it into a .png
+    .resize({width: sizes.fallback, withoutEnlargement: true}) // resize the image down to 1024 unless it's already smaller
+    .toFile(fallbackImgPath); // write the image into a file
 
     await bucket.upload(fallbackImgPath, { destination: storageDestination });
   }
@@ -82,12 +85,14 @@ export async function handleImageChange(after: ImgRef) {
 
     // delete every image size (including `fallback`)
     const deletePromises = imgSizeDirectory.map(key => {
+
       // avoid to delete if ref is empty
-      if (!after[key]!.ref) {
-        return new Promise(res => res());
-      } else {
+      if (!!after[key]!.ref) {
         return bucket.file(after[key]!.ref).delete();
+      } else {
+        return new Promise(res => res());
       }
+
     });
     await Promise.all(deletePromises);
 
