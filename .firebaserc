@@ -38,6 +38,9 @@
         ],
         "festival": [
           "blockframes-festival"
+        ],
+        "crm": [
+          "blockframes-crm"
         ]
       }
     },
@@ -51,6 +54,9 @@
         ],
         "festival": [
           "blockframes-ci-festival"
+        ],
+        "crm": [
+          "blockframes-ci-crm"
         ]
       }
     },
@@ -68,6 +74,9 @@
         ],
         "festival": [
           "staging-blockframes-festival"
+        ],
+        "crm": [
+          "staging-blockframes-crm"
         ]
       }
     },
@@ -91,7 +100,13 @@
     "blockframes-bruce": {
       "hosting": {
         "catalog": [
-          "blockframes-bruce"
+          "catalog-blockframes-bruce"
+        ],
+        "festival": [
+          "festival-blockframes-bruce"
+        ],
+        "crm": [
+          "crm-blockframes-bruce"
         ]
       }
     },
@@ -133,6 +148,9 @@
         ],
         "festival": [
           "festival-demo1-blockframes"
+        ],
+        "crm": [
+          "crm-demo1-blockframes"
         ]
       }
     },

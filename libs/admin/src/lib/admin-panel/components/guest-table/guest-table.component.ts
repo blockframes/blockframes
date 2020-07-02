@@ -1,8 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { Invitation } from '@blockframes/invitation/+state';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Invitation, InvitationDetailed } from '@blockframes/invitation/+state';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { getValue } from '@blockframes/utils/helpers';
-import { InvitationDetailed } from '../../pages/invitations/invitations.component';
 
 @Component({
   selector: 'invitation-guest-table',
@@ -10,21 +9,26 @@ import { InvitationDetailed } from '../../pages/invitations/invitations.componen
   styleUrls: ['./guest-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GuestTableComponent implements OnInit {
+export class GuestTableComponent {
   public _invitations: Invitation[] | InvitationDetailed[];
 
   public headers = {
     'id': 'Id',
     'org': 'Org',
-    'event.title': 'Event',
+    'event.id': '',
+    'event.title': 'Event title',
     'event.start': 'Event start',
     'event.end': 'Event end',
+    'event.type': 'Event type',
+    'event.isPrivate': 'Privacy status',
     'date': 'Invitation date',
     'guest.firstName': 'FirstName',
     'guest.lastName': 'LastName',
-    'mode': 'Type',
+    'guestOrg': 'Guest org',
+    'mode': 'Mode',
     'status': 'Status',
-    'guest.email': 'Email'
+    'guest.email': 'Email',
+    'movie': 'Movie'
   };
 
   @Input() initialColumns: string[] = [
@@ -47,17 +51,13 @@ export class GuestTableComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    // @TODO (#2952) WIP
-    console.log(this.invitations);
-  }
-
   filterPredicateMovies(data: any, filter) {
     const columnsToFilter = [
       'id',
       'org.denomination.full',
       'org.denomination.public',
       'event.title',
+      'event.type',
       'date',
       'guest.firstName',
       'guest.lastName',

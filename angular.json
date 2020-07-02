@@ -180,6 +180,36 @@
             "setupFile": "libs/organization/src/test-setup.ts",
             "passWithNoTests": true
           }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/organization/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/organization",
+            "config": {
+              "configFolder": "libs/organization/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
         }
       },
       "schematics": {
@@ -1161,6 +1191,195 @@
       "schematics": {
         "@nrwl/angular:component": {
           "style": "scss"
+        }
+      }
+    },
+    "crm": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/crm/crm",
+      "sourceRoot": "apps/crm/crm/src",
+      "prefix": "crm",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/crm",
+            "index": "apps/crm/crm/src/index.html",
+            "main": "apps/crm/crm/src/main.ts",
+            "polyfills": "apps/crm/crm/src/polyfills.ts",
+            "tsConfig": "apps/crm/crm/tsconfig.app.json",
+            "aot": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/crm/crm/src/favicon.ico",
+              "apps/crm/crm/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "apps/crm/crm/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "dev": {},
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "crm:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "crm:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "crm:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/crm/crm/tsconfig.app.json", "apps/crm/crm/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!apps/crm/crm/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/crm/crm/jest.config.js",
+            "tsConfig": "apps/crm/crm/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/crm/crm/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "crm-e2e": {
+      "root": "apps/crm/crm-e2e",
+      "sourceRoot": "apps/crm/crm-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/crm/crm-e2e/cypress.json",
+            "tsConfig": "apps/crm/crm-e2e/tsconfig.e2e.json",
+            "devServerTarget": "crm:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "crm:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/crm/crm-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/crm/crm-e2e/**"]
+          }
         }
       }
     }

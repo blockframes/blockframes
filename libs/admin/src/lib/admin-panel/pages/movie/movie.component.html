@@ -1,13 +1,11 @@
-<section>
+<main>
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
 
   <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
     <mat-card>
       <h2>
         {{ movie.main.title.international }} ({{ movie.main.internalRef || 'missing internal ref' }})
-        <button mat-icon-button color="accent" [routerLink]="['/c/o/dashboard/tunnel/movie', movieId]">
-          <mat-icon svgIcon="eye"></mat-icon>
-        </button>
+        <admin-go-to type="title" [id]="movieId"></admin-go-to>
       </h2>
 
       <h4>({{ movie.main.title.original }})</h4>
@@ -120,4 +118,4 @@
     </ng-container>
   </mat-card>
 
-</section>
+</main>

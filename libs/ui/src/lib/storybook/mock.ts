@@ -1,5 +1,6 @@
 import { Movie } from "@blockframes/movie/+state/movie.model";
 import { User } from '@blockframes/auth/+state';
+import { Organization } from "@blockframes/organization/+state";
 
 const MOCKS = [{"docPath":"_META/_MAINTENANCE","content":{"endedAt":null,"startedAt":{"_seconds":1589203514,"_nanoseconds":502000000}}},
 {"docPath":"_META/_VERSION","content":{"currentVersion":22}},
@@ -568,3 +569,5 @@ function getCollection(collection: string) {
 export const MOVIES = getCollection('movies') as Movie[];
 
 export const USERS = getCollection('users') as User[];
+
+export const ORGS = getCollection('orgs') as Organization[];

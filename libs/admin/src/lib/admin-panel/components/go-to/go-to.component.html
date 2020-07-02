@@ -1,0 +1,29 @@
+<button mat-icon-button [matMenuTriggerFor]="homeMenu">
+  <mat-icon svgIcon="launch"></mat-icon>
+</button>
+<mat-menu #homeMenu="matMenu">
+  <button *ngIf="catalog" mat-menu-item [matMenuTriggerFor]="contentMenu">
+    <mat-icon svgIcon="logo_archipel_content_fill"></mat-icon><span matLine>Archipel Content</span>
+  </button>
+  <button *ngIf="festival" mat-menu-item [matMenuTriggerFor]="marketMenu">
+    <mat-icon svgIcon="logo_archipel_market_fill"></mat-icon><span matLine>Archipel Market</span>
+  </button>
+</mat-menu>
+
+<mat-menu #contentMenu="matMenu">
+  <a mat-menu-item [href]="'catalog' | goToApp:'marketplace':type:id:suffix">
+    <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+  </a>
+  <a mat-menu-item [href]="'catalog' | goToApp:'dashboard':type:id:suffix">
+    <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+  </a>
+</mat-menu>
+
+<mat-menu #marketMenu="matMenu">
+  <a mat-menu-item [href]="'festival' | goToApp:'marketplace':type:id:suffix">
+    <mat-icon svgIcon="marketplace"></mat-icon><span matLine>Marketplace</span>
+  </a>
+  <a mat-menu-item [href]="'festival' | goToApp:'dashboard':type:id:suffix">
+    <mat-icon svgIcon="dashboard"></mat-icon><span matLine>Dashboard</span>
+  </a>
+</mat-menu>

@@ -7,11 +7,7 @@
     {
       "target": "catalog",
       "public": "dist/apps/catalog/",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "redirects": [
         {
           "source": "/catalog/:path*",
@@ -33,16 +29,27 @@
     {
       "target": "festival",
       "public": "dist/apps/festival/browser",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "/admin{,/**}",
+          "function": "admin"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "crm",
+      "public": "dist/apps/crm/",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
       "rewrites": [
-        {
-          "source": "/admin{,/**}",
-          "function": "admin"
-        },
         {
           "source": "**",
           "destination": "/index.html"
@@ -54,7 +61,7 @@
     "predeploy": [
       "npm run lint backend-functions",
       "npm run build:backend-functions",
-      "./ops/deploy_secrets.sh"
+      "npm run deploy:functions:config"
     ],
     "source": "dist/apps/backend-functions/"
   },

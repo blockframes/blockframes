@@ -12,6 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 // Components
 import { ContractTreeComponent } from './contract-tree.component';
 
+// Modules
+import { GoToModule } from '../go-to/go-to.module';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -22,6 +25,7 @@ import { ContractTreeComponent } from './contract-tree.component';
     RouterModule,
     MatTreeModule,
     MatButtonModule,
+    GoToModule,
   ],
   declarations: [
     ContractTreeComponent,

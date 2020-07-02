@@ -15,6 +15,7 @@ export class OrganizationsComponent implements OnInit {
     'logo': 'Logo',
     'denomination.full': 'Company name',
     'denomination.public': 'Short name',
+    'addresses.main.country': 'Country',
     'email': 'Email',
     'appAccess': 'Authorizations',
     'edit': 'Edit',
@@ -25,6 +26,7 @@ export class OrganizationsComponent implements OnInit {
     'logo',
     'denomination.full',
     'denomination.public',
+    'addresses.main.country',
     'status',
     'email',
     'appAccess',
@@ -69,6 +71,7 @@ export class OrganizationsComponent implements OnInit {
       fullDenomination: r.denomination.full,
       publicDenormination: r.denomination.public,
       status: r.status,
+      country: r && r.addresses.main.country ? r.addresses.main.country : '--',
       email: r.email,
       catalog: `dashboard: ${r.appAccess.catalog.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.catalog.marketplace ? 'yes' : 'no'}`,
       festival: `dashboard: ${r.appAccess.festival.dashboard ? 'yes' : 'no'} - marketplace: ${r.appAccess.festival.marketplace ? 'yes' : 'no'}`
