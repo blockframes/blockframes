@@ -51,13 +51,25 @@ async function updateUserWatermark(
 
 async function updateMovies(movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
 
-    const links = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link']
+    const externalMediaLinks = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link'];
+    const hostedMediaLinks = ['presentation_deck', 'scenario'];
     const legacyKeys = ['originalFileName', 'originalRef', 'ref'];
 
     movies.docs.forEach(doc => {
         const movie = doc.data() as MovieDocument;
-        links.forEach(link => {
+        externalMediaLinks.forEach(link => {
             movie.promotionalElements[link].media = createExternalMedia(movie.promotionalElements[link].media);
+            // DELETE
+            legacyKeys.forEach(key => delete movie.promotionalElements[link].media[key]);
+        })
+
+        hostedMediaLinks.forEach(link => {
+            const media = movie.promotionalElements[link].media
+            movie.promotionalElements[link].media = createHostedMedia({
+                ref: media.ref ? media.ref : media.originalRef ? media.originalRef : '',
+                url: media.url ? media.url : ''
+            });
+
             // DELETE
             legacyKeys.forEach(key => delete movie.promotionalElements[link].media[key]);
         })
