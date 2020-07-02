@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/media/+state/media.firestore";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
@@ -12,7 +13,12 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class MediaFileComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
+  constructor(
+    private tunnel: MovieTunnelComponent,
+    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Files & links', 'Title information')
+  }
 
   public movie = this.movieQuery.getActive();
 

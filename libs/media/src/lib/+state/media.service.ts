@@ -7,13 +7,14 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile, ImgRef } from "./media.firestore";
+import { UploadFile, ImgRef, imgSizeDirectory } from "./media.firestore";
 import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
+import { map, filter } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -40,10 +41,9 @@ export class MediaService {
   /** Check if a file exists in the **Firebase storage** */
   async exists(path: string, fileName: string): Promise<boolean> {
 
-    return this.storage.ref(path).listAll().toPromise().then((res) => {
-      return res.items.some(item => item.name === fileName);
-    }).catch(() => false);
-
+    return this.storage.ref(path).listAll().toPromise()
+    .then((res) => res.items.some(item => item.name === fileName))
+    .catch(() => false);
   }
 
   /**
@@ -236,25 +236,13 @@ export class MediaService {
     // listen on the corresponding firestore doc
     const doc = this.db.collection(collection).doc(docId);
 
-    // create a promise that resolve when all image sizes are empty
-    return new Promise(res => {
-      // listen on every changes of the current document
-      const sub = doc.snapshotChanges().subscribe(action => {
-        const docData = action.payload.data();
-        const image: ImgRef = get(docData, fieldToUpdate);
-        // check if all image size are empty
-        if (
-          !image.original.ref &&
-          !image.fallback.ref &&
-          !image.xs.ref &&
-          !image.md.ref &&
-          !image.lg.ref
-        ) {
-          sub.unsubscribe(); // cancel the observable
-          res(); // resolve the promise
-        }
-      });
-    });
+    const allSizeEmpty = (image: ImgRef) => imgSizeDirectory.every(key => !image[key].ref);
+
+    // listen on every changes of the current document
+    return doc.snapshotChanges().pipe(
+      map(action => get(action.payload.data(), fieldToUpdate)),
+      filter((image: ImgRef) => allSizeEmpty(image))
+    ).toPromise();
   }
 
 }

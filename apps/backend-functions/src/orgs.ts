@@ -187,11 +187,11 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   await storeSearchableOrg(after)
 
   // LOGO
+  const logoBeforeRef = before.logo?.original?.ref;
+  const logoAfterRef = before.logo?.original?.ref;
   if (
-    !!before.logo && !!after.logo &&
-    !!before.logo.original && !!after.logo.original &&
-    !!before.logo.original.ref && !!after.logo.original.ref &&
-    before.logo.original.ref !== after.logo.original.ref
+    !!logoBeforeRef && !!logoAfterRef &&
+    logoBeforeRef !== logoAfterRef
   ) {
     await handleImageChange(after.logo);
   }
