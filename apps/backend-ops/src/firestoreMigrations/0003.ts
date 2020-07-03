@@ -1,6 +1,6 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from '@blockframes/utils/static-model';
+import { createOldImgRef, createOldPromotionalElement } from './oldInterfacesAndModels/imgRef'
 
 /**
  * Update stakeholders in movie documents.
@@ -113,48 +113,4 @@ export async function updatePosterStructure(db: Firestore) {
 export async function upgrade(db: Firestore) {
   await updateStakeholdersMovieStructure(db);
   await updatePosterStructure(db);
-}
-
-function createOldPromotionalElement(
-  promotionalElement: Partial<OldPromotionalElement> = {}
-): OldPromotionalElement {
-  return {
-    label: '',
-    ...promotionalElement,
-    media: createOldImgRef(promotionalElement.media)
-  };
-}
-
-export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
-  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
-  return {
-    ref: '',
-    urls: {
-      original: '',
-      xs: '',
-      md: '',
-      lg: '',
-    },
-    ..._ref
-  };
-}
-
-interface OldPromotionalElement {
-  label: string,
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
-  media: OldImgRef,
-  language?: LanguagesSlug,
-  country?: TerritoriesSlug,
-}
-
-interface OldImgRef {
-  ref: string;
-  urls: {
-    original: string;
-    fallback?: string;
-    xs?: string;
-    md?: string;
-    lg?: string;
-  };
 }
