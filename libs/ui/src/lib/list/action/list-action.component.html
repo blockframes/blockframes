@@ -1,13 +1,34 @@
-<div fxLayout="row" fxLayoutAlign="end start">
-  <button mat-button (click)="markedAll.emit()">
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button (click)="markAllAsRead()">
     <mat-icon svgIcon="read"></mat-icon>
     <span>Mark all as read</span>
   </button>
 </div>
-<mat-card>
+<!-- We can't bind it with the host, cause it has no effect on it -->
+<div class="mat-card">
   <mat-list role="list">
-    <ng-template [ngTemplateOutlet]="listActionHeader"></ng-template>
-    <mat-divider></mat-divider>
-    <ng-template [ngTemplateOutlet]="listActionPagination"></ng-template>
+    <ng-content select="list-action-header"></ng-content>
+    <ng-container *ngFor="let timeFrame of timeFrames; let first = first; let last = last">
+      <ng-container *ngIf="(actions | slice:0:10 | filterByDate: timeFrame) as filteredItems">
+        <span class="mat-body-2" mat-subheader *ngIf="filteredItems.length">{{ timeFrame | labelByDate }}</span>
+        <mat-divider *ngIf="filteredItems.length"></mat-divider>
+        <ng-container *ngFor="let item of filteredItems">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <ng-template [ngTemplateOutlet]="listActionItem" [ngTemplateOutletContext]="{$implicit: item.data }">
+            </ng-template>
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icon button which opens up a menu">
+              <mat-icon svgIcon="more_vert">
+              </mat-icon>
+            </button>
+          </div>
+          <ng-template [ngTemplateOutlet]="listActionPagination" [ngTemplateOutletContext]="item"></ng-template>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+    <mat-paginator (select)="set()"></mat-paginator>
   </mat-list>
-</mat-card>
+</div>
+
+<mat-menu #menu="matMenu">
+  <ng-content select="list-action-menu"></ng-content>
+</mat-menu>
