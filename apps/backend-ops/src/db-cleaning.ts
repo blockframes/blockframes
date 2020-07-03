@@ -144,11 +144,11 @@ async function cleanUsers(
 
     // Check if a DB user have a record in Auth.
     // @TODO (#3066) recreate this situation
-    const authUser = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
-    if (!!authUser) {
+    const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
+    if (!!authUserId) {
       // Check if ids are the same 
-      if (authUser.uid !== user.uid) {
-        console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${user.uid}`);
+      if (authUserId !== user.uid) {
+        console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
         if (invalidOrganization) {
