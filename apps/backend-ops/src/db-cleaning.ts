@@ -80,7 +80,6 @@ function cleanNotifications(
         // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
         // @dev If the cleaning is made after Jun 24 + imagesMigrationTimestamp, this should have no effects
         const notificationTimestamp = notification.date.toMillis();
-        const imagesMigrationTimestamp = Date.parse('2020-06-24T08:00:00');
         if (notificationTimestamp < imagesMigrationTimestamp) {
           if (notification.organization) {
             notification.organization.logo = createImgRef();

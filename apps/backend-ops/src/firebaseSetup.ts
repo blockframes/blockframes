@@ -8,6 +8,7 @@ import { syncUsers } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
+import { cleanDeprecatedData } from './db-cleaning';
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
