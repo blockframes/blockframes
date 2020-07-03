@@ -1,4 +1,4 @@
-import { HostedMedia, createHostedMedia, ExternalMedia, createExternalMedia } from '../../+state//media.firestore'
+import { HostedMedia, createHostedMedia, ExternalMedia, createExternalMedia, HostedMediaFormValue } from '../../+state//media.firestore'
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
@@ -31,14 +31,13 @@ export class ExternalMediaForm extends FormEntity<ExternalMediaControl> {
 // ------------------------------
 
 function createHostedMediaControl(media: HostedMedia) {
-  const { ref, url } = createHostedMedia(media);
   return {
-    oldRef: new FormControl(ref),
-    ref: new FormControl(ref),
-    url: new FormControl(url),
+    oldRef: new FormControl(media.ref),
+    ref: new FormControl(media.ref),
+    url: new FormControl(media.url),
     blobOrFile: new FormControl(),
     delete: new FormControl(false),
-    fileName: new FormControl(getFileNameFromPath(ref))
+    fileName: new FormControl(getFileNameFromPath(media.ref))
   }
 }
 
