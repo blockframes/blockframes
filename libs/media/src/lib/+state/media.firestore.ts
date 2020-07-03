@@ -16,6 +16,13 @@ export interface HostedMedia extends ExternalMedia {
   ref: string;
 }
 
+export interface HostedMediaFormValue extends HostedMedia {
+  oldRef: string;
+  blobOrFile: Blob | File;
+  delete: boolean;
+  fileName: string;
+}
+
 export function createHostedMedia(media?: Partial<HostedMedia>): HostedMedia {
   return {
     url: '',

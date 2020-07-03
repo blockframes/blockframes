@@ -43,4 +43,6 @@ export class ProfileForm extends FormEntity<ProfileControl, User> {
   constructor(profile?: Profile) {
     super(createProfileControls(profile));
   }
+
+  get avatar() { return this.get('avatar'); }
 }
