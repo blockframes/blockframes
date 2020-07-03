@@ -1,1 +1,1 @@
-export * from './lib/testing-firebase';
+export * from './lib/functions';
