@@ -60,7 +60,8 @@
       "@blockframes/import": ["libs/import/src/index.ts"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
       "@blockframes/testing/seed-data": ["libs/testing/seed-data/src/index.ts"],
-      "@blockframes/testing/util": ["libs/testing/util/src/index.ts"]
+      "@blockframes/testing/util": ["libs/testing/util/src/index.ts"],
+      "@blockframes/testing/firebase": ["libs/testing/firebase/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
