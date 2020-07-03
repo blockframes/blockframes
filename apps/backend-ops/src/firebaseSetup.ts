@@ -9,6 +9,7 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { migrate } from './migrations';
 import { restore } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
+import { cleanStorage } from './storage-cleaning';
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
@@ -26,6 +27,7 @@ export async function prepareForTesting() {
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused data...')
   // await cleanDeprecatedData();
+  // await cleanStorage();
   // console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
@@ -49,6 +51,7 @@ export async function upgrade() {
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused data...')
   // await cleanDeprecatedData();
+  // await cleanStorage();
   // console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
