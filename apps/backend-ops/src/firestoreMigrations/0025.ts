@@ -4,6 +4,9 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { OldImgRef } from './oldInterfacesAndModels/imgRef'
+import { OldPublicOrganization } from './oldInterfacesAndModels/publicOrganization';
+import { OldPublicUser } from './oldInterfacesAndModels/publicUser';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -204,36 +207,4 @@ const updateImgRef = async (
   } catch (e) {
     return EMPTY_REF;
   }
-}
-
-interface OldImgRef {
-  ref: string;
-  urls: {
-    original: string;
-    fallback?: string;
-    xs?: string;
-    md?: string;
-    lg?: string;
-  };
-}
-
-interface OldPublicUser {
-  uid: string;
-  email: string;
-  avatar?: OldImgRef;
-  watermark?: OldImgRef;
-  firstName?: string;
-  lastName?: string;
-  orgId?: string;
-}
-
-interface OldPublicOrganization {
-  id: string;
-  denomination: OldDenomination;
-  logo: OldImgRef;
-}
-
-interface OldDenomination {
-    full: string;
-    public?: string;
 }
