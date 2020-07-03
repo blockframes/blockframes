@@ -1,6 +1,8 @@
 <ng-container *ngFor="let filter of filters">
-  <button mat-stroked-button [widgetTarget]="filterWidget" *ngIf="!!filter.label">{{filter.label}}</button>
-  <overlay-widget #filterWidget>
+  <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
+    {{filter.label}}
+  </button>
+  <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
     <mat-card>
       <mat-card-header>
         <mat-card-title>{{ filter.label }}</mat-card-title>
@@ -11,7 +13,7 @@
       <mat-divider></mat-divider>
       <mat-card-actions fxLayout fxLayoutAlign="end center">
         <button mat-button (click)="filter.form.reset()">Clear</button>
-        <button mat-flat-button color="primary">Save</button>
+        <button mat-flat-button color="primary" (click)="filterWidget.close()">Save</button>
       </mat-card-actions>
     </mat-card>
   </overlay-widget>
