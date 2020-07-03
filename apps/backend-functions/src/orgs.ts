@@ -188,7 +188,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
 
   // LOGO
   const logoBeforeRef = before.logo?.original?.ref;
-  const logoAfterRef = before.logo?.original?.ref;
+  const logoAfterRef = after.logo?.original?.ref;
   if (
     !!logoBeforeRef && !!logoAfterRef &&
     logoBeforeRef !== logoAfterRef
