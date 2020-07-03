@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 import {
   TitleListComponent,
@@ -67,6 +68,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     DisplayNameModule,
     TranslateSlugModule,
     AppBarModule,
+    MatLayoutModule,
 
     // Material
     MatIconModule,
