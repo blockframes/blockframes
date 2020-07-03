@@ -84,6 +84,9 @@
     },
     "testing-util": {
       "tags": []
+    },
+    "testing-firebase": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {
