@@ -6,16 +6,15 @@ import {
   TemplateRef,
   ContentChildren,
   QueryList,
-  Pipe,
-  PipeTransform,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnInit
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 @Directive({selector: '[filter]'})
-export class FilterDirective {
+export class FilterDirective implements OnInit {
   @Input() label = 'filter name';
   @Input() form: AbstractControl;
   private active$ = new BehaviorSubject(false);
