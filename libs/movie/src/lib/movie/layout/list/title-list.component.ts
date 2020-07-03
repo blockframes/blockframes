@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { fadeList } from '@blockframes/utils/animations/fade';
 
 
 @Directive({selector: '[appBarTitleSort]'})
@@ -20,9 +21,10 @@ export class TitleCardDirective {}
 export class TitleListItemDirective {}
 
 @Component({
-  selector: '[titles$] title-list',
+  selector: '[titles] title-list',
   templateUrl: './title-list.component.html',
   styleUrls: ['./title-list.component.scss'],
+  animations: [fadeList('.card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent implements AfterContentInit {
@@ -47,5 +49,9 @@ export class TitleListComponent implements AfterContentInit {
     } else if (!!this.titleListItemTemplate) {
       this.listView = true;
     }
+  }
+
+  trackById(movie: Movie) {
+    return movie.id;
   }
 }

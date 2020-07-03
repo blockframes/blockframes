@@ -46,34 +46,33 @@
     <ng-container *ngIf="titles.length else empty">
       <div fxLayout="row" fxLayoutAlign="end start">
         <span i18n *ngIf="titles.length as count" class="mat-body-2">
-          There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}} available.
+          There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}}
+          available.
         </span>
       </div>
     </ng-container>
-      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="0px" fxLayout.lt-sm="column" fxLayoutAlign.lt-lg="space-between center">
-        <ng-container *ngIf="!listView; else displayList">
-          <ng-container *ngFor="let title of titles">
-
+    <ng-container *ngIf="!listView; else displayList">
+      <div grid [@fadeList]="titles.length">
+        <ng-container *ngFor="let title of titles; trackBy:trackById">
+          <div class="card" [col]="3">
             <!-- INSERT CARD -->
-            <ng-template
-              [ngTemplateOutlet]="titleCardTemplate"
-              [ngTemplateOutletContext]="{$implicit: title}"
-            ></ng-template>
-
-          </ng-container>
+            <ng-template [ngTemplateOutlet]="titleCardTemplate" [ngTemplateOutletContext]="{$implicit: title}">
+            </ng-template>
+          </div>
         </ng-container>
-        <ng-template #displayList>
-          <ng-container *ngFor="let title of titles">
-
-            <!-- INSERT LIST ITEM -->
-            <ng-template
-              [ngTemplateOutlet]="titleListItemTemplate"
-              [ngTemplateOutletContext]="{$implicit: title}"
-            ></ng-template>
-
-          </ng-container>
-        </ng-template>
       </div>
+    </ng-container>
+    <ng-template #displayList>
+      <div>
+        <ng-container *ngFor="let title of titles">
+
+          <!-- INSERT LIST ITEM -->
+          <ng-template [ngTemplateOutlet]="titleListItemTemplate" [ngTemplateOutletContext]="{$implicit: title}">
+          </ng-template>
+
+        </ng-container>
+      </div>
+    </ng-template>
   </ng-container>
   <ng-template #loading>
     <div fxLayout fxLayoutAlign="center center">
