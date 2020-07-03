@@ -1,7 +1,7 @@
 <title-list [titles]="movieSearchResults$ | async">
 
   <!-- App Bar Search -->
-  <ng-template appBarTitleSearch>
+  <ng-template titleAppBarSearch>
     <form class="app-bar" [formGroup]="filterForm">
       <input type="text" formControlName="query">
     </form>
