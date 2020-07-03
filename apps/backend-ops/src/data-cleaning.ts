@@ -1,4 +1,4 @@
-import { loadAdminServices } from './admin';
+import { loadAdminServices, Auth } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { User } from '@blockframes/user/+state/user.firestore';
@@ -6,6 +6,8 @@ import { OrganizationDocument } from '@blockframes/organization/+state/organizat
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { createImgRef } from '@blockframes/media/+state/media.model';
+import { removeUnexpectedUsers } from './users';
+import { UserConfig } from './assets/users.fixture';
 
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -19,7 +21,7 @@ const imagesMigrationTimestamp = Date.parse('2020-06-24T08:00:00');
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
-  const { db } = loadAdminServices();
+  const { db, auth } = loadAdminServices();
 
   // Getting all collections we need to check
   const [
@@ -54,7 +56,7 @@ export async function cleanDeprecatedData() {
   return Promise.all([
     cleanNotifications(notifications, existingIds),
     cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>)),
-    cleanUsers(users, organizationIds),
+    cleanUsers(users, organizationIds, auth),
     cleanOrganizations(organizations, userIds, movieIds),
     cleanPermissions(permissions, organizationIds),
     cleanMovies(movies)
@@ -106,7 +108,7 @@ function cleanInvitations(
       await doc.ref.delete();
     } else {
       // Clearing ImgRef if invitation created before Jun 24 2020 (image migration) 
-       // @TODO (#3066) mock an invitation created before Jun 24
+      // @TODO (#3066) mock an invitation created before Jun 24
       const invitationTimestamp = invitation.date.toMillis();
 
       if (invitationTimestamp < imagesMigrationTimestamp) {
@@ -128,16 +130,37 @@ function cleanInvitations(
   });
 }
 
-function cleanUsers(
+async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  existingOrganizationIds: string[]
+  existingOrganizationIds: string[],
+  auth: Auth
 ) {
+
+  // Check if auth users have their record on DB
+  // @TODO (#3066) recreate this situation
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+
   users.docs.map(async userDoc => {
     const user = userDoc.data() as User;
-    const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
-    if (invalidOrganization) {
-      delete user.orgId;
-      await userDoc.ref.update(user);
+
+    // Check if a DB user have a record in Auth.
+    // @TODO (#3066) recreate this situation
+    const authUser = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
+    if (!!authUser) {
+      // Check if ids are the same 
+      if (authUser.uid !== user.uid) {
+        console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${user.uid}`);
+      } else {
+        const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
+        if (invalidOrganization) {
+          delete user.orgId;
+          await userDoc.ref.update(user);
+        }
+      }
+    } else {
+      // User does not exists on auth, should be deleted.
+      // @TODO (#3175) check if user can be deleted (permission, org etc)
+      await userDoc.ref.delete();
     }
   });
 }

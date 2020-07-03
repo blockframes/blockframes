@@ -42,7 +42,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
  * @param expectedUsers
  * @param auth
  */
-async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
   let pageToken;
 
   do {
