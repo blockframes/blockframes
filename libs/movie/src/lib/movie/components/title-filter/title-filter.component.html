@@ -1,9 +1,19 @@
 <ng-container *ngFor="let filter of filters">
   <button mat-stroked-button [widgetTarget]="filterWidget" *ngIf="!!filter.label">{{filter.label}}</button>
   <overlay-widget #filterWidget>
-    <widget-card>
-      <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
-    </widget-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ filter.label }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
+      </mat-card-content>
+      <mat-divider></mat-divider>
+      <mat-card-actions fxLayout fxLayoutAlign="end center">
+        <button mat-button (click)="filter.form.reset()">Clear</button>
+        <button mat-flat-button color="primary">Save</button>
+      </mat-card-actions>
+    </mat-card>
   </overlay-widget>
 </ng-container>
 

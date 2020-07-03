@@ -3,7 +3,7 @@
   <!-- App Bar Search -->
   <ng-template appBarTitleSearch>
     <form class="app-bar" [formGroup]="filterForm">
-      <input class="mat-title" type="text" formControlName="query">
+      <input type="text" formControlName="query">
     </form>
   </ng-template>
 
@@ -40,7 +40,7 @@
   <title-filter>
 
     <!-- TODO issue#2576 -->
-    <ng-template filter label="Sales Agents">
+    <ng-template filter label="Sales Agents" [form]="filterForm.sellers">
       <algolia-chips-autocomplete
         index="org"
         displayWithPath="name"
@@ -51,7 +51,7 @@
       ></algolia-chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Genres">
+    <ng-template filter label="Genres" [form]="filterForm.genres">
       <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
     </ng-template>
 
@@ -73,6 +73,9 @@
 
   </title-filter>
 
+  <button mat-icon-button (click)="clear()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
 
   <!-- TITLE CARD -->
   <ng-template titleCard let-title>

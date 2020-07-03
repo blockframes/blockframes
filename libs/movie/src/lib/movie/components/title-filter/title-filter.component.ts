@@ -7,12 +7,12 @@ import {
   ContentChildren,
   QueryList
 } from '@angular/core';
-import { boolean } from '@blockframes/utils/decorators/decorators';
+import { AbstractControl } from '@angular/forms';
 
 @Directive({selector: '[filter]'})
 export class FilterDirective {
   @Input() label = 'filter name';
-  @Input() @boolean section: boolean;
+  @Input() form: AbstractControl;
   constructor(public template: TemplateRef<any>) {}
 }
 

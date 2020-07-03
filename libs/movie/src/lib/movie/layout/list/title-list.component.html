@@ -1,10 +1,7 @@
 <ng-template pageBar targetId="nav">
   <header class="pageBar" fxLayout fxLayoutAlign="start center">
     <app-menu></app-menu>
-    <div fxFlex>
-      <ng-template [ngTemplateOutlet]="appBarTitleSearchTemplate"></ng-template>
-    </div>
-    <ng-template [ngTemplateOutlet]="appBarTitleSortTemplate"></ng-template>
+    <ng-template [ngTemplateOutlet]="appBarTitleSearchTemplate"></ng-template>
   </header>
 </ng-template>
 
@@ -35,7 +32,7 @@
   </section>
 </header>
 <!-- FILTER SIDE CARD -->
-<div fxLayout class="filter dark-contrast-theme">
+<div fxLayout fxLayoutAlign="space-between center" class="filter dark-contrast-theme">
   <ng-content></ng-content>
 </div>
 

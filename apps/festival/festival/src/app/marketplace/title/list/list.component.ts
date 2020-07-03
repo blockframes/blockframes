@@ -2,13 +2,13 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  OnDestroy,
+  ChangeDetectorRef
 } from '@angular/core';
-import { Subscription, Observable, combineLatest } from 'rxjs';
-import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
+import { Observable, combineLatest, of } from 'rxjs';
+import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
-import { map, distinctUntilChanged, debounceTime, filter, switchMap, pluck, startWith } from 'rxjs/operators';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { map, debounceTime, switchMap, pluck, startWith } from 'rxjs/operators';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { algolia } from '@env';
 
@@ -19,9 +19,8 @@ import { algolia } from '@env';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit {
 
-  private sub: Subscription;
   public movieSearchResults$: Observable<Movie[]>;
 
   public sortByControl: FormControl = new FormControl('Title');
@@ -31,13 +30,9 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public movieIndexName = algolia.indexNameMovies;
 
-  constructor(
-    private movieService: MovieService,
-    private movieQuery: MovieQuery,
-  ) { }
+  constructor(private movieService: MovieService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
@@ -47,21 +42,17 @@ export class ListComponent implements OnInit, OnDestroy {
       this.filterForm.valueChanges
     ]).pipe(
       debounceTime(300),
-      filter(() => !this.filterForm.isEmpty()),
-      distinctUntilChanged(),
       switchMap(() => this.filterForm.search()),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
-
-      // join retrieved movieIds from algolia with the movies from the state
-      switchMap(movieIds => this.movieQuery.selectAll({
-        filterBy: movie => movieIds.includes(movie.id),
-        sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
-      })),
+      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
+      map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))),
     );
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  clear() {
+    const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
+    this.filterForm.reset(initial);
+    this.cdr.markForCheck();
   }
 }
