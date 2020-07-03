@@ -60,6 +60,8 @@ export class OrganizationForm extends FormEntity<OrganizationFormControl> {
   get addresses() {
     return this.get('addresses');
   }
+
+  get logo() { return this.get('logo'); }
 }
 
 function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}) {
