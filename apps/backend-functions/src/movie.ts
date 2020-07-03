@@ -114,7 +114,7 @@ export async function onMovieUpdate(
 
   // BANNER
   const bannerBeforeRef = before.promotionalElements?.banner?.media?.original?.ref;
-  const bannerAfterRef = before.promotionalElements?.banner?.media?.original?.ref;
+  const bannerAfterRef = after.promotionalElements?.banner?.media?.original?.ref;
   if (
     !!bannerBeforeRef && !!bannerAfterRef &&
     bannerBeforeRef !== bannerAfterRef

@@ -3,9 +3,8 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-// import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'organization-edit',
@@ -15,7 +14,6 @@ import { HostedMediaForm } from '@blockframes/media/directives/media/media.form'
 })
 export class OrganizationComponent implements OnInit {
   public organizationForm: OrganizationForm;
-  public hostedMediaForm: HostedMediaForm;
 
   constructor(
     private query: OrganizationQuery,
@@ -27,18 +25,18 @@ export class OrganizationComponent implements OnInit {
   ngOnInit() {
     const organization = this.query.getActive();
     this.organizationForm = new OrganizationForm(organization);
-    this.hostedMediaForm = new HostedMediaForm(organization.logo.original);
   }
 
   public update() {
     try {
-      if (this.organizationForm.dirty || this.hostedMediaForm.dirty) {
+      if (this.organizationForm.dirty) {
         if (this.organizationForm.invalid) {
-          throw new Error('Your organization profile informations are not valid');
+          throw new Error('Your organization profile information are not valid');
         }
 
-        this.service.update(this.query.getActiveId(), this.organizationForm.value);
-        this.mediaService.uploadOrDeleteMedia([this.hostedMediaForm]);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm.value);
+        this.service.update(this.query.getActiveId(), documentToUpdate);
+        this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }
