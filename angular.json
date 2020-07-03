@@ -1226,9 +1226,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/crm/crm/src/styles.scss"
-            ],
+            "styles": ["apps/crm/crm/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -1379,6 +1377,58 @@
           "options": {
             "tsConfig": ["apps/crm/crm-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/crm/crm-e2e/**"]
+          }
+        }
+      }
+    },
+    "testing-seed-data": {
+      "root": "libs/testing/seed-data",
+      "sourceRoot": "libs/testing/seed-data/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/testing/seed-data/tsconfig.lib.json",
+              "libs/testing/seed-data/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/testing/seed-data/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/testing/seed-data/jest.config.js",
+            "tsConfig": "libs/testing/seed-data/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "testing-util": {
+      "root": "libs/testing/util",
+      "sourceRoot": "libs/testing/util/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/testing/util/tsconfig.lib.json",
+              "libs/testing/util/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/testing/util/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/testing/util/jest.config.js",
+            "tsConfig": "libs/testing/util/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }

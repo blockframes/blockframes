@@ -78,6 +78,12 @@
     "crm-e2e": {
       "tags": [],
       "implicitDependencies": ["crm"]
+    },
+    "testing-seed-data": {
+      "tags": []
+    },
+    "testing-util": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

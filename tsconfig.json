@@ -58,7 +58,9 @@
       "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import": ["libs/import/src/index.ts"],
-      "@blockframes/media/*": ["libs/media/src/lib/*"]
+      "@blockframes/media/*": ["libs/media/src/lib/*"],
+      "@blockframes/testing/seed-data": ["libs/testing/seed-data/src/index.ts"],
+      "@blockframes/testing/util": ["libs/testing/util/src/index.ts"]
     }
   },
   "angularCompilerOptions": {
