@@ -58,10 +58,6 @@ export class ListComponent implements OnInit, OnDestroy {
         filterBy: movie => movieIds.includes(movie.id),
         sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
       })),
-
-      // display the first 10 movies from the state (no useless queries)
-      // prevent the user to see an empty page at the beginning
-      startWith(this.movieQuery.getAll()),
     );
   }
 

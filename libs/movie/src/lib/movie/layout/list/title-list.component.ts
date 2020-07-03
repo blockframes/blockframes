@@ -2,6 +2,12 @@ import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRe
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
 
+@Directive({selector: '[appBarTitleSort]'})
+export class AppBarTitleSortDirective {}
+
+@Directive({selector: '[appBarTitleSearch]'})
+export class AppBarTitleSearchDirective {}
+
 @Directive({selector: '[titleSort]'})
 export class TitleSortDirective {}
 
@@ -21,6 +27,8 @@ export class TitleListItemDirective {}
 })
 export class TitleListComponent implements AfterContentInit {
 
+  @ContentChild(AppBarTitleSortDirective, { read: TemplateRef }) appBarTitleSortTemplate: AppBarTitleSortDirective;
+  @ContentChild(AppBarTitleSearchDirective, { read: TemplateRef }) appBarTitleSearchTemplate: AppBarTitleSearchDirective;
   @ContentChild(TitleSortDirective, { read: TemplateRef }) titleSortTemplate: TitleSortDirective;
   @ContentChild(TitleSearchDirective, { read: TemplateRef }) titleSearchTemplate: TitleSearchDirective;
   @ContentChild(TitleCardDirective, { read: TemplateRef }) titleCardTemplate: TitleCardDirective;

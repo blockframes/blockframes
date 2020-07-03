@@ -13,6 +13,8 @@ import {
   TitleListItemDirective,
   TitleSortDirective,
   TitleSearchDirective,
+  AppBarTitleSearchDirective,
+  AppBarTitleSortDirective,
 } from './title-list.component'
 
 // Material
@@ -44,6 +46,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleListItemDirective,
     TitleSortDirective,
     TitleSearchDirective,
+    AppBarTitleSearchDirective,
+    AppBarTitleSortDirective,
   ],
   exports: [
     TitleListComponent,
@@ -51,6 +55,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleListItemDirective,
     TitleSortDirective,
     TitleSearchDirective,
+    AppBarTitleSearchDirective,
+    AppBarTitleSortDirective,
   ],
   imports: [
     CommonModule,

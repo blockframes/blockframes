@@ -1,6 +1,4 @@
-@import '~@angular/flex-layout/mq';
-
-header {
+header#nav {
   padding: 48px;
   background-image: url('/assets/images/banner_header_page.webp');
   background-position: center center;
@@ -19,42 +17,27 @@ header {
   }
 }
 
+header.pageBar {
+  width: 100%;
+}
+
+.filter {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-image: url('/assets/images/banner_header_page.webp');
+  background-position: center center;
+  background-size: cover;
+}
+
 section {
   padding: 24px;
-}
 
-aside {
-  position: sticky;
-  top: 16px;
-  mat-card {
-    width: 380px;
-    max-height: calc(100vh - var(--toolbarHeight) - 40px);
-    overflow: auto;
+  bf-img {
+    width: 300px;
   }
-}
-
-article {
-  width: 100%;
 }
 
 span.mat-body-2 {
   margin-bottom: 16px;
-}
-
-@include layout-bp(lt-md) {
-  aside {
-    position: static;
-    mat-card {
-      width: 100%;
-      max-height: fit-content;
-    }
-  }
-}
-
-@include layout-bp(md) {
-  aside {
-    mat-card {
-      width: 350px;
-    }
-  }
 }
