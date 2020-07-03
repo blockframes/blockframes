@@ -4,9 +4,10 @@ import { NgModule } from '@angular/core';
 import { TitleFilterComponent, FilterDirective } from './title-filter.component';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [TitleFilterComponent, FilterDirective],
@@ -14,9 +15,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
 
     // Material
-    MatCardModule,
-    MatDividerModule,
-    MatExpansionModule,
+    MatButtonModule,
+    MatIconModule,
+    OverlayWidgetModule
   ],
   exports: [TitleFilterComponent, FilterDirective]
 })
