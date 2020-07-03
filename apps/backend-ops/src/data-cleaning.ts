@@ -56,7 +56,8 @@ export async function cleanDeprecatedData() {
     cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>)),
     cleanUsers(users, organizationIds),
     cleanOrganizations(organizations, userIds, movieIds),
-    cleanPermissions(permissions, organizationIds)
+    cleanPermissions(permissions, organizationIds),
+    cleanMovies(movies)
   ]);
 }
 
@@ -88,7 +89,6 @@ function cleanNotifications(
         }
       }
     })
-
   }
 
   return p;
@@ -106,6 +106,7 @@ function cleanInvitations(
       await doc.ref.delete();
     } else {
       // Clearing ImgRef if invitation created before Jun 24 2020 (image migration) 
+       // @TODO (#3066) mock an invitation created before Jun 24
       const invitationTimestamp = invitation.date.toMillis();
 
       if (invitationTimestamp < imagesMigrationTimestamp) {
@@ -174,6 +175,23 @@ function cleanPermissions(
   });
 }
 
+function cleanMovies(
+  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+) {
+  movies.docs.map(async movieDoc => {
+    const movie = movieDoc.data() as any;
+
+    // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
+    // @TODO (#3066) It seams that this object on root comes from an un-cleaned movie document from Akita that have been updated as is on DB.
+    if (movie.distributionRights) {
+      delete movie.distributionRights;
+    }
+
+    await movieDoc.ref.update(movie);
+  });
+}
+
+
 /**
  * Check each type of notification and return false if a referenced document doesn't exist
  * @param notification the notification to check
@@ -183,6 +201,7 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days
+  // @TODO (#3066) mock notifications with date > n days ||  date < n days and test deletion
   const notificationTimestamp = notification.date.toMillis();
   if (notificationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
     return false;
@@ -250,6 +269,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       );
     case 'joinOrganization':
       // Cleaning not pending invitations more than n days
+      // @TODO (#3066) mock invitations not pending || pending and with date > n days ||  date < n days and test deletion
       const invitationTimestamp = invitation.date.toMillis();
       if (invitation.status !== 'pending' && invitationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
         return false;
