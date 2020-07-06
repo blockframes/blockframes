@@ -143,11 +143,10 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
   }
 
   // AVATAR
-  const bannerBeforeRef = before.avatar?.original?.ref;
-  const bannerAfterRef = after.avatar?.original?.ref;
-  console.log('***', bannerBeforeRef, bannerAfterRef);
+  const avatarBeforeRef = before.avatar?.original?.ref;
+  const avatarAfterRef = after.avatar?.original?.ref;
   if (
-    bannerBeforeRef !== bannerAfterRef 
+    avatarBeforeRef !== avatarAfterRef
   ) {
     await handleImageChange(after.avatar!);
   }
