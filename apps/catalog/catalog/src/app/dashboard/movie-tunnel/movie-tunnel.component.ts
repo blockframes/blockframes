@@ -12,6 +12,7 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 import { FormGroup } from '@angular/forms';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { HostedMediaFormValue } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -112,13 +113,13 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     await this.service.save(movie);
 
     await this.mediaService.uploadOrDeleteMedia([
-      this.bannerMediaForm,
+      this.bannerMediaForm.value,
 
-      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key) as HostedMediaForm),
-      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key) as HostedMediaForm),
+      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key).value as HostedMediaFormValue),
+      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key).value as HostedMediaFormValue),
 
-      this.presentationDeckMediaForm,
-      this.scenarioMediaForm,
+      this.presentationDeckMediaForm.value,
+      this.scenarioMediaForm.value,
     ]);
 
     this.form.markAsPristine();
