@@ -12,7 +12,7 @@ const movie: Partial<Movie> = {
     originalRelease: [],
     physicalHVRelease: new Date(2020, 3, 7),
     rating: [],
-    releaseYear: 0,
+    releaseYear: null,
     scoring: 'a',
     soundFormat: '',
   }
@@ -25,16 +25,16 @@ const newMovie = {
     broadcasterCoproducers: [],
     certifications: [],
     originalRelease: [],
-    physicalHVRelease: new Date(2020, 3, 7),
+    physicalHVRelease: movie.salesInfo.physicalHVRelease || null,
     rating: [],
-    releaseYear: 0,
-    scoring: 'a',
+    releaseYear: null,
+    scoring: movie.salesInfo.scoring || null,
   },
   technicalInfo: {
-    color: 'c',
-    format: '16/9',
-    formatQuality: 'hd',
-    soundFormat: '',
+    color: movie.salesInfo.color || null,
+    format: movie.salesInfo.format || null,
+    formatQuality: movie.salesInfo.formatQuality || null,
+    soundFormat: movie.salesInfo.soundFormat || null,
   }
 };
 
