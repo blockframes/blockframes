@@ -1,4 +1,4 @@
-import { ImgRef, HostedMediaFormValue } from './media.firestore';
+import { ImgRef, HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 export * from './media.firestore';
@@ -11,7 +11,6 @@ export * from './media.firestore';
  */
 export function extractMediaFromDocumentBeforeUpdate(document: any) {
 
-  // const cleanedDocument = JSON.parse(JSON.stringify(document));
   const cleanedDocument = cloneDeep(document);
 
   const medias = extractMediaFromDocument(cleanedDocument);
@@ -28,11 +27,14 @@ function extractMediaFromDocument(document: any) {
 
     if (isMedia(document[key])) {
 
+
       if (mediaNeedsUpdate(document[key])) {
         medias.push(document[key]);
       }
 
-      delete document[key];
+      // convert an `HostedMediaFormValue` into an `HostedMedia`
+      // clear form values like `fileName`, `blobOrFile`, etc and keep only `ref` & `url`
+      document[key] = clearHostedMediaFormValue(document[key]);
 
     } else if (typeof document[key] === 'object' && !!document[key]) {
 
