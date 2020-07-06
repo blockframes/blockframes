@@ -1,18 +1,18 @@
-<header fxLayout fxLayoutAlign="space-between start">
+<header fxLayout fxLayoutAlign="space-between start" flex>
     <h1>{{ org | orgName }}</h1>
     <a mat-button [routerLink]="['/c/o/marketplace/organization/', org.id]" color="primary">
         <span>See all ({{ movies.length }})</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
     </a>
 </header>
-<section fxLayout fxLayout.lt-sm="column">
+<section fxLayout fxLayout.lt-sm="column" flex>
     <article class="org-info">
         <div fxLayoutAlign="start center">
             <a matRipple [routerLink]="['/c/o/marketplace/organization/', org.id]" class="org-image">
                 <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
             </a>
-            <div class="org-name">
-                <p>{{ org | orgName }}</p>
+            <div flex>
+                <p class="org-name">{{ org | orgName }}</p>
                 <p class="mat-caption">{{ movies.length }} films</p>
             </div>
         </div>
