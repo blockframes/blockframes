@@ -6,12 +6,12 @@
     </a>
 </header>
 <section fxLayout fxLayout.lt-sm="column">
-    <article>
+    <article class="org-info">
         <div fxLayoutAlign="start center">
-            <a matRipple [routerLink]="orgLink">
+            <a matRipple [routerLink]="orgLink" class="org-image">
                 <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
             </a>
-            <div>
+            <div class="org-name">
                 <p>{{ org | orgName }}</p>
                 <p class="mat-caption">{{ movies.length }} films</p>
             </div>

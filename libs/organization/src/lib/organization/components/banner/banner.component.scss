@@ -16,6 +16,22 @@ bf-img {
 
 article {
     width: 50%;
+
+    &.org-info {
+        margin-left: 24px;
+        padding-right: 24px;
+
+        .org-image {
+            width: 20%;
+        }
+
+        .org-name {
+            margin-left: 24px;
+            p {
+                margin-bottom: 0px;
+            }
+        }
+    }
 }
 
 @include layout-bp(lt-sm) {
