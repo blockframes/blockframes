@@ -22,7 +22,7 @@ export const listAction = () => ({
           {{ item.id | json }}</mat-list-item>
         </ng-template>
         <list-action-menu>
-          <span mat-menu-item>cool</span>
+          <span mat-menu-item>Some Menu stuff</span>
         </list-action-menu>
       </bf-list-action>
     </storybook-toolkit>
