@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="space-between center">
   <ng-content select="list-action-header"></ng-content>
-  <button mat-button (click)="markAllAsRead()">
+  <button mat-button (click)="markAsRead.emit()">
     <mat-icon svgIcon="read"></mat-icon>
     <span>Mark all as read</span>
   </button>
@@ -14,7 +14,7 @@
         <mat-divider *ngIf="filteredItems.length"></mat-divider>
         <ng-container *ngFor="let item of filteredItems">
           <div fxLayout="row" fxLayoutAlign="start center">
-            <ng-template [ngTemplateOutlet]="listActionItem" [ngTemplateOutletContext]="{$implicit: item.data }">
+            <ng-template [ngTemplateOutlet]="listActionItem" [ngTemplateOutletContext]="{$implicit: item }">
             </ng-template>
             <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Trigger which opens up a menu">
               <mat-icon svgIcon="more_vert">
@@ -24,7 +24,8 @@
         </ng-container>
       </ng-container>
     </ng-container>
-    <mat-paginator [length]="actions.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="setPage($event)">
+    <mat-paginator [length]="actions.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      (page)="setPage($event)">
     </mat-paginator>
   </mat-list>
 </div>

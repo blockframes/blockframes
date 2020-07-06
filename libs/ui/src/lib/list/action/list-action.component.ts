@@ -5,7 +5,9 @@ import {
   Directive,
   ContentChild,
   TemplateRef,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
 
 // Blockframes
@@ -38,25 +40,14 @@ export class ListActionComponent {
   public pageSize = 10;
   public pageConfig = { from: 0, to: 10 }
 
-  private _actions;
-  @Input()
-  get actions() { return this._actions }
-  set actions(actions: (Notification | Invitation)[]) {
-    this._actions = actions.map(action => {
-      return {
-        date: action.date,
-        data: action
-      }
-    })
-  }
+
+  @Input() actions: (Notification | Invitation)[];
+
+  @Output() markAsRead = new EventEmitter();
 
   @ContentChild(ListActionHeaderDirective, { read: TemplateRef }) listActionHeader: ListActionHeaderDirective;
   @ContentChild(ListActionItemDirective, { read: TemplateRef }) listActionItem: ListActionItemDirective;
   @ContentChild(ListActionMenuDirective, { read: TemplateRef }) listActionMenu: ListActionMenuDirective;
-
-  markAllAsRead() {
-    this._actions.forEach(action => action.data.isRead = true)
-  }
 
   setPage(event: PageEvent) {
     this.pageConfig.from = event.pageIndex * event.pageSize
