@@ -6,12 +6,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 
 export default {
-  title: 'List Action'
+  title: 'Bf-List Action'
 };
 
 export const listAction = () => ({
   moduleMetadata: { imports: [ListActionModule, ToolkitModule, MatListModule, MatMenuModule] },
-  name: 'List Action',
+  name: 'Bf-List Action',
   template: `
     <storybook-toolkit>
       <h1 title>List Action</h1>

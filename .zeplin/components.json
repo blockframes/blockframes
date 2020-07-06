@@ -125,6 +125,18 @@
                     "Organization Minimal Card"
                 ]
             }
+        },
+        {
+            "path": "libs/ui/src/lib/ui/components/list/action/list-action.component.ts",
+            "zeplinNames": [
+                "Component/List_actions"
+            ],
+            "storybook": {
+                "kind": "Bf-List Action",
+                "storybook": [
+                    "Bf-List Action"
+                ]
+            }
         }
     ],
     "github": {
