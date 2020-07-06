@@ -5,10 +5,10 @@ import { HostedMediaForm } from '../media/media.form';
 function createImgRefControl(reference: ImgRef) {
   return {
     original: new HostedMediaForm(reference.original),
-    fallback: new HostedMediaForm(reference.original),
-    xs: new HostedMediaForm(reference.original),
-    md: new HostedMediaForm(reference.original),
-    lg: new HostedMediaForm(reference.original),
+    fallback: new HostedMediaForm(reference.fallback),
+    xs: new HostedMediaForm(reference.xs),
+    md: new HostedMediaForm(reference.md),
+    lg: new HostedMediaForm(reference.lg),
   }
 }
 
