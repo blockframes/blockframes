@@ -10,8 +10,7 @@ import { Movie } from '@blockframes/movie/+state';
 })
 export class OrganizationBannerComponent {
   
-  @Input() org;
-  @Input() orgLink: string;
+  @Input() org: Organization;
   @Input() movies: Movie[] = [];
 
 }

@@ -1,6 +1,6 @@
 <header fxLayout fxLayoutAlign="space-between start">
     <h1>{{ org | orgName }}</h1>
-    <a mat-button [routerLink]="orgLink" color="primary">
+    <a mat-button [routerLink]="['/c/o/marketplace/organization/', org.id]" color="primary">
         <span>See all ({{ movies.length }})</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
     </a>
@@ -8,7 +8,7 @@
 <section fxLayout fxLayout.lt-sm="column">
     <article class="org-info">
         <div fxLayoutAlign="start center">
-            <a matRipple [routerLink]="orgLink" class="org-image">
+            <a matRipple [routerLink]="['/c/o/marketplace/organization/', org.id]" class="org-image">
                 <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
             </a>
             <div class="org-name">
