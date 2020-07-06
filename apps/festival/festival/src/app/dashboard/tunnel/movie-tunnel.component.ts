@@ -85,14 +85,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-
-    // TODO issue#3229
-    console.log('TO CLEAN', movie);
-
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
-
-    console.log('UPDATE', documentToUpdate);
-    console.log('UPLOAD', mediasToUpload);
 
     await this.service.save(documentToUpdate);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);
