@@ -168,9 +168,9 @@ export function createPromotionalExternalMedia(
 ): PromotionalExternalMedia {
   const promotionalElement = createPromotionalElement(promotionalExternalMedia);
   return {
-    media: createExternalMedia(promotionalExternalMedia.media),
-    ...promotionalExternalMedia,
     ...promotionalElement,
+    ...promotionalExternalMedia,
+    media: createExternalMedia(promotionalExternalMedia.media),
   };
 }
 
@@ -179,9 +179,9 @@ export function createPromotionalHostedMedia(
 ): PromotionalHostedMedia {
   const promotionalElement = createPromotionalElement(promotionalHostedMedia);
   return {
-    media: createHostedMedia(promotionalHostedMedia.media),
-    ...promotionalHostedMedia,
     ...promotionalElement,
+    ...promotionalHostedMedia,
+    media: createHostedMedia(promotionalHostedMedia.media),
   };
 }
 
