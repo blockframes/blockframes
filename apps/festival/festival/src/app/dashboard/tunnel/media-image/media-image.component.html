@@ -14,7 +14,7 @@
         <drop-cropper
           [storagePath]="movie.id | ref: 'movie' : 'banner'"
           ratio="banner"
-          [form]="form.promotionalElements.get('banner')">
+          [form]="promotionalElements.get('banner').get('media').original">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -29,7 +29,8 @@
         <mat-card-title>Poster</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let posterForm of posterForms">
+        <!-- TODO issue#3239 -->
+        <!-- <ng-container *ngFor="let posterForm of posterForms">
           <drop-cropper
             [storagePath]="movie.id | ref: 'movie' : 'poster' : 0"
             ratio="poster"
@@ -38,7 +39,7 @@
             <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
           </drop-cropper>
-        </ng-container>
+        </ng-container> -->
       </mat-card-content>
     </mat-card>
 
@@ -49,7 +50,8 @@
         <mat-card-title>Stills</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let stillForm of stillForms; let i = index; let last = last">
+        <!-- TODO issue#3230  -->
+        <!-- <ng-container *ngFor="let stillForm of stillForms; let i = index; let last = last">
           <span class="still mat-body-2">Still # {{i + 1}}</span>
           <drop-cropper
             [storagePath]="movie.id | ref: 'movie' : 'still' : i"
@@ -58,7 +60,7 @@
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-          </drop-cropper>
+          </drop-cropper> -->
 
           <!-- <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="warn" (click)="stillPhoto.removeAt(i)" aria-label="Remove a director form">
@@ -74,8 +76,8 @@
             <span>Add Still</span>
           </footer> -->
 
-          <mat-divider [inset]="true"></mat-divider>
-        </ng-container>
+          <!-- <mat-divider [inset]="true"></mat-divider>
+        </ng-container> -->
         </mat-card-content>
       </mat-card>
   </ng-container>
