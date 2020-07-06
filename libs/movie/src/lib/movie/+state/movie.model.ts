@@ -150,6 +150,7 @@ export function createMoviePromotionalDescription(
 export function createPromotionalElement(
   promotionalElement: Partial<PromotionalElement> = {}
 ): PromotionalElement {
+  promotionalElement = promotionalElement || {};
   return {
     label: '',
     ...promotionalElement,

@@ -54,7 +54,7 @@ export function getRatio(format: Formats) {
 }
 
 export function getMediaUrl(ref: ImgRef) {
-  return isSafari() ? ref.urls.fallback : ref.urls.original;
+  return isSafari() ? ref.urls?.fallback : ref.urls?.original;
 }
 
 /** Used this only for background to let the browser deal with that with picture */
