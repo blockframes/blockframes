@@ -14,7 +14,7 @@ import { HostedMediaForm } from "../directives/media/media.form";
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
-import { map, filter } from "rxjs/operators";
+import { map, takeWhile } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -132,6 +132,12 @@ export class MediaService {
     );
   }
 
+  /**
+   * Delete a file from teh firebase storage.
+   * @note the function needs the **full** path of the file
+   * **this include the file name!**
+   * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
+   */
   async removeFile(path: string) {
     await this.storage.ref(path).delete().toPromise();
 
@@ -241,7 +247,7 @@ export class MediaService {
     // listen on every changes of the current document
     return doc.snapshotChanges().pipe(
       map(action => get(action.payload.data(), fieldToUpdate)),
-      filter((image: ImgRef) => allSizeEmpty(image))
+      takeWhile((image: ImgRef) => !allSizeEmpty(image)),
     ).toPromise();
   }
 
