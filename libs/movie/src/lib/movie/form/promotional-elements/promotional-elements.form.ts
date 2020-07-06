@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
 import { PromotionalImage, PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
-import { ExternalMediaForm } from '@blockframes/media/directives/media/media.form';
+import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 // ------------------------------
 //   Promotional External Media
@@ -33,10 +33,7 @@ function createPromotionalHostedMediaControl(promotionalHostedMedia?: Partial<Pr
   const { label, media } = createPromotionalHostedMedia(promotionalHostedMedia);
   return {
     label: new FormControl(label),
-    media: new FormGroup({
-      ref: new FormControl(media.ref),
-      url: new FormControl(media.url),
-    }),
+    media: new HostedMediaForm(media),
   }
 }
 export type PromotionalHostedMediaControl = ReturnType<typeof createPromotionalHostedMediaControl>;
@@ -92,12 +89,13 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
   return {
 
     // Images
-    banner: new MoviePromotionalImageForm(entity.banner),
-    poster: new FormGroup(posterControls),
-    still_photo: new FormGroup(stillPhotoControls),
+    banner: new MoviePromotionalImageForm(entity.banner), // TODO issue#3239
+
+    poster: new FormGroup(posterControls), // TODO issue#3239
+    still_photo: new FormGroup(stillPhotoControls),  // TODO issue#3230
 
     // Hosted Media
-    trailer: new FormGroup(trailerControls),
+    trailer: new FormGroup(trailerControls), // TODO issue#3230
     presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
     scenario: new MoviePromotionalHostedMediaForm(entity.scenario),
 

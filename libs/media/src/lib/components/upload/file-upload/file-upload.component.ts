@@ -8,6 +8,7 @@ import {
 import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType } from '@blockframes/utils/file-sanitizer';
+import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: '[form] [storagePath] file-upload',
@@ -24,14 +25,14 @@ export class FileUploadComponent implements OnInit {
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
 
-  public state: 'waiting' | 'hovering' | 'ready' = 'waiting';
+  public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
   constructor(private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     // show current file
-    if (this.form.oldRef.value) {
-      this.state = 'ready';
+    if (!!this.form.oldRef.value) {
+      this.state = 'file';
     }
   }
 
@@ -59,7 +60,11 @@ export class FileUploadComponent implements OnInit {
   public selected(files: FileList) {
     if (!files.item(0)) {
       this.snackBar.open('No file found', 'close', { duration: 1000 });
-      this.state = 'waiting';
+      if (!!this.form.oldRef.value) {
+        this.state = 'file';
+      } else {
+        this.state = 'waiting';
+      }
       return;
     }
 
@@ -92,14 +97,30 @@ export class FileUploadComponent implements OnInit {
     this.form.markAsDirty();
   }
 
-  public reset() {
+  public delete() {
     this.state = 'waiting';
+
+    this.form.patchValue({
+      delete: true,
+    })
+    this.form.markAsDirty();
+  }
+
+  public reset(fileExplorer: HTMLInputElement) {
 
     this.form.patchValue({
       blobOrFile: undefined,
       delete: false,
-      fileName: '',
+      fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     })
     this.form.markAsDirty();
+
+    fileExplorer.value = null;
+
+    if (!!this.form.oldRef.value) {
+      this.state = 'file';
+    } else {
+      this.state = 'waiting';
+    }
   }
 }
