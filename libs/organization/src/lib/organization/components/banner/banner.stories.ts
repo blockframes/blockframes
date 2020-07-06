@@ -4,21 +4,20 @@ import { ToolkitModule, ORGS, MOVIES } from '@blockframes/ui/storybook';
 import { OrganizationBannerComponent } from './banner.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 export default {
   title: 'Featured Sales Agent Banner'
 };
 
 export const organizationMinimalCard = () => ({
-  moduleMetadata: { imports: [OrganizationBannerModule, ToolkitModule, MatLayoutModule, RouterTestingModule] },
+  moduleMetadata: { imports: [OrganizationBannerModule, ToolkitModule, RouterTestingModule, MatLayoutModule, FlexLayoutModule] },
   name: 'Featured Sales Agent Banner',
   component: OrganizationBannerComponent,
   template: `
     <storybook-toolkit>
       <h1 title>Featured Sales Agent Banner</h1>
-      <div layout flex>
-        <org-banner [org]="org" [col]="2"></org-banner>
-      </div>
+      <org-banner layout flex [org]="org" [col]="2"></org-banner>
     </storybook-toolkit>
   `,
   props: {
