@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/media/+state/media.firestore";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+
 @Component({
   selector: 'festival-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
@@ -17,10 +17,8 @@ export class MediaFileComponent {
   public movie = this.movieQuery.getActive();
 
   public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck.media/`;
-  public presentationMediaForm = this.tunnel.presentationDeckMediaForm;
 
   public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario.media/`;
-  public scenarioMediaForm = this.tunnel.scenarioMediaForm;
 
   get promotionalElements() {
     return this.form.get('promotionalElements');

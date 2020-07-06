@@ -15,7 +15,6 @@ import { HostedMediaForm } from '@blockframes/media/directives/media/media.form'
 export class OrganizationCreateComponent {
 
   public form = new OrganizationForm();
-  public media = new HostedMediaForm();
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(

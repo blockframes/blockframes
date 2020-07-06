@@ -1,7 +1,7 @@
 <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
   <h1>Create your Organization </h1>
   <!-- TODO#2914 Re-enable the cropper here when we found a solution -->
-  <organization-form disableCropper [form]="form" [mediaForm]="media"></organization-form>
+  <organization-form disableCropper [form]="form"></organization-form>
   <button test-id="create" mat-flat-button color="accent" (click)="addOrganization()">
     <span>Create</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
