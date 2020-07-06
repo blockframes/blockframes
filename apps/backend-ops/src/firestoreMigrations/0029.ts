@@ -10,7 +10,7 @@ export async function upgrade(db: Firestore) {
   movies.docs.map(movie => {
     const data = movie.data();
 
-    const newData = createTechnicalSection(data as Movie);
+    const newData = createTechnicalSection(data as Partial<Movie>);
 
     delete data.salesInfo.color;
     delete data.salesInfo.format;
@@ -24,28 +24,27 @@ export async function upgrade(db: Firestore) {
   console.log('Create new technical section on movie.');
 }
 
-export function createTechnicalSection(movie: Partial<Movie>) {
 
+export function createTechnicalSection(movie: Partial<Movie>) {
   const { salesInfo } = movie;
 
   const newData = {
     ...movie,
     salesInfo: {
-      broadcasterCoproducers: salesInfo.broadcasterCoproducers,
-      certifications: salesInfo.certifications,
-      originalRelease: salesInfo.originalRelease,
-      physicalHVRelease: salesInfo.physicalHVRelease,
-      rating: salesInfo.rating,
-      releaseYear: salesInfo.releaseYear,
-      scoring: salesInfo.scoring,
+      broadcasterCoproducers: salesInfo.broadcasterCoproducers || null,
+      certifications: salesInfo.certifications || null,
+      originalRelease: salesInfo.originalRelease || null,
+      physicalHVRelease: salesInfo.physicalHVRelease || null,
+      rating: salesInfo.rating || null,
+      releaseYear: salesInfo.releaseYear || null,
+      scoring: salesInfo.scoring || null,
     },
     technicalInfo: {
-      color: salesInfo.color,
-      format : salesInfo.format,
-      formatQuality : salesInfo.formatQuality,
-      soundFormat : salesInfo.soundFormat
+      color: salesInfo.color || null,
+      format : salesInfo.format || null,
+      formatQuality : salesInfo.formatQuality || null,
+      soundFormat : salesInfo.soundFormat || null
     }
-  }
-
-    return newData;
+  };
+  return newData;
 }
