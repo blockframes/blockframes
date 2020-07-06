@@ -5,8 +5,8 @@ import firebaseFunctionsTest from 'firebase-functions-test';
 import { resolve } from 'path';
 import { config } from 'dotenv'
 import { firebase } from '@env'
-import type { FeaturesList } from 'firebase-functions-test/lib/features';
-import type { AppOptions } from 'firebase-admin'; // * Correct Import
+import { FeaturesList } from 'firebase-functions-test/lib/features';
+import { AppOptions } from 'firebase-admin'; // * Correct Import
 
 config()
 
