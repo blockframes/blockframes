@@ -190,10 +190,9 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   const logoBeforeRef = before.logo?.original?.ref;
   const logoAfterRef = after.logo?.original?.ref;
   if (
-    !!logoBeforeRef && !!logoAfterRef &&
     logoBeforeRef !== logoAfterRef
   ) {
-    await handleImageChange(after.logo);
+    await handleImageChange(after.logo!);
   }
 
   return Promise.resolve(true); // no-op by default
