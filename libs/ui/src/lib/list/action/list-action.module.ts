@@ -7,10 +7,9 @@ import { FilterByDateModule } from '@blockframes/utils/pipes';
 // Components
 import {
   ListActionComponent,
-  ListActionItemDirective,
   ListActionHeaderDirective,
-  ListActionPaginationDirective,
-  ListActionMenuDirective
+  ListActionMenuDirective,
+  ListActionItemDirective
 } from './list-action.component';
 
 // Material
@@ -37,17 +36,15 @@ import { MatMenuModule } from '@angular/material/menu';
   ],
   exports: [
     ListActionComponent,
-    ListActionItemDirective,
     ListActionHeaderDirective,
-    ListActionPaginationDirective,
     ListActionMenuDirective,
+    ListActionItemDirective
   ],
   declarations: [
     ListActionComponent,
-    ListActionItemDirective,
     ListActionHeaderDirective,
-    ListActionPaginationDirective,
-    ListActionMenuDirective
+    ListActionMenuDirective,
+    ListActionItemDirective
   ],
 })
 export class ListActionModule { }
