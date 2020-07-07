@@ -78,6 +78,9 @@
     "crm-e2e": {
       "tags": [],
       "implicitDependencies": ["crm"]
+    },
+    "testing": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {
