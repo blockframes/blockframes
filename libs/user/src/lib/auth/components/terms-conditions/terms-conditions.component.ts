@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'auth-terms-conditions',
@@ -6,4 +7,10 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrls: ['./terms-conditions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TermsConditionsComponent {}
+export class TermsConditionsComponent {
+  constructor(private location: Location) {}
+
+  goBack() {
+    this.location.back();
+  }
+}
