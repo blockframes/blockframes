@@ -1,7 +1,7 @@
 import { loadAdminServices } from './admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { File as GFile, Bucket } from '@google-cloud/storage';
-import { MovieDocument } from 'apps/backend-functions/src/data/types';
+import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
 import { getDocument } from 'apps/backend-functions/src/data/internals'
 
 // @TODO (#3175) temp 
@@ -17,9 +17,15 @@ export async function cleanStorage() {
   const bucket = storage.bucket(getStorageBucketName());
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
-  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "movie" directory.`)
+  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "movie" directory.`);
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
-  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`)
+  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
+  const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
+  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
+  const cleanUsersDirOutput = await cleanUsersDir(bucket);
+  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "users" directory.`);
+  const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
+  console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "watermark" directory.`);
 }
 
 /**
@@ -82,6 +88,109 @@ async function cleanMoviesDir(bucket: Bucket) {
   return { deleted, total: files.length };
 }
 
+async function cleanOrgsDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
+  let deleted = 0;
+  const pattern = '/logo';
+
+  for (const f of files) {
+    if (f.name.split('/').length === 2) {
+      // Clean files at "orgs/" root
+      await smartDelete(f, files, pattern);
+      deleted++;
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await smartDelete(f, files, pattern)) {
+        deleted++;
+      }
+    } else {
+      const orgId = f.name.split('/')[1];
+      const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+      if (!!org) {
+        if (org.logo.ref !== f.name) {
+          if (await smartDelete(f, files, pattern)) {
+            deleted++;
+          }
+        }
+      } else {
+        if (await smartDelete(f, files, pattern)) {
+          deleted++;
+        }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+async function cleanUsersDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
+  let deleted = 0;
+  const pattern = '/avatar';
+
+  for (const f of files) {
+    if (f.name.split('/').length === 2) {
+      // Clean files at "users/" root
+      await smartDelete(f, files, pattern);
+      deleted++;
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await smartDelete(f, files, pattern)) {
+        deleted++;
+      }
+    } else {
+      const userId = f.name.split('/')[1];
+      const user = await getDocument<PublicUser>(`users/${userId}`);
+      if (!!user) {
+        if (user.avatar.ref !== f.name) {
+          if (await smartDelete(f, files, pattern)) {
+            deleted++;
+          }
+        }
+      } else {
+        if (await smartDelete(f, files, pattern)) {
+          deleted++;
+        }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+async function cleanWatermarkDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
+  let deleted = 0;
+  const pattern = '/avatar';
+
+  for (const f of files) {
+    if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) {
+        deleted++;
+      }
+    } else {
+      const userId = f.name.split('/')[1].replace('.svg', '');
+      const user = await getDocument<PublicUser>(`users/${userId}`);
+      if (!!user) {
+        if (user.watermark.ref !== f.name) {
+          if (await f.delete()) {
+            deleted++;
+          }
+        }
+      } else {
+        if (await f.delete()) {
+          deleted++;
+        }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+
+
 async function checkMovieRef(filesToCheck: fileWithMovieDocument[]) {
   // Currently, the only ref saved in DB is the orignal one
   const originalFiles = filesToCheck.filter(f => f.file.name.includes('/original/'));
@@ -134,8 +243,8 @@ function isPdfForMovie(fileName: string): boolean {
     fileName.includes('/Scenario/') // @TODO (#3175) not a good path
 }
 
-async function smartDelete(file: GFile, existingFiles: GFile[]) {
-  if (!file.name.includes('/promotionalElements.')) {
+async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string = '/promotionalElements.') {
+  if (!file.name.includes(pattern)) {
     await file.delete();
     return true;
   }
@@ -159,7 +268,6 @@ async function smartDelete(file: GFile, existingFiles: GFile[]) {
 
   return false;
 }
-
 
 function findImgRefInMovie(movie: MovieDocument, ref: string) {
   if (movie.promotionalElements.banner.media.ref === ref) {

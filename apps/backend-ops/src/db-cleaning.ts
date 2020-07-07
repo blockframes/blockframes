@@ -79,6 +79,7 @@ function cleanNotifications(
       } else {
         // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
         // @dev If the cleaning is made after Jun 24 + imagesMigrationTimestamp, this should have no effects
+        // @dev This should also have no effect if hotfix/1.6.3 have been deployed
         const notificationTimestamp = notification.date.toMillis();
         if (notificationTimestamp < imagesMigrationTimestamp) {
           if (notification.organization) {
