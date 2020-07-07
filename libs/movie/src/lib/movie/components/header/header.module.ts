@@ -15,6 +15,7 @@ import {
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MovieTitleFeaturesModule } from '../title-features/title-features.modul
     DisplayNameModule,
     ImageReferenceModule,
     MovieTitleFeaturesModule,
+    MatIconModule
   ],
   exports: [
     HeaderComponent,

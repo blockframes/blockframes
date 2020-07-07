@@ -1,4 +1,5 @@
 export const production = false;
+export const dev = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
 // TODO issue#1146 AFM CODE

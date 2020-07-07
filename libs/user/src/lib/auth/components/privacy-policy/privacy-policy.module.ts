@@ -11,6 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [PrivacyPolicyComponent],
@@ -18,6 +19,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
     CommonModule,
     MatCardModule,
     FlexLayoutModule,
+    MatIconModule,
     AppPipeModule
   ],
   exports: [PrivacyPolicyComponent]
