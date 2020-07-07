@@ -44,7 +44,6 @@ import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
-import { emulatorConfig } from '@env';
 
 @NgModule({
   declarations: [AppComponent],
