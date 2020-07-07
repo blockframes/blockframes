@@ -1,5 +1,8 @@
 <ng-container *ngIf="'festival' | app; else catalog">
   <header>
+    <div class="go-back" (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </div>
     <h1>TERMS AND CONDITIONS OF USE OF ARCHIPEL MARKET</h1>
   </header>
 
@@ -347,6 +350,9 @@
 </ng-container>
 <ng-template #catalog>
   <header>
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
     <h1>TERMS and conditions of use OF ARCHIPEL CONTENT</h1>
   </header>
   <section fxLayout="row" fxLayoutAlign="center">
