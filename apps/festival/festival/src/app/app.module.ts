@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
-import { AngularFirestoreModule, SETTINGS  } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
@@ -81,12 +81,7 @@ import { emulatorConfig } from '@env';
 
     SafariBannerModule,
   ],
-  providers: [ScreenTrackingService, UserTrackingService,
-    {
-      provide: SETTINGS,
-      useValue: emulatorConfig.firestoreConfig
-    }
-  ],
+  providers: [ScreenTrackingService, UserTrackingService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
