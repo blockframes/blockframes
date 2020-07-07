@@ -1226,9 +1226,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/crm/crm/src/styles.scss"
-            ],
+            "styles": ["apps/crm/crm/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -1379,6 +1377,29 @@
           "options": {
             "tsConfig": ["apps/crm/crm-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/crm/crm-e2e/**"]
+          }
+        }
+      }
+    },
+    "testing": {
+      "root": "libs/testing",
+      "sourceRoot": "libs/testing/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/testing/tsconfig.lib.json", "libs/testing/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/testing/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/testing/jest.config.js",
+            "tsConfig": "libs/testing/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
