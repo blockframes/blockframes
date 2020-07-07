@@ -60,11 +60,7 @@ export class FileUploadComponent implements OnInit {
   public selected(files: FileList) {
     if (!files.item(0)) {
       this.snackBar.open('No file found', 'close', { duration: 1000 });
-      if (!!this.form.oldRef.value) {
-        this.state = 'file';
-      } else {
-        this.state = 'waiting';
-      }
+      this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
       return;
     }
 
@@ -99,10 +95,7 @@ export class FileUploadComponent implements OnInit {
 
   public delete() {
     this.state = 'waiting';
-
-    this.form.patchValue({
-      delete: true,
-    })
+    this.form.patchValue({ delete: true });
     this.form.markAsDirty();
   }
 
@@ -117,10 +110,6 @@ export class FileUploadComponent implements OnInit {
 
     fileExplorer.value = null;
 
-    if (!!this.form.oldRef.value) {
-      this.state = 'file';
-    } else {
-      this.state = 'waiting';
-    }
+    this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
   }
 }
