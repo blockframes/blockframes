@@ -3,7 +3,7 @@ import { firestore, initializeApp } from 'firebase-admin';
 
 describe('firebase testing library', () => {
   test.todo('Hello World!');
-  it('should be able to access the emulator', async () => {
+  it.skip('should be able to access the emulator', async () => {
     const firebaseTest = initFunctionsTestMock();
     const db = firestore();
     const test = 5;
