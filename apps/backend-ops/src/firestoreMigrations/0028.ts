@@ -7,6 +7,7 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
+import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 
 const EMPTY_REF: ImgRef = {
   ref: '',
