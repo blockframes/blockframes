@@ -2,9 +2,9 @@
   <mat-label>{{ label }}</mat-label>
 
   <mat-chip-list #chipList>
-    <ng-container *ngFor="let control of form.controls; let i = index">
-      <mat-chip *ngIf="control.value" selectable removable (removed)="form.removeAt(i)" (dblclick)="edit(i)">
-        <span>{{ control.value | valueByPath: displayWithPath }}</span>
+    <ng-container *ngFor="let value of values$ | async; let i = index">
+      <mat-chip *ngIf="value" selectable removable (removed)="form.removeAt(i)" (dblclick)="edit(i)">
+        <span>{{ value | valueByPath: displayWithPath }}</span>
         <mat-icon matChipRemove svgIcon="close"></mat-icon>
       </mat-chip>
     </ng-container>

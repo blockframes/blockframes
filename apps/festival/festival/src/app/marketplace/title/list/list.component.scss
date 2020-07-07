@@ -1,5 +1,13 @@
 @import '~@angular/flex-layout/mq';
 
+form.app-bar {
+  width: 100%;
+  input {
+    background-color: transparent;
+    font-size: 2rem;
+  }
+}
+
 mat-form-field {
   width: 100%;
 }
@@ -10,31 +18,6 @@ title-filter {
   }
 }
 
-movie-card {
-  width: 20%;
-  padding-bottom: 40px;
-}
-
 mat-icon[matPrefix] {
   margin-right: 12px;
-}
-
-@include layout-bp(xs) {
-  movie-card {
-    width: 80%;
-    padding-bottom: 0;
-  }
-}
-
-@include layout-bp(sm) {
-  movie-card {
-    width: 45%;
-  }
-}
-
-@include layout-bp(md) {
-  movie-card {
-    width: 45%;
-    padding-bottom: 24px;
-  }
 }

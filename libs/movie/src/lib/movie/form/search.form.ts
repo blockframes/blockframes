@@ -33,7 +33,7 @@ export interface MovieSearch extends AlgoliaSearch {
   sellers: AlgoliaRecordOrganization[];
 }
 
-function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
+export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
   return {
     appAccess: [],
     query: '',
@@ -104,26 +104,26 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get storeConfig() { return this.get('storeConfig'); }
   get appAccess() { return this.get('appAccess')};
 
+
   isEmpty() {
     return (
-      !this.query.value.trim() &&
-      this.storeConfig.value.length === 0 &&
-      this.genres.value.length === 0 &&
-      this.originCountries.value.length === 0 &&
-      this.languages.value.original.length === 0 &&
-      this.languages.value.dubbed.length === 0 &&
-      this.languages.value.subtitle.length === 0 &&
-      this.languages.value.caption.length === 0 &&
-      this.productionStatus.value.length === 0 &&
-      this.minBudget.value === 0 &&
-      this.sellers.value.length === 0 &&
-      this.storeType.value.length === 0 &&
-      this.appAccess.value.length === 0
+      !this.query.value?.trim() &&
+      this.storeConfig.value?.length === 0 &&
+      this.genres.value?.length === 0 &&
+      this.originCountries.value?.length === 0 &&
+      this.languages.value?.original.length === 0 &&
+      this.languages.value?.dubbed.length === 0 &&
+      this.languages.value?.subtitle.length === 0 &&
+      this.languages.value?.caption.length === 0 &&
+      this.productionStatus?.value.length === 0 &&
+      this.minBudget?.value === 0 &&
+      this.sellers?.value.length === 0 &&
+      this.storeType?.value.length === 0 &&
+      this.appAccess?.value.length === 0
     );
   }
 
   search() {
-
     return this.movieIndex.search({
       hitsPerPage: 50,
       query: this.query.value,

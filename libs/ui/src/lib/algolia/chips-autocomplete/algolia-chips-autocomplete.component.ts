@@ -4,7 +4,7 @@ import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, filter, startWith } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
 
 const Separators = {
@@ -30,6 +30,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
+  public values$: Observable<any[]>;
 
   // INPUT ----------------------------
 
@@ -78,6 +79,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     // In case of facet search we know the result object will store the matched facets in the `value` field
     if (!!this.facet?.trim()) {
       this.displayWithPath = 'value';

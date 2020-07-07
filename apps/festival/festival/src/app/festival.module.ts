@@ -22,8 +22,7 @@ const routes: Routes = createRoutes({
     },
     {
       path: 'marketplace',
-      canActivate: [FestivalAppGuard, MovieCollectionGuard],
-      canDeactivate: [MovieCollectionGuard],
+      canActivate: [FestivalAppGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
