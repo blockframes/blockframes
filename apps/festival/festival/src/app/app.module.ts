@@ -1,4 +1,4 @@
-// Angular
+﻿// Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,8 +15,8 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
+import { AngularFirestoreModule, SETTINGS  } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
@@ -44,6 +44,25 @@ import { filter } from 'rxjs/operators';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
+
+const environment = {
+  production: false,
+  local: true,
+  localConfig: {
+    functionsEmulatorURL: 'http://localhost:5001',
+    firestoreConfig: { host: 'localhost:8080', ssl: false },
+  },
+  firebase: {
+    apiKey: 'AIzaSyAmos48yDq2xnxy9OPtQpLMiE4NeyJlA5Y',
+    authDomain: 'blockframes-staging.firebaseapp.com',
+    databaseURL: 'https://blockframes-staging.firebaseio.com',
+    projectId: 'blockframes-staging',
+    storageBucket: 'blockframes-staging.appspot.com',
+    messagingSenderId: '176629403574',
+    appId: "1:176629403574:web:d4d965add159857c3afb17",
+    measurementId: "G-91803TC0PB"
+  },
+};
 
 @NgModule({
   declarations: [AppComponent],
@@ -80,7 +99,15 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
 
     SafariBannerModule,
   ],
-  providers: [ScreenTrackingService, UserTrackingService],
+  providers: [ScreenTrackingService, UserTrackingService,
+    { provide: REGION, useValue: 'us-central1' },
+    {
+      provide: SETTINGS,
+      useValue: environment.local
+        ? environment.localConfig.firestoreConfig
+        : undefined,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
