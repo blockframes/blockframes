@@ -574,6 +574,12 @@ export const USERS = getCollection('users') as User[];
 
 export const ORGS = getCollection('orgs') as Organization[];
 
-export const NOTIFICATIONS = getCollection('notifications') as Notification[];
+export const NOTIFICATIONS = getCollection('notifications').map(notification => {
+  return {
+    ... notification,
+    date: new Date(notification.date._seconds *1000),
+   
+  }
+});
 
 export const INVITATIONS = getCollection('invitations') as Invitation[]

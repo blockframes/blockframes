@@ -1,34 +1,28 @@
-<div fxLayout="row" fxLayoutAlign="space-between center">
+<header>
   <ng-content select="list-action-header"></ng-content>
-  <button mat-button (click)="markAsRead.emit()">
-    <mat-icon svgIcon="read"></mat-icon>
-    <span>Mark all as read</span>
-  </button>
-</div>
-<!-- We can't bind it with the host, cause it has no effect on it -->
-<div class="mat-card">
-  <mat-list role="list">
-    <ng-container *ngFor="let timeFrame of timeFrames; let first = first; let last = last">
-      <ng-container *ngIf="(actions | slice:pageConfig.from:pageConfig.to | filterByDate: timeFrame) as filteredItems">
-        <h3 mat-subheader *ngIf="filteredItems.length">{{ timeFrame | labelByDate }}</h3>
-        <mat-divider *ngIf="filteredItems.length"></mat-divider>
-        <ng-container *ngFor="let item of filteredItems">
-          <div fxLayout="row" fxLayoutAlign="start center">
-            <ng-template [ngTemplateOutlet]="listActionItem" [ngTemplateOutletContext]="{$implicit: item }">
-            </ng-template>
-            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Trigger which opens up a menu">
-              <mat-icon svgIcon="more_vert">
-              </mat-icon>
-            </button>
-          </div>
-        </ng-container>
+</header>
+<mat-list role="list" class="mat-elevation-z1">
+  <ng-container *ngFor="let timeFrame of timeFrames; let first = first; let last = last">
+    <ng-container *ngIf="(actions | slice:pageConfig.from:pageConfig.to | filterByDate: timeFrame) as filteredItems">
+      <h3 mat-subheader *ngIf="filteredItems.length">{{ timeFrame | labelByDate }}</h3>
+      <mat-divider *ngIf="filteredItems.length"></mat-divider>
+      <ng-container *ngFor="let item of filteredItems">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <ng-template [ngTemplateOutlet]="listActionItem" [ngTemplateOutletContext]="{$implicit: item }">
+          </ng-template>
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
+            <mat-icon svgIcon="more_vert">
+            </mat-icon>
+          </button>
+        </div>
+        <mat-menu #menu="matMenu">
+          <ng-template [ngTemplateOutlet]="listActionMenu" [ngTemplateOutletContext]="{$implicit: item }">
+          </ng-template>
+        </mat-menu>
       </ng-container>
     </ng-container>
-    <mat-paginator [length]="actions.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-      (page)="setPage($event)">
-    </mat-paginator>
-  </mat-list>
-</div>
-<mat-menu #menu="matMenu">
-  <ng-content select="list-action-menu"></ng-content>
-</mat-menu>
+  </ng-container>
+  <mat-paginator [length]="actions.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    (page)="setPage($event)">
+  </mat-paginator>
+</mat-list>

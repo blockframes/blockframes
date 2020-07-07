@@ -7,7 +7,8 @@ import {
   TemplateRef,
   Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewEncapsulation
 } from '@angular/core';
 
 // Blockframes
@@ -24,14 +25,15 @@ export class ListActionHeaderDirective { }
 @Directive({ selector: '[listActionItem]' })
 export class ListActionItemDirective { }
 
-@Directive({ selector: 'list-action-menu' })
+@Directive({ selector: '[listActionMenu]' })
 export class ListActionMenuDirective { }
 
 @Component({
   selector: '[actions] bf-list-action',
   templateUrl: 'list-action.component.html',
   styleUrls: ['./list-action.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class ListActionComponent {
 
@@ -39,7 +41,6 @@ export class ListActionComponent {
   public pageSizeOptions = [5, 10, 25];
   public pageSize = 10;
   public pageConfig = { from: 0, to: 10 }
-
 
   @Input() actions: (Notification | Invitation)[];
 
