@@ -1,29 +1,14 @@
 import { ImgRef, createImgRef } from '../../+state//media.firestore'
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { FormControl, FormGroup } from '@angular/forms';
+import { HostedMediaForm } from '../media/media.form';
 
 function createImgRefControl(reference: ImgRef) {
   return {
-    original: new FormGroup({
-      ref: new FormControl(reference.original.ref),
-      url: new FormControl(reference.original.url),
-    }),
-    fallback: new FormGroup({
-      ref: new FormControl(reference.fallback.ref),
-      url: new FormControl(reference.fallback.url),
-    }),
-    xs: new FormGroup({
-      ref: new FormControl(reference.xs.ref),
-      url: new FormControl(reference.xs.url),
-    }),
-    md: new FormGroup({
-      ref: new FormControl(reference.md.ref),
-      url: new FormControl(reference.md.url),
-    }),
-    lg: new FormGroup({
-      ref: new FormControl(reference.lg.ref),
-      url: new FormControl(reference.lg.url),
-    }),
+    original: new HostedMediaForm(reference.original),
+    fallback: new HostedMediaForm(reference.fallback),
+    xs: new HostedMediaForm(reference.xs),
+    md: new HostedMediaForm(reference.md),
+    lg: new HostedMediaForm(reference.lg),
   }
 }
 

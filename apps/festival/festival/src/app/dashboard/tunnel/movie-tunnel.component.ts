@@ -9,9 +9,8 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { FormGroup } from '@angular/forms';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -64,15 +63,6 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
-  public bannerMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.banner.media.original);
-
-  public posterMediaForms: FormGroup;
-
-  public stillPhotoMediaForms: FormGroup;
-
-  public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
-  public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
-
   public exitRoute: string;
 
   constructor(
@@ -85,14 +75,6 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   async ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-
-    const posterMediaRecord: Record<string, HostedMediaForm> = {};
-    Object.keys(this.query.getActive().promotionalElements.poster).forEach(key => posterMediaRecord[key] = new HostedMediaForm(this.query.getActive().promotionalElements.poster[key].media.original));
-    this.posterMediaForms = new FormGroup(posterMediaRecord);
-
-    const stillMediaRecord: Record<string, HostedMediaForm> = {};
-    Object.keys(this.query.getActive().promotionalElements.still_photo).forEach(key => stillMediaRecord[key] = new HostedMediaForm(this.query.getActive().promotionalElements.still_photo[key].media.original));
-    this.stillPhotoMediaForms = new FormGroup(stillMediaRecord);
   }
 
   // Should save movie
@@ -103,17 +85,10 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    await this.service.save(movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
 
-    await this.mediaService.uploadOrDeleteMedia([
-      this.bannerMediaForm,
-
-      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key) as HostedMediaForm),
-      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key) as HostedMediaForm),
-
-      this.presentationDeckMediaForm,
-      this.scenarioMediaForm,
-    ]);
+    await this.service.save(documentToUpdate);
+    this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();

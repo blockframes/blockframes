@@ -16,7 +16,7 @@ export interface User {
 }
 
 
-/** A user interface with public informations */
+/** A user interface with public information */
 export interface PublicUser {
   uid: string;
   email: string;

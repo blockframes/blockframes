@@ -151,9 +151,6 @@ export class CropperComponent implements OnInit {
     }
 
     this.form.patchValue({
-      path: '',
-      blob: '',
-      fileName:'',
       delete: true
     })
     this.form.markAsDirty();

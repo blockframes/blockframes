@@ -1,7 +1,6 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
 
 @Component({
   selector: 'festival-tunnel-media-image',
@@ -9,15 +8,8 @@ import { HostedMediaForm } from '@blockframes/media/directives/media/media.form'
   styleUrls: ['./media-image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaImageComponent implements OnInit {
+export class MediaImageComponent {
   form = this.tunnel.form;
-  bannerForm = this.tunnel.bannerMediaForm;
-
-  posterFormRecord = this.tunnel.posterMediaForms;
-  posterForms: HostedMediaForm[] = [];
-
-  stillPhotoFormRecord = this.tunnel.stillPhotoMediaForms;
-  stillForms: HostedMediaForm[] = [];
 
   constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) {}
 
@@ -25,11 +17,6 @@ export class MediaImageComponent implements OnInit {
 
   get promotionalElements() {
     return this.form.get('promotionalElements')
-  }
-
-  ngOnInit() {
-    this.posterForms = Object.keys(this.posterFormRecord.controls).map(key => this.posterFormRecord.get(key) as HostedMediaForm);
-    this.stillForms = Object.keys(this.stillPhotoFormRecord.controls).map(key => this.stillPhotoFormRecord.get(key) as HostedMediaForm);
   }
 
 }

@@ -111,17 +111,17 @@ export async function onMovieUpdate(
     await storeSearchableMovie(after, orgName(creatorOrg));
   }
 
-
+  // TODO issue#3239
   // BANNER
   const bannerBeforeRef = before.promotionalElements?.banner?.media?.original?.ref;
-  const bannerAfterRef = before.promotionalElements?.banner?.media?.original?.ref;
+  const bannerAfterRef = after.promotionalElements?.banner?.media?.original?.ref;
   if (
-    !!bannerBeforeRef && !!bannerAfterRef &&
     bannerBeforeRef !== bannerAfterRef
   ) {
-    await handleImageChange(after.promotionalElements.banner.media);
+    await handleImageChange(after.promotionalElements.banner.media!);
   }
 
+  // TODO issue#3239
   // POSTERs
   const posterPromises = Object.keys(after.promotionalElements.poster).filter(key => {
     const posterBeforeRef = before.promotionalElements?.poster[key]?.media?.original?.ref;

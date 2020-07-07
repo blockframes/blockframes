@@ -7,14 +7,14 @@ import { ComponentPortal } from '@angular/cdk/portal';
 // State
 import { MediaStore, isDone } from "./media.store";
 import { MediaQuery } from "./media.query";
-import { UploadFile, ImgRef, imgSizeDirectory } from "./media.firestore";
+import { UploadFile, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
 import { HostedMediaForm } from "../directives/media/media.form";
 
 // Blockframes
 import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
 import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
-import { map, filter } from "rxjs/operators";
+import { map, takeWhile } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -132,6 +132,12 @@ export class MediaService {
     );
   }
 
+  /**
+   * Delete a file from teh firebase storage.
+   * @note the function needs the **full** path of the file
+   * **this include the file name!**
+   * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
+   */
   async removeFile(path: string) {
     await this.storage.ref(path).delete().toPromise();
 
@@ -183,36 +189,36 @@ export class MediaService {
     }
   }
 
-  async uploadOrDeleteMedia(mediaForms: HostedMediaForm[]) {
+  async uploadOrDeleteMedia(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
 
-      if (!!mediaForm.fileName.value) {
+      if (!!mediaForm.fileName) {
         // remove every characters after the 100th to avoid file too long error
         // this way we don't need to sanitize name anymore
         // (firebase also supports file names with unicode chars)
-        mediaForm.fileName.setValue(mediaForm.fileName.value.substr(0, 100));
+        mediaForm.fileName = mediaForm.fileName.substr(0, 100);
       }
 
       // if the file needs to be deleted and we know its path
-      if (mediaForm.delete.value && !!mediaForm.oldRef.value) {
+      if (mediaForm.delete && !!mediaForm.oldRef) {
 
-        await this.removeFile(mediaForm.oldRef.value);
+        await this.removeFile(mediaForm.oldRef);
 
       // if we have a blob = the user created or updated the file
-      } else if (!!mediaForm.blobOrFile.value) {
+      } else if (!!mediaForm.blobOrFile) {
 
         // if the file already have a path it means that we are in an update
         // we first need to delete the old file
-        if (mediaForm.oldRef.value !== '') {
+        if (mediaForm.oldRef !== '') {
           try {
-            await this.removeFile(mediaForm.oldRef.value);
+            await this.removeFile(mediaForm.oldRef);
           } catch (error) {
             console.warn('Deletion of previous file failed, but new file will still be uploaded');
           }
         }
 
         // upload the new file
-        await this.upload(mediaForm.ref.value, mediaForm.fileName.value, mediaForm.blobOrFile.value);
+        await this.upload(mediaForm.ref, mediaForm.fileName, mediaForm.blobOrFile);
       }
     });
     await Promise.all(promises);
@@ -241,7 +247,7 @@ export class MediaService {
     // listen on every changes of the current document
     return doc.snapshotChanges().pipe(
       map(action => get(action.payload.data(), fieldToUpdate)),
-      filter((image: ImgRef) => allSizeEmpty(image))
+      takeWhile((image: ImgRef) => !allSizeEmpty(image)),
     ).toPromise();
   }
 
