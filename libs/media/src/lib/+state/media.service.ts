@@ -1,22 +1,20 @@
 // Angular
-import { Injectable, Inject } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { MediaStore, isDone } from "./media.store";
-import { MediaQuery } from "./media.query";
 import { UploadFile, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
-import { AngularFirestore } from "@angular/fire/firestore";
 import { get } from 'lodash';
 import { map, takeWhile } from "rxjs/operators";
-import { REFERENCES } from'./media.tasks';
 
 // Blockframes
-import { delay } from '@blockframes/utils/helpers';
+import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
+import { TaskService } from "./tasks.service";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -31,22 +29,19 @@ export class MediaService {
   public overlayRef: OverlayRef;
 
   constructor(
-    @Inject(REFERENCES) private ref,
-    private store: MediaStore,
-    private query: MediaQuery,
     private db: AngularFirestore,
+    private tasks: TaskService,
     private storage: AngularFireStorage,
     private overlay: Overlay
   ) {
-    this.query.selectCount(task => task.status !== 'succeeded').subscribe(async (processingTasksCount) => {
-      const totalTasksCount = Object.keys(this.ref.tasks).length
-      if (totalTasksCount > 0 && processingTasksCount === 0) {
-        delay(5000).then(() => {
-          this.detachWidget();
-          this.store.remove(upload => isDone(upload));
-        });
+
+    this.tasks.endOfTasks$.subscribe(isEnd => {
+      if (isEnd) {
+        this.detachWidget();
+        this.tasks.remove();
       }
-    })
+    });
+
   }
 
   /** Check if a file exists in the **Firebase storage** */
@@ -112,33 +107,31 @@ export class MediaService {
       throw new Error(`Upload Error : there is already a file @ ${fileName}, please delete it before uploading a new file!`);
     }
 
-    const uploading = this.query.isUploading(fileName);
+    const uploading = this.tasks.isUploading(fileName);
     if (uploading) {
       throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
     }
 
     const task = this.storage.upload(path.concat(fileName), fileOrBlob);
 
-    this.store.upsert(fileName, {
+    this.tasks.add({
+      id: fileName,
       status: 'uploading',
       progress: 0,
+      uploadtask: task
     });
 
-    task.percentageChanges().subscribe(p => this.store.update(fileName, { progress: p }));
-
-    this.ref.tasks[fileName] = task;
+    task.percentageChanges().subscribe(p => this.tasks.updateProgress(fileName, p));
 
     task.then(
       // on success
       () => {
-        this.store.update(fileName, { status: 'succeeded' });
-        delete this.ref.tasks[fileName];
+        this.tasks.updateStatus(fileName, 'succeeded');
       },
 
       // on error (canceled is treated by firebase as an error)
       () => {
-        this.store.update(fileName, { status: 'canceled' });
-        delete this.ref.tasks[fileName];
+        this.tasks.updateStatus(fileName, 'canceled');
       }
     );
   }
@@ -165,9 +158,8 @@ export class MediaService {
 
   private async showWidget() {
     if (!this.overlayRef) {
-      const widget = await import('../components/upload/widget/upload-widget.component').then(c => c.UploadWidgetComponent);
       this.overlayRef = this.overlay.create(this.overlayOptions);
-      this.overlayRef.attach(new ComponentPortal(widget));
+      this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
     }
   }
 
