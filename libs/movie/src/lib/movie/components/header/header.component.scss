@@ -5,18 +5,25 @@ movie-header {
   header {
     padding: 50px 24px;
 
-    .poster {
-      height: 450px;
+    .movie-info {
+
+      .poster {
+        height: 450px;
+      }
+
+      .movie-details {
+        h4 {
+          text-transform: uppercase;
+          margin: 0;
+        }
+        h2 {
+          margin-bottom: 8px;
+        }
+      }
     }
-    
-    .movie-details {
-      h4 {
-        text-transform: uppercase;
-        margin: 0;
-      }
-      h2 {
-        margin-bottom: 8px;
-      }
+
+    mat-icon {
+      cursor: pointer;
     }
   }
 
