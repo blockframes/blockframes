@@ -205,7 +205,7 @@ function cleanMovies(
     const movie = movieDoc.data() as any;
 
     // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
-    // @TODO (#3066) It seams that this object on root comes from an un-cleaned movie document from Akita that have been updated as is on DB.
+    // @TODO (#3175) It seams that this object on root comes from an un-cleaned movie document from Akita that have been updated as is on DB.
     if (movie.distributionRights) {
       delete movie.distributionRights;
     }
