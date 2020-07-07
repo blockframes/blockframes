@@ -1,10 +1,8 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { MediaQuery } from '@blockframes/media/+state/media.query';
-import { UploadState, MediaStore, isDone } from '@blockframes/media/+state/media.store';
-import { REFERENCES } from '@blockframes/media/+state/media.tasks';
+import { TaskService, UploadTask } from '@blockframes/media/+state/tasks.service';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -17,42 +15,36 @@ import { Observable } from 'rxjs';
 })
 export class UploadWidgetComponent {
 
-  items$: Observable<UploadState[]> = this.query.selectAll();
+  items$: Observable<UploadTask[]> = this.tasks.tasks$;
 
   constructor(
-    @Inject(REFERENCES) private ref,
-    private query: MediaQuery,
-    private store: MediaStore
+    private tasks: TaskService
   ) { }
 
   pause(fileName: string) {
-    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
-      this.ref.tasks[fileName].pause();
-      this.store.update(fileName, { status: 'paused' });
+    if (this.tasks.tasks[fileName]) {
+      this.tasks.tasks[fileName].uploadtask.pause();
+      this.tasks.updateStatus(fileName, 'paused');
     }
   }
 
   resume(fileName: string) {
-    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
-      this.ref.tasks[fileName].resume();
-      this.store.update(fileName, { status: 'uploading' });
-    }
+    if (this.tasks.tasks[fileName]) {
+      this.tasks.tasks[fileName].uploadtask.resume();
+      this.tasks.updateStatus(fileName, 'uploading');
+    } 
   }
 
   cancel(fileName: string) {
-    if (fileName in this.ref.tasks && this.query.hasEntity(fileName)) {
-      this.ref.tasks[fileName].cancel();
-      this.store.update(fileName, { status: 'canceled' });
+    if (this.tasks.tasks[fileName]) {
+      this.tasks.tasks[fileName].uploadtask.cancel();
+      this.tasks.updateStatus(fileName, 'canceled');
     }
   }
   
   /** Remove a single file from the store or remove all if no param is given*/
   clear(fileName?: string) {
-    if (fileName) {
-      this.store.remove(fileName)
-    } else {
-      this.store.remove(upload => isDone(upload));
-    }
+    this.tasks.remove(fileName);
   }
 
   getFileType(file: string) {
