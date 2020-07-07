@@ -25,6 +25,15 @@ export const appUrl = {
   crm: 'https://staging.crm.blockframes.io',
 }
 
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: { 
+    host: 'localhost:8080', 
+    ssl: false 
+  }
+};
+
 export const firebase = {
   apiKey: 'AIzaSyAmos48yDq2xnxy9OPtQpLMiE4NeyJlA5Y',
   authDomain: 'blockframes-staging.firebaseapp.com',
