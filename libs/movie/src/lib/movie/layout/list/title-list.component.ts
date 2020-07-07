@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { fadeList } from '@blockframes/utils/animations/fade';
+import { Location } from '@angular/common';
 
 @Directive({selector: '[titleAppBarSearch]'})
 export class TitleAppBarSearchDirective {}
@@ -38,6 +39,8 @@ export class TitleListComponent implements AfterContentInit {
   public listView = false;
   public canToggle = false;
 
+  constructor(private location: Location) {}
+
   ngAfterContentInit() {
     if (!!this.titleCardTemplate && !!this.titleListItemTemplate) {
       this.canToggle = true;
@@ -48,5 +51,9 @@ export class TitleListComponent implements AfterContentInit {
 
   trackById(movie: Movie) {
     return movie.id;
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
