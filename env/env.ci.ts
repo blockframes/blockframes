@@ -1,4 +1,5 @@
 export const production = false;
+export const dev = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
 // TODO issue#1146 AFM CODE
@@ -164,3 +165,4 @@ export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+

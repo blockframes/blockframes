@@ -3,6 +3,9 @@ header {
   background-image: url('/assets/images/banner_empty.png');
   background-position: center center;
   background-size: cover;
+  mat-icon {
+    cursor: pointer;
+  }
 }
 
 h6 {

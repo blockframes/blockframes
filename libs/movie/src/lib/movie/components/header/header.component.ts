@@ -12,6 +12,7 @@ import {
 import { Movie } from '@blockframes/movie/+state';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { getAssetPath, getMediaUrl } from '@blockframes/media/+state/media.model';
+import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
@@ -39,7 +40,7 @@ export class HeaderComponent {
   public movieView: MovieHeaderView;
   public movie: Movie;
 
-  constructor(private sanitazier: DomSanitizer) { }
+  constructor(private sanitazier: DomSanitizer, private location: Location) { }
 
   @HostBinding('style.backgroundImage') background: SafeStyle;
   @Input('movie')
@@ -51,6 +52,10 @@ export class HeaderComponent {
       const url = getMediaUrl(this.movieView.banner.media) || getAssetPath('empty_banner.webp', 'dark');
       this.background = this.sanitazier.bypassSecurityTrustStyle(`url(${url})`);
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 }
 

@@ -10,10 +10,10 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl, FormArray } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
@@ -48,6 +48,7 @@ export class ChipsAutocompleteComponent implements OnInit {
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredItems$: Observable<any[]>;
+  public values$: Observable<any[]>;
 
   private items: SlugAndLabel[];
 
@@ -55,6 +56,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
   ngOnInit() {
+    this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     this.items = staticModels[this.model];
 
     if (this.placeholder === '') {
