@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { Location } from "@angular/common";
 
 @Component({
   selector: 'auth-privacy-policy',
@@ -6,4 +7,10 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   styleUrls: ['./privacy-policy.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PrivacyPolicyComponent {}
+export class PrivacyPolicyComponent {
+  constructor(private location: Location) {}
+
+  goBack() {
+    this.location.back();
+  }
+}
