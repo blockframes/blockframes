@@ -39,14 +39,25 @@ async function cleanMovieDir(bucket: Bucket) {
   let deleted = 0;
 
   for (const f of files) {
-    const movieId = f.name.split('/')[1];
-    // We check if the file is used before removing it
-    const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
-    if (!!movie) {
-      filesToCheck.push({ file: f, movie });
-    } else {
+    if (f.name.split('/').length === 2) {
+      // Clean files at "movie/" root
+      await smartDelete(f, files);
+      deleted++;
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
       if (await smartDelete(f, files)) {
         deleted++;
+      }
+    } else {
+      const movieId = f.name.split('/')[1];
+      // We check if the file is used before removing it
+      const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+      if (!!movie) {
+        filesToCheck.push({ file: f, movie });
+      } else {
+        if (await smartDelete(f, files)) {
+          deleted++;
+        }
       }
     }
   }
@@ -222,8 +233,10 @@ async function checkMovieRef(filesToCheck: fileWithMovieDocument[]) {
       }
 
     } else if (!isImageForMovie(f.file.name)) {
-      console.log(f.file.name)
-      console.log('!!!!!!!!!!!!!!!!! should not occur remove isPdfForMovie')
+      console.log(`Unhandled file : ${f.file.name}`);
+      if (await smartDelete(f.file, originalFiles.map(f => f.file))) {
+        deleted++;
+      }
     }
 
   }

@@ -31,7 +31,8 @@ export async function cleanDeprecatedData() {
     movies,
     organizations,
     users,
-    permissions
+    permissions,
+    docsIndex
   ] = await Promise.all([
     db.collection('notifications').get(),
     db.collection('invitations').get(),
@@ -39,7 +40,8 @@ export async function cleanDeprecatedData() {
     db.collection('movies').get(),
     db.collection('orgs').get(),
     db.collection('users').get(),
-    db.collection('permissions').get()
+    db.collection('permissions').get(),
+    db.collection('docsIndex').get()
   ]);
 
   // Getting existing document ids to compare
@@ -59,7 +61,8 @@ export async function cleanDeprecatedData() {
     cleanUsers(users, organizationIds, auth),
     cleanOrganizations(organizations, userIds, movieIds),
     cleanPermissions(permissions, organizationIds),
-    cleanMovies(movies)
+    cleanMovies(movies),
+    cleanDocsIndex(docsIndex, existingIds),
   ]);
 }
 
@@ -212,6 +215,23 @@ function cleanMovies(
 
     await movieDoc.ref.update(movie);
   });
+}
+
+function cleanDocsIndex(
+  docsIndex: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  existingIds: string[]
+) {
+
+  let p = Promise.resolve();
+  for (const doc of docsIndex.docs) {
+    p = p.then(async () => {
+      if (!existingIds.includes(doc.id)) {
+        await doc.ref.delete();
+      }
+    })
+  }
+
+  return p;
 }
 
 
