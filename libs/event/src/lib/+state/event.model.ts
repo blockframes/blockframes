@@ -1,5 +1,5 @@
 import { CalendarEvent } from 'angular-calendar';
-import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './event.firestore';
+import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
@@ -85,10 +85,3 @@ export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, isOwne
   }
 }
 
-// Private event config
-export function createPrivateEventConfig(event: Partial<EventPrivateConfig>): EventPrivateConfig {
-  return {
-    url: '',
-    ... event,
-  }
-}
