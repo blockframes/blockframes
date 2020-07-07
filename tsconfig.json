@@ -59,8 +59,6 @@
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import": ["libs/import/src/index.ts"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
-      "@blockframes/temp-test-util": ["libs/temp-test-util/src/index.ts"],
-      "@blockframes/temp-test-seed-data": ["libs/temp-test-seed-data/src/index.ts"],
       "@blockframes/testing": ["libs/testing/src/index.ts"]
     }
   },

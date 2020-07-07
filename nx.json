@@ -79,12 +79,6 @@
       "tags": [],
       "implicitDependencies": ["crm"]
     },
-    "temp-test-util": {
-      "tags": []
-    },
-    "temp-test-seed-data": {
-      "tags": []
-    },
     "testing": {
       "tags": []
     }
