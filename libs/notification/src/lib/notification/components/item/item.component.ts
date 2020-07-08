@@ -16,6 +16,7 @@ export class ItemComponent implements OnInit {
   constructor(private service: NotificationService, private breakpointsService: BreakpointsService) { }
 
   ngOnInit(): void {
+    console.log(this.notification)
   }
 
   public markAsRead(notification: Notification) {
