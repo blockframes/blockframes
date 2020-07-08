@@ -76,9 +76,9 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
-  public bannerMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.banner.media.original);
+  public bannerMediaForm = new HostedMediaForm(this.query.getActive().main.banner.media.original);
   public posterMediaForms = new FormGroup({
-    '0': new HostedMediaForm(this.query.getActive().promotionalElements.poster['0'].media.original),
+    '0': new HostedMediaForm(this.query.getActive().main.poster.media.original),
   });
 
   public stillPhotoMediaForms = new FormGroup({
