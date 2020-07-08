@@ -68,14 +68,14 @@ async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  runChunks(users.docs, async (doc) => {
+  return runChunks(users.docs, async (doc) => {
     const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
     await doc.ref.set(updatedUser);
   });
 }
 
 async function updateNotifications(notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  runChunks(notifications.docs, async (doc) => {
+  return runChunks(notifications.docs, async (doc) => {
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
@@ -88,7 +88,7 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
 }
 
 async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  runChunks(invitations.docs, async (doc) => {
+  return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
@@ -112,7 +112,7 @@ async function updateOrganizations(
   organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  runChunks(organizations.docs, async (doc) => {
+  return runChunks(organizations.docs, async (doc) => {
     const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
     await doc.ref.set(updatedOrg);
   });
@@ -122,7 +122,7 @@ async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  runChunks(movies.docs, async (doc) => {
+  return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as MovieDocument;
 
     const keys = ['banner', 'poster', 'still_photo'];
@@ -248,7 +248,7 @@ async function runChunks(docs, cb) {
   const chunks = chunk(docs, rowsConcurrency);
   for (let i = 0; i < chunks.length; i++) {
     const chunk = chunks[i];
-    console.log(`Processing chunk ${i}/${chunks.length}`);
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
     const promises = chunk.map(cb);
     await Promise.all(promises);
   }
