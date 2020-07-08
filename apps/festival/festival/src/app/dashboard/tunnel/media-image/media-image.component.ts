@@ -15,8 +15,4 @@ export class MediaImageComponent {
 
   public movie = this.movieQuery.getActive();
 
-  get promotionalElements() {
-    return this.form.get('promotionalElements')
-  }
-
 }

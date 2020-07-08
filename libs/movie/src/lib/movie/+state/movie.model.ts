@@ -111,6 +111,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     storeConfig: createStoreConfig(params.storeConfig),
     stakeholders: createMovieStakeholders(params.stakeholders),
     officialIds: createOfficialIds(params.officialIds),
+    banner: createPromotionalImage(params.banner),
+    poster: createPromotionalImage(params.poster),
   };
 }
 
@@ -121,11 +123,9 @@ export function createMoviePromotionalElements(
   const elements: MoviePromotionalElements = {
     ...params,
 
-    banner: createPromotionalImage(params.banner),
-    poster: (!!params.poster && !!Object.keys(params.poster).length) ? params.poster : {} as Record<string, PromotionalImage>,
-    still_photo: {} as Record<string, PromotionalImage>,
+    still_photo: {} as Record<string, PromotionalImage>, // TODO issue#3230
 
-    trailer: {} as Record<string, PromotionalHostedMedia>,
+    trailer: {} as Record<string, PromotionalHostedMedia>, // TODO issue#3230
     presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
     scenario: createPromotionalHostedMedia(params.scenario),
 
@@ -134,11 +134,6 @@ export function createMoviePromotionalElements(
     trailer_link: createPromotionalExternalMedia(params.trailer_link),
     teaser_link: createPromotionalExternalMedia(params.teaser_link),
   };
-
-  // We want a default poster as we look for the first one
-  if (initDefault && (!params.poster || Object.keys(params.poster).length === 0)) {
-    elements.poster['0'] = createPromotionalImage();
-  }
 
   return elements;
 }
