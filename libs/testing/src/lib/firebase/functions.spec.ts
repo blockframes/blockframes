@@ -2,9 +2,9 @@
 import { firestore, initializeApp } from 'firebase-admin';
 
 describe('firebase testing library', () => {
-  it.skip('should be able to access the emulator', async () => {
+  it('should be able to access the emulator', async () => {
     //Init test DB
-    const projectId = String(Math.random());
+    const projectId = 'sample2';
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     initializeApp({ projectId });      
@@ -13,5 +13,6 @@ describe('firebase testing library', () => {
     const docRef = db.collection('testCollection').doc('testDoc');
     const testData = { name: 'blockframes' };
     await docRef.set(testData);
-    await firebaseTesting.assertSucceeds(docRef.get());  });
+    await firebaseTesting.assertSucceeds(docRef.get());  
+  });
 });
