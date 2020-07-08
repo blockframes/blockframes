@@ -25,6 +25,15 @@ export const appUrl = {
   crm: 'https://blockframes-ci-crm.web.app',
 }
 
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: { 
+    host: 'localhost:8080', 
+    ssl: false 
+  }
+};
+
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
   authDomain: 'blockframes-ci.firebaseapp.com',
