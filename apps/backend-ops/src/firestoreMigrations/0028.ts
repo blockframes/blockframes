@@ -8,37 +8,54 @@ import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
 import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { chunk } from 'lodash'
 
 const EMPTY_REF: ImgRef = {
   ref: '',
   urls: { original: '' }
 };
 
+const rowsConcurrency = 10;
+
 /**
  * Migrate old ImgRef objects to new one.
  */
 export async function upgrade(db: Firestore, storage: Storage) {
-
+  console.log('//////////////');
+  console.log('// Processing users');
+  console.log('//////////////');
   await db
     .collection('users')
     .get()
     .then(async users => await updateUsers(users, storage));
 
+  console.log('//////////////');
+  console.log('// Processing orgs');
+  console.log('//////////////');
   await db
     .collection('orgs')
     .get()
     .then(async orgs => await updateOrganizations(orgs, storage));
 
+  console.log('//////////////');
+  console.log('// Processing movies');
+  console.log('//////////////');
   await db
     .collection('movies')
     .get()
     .then(async movies => await updateMovies(movies, storage));
 
+  console.log('//////////////');
+  console.log('// Processing notifications');
+  console.log('//////////////');
   await db
     .collection('notifications')
     .get()
     .then(async notifs => await updateNotifications(notifs));
 
+  console.log('//////////////');
+  console.log('// Processing invitations');
+  console.log('//////////////');
   await db
     .collection('invitations')
     .get()
@@ -51,108 +68,99 @@ async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    users.docs.map(async doc => {
-      const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
-      await doc.ref.set(updatedUser);
-    })
-  );
+  return runChunks(users.docs, async (doc) => {
+    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
+    await doc.ref.set(updatedUser);
+  });
 }
 
 async function updateNotifications(notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  return Promise.all(
-    notifications.docs.map(async doc => {
+  return runChunks(notifications.docs, async (doc) => {
+    const notification = doc.data() as NotificationDocument;
 
-      const notification = doc.data() as NotificationDocument;
-
-      if (notification.organization) {
-        notification.organization.logo = createImgRef();
-      } else if (notification.user) {
-        notification.user.avatar = createImgRef();
-      }
-      await doc.ref.update(notification);
-    })
-  );
+    if (notification.organization) {
+      notification.organization.logo = createImgRef();
+    } else if (notification.user) {
+      notification.user.avatar = createImgRef();
+    }
+    await doc.ref.update(notification);
+  });
 }
 
 async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  return Promise.all(
-    invitations.docs.map(async doc => {
+  return runChunks(invitations.docs, async (doc) => {
+    const invitation = doc.data() as InvitationDocument;
 
-      const invitation = doc.data() as InvitationDocument;
+    if (invitation.fromOrg) {
+      invitation.fromOrg.logo = createImgRef();
+    }
+    if (invitation.toOrg) {
+      invitation.toOrg.logo = createImgRef();
+    }
+    if (invitation.fromUser) {
+      invitation.fromUser.avatar = createImgRef();
+    }
+    if (invitation.toUser) {
+      invitation.toUser.avatar = createImgRef();
+    }
+    await doc.ref.update(invitation);
 
-      if (invitation.fromOrg) {
-        invitation.fromOrg.logo = createImgRef();
-      }
-      if (invitation.toOrg) {
-        invitation.toOrg.logo = createImgRef();
-      }
-      if (invitation.fromUser) {
-        invitation.fromUser.avatar = createImgRef();
-      }
-      if (invitation.toUser) {
-        invitation.toUser.avatar = createImgRef();
-      }
-      await doc.ref.update(invitation);
-    })
-  );
+  });
 }
 
 async function updateOrganizations(
   organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    organizations.docs.map(async doc => {
-      const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
-      await doc.ref.set(updatedOrg);
-    })
-  );
+  return runChunks(organizations.docs, async (doc) => {
+    const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+    await doc.ref.set(updatedOrg);
+  });
 }
 
 async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    movies.docs.map(async doc => {
-      const movie = doc.data() as MovieDocument;
+  return runChunks(movies.docs, async (doc) => {
+    const movie = doc.data() as MovieDocument;
 
-      const keys = ['banner', 'poster', 'still_photo'];
+    const keys = ['banner', 'poster', 'still_photo'];
 
-      for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
-          const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
-          if (Array.isArray(value)) {
-            for (let i = 0; i < value.length; i++) {
-              movie.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
-            }
-          } else {
-            movie.promotionalElements[key] = await updateMovieField(value, 'media', storage);
+    for (const key of keys) {
+      if (!!movie.promotionalElements[key]) {
+        const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
+        if (Array.isArray(value)) {
+          for (let i = 0; i < value.length; i++) {
+            movie.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
           }
+        } else {
+          movie.promotionalElements[key] = await updateMovieField(value, 'media', storage);
         }
       }
+    }
 
-      for (const key in movie.salesCast) {
-        const value: Credit[] = movie.salesCast[key];
-        for (let i = 0; i < value.length; i++) {
-          movie.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
-        }
+    for (const key in movie.salesCast) {
+      const value: Credit[] = movie.salesCast[key];
+      for (let i = 0; i < value.length; i++) {
+        movie.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
       }
+    }
 
-      for (const key in movie.main.stakeholders) {
-        const value: Credit[] = movie.main.stakeholders[key];
-        for (let i = 0; i < value.length; i++) {
-          movie.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
-        }
+    for (const key in movie.main.stakeholders) {
+      const value: Credit[] = movie.main.stakeholders[key];
+      for (let i = 0; i < value.length; i++) {
+        movie.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
       }
+    }
 
-      for (let i = 0; i < movie.main.directors.length; i++) {
-        movie.main.directors[i] = await updateMovieField(movie.main.directors[i], 'avatar', storage);
-      }
-      await doc.ref.set(movie);
-    })
-  );
+    for (let i = 0; i < movie.main.directors.length; i++) {
+      movie.main.directors[i] = await updateMovieField(movie.main.directors[i], 'avatar', storage);
+    }
+    await doc.ref.set(movie);
+
+  });
+
 }
 
 const updateMovieField = async <T extends Credit | PromotionalElement>(
@@ -166,10 +174,15 @@ const updateMovieField = async <T extends Credit | PromotionalElement>(
 }
 
 const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) => {
-  const newImageRef = await updateImgRef(user, 'avatar', storage);
-  user.avatar = newImageRef;
-  const watermark = await _upsertWatermark(user);
-  user.watermark = watermark;
+  try {
+    const newImageRef = await updateImgRef(user, 'avatar', storage);
+    user.avatar = newImageRef;
+    const watermark = await _upsertWatermark(user);
+    user.watermark = watermark;
+  } catch (e) {
+    console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
+  }
+
   return user;
 };
 
@@ -228,5 +241,15 @@ const updateImgRef = async (
   } catch (e) {
     console.log('Empty ref');
     return EMPTY_REF;
+  }
+}
+
+async function runChunks(docs, cb) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = c.map(cb);
+    await Promise.all(promises);
   }
 }
