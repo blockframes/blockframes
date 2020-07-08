@@ -26,11 +26,11 @@ export class MediaImageComponent {
   }
 
   get banner() {
-    return this.promotionalElements.get('banner');
+    return this.form.main.banner;
   }
 
   get poster() {
-    return this.promotionalElements.get('poster');
+    return this.form.main.poster;
   }
 
   get stillPhoto() {
