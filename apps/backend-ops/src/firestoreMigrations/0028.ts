@@ -161,10 +161,10 @@ async function updateMovies(
 ) {
   // We do updates by chunks of n documents
   const chunks = chunk(movies.docs, rowsConcurrency);
-  let i = 0;
+  let j = 0;
   for (const c of chunks) {
-    i++;
-    console.log(`Processing chunk ${i}/${chunks.length}`);
+    j++;
+    console.log(`Processing chunk ${j}/${chunks.length}`);
     await Promise.all(
       movies.docs.map(async doc => {
         const movie = doc.data() as MovieDocument;
