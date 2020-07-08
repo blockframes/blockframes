@@ -247,9 +247,9 @@ const updateImgRef = async (
 async function runChunks(docs, cb) {
   const chunks = chunk(docs, rowsConcurrency);
   for (let i = 0; i < chunks.length; i++) {
-    const chunk = chunks[i];
+    const c = chunks[i];
     console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = chunk.map(cb);
+    const promises = c.map(cb);
     await Promise.all(promises);
   }
 }
