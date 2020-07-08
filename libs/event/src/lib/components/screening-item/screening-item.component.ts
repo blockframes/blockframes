@@ -21,7 +21,7 @@ export class ScreeningItemComponent {
   @Input() set event(screening: ScreeningEvent) {
     this.screening = screening;
     this.movie = screening.movie;
-    this.poster = screening.movie?.promotionalElements.poster[0].media;
+    this.poster = screening.movie?.main.poster.media;
     this.invitation$ = this.invitationQuery.selectAll().pipe(
       map(invits => invits.find(e => e.docId === screening.id))
     );

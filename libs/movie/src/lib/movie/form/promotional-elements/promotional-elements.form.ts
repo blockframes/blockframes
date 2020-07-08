@@ -72,10 +72,6 @@ export class MoviePromotionalImageForm extends FormEntity<PromotionalImageContro
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
 
-  // records
-  const posterControls: Record<string, MoviePromotionalImageForm> = {};
-  Object.keys(entity.poster).forEach(key => posterControls[key] = new MoviePromotionalImageForm(entity.poster[key]));
-
   const stillPhotoControls: Record<string, MoviePromotionalImageForm> = {};
   for (const key in entity.still_photo) {
     stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]);
@@ -87,11 +83,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
   }
 
   return {
-
     // Images
-    banner: new MoviePromotionalImageForm(entity.banner), // TODO issue#3239
-
-    poster: new FormGroup(posterControls), // TODO issue#3239
     still_photo: new FormGroup(stillPhotoControls),  // TODO issue#3230
 
     // Hosted Media

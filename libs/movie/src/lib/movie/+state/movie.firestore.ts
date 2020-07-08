@@ -140,11 +140,9 @@ export interface PromotionalImage extends PromotionalElement {
 }
 
 export interface MoviePromotionalElements {
-  banner: PromotionalImage,
-  poster: Record<string, PromotionalImage>,
-  still_photo: Record<string, PromotionalImage>,
+  still_photo: Record<string, PromotionalImage>, // TODO issue#3230
 
-  trailer: Record<string, PromotionalHostedMedia>,
+  trailer: Record<string, PromotionalHostedMedia>, // TODO issue#3230
   presentation_deck: PromotionalHostedMedia,
   scenario: PromotionalHostedMedia,
 
@@ -250,6 +248,8 @@ export interface MovieMain {
   workType?: WorkType;
   storeConfig?: StoreConfig;
   totalRunTime?: number | string;
+  banner: PromotionalImage;
+  poster: PromotionalImage;
 }
 
 interface MovieSalesInfoRaw<D> {

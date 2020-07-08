@@ -200,12 +200,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // POSTER (Poster)
         // TODO issue 3091
         const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
-        const posterKey = `${Object.keys(movie.promotionalElements.poster).length}`
         const moviePoster = createPromotionalImage({
           label: 'Poster',
           media: poster,
         });
-        movie.promotionalElements.poster[posterKey] = moviePoster;
+        movie.main.poster = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -826,7 +825,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             ratio: 'rectangle'
           });
 
-          movie.promotionalElements.banner = promotionalElement;
+          movie.main.banner = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -1078,10 +1077,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (Object.keys(movie.promotionalElements.poster).length === 0) {
+    if (Object.keys(movie.main.poster).length === 0) {
       errors.push({
         type: 'error',
-        field: 'promotionalElements.poster',
+        field: 'main.poster',
         name: 'Poster',
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
