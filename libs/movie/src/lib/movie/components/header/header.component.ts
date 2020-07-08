@@ -21,8 +21,8 @@ function createMovieView(movie: Movie) {
       original: movie.main.title.original,
       international: movie.main.title.international
     },
-    banner: movie.promotionalElements.banner,
-    poster: movie.promotionalElements.poster[0]
+    banner: movie.main.banner,
+    poster: movie.main.poster,
   }
 }
 
