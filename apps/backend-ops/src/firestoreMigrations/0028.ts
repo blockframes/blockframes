@@ -68,143 +68,99 @@ async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  // We do updates by chunks of n documents
-  const chunks = chunk(users.docs, rowsConcurrency);
-  let i = 0;
-  for (const c of chunks) {
-    i++;
-    console.log(`Processing chunk ${i}/${chunks.length}`);
-    await Promise.all(
-      c.map(async doc => {
-        const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
-        await doc.ref.set(updatedUser);
-      })
-    );
-  }
-
+  runChunks(users.docs, async (doc) => {
+    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
+    await doc.ref.set(updatedUser);
+  });
 }
 
 async function updateNotifications(notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  // We do updates by chunks of n documents
-  const chunks = chunk(notifications.docs, rowsConcurrency);
-  let i = 0;
-  for (const c of chunks) {
-    i++;
-    console.log(`Processing chunk ${i}/${chunks.length}`);
-    await Promise.all(
-      c.map(async doc => {
-        const notification = doc.data() as NotificationDocument;
+  runChunks(notifications.docs, async (doc) => {
+    const notification = doc.data() as NotificationDocument;
 
-        if (notification.organization) {
-          notification.organization.logo = createImgRef();
-        } else if (notification.user) {
-          notification.user.avatar = createImgRef();
-        }
-        await doc.ref.update(notification);
-      })
-    );
-  }
+    if (notification.organization) {
+      notification.organization.logo = createImgRef();
+    } else if (notification.user) {
+      notification.user.avatar = createImgRef();
+    }
+    await doc.ref.update(notification);
+  });
 }
 
 async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  // We do updates by chunks of n documents
-  const chunks = chunk(invitations.docs, rowsConcurrency);
-  let i = 0;
-  for (const c of chunks) {
-    i++;
-    console.log(`Processing chunk ${i}/${chunks.length}`);
-    await Promise.all(
-      c.map(async doc => {
+  runChunks(invitations.docs, async (doc) => {
+    const invitation = doc.data() as InvitationDocument;
 
-        const invitation = doc.data() as InvitationDocument;
+    if (invitation.fromOrg) {
+      invitation.fromOrg.logo = createImgRef();
+    }
+    if (invitation.toOrg) {
+      invitation.toOrg.logo = createImgRef();
+    }
+    if (invitation.fromUser) {
+      invitation.fromUser.avatar = createImgRef();
+    }
+    if (invitation.toUser) {
+      invitation.toUser.avatar = createImgRef();
+    }
+    await doc.ref.update(invitation);
 
-        if (invitation.fromOrg) {
-          invitation.fromOrg.logo = createImgRef();
-        }
-        if (invitation.toOrg) {
-          invitation.toOrg.logo = createImgRef();
-        }
-        if (invitation.fromUser) {
-          invitation.fromUser.avatar = createImgRef();
-        }
-        if (invitation.toUser) {
-          invitation.toUser.avatar = createImgRef();
-        }
-        await doc.ref.update(invitation);
-      })
-    );
-  }
+  });
 }
 
 async function updateOrganizations(
   organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  // We do updates by chunks of n documents
-  const chunks = chunk(organizations.docs, rowsConcurrency);
-  let i = 0;
-  for (const c of chunks) {
-    i++;
-    console.log(`Processing chunk ${i}/${chunks.length}`);
-    await Promise.all(
-      c.map(async doc => {
-        const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
-        await doc.ref.set(updatedOrg);
-      })
-    );
-  }
+  runChunks(organizations.docs, async (doc) => {
+    const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+    await doc.ref.set(updatedOrg);
+  });
 }
 
 async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  // We do updates by chunks of n documents
-  const chunks = chunk(movies.docs, rowsConcurrency);
-  let j = 0;
-  for (const c of chunks) {
-    j++;
-    console.log(`Processing chunk ${j}/${chunks.length}`);
-    await Promise.all(
-      movies.docs.map(async doc => {
-        const movie = doc.data() as MovieDocument;
+  runChunks(movies.docs, async (doc) => {
+    const movie = doc.data() as MovieDocument;
 
-        const keys = ['banner', 'poster', 'still_photo'];
+    const keys = ['banner', 'poster', 'still_photo'];
 
-        for (const key of keys) {
-          if (!!movie.promotionalElements[key]) {
-            const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
-            if (Array.isArray(value)) {
-              for (let i = 0; i < value.length; i++) {
-                movie.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
-              }
-            } else {
-              movie.promotionalElements[key] = await updateMovieField(value, 'media', storage);
-            }
-          }
-        }
-
-        for (const key in movie.salesCast) {
-          const value: Credit[] = movie.salesCast[key];
+    for (const key of keys) {
+      if (!!movie.promotionalElements[key]) {
+        const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
+        if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
-            movie.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
+            movie.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
           }
+        } else {
+          movie.promotionalElements[key] = await updateMovieField(value, 'media', storage);
         }
+      }
+    }
 
-        for (const key in movie.main.stakeholders) {
-          const value: Credit[] = movie.main.stakeholders[key];
-          for (let i = 0; i < value.length; i++) {
-            movie.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
-          }
-        }
+    for (const key in movie.salesCast) {
+      const value: Credit[] = movie.salesCast[key];
+      for (let i = 0; i < value.length; i++) {
+        movie.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
+      }
+    }
 
-        for (let i = 0; i < movie.main.directors.length; i++) {
-          movie.main.directors[i] = await updateMovieField(movie.main.directors[i], 'avatar', storage);
-        }
-        await doc.ref.set(movie);
-      })
-    );
-  }
+    for (const key in movie.main.stakeholders) {
+      const value: Credit[] = movie.main.stakeholders[key];
+      for (let i = 0; i < value.length; i++) {
+        movie.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
+      }
+    }
+
+    for (let i = 0; i < movie.main.directors.length; i++) {
+      movie.main.directors[i] = await updateMovieField(movie.main.directors[i], 'avatar', storage);
+    }
+    await doc.ref.set(movie);
+
+  });
+
 }
 
 const updateMovieField = async <T extends Credit | PromotionalElement>(
@@ -285,5 +241,15 @@ const updateImgRef = async (
   } catch (e) {
     console.log('Empty ref');
     return EMPTY_REF;
+  }
+}
+
+async function runChunks(docs, cb) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const chunk = chunks[i];
+    console.log(`Processing chunk ${i}/${chunks.length}`);
+    const promises = chunk.map(cb);
+    await Promise.all(promises);
   }
 }
