@@ -15,6 +15,17 @@ describe('firebase testing library', () => {
     firebaseTesting.assertSucceeds(testDoc.get());
   });
 
+  it('should set a field in document', async () => {
+    const db = firebaseTesting.initializeTestApp({
+      projectId: project_ID
+    }).firestore();
+    const testStr = "blockframes";
+    const testDoc = db.collection("testCollection")
+                    .doc("testDoc").set({testStr});
+    await expect(db.doc('testCollection/testDoc').get())
+          .resolves.toBe({testStr});
+  });
+
   it.skip('should be able to access the emulator', async () => {
     const firebaseTest = initFunctionsTestMock();
     const db = firestore();
