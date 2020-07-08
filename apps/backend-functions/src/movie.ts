@@ -111,25 +111,25 @@ export async function onMovieUpdate(
     await storeSearchableMovie(after, orgName(creatorOrg));
   }
 
-  // TODO issue#3239
   // BANNER
-  const bannerBeforeRef = before.promotionalElements?.banner?.media?.original?.ref;
-  const bannerAfterRef = after.promotionalElements?.banner?.media?.original?.ref;
+  const bannerBeforeRef = before.main?.banner?.media?.original?.ref;
+  const bannerAfterRef = after.main?.banner?.media?.original?.ref;
   if (
     bannerBeforeRef !== bannerAfterRef
   ) {
-    await handleImageChange(after.promotionalElements.banner.media!);
+    await handleImageChange(after.main.banner.media!);
   }
 
-  // TODO issue#3239
   // POSTERs
-  const posterPromises = Object.keys(after.promotionalElements.poster).filter(key => {
-    const posterBeforeRef = before.promotionalElements?.poster[key]?.media?.original?.ref;
-    const posterAfterRef = after.promotionalElements?.poster[key]?.media?.original?.ref;
-    return !!posterBeforeRef && !!posterAfterRef && posterBeforeRef !== posterAfterRef;
-  }).map(key => handleImageChange(after.promotionalElements.poster[key].media));
-  await Promise.all(posterPromises);
+  const posterBeforeRef = before.main?.poster?.media?.original?.ref;
+  const posterAfterRef = after.main?.poster?.media?.original?.ref;
+  if (
+    posterBeforeRef !== posterAfterRef
+  ) {
+    await handleImageChange(after.main.poster.media!);
+  }
 
+  // TODO issue#3230
   // STILL PHOTOs
   const stillPromises = Object.keys(after.promotionalElements.still_photo).filter(key => {
     const stillBeforeRef = before.promotionalElements?.still_photo[key]?.media?.original?.ref;
