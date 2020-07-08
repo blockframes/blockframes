@@ -15,7 +15,7 @@ module.exports = {
   transform: {
     '^.+\\.(ts|js|html)$': 'ts-jest'
   },
-  testEnvironment: 'jest-environment-jsdom-thirteen',
+  testEnvironment: 'node',
   moduleFileExtensions: ['ts', 'html', 'js', 'json'],
   transformIgnorePatterns: ['node_modules/(?!@ngrx)'],
   snapshotSerializers: [
@@ -23,6 +23,7 @@ module.exports = {
     'jest-preset-angular/build/HTMLCommentSerializer.js'
   ],
   testPathIgnorePatterns: [
+    'node_modules/',
     '<rootDir>/apps/([^/].*/){1,2}([^/]-e2e/)',
     '<rootDir>/apps/([^/]+/){1,2}([^/]+-e2e/)',
     '<rootDir>/cypress/*',
