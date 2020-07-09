@@ -7,9 +7,7 @@
       <span>Accept all</span>
     </button>
   </header>
-  <div class="mat-elevation-z0">
-    <invitation-list [invitations]="invitations$ | async"></invitation-list>
-  </div>
+  <invitation-list [invitations]="invitations$ | async" class="mat-elevation-z0"></invitation-list>
 </ng-container>
 
 <ng-template #noFeed>

@@ -6,9 +6,7 @@
       <span>Mark all as read</span>
     </button>
   </header>
-  <div class="mat-elevation-z0">
-    <notification-list [notifications]="notifications$ | async"></notification-list>
-  </div>
+  <notification-list [notifications]="notifications$ | async" class="mat-elevation-z0"></notification-list>
 </ng-container>
 
 <ng-template #noFeed>

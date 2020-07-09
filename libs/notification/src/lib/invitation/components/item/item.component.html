@@ -33,15 +33,5 @@
         Decline invitation
       </span>
     </div>
-    <div *ngSwitchCase="'declined'">
-      <span mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
-        Accept invitation
-      </span>
-    </div>
-    <div *ngSwitchCase="'accepted'">
-      <span mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
-        Decline invitation
-      </span>
-    </div>
   </ng-container>
 </mat-menu>
