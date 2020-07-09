@@ -53,7 +53,7 @@
           </div>
           <bf-slider hideIndicators loop class="dark-contrast-theme">
             <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient"
-              [image]="movie.promotionalElements.banner.media">
+              [image]="movie.main.banner.media">
               <movie-slide [movie]="movie">
                 <movie-slide-cta>
                   <ng-container *ngIf="movie.promotionalElements.trailer">
