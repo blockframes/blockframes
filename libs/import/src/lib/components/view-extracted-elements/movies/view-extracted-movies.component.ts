@@ -1077,7 +1077,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (Object.keys(movie.main.poster).length === 0) {
+    if (!movie.main.poster) {
       errors.push({
         type: 'error',
         field: 'main.poster',
