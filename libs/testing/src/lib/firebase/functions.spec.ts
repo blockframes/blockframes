@@ -1,18 +1,16 @@
-﻿import * as firebaseTesting from '@firebase/testing'
-import { firestore, initializeApp } from 'firebase-admin';
+﻿import { firestore } from 'firebase-admin';
+import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
-  it('should be able to access the emulator', async () => {
-    //Init test DB
-    const projectId = 'sample2';
-    process.env.GCLOUD_PROJECT = projectId;
-    process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    initializeApp({ projectId });      
+  it('should be read the doc', async () => {
+    //Init Mocks and environment
+    initFunctionsTestMock();
 
     const db = firestore();
     const docRef = db.collection('testCollection').doc('testDoc');
     const testData = { name: 'blockframes' };
     await docRef.set(testData);
-    await firebaseTesting.assertSucceeds(docRef.get());  
+    const doc = await db.doc('testCollection/testDoc').get();
+    expect(doc.data()).toEqual(testData);
   });
 });

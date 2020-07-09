@@ -15,7 +15,7 @@ module.exports = {
   transform: {
     '^.+\\.(ts|js|html)$': 'ts-jest'
   },
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-jsdom-thirteen',
   moduleFileExtensions: ['ts', 'html', 'js', 'json'],
   transformIgnorePatterns: ['node_modules/(?!@ngrx)'],
   snapshotSerializers: [
