@@ -79,3 +79,22 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
  */
 (window as any).global = window;
 
+/***************************************************************************************************
+* allSettled
+*/
+if (!(Promise as any).allSettled) {
+    (Promise as any).allSettled = (promises: Promise<any>[]) =>
+      Promise.all(
+        promises.map(promise =>
+          promise
+            .then(value => ({
+              status: 'fulfilled',
+              value,
+            }))
+            .catch(reason => ({
+              status: 'rejected',
+              reason,
+            }))
+        )
+    );
+  }
