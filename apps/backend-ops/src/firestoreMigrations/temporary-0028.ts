@@ -1,257 +1,52 @@
-import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { ImgRef, createImgRef } from '@blockframes/media/+state/media.firestore';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
-import { Credit } from '@blockframes/utils/common-interfaces';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash'
-
-const EMPTY_REF: ImgRef = {
-  ref: '',
-  urls: { original: '' }
-};
-
-const rowsConcurrency = 10;
+import { Firestore } from "../admin";
+import { PublicUser } from "@blockframes/user/types";
+import { createHostedMedia, ExternalMedia } from "@blockframes/media/+state/media.model";
+import { MovieDocument } from 'apps/backend-functions/src/data/types';
 
 /**
  * Migrate old watermarks into new ones (HostedMedia).
  */
-export async function upgrade(db: Firestore, storage: Storage) {
-  console.log('//////////////');
-  console.log('// Processing users');
-  console.log('//////////////');
-  await db
-    .collection('users')
-    .get()
-    .then(async users => await updateUsers(users, storage));
+export async function upgrade(db: Firestore) {
 
-  console.log('//////////////');
-  console.log('// Processing orgs');
-  console.log('//////////////');
-  await db
-    .collection('orgs')
-    .get()
-    .then(async orgs => await updateOrganizations(orgs, storage));
+    try {
+        await db
+            .collection('users')
+            .get()
+            .then(async users => updateUsers(users));
 
-  console.log('//////////////');
-  console.log('// Processing movies');
-  console.log('//////////////');
-  await db
-    .collection('movies')
-    .get()
-    .then(async movies => await updateMovies(movies, storage));
+    } catch (error) {
+        console.log(`An error happened while updating users: ${error.message}`);
+    }
 
-  console.log('//////////////');
-  console.log('// Processing notifications');
-  console.log('//////////////');
-  await db
-    .collection('notifications')
-    .get()
-    .then(async notifs => await updateNotifications(notifs));
-
-  console.log('//////////////');
-  console.log('// Processing invitations');
-  console.log('//////////////');
-  await db
-    .collection('invitations')
-    .get()
-    .then(async invits => await updateInvitations(invits));
-
-  console.log('Updating ImgRef in users, organizations, movies, notifications and invitations done.');
+    try {
+        await db
+            .collection('movies')
+            .get()
+            .then(async movies => await updateMovies(movies));
+    } catch (error) {
+        console.log(`An error happened while updating movies: ${error.message}`);
+    }
 }
 
 async function updateUsers(
-  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  storage: Storage
+    users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
-  return runChunks(users.docs, async (doc) => {
-    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
-    await doc.ref.set(updatedUser);
-  });
+    return Promise.all(
+        users.docs.map(async doc => {
+            const updatedUser = await updateUserWatermark(doc.data() as PublicUser);
+            await doc.ref.set(updatedUser);
+        })
+    )
 }
 
-async function updateNotifications(notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  return runChunks(notifications.docs, async (doc) => {
-    const notification = doc.data() as NotificationDocument;
-
-    if (notification.organization) {
-      notification.organization.logo = createImgRef();
-    } else if (notification.user) {
-      notification.user.avatar = createImgRef();
-    }
-    await doc.ref.update(notification);
-  });
-}
-
-async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
-  return runChunks(invitations.docs, async (doc) => {
-    const invitation = doc.data() as InvitationDocument;
-
-    if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createImgRef();
-    }
-    if (invitation.toOrg) {
-      invitation.toOrg.logo = createImgRef();
-    }
-    if (invitation.fromUser) {
-      invitation.fromUser.avatar = createImgRef();
-    }
-    if (invitation.toUser) {
-      invitation.toUser.avatar = createImgRef();
-    }
-    await doc.ref.update(invitation);
-
-  });
-}
-
-async function updateOrganizations(
-  organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  storage: Storage
+async function updateUserWatermark(
+    user: PublicUser
 ) {
-  return runChunks(organizations.docs, async (doc) => {
-    const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
-    await doc.ref.set(updatedOrg);
-  });
-}
-
-async function updateMovies(
-  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  storage: Storage
-) {
-  return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as MovieDocument;
-
-    const keys = ['banner', 'poster', 'still_photo'];
-
-    for (const key of keys) {
-      if (!!movie.promotionalElements[key]) {
-        const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
-        if (Array.isArray(value)) {
-          for (let i = 0; i < value.length; i++) {
-            movie.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
-          }
-        } else {
-          movie.promotionalElements[key] = await updateMovieField(value, 'media', storage);
-        }
-      }
-    }
-
-    for (const key in movie.salesCast) {
-      const value: Credit[] = movie.salesCast[key];
-      for (let i = 0; i < value.length; i++) {
-        movie.salesCast[key][i] = await updateMovieField(value[i], 'avatar', storage);
-      }
-    }
-
-    for (const key in movie.main.stakeholders) {
-      const value: Credit[] = movie.main.stakeholders[key];
-      for (let i = 0; i < value.length; i++) {
-        movie.main.stakeholders[key][i] = await updateMovieField(value[i], 'logo', storage);
-      }
-    }
-
-    for (let i = 0; i < movie.main.directors.length; i++) {
-      movie.main.directors[i] = await updateMovieField(movie.main.directors[i], 'avatar', storage);
-    }
-    await doc.ref.set(movie);
-
-  });
-
-}
-
-const updateMovieField = async <T extends Credit | PromotionalElement>(
-  value: T,
-  imgRefFieldName: 'avatar' | 'logo' | 'media',
-  storage: Storage
-): Promise<T> => {
-  const newImageRef = await updateImgRef(value, imgRefFieldName, storage);
-  value[imgRefFieldName] = newImageRef;
-  return value;
-}
-
-const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) => {
-  try {
-    const newImageRef = await updateImgRef(user, 'avatar', storage);
-    user.avatar = newImageRef;
-    const watermark = await _upsertWatermark(user);
-    user.watermark = watermark;
-  } catch (e) {
-    console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
-  }
-
-  return user;
-};
-
-const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
-  const newImageRef = await updateImgRef(org, 'logo', storage);
-  org.logo = newImageRef;
-  return org;
-};
-
-const updateImgRef = async (
-  element: PublicUser | PublicOrganization | Credit | PromotionalElement,
-  key: 'logo' | 'avatar' | 'media' | 'watermark',
-  storage: Storage
-): Promise<ImgRef> => {
-
-  // get the current ref
-  const media = element[key]; // get old ImgRef format
-
-  // ## if it's empty:
-  if (!media || !media.ref || typeof media === 'string') {
-    // just put an empty ref
-    return EMPTY_REF;
-  }
-
-  // ### get the old file
-  const { ref } = media as ImgRef;
-
-  // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
-
-  try {
-    const from = bucket.file(ref);
-
-    const [exists] = await from.exists();
-    const fileName = ref.split('/').pop();
-    const to = bucket.file(ref.replace(fileName, sanitizeFileName(ref)));
-
-    if (exists) {
-      console.log(`copying ${ref}`);
-      await from.copy(to);
-      console.log('copy OK');
-
-      const [signedUrl] = await to.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
-
-      // delete previous image
-      await from.delete();
-      console.log('Removed previous');
-
-      media.urls.original = signedUrl;
-      return media;
-    } else {
-      console.log('Empty ref');
-      return EMPTY_REF;
-    }
-
-  } catch (e) {
-    console.log('Empty ref');
-    return EMPTY_REF;
-  }
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
-  }
+    user.watermark = createHostedMedia({
+        ref: user.watermark['ref'],
+        url: user.watermark['urls']['original']
+    });
+    return user;
 }
 
 async function updateMovies(movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) {
