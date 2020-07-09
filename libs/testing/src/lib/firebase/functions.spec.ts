@@ -10,7 +10,7 @@ describe('firebase testing library', () => {
     const docRef = db.collection('testCollection').doc('testDoc');
     const testData = { name: 'blockframes' };
     await docRef.set(testData);
-    const doc = await db.doc('testCollection/testDoc').get();
+    const doc = await docRef.get();
     expect(doc.data()).toEqual(testData);
   });
 });

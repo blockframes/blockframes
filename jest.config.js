@@ -23,7 +23,6 @@ module.exports = {
     'jest-preset-angular/build/HTMLCommentSerializer.js'
   ],
   testPathIgnorePatterns: [
-    'node_modules/',
     '<rootDir>/apps/([^/].*/){1,2}([^/]-e2e/)',
     '<rootDir>/apps/([^/]+/){1,2}([^/]+-e2e/)',
     '<rootDir>/cypress/*',
