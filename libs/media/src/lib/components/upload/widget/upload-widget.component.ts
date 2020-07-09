@@ -1,11 +1,8 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
-// Blockframes
-import { TaskService, UploadTask } from '@blockframes/media/+state/tasks.service';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { AngularFireUploadTask } from '@angular/fire/storage';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -15,37 +12,9 @@ import { Observable } from 'rxjs';
 })
 export class UploadWidgetComponent {
 
-  items$: Observable<UploadTask[]> = this.tasks.tasks$;
-
   constructor(
-    private tasks: TaskService
-  ) { }
-
-  pause(fileName: string) {
-    if (this.tasks.tasks[fileName]) {
-      this.tasks.tasks[fileName].uploadtask.pause();
-      this.tasks.updateStatus(fileName, 'paused');
-    }
-  }
-
-  resume(fileName: string) {
-    if (this.tasks.tasks[fileName]) {
-      this.tasks.tasks[fileName].uploadtask.resume();
-      this.tasks.updateStatus(fileName, 'uploading');
-    } 
-  }
-
-  cancel(fileName: string) {
-    if (this.tasks.tasks[fileName]) {
-      this.tasks.tasks[fileName].uploadtask.cancel();
-      this.tasks.updateStatus(fileName, 'canceled');
-    }
-  }
-  
-  /** Remove a single file from the store or remove all if no param is given*/
-  clear(fileName?: string) {
-    this.tasks.remove(fileName);
-  }
+    @Inject('tasks') public tasklist: AngularFireUploadTask[],
+  ) {}
 
   getFileType(file: string) {
     const type = file.split('.').pop();
