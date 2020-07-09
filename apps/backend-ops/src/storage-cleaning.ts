@@ -7,7 +7,7 @@ import { getDocument } from 'apps/backend-functions/src/data/internals'
 // @TODO (#3175) temp 
 // gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com 
 
-interface fileWithMovieDocument {
+interface FileWithMovieDocument {
   file: GFile,
   movie: MovieDocument
 }
@@ -35,7 +35,7 @@ export async function cleanStorage() {
  */
 async function cleanMovieDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
-  const filesToCheck: fileWithMovieDocument[] = [];
+  const filesToCheck: FileWithMovieDocument[] = [];
   let deleted = 0;
 
   for (const f of files) {
@@ -69,7 +69,7 @@ async function cleanMovieDir(bucket: Bucket) {
 async function cleanMoviesDir(bucket: Bucket) {
   // Movie dir should not exists
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
-  const filesToCheck: fileWithMovieDocument[] = [];
+  const filesToCheck: FileWithMovieDocument[] = [];
   let deleted = 0;
 
   for (const f of files) {
@@ -202,7 +202,7 @@ async function cleanWatermarkDir(bucket: Bucket) {
 
 
 
-async function checkMovieRef(filesToCheck: fileWithMovieDocument[]) {
+async function checkMovieRef(filesToCheck: FileWithMovieDocument[]) {
   // Currently, the only ref saved in DB is the orignal one
   const originalFiles = filesToCheck.filter(f => f.file.name.includes('/original/'));
   const otherFiles = filesToCheck.filter(f => !f.file.name.includes('/original/'));
@@ -212,7 +212,7 @@ async function checkMovieRef(filesToCheck: fileWithMovieDocument[]) {
     if (isImageForMovie(f.file.name)) {
       if (!findImgRefInMovie(f.movie, f.file.name)) {
         // We only delete original, functions will delete the rest
-        if (await smartDelete(f.file, originalFiles.map(f => f.file))) {
+        if (await smartDelete(f.file, originalFiles.map(ff => ff.file))) {
           deleted++;
         }
       }
@@ -227,14 +227,14 @@ async function checkMovieRef(filesToCheck: fileWithMovieDocument[]) {
       const stringToFind = f.file.name.includes('/PresentationDeck/') ? `movie%2F${f.movie.id}%2FPresentationDeck` : `movie%2F${f.movie.id}%2FScenario`;
 
       if (!pdfUrl || !pdfUrl.includes(stringToFind)) {
-        if (await smartDelete(f.file, originalFiles.map(f => f.file))) {
+        if (await smartDelete(f.file, originalFiles.map(ff => ff.file))) {
           deleted++;
         }
       }
 
     } else if (!isImageForMovie(f.file.name)) {
       console.log(`Unhandled file : ${f.file.name}`);
-      if (await smartDelete(f.file, originalFiles.map(f => f.file))) {
+      if (await smartDelete(f.file, originalFiles.map(ff => ff.file))) {
         deleted++;
       }
     }
