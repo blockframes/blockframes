@@ -33,7 +33,7 @@ export class ReferencePipe implements PipeTransform {
 }
 
 @NgModule({
-    exports: [ReferencePipe],
-    declarations: [ReferencePipe],
-  })
-  export class ReferencePathModule { }
+  exports: [ReferencePipe],
+  declarations: [ReferencePipe],
+})
+export class ReferencePathModule { }

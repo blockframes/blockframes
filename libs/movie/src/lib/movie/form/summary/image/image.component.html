@@ -1,27 +1,27 @@
 <ul>
   <li>
     <strong>Banner </strong>
-    <ng-container *ngIf="imageHasNoValue('banner') else banner">
+    <ng-container *ngIf="(form.main.banner.get('media').value | isEmptyImgRef) else banner">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #banner>
       <a [href]="form.main.banner.get('media').value.original.url" target="_blank">
-        {{ form.main.banner.get('media').value.original.ref | fileName }}
+        {{ form.main.banner.get('media').value.original | fileName }}
       </a>
     </ng-template>
   </li>
   <li>
     <strong>Poster </strong>
-    <ng-container *ngIf="imageHasNoValue('poster') else poster">
+    <ng-container *ngIf="(form.main.poster.get('media').value | isEmptyImgRef)  else poster">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #poster>
       <a [href]="form.main.poster.get('media').value.original.url" target="_blank">
-        {{ form.main.poster.get('media').value.original.ref | fileName }}
+        {{ form.main.poster.get('media').value.original | fileName }}
       </a>
     </ng-template>
   </li>
@@ -35,7 +35,7 @@
     <ng-template #photos>
       <ng-container *ngFor="let photo of form.promotionalElements.get('still_photo').controls; let isLast = last">
         <a [href]="photo.get('media').get('lg').get('url').value" target="_blank">
-          {{ photo.get('media').get('ref').value | fileName }} {{ isLast ? '' : '| '}}
+          {{ photo.get('media').get('ref') | fileName }} {{ isLast ? '' : '| '}}
         </a>
       </ng-container>
     </ng-template>
