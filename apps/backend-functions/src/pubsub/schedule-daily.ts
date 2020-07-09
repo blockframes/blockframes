@@ -10,6 +10,7 @@ export default pubsub.schedule('0 0 * * *').onRun(context => {
     {},
     {
       // TODO: This is messy - decouple backup code in testing library
+      // TODO: better method - https://firebase.google.com/docs/firestore/manage-data/export-import
       // @ts-ignore
       status: number => ({ send: string => null })
     }
