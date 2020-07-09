@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
@@ -15,6 +16,8 @@ import { ActiveContractGuard } from '@blockframes/contract/contract/guards/activ
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [{
   path: '',
@@ -120,10 +123,13 @@ const routes: Routes = [{
 @NgModule({
   declarations: [MarketplaceComponent],
   imports: [
+    CommonModule,
     FlexLayoutModule,
     MatListModule,
     MatIconModule,
+    MatButtonModule,
     MarketplaceLayoutModule,
+    MatBadgeModule,
     RouterModule.forChild(routes)
   ]
 })

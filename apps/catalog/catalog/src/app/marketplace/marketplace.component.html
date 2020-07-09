@@ -24,11 +24,11 @@
     </mat-nav-list>
   </aside>
 ​
-  <!-- IF you need to add something in the toolbar put it here -->
   <header fxFlex fxLayout fxLayoutAlign="end center" class="marketplace-header">
-    <!-- <a test-id="heart-icon" mat-icon-button routerLink="event/calendar">
-      <mat-icon svgIcon="calendar"></mat-icon>
-    </a> -->
+    <a mat-icon-button routerLink="selection">
+      <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
+        matBadgeColor="accent" matBadgeSize="small">
+      </mat-icon>
+    </a>
   </header>
-​
 </layout-marketplace>
