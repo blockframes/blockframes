@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
-import { LayoutModule } from './layout/layout.module';
+import { MarketplaceComponent } from './marketplace.component';
+import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
@@ -9,11 +11,14 @@ import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+
+// Material
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 const routes: Routes = [{
   path: '',
-  component: LayoutComponent,
+  component: MarketplaceComponent,
   children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
@@ -113,6 +118,13 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [LayoutModule, RouterModule.forChild(routes)]
+  declarations: [MarketplaceComponent],
+  imports: [
+    FlexLayoutModule,
+    MatListModule,
+    MatIconModule,
+    MarketplaceLayoutModule,
+    RouterModule.forChild(routes)
+  ]
 })
 export class MarketplaceModule { }
