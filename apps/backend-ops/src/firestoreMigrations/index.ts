@@ -25,7 +25,7 @@ import * as v0024 from './0024';
 import * as v0025 from './0025';
 import * as v0026 from './0026';
 import * as v0027 from './0027';
-import * as v0028 from './0028';
+import * as v0028 from './temporary-0028';
 
 import { Firestore, Storage } from '../admin';
 
