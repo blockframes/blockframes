@@ -6,7 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { InvitationListModule } from '@blockframes/invitation/components/list/list.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [InvitationComponent],
@@ -15,7 +16,8 @@ import { MatCardModule } from '@angular/material/card';
     InvitationListModule,
     FlexLayoutModule,
     ImageReferenceModule,
-    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }])
   ]
 })
