@@ -829,7 +829,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         } else {
           importErrors.errors.push({
             type: 'warning',
-            field: 'promotionalElements',
+            field: 'main',
             name: 'Banner',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
