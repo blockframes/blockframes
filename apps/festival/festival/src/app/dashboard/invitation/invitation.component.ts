@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-invitation',
@@ -16,8 +15,9 @@ export class InvitationComponent {
   constructor(private query: InvitationQuery, private service: InvitationService) { }
 
   acceptAll() {
-    this.invitations$.pipe(take(1)).subscribe(invitations => invitations.forEach(invitation => {
-      this.service.acceptInvitation(invitation)
-    }))
+    const invitations = this.query.getAll().filter(i => this.query.isToMe(i));
+    for (const invitation of invitations) {
+      this.service.acceptInvitation(invitation);
+    }
   }
 }
