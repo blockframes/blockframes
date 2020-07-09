@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Notification, NotificationService } from '../../+state';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
@@ -8,15 +8,12 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
   styleUrls: ['./item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ItemComponent implements OnInit {
+export class ItemComponent {
 
   @Input() notification: Notification;
   public xs$ = this.breakpointsService.xs;
 
   constructor(private service: NotificationService, private breakpointsService: BreakpointsService) { }
-
-  ngOnInit(): void {
-  }
 
   public markAsRead(notification: Notification) {
     this.service.readNotification(notification);

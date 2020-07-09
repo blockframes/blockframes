@@ -1,7 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Event } from '@blockframes/event/+state';
 import { Invitation, InvitationService } from '../../+state';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'invitation-action',
