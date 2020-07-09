@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
+import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 
 @Component({
   selector: 'festival-landing',
@@ -26,12 +27,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Sales Agents.',
-      imgSrc: '/assets/images/lp_dashboard_market_sales_agents.png',
+      imgSrc: `/assets/images/lp_dashboard_market_sales_agents.${ isSafari() ? 'png':'webp' }`,
       description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
     },
     {
       title: 'For Buyers.',
-      imgSrc: '/assets/images/lp_archipel_market_buyers.png',
+      imgSrc: `/assets/images/lp_archipel_market_buyers.${ isSafari() ? 'png':'webp' }`,
       description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
     }
   ]
