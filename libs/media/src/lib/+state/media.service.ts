@@ -47,7 +47,7 @@ export class MediaService {
 
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles]
     const tasks = files.map(file => this.storage.upload(file.path, file.data));
-    Promise.allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget));
+    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget));
     this.showWidget(tasks);
 
   }
@@ -67,7 +67,7 @@ export class MediaService {
         tasks.push(this.storage.upload(path.concat(file.item(index).name), file.item(index)));
       }
     }
-    Promise.allSettled(tasks as Promise<UploadTaskSnapshot>[]).then(() => delay(5000).then(() => this.detachWidget));
+    (Promise as any).allSettled(tasks as Promise<UploadTaskSnapshot>[]).then(() => delay(5000).then(() => this.detachWidget));
     this.showWidget(tasks);
   }
 
