@@ -15,7 +15,9 @@ echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
 
 npx firebase use ci
 
-npx firebase deploy --non-interactive --only firestore,hosting:catalog,hosting:festival
+npx firebase deploy --non-interactive --only firestore --force
+
+npx firebase deploy --non-interactive --only hosting:catalog,hosting:festival
 
 npx firebase deploy --non-interactive --only functions --force || true
 
