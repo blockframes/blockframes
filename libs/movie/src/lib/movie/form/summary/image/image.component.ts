@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MoviePromotionalElementsForm } from '../../promotional-elements/promotional-elements.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({
@@ -16,15 +15,6 @@ export class MovieSummaryImageComponent implements OnInit {
 
   ngOnInit() {
     this.form.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
-
-  imageHasNoValue(type: 'banner' | 'poster') {
-    try {
-      return !this.form.main.get(type).get('media').original.get('url').value;
-    } catch (error) {
-      console.warn(error);
-      return true;
-    }
   }
 
   get photoHasNoValue() {
