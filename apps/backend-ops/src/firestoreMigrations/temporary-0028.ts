@@ -85,10 +85,20 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
       legacyKeysHostedMedia.forEach(key => delete movie.promotionalElements[link].media[key]);
     }
 
-    movie.promotionalElements['banner'] = updateImgRef(
-      movie.promotionalElements['banner'],
-      'media'
-    ) as PromotionalImage;
+    // update and move banner to main
+    movie.main.banner = updateImgRef(movie.promotionalElements['banner'], 'media') as PromotionalImage;
+    if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
+
+    // update and move poster to main
+    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalImage, index: number) => {
+      if (index === 0) {
+        movie.main.poster = updateImgRef(poster, 'media') as PromotionalImage;
+        delete movie.promotionalElements['poster'];
+      } else {
+        delete movie.promotionalElements['poster']; // other posters shouldn't exist, but if do they are deleted
+      }
+    });
+
     db.doc(`movies/${movie.id}`).set(movie);
   }
 }
