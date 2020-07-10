@@ -68,14 +68,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `${organizationName} submitted a contract.`,
-          placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
+          placeholderUrl: 'Organization_250.webp', // TODO: ISSUE#2262
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'contractInNegotiation':
         return {
           date: toDate(notification.date),
           message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
+          placeholderUrl: 'WelcomeArchipelContent_500.webp', // TODO: ISSUE#2262
           url: `/c/o/dashboard/deals/${notification.docId}`, // TODO check url : see  #2716
         };
       case 'movieSubmitted':
