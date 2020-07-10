@@ -1,4 +1,5 @@
 export const production = true;
+export const dev = false;
 export const hmr = false;
 
 // TODO issue#1146 AFM CODE
@@ -23,6 +24,15 @@ export const appUrl = {
   market: 'https://archipelmarket.com',
   crm: 'https://crm.blockframes.io',
 }
+
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: { 
+    host: 'localhost:8080', 
+    ssl: false 
+  }
+};
 
 export const firebase = {
   apiKey: 'AIzaSyCcUEsNlBgusJtyYAawoJAshnnHBruM1ss',

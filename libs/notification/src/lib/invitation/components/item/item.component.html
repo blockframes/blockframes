@@ -1,6 +1,8 @@
 <mat-list-item>
-  <bf-img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar" alt="Profile picture"></bf-img>
-  <bf-img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo" alt="Organization logo"></bf-img>
+  <bf-img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar"
+    alt="Profile picture"></bf-img>
+  <bf-img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo"
+    alt="Organization logo"></bf-img>
   <p *ngIf="!(xs$ | async)" matLine class="mat-body-1">
     {{ invitation.message }}
   </p>
@@ -10,18 +12,26 @@
     </small>
   </span>
   <invitation-action [invitation]="invitation"></invitation-action>
-  <a
-    mat-button
-    [routerLink]="invitation | eventLink"
-  >
-    <div test-id="more" class="mat-caption" fxLayout="column" fxLayoutAlign="center center">
-      <mat-icon svgIcon="dot_menu"></mat-icon>
-      More
-    </div>
-  </a>
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
+    <mat-icon svgIcon="more_vert">
+    </mat-icon>
+  </button>
 </mat-list-item>
 <ng-container *ngIf="xs$ | async">
   <p class="mat-body-1">
     {{ invitation.message }}
   </p>
 </ng-container>
+<mat-menu #menu="matMenu">
+  <a test-id="more" mat-menu-item [routerLink]="invitation | eventLink">Go to event</a>
+  <ng-container [ngSwitch]="invitation.status">
+    <div *ngSwitchCase="'pending'">
+      <span mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
+        Accept invitation
+      </span>
+      <span mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
+        Decline invitation
+      </span>
+    </div>
+  </ng-container>
+</mat-menu>
