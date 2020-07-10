@@ -99,6 +99,15 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
       }
     });
 
+    // update still photos from an array with old ImgRef to a record with new ImgRef
+    const still_photo = {};
+    let index = 0;
+    for (const still of movie.promotionalElements.still_photo as any) {
+      still_photo[index] = updateImgRef(still, 'media') as PromotionalImage;
+      index++;
+    }
+    movie.promotionalElements.still_photo = still_photo;
+
     db.doc(`movies/${movie.id}`).set(movie);
   }
 }
