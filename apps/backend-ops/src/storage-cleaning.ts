@@ -231,6 +231,8 @@ async function checkMovieRef(filesToCheck: FileWithMovieDocument[]) {
       const fileName = fileParts[fileParts.length - 1];
 
       // Pdf files are currently stored here 
+
+      // @TODO (#3175) thanks to migration 0029, /PresentationDeck/ and /Scenario/ cases should not occur
       let pdfUrl = '';
       let stringToFind = '';
       if(f.file.name.includes('/PresentationDeck/') || f.file.name.includes('/promotionalElements.presentation_deck')) {
