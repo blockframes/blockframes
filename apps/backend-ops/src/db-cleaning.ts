@@ -55,15 +55,15 @@ export async function cleanDeprecatedData() {
   const existingIds = movieIds.concat(organizationIds, eventIds, userIds);
 
   // Compare and update/delete documents with references to non existing documents
-  return Promise.all([
-    cleanNotifications(notifications, existingIds),
-    cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>)),
-    cleanUsers(users, organizationIds, auth),
-    cleanOrganizations(organizations, userIds, movieIds),
-    cleanPermissions(permissions, organizationIds),
-    cleanMovies(movies),
-    cleanDocsIndex(docsIndex, existingIds),
-  ]);
+  await cleanNotifications(notifications, existingIds);
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>))
+  await cleanUsers(users, organizationIds, auth)
+  await cleanOrganizations(organizations, userIds, movieIds)
+  await cleanPermissions(permissions, organizationIds)
+  await cleanMovies(movies)
+  await cleanDocsIndex(docsIndex, existingIds)
+
+  return true;
 }
 
 function cleanNotifications(

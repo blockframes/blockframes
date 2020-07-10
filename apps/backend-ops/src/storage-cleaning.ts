@@ -173,7 +173,6 @@ async function cleanUsersDir(bucket: Bucket) {
 async function cleanWatermarkDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
   let deleted = 0;
-  const pattern = '/avatar';
 
   for (const f of files) {
     if (f.name.split('/').pop().length >= 255) {
