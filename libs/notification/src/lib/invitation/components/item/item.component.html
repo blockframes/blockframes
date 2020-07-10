@@ -4,7 +4,7 @@
   <bf-img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo"
     alt="Organization logo"></bf-img>
   <p *ngIf="!(xs$ | async)" matLine class="mat-body-1">
-    {{ invitation.message }}
+    <invitation-message [invitation]="invitation"></invitation-message>
   </p>
   <span matLine>
     <small class="mat-caption">

@@ -9,6 +9,7 @@ import { ItemComponent } from './item.component';
 import { InvitationActionModule } from '../action/action.module';
 import { EventLinkModule } from '../../pipes/event-link.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MessageModule } from '../message/message.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -26,6 +27,7 @@ import { MatMenuModule } from '@angular/material/menu';
     InvitationActionModule,
     EventLinkModule,
     RouterModule,
+    MessageModule,
     
     // Material
     MatListModule,
