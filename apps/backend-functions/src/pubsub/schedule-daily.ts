@@ -1,11 +1,13 @@
 import { pubsub } from 'firebase-functions';
 import { freeze } from '../backup';
+import * as env from '../environments/environment';
 
 export default pubsub.schedule('0 0 * * *').onRun(context => {
+  if (!env?.enableNightlyFirestoreBackup) return null;
   // const { eventId, eventType, params, resource, timestamp, auth, authType } = context;
   console.log('This will be run daily! Running DB Backup!');
-  console.log('Context: ', context);
-  // Mock - return resp.status(200).send('success');
+  console.log('Message: ', context.params);
+  // Mock - freeze calls second param - return resp.status(200).send('success');
   return freeze(
     {},
     {

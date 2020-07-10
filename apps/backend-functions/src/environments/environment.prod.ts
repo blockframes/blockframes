@@ -15,11 +15,12 @@ export {
   sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
-  centralOrgID,
+  centralOrgID
 } from '@env';
 
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+export const enableNightlyFirestoreBackup = true;
 
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const mnemonic = functions.config().relayer.mnemonic;

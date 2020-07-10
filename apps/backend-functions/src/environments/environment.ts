@@ -7,6 +7,7 @@
  */
 import * as functions from 'firebase-functions';
 
+import * as env from '@env';
 import { algolia as algoliaClient, dev } from '@env';
 export {
   factoryContract,
@@ -16,11 +17,12 @@ export {
   sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
-  centralOrgID,
+  centralOrgID
 } from '@env';
 
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+export const enableNightlyFirestoreBackup = 'enableNightlyFirestoreBackup' in env;
 
 /**
  * Helper to work in local / remote dev mode:
@@ -41,9 +43,7 @@ export const algolia = {
   adminKey: mockConfigIfNeeded('algolia', 'api_key')
 };
 
-
-
-export const adminEmail = dev ? mockConfigIfNeeded('admin', 'password'): 'developers@cascade8.com';
+export const adminEmail = dev ? mockConfigIfNeeded('admin', 'password') : 'developers@cascade8.com';
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
