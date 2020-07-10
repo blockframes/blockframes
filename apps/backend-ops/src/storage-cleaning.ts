@@ -141,8 +141,8 @@ async function cleanUsersDir(bucket: Bucket) {
   const pattern = '/avatar';
 
   for (const f of files) {
-    if (f.name.split('/').length === 2) {
-      // Clean files at "users/" root
+    if (f.name.split('/').length === 2 || f.name.split('/').length === 3 ) {
+      // Clean files at "users/" or "user/{$userId}/" root
       await smartDelete(f, files, pattern);
       deleted++;
     } else if (f.name.split('/').pop().length >= 255) {
@@ -154,7 +154,7 @@ async function cleanUsersDir(bucket: Bucket) {
       const userId = f.name.split('/')[1];
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!!user) {
-        if (user.avatar.ref !== f.name) {
+        if (user.avatar.ref !== f.name && user.watermark.ref !== f.name ) {
           if (await smartDelete(f, files, pattern)) {
             deleted++;
           }
@@ -170,6 +170,11 @@ async function cleanUsersDir(bucket: Bucket) {
   return { deleted, total: files.length };
 }
 
+/**
+ * watermark dir is not used anymore
+ * watermarks are in users/${userId}/watermark.svg
+ * @param bucket 
+ */
 async function cleanWatermarkDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
   let deleted = 0;
@@ -184,7 +189,9 @@ async function cleanWatermarkDir(bucket: Bucket) {
       const userId = f.name.split('/')[1].replace('.svg', '');
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!!user) {
-        if (user.watermark.ref !== f.name) {
+        if (user.watermark.ref === f.name) {
+          console.log('This should not have happened if migration 29 went well..');
+        } else {
           if (await f.delete()) {
             deleted++;
           }
@@ -199,8 +206,6 @@ async function cleanWatermarkDir(bucket: Bucket) {
 
   return { deleted, total: files.length };
 }
-
-
 
 async function checkMovieRef(filesToCheck: FileWithMovieDocument[]) {
   // Currently, the only ref saved in DB is the orignal one
