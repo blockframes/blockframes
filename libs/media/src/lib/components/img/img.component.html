@@ -1,10 +1,8 @@
 <picture>
   <!-- Ref -->
   <source *ngIf="srcset" [srcset]="srcset" type="image/webp" />
-  <source *ngIf="srcFallback" [srcset]="srcFallback" type="image/png" />
   <!-- Asset -->
-  <source *ngIf="asset" [srcset]="assetSrc" type="image/webp" />
-  <source *ngIf="assetFallback" [srcset]="assetFallback" type="image/png" />
+  <source *ngIf="asset" [srcset]="assetSrc" type="{{ 'image/' + format }}" />
   <!-- If picture is not supported -->
-  <img [src]="assetFallback" [alt]="alt" />
+  <img [src]="assetSrc" [alt]="alt" />
 </picture>
