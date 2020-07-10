@@ -6,6 +6,7 @@ import { getDocument } from 'apps/backend-functions/src/data/internals'
 
 // @TODO (#3175) temp 
 // gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com 
+// export ENV=dev && npx ng build backend-ops --configuration=dev
 
 interface FileWithMovieDocument {
   file: GFile,
@@ -222,9 +223,19 @@ async function checkMovieRef(filesToCheck: FileWithMovieDocument[]) {
   for (const f of otherFiles) {
     if (isPdfForMovie(f.file.name)) {
 
+      const fileParts = f.file.name.split('/');
+      const fileName = fileParts[fileParts.length - 1];
+
       // Pdf files are currently stored here 
-      const pdfUrl = f.file.name.includes('/PresentationDeck/') ? f.movie.promotionalElements.presentation_deck.media.urls.original : f.movie.promotionalElements.scenario.media.urls.original;
-      const stringToFind = f.file.name.includes('/PresentationDeck/') ? `movie%2F${f.movie.id}%2FPresentationDeck` : `movie%2F${f.movie.id}%2FScenario`;
+      let pdfUrl = '';
+      let stringToFind = '';
+      if(f.file.name.includes('/PresentationDeck/') || f.file.name.includes('/promotionalElements.presentation_deck')) {
+         pdfUrl = f.movie.promotionalElements.presentation_deck.media.urls.original
+         stringToFind = f.file.name.includes('/PresentationDeck/') ? `movie%2F${f.movie.id}%2FPresentationDeck` : `movies%2F${f.movie.id}%2FpromotionalElements.presentation_deck.media%2F${fileName}`;
+      } else {
+        pdfUrl = f.movie.promotionalElements.scenario.media.urls.original
+        stringToFind = f.file.name.includes('/Scenario/') ? `movie%2F${f.movie.id}%2FScenario` : `movies%2F${f.movie.id}%2FpromotionalElements.scenario.media%2F${fileName}`;
+      }
 
       if (!pdfUrl || !pdfUrl.includes(stringToFind)) {
         if (await smartDelete(f.file, originalFiles.map(ff => ff.file))) {
@@ -251,9 +262,10 @@ function isImageForMovie(fileName: string): boolean {
 }
 
 function isPdfForMovie(fileName: string): boolean {
-  // @TODO (#3175) files coming from "Files & likes" are stored in "movie" dir and not "movies" and don't have the good path
-  return fileName.includes('/PresentationDeck/') || // @TODO (#3175) not a good path
-    fileName.includes('/Scenario/') // @TODO (#3175) not a good path
+  return fileName.includes('/PresentationDeck/') || // @TODO (#3175) not a good path, should not occur after next db migration
+    fileName.includes('/Scenario/') || // @TODO (#3175) not a good path, should not occur after next db migration
+    fileName.includes('/promotionalElements.presentation_deck') ||
+    fileName.includes('/promotionalElements.scenario')
 }
 
 async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string = '/promotionalElements.') {
