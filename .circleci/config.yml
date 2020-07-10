@@ -300,6 +300,17 @@ jobs:
             npx firebase deploy --only firestore:rules
           when: always
       - slack/status
+  trigger-firestore-backup-pubsub:
+    executor: blockframes-ci
+    environment:
+      - ENV: production
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - run: gcloud auth activate-service-account --key-file=creds.json
+      - run: gcloud pubsub topics publish firebase-schedule-scheduleDaily-us-central1 --message="Sent from CI"
 workflows:
   version: 2.1
   build-and-test:
@@ -365,3 +376,13 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
+  nightly-prod-firestore-backup:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - production
+    jobs:
+      - trigger-firestore-backup-pubsub
