@@ -86,7 +86,7 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     }
 
     // update and move banner to main
-    movie.main.banner = updateImgRef(movie.promotionalElements['banner'], 'media') as PromotionalImage;
+    movie.main.banner = updateImgRef<PromotionalImage>(movie.promotionalElements['banner'], 'media');
     if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
 
     // update and move poster to main
@@ -100,12 +100,12 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     });
 
     // update still photos from an array with old ImgRef to a record with new ImgRef
-    const still_photo = {};
-    let index = 0;
-    for (const still of movie.promotionalElements.still_photo as any) {
-      still_photo[index] = updateImgRef(still, 'media') as PromotionalImage;
-      index++;
-    }
+    const still_photo: Record<string, PromotionalImage> = {};
+    (movie.promotionalElements.still_photo as any).forEach((still, index) => {
+      if (!!still.media?.ref || !!still.media?.urls?.original) {
+        still_photo[`${index}`] = updateImgRef<PromotionalImage>(still, 'media');
+      }
+    });
     movie.promotionalElements.still_photo = still_photo;
 
     db.doc(`movies/${movie.id}`).set(movie);
@@ -116,8 +116,8 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
   return { url: media?.url || '' };
 }
 
-function updateImgRef(
-  element: PublicUser | Organization | PromotionalImage,
+function updateImgRef<T extends (PublicUser | Organization | PromotionalImage)>(
+  element: T,
   property: 'avatar' | 'logo' | 'media'
 ) {
   if (!element[property] || 'original' in element[property]) return element;
