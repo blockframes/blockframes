@@ -126,7 +126,4 @@ export class InvitationService extends CollectionService<InvitationState> {
       })
     }
   }
-
 }
-
-

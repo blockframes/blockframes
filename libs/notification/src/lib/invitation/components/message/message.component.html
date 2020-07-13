@@ -1,6 +1,12 @@
-<ng-container *ngIf="(invitation | async) as parsedInvitation ">
-  <span>{{ orgName }} invited you to
-    <a color="primary" [routerLink]="['/c/o/dashboard/event/' + parsedInvitation.id]" id="link">
-      {{ parsedInvitation.title }}</a>, {{ parsedInvitation.start | date: 'mediumDate' }},
-    {{parsedInvitation.start | date: 'shortTime' | slice:0:5  }} - {{ parsedInvitation.end | date: 'shortTime' }}</span>
+<ng-container *ngIf="isEvent; else noEvent">
+  <ng-container *ngIf="(invitation | async) as parsedInvitation">
+    <span>{{ orgName }} invited you to
+      <a color="primary" [routerLink]="['/c/o/marketplace/event/' + parsedInvitation.id]" id="link">
+        {{ parsedInvitation.title }}</a>, {{ parsedInvitation.start | date: 'mediumDate' }},
+      {{parsedInvitation.start | date: 'shortTime' | slice:0:5  }} -
+      {{ parsedInvitation.end | date: 'shortTime' }}</span>
+  </ng-container>
+  <ng-template #noEvent>
+    {{invitation.message}}
+  </ng-template>
 </ng-container>
