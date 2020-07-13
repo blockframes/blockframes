@@ -48,15 +48,9 @@
       </mat-card-header>
       <mat-card-content>
 
-        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue ; let i = index; let last = last">
+        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue ; let i = index">
 
-          <span fxLayout="row" fxLayoutAlign="space-between center">
-            <span class="still mat-body-2">Still # {{ stillForm.key }}</span>
-
-            <button mat-icon-button (click)="form.promotionalElements.get('still_photo').delete(stillForm.key)" aria-label="Remove this still photo">
-              <mat-icon svgIcon="trash"></mat-icon>
-            </button>
-          </span>
+          <span class="still mat-body-2">Still # {{ i }}</span>
 
           <drop-cropper
             [storagePath]="movie.id | ref: 'movie' : 'still' : stillForm.key"
