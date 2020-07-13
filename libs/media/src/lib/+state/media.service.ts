@@ -45,8 +45,9 @@ export class MediaService {
 
   async uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
 
-    const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles]
-    const tasks = files.map(file => this.storage.upload(file.path, file.data));
+    const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
+
+    const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
     (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget));
     this.showWidget(tasks);
 
