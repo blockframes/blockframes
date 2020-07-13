@@ -36,7 +36,7 @@
           </div>
           <bf-carousel flex>
             <ng-container *ngFor="let org of orgs$ | async">
-             <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+              <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
             </ng-container>
           </bf-carousel>
           <!-- Events Banner -->
@@ -68,6 +68,12 @@
               </movie-slide>
             </bf-slide>
           </bf-slider>
+          <!-- Featured Sales Agent Banner -->
+          <ng-container *ngIf="featuredOrg$ | async as org">
+            <ng-container *ngIf="featuredOrgMovies$ | async as movies">
+              <org-banner [org]="org" [movies]="movies"></org-banner>
+            </ng-container>
+          </ng-container>
         </ng-container>
       </article>
     </ng-container>
