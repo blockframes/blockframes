@@ -19,7 +19,7 @@
 </mat-list-item>
 <ng-container *ngIf="xs$ | async">
   <p class="mat-body-1">
-    {{ invitation.message }}
+    <invitation-message [invitation]="invitation"></invitation-message>
   </p>
 </ng-container>
 <mat-menu #menu="matMenu">
