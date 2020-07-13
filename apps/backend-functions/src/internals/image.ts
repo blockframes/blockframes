@@ -102,3 +102,7 @@ export async function handleImageChange(after: ImgRef) {
   }
 
 }
+
+export function isEmptyImage(image: ImgRef) {
+  return ['original', ...imgSizeDirectory].every(key => !image[key as keyof ImgRef]?.ref);
+}

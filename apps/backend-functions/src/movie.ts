@@ -6,7 +6,8 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { handleImageChange } from './internals/image';
+import { handleImageChange, isEmptyImage } from './internals/image';
+import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -129,14 +130,29 @@ export async function onMovieUpdate(
     await handleImageChange(after.main.poster.media!);
   }
 
-  // TODO issue#3230
   // STILL PHOTOs
   const stillPromises = Object.keys(after.promotionalElements.still_photo).filter(key => {
+
     const stillBeforeRef = before.promotionalElements?.still_photo[key]?.media?.original?.ref;
     const stillAfterRef = after.promotionalElements?.still_photo[key]?.media?.original?.ref;
-    return !!stillBeforeRef && !!stillAfterRef && stillBeforeRef !== stillAfterRef;
+
+    return stillBeforeRef !== stillAfterRef;
   }).map(key => handleImageChange(after.promotionalElements.still_photo[key].media));
   await Promise.all(stillPromises);
+
+  // GARBAGE COLLECT STILL_PHOTOs
+  const needsGarbageCollecting = Object.keys(after.promotionalElements.still_photo).some(key => {
+    return isEmptyImage(after.promotionalElements.still_photo[key].media);
+  });
+
+  if (needsGarbageCollecting) {
+    const notEmptyStills: Record<string, PromotionalImage> = {};
+    Object.keys(after.promotionalElements.still_photo).filter(key => {
+      return !isEmptyImage(after.promotionalElements.still_photo[key].media);
+
+    }).forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+    change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
+  }
 
 }
 

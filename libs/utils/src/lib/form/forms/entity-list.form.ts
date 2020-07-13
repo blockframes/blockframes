@@ -20,8 +20,4 @@ export class FormEntityList<C extends EntityControl<Record<string, T>>, T = any>
     const newKey = this.getNextKey();
     this.setControl(newKey, control);
   }
-
-  delete(key: string) {
-    this.removeControl(key);
-  }
 }

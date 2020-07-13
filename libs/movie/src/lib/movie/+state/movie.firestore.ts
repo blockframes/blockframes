@@ -140,7 +140,7 @@ export interface PromotionalImage extends PromotionalElement {
 }
 
 export interface MoviePromotionalElements {
-  still_photo: Record<string, PromotionalImage>, // TODO issue#3230
+  still_photo: Record<string, PromotionalImage>,
 
   presentation_deck: PromotionalHostedMedia,
   scenario: PromotionalHostedMedia,
