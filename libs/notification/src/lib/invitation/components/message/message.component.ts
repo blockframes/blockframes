@@ -20,19 +20,33 @@ export class MessageComponent {
   @Input()
   get invitation() { return (this._invitation as any) }
   set invitation(invitation: Invitation) {
-    if(invitation.docId) {
-      this.isEvent = true;
-      this._invitation = this.eventService.syncDoc({ id: invitation.docId });
-      if (invitation.fromOrg) {
-        this.orgName = invitation.fromOrg.denomination.public || invitation.fromOrg.denomination.full
-      } else {
-        this.orgName = (invitation.fromUser.firstName && invitation.fromUser.lastName)
-        ? `${invitation.fromUser.firstName} ${invitation.fromUser.lastName}` : invitation.fromUser.email
-      }
-      /* docId is empty */
-    } else {
-      this.isEvent = false;
-      this._invitation = invitation
+    switch (invitation.type) {
+      case 'joinOrganization':
+        this.isEvent = false;
+        this._invitation = { message: '' };
+        if (invitation.mode === 'request') {
+          this._invitation.message = `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization.`;
+        } else {
+          this._invitation.message = `Your organization sent an invitation to this user email: ${invitation.toUser.email}.`;
+        }
+        break;
+      case 'attendEvent':
+        this.isEvent = true;
+        if (invitation.mode === 'request') {
+          let from: string;
+          if (invitation.fromOrg) {
+            from = invitation.fromOrg.denomination.public ? invitation.fromOrg.denomination.public : invitation.fromOrg.denomination.full;
+          } else if (invitation.fromUser) {
+            from = invitation.fromUser.firstName && invitation.fromUser.lastName ? `${invitation.fromUser.firstName} ${invitation.fromUser.lastName}` : invitation.fromUser.email;
+          }
+          this.orgName = from;
+          this._invitation = this.eventService.syncDoc({ id: invitation.docId });
+        } else {
+          /* Fallback */
+          this.isEvent = false;
+          this._invitation = { message: '' };
+          this._invitation.message = 'You have been invited to an event.';
+        }
     }
   }
 
