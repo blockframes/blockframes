@@ -120,10 +120,17 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {},
   initDefault: boolean = true
 ): MoviePromotionalElements {
+
+  const newStills: Record<string, PromotionalImage> = {};
+  Object.keys(params.still_photo)
+    .forEach(stillKey =>
+      newStills[stillKey] = createPromotionalImage(params.still_photo[stillKey])
+    );
+
   const elements: MoviePromotionalElements = {
     ...params,
 
-    still_photo: {} as Record<string, PromotionalImage>, // TODO issue#3230
+    still_photo: newStills,
 
     presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
     scenario: createPromotionalHostedMedia(params.scenario),
