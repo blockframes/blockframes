@@ -20,7 +20,7 @@
     "deploy:functions:config": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/deploy-function-config.ts",
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
-    "firebase:emulator": "chmod +ux ./.circleci/run-firebase-emulator.sh && . ./.circleci/run-firebase-emulator.sh",
+    "firebase:emulator": ". ./.circleci/run-firebase-emulator.sh",
     "firebase:deploy": "firebase deploy",
     "test": "jest --maxWorkers=2",
     "test:testing:firebase": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:exec 'nx test testing-firebase' ",
