@@ -7,7 +7,7 @@ import { OrganizationService, Organization } from '@blockframes/organization/+st
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 // env
 import { centralOrgID } from '@env';
@@ -30,7 +30,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   public orgs$: Observable<Organization[]>;
 
   public featuredOrg$: Observable<Organization>;
-  public featuredOrgMovies$: Observable<Movie[]>;
 
   private sub: Subscription;
 
@@ -69,26 +68,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
     ];
 
-    this.orgs$  = this.organizationService
+    this.orgs$ = this.organizationService
       .queryWithoutMovies(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
       .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
 
-    this.featuredOrg$ = this.orgs$.pipe(
-      map(orgs => orgs.filter(org => org.movieIds.length > 3)),
-      map(orgs => orgs[Math.floor(Math.random() * orgs.length)]),
-      tap((org: Organization) => {
-        this.featuredOrgMovies$ = this.movieQuery.selectAll({
-          filterBy: movie => {
-            if (!org.movieIds) return false;
-            return org.movieIds.includes(movie.id) &&
-            movie.main.storeConfig?.status === 'accepted' &&
-            movie.main.storeConfig.appAccess.festival;
-          }
-        });
-      })
-    );
+    this.featuredOrg$ = this.organizationService
+      .queryWithMovies(ref => ref
+        .where('appAccess.festival.dashboard', '==', true)
+        .where('status', '==', 'accepted'))
+      .pipe(
+        map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)),
+        map(orgs => orgs.filter(org => org.movieIds.length > 3)),
+        map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
+      );
   }
 
   ngOnDestroy() {
