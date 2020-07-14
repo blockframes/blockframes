@@ -5,8 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
-import { FormControl } from '@angular/forms';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 

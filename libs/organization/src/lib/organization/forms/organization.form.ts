@@ -4,7 +4,7 @@ import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
+import { ImgRefForm } from '@blockframes/media/form/image-reference.form'
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
