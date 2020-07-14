@@ -9,7 +9,9 @@ import { ItemComponent } from './item.component';
 import { InvitationActionModule } from '../action/action.module';
 import { EventLinkModule } from '../../pipes/event-link.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { MessageModule } from '../message/message.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
+import { EventTitlePipeModule } from '@blockframes/invitation/pipes/event-title.pipe';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -27,8 +29,10 @@ import { MatMenuModule } from '@angular/material/menu';
     InvitationActionModule,
     EventLinkModule,
     RouterModule,
-    MessageModule,
-    
+    OrgNameModule,
+    DisplayNameModule,
+    EventTitlePipeModule,
+
     // Material
     MatListModule,
     MatButtonModule,
