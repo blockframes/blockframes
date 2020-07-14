@@ -1,6 +1,6 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from '@blockframes/utils/static-model';
+import { OldImgRef, OldPromotionalElement } from './old-types';
 
 /**
  * Update stakeholders in movie documents.
@@ -136,25 +136,5 @@ export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRe
       lg: '',
     },
     ..._ref
-  };
-}
-
-interface OldPromotionalElement {
-  label: string,
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
-  media: OldImgRef,
-  language?: LanguagesSlug,
-  country?: TerritoriesSlug,
-}
-
-interface OldImgRef {
-  ref: string;
-  urls: {
-    original: string;
-    fallback?: string;
-    xs?: string;
-    md?: string;
-    lg?: string;
   };
 }
