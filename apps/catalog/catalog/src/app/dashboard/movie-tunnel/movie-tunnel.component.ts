@@ -110,7 +110,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    await this.service.save(movie);
+    await this.service.update(movie.id, movie);
 
     await this.mediaService.uploadOrDeleteMedia([
       this.bannerMediaForm.value,
