@@ -122,10 +122,9 @@ export function createMoviePromotionalElements(
 ): MoviePromotionalElements {
 
   const newStills: Record<string, PromotionalImage> = {};
-  Object.keys(params.still_photo)
-    .forEach(stillKey =>
-      newStills[stillKey] = createPromotionalImage(params.still_photo[stillKey])
-    );
+  for (const key in params.still_photo) {
+    newStills[key] = createPromotionalImage(params.still_photo[key]);
+  }
 
   const elements: MoviePromotionalElements = {
     ...params,
