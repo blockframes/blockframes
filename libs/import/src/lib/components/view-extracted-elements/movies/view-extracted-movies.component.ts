@@ -40,7 +40,7 @@ import { createStakeholder } from '@blockframes/utils/common-interfaces/identity
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
-import { ImageUploader } from '@blockframes/media/+state/image-uploader.service';
+// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
@@ -79,9 +79,9 @@ enum SpreadSheetMovie {
   availableFormat,
   soundQuality,
   availableVersions,
-  poster,
-  bannerLink,
-  stillLinks,
+  // poster,
+  // bannerLink,
+  // stillLinks,
   presentationDeck,
   scenarioLink,
   screenerLink,
@@ -124,7 +124,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
   constructor(
     @Optional() private intercom: Intercom,
     private movieService: MovieService,
-    private imageUploader: ImageUploader,
+    // private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private userService: UserService,
@@ -199,12 +199,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // POSTER (Poster)
         // TODO issue 3091
-        const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
-        const moviePoster = createPromotionalImage({
-          label: 'Poster',
-          media: poster,
-        });
-        movie.main.poster = moviePoster;
+        // const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
+        // const moviePoster = createPromotionalImage({
+        //   label: 'Poster',
+        //   media: poster,
+        // });
+        // movie.main.poster = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -533,9 +533,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 }
 
               }
-              if (prizeParts.length >= 5) {
-                prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
-              }
+              // if (prizeParts.length >= 5) {
+              //   prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
+              // }
               movie.festivalPrizes.prizes.push(prize);
             }
           });
@@ -818,42 +818,42 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
 
         // IMAGE BANNIERE LINK
-        if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
-          const promotionalElement = createPromotionalImage({
-            label: 'Banner',
-            media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
-            ratio: 'rectangle'
-          });
+        // if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
+        //   const promotionalElement = createPromotionalImage({
+        //     label: 'Banner',
+        //     media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
+        //     ratio: 'rectangle'
+        //   });
 
-          movie.main.banner = promotionalElement;
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'main',
-            name: 'Banner',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
-        }
+        //   movie.main.banner = promotionalElement;
+        // } else {
+        //   importErrors.errors.push({
+        //     type: 'warning',
+        //     field: 'main',
+        //     name: 'Banner',
+        //     reason: 'Optional field is missing',
+        //     hint: 'Edit corresponding sheet field.'
+        //   });
+        // }
 
-        // IMAGE STILLS LINK
-        if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
-          movie.promotionalElements.still_photo = {};
-          for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
-            const media = await this.imageUploader.upload(still);
-            const element = createPromotionalImage({ label: 'Still', media });
-            const stillPhotoKey = `${Object.keys(movie.promotionalElements.still_photo).length}`
-            movie.promotionalElements.still_photo[stillPhotoKey] = element;
-          }
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'promotionalElements',
-            name: 'Stills',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
-        }
+        // // IMAGE STILLS LINK
+        // if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
+        //   movie.promotionalElements.still_photo = {};
+        //   for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
+        //     const media = await this.imageUploader.upload(still);
+        //     const element = createPromotionalImage({ label: 'Still', media });
+        //     const stillPhotoKey = `${Object.keys(movie.promotionalElements.still_photo).length}`
+        //     movie.promotionalElements.still_photo[stillPhotoKey] = element;
+        //   }
+        // } else {
+        //   importErrors.errors.push({
+        //     type: 'warning',
+        //     field: 'promotionalElements',
+        //     name: 'Stills',
+        //     reason: 'Optional field is missing',
+        //     hint: 'Edit corresponding sheet field.'
+        //   });
+        // }
 
         // PRESENTATION DECK
         if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
