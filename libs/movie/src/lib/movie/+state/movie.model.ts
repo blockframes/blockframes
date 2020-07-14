@@ -125,7 +125,6 @@ export function createMoviePromotionalElements(
 
     still_photo: {} as Record<string, PromotionalImage>, // TODO issue#3230
 
-    trailer: {} as Record<string, PromotionalHostedMedia>, // TODO issue#3230
     presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
     scenario: createPromotionalHostedMedia(params.scenario),
 

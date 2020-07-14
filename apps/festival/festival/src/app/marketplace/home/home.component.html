@@ -56,11 +56,9 @@
               [image]="movie.main.banner.media">
               <movie-slide [movie]="movie">
                 <movie-slide-cta>
-                  <ng-container *ngIf="movie.promotionalElements.trailer">
-                    <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
-                      class="detail">
-                      More Details</a>
-                  </ng-container>
+                  <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
+                    class="detail">
+                    More Details</a>
                 </movie-slide-cta>
                 <movie-slide-actions>
                   <wishlist-button [movieId]="movie.id"></wishlist-button>

@@ -108,6 +108,9 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     });
     movie.promotionalElements.still_photo = still_photo;
 
+    // remove trailer
+    if (movie.promotionalElements['trailer']) delete movie.promotionalElements['trailer'];
+
     db.doc(`movies/${movie.id}`).set(movie);
   }
 }
