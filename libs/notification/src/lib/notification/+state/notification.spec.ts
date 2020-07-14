@@ -1,18 +1,22 @@
-import {TestBed} from '@angular/core/testing';
+﻿import {TestBed} from '@angular/core/testing';
 
 import { NotificationService } from './notification.service';
 import { NotificationStore } from './notification.store';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Notification } from './notification.model';
+import * as firebase from '@firebase/testing';
 
-const AngularFirestoreStub = {
+const NotificationStoreStub = {
   formatNotification : (notification) => ({
     format: JSON.stringify(notification)
   })
 };
 
-describe('Notifications tests', () => {
+let testIndex = 0;
+
+describe('Notifications Test Suite', () => {
   let notifService: NotificationService;
+  let projectId;
   const notif: Notification = {
     type: 'newContract',
     toUserId: "",
@@ -22,16 +26,23 @@ describe('Notifications tests', () => {
     date: new Date()
   };
   
-  beforeEach(() => {
+  beforeEach(async () => {
+    projectId = 'test' + testIndex++;
+    firebase.initializeTestApp({ projectId });
+
     TestBed.configureTestingModule({
       providers: [
         NotificationService, 
-        {provide: NotificationStore, useValue: AngularFirestoreStub},
-        {provide: AngularFirestore, useValue: AngularFirestoreStub}
+        {provide: NotificationStore, useValue: NotificationStoreStub},
+        {provide: AngularFirestore }
       ],
     });
-    notifService = TestBed.get(NotificationService);
+    notifService = TestBed.inject(NotificationService);
   });  
+
+  afterEach(async () => {
+    await firebase.clearFirestoreData({ projectId });
+  });
 
   it('should create notification service', () => {
     expect(notifService).toBeTruthy();
