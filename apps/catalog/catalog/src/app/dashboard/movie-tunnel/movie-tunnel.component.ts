@@ -9,6 +9,10 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { FormGroup } from '@angular/forms';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { HostedMediaFormValue } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -72,17 +76,30 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
+  public bannerMediaForm = new HostedMediaForm(this.query.getActive().main.banner.media.original);
+  public posterMediaForms = new FormGroup({
+    '0': new HostedMediaForm(this.query.getActive().main.poster.media.original),
+  });
+
+  public stillPhotoMediaForms = new FormGroup({
+    '0': new HostedMediaForm(this.query.getActive().promotionalElements.still_photo['0'].media.original),
+  });
+
+  public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
+  public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
+
   public exitRoute: string;
 
   constructor(
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private mediaService: MediaService,
   ) { }
 
   async ngOnInit() {
-    this.exitRoute = `../../../titles/${this.query.getActiveId()}`;
+    this.exitRoute = `../../../title/${this.query.getActiveId()}`;
   }
 
   // Should save movie
@@ -92,7 +109,19 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
       return;
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
-    await this.service.save(movie);
+
+    await this.service.update(movie.id, movie);
+
+    await this.mediaService.uploadOrDeleteMedia([
+      this.bannerMediaForm.value,
+
+      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key).value as HostedMediaFormValue),
+      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key).value as HostedMediaFormValue),
+
+      this.presentationDeckMediaForm.value,
+      this.scenarioMediaForm.value,
+    ]);
+
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;

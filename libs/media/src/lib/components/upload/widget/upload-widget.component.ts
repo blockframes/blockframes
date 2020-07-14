@@ -1,13 +1,8 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-
-// Blockframes
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { MediaQuery } from '@blockframes/media/+state/media.query';
-import { UploadState } from '@blockframes/media/+state/media.store';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 
 // RxJs
-import { Observable } from 'rxjs';
+import { AngularFireUploadTask } from '@angular/fire/storage';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -17,13 +12,9 @@ import { Observable } from 'rxjs';
 })
 export class UploadWidgetComponent {
 
-  items$: Observable<UploadState[]> = this.mediaQuery.selectAll();
-
-  constructor(private mediaService: MediaService, private mediaQuery: MediaQuery) { }
-
-  delegateAction(fileName: string, action: 'pause' | 'resume' | 'cancel' | 'clear') {
-    this.mediaService[action](fileName);
-  }
+  constructor(
+    @Inject('tasks') public tasklist: AngularFireUploadTask[],
+  ) {}
 
   getFileType(file: string) {
     const type = file.split('.').pop();
@@ -41,8 +32,4 @@ export class UploadWidgetComponent {
     }
   }
 
-  close() {
-    this.mediaService.detachWidget()
-    this.mediaService.clear();
-  }
 }

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional, OnDestroy } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -6,6 +6,8 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { getCurrentApp } from '@blockframes/utils/apps';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { Subscription } from 'rxjs';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -18,20 +20,23 @@ export interface SpreadsheetImportEvent {
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSpreadsheetComponent implements OnInit {
-
+export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
   @Output() importEvent = new EventEmitter<{ sheet: SheetTab, fileType: string }>();
   public sheets: SheetTab[] = [];
   public fileType = new FormControl();
   public isUserBlockframesAdmin = false;
   public pageTitle = 'Import multiple titles at once';
 
+  public excelForm = new HostedMediaForm();
+
+  private sub: Subscription;
+
   constructor(
     @Optional() private intercom: Intercom,
     private http: HttpClient,
     private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
-    private routerQuery: RouterQuery, 
+    private routerQuery: RouterQuery,
   ) {
     this.fileType.setValue('movies');
   }
@@ -42,9 +47,28 @@ export class ImportSpreadsheetComponent implements OnInit {
       this.pageTitle = '[ADMIN] Import multiple items at once';
     }
     this.cdRef.markForCheck();
+
+    this.sub = this.excelForm.valueChanges.subscribe(excelFormValue => {
+      if (!!excelFormValue.blobOrFile && !!excelFormValue.blobOrFile.name) {
+
+        const reader = new FileReader();
+        reader.addEventListener('loadend', _ => {
+          const buffer = new Uint8Array(reader.result as ArrayBuffer);
+          this.setSheetRange(buffer);
+        });
+        reader.readAsArrayBuffer(excelFormValue.blobOrFile);
+
+      } else {
+        this.sheets = [];
+      }
+    });
   }
 
-  importSpreadsheet(bytes: Uint8Array) {
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  setSheetRange(bytes: Uint8Array) {
     let sheetRange;
     if (this.fileType.value === 'movies') {
       sheetRange = 'A14:AZ100';
