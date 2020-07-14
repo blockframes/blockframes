@@ -1,10 +1,10 @@
 import { MoviePromotionalElements, createMoviePromotionalElements, createPromotionalImage, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
+import { ImgRefForm } from '@blockframes/media/form/image-reference.form'
 import { PromotionalImage, PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
-import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/directives/media/media.form';
-import { MediaFormList } from '@blockframes/media/directives/media/media-list.form';
+import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/form/media.form';
+import { MediaFormList } from '@blockframes/media/form/media-list.form';
 
 // ------------------------------
 //   Promotional External Media

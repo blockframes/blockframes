@@ -6,7 +6,7 @@ import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { getCurrentApp } from '@blockframes/utils/apps';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { Subscription } from 'rxjs';
 
 export interface SpreadsheetImportEvent {
