@@ -36,7 +36,7 @@
       {{ invitation.date | date: 'medium' }}
     </small>
   </span>
-  <invitation-action [invitation]="invitation"></invitation-action>
+  <invitation-action [invitation]="invitation | eventLink"></invitation-action>
   <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert">
     </mat-icon>
