@@ -1,6 +1,7 @@
-import { FormEntity, EntityControl } from './entity.form';
+import { EntityControl, FormEntity } from "@blockframes/utils/form/forms/entity.form";
 
-export class FormEntityList<C extends EntityControl<Record<string, T>>, T = any> extends FormEntity<C, Record<string, T>> {
+// TODO when we will transition to ImgIx we can remove the generic part of this form issue#3283
+export class MediaFormList<C extends EntityControl<Record<string, T>>, T = any> extends FormEntity<C, Record<string, T>> {
 
   /**
    * Generate a key for the next element to insert.

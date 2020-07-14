@@ -4,7 +4,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
 import { PromotionalImage, PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
 import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/directives/media/media.form';
-import { FormEntityList } from '@blockframes/utils/form';
+import { MediaFormList } from '@blockframes/media/directives/media/media-list.form';
 
 // ------------------------------
 //   Promotional External Media
@@ -81,7 +81,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
 
   return {
     // Images
-    still_photo: new FormEntityList<Record<string, MoviePromotionalImageForm>>(stillPhotoControls),
+    still_photo: new MediaFormList<Record<string, MoviePromotionalImageForm>>(stillPhotoControls),
 
     // Hosted Media
     presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
