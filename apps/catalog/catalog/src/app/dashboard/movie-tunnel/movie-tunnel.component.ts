@@ -9,7 +9,7 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { HostedMediaForm } from '@blockframes/media/directives/media/media.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { FormGroup } from '@angular/forms';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { HostedMediaFormValue } from '@blockframes/media/+state/media.model';

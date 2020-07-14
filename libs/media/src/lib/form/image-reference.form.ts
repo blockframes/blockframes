@@ -1,6 +1,6 @@
-import { ImgRef, createImgRef } from '../../+state//media.firestore'
+import { ImgRef, createImgRef } from '../+state//media.firestore'
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { HostedMediaForm } from '../media/media.form';
+import { HostedMediaForm } from './media.form';
 
 function createImgRefControl(reference: ImgRef) {
   return {

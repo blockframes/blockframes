@@ -17,7 +17,7 @@ import { MovieLegalDocuments } from '../+state/movie.firestore';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form';
+import { ImgRefForm } from '@blockframes/media/form/image-reference.form';
 
 // LEGAL DOCUMENTS
 
