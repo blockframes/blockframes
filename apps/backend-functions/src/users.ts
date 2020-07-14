@@ -11,6 +11,7 @@ import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
+import { handleImageChange } from './internals/image';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -127,7 +128,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.urls.original !== after.avatar?.urls.original
+    before.avatar?.fallback?.url !== after.avatar?.fallback?.url
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -139,6 +140,15 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.email !== after.email
   ) {
     promises.push(upsertWatermark(after));
+  }
+
+  // AVATAR
+  const avatarBeforeRef = before.avatar?.original?.ref;
+  const avatarAfterRef = after.avatar?.original?.ref;
+  if (
+    avatarBeforeRef !== avatarAfterRef
+  ) {
+    await handleImageChange(after.avatar!);
   }
 
   return Promise.all(promises);
@@ -181,8 +191,8 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
 /**
  * Create an user.
  * Used in admin panel by blockframes admins only
- * @param data 
- * @param context 
+ * @param data
+ * @param context
  */
 export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
   const { email, orgName, app } = data;

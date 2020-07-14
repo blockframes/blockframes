@@ -3,7 +3,6 @@
   <h1 subtitle>Promotional Images</h1>
   <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
   <ng-container tunnel-form>
-    <!-- TODO#1625 cropzone doesn't match with source image on large screen -->
     <!-- Banner -->
     <mat-card>
       <mat-card-header>
@@ -24,7 +23,7 @@
     <!-- Poster -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Poster</mat-card-title>
+        <mat-card-title></mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngFor="let control of poster.controls">

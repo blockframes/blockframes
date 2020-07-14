@@ -13,7 +13,7 @@ import {
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { createParty } from '@blockframes/utils/common-interfaces';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
+import { ImgRefForm } from '@blockframes/media/form/image-reference.form'
 
 // PARTY DETAILS
 

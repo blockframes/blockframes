@@ -47,7 +47,7 @@ export class TunnelSummaryComponent {
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.main.storeConfig.appAccess.catalog = true;
-      await this.service.save(movie);
+      await this.service.update(movie.id, movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {

@@ -1,34 +1,62 @@
-import { ImgRef } from './media.firestore';
+import { ImgRef, HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
-
+import { cloneDeep } from 'lodash';
 export * from './media.firestore';
 
-export function extractToBeUpdatedMedia(origin: any) {
-  const value = Object.assign({}, origin);
-  const media = extractToBeUpdatedMediaValue(value);
-  return [value, media];
+/**
+ * This function **clean** a document from it's medias before updating it in the firestore.
+ * We need to clean it because the backend functions are supposed to manage medias in the db,
+ * and **not the front**.
+ * The function also return an array of media to upload, we can then pass this array to the media service.
+ */
+export function extractMediaFromDocumentBeforeUpdate(document: any) {
+
+  const cleanedDocument = cloneDeep(document);
+
+  const medias = extractMediaFromDocument(cleanedDocument);
+  return {
+    documentToUpdate: cleanedDocument,
+    mediasToUpload: medias,
+  };
 }
 
-function extractToBeUpdatedMediaValue(value: any) {
-  let media: ImgRef[] = [];
-  for (const key in value) {
-    if (isMedia(value[key]) && mediaNeedsUpdate(value[key])) {
-      media.push(value[key]);
-      delete value[key];
-    } else if (typeof value[key] === 'object' && !!value[key]) {
-      const childMedia = extractToBeUpdatedMediaValue(value[key]);
-      media = media.concat(childMedia);
+function extractMediaFromDocument(document: any) {
+  let medias: HostedMediaFormValue[] = [];
+
+  for (const key in document) {
+
+    if (isMedia(document[key])) {
+
+
+      if (mediaNeedsUpdate(document[key])) {
+        medias.push(document[key]);
+      }
+
+      // convert an `HostedMediaFormValue` into an `HostedMedia`
+      // clear form values like `fileName`, `blobOrFile`, etc and keep only `ref` & `url`
+      document[key] = clearHostedMediaFormValue(document[key]);
+
+    } else if (typeof document[key] === 'object' && !!document[key]) {
+
+      const childMedias = extractMediaFromDocument(document[key]);
+      medias = medias.concat(childMedias);
+
     }
   }
-  return media;
+  return medias;
 }
 
-function isMedia(obj: any): boolean {
-  return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
+function isMedia(obj: any) {
+  return (
+    typeof obj === 'object' &&
+    !!obj &&
+    'ref' in obj &&
+    'url' in obj
+  );
 }
 
-function mediaNeedsUpdate(obj: ImgRef): boolean {
-  return obj.delete || (!!obj.path && !!obj.blob);
+function mediaNeedsUpdate(media: HostedMediaFormValue) {
+  return media.delete || (!!media.ref && !!media.blobOrFile);
 }
 
 const formats = {
@@ -53,8 +81,15 @@ export function getRatio(format: Formats) {
   return width / height;
 }
 
-export function getMediaUrl(ref: ImgRef) {
-  return isSafari() ? ref.urls?.fallback : ref.urls?.original;
+export function getFileNameFromPath(path: string) {
+  return path.split('/').pop()
+}
+
+/** Return the url of the original image, unless we are on Safari
+ * were it returns the fallback image instead
+ */
+export function getImageUrl(image: ImgRef) {
+  return isSafari() ? image.fallback.url : image.original.url;
 }
 
 /** Used this only for background to let the browser deal with that with picture */
