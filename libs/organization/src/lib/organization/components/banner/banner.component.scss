@@ -1,0 +1,59 @@
+@import '~@angular/flex-layout/mq';
+
+:host {
+  display: block;
+}
+
+header {
+  margin: 0 var(--layout-margin);
+}
+
+section {
+  margin-left: var(--layout-margin);
+}
+
+bf-img {
+  border-radius: 50%;
+}
+
+@include layout-bp(gt-md) {
+  bf-img {
+    width: 180px;
+  }  
+}
+
+@include layout-bp(md) {
+  bf-img {
+    width: 140px;
+  }
+}
+
+@include layout-bp(sm) {
+  bf-img {
+    width: 100px;
+  }
+}
+
+@include layout-bp(xs) {
+  bf-img {
+    width: 80px;
+  }
+}
+
+article {
+  width: 50%;
+}
+
+@include layout-bp(lt-sm) {
+  article {
+    width: 100%;
+  }
+}
+
+.org-name {
+  margin-bottom: 0px;
+}
+
+movie-card {
+  width: calc(50% - 24px);
+}
