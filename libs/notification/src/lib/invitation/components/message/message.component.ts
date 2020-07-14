@@ -13,9 +13,9 @@ export class MessageComponent {
 
   public orgName: string;
 
-  private _invitation: Observable<Event> | any;
-
   public isEvent = false;
+
+  private _invitation: Observable<Event> | string;
 
   @Input()
   get invitation() { return (this._invitation as any) }
@@ -23,11 +23,10 @@ export class MessageComponent {
     switch (invitation.type) {
       case 'joinOrganization':
         this.isEvent = false;
-        this._invitation = { message: '' };
         if (invitation.mode === 'request') {
-          this._invitation.message = `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization.`;
+          this._invitation = `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization.`;
         } else {
-          this._invitation.message = `Your organization sent an invitation to this user email: ${invitation.toUser.email}.`;
+          this._invitation = `Your organization sent an invitation to this user email: ${invitation.toUser.email}.`;
         }
         break;
       case 'attendEvent':
@@ -44,9 +43,9 @@ export class MessageComponent {
         } else {
           /* Fallback */
           this.isEvent = false;
-          this._invitation = { message: '' };
-          this._invitation.message = 'You have been invited to an event.';
+          this._invitation = 'You have been invited to an event.';
         }
+        break;
     }
   }
 

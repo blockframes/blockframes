@@ -13,7 +13,7 @@ export class ItemComponent {
   @Input() invitation: Invitation;
   public xs$ = this.breakpointsService.xs;
 
-  constructor(private breakpointsService: BreakpointsService, private invitationService: InvitationService) { }
+  constructor(private breakpointsService: BreakpointsService, private invitationService: InvitationService) {}
 
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {
     this.invitationService[action](invitation);

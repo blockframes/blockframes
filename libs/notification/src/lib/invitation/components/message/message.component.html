@@ -3,12 +3,12 @@
     <span class="mat-body-1">{{ orgName }} invited you to
       <a color="primary" [routerLink]="['/c/o/marketplace/event/' + parsedInvitation.id]" id="link">
         {{ parsedInvitation.title }}</a>, {{ parsedInvitation.start | date: 'mediumDate' }},
-      {{parsedInvitation.start | date: 'shortTime' | slice:0:5 }} -
+      {{ parsedInvitation.start | date: 'shortTime' | slice:0:5 }} -
       {{ parsedInvitation.end | date: 'shortTime' }}</span>
   </ng-container>
 </ng-container>
 <ng-template #noEvent>
   <span class="mat-body-1">
-    {{invitation.message}}
+    {{invitation}}
   </span>
 </ng-template>
