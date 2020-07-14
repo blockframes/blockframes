@@ -1,3 +1,14 @@
+import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+
+export interface OldPromotionalElement {
+  label: string,
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
+  media: OldImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
+}
+
 export interface OldImgRef {
   ref: string;
   urls: {
