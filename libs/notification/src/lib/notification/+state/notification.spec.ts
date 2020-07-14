@@ -6,8 +6,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Notification } from './notification.model';
 
 const AngularFirestoreStub = {
-  collection: (name: string) => {
-  },
   formatNotification : (notification) => ({
     format: JSON.stringify(notification)
   })
