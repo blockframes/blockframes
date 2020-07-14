@@ -51,23 +51,6 @@
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>
           </div>
-          <bf-slider hideIndicators loop class="dark-contrast-theme">
-            <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient"
-              [image]="movie.main.banner.media">
-              <movie-slide [movie]="movie">
-                <movie-slide-cta>
-                  <ng-container *ngIf="movie.promotionalElements.trailer">
-                    <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
-                      class="detail">
-                      More Details</a>
-                  </ng-container>
-                </movie-slide-cta>
-                <movie-slide-actions>
-                  <wishlist-button [movieId]="movie.id"></wishlist-button>
-                </movie-slide-actions>
-              </movie-slide>
-            </bf-slide>
-          </bf-slider>
         </ng-container>
       </article>
     </ng-container>
