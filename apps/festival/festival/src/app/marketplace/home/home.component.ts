@@ -69,20 +69,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     ];
 
     this.orgs$ = this.organizationService
-      .queryWithoutMovies(ref => ref
+      .queryWithMovies(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
       .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
 
-    this.featuredOrg$ = this.organizationService
-      .queryWithMovies(ref => ref
-        .where('appAccess.festival.dashboard', '==', true)
-        .where('status', '==', 'accepted'))
-      .pipe(
-        map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)),
-        map(orgs => orgs.filter(org => org.movieIds.length > 3)),
-        map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
-      );
+    this.featuredOrg$ = this.orgs$.pipe(
+      map(orgs => orgs.filter(org => org.movieIds.length > 3)),
+      map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
+    );
+
   }
 
   ngOnDestroy() {
