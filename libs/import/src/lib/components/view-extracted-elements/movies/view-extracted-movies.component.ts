@@ -40,7 +40,7 @@ import { createStakeholder } from '@blockframes/utils/common-interfaces/identity
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
-// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service';
+// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
@@ -79,9 +79,9 @@ enum SpreadSheetMovie {
   availableFormat,
   soundQuality,
   availableVersions,
-  // poster,
-  // bannerLink,
-  // stillLinks,
+  // poster, TODO issue #3091
+  // bannerLink, TODO issue #3091
+  // stillLinks, TODO issue #3091
   presentationDeck,
   scenarioLink,
   screenerLink,
@@ -124,7 +124,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
   constructor(
     @Optional() private intercom: Intercom,
     private movieService: MovieService,
-    // private imageUploader: ImageUploader,
+    // private imageUploader: ImageUploader, TODO issue #3091
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private userService: UserService,
@@ -197,6 +197,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
           movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
         }
 
+        // TODO issue #3091
         // POSTER (Poster)
         // TODO issue 3091
         // const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
@@ -533,6 +534,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 }
 
               }
+              // TODO issue #3091
               // if (prizeParts.length >= 5) {
               //   prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
               // }
@@ -817,6 +819,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
+        // TODO issue #3091
         // IMAGE BANNIERE LINK
         // if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
         //   const promotionalElement = createPromotionalImage({
@@ -824,7 +827,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //     media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
         //     ratio: 'rectangle'
         //   });
-
         //   movie.main.banner = promotionalElement;
         // } else {
         //   importErrors.errors.push({
@@ -836,7 +838,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //   });
         // }
 
-        // // IMAGE STILLS LINK
+        // TODO issue #3091
+        // IMAGE STILLS LINK
         // if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
         //   movie.promotionalElements.still_photo = {};
         //   for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
@@ -1076,16 +1079,17 @@ export class ViewExtractedMoviesComponent implements OnInit {
         hint: 'Edit corresponding sheet field.'
       });
     }
-
-    if (!movie.main.poster) {
-      errors.push({
-        type: 'error',
-        field: 'main.poster',
-        name: 'Poster',
-        reason: 'Required field is missing',
-        hint: 'Add poster URL in corresponding column.'
-      });
-    }
+    
+    // TODO issue #3091
+    // if (!movie.main.poster) {
+    //   errors.push({
+    //     type: 'error',
+    //     field: 'main.poster',
+    //     name: 'Poster',
+    //     reason: 'Required field is missing',
+    //     hint: 'Add poster URL in corresponding column.'
+    //   });
+    // }
 
     //////////////////
     // OPTIONAL FIELDS
