@@ -16,6 +16,7 @@ import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
+import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -36,6 +37,7 @@ import { HomeComponent } from './home.component';
     WishlistButtonModule,
     MatLayoutModule,
     OrganizationCardMinimalModule,
+    OrganizationBannerModule,
 
     // Material
     MatButtonModule,
