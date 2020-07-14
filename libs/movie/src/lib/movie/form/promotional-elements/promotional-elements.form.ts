@@ -77,17 +77,12 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]);
   }
 
-  const trailerControls: Record<string, MoviePromotionalHostedMediaForm> = {};
-  for (const key in entity.trailer) {
-    trailerControls[key] = new MoviePromotionalHostedMediaForm(entity.trailer[key]);
-  }
 
   return {
     // Images
     still_photo: new FormGroup(stillPhotoControls),  // TODO issue#3230
 
     // Hosted Media
-    trailer: new FormGroup(trailerControls), // TODO issue#3230
     presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
     scenario: new MoviePromotionalHostedMediaForm(entity.scenario),
 
