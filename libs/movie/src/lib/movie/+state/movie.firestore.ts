@@ -142,7 +142,6 @@ export interface PromotionalImage extends PromotionalElement {
 export interface MoviePromotionalElements {
   still_photo: Record<string, PromotionalImage>, // TODO issue#3230
 
-  trailer: Record<string, PromotionalHostedMedia>, // TODO issue#3230
   presentation_deck: PromotionalHostedMedia,
   scenario: PromotionalHostedMedia,
 
