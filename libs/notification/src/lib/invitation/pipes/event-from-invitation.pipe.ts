@@ -4,17 +4,17 @@ import { Observable } from 'rxjs';
 import { EventService, Event } from '@blockframes/event/+state';
 
 @Pipe({
-  name: 'eventTitle'
+  name: 'eventFromInvitation'
 })
-export class EventTitlePipe implements PipeTransform {
+export class EventFromInvitationPipe implements PipeTransform {
   constructor(private eventService: EventService) { }
   transform(invitation: Invitation): Observable<Event> {
-    return this.eventService.syncDoc({ id: invitation.docId })
+    return this.eventService.valueChanges(invitation.docId)
   }
 }
 
 @NgModule({
-  exports: [EventTitlePipe],
-  declarations: [EventTitlePipe],
+  exports: [EventFromInvitationPipe],
+  declarations: [EventFromInvitationPipe],
 })
-export class EventTitlePipeModule { }
+export class EventFromInvitationPipeModule { }

@@ -6,22 +6,18 @@
   <div matLine>
     <ng-container [ngSwitch]="invitation.type">
       <div *ngSwitchCase="'attendEvent'">
-        <ng-container *ngIf=" invitation | eventTitle | async as event">
+        <ng-container *ngIf=" invitation | eventFromInvitation | async as event">
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="invitation.mode === 'invitation'; else request">
             <span>{{ invitation.fromOrg | orgName }} invited you to </span>
             <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{ event.start | date: 'mediumDate' }}</span>,&nbsp;
-            <span>{{ event.start | date: 'shortTime' | slice:0:5 }}</span> -
-            <span>{{ event.end | date: 'shortTime' | slice }}</span>
+            <span>{{event | eventRange }}</span>
           </ng-container>
           <!-- Request to attendEvent -->
           <ng-template #request>
             <span>{{ invitation.fromUser | displayName }} would like to attend event </span>
             <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{ event.start  | date: 'mediumDate' }}</span>,&nbsp;
-            <span>{{ event.start | date: 'shortTime' | slice:0:5 }}</span> -
-            <span>{{ event.end | date: 'shortTime' | slice }}</span>
+            <span>{{ event | eventRange }}</span>
           </ng-template>
         </ng-container>
       </div>
