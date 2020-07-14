@@ -8,7 +8,18 @@ import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
 
 /**
- * Migrate old watermarks into new ones (HostedMedia).
+ * Migrate old medias & images and some refactoring on the movie.
+ * - user
+ *   - avatar: old image -> new image
+ *   - watermark: old image -> new media
+ * - org
+ *   - logo: old image -> new image
+ * - movie
+ *   - poster: `promotionalElements` old image array -> `main` single new image
+ *   - banner: `promotionalElements` old image -> `main` new image
+ *   - every single `promotionalElements`: old image -> new image or new media
+ *   - `promotionalElements` still_photo: array of old images -> record of new image
+ *   - `promotionalElements` trailer: deleted
  */
 export async function upgrade(db: Firestore) {
   try {

@@ -1,6 +1,6 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { OldImgRef, OldPromotionalElement } from './old-types';
+import { OldImgRef, OldPromotionalElement, createOldImgRef, createOldPromotionalElement } from './old-types';
 
 /**
  * Update stakeholders in movie documents.
@@ -113,28 +113,4 @@ export async function updatePosterStructure(db: Firestore) {
 export async function upgrade(db: Firestore) {
   await updateStakeholdersMovieStructure(db);
   await updatePosterStructure(db);
-}
-
-function createOldPromotionalElement(
-  promotionalElement: Partial<OldPromotionalElement> = {}
-): OldPromotionalElement {
-  return {
-    label: '',
-    ...promotionalElement,
-    media: createOldImgRef(promotionalElement.media)
-  };
-}
-
-export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
-  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
-  return {
-    ref: '',
-    urls: {
-      original: '',
-      xs: '',
-      md: '',
-      lg: '',
-    },
-    ..._ref
-  };
 }

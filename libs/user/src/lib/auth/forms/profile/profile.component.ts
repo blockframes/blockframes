@@ -3,7 +3,7 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 @Component({
-  selector: '[profileForm] auth-form-profile',
+  selector: '[form] auth-form-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -11,7 +11,7 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 export class ProfileFormComponent {
   public uid = this.authQuery.userId;
 
-  @Input() profileForm: ProfileForm;
+  @Input() form: ProfileForm;
 
   constructor(private authQuery: AuthQuery){}
 }

@@ -87,7 +87,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
 
-    await this.service.save(documentToUpdate);
+    await this.service.update(movie.id, documentToUpdate);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
     this.form.markAsPristine();

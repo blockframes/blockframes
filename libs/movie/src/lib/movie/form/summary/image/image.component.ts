@@ -26,7 +26,7 @@ export class MovieSummaryImageComponent implements OnInit {
       return keys.length === 0 ?
         true :
         // or if at least one still photo as an empty url
-        keys.some(key => !this.form.promotionalElements.get('still_photo').value[key].media.original.url.value);
+        keys.some(key => !stillPhotos[key].media.original.url);
 
     } catch (error) {
       console.warn(error);

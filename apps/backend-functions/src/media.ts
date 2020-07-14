@@ -7,7 +7,7 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
   // the storage path of the file
   const filePath = data.name;
 
-  if (filePath === undefined) {
+  if (!filePath) {
     throw new Error('Upload Error : Undefined File Path');
   }
 

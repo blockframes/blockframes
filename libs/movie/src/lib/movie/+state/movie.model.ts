@@ -190,9 +190,9 @@ export function createPromotionalImage(
 ): PromotionalImage {
   const promotionalElement = createPromotionalElement(promotionalImage);
   return {
-    media: createImgRef(promotionalImage.media),
     ...promotionalImage,
     ...promotionalElement,
+    media: createImgRef(promotionalImage.media),
   };
 }
 

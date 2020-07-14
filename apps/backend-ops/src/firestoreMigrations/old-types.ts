@@ -40,3 +40,28 @@ export interface OldDenomination {
     full: string;
     public?: string;
 }
+
+export function createOldPromotionalElement(
+  promotionalElement: Partial<OldPromotionalElement> = {}
+): OldPromotionalElement {
+  return {
+    label: '',
+    ...promotionalElement,
+    media: createOldImgRef(promotionalElement.media)
+  };
+}
+
+export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRef {
+  const _ref = typeof ref === 'string' ? { urls: { original: ref } } : ref;
+  return {
+    ref: '',
+    urls: {
+      original: '',
+      xs: '',
+      md: '',
+      lg: '',
+    },
+    ..._ref
+  };
+}
+

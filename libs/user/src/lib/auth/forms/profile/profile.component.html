@@ -5,29 +5,29 @@
   <mat-card-content>
     <mat-form-field appearance="outline">
       <mat-label>First name</mat-label>
-      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="profileForm.get('firstName')" required />
-      <mat-error *ngIf="profileForm.get('firstName').hasError('required')">
+      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('firstName')" required />
+      <mat-error *ngIf="form.get('firstName').hasError('required')">
         First name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Last name</mat-label>
-      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="profileForm.get('lastName')" required />
-      <mat-error *ngIf="profileForm.get('lastName').hasError('required')">
+      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('lastName')" required />
+      <mat-error *ngIf="form.get('lastName').hasError('required')">
         Last name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Position</mat-label>
-      <input matInput test-id="position-form" placeholder="Position" type="text" [formControl]="profileForm.get('position')" />
+      <input matInput test-id="position-form" placeholder="Position" type="text" [formControl]="form.get('position')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Email Address</mat-label>
-      <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="profileForm.get('email')" />
+      <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>
-      <input matInput test-id="phone-form" placeholder="Phone number" type="tel" [formControl]="profileForm.get('phoneNumber')" />
+      <input matInput test-id="phone-form" placeholder="Phone number" type="tel" [formControl]="form.get('phoneNumber')" />
     </mat-form-field>
   </mat-card-content>
 </mat-card>
@@ -37,7 +37,7 @@
     <mat-card-subtitle>Choose your avatar</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <drop-cropper ratio="square" [storagePath]="uid | ref: 'profile' : 'avatar'" [form]="profileForm.avatar.original">
+    <drop-cropper ratio="square" [storagePath]="uid | ref: 'profile' : 'avatar'" [form]="form.avatar.original">
       <h3 type>Profile Image</h3>
       <p class="mat-body-2" dimensions>Ratio : 1:1</p>
       <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
