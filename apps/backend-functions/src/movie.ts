@@ -140,17 +140,18 @@ export async function onMovieUpdate(
   }).map(key => handleImageChange(after.promotionalElements.still_photo[key].media));
   await Promise.all(stillPromises);
 
-  // GARBAGE COLLECT STILL_PHOTOs
-  const needsGarbageCollecting = Object.keys(after.promotionalElements.still_photo).some(key => {
-    return isEmptyImage(after.promotionalElements.still_photo[key].media);
-  });
+  // REMOVING EMPTY STILL_PHOTOs
+  const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
+    .some(key => isEmptyImage(after.promotionalElements.still_photo[key].media));
 
-  if (needsGarbageCollecting) {
+  // if we found at least one empty still_photo, we update with only the none empty ones
+  if (hasEmptyStills) {
     const notEmptyStills: Record<string, PromotionalImage> = {};
-    Object.keys(after.promotionalElements.still_photo).filter(key => {
-      return !isEmptyImage(after.promotionalElements.still_photo[key].media);
 
-    }).forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+    Object.keys(after.promotionalElements.still_photo)
+      .filter(key => !isEmptyImage(after.promotionalElements.still_photo[key].media))
+      .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+
     change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
   }
 

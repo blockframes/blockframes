@@ -1,5 +1,4 @@
 export * from './entity.form';
-export * from './entity-list.form';
 export * from './list.form';
 export * from './value.form';
 export * from './types';
