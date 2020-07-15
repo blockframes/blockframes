@@ -15,16 +15,15 @@ export const organizationMinimalCard = () => ({
   template: `
     <storybook-toolkit>
       <h1 title>Featured Sales Agent Banner</h1>
-      <org-banner [org]="org"></org-banner>
+      <org-banner [org]="org" [movies]="movies"></org-banner>
     </storybook-toolkit>
   `,
   props: {
-    org: object('org', getObject()),
+    org: object('org', ORGS[0]),
+    movies: getMovies()
   }
 });
 
-function getObject() {
-  const org = ORGS[0];
-  org.movies = MOVIES.filter(movie => movie?.main?.storeConfig?.status === 'accepted' && movie?.main?.storeConfig?.appAccess.festival).slice(0, 4);
-  return org;
+function getMovies() {
+  return MOVIES.filter(movie => movie?.main?.storeConfig?.status === 'accepted' && movie?.main?.storeConfig?.appAccess.festival).slice(0, 4);
 }

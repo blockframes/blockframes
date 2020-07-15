@@ -66,6 +66,12 @@
               </movie-slide>
             </bf-slide>
           </bf-slider>
+          <!-- Featured Sales Agent Banner -->
+          <ng-container *ngIf="featuredOrg$ | async as org">
+            <ng-container *ngIf="org | orgMovies:0:3 | async as movies">
+              <org-banner [org]="org" [movies]="movies"></org-banner>
+            </ng-container>
+          </ng-container>
         </ng-container>
       </article>
     </ng-container>
