@@ -84,6 +84,7 @@
     <td mat-cell *matCellDef="let element"> {{ element.movie.main.storeConfig.storeType | toLabel: 'storeType' | async  }} </td>
   </ng-container>
 
+  <!-- TODO issue #3091
   <ng-container matColumnDef="movie.main.poster">
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
@@ -94,7 +95,7 @@
         --
       </ng-template>
     </td>
-  </ng-container>
+  </ng-container> -->
 
   <ng-container matColumnDef="movie.main.productionYear">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Production Year </th>
