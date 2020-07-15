@@ -1,7 +1,7 @@
 <header fxLayout fxLayoutAlign="space-between start">
   <h1>{{ org | orgName }}</h1>
   <a mat-button [routerLink]="['/c/o/marketplace/organization/', org.id]" color="primary">
-    <span>See all ({{ movies.length }})</span>
+    <span>See all ({{ org.movieIds.length }})</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </a>
 </header>
@@ -13,14 +13,14 @@
       </a>
       <div>
         <p class="org-name">{{ org | orgName }}</p>
-        <p class="mat-caption">{{ movies.length }} films</p>
+        <p class="mat-caption">{{ org.movieIds.length }} films</p>
       </div>
     </div>
     <!-- TODO add detailed company description -->
   </article>
 
   <article fxLayout="row wrap" fxLayoutGap="24px">
-    <ng-container *ngFor="let movie of movies | slice:0:4; let i = index">
+    <ng-container *ngFor="let movie of org | orgMovies:0:4 | async">
       <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id"></movie-card>
     </ng-container>
   </article>
