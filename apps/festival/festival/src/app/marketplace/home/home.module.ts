@@ -17,6 +17,7 @@ import { MovieCardModule } from '@blockframes/movie/components/card/card.module'
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
+import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
 
 // Page
 import { HomeComponent } from './home.component';
@@ -38,6 +39,7 @@ import { HomeComponent } from './home.component';
     MatLayoutModule,
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
+    OrgMoviesModule,
 
     // Material
     MatButtonModule,
