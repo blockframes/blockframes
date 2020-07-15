@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthQuery, User, AuthService, AuthState } from '../+state';
-import { map, switchMap, catchError, tap } from 'rxjs/operators';
+import { map, switchMap, catchError } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
