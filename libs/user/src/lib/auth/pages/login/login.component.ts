@@ -69,7 +69,13 @@ export class LoginComponent implements OnInit {
       await this.service.signup(email.trim(), password, { ctx: { firstName, lastName } });
       // Reset page title to default
       this.dynTitle.setPageTitle();
-      this.router.navigate(['c']);
+      const redirectTo = localStorage.getItem('redirectTo');
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo');
+        this.router.navigate([redirectTo]);
+      } else {
+        this.router.navigate(['c']);
+      }
     } catch (err) {
 
       switch (err.code) {
