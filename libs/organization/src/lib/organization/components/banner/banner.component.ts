@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Organization } from '../../+state';
-import { Movie } from '@blockframes/movie/+state';
 
 @Component({
   selector: '[org] org-banner',
@@ -11,6 +10,5 @@ import { Movie } from '@blockframes/movie/+state';
 export class OrganizationBannerComponent {
   
   @Input() org: Organization;
-  @Input() movies: Movie[] = [];
 
 }
