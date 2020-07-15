@@ -21,16 +21,9 @@ export class ListComponent {
 
   constructor(private service: OrganizationService) {
     this.orgs$ = this.service
-      .queryWithMovies(ref => ref
+      .valueChanges(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && this.getOrgWithMovie(org).length > 0)));
-  }
-
-  // Get the number of movies available for an organization
-  getOrgWithMovie(org: Organization) {
-    this.movies = org.movies
-      .filter(movie => movie?.main.storeConfig.status === 'accepted' && movie?.main.storeConfig.appAccess.festival);
-    return this.movies;
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
   }
 }
