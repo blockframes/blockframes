@@ -294,10 +294,86 @@ export interface MovieRating {
   value: string,
 }
 
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+
+export interface MovieMain {
+  banner: PromotionalImage;
+  contentType?: ContentType;
+  customGenres?: string[],
+  directors?: Director[], // TODO issue#3179
+  genres?: GenresSlug[],
+  internalRef?: string,
+  originCountries?: TerritoriesSlug[],
+  originalLanguages?: LanguagesSlug[],
+  poster: PromotionalImage;
+  releaseYear?: number,
+  status?: MovieStatusSlug,
+  storeConfig?: StoreConfig;
+  title: Title,
+  totalRunTime?: number | string;
+}
+
+export interface MovieProduction {
+  stakeholders?: MovieStakeholders,
+}
+
+interface MovieSalesInfoRaw<D> {
+  broadcasterCoproducers: string[],
+  certifications: CertificationsSlug[],
+  color: ColorsSlug,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  originalRelease: MovieOriginalReleaseRaw<D>[],
+  physicalHVRelease: D,
+  rating: MovieRating[],
+  scoring: ScoringSlug,
+  soundFormat?: SoundFormatSlug,
+}
+
+export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
+}
+
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
+}
+
+export interface MovieReview {
+  criticName?: string,
+  journalName?: string,
+  criticQuote?: string,
+  revueLink?: string,
+  publicationDate?: Date;
+}
+
 export interface DocumentMeta {
   createdBy: string;
   updatedBy?: string,
   deletedBy?: string
+}
+
+/** Generic interface of a Movie */
+interface MovieRaw<D> {
+  _type: 'movies';
+  _meta?: DocumentMeta;
+  id: string;
+  documents: MovieLegalDocuments;
+
+  // Sections
+  main: MovieMain;
+  story: MovieStory;
+  promotionalElements: MoviePromotionalElements;
+  promotionalDescription: MoviePromotionalDescription;
+  salesCast: MovieSalesCast;
+  salesInfo: MovieSalesInfoRaw<D>;
+  versionInfo: MovieVersionInfo;
+  festivalPrizes: MovieFestivalPrizes;
+  budget: MovieBudget;
+  movieReview: MovieReview[];
+  production: MovieProduction;
+
+  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
+  // TODO we will need more visibility on the upload part to take the final decision
+  // TODO we also need to consider how to differentiate full movies from trailer
+  hostedVideo?: string;
 }
 
 export interface MovieLegalDocuments {
