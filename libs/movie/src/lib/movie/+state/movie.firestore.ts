@@ -27,7 +27,7 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 
 type Timestamp = firestore.Timestamp;
 
-export const workType = {
+export const contentType = {
   feature_film: 'Feature Film',
   short: 'Short',
   serie: 'Serie',
@@ -39,8 +39,8 @@ export const workType = {
   flow: 'Flow'
 } as const;
 
-export type WorkType = keyof typeof workType;
-export type WorkTypeValue = typeof workType[WorkType];
+export type ContentType = keyof typeof contentType;
+export type ContentTypeValue = typeof contentType[ContentType];
 
 export const storeType = {
   library: 'Library',
@@ -233,7 +233,7 @@ export interface MovieOfficialIds {
 
 export interface MovieMain {
   banner: PromotionalImage;
-  contentType?: WorkType;
+  contentType?: ContentType;
   customGenres?: string[],
   directors?: Director[], // TODO issue#3179
   genres?: GenresSlug[],
