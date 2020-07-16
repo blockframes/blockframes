@@ -1,73 +1,27 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 // Blockframes
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
+import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
-const steps: TunnelStep[] = [{
-  title: 'Title Information',
-  icon: 'document',
-  time: 15,
-  routes: [{
-    path: 'main',
-    label: 'Main Information'
-  }, {
-    path: 'synopsis',
-    label: 'Storyline Elements'
-  }, {
-    path: 'credits',
-    label: 'Credits'
-  }, {
-    path: 'budget',
-    label: 'Budget, Quotas, Critics',
-  }]
-}, {
-  title: 'Media',
-  icon: 'import',
-  time: 10,
-  routes: [{
-    path: 'technical-info',
-    label: 'Technical Information'
-  }, {
-    path: 'images',
-    label: 'Promotional Images'
-  }, {
-    path: 'files&links',
-    label: 'Files & Links'
-  }]
-}, {
-  title: 'Summary',
-  icon: 'document',
-  routes: [{
-    path: 'summary',
-    label: 'Summary & Submission'
-  }]
-}];
-
 @Component({
-  selector: 'festival-movie-tunnel',
-  templateUrl: './movie-tunnel.component.html',
-  styleUrls: ['./movie-tunnel.component.scss'],
+  selector: 'movie-form-shell',
+  templateUrl: './shell.component.html',
+  styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements TunnelRoot, OnInit {
-  steps = steps;
-
-
-  //////////////////////////////////////
-  // EVERYTHING BELOW WILL BE REMOVED //
-  //////////////////////////////////////
-
+export class MovieFormShellComponent implements TunnelRoot, OnInit {
   // Have to be initialized in the constructor as children page use it in the constructor too
-  public form = new MovieForm(this.query.getActive());
+  @Input() form = new MovieForm(this.query.getActive());
+  @Input() steps: TunnelStep;
 
   public exitRoute: string;
 
