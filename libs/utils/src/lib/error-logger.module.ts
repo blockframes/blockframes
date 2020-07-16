@@ -12,6 +12,10 @@ export class ErrorLoggerHandler implements ErrorHandler {
   constructor(private snackBar: MatSnackBar) {}
 
   handleError(error: any) {
+    if (error?.name === 'FirebaseError' && error?.code === 'storage/canceled') {
+      // suppress error issue #3267
+      return;
+    }
     console.error(error);
     this.snackBar.open(`${error}`.substring(0, 100), 'close');
   }
