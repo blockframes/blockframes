@@ -27,7 +27,7 @@ import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/st
 import {
   PremiereType,
   storeType,
-  workType,
+  contentType,
   storeStatus,
   unitBox,
   movieLanguageTypes,
@@ -50,7 +50,7 @@ enum SpreadSheetMovie {
   internationalTitle,
   originalTitle,
   internalRef,
-  workType,
+  contentType,
   productionStatus,
   directors,
   originCountries,
@@ -166,16 +166,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
         movie.main.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
 
         // WORK TYPE
-        if (spreadSheetRow[SpreadSheetMovie.workType]) {
-          const key = getKeyIfExists(workType, spreadSheetRow[SpreadSheetMovie.workType]);
+        if (spreadSheetRow[SpreadSheetMovie.contentType]) {
+          const key = getKeyIfExists(contentType, spreadSheetRow[SpreadSheetMovie.contentType]);
           if (key) {
-            movie.main.workType = key;
+            movie.main.contentType = key;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.workType',
+              field: 'movie.main.contentType',
               name: 'Work Type',
-              reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase()}`,
+              reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.contentType].trim().toLowerCase()}`,
               hint: 'Edit corresponding sheet field.'
             });
           }

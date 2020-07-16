@@ -101,7 +101,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     },
     directors: [],
     genres: [],
-    workType: 'feature_film',
+    contentType: 'feature_film',
     originalLanguages: [],
     originCountries: [],
     status: null,
