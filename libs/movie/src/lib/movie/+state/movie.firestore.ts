@@ -23,6 +23,151 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO issue#2582
 
+//////////////////
+// MOVIE OBJECT //
+//////////////////
+
+/** Generic interface of a Movie */
+interface MovieRaw<D> {
+  _type: 'movies';
+  _meta?: DocumentMeta;
+  id: string;
+  documents: MovieLegalDocuments;
+
+  // Sections
+  budget: MovieBudget;
+  festivalPrizes: MovieFestivalPrizes;
+  main: MovieMain;
+  movieReview: MovieReview[];
+  production: MovieProduction;
+  promotionalElements: MoviePromotionalElements;
+  promotionalDescription: MoviePromotionalDescription;
+  salesCast: MovieSalesCast;
+  salesInfo: MovieSalesInfoRaw<D>;
+  story: MovieStory;
+  versionInfo: MovieVersionInfo;
+
+  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
+  // TODO we will need more visibility on the upload part to take the final decision
+  // TODO we also need to consider how to differentiate full movies from trailer
+  hostedVideo?: string;
+}
+
+/** Document model of a Movie */
+export interface MovieDocument extends MovieRaw<Timestamp> {
+}
+
+/** Document model of a Movie with Dates (type Date) */
+export interface MovieDocumentWithDates extends MovieRaw<Date> {
+}
+
+/** Public interface of a movie (to notifications). */
+export interface PublicMovie {
+  id: string;
+  title: Title;
+}
+
+////////////////////
+// MOVIE SECTIONS //
+////////////////////
+
+export interface MovieBudget {
+  /**
+   * @dev If the budget is fixed, we use totalBudget
+   */
+  totalBudget?: Price,
+  /**
+   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
+   * @see BUDGET_LIST for possible values
+   * */
+  estimatedBudget?: NumberRange,
+  /** @dev More information needed. What is this about ? */
+  boxOffice?: BoxOffice[],
+}
+
+export interface MovieFestivalPrizes {
+  prizes: Prize[]
+}
+
+export interface MovieMain {
+  banner: PromotionalImage;
+  contentType?: ContentType;
+  customGenres?: string[],
+  directors?: Director[], // TODO issue#3179
+  genres?: GenresSlug[],
+  internalRef?: string,
+  originCountries?: TerritoriesSlug[],
+  originalLanguages?: LanguagesSlug[],
+  poster: PromotionalImage;
+  releaseYear?: number,
+  status?: MovieStatusSlug,
+  storeConfig?: StoreConfig;
+  title: Title,
+  totalRunTime?: number | string;
+}
+
+export interface MovieReview {
+  criticName?: string,
+  criticQuote?: string,
+  journalName?: string,
+  publicationDate?: Date;
+  revueLink?: string,
+}
+
+export interface MovieProduction {
+  stakeholders?: MovieStakeholders,
+}
+
+export interface MoviePromotionalElements {
+  presentation_deck: PromotionalHostedMedia,
+  promo_reel_link: PromotionalExternalMedia,
+  scenario: PromotionalHostedMedia,
+  screener_link: PromotionalExternalMedia,
+  still_photo: Record<string, PromotionalImage>,
+  teaser_link: PromotionalExternalMedia,
+  trailer_link: PromotionalExternalMedia,
+}
+
+export interface MoviePromotionalDescription {
+  keyAssets: string,
+  keywords: string[],
+}
+
+export interface MovieSalesCast {
+  cast: Cast[],
+  crew: Crew[],
+  producers: Producer[],
+}
+
+interface MovieSalesInfoRaw<D> {
+  broadcasterCoproducers: string[],
+  certifications: CertificationsSlug[],
+  color: ColorsSlug,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  originalRelease: MovieOriginalReleaseRaw<D>[],
+  physicalHVRelease: D,
+  rating: MovieRating[],
+  scoring: ScoringSlug,
+  soundFormat?: SoundFormatSlug,
+}
+
+export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
+}
+
+export interface MovieStory {
+  logline: string,
+  synopsis: string,
+}
+
+export interface MovieVersionInfo {
+  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+}
+
+////////////////////
+// MOVIE DETAILS //
+////////////////////
+
 type Timestamp = firestore.Timestamp;
 
 export const contentType = {
@@ -77,38 +222,20 @@ export const storeStatus = {
 export type StoreStatus = keyof typeof storeStatus;
 export type StoreStatusValue = typeof storeStatus[StoreStatus];
 
-export interface MovieEventAnalytics {
-  event_date: string,
-  event_name: AnalyticsEvents,
-  hits: number,
-  movieId: string
-}
+export const movieLanguageTypes = {
+  original: 'Original',
+  dubbed: 'Dubbed',
+  subtitle: 'Subtitle',
+  caption: 'Caption',
+} as const;
 
-export interface MovieAnalytics {
-  movieId: string,
-  addedToWishlist: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
-  movieViews: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  },
-  promoReelOpened: {
-    current: MovieEventAnalytics[],
-    past: MovieEventAnalytics[]
-  }
-}
+export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
 
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,
   appAccess: MovieAppAccess
-}
-
-export interface MoviePromotionalDescription {
-  keyAssets: string,
-  keywords: string[],
 }
 
 export interface Prize {
@@ -143,24 +270,15 @@ export interface MoviePromotionalElements {
   teaser_link: PromotionalExternalMedia,
 }
 
+export interface PromotionalImage extends PromotionalElement {
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
+  media: ImgRef,
+}
+
 export interface Title {
   original: string;
   international?: string;
-}
-
-export interface MovieStory {
-  synopsis: string,
-  logline: string,
-}
-
-export interface MovieSalesCast {
-  producers: Producer[],
-  cast: Cast[],
-  crew: Crew[],
-}
-
-export interface MovieFestivalPrizes {
-  prizes: Prize[]
 }
 
 export interface BoxOffice {
@@ -169,30 +287,6 @@ export interface BoxOffice {
   territory: TerritoriesSlug,
 }
 
-export interface MovieBudget {
-  /**
-   * @dev If the budget is fixed, we use totalBudget
-   */
-  totalBudget?: Price,
-  /**
-   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
-   * @see BUDGET_LIST for possible values
-   * */
-  estimatedBudget?: NumberRange,
-  /** @dev More information needed. What is this about ? */
-  boxOffice?: BoxOffice[],
-}
-
-export const movieLanguageTypes = {
-  original: 'Original',
-  dubbed: 'Dubbed',
-  subtitle: 'Subtitle',
-  caption: 'Caption',
-} as const;
-
-export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
-export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
-
 export interface MovieLanguageSpecification {
   original: boolean;
   dubbed: boolean;
@@ -200,11 +294,16 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
   country: TerritoriesSlug;
   media?: MediasSlug
 }
+
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 
 export interface MovieRating {
   country: TerritoriesSlug;
@@ -213,108 +312,14 @@ export interface MovieRating {
   value: string,
 }
 
-export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
-
-export interface MovieMain {
-  banner: PromotionalImage;
-  contentType?: ContentType;
-  customGenres?: string[],
-  directors?: Director[], // TODO issue#3179
-  genres?: GenresSlug[],
-  internalRef?: string,
-  originCountries?: TerritoriesSlug[],
-  originalLanguages?: LanguagesSlug[],
-  poster: PromotionalImage;
-  releaseYear?: number,
-  status?: MovieStatusSlug,
-  storeConfig?: StoreConfig;
-  title: Title,
-  totalRunTime?: number | string;
-}
-
-export interface MovieProduction {
-  stakeholders?: MovieStakeholders,
-}
-
-interface MovieSalesInfoRaw<D> {
-  broadcasterCoproducers: string[],
-  certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
-  originalRelease: MovieOriginalReleaseRaw<D>[],
-  physicalHVRelease: D,
-  rating: MovieRating[],
-  scoring: ScoringSlug,
-  soundFormat?: SoundFormatSlug,
-}
-
-export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
-}
-
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
-}
-
-export interface MovieReview {
-  criticName?: string,
-  journalName?: string,
-  criticQuote?: string,
-  revueLink?: string,
-  publicationDate?: Date;
-}
-
 export interface DocumentMeta {
   createdBy: string;
   updatedBy?: string,
   deletedBy?: string
 }
 
-/** Generic interface of a Movie */
-interface MovieRaw<D> {
-  _type: 'movies';
-  _meta?: DocumentMeta;
-  id: string;
-  documents: MovieLegalDocuments;
-
-  // Sections
-  main: MovieMain;
-  story: MovieStory;
-  promotionalElements: MoviePromotionalElements;
-  promotionalDescription: MoviePromotionalDescription;
-  salesCast: MovieSalesCast;
-  salesInfo: MovieSalesInfoRaw<D>;
-  versionInfo: MovieVersionInfo;
-  festivalPrizes: MovieFestivalPrizes;
-  budget: MovieBudget;
-  movieReview: MovieReview[];
-  production: MovieProduction;
-
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
-}
-
 export interface MovieLegalDocuments {
   chainOfTitles: LegalDocument[],
-}
-
-export interface MovieVersionInfo {
-  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
-}
-
-/** Document model of a Movie */
-export interface MovieDocument extends MovieRaw<Timestamp> {
-}
-
-/** Document model of a Movie with Dates (type Date) */
-export interface MovieDocumentWithDates extends MovieRaw<Date> {
-}
-
-/** Public interface of a movie (to notifications). */
-export interface PublicMovie {
-  id: string;
-  title: Title;
 }
 
 export interface MovieStakeholders {
@@ -328,4 +333,29 @@ export interface MovieStakeholders {
   financier: Stakeholder[];
 }
 
-export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+/////////////////////
+// MOVIE ANALYTICS //
+/////////////////////
+
+export interface MovieEventAnalytics {
+  event_date: string,
+  event_name: AnalyticsEvents,
+  hits: number,
+  movieId: string
+}
+
+export interface MovieAnalytics {
+  movieId: string,
+  addedToWishlist: {
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
+  },
+  movieViews: {
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
+  },
+  promoReelOpened: {
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
+  }
+}
