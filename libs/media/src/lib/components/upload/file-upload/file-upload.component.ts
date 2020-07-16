@@ -31,7 +31,7 @@ export class FileUploadComponent implements OnInit {
 
   ngOnInit() {
     // show current file
-    if (!!this.form.oldRef.value) {
+    if (!!this.form.oldRef?.value) {
       this.state = 'file';
     }
   }
