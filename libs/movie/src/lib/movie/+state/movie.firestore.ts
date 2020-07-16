@@ -279,7 +279,6 @@ export interface MovieLanguageSpecification {
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 
-
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
   country: TerritoriesSlug;
