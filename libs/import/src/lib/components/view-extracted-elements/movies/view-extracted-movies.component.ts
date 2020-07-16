@@ -64,7 +64,6 @@ enum SpreadSheetMovie {
   synopsis,
   keyAssets,
   keywords,
-  productionYear,
   producers,
   crewMembers,
   budget,
@@ -186,11 +185,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           movie.main.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
         }
 
-        // PRODUCTION YEAR
-        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.productionYear]))) {
-          movie.main.productionYear = parseInt(spreadSheetRow[SpreadSheetMovie.productionYear], 10);
-        }
-
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
           movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
@@ -237,7 +231,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               } else {
                 importErrors.errors.push({
                   type: 'warning',
-                  field: 'movie.main.stakeholders',
+                  field: 'movie.production.stakeholders',
                   name: 'Stakeholders',
                   reason: `${stakeHolderParts[2]} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
@@ -247,35 +241,35 @@ export class ViewExtractedMoviesComponent implements OnInit {
             if (role) {
               switch (role) {
                 case 'broadcaster-coproducer':
-                  movie.main.stakeholders.broadcasterCoproducer.push(stakeHolder);
+                  movie.production.stakeholders.broadcasterCoproducer.push(stakeHolder);
                   break;
                 case 'financier':
-                  movie.main.stakeholders.financier.push(stakeHolder);
+                  movie.production.stakeholders.financier.push(stakeHolder);
                   break;
                 case 'laboratory':
-                  movie.main.stakeholders.laboratory.push(stakeHolder);
+                  movie.production.stakeholders.laboratory.push(stakeHolder);
                   break;
                 case 'sales-agent':
-                  movie.main.stakeholders.salesAgent.push(stakeHolder);
+                  movie.production.stakeholders.salesAgent.push(stakeHolder);
                   break;
                 case 'distributor':
-                  movie.main.stakeholders.distributor.push(stakeHolder);
+                  movie.production.stakeholders.distributor.push(stakeHolder);
                   break;
                 case 'line-producer':
-                  movie.main.stakeholders.lineProducer.push(stakeHolder);
+                  movie.production.stakeholders.lineProducer.push(stakeHolder);
                   break;
                 case 'co-producer':
-                  movie.main.stakeholders.coProducer.push(stakeHolder);
+                  movie.production.stakeholders.coProducer.push(stakeHolder);
                   break;
                 case 'executive-producer':
                 default:
-                  movie.main.stakeholders.executiveProducer.push(stakeHolder);
+                  movie.production.stakeholders.executiveProducer.push(stakeHolder);
                   break;
               }
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.stakeholders',
+                field: 'movie.production.stakeholders',
                 name: 'Stakeholders',
                 reason: `${stakeHolderParts[1]} not found in Stakeholders roles list`,
                 hint: 'Edit corresponding sheet field.'
@@ -1059,16 +1053,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.main.productionYear) {
-      errors.push({
-        type: 'error',
-        field: 'main.productionYear',
-        name: 'Production Year',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
     if (movie.main.directors.length === 0) {
       errors.push({
         type: 'error',
@@ -1115,11 +1099,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
     }
 
     let stakeholdersCount = 0;
-    Object.keys(movie.main.stakeholders).forEach(k => { stakeholdersCount += k.length });
+    Object.keys(movie.production.stakeholders).forEach(k => { stakeholdersCount += k.length });
     if (stakeholdersCount === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.stakeholders',
+        field: 'production.stakeholders',
         name: 'Stakeholder(s)',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

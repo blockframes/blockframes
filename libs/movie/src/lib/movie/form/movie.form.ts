@@ -10,6 +10,7 @@ import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
+import { MovieProductionForm } from './production.form';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
@@ -59,6 +60,7 @@ function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
   return {
     main: new MovieMainForm(entity.main),
+    production: new MovieProductionForm(entity.production),
     promotionalElements: new MoviePromotionalElementsForm(entity.promotionalElements),
     promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
     story: new MovieStoryForm(entity.story),
@@ -141,5 +143,9 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get promotionalElements() {
     return this.get('promotionalElements');
+  }
+
+  get production() {
+    return this.get('production');
   }
 }
