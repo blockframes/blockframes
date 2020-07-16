@@ -27,8 +27,8 @@
           <ng-container *ngFor="let country of movie.main.originCountries">
             {{ country | translateSlug: 'TERRITORIES'}},
           </ng-container>
-          <ng-container *ngIf="movie.main.productionYear">
-            {{ movie.main.productionYear }}
+          <ng-container *ngIf="movie.main.releaseYear">
+            {{ movie.main.releaseYear }}
           </ng-container>
         </span>
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">

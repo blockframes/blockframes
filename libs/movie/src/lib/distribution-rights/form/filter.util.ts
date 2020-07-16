@@ -8,13 +8,13 @@ import { getFilterMatchingRights, getRightsInDateRange, getExclusiveRights } fro
 import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
-function isProductionYearBetween(movie: Movie, range: DateRange): boolean {
+function isReleaseYearBetween(movie: Movie, range: DateRange): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
   // prevent from default error that property is undefined
   if (typeof range.from && typeof range.to) {
-    return movie.main.productionYear >= range.from.getFullYear() && movie.main.productionYear <= range.to.getFullYear();
+    return movie.main.releaseYear >= range.from.getFullYear() && movie.main.releaseYear <= range.to.getFullYear();
   }
 }
 
@@ -156,7 +156,7 @@ function mandateHas(listFromFilter: string[], listFromRight: string[]) {
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
   return (
-    isProductionYearBetween(movie, filter.productionYear) &&
+    isReleaseYearBetween(movie, filter.releaseYear) &&
     hasGenres(movie, filter.genres) &&
     hasCertifications(movie, filter.certifications) &&
     isProductionStatus(movie, filter.productionStatus) &&

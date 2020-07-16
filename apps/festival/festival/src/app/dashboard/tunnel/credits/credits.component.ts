@@ -20,4 +20,8 @@ export class CreditsComponent {
     return this.form.get('salesCast');
   }
 
+  get production() {
+    return this.form.get('production');
+  }
+
 }
