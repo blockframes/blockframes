@@ -15,7 +15,7 @@ import {
   GenresSlug
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef, HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
@@ -232,23 +232,24 @@ export interface MovieOfficialIds {
 }
 
 export interface MovieMain {
-  internalRef?: string,
-  title: Title,
-  directors?: Credit[], // TODO issue#3179
-  officialIds?: MovieOfficialIds,
-  productionYear?: number,
-  genres?: GenresSlug[],
+  banner: PromotionalImage;
+  contentType?: WorkType;
   customGenres?: string[],
+  directors?: Director[], // TODO issue#3179
+  genres?: GenresSlug[],
+  internalRef?: string,
   originCountries?: TerritoriesSlug[],
   originalLanguages?: LanguagesSlug[],
-  status?: MovieStatusSlug,
-  stakeholders?: MovieStakeholders,
-  shortSynopsis?: string,
-  workType?: WorkType;
-  storeConfig?: StoreConfig;
-  totalRunTime?: number | string;
-  banner: PromotionalImage;
   poster: PromotionalImage;
+  releaseYear?: number,
+  status?: MovieStatusSlug,
+  storeConfig?: StoreConfig;
+  title: Title,
+  totalRunTime?: number | string;
+}
+
+export interface MovieProduction {
+  stakeholders?: MovieStakeholders,
 }
 
 interface MovieSalesInfoRaw<D> {
@@ -260,7 +261,6 @@ interface MovieSalesInfoRaw<D> {
   originalRelease: MovieOriginalReleaseRaw<D>[],
   physicalHVRelease: D,
   rating: MovieRating[],
-  releaseYear: number,
   scoring: ScoringSlug,
   soundFormat?: SoundFormatSlug,
 }
