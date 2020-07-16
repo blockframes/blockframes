@@ -15,7 +15,7 @@ export const organizationMinimalCard = () => ({
   template: `
     <storybook-toolkit>
       <h1 title>Featured Sales Agent Banner</h1>
-      <org-banner [org]="org" [movies]="movies"></org-banner>
+      <org-banner [org]="org"></org-banner>
     </storybook-toolkit>
   `,
   props: {
