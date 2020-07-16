@@ -1,7 +1,5 @@
 import {
   MovieStatusSlug,
-  ResourceRatioSlug,
-  ResourceSizesSlug,
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
