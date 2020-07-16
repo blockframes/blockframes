@@ -38,31 +38,12 @@ export function createHostedMedia(media?: Partial<HostedMedia>): HostedMedia {
   }
 }
 
-
 /**
  * This array contains the different image sizes.
  * @note it **does not** contains the `original` key
  */
 export const imgSizeDirectory = ['lg', 'md', 'xs', 'fallback'] as const;
 export type ImgSizeDirectory = (typeof imgSizeDirectory)[number];
-
-export interface ImgRef {
-  original: HostedMedia;
-  fallback: HostedMedia;
-  xs?: HostedMedia;
-  md?: HostedMedia;
-  lg?: HostedMedia;
-}
-
-export function createImgRef(ref?: Partial<ImgRef>): ImgRef {
-  return {
-    original: createHostedMedia(ref?.original || {}),
-    fallback: createHostedMedia(ref?.fallback || {}),
-    xs: createHostedMedia(ref?.xs || {}),
-    md: createHostedMedia(ref?.md || {}),
-    lg: createHostedMedia(ref?.lg || {}),
-  };
-}
 
 export type ImageSizes = Record<ImgSizeDirectory, number>;
 

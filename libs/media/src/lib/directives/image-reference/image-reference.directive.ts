@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ImgRef, getImgSize, imgSizeDirectory } from '../../+state/media.firestore';
+import { getImgSize, imgSizeDirectory, HostedMedia } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
@@ -20,18 +20,18 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set ref(path: ImgRef) {
-    if (!path) {
+  @Input() set ref(media: HostedMedia) {
+    if (!media) {
       this.ref$.next('');
     }
     try {
-      if (path.xs && path.md && path.lg) {
-        const sizes = getImgSize(path.xs.ref);
-        const srcset = imgSizeDirectory.map(size => `${path[size].url} ${sizes[size]}w`)
+      if (media.ref) {
+        const sizes = getImgSize(media.ref);
+        const srcset = imgSizeDirectory.map(size => `${media.url} ${sizes[size]}w`)
           .join(', ');
         this.srcset$.next(srcset);
       }
-      const url = getImageUrl(path);
+      const url = getImageUrl(media);
       this.ref$.next(url);
     } catch (err) {
       this.ref$.next('');

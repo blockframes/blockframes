@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDet
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
-import { getImageUrl, getImgSize, ImgRef, imgSizeDirectory, getAssetPath } from '@blockframes/media/+state/media.model';
+import { getImageUrl, getImgSize, imgSizeDirectory, getAssetPath, HostedMedia } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',
@@ -25,11 +25,11 @@ export class ImgComponent implements OnInit, OnDestroy {
 
   /** Set src attribute in img tag with the url stored in firestore.
    *  If image is wrong, src will be set with provided placeholder or empty string */
-  @Input() set ref(image: ImgRef) {
+  @Input() set ref(image: HostedMedia) {
     try {
-      if (!!image.fallback.url && !!image.xs.url && !!image.md.url && !!image.lg.url) {
-        this.srcFallback = image.fallback.url;
-        const sizes = getImgSize(image.fallback.url);
+      if (!!image.url) {
+        this.srcFallback = image.url;
+        const sizes = getImgSize(image.url);
         const srcset = imgSizeDirectory
           .map(size => `${image[size].url} ${sizes[size]}w`)
           .join(', ');

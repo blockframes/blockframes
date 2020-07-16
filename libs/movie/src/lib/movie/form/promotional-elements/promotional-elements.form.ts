@@ -1,8 +1,7 @@
-import { MoviePromotionalElements, createMoviePromotionalElements, createPromotionalImage, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
-import { FormControl, FormGroup } from '@angular/forms';
+import { MoviePromotionalElements, createMoviePromotionalElements, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
+import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ImgRefForm } from '@blockframes/media/form/image-reference.form'
-import { PromotionalImage, PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
+import { PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
 import { ExternalMediaForm, HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaFormList } from '@blockframes/media/form/media-list.form';
 
@@ -45,26 +44,6 @@ export class MoviePromotionalHostedMediaForm extends FormEntity<PromotionalHoste
   }
 }
 
-// ------------------------------
-//       Promotional Image
-// ------------------------------
-
-function createPromotionalImageControl(promotionalImage?: Partial<PromotionalImage>) {
-  const { label, size, ratio, media } = createPromotionalImage(promotionalImage);
-  return {
-    label: new FormControl(label),
-    size: new FormControl(size),
-    ratio: new FormControl(ratio),
-    media: new ImgRefForm(media),
-  }
-}
-export type PromotionalImageControl = ReturnType<typeof createPromotionalImageControl>;
-
-export class MoviePromotionalImageForm extends FormEntity<PromotionalImageControl> {
-  constructor(promotionalImage?: Partial<PromotionalImage>) {
-    super(createPromotionalImageControl(promotionalImage));
-  }
-}
 
 // ------------------------------
 //   Every Promotional Elements
@@ -73,15 +52,15 @@ export class MoviePromotionalImageForm extends FormEntity<PromotionalImageContro
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
 
-  const stillPhotoControls: Record<string, MoviePromotionalImageForm> = {};
+  const stillPhotoControls: Record<string, MoviePromotionalHostedMediaForm> = {};
   for (const key in entity.still_photo) {
-    stillPhotoControls[key] = new MoviePromotionalImageForm(entity.still_photo[key]);
+    stillPhotoControls[key] = new MoviePromotionalHostedMediaForm(entity.still_photo[key]);
   }
 
 
   return {
     // Images
-    still_photo: new MediaFormList<Record<string, MoviePromotionalImageForm>>(stillPhotoControls),
+    still_photo: new MediaFormList<Record<string, MoviePromotionalHostedMediaForm>>(stillPhotoControls),
 
     // Hosted Media
     presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
