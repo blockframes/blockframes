@@ -39,7 +39,7 @@ const newMovie = {
 };
 
 describe('Migration script', () => {
-  test('migrate data from schemaX to schemaY', () => {
+  it('Create a technical section into movie object', () => {
     const schemaX = movie;
     const schemaY = createTechnicalSection(schemaX);
     expect(schemaY).toEqual(newMovie);
