@@ -49,7 +49,9 @@ export interface Stakeholder extends StakeholderRaw {
  * @dev interface to represent a movie credit
  */
 export interface Credit extends Person {
-  shortBiography?: string,
+  description?: string,
+  filmography?: string,
+  status?: string,
 };
 
 /**
@@ -57,6 +59,13 @@ export interface Credit extends Person {
  */
 export interface Producer extends Credit {
   role: ProducerRolesSlug, // overrided role scope from Producer interface
+};
+
+/**
+ * @dev interface to represent a director credit
+ */
+export interface Director extends Credit {
+  category?: string, // TODO Do a static when we have predefined value for category
 };
 
 /**
@@ -113,7 +122,7 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     firstName: '',
     lastName: '',
     role: '',
-    shortBiography: '',
+    filmography: '',
     avatar: createHostedMedia(),
     ...params
   } as T;
