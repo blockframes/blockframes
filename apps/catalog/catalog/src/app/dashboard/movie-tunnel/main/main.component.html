@@ -35,7 +35,7 @@
         </movie-form-original-releases>
         <mat-divider></mat-divider>
         <h6 class="mat-body-2">
-          Domestic Distributor{ main.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
+          Domestic Distributor{ production.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
         </h6>
         <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders>
         <mat-divider></mat-divider>

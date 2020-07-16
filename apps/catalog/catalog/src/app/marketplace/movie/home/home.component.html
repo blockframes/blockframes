@@ -33,7 +33,7 @@
                 </div>
                 <span class="mat-caption">{{ getMainInfo(movie) }}</span>
                 <span class="mat-caption"
-                  *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                  *ngFor="let salesAgent of movie.production.stakeholders.salesAgent; let isLast=last">
                   {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
                 </span>
               </div>

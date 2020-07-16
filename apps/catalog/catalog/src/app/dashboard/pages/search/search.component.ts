@@ -6,7 +6,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 interface MovieSearchResult {
   original: string;
-  productionYear: number;
+  releaseYear: number;
   director: string;
   runningTime: string | number;
 }
@@ -25,7 +25,7 @@ export class SearchComponent implements OnInit {
 
   public columns = {
     original: 'Original Title',
-    productionYear: 'Production Year',
+    releaseYear: 'Release Year',
     director: 'Director',
     runningTime: 'Running Time'
   };
@@ -54,7 +54,7 @@ export class SearchComponent implements OnInit {
       ).flat(1);
       moviesResult.push({
         original: movie.main.title.original,
-        productionYear: movie.main.productionYear,
+        releaseYear: movie.main.releaseYear,
         director: flatDirector.join(' '),
         runningTime: movie.main.totalRunTime
       });
