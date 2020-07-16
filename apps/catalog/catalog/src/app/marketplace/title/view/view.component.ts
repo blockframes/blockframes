@@ -116,7 +116,7 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getOriginalCountries(movie: Movie) {
-    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
+    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.releaseYear}`;
   }
 
 

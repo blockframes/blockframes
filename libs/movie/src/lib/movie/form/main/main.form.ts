@@ -36,11 +36,11 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName, shortBiography } = createCredit(director);
+  const { firstName, lastName, filmography } = createCredit(director);
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),
-    shortBiography: new FormControl(shortBiography)
+    filmography: new FormControl(filmography)
   }
 }
 
@@ -147,14 +147,12 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     internalRef: new FormControl(entity.internalRef),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    productionYear: new FormControl(entity.productionYear, [yearValidators]),
+    releaseYear: new FormControl(entity.releaseYear, [yearValidators]),
     genres: new FormStaticArray(entity.genres, 'GENRES'),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status),
     totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
-    shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
-    stakeholders: new StakeholderMapForm(entity.stakeholders),
     contentType: new FormControl(entity.contentType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
@@ -196,14 +194,6 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
 
   get directors() {
     return this.get('directors');
-  }
-
-  get stakeholders() {
-    return this.get('stakeholders');
-  }
-
-  get shortSynopsis() {
-    return this.get('shortSynopsis');
   }
 
   get banner() {
