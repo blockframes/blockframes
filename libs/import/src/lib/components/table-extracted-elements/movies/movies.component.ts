@@ -40,7 +40,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     'select',
     'movie.main.title.original',
     // 'movie.main.poster', TODO issue #3091
-    'movie.main.productionYear',
     'errors',
     'warnings',
     'actions',
@@ -144,8 +143,8 @@ export class TableExtractedMoviesComponent implements OnInit {
       licensor.party.displayName = `${importState.movie.main.internalRef}'s producer`;
 
       // Lets try to add more info about licensor with movie producing company
-      if (importState.movie.main?.stakeholders?.executiveProducer.length) {
-        const firstProducer = importState.movie.main?.stakeholders?.executiveProducer.pop();
+      if (importState.movie.production?.stakeholders?.executiveProducer.length) {
+        const firstProducer = importState.movie.production?.stakeholders?.executiveProducer.pop();
         if (firstProducer.orgId) {
           licensor.party.orgId = firstProducer.orgId;
         } else if (firstProducer.displayName) {
@@ -265,7 +264,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Even for nested objects.
    */
   public filterPredicate(data: MovieImportState, filter: string) {
-    const dataStr = data.movie.main.internalRef + data.movie.main.title.original + data.movie.main.productionYear;
+    const dataStr = data.movie.main.internalRef + data.movie.main.title.original;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

@@ -41,9 +41,9 @@
           <strong>Director </strong>
           <span>{{ movie.main.directors | displayName }} </span>
         </li>
-        <li *ngIf="movie.main.productionYear">
+        <li *ngIf="movie.main.releaseYear">
           <strong>Production Year </strong>
-          <span>{{ movie.main.productionYear }} </span>
+          <span>{{ movie.main.releaseYear }} </span>
         </li>
         <li *ngIf="movie.main.originCountries">
           <strong>Country of Origin </strong>
@@ -77,7 +77,7 @@
   </mat-card>
 
   <!-- CREDIT CARD -->
-  <mat-card *ngIf="movie.salesCast || movie.main.stakeholders">
+  <mat-card *ngIf="movie.salesCast || movie.production.stakeholders">
     <mat-card-header>
       <h3>Credits</h3>
     </mat-card-header>
@@ -91,9 +91,9 @@
             </ng-container>
           </li>
         </ng-container>
-        <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
+        <ng-container *ngIf="movie.production.stakeholders || movie.salesCast.producers.length > 0">
           <h5>Company Credits</h5>
-          <ng-container *ngIf="movie.main.stakeholders as stakeholders">
+          <ng-container *ngIf="movie.production.stakeholders as stakeholders">
             <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Production Companies</strong>
               <span> {{ getStakeholder(movie, 'executiveProducer') }}</span></li>
             <li *ngIf="stakeholders.coProducer.length > 0"><strong i18n>Co-Producer{stakeholders.coProducer.length,
@@ -104,7 +104,7 @@
             <li><strong i18n>Producer{movie.salesCast.producers.length, plural,=1 {} other {s}}</strong>
               <span> {{ getSalesCast(movie, 'producers', 'PRODUCER_ROLES') }}</span></li>
           </ng-container>
-          <ng-container *ngIf="movie.main.stakeholders as stakeholders">
+          <ng-container *ngIf="movie.production.stakeholders as stakeholders">
             <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length,
                 plural,=1 {} other {s}}</strong>
               <span> {{ getStakeholder(movie, 'distributor') }}</span></li>

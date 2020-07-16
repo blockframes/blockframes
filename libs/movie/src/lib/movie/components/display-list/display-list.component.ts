@@ -14,7 +14,7 @@ import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayListComponent {
-  public displayedColumns: string[] = ['picture', 'title', 'director', 'productionYear', 'action'];
+  public displayedColumns: string[] = ['picture', 'title', 'director', 'releaseYear', 'action'];
   public dataSource: MatTableDataSource<Movie>;
 
   @Input()

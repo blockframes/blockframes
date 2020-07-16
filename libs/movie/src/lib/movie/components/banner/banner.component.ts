@@ -23,7 +23,7 @@ export class BannerComponent {
       this.title = movie.main.title;
       this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
       this.countries = movie.main.originCountries;
-      this.date = movie.main.productionYear;
+      this.date = movie.main.releaseYear;
     }
   }
 }
