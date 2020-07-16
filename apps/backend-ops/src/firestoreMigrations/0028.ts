@@ -1,5 +1,5 @@
 import { Firestore, Storage } from '../admin';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
@@ -78,9 +78,9 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
-      notification.organization.logo = createImgRef();
+      notification.organization.logo = createHostedMedia();
     } else if (notification.user) {
-      notification.user.avatar = createImgRef();
+      notification.user.avatar = createHostedMedia();
     }
     await doc.ref.update(notification);
   });
@@ -91,16 +91,16 @@ async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<Fi
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createImgRef();
+      invitation.fromOrg.logo = createHostedMedia();
     }
     if (invitation.toOrg) {
-      invitation.toOrg.logo = createImgRef();
+      invitation.toOrg.logo = createHostedMedia();
     }
     if (invitation.fromUser) {
-      invitation.fromUser.avatar = createImgRef();
+      invitation.fromUser.avatar = createHostedMedia();
     }
     if (invitation.toUser) {
-      invitation.toUser.avatar = createImgRef();
+      invitation.toUser.avatar = createHostedMedia();
     }
     await doc.ref.update(invitation);
 

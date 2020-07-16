@@ -6,17 +6,11 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { UploadData, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
+import { UploadData, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
 import { delay, BehaviorStore } from "@blockframes/utils/helpers";
-
-// Rxjs
-import { map, takeWhile } from "rxjs/operators";
-
-// Lodash
-import { get } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -64,11 +58,6 @@ export class MediaService {
    */
   async removeFile(path: string) {
     await this.storage.ref(path).delete().toPromise();
-
-    // if we delete an image, we will wait until the deletion of all the sizes
-    if (path.includes('original')) {
-      await this.waitForImageDeletion(path);
-    }
   }
 
   private addTasks(tasks: AngularFireUploadTask[]) {
@@ -136,33 +125,6 @@ export class MediaService {
       }
     });
     await Promise.all(promises);
-  }
-
-  waitForImageDeletion(path: string) {
-
-    // extract info from the path
-
-    const pathParts = path.split('/');
-    if (pathParts.length < 5) {
-      throw new Error(`Invalid Path : ${path}, path must contain at least 5 parts : collection/id/one-or-more-field/original/fileName`)
-    }
-    const collection = pathParts.shift();
-    const docId = pathParts.shift();
-    pathParts.pop(); // remove filename
-    pathParts.pop(); // remove 'original'
-
-    const fieldToUpdate = pathParts.join('.');
-
-    // listen on the corresponding firestore doc
-    const doc = this.db.collection(collection).doc(docId);
-
-    const allSizeEmpty = (image: ImgRef) => imgSizeDirectory.every(key => !image[key].ref);
-
-    // listen on every changes of the current document
-    return doc.snapshotChanges().pipe(
-      map(action => get(action.payload.data(), fieldToUpdate)),
-      takeWhile((image: ImgRef) => !allSizeEmpty(image)),
-    ).toPromise();
   }
 
 }

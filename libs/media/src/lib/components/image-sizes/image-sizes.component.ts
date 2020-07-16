@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
-import { ImgRef } from '@blockframes/media/+state/media.model';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 @Component({
-  selector: '[imgRef] admin-image-sizes',
+  selector: '[form] admin-image-sizes',
   templateUrl: './image-sizes.component.html',
   styleUrls: ['./image-sizes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageSizeComponent {
-  @Input() imgRef: any; // any is needed for the keyvalue pipe. This page will disapear with imgix
+  @Input() form: HostedMediaForm;
 }

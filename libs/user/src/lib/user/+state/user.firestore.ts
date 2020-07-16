@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef, HostedMedia, createHostedMedia } from "@blockframes/media/+state/media.firestore";
+import { HostedMedia, createHostedMedia } from "@blockframes/media/+state/media.firestore";
 
 export interface User {
   uid: string;
@@ -11,7 +11,7 @@ export interface User {
   phoneNumber: string;
   position: string;
   orgId: string;
-  avatar: ImgRef;
+  avatar: HostedMedia;
   watermark: HostedMedia;
 }
 
@@ -20,7 +20,7 @@ export interface User {
 export interface PublicUser {
   uid: string;
   email: string;
-  avatar?: ImgRef;
+  avatar?: HostedMedia;
   watermark?: HostedMedia;
   firstName?: string;
   lastName?: string;
@@ -31,7 +31,7 @@ export function createPublicUser(user: Partial<User> = {}) : PublicUser{
   return {
     uid: user.uid || '',
     email: user.email || '',
-    avatar: createImgRef(user.avatar),
+    avatar: createHostedMedia(user.avatar),
     watermark: createHostedMedia(user.watermark),
     firstName: user.firstName || '',
     lastName: user.lastName || '',

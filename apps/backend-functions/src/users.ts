@@ -11,7 +11,6 @@ import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
-import { handleImageChange } from './internals/image';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -128,7 +127,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.fallback?.url !== after.avatar?.fallback?.url
+    before.avatar?.url !== after.avatar?.url
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -140,15 +139,6 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.email !== after.email
   ) {
     promises.push(upsertWatermark(after));
-  }
-
-  // AVATAR
-  const avatarBeforeRef = before.avatar?.original?.ref;
-  const avatarAfterRef = after.avatar?.original?.ref;
-  if (
-    avatarBeforeRef !== avatarAfterRef
-  ) {
-    await handleImageChange(after.avatar!);
   }
 
   return Promise.all(promises);

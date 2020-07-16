@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { ScreeningEvent } from '../../+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { Movie } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningItemComponent {
-  public poster: ImgRef;
+  public poster: HostedMedia;
   public movie: Movie;
   public screening: ScreeningEvent;
   public invitation$: Observable<Invitation>;

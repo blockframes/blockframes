@@ -1,4 +1,5 @@
 import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+import { HostedMedia } from "@blockframes/media/+state/media.model";
 
 export interface OldPromotionalElement {
   label: string,
