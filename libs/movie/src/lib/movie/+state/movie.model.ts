@@ -26,10 +26,9 @@ import {
   DocumentMeta,
   LanguageRecord,
   PromotionalExternalMedia,
-  PromotionalImage,
   PromotionalHostedMedia,
 } from './movie.firestore';
-import { createImgRef, createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -111,8 +110,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     storeConfig: createStoreConfig(params.storeConfig),
     stakeholders: createMovieStakeholders(params.stakeholders),
     officialIds: createOfficialIds(params.officialIds),
-    banner: createPromotionalImage(params.banner),
-    poster: createPromotionalImage(params.poster),
+    banner: createPromotionalHostedMedia(params.banner),
+    poster: createPromotionalHostedMedia(params.poster),
   };
 }
 
@@ -121,9 +120,9 @@ export function createMoviePromotionalElements(
   initDefault: boolean = true
 ): MoviePromotionalElements {
 
-  const newStills: Record<string, PromotionalImage> = {};
+  const newStills: Record<string, PromotionalHostedMedia> = {};
   for (const key in params.still_photo) {
-    newStills[key] = createPromotionalImage(params.still_photo[key]);
+    newStills[key] = createPromotionalHostedMedia(params.still_photo[key]);
   }
 
   const elements: MoviePromotionalElements = {
@@ -182,17 +181,6 @@ export function createPromotionalHostedMedia(
     ...promotionalElement,
     ...promotionalHostedMedia,
     media: createHostedMedia(promotionalHostedMedia.media),
-  };
-}
-
-export function createPromotionalImage(
-  promotionalImage: Partial<PromotionalImage> = {}
-): PromotionalImage {
-  const promotionalElement = createPromotionalElement(promotionalImage);
-  return {
-    ...promotionalImage,
-    ...promotionalElement,
-    media: createImgRef(promotionalImage.media),
   };
 }
 
@@ -262,7 +250,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: createImgRef(),
+    logo: createHostedMedia(),
     ...prize
   };
 }

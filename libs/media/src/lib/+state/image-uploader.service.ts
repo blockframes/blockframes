@@ -1,8 +1,6 @@
 import { Injectable } from "@angular/core";
 import { AngularFireStorage } from "@angular/fire/storage";
 import { HttpClient } from "@angular/common/http";
-import { createImgRef, ImgRef } from "./media.model";
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 @Injectable({ providedIn: 'root' })
 export class ImageUploader {
