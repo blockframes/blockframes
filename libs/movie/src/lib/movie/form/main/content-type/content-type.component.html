@@ -2,8 +2,8 @@
   <!-- CONTENT TYPE -->
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Content Type</mat-label>
-    <mat-select test-id="content-type" formControlName="workType">
-      <mat-option *ngFor="let type of workType | keyvalue" [value]="type.key">
+    <mat-select test-id="content-type" formControlName="contentType">
+      <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
         {{ type.value }}
       </mat-option>
     </mat-select>
