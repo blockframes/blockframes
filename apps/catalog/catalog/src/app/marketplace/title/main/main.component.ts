@@ -47,7 +47,7 @@ export class MarketplaceMovieMainComponent {
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getStakeholder(movie: Movie, role: string) {
-    return movie.main.stakeholders[role].map(stakeholder => {
+    return movie.production.stakeholders[role].map(stakeholder => {
       return (stakeholder.countries && !!stakeholder.countries.length)
         ? `${stakeholder.displayName} (${stakeholder.countries.map(country => getLabelBySlug('TERRITORIES', country))})`
         :  stakeholder.displayName;

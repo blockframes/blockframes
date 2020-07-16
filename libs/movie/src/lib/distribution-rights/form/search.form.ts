@@ -28,7 +28,7 @@ import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfa
 /////////////////////////
 
 export interface CatalogSearch {
-  productionYear: DateRange;
+  releaseYear: DateRange;
   genres: GenresSlug[];
   productionStatus: MovieStatusLabel[];
   salesAgent: string[];
@@ -59,7 +59,7 @@ export interface AvailsSearch {
 
 function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch {
   return {
-    productionYear: {
+    releaseYear: {
       from: null,
       to: null
     },
@@ -134,7 +134,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     {} // Initial value. No controls at the beginning
   );
   return {
-    productionYear: createTermsControl(search.productionYear),
+    releaseYear: createTermsControl(search.releaseYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),

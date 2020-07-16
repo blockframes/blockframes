@@ -215,14 +215,6 @@ export interface MovieRating {
 
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 
-export interface MovieOfficialIds {
-  isan: string;
-  eidr: string;
-  imdb?: string;
-  custom?: string;
-  internal?: string;
-}
-
 export interface MovieMain {
   banner: PromotionalImage;
   contentType?: ContentType;
@@ -295,6 +287,7 @@ interface MovieRaw<D> {
   festivalPrizes: MovieFestivalPrizes;
   budget: MovieBudget;
   movieReview: MovieReview[];
+  production: MovieProduction;
 
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO we will need more visibility on the upload part to take the final decision

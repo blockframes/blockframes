@@ -37,7 +37,6 @@ export async function upgrade(db :Firestore) {
       }
     };
 
-
     return batch.set(movieDoc.ref, newData);
   })
 

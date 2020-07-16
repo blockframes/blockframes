@@ -27,7 +27,7 @@ export class MarketplaceHomeComponent implements OnInit {
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.productionYear >= 2018 && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
+      filterBy: movies => movies.main.releaseYear >= 2018 && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
     });
     const postProduction$ = this.movieQuery.selectAll({
       filterBy: movies => movies.main.status === 'post-production' && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
