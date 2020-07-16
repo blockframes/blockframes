@@ -1,4 +1,4 @@
-import { createTechnicalSection } from "./firestoreMigrations/0029";
+import { createTechnicalSection } from "./firestoreMigrations/temp-31";
 import { Movie } from "@blockframes/movie/+state/movie.model";
 
 // Old version of movie data model
