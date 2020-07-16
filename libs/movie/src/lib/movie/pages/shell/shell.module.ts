@@ -5,9 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Component
-import { MovieTunnelComponent } from './movie-tunnel.component';
-import { MovieTunnelRoutingModule } from './movie-tunnel-routing.module';
-import { MovieFormShellModule } from '@blockframes/movie/pages/shell/shell.module';
+import { MovieFormShellComponent } from './shell.component';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -20,12 +18,11 @@ import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
-  declarations: [MovieTunnelComponent],
+  declarations: [MovieFormShellComponent],
+  exports: [MovieFormShellComponent],
   imports: [
     CommonModule,
-    MovieTunnelRoutingModule,
     RouterModule,
-    MovieFormShellModule,
     FlexLayoutModule,
     TunnelLayoutModule,
     ImageReferenceModule,
@@ -38,4 +35,4 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     MatDialogModule,
   ],
 })
-export class MovieTunnelModule { }
+export class MovieFormShellModule { }
