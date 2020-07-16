@@ -285,7 +285,7 @@ export interface MovieOriginalReleaseRaw<D> {
   media?: MediasSlug
 }
 
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> { }
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 
 export interface MovieRating {
   country: TerritoriesSlug;
