@@ -18,11 +18,11 @@ const tunnelRoutes: Routes = [
       // Page 2
       {
         path: 'main',
-        loadChildren: () => import('./main/main.module').then(m => m.MainTunnelModule)
+        loadChildren: () => import('@blockframes/movie/pages/main/main.module').then(m => m.MovieFormMainModule)
       },
       {
         path: 'synopsis',
-        loadChildren: () => import('./synopsis/synopsis.module').then(m => m.TunnelSynopsisModule)
+        loadChildren: () => import('@blockframes/movie/pages//synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
       },
       // Page 4
       {
