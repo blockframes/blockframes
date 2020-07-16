@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MoviePromotionalImageForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { ActivatedRoute } from '@angular/router';
