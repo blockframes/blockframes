@@ -13,19 +13,22 @@ export default class FestivalInvitationsPage {
   }
 
   acceptInvitationScreening() {
-    cy.get('festival-invitation invitation-list invitation-item button[test-id=invitation-accept]').click();
+    cy.get('festival-invitation [test-id=more]').first().click();
+    cy.get('[test-id=accept-invitation]').click();
   }
 
   refuseInvitationScreening() {
-    cy.get('festival-invitation invitation-list invitation-item button[test-id=invitation-refuse]').click();
+    cy.get('festival-invitation [test-id=more]').first().click();
+    cy.get('[test-id=decline-invitation]').click();
   }
 
   assertInvitationIsAccepted() {
     cy.get('festival-invitation invitation-list invitation-item').contains(ACCEPTED);
   }
 
-  clickMore() {
+  clickGoToEvent() {
     cy.get('festival-invitation [test-id=more]').first().click();
+    cy.get('[test-id=go-to-event]').click();
     return new FestivalMarketplaceEventPage();
   }
 }

@@ -54,7 +54,7 @@ describe('User invites other users to his private screening', () => {
     cy.wait(2000);
 
     // Assets video runs
-    const p3: FestivalMarketplaceEventPage = p2.clickMore();
+    const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
     const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
     // Save the current url for the next test
