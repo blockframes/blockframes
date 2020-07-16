@@ -8,7 +8,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 })
 export class MovieFeaturePipe implements PipeTransform {
   transform(value: Movie): string {
-    const { workType, totalRunTime, genres, originalLanguages, productionYear } = value.main;
+    const { contentType, totalRunTime, genres, originalLanguages, productionYear } = value.main;
 
     let displayedGenres = '';
     if (genres.length > 0) displayedGenres += getLabelBySlug('GENRES', genres[0]);
@@ -21,7 +21,7 @@ export class MovieFeaturePipe implements PipeTransform {
     const isTBC = (totalRunTime && totalRunTime !== 'TBC') ? `${totalRunTime}'` : 'TBC';
 
     return [
-      workType ? workType[workType] : '',
+      contentType ? contentType[contentType] : '',
       displayedGenres,
       displayedLanguages,
       productionYear,
