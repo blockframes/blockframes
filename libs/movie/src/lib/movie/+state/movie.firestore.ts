@@ -17,7 +17,7 @@ import {
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { ImgRef, HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
+import { HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
@@ -117,7 +117,7 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
-  logo?: ImgRef,
+  logo?: HostedMedia,
   premiere?: PremiereType,
 }
 
@@ -133,14 +133,8 @@ export interface PromotionalHostedMedia extends PromotionalElement {
   media: HostedMedia,
 }
 
-export interface PromotionalImage extends PromotionalElement {
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
-  media: ImgRef,
-}
-
 export interface MoviePromotionalElements {
-  still_photo: Record<string, PromotionalImage>,
+  still_photo: Record<string, PromotionalHostedMedia>,
 
   presentation_deck: PromotionalHostedMedia,
   scenario: PromotionalHostedMedia,
@@ -247,8 +241,8 @@ export interface MovieMain {
   workType?: WorkType;
   storeConfig?: StoreConfig;
   totalRunTime?: number | string;
-  banner: PromotionalImage;
-  poster: PromotionalImage;
+  banner: PromotionalHostedMedia;
+  poster: PromotionalHostedMedia;
 }
 
 interface MovieSalesInfoRaw<D> {

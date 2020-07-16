@@ -2,7 +2,7 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
+import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
@@ -97,13 +97,13 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     }
 
     // update and move banner to main
-    movie.main.banner = updateImgRef<PromotionalImage>(movie.promotionalElements['banner'], 'media');
+    movie.main.banner = updateImgRef<PromotionalHostedMedia>(movie.promotionalElements['banner'], 'media');
     if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
 
     // update and move poster to main
-    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalImage, index: number) => {
+    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalHostedMedia, index: number) => {
       if (index === 0) {
-        movie.main.poster = updateImgRef(poster, 'media') as PromotionalImage;
+        movie.main.poster = updateImgRef(poster, 'media') as PromotionalHostedMedia;
         delete movie.promotionalElements['poster'];
       } else {
         delete movie.promotionalElements['poster']; // other posters shouldn't exist, but if do they are deleted
@@ -111,10 +111,10 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     });
 
     // update still photos from an array with old ImgRef to a record with new ImgRef
-    const still_photo: Record<string, PromotionalImage> = {};
+    const still_photo: Record<string, PromotionalHostedMedia> = {};
     (movie.promotionalElements.still_photo as any).forEach((still, index) => {
       if (!!still.media?.ref || !!still.media?.urls?.original) {
-        still_photo[`${index}`] = updateImgRef<PromotionalImage>(still, 'media');
+        still_photo[`${index}`] = updateImgRef<PromotionalHostedMedia>(still, 'media');
       }
     });
     movie.promotionalElements.still_photo = still_photo;
@@ -130,7 +130,7 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
   return { url: media?.url || '' };
 }
 
-function updateImgRef<T extends (PublicUser | Organization | PromotionalImage)>(
+function updateImgRef<T extends (PublicUser | Organization | PromotionalHostedMedia)>(
   element: T,
   property: 'avatar' | 'logo' | 'media'
 ) {

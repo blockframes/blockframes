@@ -8,7 +8,7 @@ import { DateGroup } from '@blockframes/utils/helpers';
 import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { NotificationType } from './notification.firestore';
-import { ImgRef, createImgRef } from '@blockframes/media/+state/media.firestore';
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { toDate } from 'date-fns';
 
 function getYesterday() {
@@ -56,8 +56,8 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
     );
   }
 
-  public getPoster(id: string): ImgRef {
+  public getPoster(id: string): HostedMedia {
     const movie = this.movieQuery.getEntity(id);
-    return !!movie && movie.main.poster ? movie.main.poster.media : createImgRef();
+    return !!movie && movie.main.poster ? movie.main.poster.media : createHostedMedia();
   }
 }

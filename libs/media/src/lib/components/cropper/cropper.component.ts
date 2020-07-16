@@ -127,7 +127,7 @@ export class CropperComponent implements OnInit {
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
 
       this.form.patchValue({
-        ref: `${this.storagePath}/original/`,
+        ref: `${this.storagePath}/`,
         blobOrFile: blob,
         delete: false,
         fileName: fileName,

@@ -1,11 +1,11 @@
 import { NotificationDocument } from "./notification.firestore";
-import { ImgRef } from "@blockframes/media/+state/media.firestore";
+import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 
 // export type Notification = NotificationDocument;
 
 export interface Notification extends NotificationDocument<Date> {
   message: string;
-  imgRef?: ImgRef;
+  imgRef?: HostedMedia;
   placeholderUrl?: string;
   url?: string;
 }
@@ -16,6 +16,6 @@ export interface Notification extends NotificationDocument<Date> {
  */
 export interface  NotificationInformation {
   message: string;
-  imgRef?: ImgRef;
+  imgRef?: HostedMedia;
   placeholderUrl?: string;
 }
