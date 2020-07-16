@@ -155,7 +155,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
-    workType: new FormControl(entity.workType),
+    contentType: new FormControl(entity.contentType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
     banner: new MoviePromotionalHostedMediaForm(entity.banner),
