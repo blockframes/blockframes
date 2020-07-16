@@ -1,9 +1,9 @@
 <ul>
   <li>
     <strong>Content Type </strong>
-    <missing-control [control]="main.get('workType')" [link]="link">
+    <missing-control [control]="main.get('contentType')" [link]="link">
       <ng-template #content>
-        {{ main.get('workType').value | toLabel: 'workType' | async | titlecase }}
+        {{ main.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
       </ng-template>
     </missing-control>
   </li>

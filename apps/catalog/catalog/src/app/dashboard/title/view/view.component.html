@@ -9,8 +9,8 @@
       </ng-container>
       <div class="movie-info">
         <h4>
-          {{ movie.main.workType }}
-          <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
+          {{ movie.main.contentType }}
+          <ng-container *ngIf="movie.main.contentType && movie.main.status">|</ng-container>
           {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
           <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|</ng-container>
           {{ movie.main.totalRunTime | duration: 'ms' }}
@@ -21,8 +21,6 @@
           <ng-container *ngFor="let country of movie.main.originCountries; let isLast=last">
             {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
           </ng-container>
-          <ng-container *ngIf="movie.main.productionYear && movie.main.originCountries.length">,</ng-container>
-          {{ movie.main.productionYear }}
         </span>
       </div>
     </article>
