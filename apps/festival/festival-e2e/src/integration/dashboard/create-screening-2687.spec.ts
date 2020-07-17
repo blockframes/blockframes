@@ -98,7 +98,7 @@ describe('User create a screening', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
-    p2.acceptInvitation();
+    p2.acceptInvitationScreening();
   });
 
   it('Verify that request is accepted', () => {

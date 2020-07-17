@@ -46,10 +46,10 @@
   <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">Go to event</a>
   <ng-container [ngSwitch]="invitation.status">
     <div *ngSwitchCase="'pending'">
-      <span test-id="accept-invivation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
+      <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
         Accept invitation
       </span>
-      <span test-id="decline-invivation" mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
+      <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
         Decline invitation
       </span>
     </div>
