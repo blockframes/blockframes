@@ -5,7 +5,7 @@ import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module'
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterComponent } from './table-filter.component';
 import { RouterModule } from '@angular/router';
-import { ColRefModule, ColRef } from '@blockframes/utils/directives/col-ref.directive';
+import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +20,7 @@ import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [TableFilterComponent],
-  exports: [TableFilterComponent, ColRef],
+  exports: [TableFilterComponent, ColRefModule],
   imports: [
     CommonModule,
     ReactiveFormsModule,

@@ -5,8 +5,6 @@ import {
   ViewChild,
   Input,
   AfterViewInit,
-  Directive,
-  TemplateRef,
   ContentChildren,
   QueryList,
   EventEmitter,

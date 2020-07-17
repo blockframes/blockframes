@@ -1,8 +1,11 @@
 :host {
   display: block;
-  overflow: auto;
 }
 
 table, mat-paginator {
-  width: 100%;
+  overflow: auto;
+}
+
+.mat-table-sticky:first-child {
+  width: 100px;
 }
