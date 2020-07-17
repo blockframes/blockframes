@@ -1,10 +1,10 @@
 import { Firestore, Storage } from '../admin';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
+import { PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { OldImgRef, OldPublicUser, OldPublicOrganization } from './old-types';
+import { OldImgRef, OldPublicUser, OldPublicOrganization, OldMovieImgRefDocument } from './old-types';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -64,7 +64,7 @@ async function updateMovies(
 ) {
   return Promise.all(
     movies.docs.map(async doc => {
-      const movie = doc.data() as MovieDocument;
+      const movie = doc.data() as OldMovieImgRefDocument;
 
       const keys = ['banner', 'poster', 'still_photo'];
 

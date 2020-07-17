@@ -1,13 +1,13 @@
 import { Firestore, Storage } from '../admin';
 import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
+import { PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { chunk } from 'lodash'
-import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
+import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -122,7 +122,7 @@ async function updateMovies(
   storage: Storage
 ) {
   return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as MovieDocument;
+    const movie = doc.data() as OldMovieImgRefDocument;
 
     const keys = ['banner', 'poster', 'still_photo'];
 

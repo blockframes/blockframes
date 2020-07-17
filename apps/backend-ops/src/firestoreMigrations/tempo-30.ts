@@ -7,8 +7,7 @@ export async function upgrade(db :Firestore) {
   movies.docs.forEach(movieDoc => {
     const movieData = movieDoc.data();
 
-    const { stakeholders, workType } = movieData.main;
-    const { releaseYear } = movieData.salesInfo;
+    const { stakeholders, workType, productionYear } = movieData.main;
 
     delete movieData.main.productionYear;
     delete movieData.main.stakeholders;
@@ -30,7 +29,7 @@ export async function upgrade(db :Firestore) {
           }
         }),
         contentType: workType || null,
-        releaseYear: releaseYear || null,
+        releaseYear: productionYear || null,
       },
       production: {
         stakeholders: stakeholders || null
