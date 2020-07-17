@@ -74,6 +74,7 @@ export const MIGRATIONS = {
   30: v0030,
   31: v0031,
   32: v0032,
+  // 30: v0030,
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));
