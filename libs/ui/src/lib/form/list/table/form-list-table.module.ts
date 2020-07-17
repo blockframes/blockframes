@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 
 // Components
 import { FormListTableComponent } from './form-list-table.component';
-import { ColRef } from './form-list-table.component';
+
+// Blockframes
+import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 
 // Material
 import { MatTableModule } from '@angular/material/table';
@@ -15,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   imports: [
     CommonModule,
+    ColRefModule,
 
     // Material
     MatTableModule,
@@ -22,7 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatButtonModule,
   ],
-  declarations: [FormListTableComponent, ColRef],
-  exports: [FormListTableComponent, ColRef]
+  declarations: [FormListTableComponent],
+  exports: [FormListTableComponent]
 })
 export class FormListTableModule { }
