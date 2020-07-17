@@ -8,12 +8,6 @@ import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
 import { Notification } from './notification.model';
 
-class NotificationStoreStub  {
-  formatNotification(notification) {
-    return { format: notification };
-  }
-};
-
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
   let db: AngularFirestore;
@@ -34,7 +28,7 @@ describe('Notifications Test Suite', () => {
       ],
       providers: [
         NotificationService,
-        { provide: NotificationStore, useClass: NotificationStoreStub },
+        { provide: NotificationStore },
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -61,7 +55,8 @@ describe('Notifications Test Suite', () => {
   });
 
   it('formats notification', () => {
-    const newNotif = service.formatFromFirestore(notif);
-    expect(newNotif).toEqual({ ...notif, format: notif});
+    service.formatFromFirestore = jest.fn();
+    service.formatFromFirestore(notif);
+    expect(service.formatFromFirestore).toHaveBeenCalled();    
   });
 });
