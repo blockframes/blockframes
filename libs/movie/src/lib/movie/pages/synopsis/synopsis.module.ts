@@ -9,6 +9,10 @@ import { MovieFormKeywordsModule } from '@blockframes/movie/form/promotional-des
 
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [MovieFormSynopsisComponent],
@@ -18,6 +22,10 @@ import { MatCardModule } from '@angular/material/card';
     MovieFormKeywordsModule,
     MovieFormPromotionalDescriptionModule,
     MovieFormStoryModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatIconModule,
+    MatInputModule,
     RouterModule.forChild([{ path: '', component: MovieFormSynopsisComponent }]),
     MatCardModule
   ],

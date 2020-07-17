@@ -22,42 +22,42 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'synopsis',
-        loadChildren: () => import('@blockframes/movie/pages//synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+        loadChildren: () => import('@blockframes/movie/pages/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
       },
       // Page 4
       {
         path: 'credits',
-        loadChildren: () => import('./credits/credits.module').then(m => m.CreditsModule)
+        loadChildren: () => import('@blockframes/movie/pages/credits/credits.module').then(m => m.CreditsModule)
       },
       // Page 5
       {
         path: 'budget',
-        loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule)
+        loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
       },
       // Page 6
       {
         path: 'technical-info',
         loadChildren: () =>
-          import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+          import('@blockframes/movie/pages/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
       // Page 10
       {
         path: 'images',
-        loadChildren: () => import('./media-image/media-image.module').then(m => m.MediaImageModule)
+        loadChildren: () => import('@blockframes/movie/pages/media-image/media-image.module').then(m => m.MediaImageModule)
       // Page 11
       },
       {
         path: 'files&links',
-        loadChildren: () => import('./media-file/media-file.module').then(m => m.MediaFileModule)
+        loadChildren: () => import('@blockframes/movie/pages/media-file/media-file.module').then(m => m.MediaFileModule)
       },
       {
         path: 'summary',
-        loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule)
+        loadChildren: () => import('@blockframes/movie/pages/summary/summary.module').then(m => m.TunnelSummaryModule)
       },
       // Last page
       {
         path: 'end',
-        loadChildren: () => import('./end/end.module').then(m => m.EndTunnelModule)
+        loadChildren: () => import('@blockframes/movie/pages/end/end.module').then(m => m.EndTunnelModule)
       }
     ]
   }
