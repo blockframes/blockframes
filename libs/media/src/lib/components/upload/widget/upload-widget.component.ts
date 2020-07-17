@@ -37,9 +37,9 @@ export class UploadWidgetComponent {
     }
   }
 
-  cancel(task: AngularFireUploadTask, index: number) {
-    task.pause();
-    this.remove(index);
+  cancel(task: AngularFireUploadTask) {
+    task.resume();
+    task.cancel();
   }
 
   remove(index: number) {
