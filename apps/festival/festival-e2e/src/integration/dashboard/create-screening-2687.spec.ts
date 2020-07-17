@@ -8,7 +8,6 @@ import {
   FestivalScreeningPage,
   FestivalMarketplaceNotificationsPage,
   FestivalMarketplaceCalendarPage,
-  FestivalMarketplaceScreeningPage,
   FestivalMarketplaceEventPage
 } from '../../support/pages/marketplace/index';
 import {
