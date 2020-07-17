@@ -1,6 +1,6 @@
 import { object } from '@storybook/addon-knobs';
 import { OrganizationBannerModule } from './banner.module';
-import { ToolkitModule, ORGS, MOVIES } from '@blockframes/ui/storybook';
+import { ToolkitModule, ORGS } from '@blockframes/ui/storybook';
 import { OrganizationBannerComponent } from './banner.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -19,12 +19,6 @@ export const organizationMinimalCard = () => ({
     </storybook-toolkit>
   `,
   props: {
-    org: object('org', getObject()),
+    org: object('org', ORGS[0]),
   }
 });
-
-function getObject() {
-  const org = ORGS[0];
-  org.movies = MOVIES.filter(movie => movie?.main?.storeConfig?.status === 'accepted' && movie?.main?.storeConfig?.appAccess.festival).slice(0, 4);
-  return org;
-}

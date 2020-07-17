@@ -58,6 +58,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
 
   public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id);
-    return !!movie && movie.promotionalElements.poster.length ? movie.promotionalElements.poster[0].media : createImgRef();
+    return !!movie && movie.main.poster ? movie.main.poster.media : createImgRef();
   }
 }

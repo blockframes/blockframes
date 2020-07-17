@@ -9,8 +9,9 @@ import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
 import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { chunk } from 'lodash'
+import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
 
-const EMPTY_REF: ImgRef = {
+const EMPTY_REF: OldImgRef = {
   ref: '',
   urls: { original: '' }
 };
@@ -69,7 +70,7 @@ async function updateUsers(
   storage: Storage
 ) {
   return runChunks(users.docs, async (doc) => {
-    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
+    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as OldPublicUser, storage);
     await doc.ref.set(updatedUser);
   });
 }
@@ -113,7 +114,7 @@ async function updateOrganizations(
   storage: Storage
 ) {
   return runChunks(organizations.docs, async (doc) => {
-    const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+    const updatedOrg = await updateOrgLogo(doc.data() as OldPublicOrganization, storage);
     await doc.ref.set(updatedOrg);
   });
 }
@@ -173,12 +174,13 @@ const updateMovieField = async <T extends Credit | PromotionalElement>(
   return value;
 }
 
-const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) => {
+const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storage) => {
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    const watermark = await _upsertWatermark(user);
-    user.watermark = watermark;
+    const watermark = await _upsertWatermark(user as any); // _upsertWatermark only require uid, email, firstName, lastName, witch are common between the 2 types
+    user.watermark.ref = watermark.ref;
+    user.watermark.urls.original = watermark.url;
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }
@@ -186,17 +188,17 @@ const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) 
   return user;
 };
 
-const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
+const updateOrgLogo = async (org: OldPublicOrganization, storage: Storage) => {
   const newImageRef = await updateImgRef(org, 'logo', storage);
   org.logo = newImageRef;
   return org;
 };
 
 const updateImgRef = async (
-  element: PublicUser | PublicOrganization | Credit | PromotionalElement,
+  element: OldPublicUser | OldPublicOrganization | Credit | PromotionalElement,
   key: 'logo' | 'avatar' | 'media' | 'watermark',
   storage: Storage
-): Promise<ImgRef> => {
+): Promise<OldImgRef> => {
 
   // get the current ref
   const media = element[key]; // get old ImgRef format
@@ -208,7 +210,7 @@ const updateImgRef = async (
   }
 
   // ### get the old file
-  const { ref } = media as ImgRef;
+  const { ref } = media as OldImgRef;
 
   // ### copy it to a new location
   const bucket = storage.bucket(getStorageBucketName());

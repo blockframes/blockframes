@@ -18,6 +18,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { app, Module, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
+import { handleImageChange } from './internals/image';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -185,6 +186,15 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   // Update algolia's index
   await storeSearchableOrg(after)
 
+  // LOGO
+  const logoBeforeRef = before.logo?.original?.ref;
+  const logoAfterRef = after.logo?.original?.ref;
+  if (
+    logoBeforeRef !== logoAfterRef
+  ) {
+    await handleImageChange(after.logo!);
+  }
+
   return Promise.resolve(true); // no-op by default
 }
 
@@ -206,7 +216,7 @@ export const accessToAppChanged = async (
   const appKey = await getOrgAppKey(orgId);
   const appName = getAppName(appKey)
   const appUrl = await getAppUrl(orgId);
-  
+
   await Promise.all(admins.map(admin => {
     const template = organizationAppAccessChanged(admin, appName.label, appUrl);
     return sendMailFromTemplate(template, from)

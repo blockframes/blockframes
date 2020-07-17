@@ -4,7 +4,7 @@ import { Organization, createOrganization } from '@blockframes/organization/+sta
 import { ModuleAccessAdminForm } from './module-access-admin.form';
 import { app } from '@blockframes/utils/apps';
 import { OrganizationDenominationForm, OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form';
+import { ImgRefForm } from '@blockframes/media/form/image-reference.form';
 
 function createOrgAdminControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
