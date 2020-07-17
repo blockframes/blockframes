@@ -1,9 +1,9 @@
 <ul>
   <li>
     <strong>Content Type </strong>
-    <missing-control [control]="main.get('workType')" [link]="link">
+    <missing-control [control]="main.get('contentType')" [link]="link">
       <ng-template #content>
-        {{ main.get('workType').value | toLabel: 'workType' | async | titlecase }}
+        {{ main.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
       </ng-template>
     </missing-control>
   </li>
@@ -33,7 +33,7 @@
       </ng-template>
     </li>
     <li>
-      <strong>Director's Filmography </strong><missing-control [control]="director.get('shortBiography')" [link]="link"></missing-control>
+      <strong>Director's Filmography </strong><missing-control [control]="director.get('filmography')" [link]="link"></missing-control>
     </li>
   </ng-container>
 </ul>

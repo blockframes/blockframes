@@ -17,11 +17,15 @@ export class TunnelMainComponent {
   }
 
   get distributors() {
-    return this.main.get('stakeholders').get('distributor');
+    return this.production.get('stakeholders').get('distributor');
   }
 
   get salesInfo() {
     return this.form.get('salesInfo');
+  }
+
+  get production() {
+    return this.form.get('production');
   }
 
   get salesCast() {

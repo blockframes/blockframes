@@ -5,7 +5,7 @@ const registeredObjects = [
   'unitBox',
   'storeType',
   'storeStatus',
-  'workType',
+  'contentType',
   'contractStatus',
   'distributionRightStatus',
   'contractType',
@@ -40,7 +40,7 @@ export class ToLabelPipe implements PipeTransform {
         // KFH compatible import
         case 'unitBox':
         case 'storeType':
-        case 'workType':
+        case 'contentType':
         case 'storeStatus':
           this.imports[type] = await import('@blockframes/movie/+state/movie.firestore').then(e => e[type]);
           break;

@@ -9,8 +9,8 @@
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>
-          {{ movie.main.workType | toLabel: 'workType' | async }}
-          <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
+          {{ movie.main.contentType | toLabel: 'contentType' | async }}
+          <ng-container *ngIf="movie.main.contentType && movie.main.status">|</ng-container>
           {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
           <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|
           {{ movie.main.totalRunTime }} min
@@ -22,8 +22,8 @@
           <ng-container *ngFor="let country of movie.main.originCountries">
             {{ country | translateSlug: 'TERRITORIES'}},
           </ng-container>
-          <ng-container *ngIf="movie.main.productionYear">
-            {{ movie.main.productionYear }}
+          <ng-container *ngIf="movie.main.releaseYear">
+            {{ movie.main.releaseYear }}
           </ng-container>
         </span>
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">

@@ -2,6 +2,7 @@ import {
   MovieBudget,
   MovieFestivalPrizes,
   MovieMain,
+  MovieProduction,
   MoviePromotionalDescription,
   MoviePromotionalElements,
   MovieReview,
@@ -15,7 +16,6 @@ import {
   MovieLanguageTypes,
   StoreConfig,
   MovieLanguageSpecificationContainer,
-  MovieOfficialIds,
   MovieOriginalRelease,
   MovieRating,
   MovieDocumentWithDates,
@@ -82,6 +82,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     salesInfo: createMovieSalesInfo(params.salesInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     budget: createMovieBudget(params.budget),
+    production: createMovieProduction(params.production),
   };
 }
 
@@ -102,17 +103,23 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     },
     directors: [],
     genres: [],
-    workType: 'feature_film',
+    contentType: 'feature_film',
     originalLanguages: [],
     originCountries: [],
     status: null,
     customGenres: [],
+    releaseYear: null,
     ...params,
     storeConfig: createStoreConfig(params.storeConfig),
-    stakeholders: createMovieStakeholders(params.stakeholders),
-    officialIds: createOfficialIds(params.officialIds),
     banner: createPromotionalImage(params.banner),
     poster: createPromotionalImage(params.poster),
+  };
+}
+
+/** A factory function that creates Production section */
+export function createMovieProduction(params: Partial<MovieProduction> = {}): MovieProduction {
+  return {
+    stakeholders: createMovieStakeholders(params.stakeholders),
   };
 }
 
@@ -235,7 +242,6 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     formatQuality: null,
     soundFormat: '',
     physicalHVRelease: null,
-    releaseYear: null,
     ...params
   };
 }
@@ -335,14 +341,6 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
     storeType: 'line_up',
     ...params,
     appAccess: createMovieAppAccess(params.appAccess)
-  };
-}
-
-export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): MovieOfficialIds {
-  return {
-    eidr: '',
-    isan: '',
-    ...params
   };
 }
 
