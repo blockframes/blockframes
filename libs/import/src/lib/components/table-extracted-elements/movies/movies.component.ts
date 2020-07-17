@@ -39,7 +39,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.main.internalRef',
     'select',
     'movie.main.title.original',
-    'movie.promotionalElements.poster',
+    // 'movie.main.poster', TODO issue #3091
     'movie.main.productionYear',
     'errors',
     'warnings',

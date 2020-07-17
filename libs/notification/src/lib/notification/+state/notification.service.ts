@@ -12,8 +12,8 @@ export class NotificationService extends CollectionService<NotificationState> {
     super(store);
   }
 
-  public readNotification(notification: Notification) {
-    this.update(notification.id, { isRead: true });
+  public readNotification(notification: Partial<Notification>) {
+    return this.update(notification.id, { isRead: true });
   }
 
   formatFromFirestore(notification: Notification): Notification {

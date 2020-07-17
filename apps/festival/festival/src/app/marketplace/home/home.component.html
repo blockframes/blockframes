@@ -53,14 +53,12 @@
           </div>
           <bf-slider hideIndicators loop class="dark-contrast-theme">
             <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient"
-              [image]="movie.promotionalElements.banner.media">
+              [image]="movie.main.banner.media">
               <movie-slide [movie]="movie">
                 <movie-slide-cta>
-                  <ng-container *ngIf="movie.promotionalElements.trailer">
-                    <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
-                      class="detail">
-                      More Details</a>
-                  </ng-container>
+                  <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
+                    class="detail">
+                    More Details</a>
                 </movie-slide-cta>
                 <movie-slide-actions>
                   <wishlist-button [movieId]="movie.id"></wishlist-button>
@@ -70,7 +68,7 @@
           </bf-slider>
           <!-- Featured Sales Agent Banner -->
           <ng-container *ngIf="featuredOrg$ | async as org">
-            <org-banner [org]="org" [movies]="org.movies"></org-banner>
+            <org-banner [org]="org"></org-banner>
           </ng-container>
         </ng-container>
       </article>

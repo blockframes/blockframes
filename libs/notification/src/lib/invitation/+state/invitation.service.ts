@@ -8,7 +8,7 @@ import { toDate } from '@blockframes/utils/helpers';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { InvitationDocument } from './invitation.firestore';
-import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
+import { cleanInvitation } from '../invitation-utils';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
@@ -31,9 +31,6 @@ export class InvitationService extends CollectionService<InvitationState> {
       ..._invitation,
       date: toDate(_invitation.date)
     }
-
-    const isForMe = this.isInvitationForMe(invitation);
-    invitation.message = getInvitationMessage(invitation, isForMe);
     return invitation;
   }
 
@@ -129,7 +126,4 @@ export class InvitationService extends CollectionService<InvitationState> {
       })
     }
   }
-
 }
-
-

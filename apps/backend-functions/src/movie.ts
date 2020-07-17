@@ -6,6 +6,8 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { handleImageChange, isEmptyImage } from './internals/image';
+import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -107,8 +109,52 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    return storeSearchableMovie(after, orgName(creatorOrg));
+    await storeSearchableMovie(after, orgName(creatorOrg));
   }
+
+  // BANNER
+  const bannerBeforeRef = before.main?.banner?.media?.original?.ref;
+  const bannerAfterRef = after.main?.banner?.media?.original?.ref;
+  if (
+    bannerBeforeRef !== bannerAfterRef
+  ) {
+    await handleImageChange(after.main.banner.media!);
+  }
+
+  // POSTERs
+  const posterBeforeRef = before.main?.poster?.media?.original?.ref;
+  const posterAfterRef = after.main?.poster?.media?.original?.ref;
+  if (
+    posterBeforeRef !== posterAfterRef
+  ) {
+    await handleImageChange(after.main.poster.media!);
+  }
+
+  // STILL PHOTOs
+  const stillPromises = Object.keys(after.promotionalElements.still_photo).filter(key => {
+
+    const stillBeforeRef = before.promotionalElements?.still_photo[key]?.media?.original?.ref;
+    const stillAfterRef = after.promotionalElements?.still_photo[key]?.media?.original?.ref;
+
+    return stillBeforeRef !== stillAfterRef;
+  }).map(key => handleImageChange(after.promotionalElements.still_photo[key].media));
+  await Promise.all(stillPromises);
+
+  // REMOVING EMPTY STILL_PHOTOs
+  const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
+    .some(key => isEmptyImage(after.promotionalElements.still_photo[key].media));
+
+  // if we found at least one empty still_photo, we update with only the none empty ones
+  if (hasEmptyStills) {
+    const notEmptyStills: Record<string, PromotionalImage> = {};
+
+    Object.keys(after.promotionalElements.still_photo)
+      .filter(key => !isEmptyImage(after.promotionalElements.still_photo[key].media))
+      .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+
+    change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
+  }
+
 }
 
 /** Checks if the store status is going from draft to submitted. */

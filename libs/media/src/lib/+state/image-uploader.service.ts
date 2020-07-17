@@ -17,17 +17,18 @@ export class ImageUploader {
    * @param imageUrl
    * @param afPath
    */
-  public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef | undefined> {
-    try {
-      const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
-      const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
-      const url = await snapshot.ref.getDownloadURL();
-      const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ urls: { original: url }, ref: meta.fullPath });
-    } catch (error) {
-      console.error(`Upload fail because of`, error);
-      return;
-    }
-  }
+  //  TODO issue #3091
+  // public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef | undefined> {
+  //   try {
+  //     const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
+  //     const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
+  //     const url: string = await snapshot.ref.getDownloadURL();
+  //     const meta: { fullPath: string} = await snapshot.ref.getMetadata();
+  //     return createImgRef({ original: { ref: meta.fullPath, url }});
+  //   } catch (error) {
+  //     console.error(`Upload fail because of`, error);
+  //     return;
+  //   }
+  // }
 
 }

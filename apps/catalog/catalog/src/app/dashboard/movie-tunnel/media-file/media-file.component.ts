@@ -21,8 +21,12 @@ export class MediaFileComponent {
   }
 
   public movie = this.movieQuery.getActive();
-  public presentationPath = `movie/${this.movie.id}/PresentationDeck`;
-  public scenarioPath = `movie/${this.movie.id}/Scenario`;
+
+  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck.media/`;
+  public presentationMediaForm = this.form.promotionalElements.get('presentation_deck').get('media');
+
+  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario.media/`;
+  public scenarioMediaForm = this.form.promotionalElements.get('scenario').get('media');
 
   get promotionalElements() {
     return this.form.get('promotionalElements');
