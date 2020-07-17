@@ -9,16 +9,20 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { UploadFile, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
-import { get } from 'lodash';
-import { map, takeWhile } from "rxjs/operators";
-
-// Blockframes
 import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
 import { delay } from "@blockframes/utils/helpers";
-import { UploadTaskSnapshot } from "@angular/fire/storage/interfaces";
+
+// Rxjs
+import { BehaviorSubject } from "rxjs";
+import { map, takeWhile } from "rxjs/operators";
+
+// Lodash
+import { get } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
+
+  private _tasks: BehaviorSubject<AngularFireUploadTask[]> = new BehaviorSubject([]);
 
   private overlayOptions = {
     height: '400px',
@@ -44,13 +48,11 @@ export class MediaService {
   }
 
   async uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
-
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
-
     const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
-    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget));
-    this.showWidget(tasks);
-
+    this.addTasks(tasks);
+    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget()));
+    this.showWidget();
   }
 
   /**
@@ -68,8 +70,10 @@ export class MediaService {
         tasks.push(this.storage.upload(path.concat(file.item(index).name), file.item(index)));
       }
     }
-    (Promise as any).allSettled(tasks as Promise<UploadTaskSnapshot>[]).then(() => delay(5000).then(() => this.detachWidget));
-    this.showWidget(tasks);
+
+    this.addTasks(tasks);
+    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget()));
+    this.showWidget();
   }
 
   /**
@@ -87,16 +91,36 @@ export class MediaService {
     }
   }
 
-  public detachWidget() {
-    this.overlayRef.detach();
-    delete this.overlayRef;
+  private addTasks(tasks: AngularFireUploadTask[]) {
+    const t = this._tasks.getValue();
+    t.push(...tasks);
+    this._tasks.next(t);
   }
 
-  private async showWidget(tasks?: AngularFireUploadTask[]) {
+  private detachWidget() {
+    if (!this.overlayRef) return;
+
+    let canClose: boolean = true;
+    const tasks = this._tasks.getValue();
+    for (const task of tasks) {
+      const state = task.task.snapshot.state
+      if (state !== 'success') {
+        canClose = false;
+        break;
+      }
+    }
+
+    if (canClose) {
+      this.overlayRef.detach();
+      delete this.overlayRef;
+    }
+  }
+
+  private async showWidget() {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: tasks }]});
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }]});
       this.overlayRef.attach(instance);
     }
   }
