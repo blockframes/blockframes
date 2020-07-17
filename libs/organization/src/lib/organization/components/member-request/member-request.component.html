@@ -16,10 +16,10 @@
     </ng-template>
     <ng-template colRef="uid" let-uid>
       <div fxLayout="row" fxLayoutAlign="end">
-        <button class="mat-elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findRequest(uid))">
+        <button class="elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findRequest(uid))">
           <mat-icon svgIcon="accept_member"></mat-icon>
         </button>
-        <button class="mat-elevation-z0" mat-mini-fab color="warn" (click)="declined.emit(findRequest(uid))">
+        <button class="elevation-z0" mat-mini-fab color="warn" (click)="declined.emit(findRequest(uid))">
           <mat-icon svgIcon="refuse"></mat-icon>
         </button>
       </div>
