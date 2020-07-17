@@ -51,7 +51,9 @@ export class MediaService {
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
     const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
     this.addTasks(tasks);
-    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget()));
+    (Promise as any).allSettled(tasks)
+      .then(() => delay(5000))
+      .then(() => this.detachWidget());
     this.showWidget();
   }
 
@@ -72,7 +74,9 @@ export class MediaService {
     }
 
     this.addTasks(tasks);
-    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget()));
+    (Promise as any).allSettled(tasks)
+      .then(() => delay(5000))
+      .then(() => this.detachWidget());
     this.showWidget();
   }
 
@@ -100,19 +104,12 @@ export class MediaService {
   private detachWidget() {
     if (!this.overlayRef) return;
 
-    let canClose: boolean = true;
-    const tasks = this._tasks.getValue();
-    for (const task of tasks) {
-      const state = task.task.snapshot.state
-      if (state !== 'success') {
-        canClose = false;
-        break;
-      }
-    }
-
+    const canClose = this._tasks.getValue().every(task => task.task.snapshot.state === 'success');
     if (canClose) {
       this.overlayRef.detach();
       delete this.overlayRef;
+      const tasks = this._tasks.getValue().filter(task => task.task.snapshot.state !== 'success');
+      this._tasks.next(tasks);
     }
   }
 
