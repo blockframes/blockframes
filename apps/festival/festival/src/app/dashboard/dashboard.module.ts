@@ -98,7 +98,7 @@ const routes: Routes = [{
     path: 'movie',
     children: [{
       path: '',
-      loadChildren: () => import('./tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      loadChildren: () => import('@blockframes/movie/pages/start/start-tunnel.module').then(m => m.StartTunnelModule)
     }, {
       path: ':movieId',
       canActivate: [MovieActiveGuard, MovieTunnelGuard],
