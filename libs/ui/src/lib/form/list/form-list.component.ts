@@ -12,11 +12,8 @@ import { MovieSalesInfoForm } from '@blockframes/movie/form/sales-info/sales-inf
 })
 export class FormListComponent implements OnInit {
 
-  /* Columns to display in the table header */
-  @Input() displayedColumns: string[];
-
   formList = new MovieSalesInfoForm({scoring:'a', color: 'b', format: '16/9'})
-  public localForm = this.formList;
+  public localForm = this.formList; 
   
   constructor() { }
 

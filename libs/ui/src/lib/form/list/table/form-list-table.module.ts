@@ -9,6 +9,8 @@ import { ColRef } from './form-list-table.component';
 // Material
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   imports: [
@@ -16,7 +18,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
     // Material
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   declarations: [FormListTableComponent, ColRef],
   exports: [FormListTableComponent, ColRef]
