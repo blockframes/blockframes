@@ -1,16 +1,23 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'mvoie-form-synopsis',
+  selector: 'movie-form-synopsis',
   templateUrl: './synopsis.component.html',
   styleUrls: ['./synopsis.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieFormSynopsisComponent {
-  form = this.tunnel.form;
+export class MovieFormSynopsisComponent implements OnInit {
+  values$: Observable<string[]>;
+  form = this.shell.form;
 
-  constructor(private tunnel: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent) { }
+
+  ngOnInit() {
+    this.values$ = this.keywords.valueChanges.pipe(startWith(this.keywords.value));
+  }
 
   get synopsis() {
     return this.form.get('story').get('synopsis');

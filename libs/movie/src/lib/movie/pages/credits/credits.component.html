@@ -1,0 +1,38 @@
+<tunnel-page>
+  <h4 title>TITLE INFORMATION</h4>
+  <h1 subtitle>Credits</h1>
+  <ng-container tunnel-form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Production information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-production-year [form]="main.get('productionYear')"></movie-form-production-year>
+        <mat-divider></mat-divider>
+        <h6 class="mat-body-2"  i18n>
+          Production Compan{ main.get('stakeholders').get('executiveProducer').controls.length, plural, =1 {y} other {ies}}
+        </h6>
+        <movie-form-stakeholders test-id="production" [form]="main.get('stakeholders').get('executiveProducer')"></movie-form-stakeholders>
+        <mat-divider></mat-divider>
+        <h6 class="mat-body-2"  i18n>
+          Co-Production Compan{ main.get('stakeholders').get('coProducer').controls.length, plural, =1 {y} other {ies}}
+        </h6>
+        <movie-form-stakeholders test-id="co-production" [form]="main.get('stakeholders').get('coProducer')"></movie-form-stakeholders>
+        <mat-divider></mat-divider>
+        <h6 class="mat-body-2">Producer{ salesCast.get('producers').controls.length, plural, =1 {} other {s}}</h6>
+        <movie-form-sales-cast  test-id="producer" [form]="salesCast.get('producers')" role="PRODUCER_ROLES" roleLabel="Producer"></movie-form-sales-cast>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title i18n>
+          Crew Member{ salesCast.get('crew').controls.length, plural, =1 {} other {s}}
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-sales-cast role="CREW_ROLES" [form]="salesCast.get('crew')" test-id="crew-member" roleLabel="Crew member"></movie-form-sales-cast>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</tunnel-page>
