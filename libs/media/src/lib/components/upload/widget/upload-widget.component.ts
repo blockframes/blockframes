@@ -32,4 +32,9 @@ export class UploadWidgetComponent {
     }
   }
 
+  cancel(task: AngularFireUploadTask) {
+    task.resume();
+    task.cancel();
+  }
+
 }
