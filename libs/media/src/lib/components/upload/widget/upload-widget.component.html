@@ -47,7 +47,7 @@
                 <button mat-icon-button (click)="task$.pause()">
                   <mat-icon svgIcon="pause_circle"></mat-icon>
                 </button>
-                <button mat-icon-button (click)="cancel(task$, i)">
+                <button mat-icon-button (click)="task$.cancel()">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
@@ -64,7 +64,7 @@
                 <button mat-icon-button (click)="task$.resume()">
                   <mat-icon svgIcon="play_circle"></mat-icon>
                 </button>
-                <button mat-icon-button (click)="cancel(task$, i)">
+                <button mat-icon-button (click)="cancel(task$)">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
