@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [MovieFormSynopsisComponent],
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule,
     MatIconModule,
     MatInputModule,
+    CommonModule,
     RouterModule.forChild([{ path: '', component: MovieFormSynopsisComponent }]),
     MatCardModule
   ],
