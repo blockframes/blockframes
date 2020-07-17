@@ -47,6 +47,7 @@ interface MovieRaw<D> {
   salesCast: MovieSalesCast;
   salesInfo: MovieSalesInfoRaw<D>;
   story: MovieStory;
+  technicalInfo: MovieTechnicalInfo;
   versionInfo: MovieVersionInfo;
 
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
@@ -144,14 +145,10 @@ export interface MovieSalesCast {
 interface MovieSalesInfoRaw<D> {
   broadcasterCoproducers: string[],
   certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
   originalRelease: MovieOriginalReleaseRaw<D>[],
   physicalHVRelease: D,
   rating: MovieRating[],
   scoring: ScoringSlug,
-  soundFormat?: SoundFormatSlug,
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
@@ -160,6 +157,13 @@ export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date>
 export interface MovieStory {
   logline: string,
   synopsis: string,
+}
+
+export interface MovieTechnicalInfo {
+  color?: ColorsSlug,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  soundFormat?: SoundFormatSlug,
 }
 
 export interface MovieVersionInfo {

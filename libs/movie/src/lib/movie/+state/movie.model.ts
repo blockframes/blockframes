@@ -28,6 +28,7 @@ import {
   PromotionalExternalMedia,
   PromotionalImage,
   PromotionalHostedMedia,
+  MovieTechnicalInfo,
 } from './movie.firestore';
 import { createImgRef, createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -83,6 +84,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     budget: createMovieBudget(params.budget),
     production: createMovieProduction(params.production),
+    technicalInfo: createMovieTechnical(params.technicalInfo)
   };
 }
 
@@ -137,10 +139,8 @@ export function createMoviePromotionalElements(
     ...params,
 
     still_photo: newStills,
-
     presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
     scenario: createPromotionalHostedMedia(params.scenario),
-
     promo_reel_link: createPromotionalExternalMedia(params.promo_reel_link),
     screener_link: createPromotionalExternalMedia(params.screener_link),
     trailer_link: createPromotionalExternalMedia(params.trailer_link),
@@ -235,12 +235,8 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     certifications: [],
     broadcasterCoproducers: [],
     scoring: null,
-    color: null,
     rating: [],
     originalRelease: [],
-    format: null,
-    formatQuality: null,
-    soundFormat: '',
     physicalHVRelease: null,
     ...params
   };
@@ -250,6 +246,12 @@ export function createMovieStory(params: Partial<MovieStory> = {}): MovieStory {
   return {
     synopsis: '',
     logline: '',
+    ...params
+  };
+}
+
+export function createMovieTechnical(params: Partial<MovieTechnicalInfo> = {}): MovieTechnicalInfo {
+  return {
     ...params
   };
 }
