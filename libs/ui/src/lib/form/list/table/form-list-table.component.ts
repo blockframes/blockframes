@@ -10,14 +10,16 @@ import {
   ContentChildren,
   QueryList,
   EventEmitter,
-  Output,
-  AfterContentInit,
+  Output
 } from '@angular/core';
+
+// Material
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+
+// Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { getValue } from '@blockframes/utils/helpers';
 import { FormList } from '@blockframes/utils/form';
 
 /**
@@ -39,45 +41,32 @@ export class ColRef {
   styleUrls: ['./form-list-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListTableComponent implements  AfterContentInit, AfterViewInit {
+export class FormListTableComponent implements AfterViewInit {
 
   @Input() @boolean showPaginator: boolean;
 
   // Name of the column headers
-  @Input() displayedColumns: string[];
+  @Input() displayedColumns: string[] = [];
   @Input() pageSize = 10;
-  @Input() set source(data: FormList<any>) {
-    this.dataSource = new MatTableDataSource([data.value]);
+
+  private _dataSource: MatTableDataSource<any>
+  @Input()
+  get dataSource() { return this._dataSource as any }
+  set dataSource(data: FormList<any>) {
+    this._dataSource = new MatTableDataSource(data.value);
   }
 
   @Output() rowClick = new EventEmitter();
 
-  // Column & rows  
-  dataSource: MatTableDataSource<any>;
-
-  public getValue = getValue;
-
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
-/*   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort; */
-
-  ngAfterContentInit() {
-    console.log(this.cols)
-  }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngAfterViewInit() {
-    console.log(this.cols)
-    /*     this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort; */
-  }
-
-  /**
-   * Get the specific template provided by the parent component for a column if any
-   * @param name This should be the name of the column you're looking the template for.
-   */
-  getTemplate(name: string): TemplateRef<any> {
-    const col = this.cols.find(child => child.colRef === name);
-    return col && col.template;
+    this._dataSource.paginator = this.paginator;
+    this._dataSource.sort = this.sort;
+    this.displayedColumns.push('actions')
+    console.log(this.dataSource)
   }
 }

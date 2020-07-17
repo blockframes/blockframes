@@ -1,4 +1,4 @@
-<ng-container *ngIf="(hasMovies$ | async) else noMovie">
+<!-- <ng-container *ngIf="(hasMovies$ | async) else noMovie">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -15,10 +15,10 @@
     <h3>My Marketplace Activity</h3>
     <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
   </section>
-</ng-container>
+</ng-container> -->
 
 <!-- @TODO (#2891) -->
-<ng-template #noMovie>
+<!-- <ng-template #noMovie>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no title yet.</h1>
     <p class="mat-body-1">
@@ -38,4 +38,17 @@
     </article>
   </section>
 </ng-template>
+ -->
 
+<bf-form-list>
+  <bf-form-list-table [displayedColumns]="displayedColumns" [dataSource]="dataSource" showPaginator>
+    <ng-template colRef="First Name" let-cool>{{cool.firstName}}</ng-template>
+    <ng-template colRef="Last Name" let-cool>{{cool.lastName}}</ng-template>
+    <ng-template colRef="1" let-cool>{{cool.firstName}}</ng-template>
+    <ng-template colRef="2" let-cool>{{cool.lastName}}</ng-template>
+    <ng-template colRef="3" let-cool>{{cool.firstName}}</ng-template>
+    <ng-template colRef="4" let-cool>{{cool.lastName}}</ng-template>
+    <ng-template colRef="5" let-cool>{{cool.firstName}}</ng-template>
+    <ng-template colRef="6" let-cool>{{cool.lastName}}</ng-template>
+  </bf-form-list-table>
+</bf-form-list>

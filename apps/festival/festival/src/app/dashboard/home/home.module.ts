@@ -20,6 +20,9 @@ import { HomeComponent } from './home.component';
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module'
+import { FormListTableModule } from '@blockframes/ui/form/list/table/form-list-table.module'
+
 @NgModule({
   declarations: [HomeComponent],
   imports: [
@@ -34,7 +37,10 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     MatCardModule,
     MatProgressSpinnerModule,
     // Routing
-    RouterModule.forChild([{ path: '', component: HomeComponent }])
+    RouterModule.forChild([{ path: '', component: HomeComponent }]),
+
+    FormListModule,
+    FormListTableModule
   ]
 })
 export class HomeModule { }

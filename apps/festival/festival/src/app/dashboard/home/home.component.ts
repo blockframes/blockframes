@@ -4,6 +4,8 @@ import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { FormList } from '@blockframes/utils/form';
+import { DirectorForm } from '@blockframes/movie/form/main/main.form'
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -45,4 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
+  displayedColumns = ['First Name', 'Last Name', '1', '2', '3', '4', '5', '6'];
+  dataSource = FormList.factory([{ firstName: 'MaxMaxMaxMax', lastName: 'FritzFritzFritzFritz' }, { firstName: 'Hannah', lastName: 'Arendt' }], el => new DirectorForm(el))
 }
