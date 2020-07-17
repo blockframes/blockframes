@@ -26,6 +26,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
   ],
   declarations: [FormListTableComponent],
-  exports: [FormListTableComponent]
+  exports: [FormListTableComponent, ColRefModule]
 })
 export class FormListTableModule { }

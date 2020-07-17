@@ -19,21 +19,9 @@ import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
-
-/**
- * This directive is to be used inside the table-filter component on a ng-template
- * @example `<ng-template colRef="director" let-director> {{ director.firstName }}</ng-template>`
- * @dev Use the name of the column in colRef & let-[name here]
- */
-@Directive({ selector: '[colRef]' })
-// tslint:disable-next-line: directive-class-suffix
-export class ColRef {
-  /** This should be the name of the column this template will be used into. */
-  @Input() colRef: string;
-  constructor(public template: TemplateRef<any>) { }
-}
+import { boolean } from '@blockframes/utils/decorators/decorators';
+import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
 
 @Component({
   selector: 'bf-table-filter',
@@ -43,18 +31,9 @@ export class ColRef {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
-  _showFilter: boolean;
-  @Input()
-  get showFilter(): boolean { return this._showFilter }
-  set showFilter(value: boolean) {
-    this._showFilter = coerceBooleanProperty(value);
-  }
-  _showPaginator: boolean;
-  @Input()
-  get showPaginator(): boolean { return this._showPaginator };
-  set showPaginator(value: boolean) {
-    this._showPaginator = coerceBooleanProperty(value);
-  }
+  @Input() @boolean showFilter: boolean;
+
+  @Input() @boolean showPaginator: boolean;
   // Name of the column headers
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];

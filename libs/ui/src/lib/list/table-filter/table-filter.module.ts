@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
-
-import { TableFilterComponent, ColRef } from './table-filter.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TableFilterComponent } from './table-filter.component';
+import { RouterModule } from '@angular/router';
+import { ColRefModule, ColRef } from '@blockframes/utils/directives/col-ref.directive';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -16,10 +17,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [TableFilterComponent, ColRef],
+  declarations: [TableFilterComponent],
   exports: [TableFilterComponent, ColRef],
   imports: [
     CommonModule,
@@ -27,6 +27,7 @@ import { RouterModule } from '@angular/router';
     OverlayWidgetModule,
     RouterModule,
     FlexLayoutModule,
+    ColRefModule,
     // Material
     MatButtonModule,
     MatIconModule,
