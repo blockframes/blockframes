@@ -30,7 +30,7 @@
 @import './components/bf-calendar.scss';
 @import './components/mat-native-control.scss';
 @import './components/mat-datepicker.scss';
-@import './components/mat-elevation.scss';
+@import './components/surface.scss';
 
 @include mat-core($bf-typography);
 
@@ -52,7 +52,7 @@
   @include mat-bf-dialog-theme($theme);
   @include mat-bf-slider-theme($theme);
   @include mat-bf-datepicker-theme($theme);
-  @include mat-elevation-theme($theme);
+  @include surface-theme($theme);
   @include bf-footer-theme($theme);
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
