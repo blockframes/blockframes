@@ -17,7 +17,7 @@ describe('Notifications Test Suite', () => {
   let service: NotificationService;
   let db: AngularFirestore
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [
         AngularFireModule.initializeApp({projectId: 'test'}),
