@@ -1,4 +1,5 @@
 import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
   label: string,
@@ -37,8 +38,53 @@ export interface OldPublicOrganization {
 }
 
 export interface OldDenomination {
-    full: string;
-    public?: string;
+  full: string;
+  public?: string;
+}
+
+// Interface at Date : 17 July 2020
+interface MovieStakeholders {
+  executiveProducer: Stakeholder[];
+  coProducer: Stakeholder[];
+  broadcasterCoproducer: Stakeholder[];
+  lineProducer: Stakeholder[];
+  distributor: Stakeholder[];
+  salesAgent: Stakeholder[];
+  laboratory: Stakeholder[];
+  financier: Stakeholder[];
+}
+
+interface Stakeholder {
+  firstName?: string,
+  lastName?: string,
+  avatar?: OldImgRef,
+  logo?: OldImgRef;
+  countries?: TerritoriesSlug[],
+}
+
+export interface OldMovieImgRefDocument {
+  id: string,
+  main: {
+    stakeholders: MovieStakeholders,
+    directors: Credit[],
+  },
+  promotionalElements : {
+    banner: OldPromotionalElement,
+    poster: Record<string, OldPromotionalElement>,
+    presentation_deck: OldPromotionalElement,
+    promo_reel_link: OldPromotionalElement,
+    scenario: OldPromotionalElement,
+    screener_link: OldPromotionalElement,
+    still_photo: Record<string, OldPromotionalElement>,
+    teaser_link: OldPromotionalElement,
+    trailer_link: OldPromotionalElement,
+    trailer: Record<string, OldPromotionalElement>,
+  },
+  salesCast: {
+    cast: Cast[],
+    crew: Crew[],
+    producers: Producer[]
+  }
 }
 
 export function createOldPromotionalElement(
