@@ -6,19 +6,10 @@ import { AngularFireModule } from '@angular/fire';
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
 import { readFileSync } from 'fs';
-import { Notification } from './notification.model';
 
 describe('Notifications Test Suite', () => {
   let service: NotificationService;
   let db: AngularFirestore;
-  const notif: Notification = {
-    type: 'newContract',
-    toUserId: "",
-    id: "",
-    isRead: false,
-    message: "Jest Notify",
-    date: new Date()
-  };
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -28,7 +19,7 @@ describe('Notifications Test Suite', () => {
       ],
       providers: [
         NotificationService,
-        { provide: NotificationStore },
+        NotificationStore,
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
     });
@@ -54,9 +45,10 @@ describe('Notifications Test Suite', () => {
     expect(doc.data().isRead).toBeTruthy();
   });
 
-  it('formats notification', () => {
-    service.formatFromFirestore = jest.fn();
-    service.formatFromFirestore(notif);
-    expect(service.formatFromFirestore).toHaveBeenCalled();    
+  it('Formats notification', () => {
+    const ns = TestBed.inject(NotificationStore)
+    ns.formatNotification = jest.fn();
+    service.formatFromFirestore({} as any);
+    expect(ns.formatNotification).toHaveBeenCalled();
   });
 });
