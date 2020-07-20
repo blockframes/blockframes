@@ -2,8 +2,8 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 
-// RxJs
-import { BehaviorSubject, Observable } from 'rxjs';
+// Blockframes
+import { BehaviorStore } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -13,13 +13,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class UploadWidgetComponent {
 
-  tasklist$: Observable<AngularFireUploadTask[]>;
 
   constructor(
-    @Inject('tasks') public tasks: BehaviorSubject<AngularFireUploadTask[]>,
-  ) {
-    this.tasklist$ = this.tasks.asObservable();
-  }
+    @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
+  ) {}
 
   getFileType(file: string) {
     const type = file.split('.').pop();
@@ -43,9 +40,9 @@ export class UploadWidgetComponent {
   }
 
   remove(index: number) {
-    const tasks = this.tasks.getValue();
+    const tasks = this.tasks.value;
     tasks.splice(index, 1);
-    this.tasks.next(tasks);
+    this.tasks.value = tasks;
   }
 
 }
