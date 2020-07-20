@@ -59,7 +59,7 @@ export function getImgSize(url: string): ImageSizes {
   } else if (url.includes('still')) {
     return { xs: 50, md: 100, lg: 200, fallback: 1024 };
   } else {
-    throw new Error(`Unknown Image Format in ${url}, known format are ${imgSizeDirectory.join(', ')}`);
+    throw new Error(`Unknown Image Format in ${url}, known format are 'avatar', 'logo', 'poster', 'banner', 'still'`);
   }
 }
 

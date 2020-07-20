@@ -5,7 +5,14 @@
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
        <ng-container *ngIf="getPoster(movie) as poster">
-        <bf-img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"></bf-img>
+        <bf-img
+          class="movie-poster"
+          [ref]="poster"
+          width="168"
+          height="220"
+          asset="empty_poster.webp"
+          alt="movie poster"
+        ></bf-img>
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>
