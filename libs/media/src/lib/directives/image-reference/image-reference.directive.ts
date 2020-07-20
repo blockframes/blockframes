@@ -20,7 +20,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set ref(media: HostedMedia) {
+  @Input() set ref(media: HostedMedia) { // TODO IMPLEMENT IMGIX issue#3283
     if (!media) {
       this.ref$.next('');
     }
