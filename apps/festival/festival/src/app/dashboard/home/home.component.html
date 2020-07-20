@@ -40,3 +40,13 @@
   </section>
 </ng-template>
 
+<bf-form-list [formList]="formList.controls.boxOffice" buttonText="Save Director">
+  <bf-form-list-table [displayedColumns]="displayedColumns" [dataSource]="formList.controls.boxOffice.value"
+    showPaginator>
+    <ng-template colRef="Value" let-cool>{{cool.value}}</ng-template>
+    <ng-template colRef="Territory" let-cool>{{cool.value}}</ng-template>
+    <ng-template colRef="Box Office" let-cool>{{cool.value}}</ng-template>
+  </bf-form-list-table>
+  <h1>test</h1>
+</bf-form-list>
+<button (click)="add()">Add</button>
