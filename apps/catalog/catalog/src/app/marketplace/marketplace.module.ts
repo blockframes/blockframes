@@ -55,14 +55,10 @@ const routes: Routes = [{
       data: { animation: 'invitations' }
     },
     {
-      path: 'search',
-      loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
-    },
-    {
       path: 'selection',
       canActivate: [CatalogCartGuard],
       canDeactivate: [CatalogCartGuard],
-      loadChildren: () => import('./movie/selection/selection.module').then(m => m.SelectionModule)
+      loadChildren: () => import('./title/selection/selection.module').then(m => m.SelectionModule)
     },
     {
       path: 'wishlist',
@@ -84,17 +80,17 @@ const routes: Routes = [{
       }]
     },
     {
-      path: ':movieId',
-      canActivate: [MovieActiveGuard],
-      canDeactivate: [MovieActiveGuard],
-      children: [
-        { path: '', redirectTo: 'view', pathMatch: 'full' },
-        {
-          path: 'view',
-          loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
-        }
-      ],
-      data: { redirect: '/c/o/marketplace/home' }
+      path: 'title',
+      children: [{
+        path: '',
+        loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule)
+      }, {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
+        loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
+        data: { redirect: '/c/o/marketplace/home' }
+      }]
     },
     {
       path: 'tunnel',

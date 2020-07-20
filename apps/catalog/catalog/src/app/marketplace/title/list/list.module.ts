@@ -43,10 +43,10 @@ import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/e
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
-import { MarketplaceSearchComponent } from "./search.component";
+import { ListComponent } from "./list.component";
 
 @NgModule({
-  declarations: [MarketplaceSearchComponent],
+  declarations: [ListComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -86,7 +86,7 @@ import { MarketplaceSearchComponent } from "./search.component";
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
-    RouterModule.forChild([{ path: '', component: MarketplaceSearchComponent }])
+    RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })
-export class MarketplaceSearchModule { }
+export class MovieListModule { }
