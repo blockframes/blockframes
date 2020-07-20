@@ -7,7 +7,7 @@ export default class TitlesListPage {
   }
 
   public static navigateToPage() {
-    cy.visit('c/o/dashboard/titles');
+    cy.visit('c/o/dashboard/title');
     return new TitlesListPage();
   }
 
