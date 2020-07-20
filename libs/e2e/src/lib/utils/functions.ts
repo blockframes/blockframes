@@ -37,7 +37,7 @@ export function assertUploadStatus(content: string, testId: string) {
 }
 
 let currentID = 0;
-export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
+export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`);
 export const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
 export function getTomorrowDay(date: Date) {
