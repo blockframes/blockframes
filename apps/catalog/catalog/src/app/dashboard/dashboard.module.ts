@@ -99,12 +99,12 @@ const routes: Routes = [
       path: 'movie',
       children: [{
         path: '',
-        loadChildren: () => import('./tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+        loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+        loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
         data: {
           redirect: '/c/o/dashboard/tunnel/movie'
         },
