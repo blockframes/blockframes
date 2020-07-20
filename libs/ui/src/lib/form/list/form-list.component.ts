@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, AfterContentInit, ContentChild, OnDestroy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, AfterContentInit, ContentChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
+export class FormListComponent implements AfterContentInit, OnDestroy {
   private sub: Subscription;
 
   @Input() formList: FormList<any>;
@@ -33,13 +33,9 @@ export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  ngOnInit() {
-  
-  }
-  
   ngAfterContentInit() {
-    console.log(this.formList)
-    this.formList.controls.length ? this.tableView = true : this.tableView = false;
+   /*  console.log(this.formList)
+    this.formList.controls.length ? this.tableView = true : this.tableView = false; */
     this.localForm = this.formList;
     this.sub = this.formListTableComponent.selectedRow.subscribe(index => {
       this.selectedForm = index
