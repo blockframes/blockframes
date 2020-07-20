@@ -26,7 +26,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formList
   ngOnInit() {
-    this.formList = new MovieBudgetForm({ boxOffice: [{ value: 52, territory: 'germany', unit: 'boxoffice_dollar' }] });
+    this.formList = new MovieBudgetForm({ boxOffice: [{ value: 52, territory: 'germany', unit: 'boxoffice_dollar' }, { value: 52, territory: 'germany', unit: 'boxoffice_dollar' }] });
+
+
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(
@@ -51,7 +53,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['Territory', 'Value', 'Box Office'];
   add() {
-    /*  this.formList.add({ firstName: 'testtesttesttest', lastName: 'testtesttesttesttest' })
-     console.log(this.formList.value) */
+    this.formList.controls.boxOffice.add({ value: Math.random(), territory: 'germany', unit: 'boxoffice_dollar' })
   }
 }

@@ -6,7 +6,8 @@ import {
   Input,
   AfterViewInit,
   ContentChildren,
-  QueryList
+  QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 
 // Material
@@ -31,14 +32,19 @@ export class FormListTableComponent implements AfterViewInit {
 
   // Name of the column headers
   @Input() displayedColumns: string[] = [];
-  @Input() pageSize = 10;
+  @Input() pageSize = 2;
 
   private _dataSource: MatTableDataSource<any>
   @Input()
   get dataSource() { return this._dataSource as any }
   set dataSource(data: any[]) {
     this._dataSource = new MatTableDataSource(data);
+    if (this._dataSource?.paginator) {
+      this._dataSource._updatePaginator(data.length)
+    }
   }
+
+  constructor(private cdr: ChangeDetectorRef) { }
 
   selectedRow: BehaviorSubject<number> = new BehaviorSubject(null);
   markedToRemove: BehaviorSubject<number> = new BehaviorSubject(null);
@@ -49,7 +55,7 @@ export class FormListTableComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this._dataSource.paginator = this.paginator;
-    this.displayedColumns.push('actions')
+    this.displayedColumns.push('actions');
   }
 
   removeValueFromDataSource(index: number) {

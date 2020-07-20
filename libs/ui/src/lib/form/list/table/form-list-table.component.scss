@@ -22,8 +22,9 @@ table {
 }
 
 mat-paginator {
-  width: 100%;
+  bottom: 0px;
   position: sticky;
+  z-index: 10;
 }
 
 .mat-table-sticky {
