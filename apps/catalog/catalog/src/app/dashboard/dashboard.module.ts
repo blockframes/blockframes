@@ -27,7 +27,7 @@ const routes: Routes = [
         path: 'home',   // Home (dashboard if film, welcome if not)
         canActivate: [MovieOrganizationListGuard],
         canDeactivate: [MovieOrganizationListGuard],
-        loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
         path: 'notifications',
