@@ -19,7 +19,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set bgRef(image: HostedMedia) {
+  @Input() set bgRef(image: HostedMedia) { // TODO IMPLEMENT IMGIX issue#3283
     if(!image){
       this.ref$.next('');
     } try {

@@ -10,7 +10,7 @@ export class EmptyImagePipe implements PipeTransform {
     image: HostedMedia
   ): boolean {
     try {
-      return !image.url;
+      return !image.ref;
     } catch (error) {
       console.warn(error);
       return true;
