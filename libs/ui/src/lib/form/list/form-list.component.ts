@@ -9,7 +9,6 @@ import {
   Directive,
   ChangeDetectorRef
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 // RxJs
 import { Observable } from 'rxjs';
