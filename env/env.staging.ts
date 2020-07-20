@@ -28,9 +28,9 @@ export const appUrl = {
 //Local firebase emulator UI
 export const emulatorConfig = {
   functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: { 
-    host: 'localhost:8080', 
-    ssl: false 
+  firestoreConfig: {
+    host: 'localhost:8080',
+    ssl: false
   }
 };
 
@@ -138,7 +138,8 @@ export const templateIds = {
 }
 
 // Yandex Metrika Id
-export const yandexId = 0;
+export const festivalYandexId = 0;
+export const catalogYandexId = 0;
 
 // Intercom
 // ========

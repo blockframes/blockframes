@@ -29,7 +29,7 @@ import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
-import { yandexId } from '@env';
+import { festivalYandexId } from '@env';
 
 // Intercom
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
@@ -73,7 +73,7 @@ import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-bann
     AkitaNgRouterStoreModule,
 
     // Yandex Metrika
-    YandexMetricaModule.forRoot(yandexId),
+    YandexMetricaModule.forRoot(festivalYandexId),
 
     // Router
     FestivalModule,

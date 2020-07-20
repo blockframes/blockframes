@@ -130,7 +130,8 @@ export const templateIds = {
 }
 
 // Yandex Metrika Id
-export const yandexId = 0;
+export const festivalYandexId = 0;
+export const catalogYandexId = 0;
 
 // Intercom
 // ========

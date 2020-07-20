@@ -32,7 +32,7 @@ import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
-import { yandexId } from '@env';
+import { catalogYandexId } from '@env';
 
 // Intercom
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
@@ -70,7 +70,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     AkitaNgRouterStoreModule,
 
     // Yandex Metrika
-    YandexMetricaModule.forRoot(yandexId),
+    YandexMetricaModule.forRoot(catalogYandexId),
 
     // Router
     RouterModule.forRoot([{
