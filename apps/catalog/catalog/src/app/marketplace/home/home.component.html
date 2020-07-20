@@ -20,7 +20,7 @@
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
           <bf-slide *ngFor="let movie of section.movies;" [image]="movie.main.banner.media"
             overlayColor="medium">
-            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace', movie.id]"
+            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>
               <wishlist-button [movieId]="movie.id" small></wishlist-button>
               <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
