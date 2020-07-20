@@ -23,8 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery
   ) { }
 
+  formList
   ngOnInit() {
-
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(
