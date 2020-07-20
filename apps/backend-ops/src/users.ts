@@ -8,6 +8,10 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep } from './tools';
 import readline from 'readline';
+import { getCollection } from 'apps/backend-functions/src/data/internals';
+import { PublicUser } from '@blockframes/user/types';
+import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -144,4 +148,25 @@ export async function createUsers(): Promise<any> {
   const users = await readUsersFromSTDIN();
   const usersWithPassword = users.map(user => ({ ...user, password: 'password' }));
   return createAllUsers(usersWithPassword, auth);
+}
+
+export async function generateWatermarks() {
+  try {
+    const users = await getCollection<PublicUser>('users');
+    const { storage } = loadAdminServices();
+    const bucket = storage.bucket(getStorageBucketName());
+
+    const promises = users.map(async user => {
+      const ref = `users/${user.uid}/watermark/${user.uid}.svg`;
+      const to = bucket.file(ref);
+      const exists = await to.exists();
+      if (!exists) {
+        return upsertWatermark(user);
+      }
+      return;
+    });
+    return await Promise.all(promises);
+  } catch (error) {
+    console.log(`An error happened while generating Watermarks: ${error.message}`);
+  }
 }

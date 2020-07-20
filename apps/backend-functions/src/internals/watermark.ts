@@ -1,20 +1,14 @@
 import { getWatermark } from '../templates/watermark';
 import { PublicUser } from '../data/types';
-import { admin, db, getStorageBucketName } from './firebase';
+import { admin, getStorageBucketName } from './firebase';
 import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
  * - Generate a svg file with the name & email of the user
  * - Store the watermark file in the storage bucket
- * - Update the user's firestore doc to link it to the watermark file
+ * - User's firestore doc is updated by onFileUpload backend function
  */
-export async function upsertWatermark(user: PublicUser) {
-  const watermark = await _upsertWatermark(user);
-  const userRef = db.collection('users').doc(user.uid);
-  return userRef.update({ watermark });
-}
-
-export async function _upsertWatermark(user: PublicUser): Promise<HostedMedia> {
+export async function upsertWatermark(user: PublicUser): Promise<HostedMedia> {
 
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
