@@ -47,6 +47,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     } else {
       value.forEach(v => form.add(v as GetPartial<T>))
     }
+    form.controls
     return form;
   }
 
