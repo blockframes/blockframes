@@ -6,4 +6,16 @@ mat-divider + * {
 
 mat-card {
   width: 100%;
+
+  .content-holder {
+    margin-bottom: 10px;
+
+    h5 {
+      margin-bottom: 0;
+    }
+
+    span {
+      margin-bottom: 10px;
+    }
+  }
 }
