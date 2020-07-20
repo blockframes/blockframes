@@ -44,7 +44,7 @@ const routes: Routes = [
         loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
       },
       {
-        path: 'titles',
+        path: 'title',
         canActivate: [OrganizationContractListGuard],
         canDeactivate: [OrganizationContractListGuard],
         children: [{
