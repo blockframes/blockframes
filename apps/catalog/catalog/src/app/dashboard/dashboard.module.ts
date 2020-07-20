@@ -44,10 +44,6 @@ const routes: Routes = [
         loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
       },
       {
-        path: 'search',  // Result of a search on the main searchbar
-        loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule)
-      },
-      {
         path: 'titles',
         canActivate: [OrganizationContractListGuard],
         canDeactivate: [OrganizationContractListGuard],
