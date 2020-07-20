@@ -9,7 +9,7 @@ export default class OrganizationHomePage {
   }
 
   public assertMoveToOrgHomepage() {
-    cy.location().should(loc => {
+    cy.location({timeout: 1000}).should(loc => {
       expect(loc.pathname).to.eq(PATH);
     });
   }

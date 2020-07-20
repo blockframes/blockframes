@@ -26,7 +26,7 @@ beforeEach(() => {
 })
 
 describe('User can create new account', () => {
-  it('Fill all the fields appropriately', () => {
+  it.only('Fill all the fields appropriately', () => {
     const p1 = new AuthLoginPage();
     p1.fillSignup(USER);
     p1.clickTermsAndCondition();

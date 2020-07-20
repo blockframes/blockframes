@@ -94,7 +94,7 @@ describe('User create a screening', () => {
     p4.clickAskForInvitation();
   });
 
-  it('Accept screening request', () => {
+  it.only('Accept screening request', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
