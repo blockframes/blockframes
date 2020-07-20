@@ -1,26 +1,49 @@
 <tunnel-page>
-  <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Main Information</h1>
   <ng-container tunnel-form>
 
-    <!-- Content type component -->
+    <!-- Reference -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Content Type</mat-card-title>
+        <mat-card-title>Reference</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <movie-form-content-type [form]="main"></movie-form-content-type>
       </mat-card-content>
     </mat-card>
 
-    <!-- Directors -->
+    <mat-divider></mat-divider>
+
+    <!-- BANNER -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Director{ main.get('directors').controls.length, plural,=1 {} other {s}}</mat-card-title>
+        <mat-card-title>Images</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
-        <movie-form-directors [form]="main.get('directors')"></movie-form-directors>
-      </mat-card-content>
+      <div class="content-holder">
+        <h5>Poster Image</h5>
+        <mat-card-subtitle>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</mat-card-subtitle>
+        <drop-cropper
+          [storagePath]="movieId | ref: 'movie' : 'banner'"
+          ratio="banner"
+          [form]="form.main.banner.get('media').get('original')">
+          <h3 type>Banner Image*</h3>
+          <p class="mat-body-2" dimensions>Ratio : 16:9</p>
+          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+        </drop-cropper>
+      </div>
+
+      <div class="content-holder">
+        <h5>Film Page Banner Image</h5>
+        <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
+        <drop-cropper
+            [storagePath]="movieId | ref: 'movie' : 'poster'"
+            ratio="poster"
+            [form]="form.main.poster.get('media').get('original')">
+            <h3 type>Poster*</h3>
+            <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
+            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+          </drop-cropper>
+      </div>
     </mat-card>
 
     <!-- Country of Origin -->
@@ -29,13 +52,15 @@
         <mat-card-title>Countr{ main.get('originCountries').controls.length, plural,=1 {y} other {ies}} of Origin</mat-card-title>
       </mat-card-header>
       <mat-card-content>
+        <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
+        <chips-autocomplete [form]="main.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
         <movie-form-original-releases
           [releasesForm]="salesInfo.get('originalRelease')"
           [countriesForm]="main.get('originCountries')">
         </movie-form-original-releases>
         <mat-divider></mat-divider>
         <h6 class="mat-body-2">
-          Domestic Distributor{ main.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
+          Domestic Distributor{ production.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
         </h6>
         <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders>
         <mat-divider></mat-divider>
@@ -57,15 +82,25 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Festival -->
+    <!-- Directors -->
     <mat-card>
+      <mat-card-header>
+        <mat-card-title>Director{ main.get('directors').controls.length, plural,=1 {} other {s}}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-directors [form]="main.get('directors')"></movie-form-directors>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Festival -->
+    <!-- <mat-card>
       <mat-card-header>
         <mat-card-title i18n>Festival{ festivalPrizes.get('prizes').controls.length, plural,=1 {} other {s}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <movie-form-festival-prizes [form]="festivalPrizes"></movie-form-festival-prizes>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
   </ng-container>
 </tunnel-page>
