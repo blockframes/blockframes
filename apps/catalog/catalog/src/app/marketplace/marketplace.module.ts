@@ -26,7 +26,7 @@ const routes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
       path: 'home',
-      loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+      loadChildren: () => import('./home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
       path: 'about',
