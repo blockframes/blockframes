@@ -42,12 +42,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     if (createControl) {
       form['createControl'] = createControl.bind(form);
     }
-    if (!value || !value.length) {
-      form.add();
-    } else {
-      value.forEach(v => form.add(v as GetPartial<T>))
-    }
-    form.controls
+    value.forEach(v => form.add(v as GetPartial<T>))
     return form;
   }
 
