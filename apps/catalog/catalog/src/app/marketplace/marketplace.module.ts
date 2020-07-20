@@ -66,7 +66,7 @@ const routes: Routes = [{
     },
     {
       path: 'wishlist',
-      loadChildren: () => import('./movie/wishlist/wishlist.module').then(m => m.WishlistModule),
+      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule),
       data: { animation: 'wishlist' }
     },
     {
