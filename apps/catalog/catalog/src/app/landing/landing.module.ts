@@ -10,12 +10,11 @@ import { LandingModule } from '@blockframes/landing/landing.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Pages
-import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
+import { CatalogLandingComponent } from './landing.component';
 
 // Components
-import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
-import { CatalogViewMarketplaceComponent } from './components/view-marketplace/view-marketplace.component';
-import { CatalogLeftMenuComponent } from './components/left-menu/left-menu.component';
+import { CatalogKeyFeaturesComponent } from './key-features/key-features.component';
+import { CatalogViewMarketplaceComponent } from './view-marketplace/view-marketplace.component';
 
 // Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -31,33 +30,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 
-const routes = [
-  {
-    path: '',
-    component: CatalogLandingPageComponent,
-    children: [
-      {
-        path: ''
-        // loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
-      },
-      {
-        path: 'about'
-        // loadChildren: () => import()
-      },
-      {
-        path: 'faq'
-        // loadChildren: () => import()
-      }
-    ]
-  }
-];
-
 @NgModule({
   declarations: [
-    CatalogLandingPageComponent,
+    CatalogLandingComponent,
     CatalogKeyFeaturesComponent,
-    CatalogViewMarketplaceComponent,
-    CatalogLeftMenuComponent
+    CatalogViewMarketplaceComponent
   ],
   imports: [
     CommonModule,
@@ -82,7 +59,7 @@ const routes = [
     MatSnackBarModule,
     MatListModule,
 
-    RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
+    RouterModule.forChild([{ path: '', component: CatalogLandingComponent }])
   ]
 })
 export class CatalogLandingModule {}
