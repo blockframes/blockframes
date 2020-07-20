@@ -121,7 +121,7 @@ export async function onMovieUpdate(
     const notEmptyStills: Record<string, PromotionalHostedMedia> = {};
 
     Object.keys(after.promotionalElements.still_photo)
-      .filter(key => !after.promotionalElements.still_photo[key].media.ref)
+      .filter(key => !!after.promotionalElements.still_photo[key].media.ref)
       .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
 
     change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
