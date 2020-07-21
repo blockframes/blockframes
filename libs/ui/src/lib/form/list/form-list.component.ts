@@ -35,7 +35,7 @@ export class FormListComponent implements AfterContentInit {
 
   public tableView: boolean;
 
-/*   @ContentChild(FormListTableComponent) formListTableComponent: FormListTableComponent; */
+  @ContentChild(FormListTableComponent) formListTableComponent: FormListTableComponent;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
 
   constructor(private cdr: ChangeDetectorRef) { }
