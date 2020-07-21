@@ -1,6 +1,10 @@
-:host {
+﻿:host {
   display: block;
   height: 100vh;
+}
+
+aside {
+  flex: 1;
 }
 
 mat-sidenav-container {
