@@ -211,7 +211,7 @@
     },
     {
       "path": "./dist/apps/backend-functions/main**.js",
-      "maxSize": "0.9 MB",
+      "maxSize": "1 MB",
       "compression": "none"
     }
   ]
