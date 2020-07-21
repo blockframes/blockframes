@@ -1,0 +1,23 @@
+  <!-- TITLES -->
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <mat-form-field appearance="outline">
+      <mat-label>Production Year</mat-label>
+      <input matInput [formControl]="form.get('releaseYear')" required type="number"/>
+      <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Running Time</mat-label>
+      <input matInput type="number" min="0" [formControl]="form.get('totalRunTime')" name="runningTime"/>
+      <mat-hint>In minutes</mat-hint>
+      <mat-error *ngIf="form.hasError('min')">
+        Only positive values are accepted.
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
+
+  <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
+
+  <movie-form-genre [form]="form.genres" [customGenreForm]="form.customGenres"></movie-form-genre>
