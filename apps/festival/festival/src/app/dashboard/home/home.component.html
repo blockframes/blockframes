@@ -46,9 +46,18 @@
     <ng-template colRef="Value" let-cool>{{cool.value}}</ng-template>
     <ng-template colRef="Territory" let-cool>{{cool.value}}</ng-template>
     <ng-template colRef="Box Office" let-cool>{{cool.value}}</ng-template>
+    <ng-template colRef="1" let-cool>{{cool.value}}</ng-template>
+    <ng-template colRef="2" let-cool>{{cool.value}}</ng-template>
+    <ng-template colRef="3" let-cool>{{cool.value}}</ng-template>
+    
   </bf-form-list-table>
-  <ng-template formView>
-    <h2>cool</h2>
-  </ng-template>
+  <ng-template formView let-form>
+    <button (click)="log(form)">CLICK</button>
+
+      <section [formGroup]="form">
+        <input formControlName="value">
+      </section>
+ 
+    </ng-template>
 </bf-form-list>
 <button (click)="add()">Add</button>

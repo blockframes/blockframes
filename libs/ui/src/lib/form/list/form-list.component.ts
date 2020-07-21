@@ -7,7 +7,8 @@ import {
   ContentChild,
   ChangeDetectorRef,
   Directive,
-  TemplateRef
+  TemplateRef,
+  OnDestroy
 } from '@angular/core';
 
 // Blockframes
@@ -15,6 +16,9 @@ import { FormList } from '@blockframes/utils/form';
 
 // Component
 import { FormListTableComponent } from './table/form-list-table.component';
+
+// RxJs
+import { Subscription } from 'rxjs';
 
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
@@ -25,9 +29,19 @@ export class FormViewDirective { }
   styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListComponent implements AfterContentInit {
+export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
 
-  @Input() formList: FormList<any>;
+  private sub: Subscription;
+
+  private activeIndex: number;
+
+  private _formList: FormList<any>
+  @Input()
+  get formList() { return this._formList }
+  set formList(list) {
+    this._formList = list;
+    this.localForm = list;
+  };
 
   @Input() buttonText: string;
 
@@ -40,34 +54,80 @@ export class FormListComponent implements AfterContentInit {
 
   constructor(private cdr: ChangeDetectorRef) { }
 
-  ngAfterContentInit() {
-    this.tableView = !!this.formList.controls.length;
-    this.localForm = this.formList
-    console.log(this.localForm, this.formList)
-
+  ngOnInit() {
+    this.tableView = !this.hasNoControls();
+    /* If there are no controls we still need to have one since we need to provide a form via the ngTemplateOutletContext */
+    if (!this.formList.controls.length) {
+      this.formList.add([])
+      this.localForm = this.formList.at(0)
+    }
   }
 
-  public selectRow(index: number) {
-    this.localForm = this.localForm.at(index);
-    console.log(this.localForm)
-    this.tableView = false;
-    this.cdr.markForCheck();
+  ngAfterContentInit() {
+    this.sub = this.formListTableComponent.selectedRow.subscribe(index => {
+      /* We need the not null check because when initializing the subscription, index can be null */
+      if (this.isNotNull(index)) {
+        this.activeIndex = index
+        this.editItem(index)
+      }
+    })
+    this.sub.add(this.formListTableComponent.removeIndex.subscribe(index => {
+      /* We need the not null check because when initializing the subscription, index can be null */
+      if (this.isNotNull(index)) {
+        this.removeControlFromList(index)
+      }
+    }))
+  }
+
+  public editItem(index: number) {
+    if (this.isNotNull(index)) {
+      /* Reset the local form, otherwise at the next iteration we are at the wrong level of the controls array */
+      this.localForm = this.formList;
+      this.localForm = this.localForm.at(index)
+      this.tableView = false;
+      this.cdr.markForCheck();
+    }
   }
 
   public saveForm() {
+    if (this.hasNoControls()) {
+      /* If we have no controls in the controls array, we need to use the add function */
+      this.formList.add(this.localForm.value)
+    } else {
+      this.formList.at(this.activeIndex).setValue(this.localForm.value)
+    }
     this.tableView = true;
-    this.cdr.markForCheck()
+    this.cdr.markForCheck();
   }
 
   public removeControlFromList(index: number) {
-    console.log(this.localForm)
-    this.formList.removeAt(index);
-    this.isLastControl()
+    if (this.formList.controls.length === 1) {
+      /* If only one control is left and we are going to remove it, we need a placeholder. The placeholder
+      will get used for the template router outlet context. We always need a valid form group that we can pass
+      to the outlet, otherwise it will throw an error. This is why we are shifting with the indices.  */
+      this.activeIndex = 0;
+      this.formList.add([]);
+      this.formList.removeAt(index);
+      this.localForm = this.formList.at(index);
+      this.tableView = false;
+    } else {
+      this.formList.removeAt(index);
+    }
+    if (this.hasNoControls()) {
+      this.tableView = false;
+    }
     this.cdr.markForCheck();
-    console.log(this.localForm)
   }
 
-  private isLastControl() {
-    this.tableView = !!this.formList.controls.length;
+  private isNotNull(integer: number) {
+    return integer !== null
+  }
+
+  private hasNoControls() {
+    return this.formList.controls.length === 0
+  }
+
+  ngOnDestroy() {
+    if (this.sub) { this.sub.unsubscribe(); }
   }
 }
