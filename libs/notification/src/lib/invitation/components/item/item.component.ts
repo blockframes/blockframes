@@ -13,6 +13,10 @@ export class ItemComponent {
 
   constructor(private invitationService: InvitationService) { }
 
+  get eventLink() {
+    return `../event/${this.invitation.docId}`;
+  }
+
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {
     this.invitationService[action](invitation);
   }
