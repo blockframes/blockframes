@@ -48,7 +48,9 @@
     <ng-template colRef="Box Office" let-cool>{{cool.value}}</ng-template>
   </bf-form-list-table>
   <ng-template formView let-form>
-    {{ form }}
+    <section [formGroup]="form">
+      <input formControlName="unit">
+    </section>
   </ng-template>
 </bf-form-list>
 <button (click)="add()">Add</button>
