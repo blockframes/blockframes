@@ -6,9 +6,7 @@ import {
   Input,
   AfterViewInit,
   ContentChildren,
-  QueryList,
-  EventEmitter,
-  Output
+  QueryList
 } from '@angular/core';
 
 // Material
@@ -18,6 +16,10 @@ import { MatPaginator } from '@angular/material/paginator';
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
+
+
+// RxJs
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: '[displayedColumns] [dataSource] bf-form-list-table',
@@ -36,16 +38,12 @@ export class FormListTableComponent implements AfterViewInit {
   private _dataSource: MatTableDataSource<any>
   @Input()
   get dataSource() { return this._dataSource as any }
-  set dataSource(data: any[]) {
+  set dataSource(data) {
     this._dataSource = new MatTableDataSource(data);
- /*    if (this.test) {
-      this._dataSource.paginator = this.paginator
-    }
-    this.test = true */
   }
 
-  @Output() selectedRow = new EventEmitter<number>()
-  @Output() removeIndex = new EventEmitter<number>()
+  selectedRow = new BehaviorSubject<number>(null)
+  removeIndex = new BehaviorSubject<number>(null)
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
@@ -59,9 +57,17 @@ export class FormListTableComponent implements AfterViewInit {
 
   removeEntity(index: number) {
     if (index || index === 0) {
-      this.removeIndex.emit(index);
+      this.removeIndex.next(index);
       this._dataSource.data.splice(index, 1);
+      this.reconnectPaginator();
       this._dataSource._updateChangeSubscription();
+    }
+  }
+
+  reconnectPaginator() {
+    if (this.paginator) {
+      this._dataSource.paginator = this.paginator
+      this.paginator._changePageSize(this.paginator.pageSize);
     }
   }
 }
