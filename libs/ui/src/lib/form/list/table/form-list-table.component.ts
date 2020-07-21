@@ -6,8 +6,7 @@ import {
   Input,
   AfterViewInit,
   ContentChildren,
-  QueryList,
-  ChangeDetectorRef
+  QueryList
 } from '@angular/core';
 
 // Material
@@ -17,6 +16,8 @@ import { MatPaginator } from '@angular/material/paginator';
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
+
+// Component
 import { FormListComponent } from '../form-list.component';
 
 @Component({
@@ -32,22 +33,23 @@ export class FormListTableComponent implements AfterViewInit {
   // Name of the column headers
   @Input() displayedColumns: string[] = [];
   @Input() pageSize = 2;
-
+  test = false;
   private _dataSource: MatTableDataSource<any>
   @Input()
   get dataSource() { return this._dataSource as any }
   set dataSource(data: any[]) {
     this._dataSource = new MatTableDataSource(data);
-    if (this._dataSource?.paginator) {
-      this._dataSource._updatePaginator(data.length)
-      this.paginator.firstPage()
+    if (this.test) {
+      this._dataSource.paginator = this.paginator
     }
+    this.test = true
   }
 
-  constructor(private formList: FormListComponent) { }
+  constructor(/* private formList: FormListComponent */) { }
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {
@@ -57,15 +59,15 @@ export class FormListTableComponent implements AfterViewInit {
 
   selectRow(index: number) {
     if (index || index === 0) {
-      this.formList.selectRow(index);
+ /*      this.formList.selectRow(index); */
     }
   }
 
   removeValueFromDataSource(index: number) {
     if (index || index === 0) {
-      this.formList.removeControlFromList(index)
+/*       this.formList.removeControlFromList(index)
       this._dataSource.data.splice(index, 1);
-      this._dataSource._updateChangeSubscription();
+      this._dataSource._updateChangeSubscription(); */
     }
   }
 }
