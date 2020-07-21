@@ -39,14 +39,14 @@
       "@blockframes/permissions/types": [
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
-      "@blockframes/invitation/*": ["libs/notification/src/lib/invitation/*"],
+      "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
       "@blockframes/invitation/types": [
-        "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
+        "libs/invitation/src/lib/+state/invitation.firestore.ts"
       ],
       "@blockframes/notification/types": [
-        "libs/notification/src/lib/notification/+state/notification.firestore.ts"
+        "libs/notification/src/lib/+state/notification.firestore.ts"
       ],
-      "@blockframes/notification/*": ["libs/notification/src/lib/notification/*"],
+      "@blockframes/notification/*": ["libs/notification/src/lib/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
