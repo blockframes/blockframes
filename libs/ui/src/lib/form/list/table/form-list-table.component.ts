@@ -6,7 +6,8 @@ import {
   Input,
   AfterViewInit,
   ContentChildren,
-  QueryList
+  QueryList,
+  OnChanges
 } from '@angular/core';
 
 // Material
@@ -17,7 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
 
-
 // RxJs
 import { BehaviorSubject } from 'rxjs';
 
@@ -27,7 +27,7 @@ import { BehaviorSubject } from 'rxjs';
   styleUrls: ['./form-list-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListTableComponent implements AfterViewInit {
+export class FormListTableComponent implements AfterViewInit, OnChanges {
 
   @Input() @boolean showPaginator: boolean;
 
@@ -48,11 +48,16 @@ export class FormListTableComponent implements AfterViewInit {
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
   ngAfterViewInit() {
     this._dataSource.paginator = this.paginator;
     this.displayedColumns.push('actions');
+  }
+
+  ngOnChanges() {
+    console.log(this.dataSource)
+ 
   }
 
   removeEntity(index: number) {
