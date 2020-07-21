@@ -14,7 +14,7 @@ export class MovieFormMainComponent {
   public contentType = contentType;
   public movieId = this.route.snapshot.params.movieId;
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
+  constructor(private shell: MovieFormShellComponent) {}
 
   get main() {
     return this.form.get('main');
