@@ -26,9 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formList
   ngOnInit() {
-    this.formList = new MovieBudgetForm({ boxOffice: [{ value: 52, territory: 'germany', unit: 'boxoffice_dollar' }, 
-    { value: 20, territory: 'france', unit: 'boxoffice_dollar' },   { value: 50, territory: 'spain', unit: 'boxoffice_dollar' }] });
-    console.log(this.formList)
+    this.formList = new MovieBudgetForm({ boxOffice: [{ value: 52, territory: 'germany', unit: 'boxoffice_dollar' }] });
 
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
