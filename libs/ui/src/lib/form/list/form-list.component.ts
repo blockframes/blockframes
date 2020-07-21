@@ -1,5 +1,15 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, AfterContentInit, ContentChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  AfterContentInit,
+  ContentChild,
+  OnDestroy,
+  ChangeDetectorRef,
+  Directive,
+  TemplateRef
+} from '@angular/core';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
@@ -7,8 +17,8 @@ import { FormList } from '@blockframes/utils/form';
 // Component
 import { FormListTableComponent } from './table/form-list-table.component';
 
-// RxJs
-import { Subscription } from 'rxjs';
+@Directive({ selector: '[formView]' })
+export class FormViewDirective { }
 
 @Component({
   selector: '[formList] [buttonText] bf-form-list',
@@ -16,8 +26,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListComponent implements AfterContentInit, OnDestroy {
-  private sub: Subscription;
+export class FormListComponent implements AfterContentInit {
 
   @Input() formList: FormList<any>;
 
@@ -25,38 +34,42 @@ export class FormListComponent implements AfterContentInit, OnDestroy {
 
   public localForm: FormList<any>
 
-  public selectedForm: number;
+  public selectedFormIndex: number;
 
   public tableView: boolean;
 
   @ContentChild(FormListTableComponent) formListTableComponent: FormListTableComponent;
+  @ContentChild(FormViewDirective) formViewDirective: FormViewDirective;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
-   /*  console.log(this.formList)
-    this.formList.controls.length ? this.tableView = true : this.tableView = false; */
+    console.log(this.formListTableComponent)
+    this.tableView = !!this.formList.controls.length;
+    this.cdr.markForCheck();
     this.localForm = this.formList;
-    this.sub = this.formListTableComponent.selectedRow.subscribe(index => {
-      this.selectedForm = index
-      this.tableView = false;
-      this.cdr.markForCheck();
-    })
-    this.sub.add(this.formListTableComponent.markedToRemove.subscribe(index => this.removeControlFromList(index)));
+  }
+
+  public selectRow(index: number) {
+    this.selectedFormIndex = index
+    this.localForm = this.localForm.at(index)
+    this.tableView = false;
+    this.cdr.markForCheck()
   }
 
   public saveForm() {
     this.tableView = true;
-    this.selectedForm = null;
+    this.selectedFormIndex = null;
     this.cdr.markForCheck()
   }
 
-  private removeControlFromList(index: number) {
+  public removeControlFromList(index: number) {
     this.formList.removeAt(index);
     this.cdr.markForCheck();
+    this.isLastControl()
   }
 
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
+  private isLastControl() {
+    this.tableView = !!this.formList.controls.length;
   }
 }
