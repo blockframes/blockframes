@@ -12,59 +12,25 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-divider></mat-divider>
+    <hr>
 
     <!-- BANNER -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>Images</mat-card-title>
       </mat-card-header>
-      <div class="content-holder">
-        <h5>Poster Image</h5>
-        <mat-card-subtitle>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</mat-card-subtitle>
-        <drop-cropper
-          [storagePath]="movieId | ref: 'movie' : 'banner'"
-          ratio="banner"
-          [form]="form.main.banner.get('media').get('original')">
-          <h3 type>Banner Image*</h3>
-          <p class="mat-body-2" dimensions>Ratio : 16:9</p>
-          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-        </drop-cropper>
-      </div>
-
-      <div class="content-holder">
-        <h5>Film Page Banner Image</h5>
-        <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
-        <drop-cropper
-            [storagePath]="movieId | ref: 'movie' : 'poster'"
-            ratio="poster"
-            [form]="form.main.poster.get('media').get('original')">
-            <h3 type>Poster*</h3>
-            <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
-            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-          </drop-cropper>
-      </div>
+      <mat-card-content>
+        <movie-form-images [form]="main"></movie-form-images>
+      </mat-card-content>
     </mat-card>
 
     <!-- Country of Origin -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Countr{ main.get('originCountries').controls.length, plural,=1 {y} other {ies}} of Origin</mat-card-title>
+        <mat-card-title>General Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
-        <chips-autocomplete [form]="main.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
-        <movie-form-original-releases
-          [releasesForm]="salesInfo.get('originalRelease')"
-          [countriesForm]="main.get('originCountries')">
-        </movie-form-original-releases>
-        <mat-divider></mat-divider>
-        <h6 class="mat-body-2">
-          Domestic Distributor{ production.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
-        </h6>
-        <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders>
-        <mat-divider></mat-divider>
-        <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages>
+        <movie-form-general-information [form]="main"></movie-form-general-information>
       </mat-card-content>
     </mat-card>
 
