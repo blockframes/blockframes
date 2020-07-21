@@ -176,6 +176,30 @@ const models = {
       'label': 'Original Author'
     }
   ],
+  'RELEASE_STATUS': [
+    {
+      'slug': 'estimated',
+      'label': 'Estimated'
+    },
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    }
+  ] as const,
+  'SCREENING_STATUS': [
+    {
+      'slug': 'tobedetermined',
+      'label': 'To be determined'
+    },
+    {
+      'slug': 'estimated',
+      'label': 'Estimated'
+    },
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    }
+  ] as const,
   'MOVIE_STATUS': [
     {
       'slug': 'financing',
