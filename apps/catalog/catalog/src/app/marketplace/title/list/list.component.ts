@@ -19,12 +19,12 @@ import { MovieSearchForm } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'catalog-movie-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss'],
+  selector: 'catalog-marketplace-title-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit {
+export class ListComponent implements OnInit {
   public movieSearchResults$: Observable<any>;
 
   public sortByControl: FormControl = new FormControl('Title');

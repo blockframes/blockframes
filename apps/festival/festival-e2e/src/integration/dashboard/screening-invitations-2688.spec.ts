@@ -4,13 +4,15 @@
 import {
   NOW,
   USER_1,
-  USER_2,
   USER_3,
   USER_4,
   PRIVATE_EVENTNAME,
   PARTICIPANT_1_NAME,
   PARTICIPANT_2_NAME,
-  ORG_NAME
+  ORG_NAME,
+  PARTICIPANT_1_NOTIFICATION_NAME,
+  PARTICIPANT_2_NOTIFICATION_NAME,
+  USER_2
 } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
@@ -27,7 +29,7 @@ describe('User invites other users to his private screening', () => {
     clearDataAndPrepareTest();
   });
 
-  it('User creates a screening and invites John Bryant and Sarah Gregory to the screening', () => {
+  it(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
@@ -51,10 +53,12 @@ describe('User invites other users to his private screening', () => {
     cy.wait(2000)
     p2.acceptInvitationScreening();
     // Wait for post request to finish
+    // TODO: verify UI has changed instead of wait
     cy.wait(2000);
 
     // Assets video runs
-    const p3: FestivalMarketplaceEventPage = p2.clickMore();
+    p2.openMoreMenu();
+    const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
     const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
     // Save the current url for the next test
@@ -72,6 +76,7 @@ describe('User invites other users to his private screening', () => {
     cy.wait(2000);
     p2.refuseInvitationScreening();
     // Wait for post request to finish
+    // TODO: verify UI has changed instead of wait
     cy.wait(5000);
   });
 
@@ -80,8 +85,8 @@ describe('User invites other users to his private screening', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()
-    p2.verifyNotification(PARTICIPANT_1_NAME, true);
-    p2.verifyNotification(PARTICIPANT_2_NAME, false);
+    p2.verifyNotification(PARTICIPANT_1_NOTIFICATION_NAME, true);
+    p2.verifyNotification(PARTICIPANT_2_NOTIFICATION_NAME, false);
   });
 
   it('Pamela logs in, go on event page, asserts she can\'t access to the video and force the url', () => {

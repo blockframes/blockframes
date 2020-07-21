@@ -116,7 +116,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
     const basePath = `/c/o/dashboard`;
     const path = (title.status === 'draft')
       ? `${basePath}/tunnel/movie/${title.id}`
-      : `${basePath}/titles/${title.id}`;
+      : `${basePath}/title/${title.id}`;
     this.router.navigate([path], { relativeTo: this.route });
   }
 
