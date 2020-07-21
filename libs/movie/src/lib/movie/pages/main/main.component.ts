@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'movie-form-main',
@@ -10,9 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MovieFormMainComponent {
   form = this.shell.form;
-  public movieId = this.route.snapshot.params.movieId;
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
+  constructor(private shell: MovieFormShellComponent) {}
 
   get main() {
     return this.form.get('main');

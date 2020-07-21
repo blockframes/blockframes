@@ -1,0 +1,27 @@
+<form [formGroup]="form" fxLayout="column">
+  <div class="content-holder">
+    <h5>Poster Image</h5>
+    <span>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</span>
+    <drop-cropper
+      [storagePath]="movieId | ref: 'movie' : 'banner'"
+      ratio="banner"
+      [form]="form.banner.get('media').get('original')">
+      <h3 type>Banner Image*</h3>
+      <p class="mat-body-2" dimensions>Ratio : 16:9</p>
+      <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+    </drop-cropper>
+  </div>
+
+  <div class="content-holder">
+    <h5>Film Page Banner Image</h5>
+    <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
+    <drop-cropper
+        [storagePath]="movieId | ref: 'movie' : 'poster'"
+        ratio="poster"
+        [form]="form.poster.get('media').get('original')">
+        <h3 type>Poster*</h3>
+        <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
+        <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+      </drop-cropper>
+  </div>
+</form>
