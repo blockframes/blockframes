@@ -4,7 +4,7 @@ import { InvitationQuery } from '@blockframes/invitation/+state/invitation.query
 import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
-  selector: 'catalog-layout',
+  selector: 'catalog-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
