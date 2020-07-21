@@ -5,7 +5,6 @@ import {
   Input,
   AfterContentInit,
   ContentChild,
-  OnDestroy,
   ChangeDetectorRef,
   Directive,
   TemplateRef
@@ -34,39 +33,38 @@ export class FormListComponent implements AfterContentInit {
 
   public localForm: FormList<any>
 
-  public selectedFormIndex: number;
-
   public tableView: boolean;
 
-  @ContentChild(FormListTableComponent) formListTableComponent: FormListTableComponent;
-  @ContentChild(FormViewDirective) formViewDirective: FormViewDirective;
+/*   @ContentChild(FormListTableComponent) formListTableComponent: FormListTableComponent; */
+  @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngAfterContentInit() {
-    console.log(this.formListTableComponent)
     this.tableView = !!this.formList.controls.length;
-    this.cdr.markForCheck();
-    this.localForm = this.formList;
+    this.localForm = this.formList
+    console.log(this.localForm, this.formList)
+
   }
 
   public selectRow(index: number) {
-    this.selectedFormIndex = index
-    this.localForm = this.localForm.at(index)
+    this.localForm = this.localForm.at(index);
+    console.log(this.localForm)
     this.tableView = false;
-    this.cdr.markForCheck()
+    this.cdr.markForCheck();
   }
 
   public saveForm() {
     this.tableView = true;
-    this.selectedFormIndex = null;
     this.cdr.markForCheck()
   }
 
   public removeControlFromList(index: number) {
+    console.log(this.localForm)
     this.formList.removeAt(index);
-    this.cdr.markForCheck();
     this.isLastControl()
+    this.cdr.markForCheck();
+    console.log(this.localForm)
   }
 
   private isLastControl() {
