@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ImgRef } from "@blockframes/media/+state/media.firestore";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 
@@ -22,8 +21,4 @@ export class MediaFileComponent {
     return this.form.get('promotionalElements');
   }
 
-  // get the ImgRef generated from firestorage and update url of media for each path
-  importPDF(imgRef: ImgRef, path: 'scenario' | 'presentation_deck') {
-    this.form.get('promotionalElements').get(path).get('media').patchValue(imgRef);
-  }
 }

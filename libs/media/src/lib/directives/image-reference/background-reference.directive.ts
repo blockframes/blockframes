@@ -1,5 +1,5 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
-import { ImgRef } from '../../+state/media.firestore';
+import {  HostedMedia } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
@@ -19,12 +19,13 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
 
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set bgRef(image: ImgRef) {
+  @Input() set bgRef(image: HostedMedia) {
     if(!image){
       this.ref$.next('');
     } try {
-      const url = getImageUrl(image);
-      this.ref$.next(url);
+      // TODO IMPLEMENT IMGIX issue#3283
+      // TODO format the url and get the needed query parameters
+      this.ref$.next(image.url);
     } catch (err) {
       this.ref$.next('')
     }

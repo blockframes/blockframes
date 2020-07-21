@@ -1,7 +1,7 @@
 import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '../../+state/movie.model';
 import { Title } from '../../+state/movie.firestore';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[movie] movie-banner',
@@ -11,7 +11,7 @@ import { ImgRef } from '@blockframes/media/+state/media.firestore';
 })
 export class BannerComponent {
 
-  public poster: ImgRef;
+  public poster: HostedMedia;
   public title: Title;
   public director: string;
   public countries: string[];

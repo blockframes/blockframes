@@ -18,7 +18,6 @@ import {
   createDocumentMeta,
   createBoxOffice,
   createMovieReview,
-  createPromotionalImage,
   createPromotionalHostedMedia,
   createPromotionalExternalMedia,
 } from '@blockframes/movie/+state';
@@ -1079,7 +1078,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         hint: 'Edit corresponding sheet field.'
       });
     }
-    
+
     // TODO issue #3091
     // if (!movie.main.poster) {
     //   errors.push({

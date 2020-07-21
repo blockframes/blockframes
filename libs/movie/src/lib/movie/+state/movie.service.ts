@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -115,7 +115,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
       movie.promotionalElements.promotionalElements.forEach(el => {
         if (typeof el.media === typeof 'string') {
-          el.media = createImgRef(el.media);
+          el.media = createHostedMedia(el.media);
         }
       });
     }

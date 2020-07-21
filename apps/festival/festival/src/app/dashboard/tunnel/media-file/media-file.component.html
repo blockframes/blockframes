@@ -13,8 +13,7 @@
           [form]="form.promotionalElements.get('presentation_deck').get('media')"
           [storagePath]="presentationPath"
           accept="['.pdf']"
-          [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'presentation_deck')">
+          [types]="['application/pdf']">
           <h3 type>Presentation Deck</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>
@@ -31,8 +30,7 @@
           [form]="form.promotionalElements.get('scenario').get('media')"
           [storagePath]="scenarioPath"
           accept="['.pdf']"
-          [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'scenario')">
+          [types]="['application/pdf']">
           <h3 type>Script</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>
