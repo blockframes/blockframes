@@ -6,8 +6,8 @@
 
       <section fxLayout="column" fxLayoutGap="24px">
         <h3>Reference</h3>
-        <article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" class="full-width">
+        <article fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>International title</mat-label>
             <input test-id="international-title" matInput type="text" placeholder="International title" [formControl]="main.title.get('international')" required />
             <mat-error *ngIf="main.title.get('international').hasError('required')">
@@ -15,7 +15,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Original title</mat-label>
             <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="main.title.get('original')" required />
             <mat-error *ngIf="main.title.get('original').hasError('required')">
@@ -24,8 +24,8 @@
           </mat-form-field>
         </article>
 
-        <article fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
-          <mat-form-field appearance="outline" class="full-width">
+        <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Content Type</mat-label>
             <mat-select test-id="content-type" [formControl]="main.get('contentType')">
               <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
@@ -33,7 +33,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Reference</mat-label>
             <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="main.get('internalRef')" />
             <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
@@ -74,13 +74,13 @@
       <section>
         <h3>General Information</h3>
         <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Production Year</mat-label>
             <input matInput [formControl]="main.get('releaseYear')" required type="number"/>
             <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
           </mat-form-field>
 
-          <static-select scope="RELEASE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" class="full-width">
+          <static-select scope="RELEASE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" fxFlex>
             <ng-template let-status>
               <span>{{ status.label }}</span>
             </ng-template>
@@ -94,13 +94,13 @@
         <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
 
         <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-          <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" class="full-width">
+          <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" fxFlex>
             <ng-template let-status>
               <span>{{ status.label }}</span>
             </ng-template>
           </static-select>
 
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Running Time</mat-label>
             <input matInput type="number" min="0" [formControl]="main.get('totalRunTime')" name="runningTime"/>
             <mat-hint>In minutes</mat-hint>
@@ -113,11 +113,22 @@
 
       <section>
         <h3>Directors</h3>
-        <article *ngFor="let control of directors.controls; let i = index; let last = last">
+        <article *ngFor="let control of directors.controls; let i = index; let last = last" fxLayout="column">
+
           <!-- Display Name -->
-          <form-display-name [form]="control"></form-display-name>
+          <section fxLayout fxLayoutGap="24px">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>First Name</mat-label>
+              <input test-id="first-name" matInput [formControl]="control.get('firstName')" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Last Name</mat-label>
+              <input test-id="last-name" matInput [formControl]="control.get('lastName')" />
+            </mat-form-field>
+          </section>
+
           <!--  Shot Biography -->
-          <mat-form-field appearance="outline" class="full-width">
+          <mat-form-field appearance="outline" fxFlex>
             <mat-label>Director's Filmography</mat-label>
             <textarea matInput [formControl]="control.get('filmography')"></textarea>
             <mat-hint>Selective Filmography to present the director.</mat-hint>
