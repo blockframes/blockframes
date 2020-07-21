@@ -236,10 +236,10 @@ async function checkMovieRef(filesToCheck: FileWithMovieDocument[]) {
       let pdfUrl = '';
       let stringToFind = '';
       if(f.file.name.includes('/PresentationDeck/') || f.file.name.includes('/promotionalElements.presentation_deck')) {
-         pdfUrl = f.movie.promotionalElements.presentation_deck.media.urls.original
+         pdfUrl = f.movie.promotionalElements.presentation_deck.media.url;
          stringToFind = f.file.name.includes('/PresentationDeck/') ? `movie%2F${f.movie.id}%2FPresentationDeck` : `movies%2F${f.movie.id}%2FpromotionalElements.presentation_deck.media%2F${fileName}`;
       } else {
-        pdfUrl = f.movie.promotionalElements.scenario.media.urls.original
+        pdfUrl = f.movie.promotionalElements.scenario.media.url;
         stringToFind = f.file.name.includes('/Scenario/') ? `movie%2F${f.movie.id}%2FScenario` : `movies%2F${f.movie.id}%2FpromotionalElements.scenario.media%2F${fileName}`;
       }
 
@@ -301,15 +301,15 @@ async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string 
 }
 
 function findImgRefInMovie(movie: MovieDocument, ref: string) {
-  if (movie.promotionalElements.banner.media.ref === ref) {
+  if (movie.main.banner.media.ref === ref) {
     return true;
   }
 
-  if (movie.promotionalElements.poster.some(p => p.media.ref === ref)) {
+  if (movie.main.poster.media.ref === ref) {
     return true;
   }
 
-  if (movie.promotionalElements.still_photo.some(p => p.media.ref === ref)) {
+  if (Object.values(movie.promotionalElements.still_photo).some(p => p.media.ref === ref)) {
     return true;
   }
 

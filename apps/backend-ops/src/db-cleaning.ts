@@ -5,7 +5,7 @@ import { User } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
-import { createImgRef } from '@blockframes/media/+state/media.model';
+import { createHostedMedia } from '@blockframes/media/+state/media.model';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 
@@ -86,9 +86,9 @@ function cleanNotifications(
         const notificationTimestamp = notification.date.toMillis();
         if (notificationTimestamp < imagesMigrationTimestamp) {
           if (notification.organization) {
-            notification.organization.logo = createImgRef();
+            notification.organization.logo = createHostedMedia();
           } else if (notification.user) {
-            notification.user.avatar = createImgRef();
+            notification.user.avatar = createHostedMedia();
           }
           await doc.ref.update(notification);
         }
@@ -116,16 +116,16 @@ function cleanInvitations(
 
       if (invitationTimestamp < imagesMigrationTimestamp) {
         if (invitation.fromOrg) {
-          invitation.fromOrg.logo = createImgRef();
+          invitation.fromOrg.logo = createHostedMedia();
         }
         if (invitation.toOrg) {
-          invitation.toOrg.logo = createImgRef();
+          invitation.toOrg.logo = createHostedMedia();
         }
         if (invitation.fromUser) {
-          invitation.fromUser.avatar = createImgRef();
+          invitation.fromUser.avatar = createHostedMedia();
         }
         if (invitation.toUser) {
-          invitation.toUser.avatar = createImgRef();
+          invitation.toUser.avatar = createHostedMedia();
         }
         await doc.ref.update(invitation);
       }
@@ -174,7 +174,14 @@ function cleanOrganizations(
   existingMovieIds: string[]
 ) {
   organizations.docs.map(async orgDoc => {
-    const { userIds, movieIds } = orgDoc.data() as OrganizationDocument;
+    const org = orgDoc.data();
+
+    if (org.members) {
+      delete org.members;
+      await orgDoc.ref.set(org);
+    }
+
+    const { userIds, movieIds } = org as OrganizationDocument;
 
     const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
     if (validUserIds.length !== userIds.length) {

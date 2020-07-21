@@ -22,7 +22,7 @@ export async function _upsertWatermark(user: PublicUser): Promise<HostedMedia> {
 
   const watermark = getWatermark(user.email, user.firstName, user.lastName);
 
-  const ref = `users/${user.uid}/watermark/${user.uid}.svg`; // uid?
+  const ref = `users/${user.uid}/watermark/${user.uid}.svg`;
   const file = admin.storage().bucket(getStorageBucketName()).file(ref);
 
   await new Promise(res => {
