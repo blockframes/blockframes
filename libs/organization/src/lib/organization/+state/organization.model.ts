@@ -20,9 +20,7 @@ export {
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-export interface Organization extends OrganizationDocumentWithDates {
-  movies?: Movie[];
-}
+export type Organization = OrganizationDocumentWithDates;
 
 export interface Wishlist extends WishlistDocumentWithDates {
   movies?: Movie[];

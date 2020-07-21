@@ -2,15 +2,15 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
 const referencesPaths = {
     movie: {
-        banner: (id: string) => `movies/${id}/promotionalElements.banner.media`,
-        poster: (id: string, i: number) => `movies/${id}/promotionalElements.poster.${i}.media`, 
-        still: (id: string, i: number) => `movies/${id}/promotionalElements.still_photo.${i}.media`,
+        banner: (docId: string) => `movies/${docId}/main.banner.media`,
+        poster: (docId: string) => `movies/${docId}/main.poster.media`,
+        still: (docId: string, elementId: string) => `movies/${docId}/promotionalElements.still_photo.${elementId}.media`,
     },
     profile: {
         avatar: (uid: string) => `users/${uid}/avatar`
     },
     organization: {
-        logo: (id: string) => `orgs/${id}/logo`
+        logo: (docId: string) => `orgs/${docId}/logo`
     }
 }
 type ReferencePath = typeof referencesPaths;
@@ -22,18 +22,18 @@ type ReferenceType = keyof ReferencePath;
 export class ReferencePipe implements PipeTransform {
 
   transform<Type extends ReferenceType>(
-      id: string,
+      docId: string,
       type: Type,
       key: keyof ReferencePath[Type],
-      index?: number
+      elementId?: number
   ): string {
     const getRef = referencesPaths[type][key] as any
-    return getRef(id, index)
+    return getRef(docId, elementId)
   }
 }
 
 @NgModule({
-    exports: [ReferencePipe],
-    declarations: [ReferencePipe],
-  })
-  export class ReferencePathModule { }
+  exports: [ReferencePipe],
+  declarations: [ReferencePipe],
+})
+export class ReferencePathModule { }

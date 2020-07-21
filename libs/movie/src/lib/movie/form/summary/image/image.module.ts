@@ -4,6 +4,7 @@ import { MovieSummaryImageComponent } from './image.component';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 import { RouterModule } from '@angular/router';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
 
 @NgModule({
   declarations: [MovieSummaryImageComponent],
@@ -11,7 +12,8 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     CommonModule,
     RouterModule,
     FileNameModule,
-    MissingControlModule
+    MissingControlModule,
+    EmptyImagePipeModule,
   ],
   exports: [MovieSummaryImageComponent]
 })

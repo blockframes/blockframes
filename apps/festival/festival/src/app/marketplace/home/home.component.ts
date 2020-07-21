@@ -29,6 +29,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;
 
+  public featuredOrg$: Observable<Organization>;
+
   private sub: Subscription;
 
   constructor(
@@ -65,11 +67,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         movies$: selectMovies('financing')
       },
     ];
-    this.orgs$  = this.organizationService
-      .queryWithoutMovies(ref => ref
+
+    this.orgs$ = this.organizationService
+      .valueChanges(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
       .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
+
+    this.featuredOrg$ = this.orgs$.pipe(
+      map(orgs => orgs.filter(org => org.movieIds.length > 3)),
+      map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
+    );
+
   }
 
   ngOnDestroy() {

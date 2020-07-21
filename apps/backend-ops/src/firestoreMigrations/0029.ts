@@ -1,176 +1,152 @@
-import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash'
-import { MovieDocument } from 'apps/backend-functions/src/data/types';
-import { PromotionalElement } from '@blockframes/movie/+state/movie.model';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
-import { get } from 'https';
-
-const rowsConcurrency = 10;
-
-const EMPTY_REF: ImgRef = {
-  ref: '',
-  urls: { original: '' }
-};
-
+import { Firestore } from '../admin';
+import { PublicUser } from '@blockframes/user/types';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
+import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
+import { getCollection } from 'apps/backend-functions/src/data/internals';
+import { OldImgRef } from './old-types';
 
 /**
- * Migrate old ImgRef objects to new one.
+ * Migrate old medias & images and some refactoring on the movie.
+ * - user
+ *   - avatar: old image -> new image
+ *   - watermark: old image -> new media
+ * - org
+ *   - logo: old image -> new image
+ * - movie
+ *   - poster: `promotionalElements` old image array -> `main` single new image
+ *   - banner: `promotionalElements` old image -> `main` new image
+ *   - every single `promotionalElements`: old image -> new image or new media
+ *   - `promotionalElements` still_photo: array of old images -> record of new image
+ *   - `promotionalElements` trailer: deleted
  */
-export async function upgrade(db: Firestore, storage: Storage) {
-  console.log('//////////////');
-  console.log('// Processing watermarks');
-  console.log('//////////////');
-  await db
-    .collection('users')
-    .get()
-    .then(async users => await updateWatermarks(users, storage));
+export async function upgrade(db: Firestore) {
+  try {
+    const users = await getCollection<PublicUser>('users');
+    updateUsers(db, users);
+  } catch (error) {
+    console.log(`An error happened while updating users: ${error.message}`);
+  }
 
+  try {
+    const movies = await getCollection<Movie>('movies');
+    updateMovies(db, movies);
+  } catch (error) {
+    console.log(`An error happened while updating movies: ${error.message}`);
+  }
 
-  console.log('//////////////');
-  console.log('// Processing movies');
-  console.log('//////////////');
-  await db
-    .collection('movies')
-    .get()
-    .then(async movies => await updateMovies(movies, storage)); // @TODO (#3175) not working
-
-  console.log('Updated watermark.');
+  try {
+    const orgs = await getCollection<Organization>('orgs');
+    updateOrgs(db, orgs);
+  } catch (error) {
+    console.log(`An error happened while updating organizations: ${error.message}`);
+  }
 }
 
-async function updateWatermarks(
-  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  _: Storage
-) {
-  return runChunks(users.docs, async (doc) => {
-    const updatedUser = await updateUserWaterMark(doc.data() as PublicUser);
-    await doc.ref.set(updatedUser);
+async function updateUsers(db: Firestore, users: PublicUser[]) {
+  for (const user of users) {
+    let updatedUser = updateUserWatermark(user);
+    updatedUser = updateImgRef(user, 'avatar') as PublicUser;
+    db.doc(`users/${user.uid}`).set(updatedUser);
+  }
+}
+
+function updateUserWatermark(user: PublicUser) {
+  if (user.watermark?.url) return user; // already has new format
+  const url = user?.watermark?.['urls']?.['original'] || user.watermark?.url;
+  user.watermark = createHostedMedia({
+    ref: user.watermark?.ref || '',
+    url: url || ''
   });
-}
-
-const updateUserWaterMark = async (user: PublicUser) => {
-  try {
-    const watermark = await _upsertWatermark(user);
-    user.watermark = watermark;
-  } catch (e) {
-    console.log(`Error while updating user ${user.uid} watermark. Reason: ${e.message}`);
-  }
-
   return user;
-};
+}
 
-async function updateMovies(
-  movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  storage: Storage
-) {
-  return Promise.all(
-    movies.docs.map(async doc => {
-      const movie = doc.data() as MovieDocument;
+function updateOrgs(db: Firestore, orgs: Organization[]) {
+  for (const org of orgs) {
+    const updatedOrg = updateImgRef(org, 'logo');
+    db.doc(`orgs/${org.id}`).set(updatedOrg);
+  }
+}
 
-      const keys = ['presentation_deck', 'scenario'];
-      // We search for pdf that are not in the good directory
-      for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
+async function updateMovies(db: Firestore, movies: Movie[]) {
+  const externalMediaLinks = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link'];
+  const hostedMediaLinks = ['presentation_deck', 'scenario'];
+  const legacyKeysExternalMedia = ['originalFileName', 'originalRef', 'ref'];
+  const legacyKeysHostedMedia = ['originalFileName', 'originalRef'];
 
-          const value: PromotionalElement = movie.promotionalElements[key];
-          if (value.media.urls.original.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with an "s"
-            movie.promotionalElements[key] = await updateMovieField(value, storage, movie.id);
-          }
-
-        }
+  for (const movie of movies) {
+    for (const link of externalMediaLinks) {
+      movie.promotionalElements[link].media = createExternalMedia(
+        movie.promotionalElements[link].media
+      );
+      // DELETE
+      for (const key of legacyKeysExternalMedia) {
+        delete movie.promotionalElements[link].media[key];
       }
-
-      await doc.ref.set(movie);
-    })
-  );
-}
-
-const updateMovieField = async <T extends PromotionalElement>(
-  value: T,
-  storage: Storage,
-  movieId: string,
-): Promise<T> => {
-  const newImageRef = await updateImgRef(value, storage, movieId);
-  value['media'] = newImageRef;
-  return value;
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
-  }
-}
-
-
-const updateImgRef = async (
-  element: PromotionalElement,
-  storage: Storage,
-  movieId: string
-): Promise<ImgRef> => {
-
-  // get the current ref
-  const media = element['media'];
-
-  // ### get the old file
-  const { ref, urls } = media as ImgRef;
-
-  // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
-
-  try {
-    const fileName = ref.split('/').pop();
-
-    let newPath = '';
-    if( fileName.includes(`movie%2F${movieId}%2FPresentationDeck`) || fileName.includes(`movies%2F${movieId}%2FpromotionalElements.presentation_deck.media%2F${fileName}`)){
-      newPath = `movies/${movieId}/promotionalElements.presentation_deck.media/${fileName}`;
-    } else if( fileName.includes(`movie%2F${movieId}%2FScenario`) || fileName.includes(`movies%2F${movieId}%2FpromotionalElements.scenario.media%2F${fileName}`)){
-      newPath = `movies/${movieId}/promotionalElements.scenario.media/${fileName}`;
-    } else {
-      // @TODO (#3175) is there other cases ?
     }
 
-    const to = bucket.file(newPath);
-    // we try to download it directly from it's original url
-    if (!!urls.original) {
-
-      console.log(`downloading ${ref}`);
-
-      await new Promise((resolve, reject) => {
-        // create a write stream to save the image in google cloud storage
-        const saveImage = to.createWriteStream({ contentType: 'image/jpeg' })
-          .on('error', (err) => { console.log('save error', err); reject(err) })
-          .once('finish', () => resolve());
-
-        // download the image and save it
-        get(urls.original, result => {
-          result.pipe(saveImage);
-        }).on('error', err => { console.log('fail to download because of', err); reject(err) });
+    for (const link of hostedMediaLinks) {
+      const media = movie.promotionalElements[link].media;
+      movie.promotionalElements[link].media = createHostedMedia({
+        ref: media.ref ? media.ref : media.originalRef ? media.originalRef : '',
+        url: media.url ? media.url : ''
       });
-
-      console.log('download OK');
-
-      const [signedUrl] = await to.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
-
-      // delete previous image
-      const from = bucket.file(ref);
-      await from.delete();
-      console.log('Removed previous');
-
-      media.urls.original = signedUrl;
-      return media;
-    } else {
-      console.log('Empty ref');
-      return EMPTY_REF;
+      // DELETE
+      legacyKeysHostedMedia.forEach(key => delete movie.promotionalElements[link].media[key]);
     }
 
-  } catch (e) {
-    console.log('Empty ref');
-    return EMPTY_REF;
+    // update and move banner to main
+    movie.main.banner = updateImgRef<PromotionalImage>(movie.promotionalElements['banner'], 'media');
+    if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
+
+    // update and move poster to main
+    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalImage, index: number) => {
+      if (index === 0) {
+        movie.main.poster = updateImgRef(poster, 'media') as PromotionalImage;
+        delete movie.promotionalElements['poster'];
+      } else {
+        delete movie.promotionalElements['poster']; // other posters shouldn't exist, but if do they are deleted
+      }
+    });
+
+    // update still photos from an array with old ImgRef to a record with new ImgRef
+    const still_photo: Record<string, PromotionalImage> = {};
+    (movie.promotionalElements.still_photo as any).forEach((still, index) => {
+      if (!!still.media?.ref || !!still.media?.urls?.original) {
+        still_photo[`${index}`] = updateImgRef<PromotionalImage>(still, 'media');
+      }
+    });
+    movie.promotionalElements.still_photo = still_photo;
+
+    // remove trailer
+    if (movie.promotionalElements['trailer']) delete movie.promotionalElements['trailer'];
+
+    db.doc(`movies/${movie.id}`).set(movie);
   }
+}
+
+function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
+  return { url: media?.url || '' };
+}
+
+function updateImgRef<T extends (PublicUser | Organization | PromotionalImage)>(
+  element: T,
+  property: 'avatar' | 'logo' | 'media'
+) {
+  if (!element[property] || 'original' in element[property]) return element;
+
+  const imgRef: OldImgRef = Object.assign(<OldImgRef>{}, element[property]);
+  const sizes = ['original', 'fallback', 'xs', 'md', 'lg'];
+  const legacyKeys = ['ref', 'urls'];
+
+  for (const size of sizes) {
+    element[property][size] = createHostedMedia({
+      ref: size === 'original' ? (imgRef.ref ? imgRef.ref : '') : '',
+      url: imgRef.urls?.[size] || ''
+    });
+  }
+
+  legacyKeys.forEach(key => delete element[property][key]);
+  return element;
 }

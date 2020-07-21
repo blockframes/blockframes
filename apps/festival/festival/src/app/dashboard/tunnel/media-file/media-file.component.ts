@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/media/+state/media.firestore";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+
 @Component({
   selector: 'festival-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',

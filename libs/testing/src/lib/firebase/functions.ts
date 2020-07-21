@@ -1,14 +1,14 @@
 import * as admin from 'firebase-admin';
-import * as firebaseTesting from '@firebase/testing'
 import firebaseFunctionsTest from 'firebase-functions-test';
 
 import { resolve } from 'path';
-import { config } from 'dotenv'
-import { firebase } from '@env'
+import { config } from 'dotenv';
+import { firebase } from '@env';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 
-config()
+let testIndex = 0;
+config();
 
 /**
  * Helper function that sets up `firebase-functions-test` using environment
@@ -20,7 +20,8 @@ config()
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FeaturesList {
   if (offline) { // ** Connect to emulator
     const firebaseTest = firebaseFunctionsTest();
-    const projectId = String(Math.random())
+    //projectId cannot have '.' in the string; need whole numbers
+    const projectId = 'test' + testIndex++;
 
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;

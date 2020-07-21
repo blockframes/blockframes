@@ -36,21 +36,9 @@ a {
   color: inherit;
 }
 
-.important {
-  color: mat-color($mat-dark-bf-orange, 400);
-}
-
 .dark-theme p.bf-dark-text,
 .dark-theme span.bf-dark-text {
   color: mat-color($bf-dark-foreground, dark-text);
-}
-
-.bf-strong {
-  font-weight: 600;
-}
-
-.table-size-text {
-  font-size: 12px;
 }
 
 /** Used for marketplace header & carousel */
@@ -58,19 +46,8 @@ a {
   color: mat-color($bf-light-foreground, light-text);
 }
 
-/** Used for movie status in banners. */
-.status-text {
-  font-size: 8px;
-  color: mat-color($bf-dark-foreground, blue-icon);
-}
-
-
 main {
   height: 100%;
-}
-
-.black-bg-opacity-30 {
-  background-color: rgba(#000000, 0.3);
 }
 
 /* Leaflet WorldMap default pane */

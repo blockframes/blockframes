@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Invitation, InvitationService } from '../../+state';
-import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'invitation-item',
@@ -11,9 +10,8 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
 export class ItemComponent {
 
   @Input() invitation: Invitation;
-  public xs$ = this.breakpointsService.xs;
 
-  constructor(private breakpointsService: BreakpointsService, private invitationService: InvitationService) { }
+  constructor(private invitationService: InvitationService) { }
 
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {
     this.invitationService[action](invitation);

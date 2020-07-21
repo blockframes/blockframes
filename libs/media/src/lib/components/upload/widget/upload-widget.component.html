@@ -1,10 +1,7 @@
-<mat-accordion *ngIf="(items$ | async).length as itemCount" class="mat-card">
+<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount" class="mat-card">
   <mat-expansion-panel expanded>
     <mat-expansion-panel-header i18n>Uploading {{ itemCount }} item{ itemCount,
       plural, =1 {} other {s} }
-      <button mat-icon-button (click)="close()" class="close-btn">
-        <mat-icon svgIcon="cross_circle"></mat-icon>
-      </button>
     </mat-expansion-panel-header>
 
     <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="24px" class="content">
@@ -14,18 +11,18 @@
         thank you for your patience! You can continue using the platform</caption>
 
       <div fxLayout="column-reverse" fxLayoutGap="24px">
-        <ng-container *ngFor="let item of items$ | async">
-          <ng-container [ngSwitch]="item.status">
-
+        <ng-container *ngFor="let task$ of tasks.$ | async; let i = index">
+          <ng-container [ngSwitch]="task$ | state | async">
             <div fxLayout="row" fxLayoutGap="8px">
-              <img [src]="getFileType(item.id)">
+              <img [src]="getFileType(task$.task.snapshot.ref.name)">
 
               <div fxLayout="column" fxLayoutAlign="start start">
-                <caption class="caption">{{item.id | maxLength: 25}}</caption>
-                <mat-progress-bar [value]="item.progress" *ngIf="item.status !== 'canceled'"></mat-progress-bar>
+                <caption class="caption">{{task$.task.snapshot.ref.name | maxLength: 25}}</caption>
+                <mat-progress-bar [value]="task$ | progress | async" *ngIf="(task$ | state | async) !== 'canceled'">
+                </mat-progress-bar>
 
                 <!-- Finished -->
-                <ng-template ngSwitchCase="succeeded">
+                <ng-template ngSwitchCase="success">
                   <caption class="mat-caption succeeded"><em>Completed</em></caption>
                 </ng-template>
 
@@ -34,8 +31,8 @@
                   <caption class="mat-caption"><em>Paused</em></caption>
                 </ng-template>
 
-                <!-- Processing -->
-                <ng-template ngSwitchCase="uploading">
+                <!-- Running -->
+                <ng-template ngSwitchCase="running">
                   <caption class="mat-caption"><em>Uploading</em></caption>
                 </ng-template>
 
@@ -45,36 +42,36 @@
                 </ng-template>
               </div>
 
-              <!-- Processing -->
-              <ng-template ngSwitchCase="uploading">
-                <button mat-icon-button (click)="delegateAction(item.id, 'pause')">
+              <!-- Running -->
+              <ng-template ngSwitchCase="running">
+                <button mat-icon-button (click)="task$.pause()">
                   <mat-icon svgIcon="pause_circle"></mat-icon>
                 </button>
-                <button mat-icon-button (click)="delegateAction(item.id, 'cancel')">
+                <button mat-icon-button (click)="task$.cancel()">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
 
               <!-- Error -->
               <ng-template ngSwitchCase="canceled">
-                <button mat-icon-button (click)="delegateAction(item.id, 'clear')">
+                <button mat-icon-button (click)="remove(i)">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
 
               <!-- Paused -->
               <ng-template ngSwitchCase="paused">
-                <button mat-icon-button (click)="delegateAction(item.id, 'resume')">
+                <button mat-icon-button (click)="task$.resume()">
                   <mat-icon svgIcon="play_circle"></mat-icon>
                 </button>
-                <button mat-icon-button (click)="delegateAction(item.id, 'cancel')">
+                <button mat-icon-button (click)="cancel(task$)">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
 
               <!-- Finished -->
-              <ng-template ngSwitchCase="succeeded">
-                <button mat-icon-button (click)="delegateAction(item.id, 'clear')">
+              <ng-template ngSwitchCase="success">
+                <button mat-icon-button (click)="remove(i)">
                   <mat-icon svgIcon="check_circle"></mat-icon>
                 </button>
               </ng-template>

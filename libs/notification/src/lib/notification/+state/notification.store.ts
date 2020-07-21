@@ -189,7 +189,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id);
-    return movie?.promotionalElements?.poster?.length[0] || createImgRef();
+    return movie?.main?.poster?.media || createImgRef();
   }
 
   private getDocument<T>(path: string): Promise<T> {

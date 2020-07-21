@@ -1,7 +1,7 @@
 import { getWatermark } from '../templates/watermark';
 import { PublicUser } from '../data/types';
 import { admin, db, getStorageBucketName } from './firebase';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
  * - Generate a svg file with the name & email of the user
@@ -14,7 +14,7 @@ export async function upsertWatermark(user: PublicUser) {
   return userRef.update({ watermark });
 }
 
-export async function _upsertWatermark(user: PublicUser): Promise<ImgRef> {
+export async function _upsertWatermark(user: PublicUser): Promise<HostedMedia> {
 
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
@@ -22,7 +22,7 @@ export async function _upsertWatermark(user: PublicUser): Promise<ImgRef> {
 
   const watermark = getWatermark(user.email, user.firstName, user.lastName);
 
-  const ref = `users/${user.uid}/watermark/watermark.svg`;
+  const ref = `users/${user.uid}/watermark/${user.uid}.svg`; // uid?
   const file = admin.storage().bucket(getStorageBucketName()).file(ref);
 
   await new Promise(res => {
@@ -31,12 +31,10 @@ export async function _upsertWatermark(user: PublicUser): Promise<ImgRef> {
 
   const [signedUrl] = await file.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
 
-  const watermarkImgRef = {
+  const watermarkMedia = {
     ref,
-    urls: {
-      original: signedUrl,
-    },
+    url: signedUrl,
   }
 
-  return watermarkImgRef;
+  return watermarkMedia;
 }

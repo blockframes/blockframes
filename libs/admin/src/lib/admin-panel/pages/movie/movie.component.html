@@ -92,14 +92,12 @@
   <mat-card *ngIf="movie">
     <h2>Promotional Elements :</h2>
 
-    <admin-image-sizes *ngIf="movie.promotionalElements.banner.media" title="Movie banner" [imgRef]="movie.promotionalElements.banner.media">
+    <admin-image-sizes *ngIf="movie.main.banner.media" title="Movie banner" [imgRef]="movie.main.banner.media">
       <h3>Movie Banner</h3>
     </admin-image-sizes>
-    <ng-container *ngFor="let poster of movie.promotionalElements.poster; let i = index; let last = last">
-      <admin-image-sizes [imgRef]="poster.media">
-        <h3>Movie poster n°{{ i + 1 }}</h3>
-      </admin-image-sizes>
-    </ng-container>
+    <admin-image-sizes *ngIf="movie.main.poster.media" title="Movie poster" [imgRef]="movie.main.poster.media">
+      <h3>Movie poster</h3>
+    </admin-image-sizes>
   </mat-card>
 
 </main>

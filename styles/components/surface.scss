@@ -1,6 +1,6 @@
-@mixin mat-elevation-theme($theme) {
+@mixin surface-theme($theme) {
   $background: map-get($theme, background);
-  .mat-elevation-z0 {
+  .surface {
     background-color: mat-color($background, card);
     padding: 8px;
     border-radius: 4px;
