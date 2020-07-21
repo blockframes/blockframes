@@ -47,6 +47,8 @@
     <ng-template colRef="Territory" let-cool>{{cool.value}}</ng-template>
     <ng-template colRef="Box Office" let-cool>{{cool.value}}</ng-template>
   </bf-form-list-table>
-  <h1>test</h1>
+  <ng-template formView let-form>
+    {{ form }}
+  </ng-template>
 </bf-form-list>
 <button (click)="add()">Add</button>

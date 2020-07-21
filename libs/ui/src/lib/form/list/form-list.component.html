@@ -1,12 +1,11 @@
-<!-- <ng-container *ngIf="tableView else addForm"> -->
+<ng-container *ngIf="tableView else formView">
   <ng-content select="bf-form-list-table"></ng-content>
-<!-- </ng-container> -->
-<!-- <ng-template #addForm>
-  <section [formGroup]="localForm">
-    <ng-content></ng-content>
-  </section>
+</ng-container>
+<ng-template #formView>
+    <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: localForm }">
+    </ng-template>
   <button mat-stroked-button color="primary" (click)="saveForm()">
     <mat-icon svgIcon="floppy"></mat-icon>
     {{ buttonText }}
   </button>
-</ng-template> -->
+</ng-template>
