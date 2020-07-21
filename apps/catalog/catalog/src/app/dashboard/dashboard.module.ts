@@ -1,7 +1,12 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutModule } from './layout.module';
 import { LayoutComponent } from './layout.component';
+import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
@@ -12,6 +17,12 @@ import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-cont
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
+
+// Material
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
 
 const routes: Routes = [
   {
@@ -128,7 +139,21 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [LayoutModule, RouterModule.forChild(routes)],
-  declarations: []
+  declarations: [LayoutComponent],
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    DashboardLayoutModule,
+    ImageReferenceModule,
+    OrgNameModule,
+    ToLabelModule,
+
+    // Material
+    MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule,
+    RouterModule.forChild(routes)
+  ]
 })
 export class DashboardModule {}
