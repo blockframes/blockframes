@@ -16,22 +16,4 @@
       color: #FFFFFF;
     }
   }
-
-  // To color mat-chip when autocomplete is used, attribute 'selected' isn't enough
-  // So I create a new attribute to add to the chip to enable everyone to color the chip with autocomplete
-  mat-chip.mat-standard-chip {
-    &[bfChipAutocomplete] {
-      &[color="primary"] {
-        @include mat-chips-theme-color($primary);
-      }
-
-      &[color="warn"] {
-        @include mat-chips-theme-color($warn);
-      }
-
-      &[color="accent"] {
-        @include mat-chips-theme-color($accent);
-      }
-    }
-  }
 }
