@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { ActivatedRoute } from '@angular/router';
+import { contentType } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'movie-form-main',
@@ -9,30 +11,20 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 })
 export class MovieFormMainComponent {
   form = this.shell.form;
+  public contentType = contentType;
+  public movieId = this.route.snapshot.params.movieId;
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
 
   get main() {
     return this.form.get('main');
-  }
-
-  get distributors() {
-    return this.production.get('stakeholders').get('distributor');
-  }
-
-  get salesInfo() {
-    return this.form.get('salesInfo');
   }
 
   get production() {
     return this.form.get('production');
   }
 
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
-
-  get festivalPrizes() {
-    return this.form.get('festivalPrizes');
+  get directors() {
+    return this.main.get('directors');
   }
 }
