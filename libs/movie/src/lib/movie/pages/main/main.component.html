@@ -4,7 +4,7 @@
 
     <form [formGroup]="main" fxLayout="column" fxLayoutGap="24px">
 
-      <h1>Reference</h1>
+      <h3>Reference</h3>
       <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>International title</mat-label>
@@ -39,10 +39,10 @@
         </mat-form-field>
       </section>
 
-      <h1>Images</h1>
-      <article class="content-holder">
+      <h3>Images</h3>
+      <article>
         <h5>Poster Image</h5>
-        <span>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</span>
+        <p>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</p>
         <drop-cropper
           [storagePath]="movieId | ref: 'movie' : 'banner'"
           ratio="banner"
@@ -53,9 +53,9 @@
         </drop-cropper>
       </article>
 
-      <article class="content-holder">
+      <article>
         <h5>Film Page Banner Image</h5>
-        <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
+        <p>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</p>
         <drop-cropper
             [storagePath]="movieId | ref: 'movie' : 'poster'"
             ratio="poster"
@@ -66,7 +66,7 @@
           </drop-cropper>
       </article>
 
-      <h1>General Information</h1>
+      <h3>General Information</h3>
       <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Production Year</mat-label>
@@ -105,7 +105,7 @@
       </section>
 
 
-      <h1>Directors</h1>
+      <h3>Directors</h3>
       <article *ngFor="let control of directors.controls; let i = index; let last = last">
         <!-- Display Name -->
         <form-display-name [form]="control"></form-display-name>
