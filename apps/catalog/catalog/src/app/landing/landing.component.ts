@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'catalog-landing-page',
-  templateUrl: './landing-page.component.html',
-  styleUrls: ['./landing-page.component.scss'],
+  selector: 'catalog-landing',
+  templateUrl: './landing.component.html',
+  styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogLandingPageComponent {
+export class CatalogLandingComponent {
   public tabNames = ['Seller', 'Buyer'];
 
   public tabTitle = [

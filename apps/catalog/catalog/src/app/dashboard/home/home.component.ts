@@ -1,9 +1,10 @@
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Optional } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { Intercom } from 'ng-intercom';
 
 const isAcceptedInApp = movie => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.catalog === true;
 
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    @Optional() private intercom: Intercom
   ) { }
 
   ngOnInit() {
@@ -32,6 +34,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.movieQuery.getCount()
       ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
       : this.dynTitle.setPageTitle('New Title')
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 
   ngOnDestroy() {

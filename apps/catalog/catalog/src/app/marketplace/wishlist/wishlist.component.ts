@@ -12,12 +12,12 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'catalog-wishlist',
-  templateUrl: './wishlist-view.component.html',
-  styleUrls: ['./wishlist-view.component.scss'],
+  templateUrl: './wishlist.component.html',
+  styleUrls: ['./wishlist.component.scss'],
   // The table needs to be updated when user deletes a movie
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class WishlistViewComponent implements OnInit, OnDestroy {
+export class WishlistComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<Movie>;
   public hasWishlist: boolean;
@@ -54,7 +54,7 @@ export class WishlistViewComponent implements OnInit, OnDestroy {
   }
 
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`../../${movieId}`], { relativeTo: this.route });
+    this.router.navigate([`../title/${movieId}`], { relativeTo: this.route });
   }
 
   public remove(movie: Movie, event: Event) {

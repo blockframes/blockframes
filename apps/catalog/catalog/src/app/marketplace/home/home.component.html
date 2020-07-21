@@ -5,7 +5,7 @@
     <h2>Archipel Content</h2>
     <h1>The only marketplace offering package deals</h1>
     <p>for TV, VOD and ancillary rights</p>
-    <a mat-flat-button color="accent" test-id="library" routerLink="/c/o/marketplace/search">View the Library</a>
+    <a mat-flat-button color="accent" test-id="library" routerLink="/c/o/marketplace/title">View the Library</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -15,12 +15,12 @@
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
           <p>{{ section.subline}} </p>
-          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/search">See more</a>
+          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/title">See more</a>
         </aside>
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
           <bf-slide *ngFor="let movie of section.movies;" [image]="movie.main.banner.media"
             overlayColor="medium">
-            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace', movie.id]"
+            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>
               <wishlist-button [movieId]="movie.id" small></wishlist-button>
               <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">

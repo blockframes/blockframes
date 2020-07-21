@@ -19,11 +19,10 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Components
-import { WishlistViewComponent } from './wishlist-view/wishlist-view.component';
-import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
+import { WishlistComponent } from './wishlist.component';
 
 @NgModule({
-  declarations: [WishlistViewComponent, WishlistCurrentRepertoryComponent],
+  declarations: [WishlistComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -32,7 +31,7 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     TranslateSlugModule,
     ImageReferenceModule,
     DurationModule,
-    
+
     // Material
     MatButtonModule,
     MatDividerModule,
@@ -45,7 +44,7 @@ import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/
     RouterModule.forChild([
       {
         path: '',
-        component: WishlistViewComponent
+        component: WishlistComponent
       }
     ])
   ]
