@@ -13,12 +13,11 @@ import {
 // Material
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
-
-// RxJs
-import { BehaviorSubject } from 'rxjs';
+import { FormListComponent } from '../form-list.component';
 
 @Component({
   selector: '[displayedColumns] [dataSource] bf-form-list-table',
@@ -41,13 +40,11 @@ export class FormListTableComponent implements AfterViewInit {
     this._dataSource = new MatTableDataSource(data);
     if (this._dataSource?.paginator) {
       this._dataSource._updatePaginator(data.length)
+      this.paginator.firstPage()
     }
   }
 
-  constructor(private cdr: ChangeDetectorRef) { }
-
-  selectedRow: BehaviorSubject<number> = new BehaviorSubject(null);
-  markedToRemove: BehaviorSubject<number> = new BehaviorSubject(null);
+  constructor(private formList: FormListComponent) { }
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
@@ -58,9 +55,17 @@ export class FormListTableComponent implements AfterViewInit {
     this.displayedColumns.push('actions');
   }
 
+  selectRow(index: number) {
+    if (index || index === 0) {
+      this.formList.selectRow(index);
+    }
+  }
+
   removeValueFromDataSource(index: number) {
-    this.markedToRemove.next(index)
-    this._dataSource.data.splice(index, 1);
-    this._dataSource._updateChangeSubscription();
+    if (index || index === 0) {
+      this.formList.removeControlFromList(index)
+      this._dataSource.data.splice(index, 1);
+      this._dataSource._updateChangeSubscription();
+    }
   }
 }
