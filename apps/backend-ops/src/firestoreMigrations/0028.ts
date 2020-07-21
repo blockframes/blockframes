@@ -176,7 +176,7 @@ const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storag
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    await upsertWatermark(user as any); // _upsertWatermark only require uid, email, firstName, lastName, witch are common between the 2 types
+    await upsertWatermark(user as any); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }

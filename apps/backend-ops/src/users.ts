@@ -159,7 +159,7 @@ export async function generateWatermarks() {
     const promises = users.map(async user => {
       const ref = `users/${user.uid}/watermark/${user.uid}.svg`;
       const to = bucket.file(ref);
-      const exists = await to.exists();
+      const [exists] = await to.exists();
       if (!exists) {
         return upsertWatermark(user);
       }
