@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from './layout.component';
+import { DashboardComponent } from './dashboard.component';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -27,7 +27,7 @@ import { MatDividerModule } from '@angular/material/divider';
 const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
+    component: DashboardComponent,
     children: [
       {
         path: '',
@@ -139,7 +139,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LayoutComponent],
+  declarations: [DashboardComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
