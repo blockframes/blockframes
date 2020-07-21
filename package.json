@@ -92,7 +92,7 @@
     "@ethersproject/wallet": "^5.0.0-beta.131",
     "@google-cloud/bigquery": "^4.6.1",
     "@google-cloud/pubsub": "^1.7.2",
-    "@google-cloud/storage": "^4.3.1",
+    "@google-cloud/storage": "^5.0.0",
     "@juggle/resize-observer": "^3.2.0",
     "@ngrx/effects": "9.1.0",
     "@ngrx/router-store": "9.1.0",
