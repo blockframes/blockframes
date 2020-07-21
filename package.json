@@ -150,7 +150,6 @@
     "@datorama/akita-ng-router-store": "^4.0.0",
     "@datorama/akita-ngdevtools": "^3.0.2",
     "@firebase/testing": "^0.16.4",
-    "@ngneat/spectator": "^5.12.0",
     "@ngrx/schematics": "9.0.0",
     "@ngrx/store-devtools": "9.0.0",
     "@nrwl/cypress": "9.2.1",
