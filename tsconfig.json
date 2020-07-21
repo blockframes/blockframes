@@ -39,9 +39,9 @@
       "@blockframes/permissions/types": [
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
-      "@blockframes/invitation/*": ["libs/notification/src/lib/invitation/*"],
+      "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
       "@blockframes/invitation/types": [
-        "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
+        "libs/invitation/src/lib/+state/invitation.firestore.ts"
       ],
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
@@ -59,8 +59,7 @@
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import": ["libs/import/src/index.ts"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
-      "@blockframes/testing/*": ["libs/testing/src/*"]
-    }
+      "@blockframes/testing/*": ["libs/testing/src/*"]    }
   },
   "angularCompilerOptions": {
     "enableIvy": true,
