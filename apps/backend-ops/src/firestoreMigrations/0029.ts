@@ -77,9 +77,10 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
 
   for (const movie of movies) {
     for (const link of externalMediaLinks) {
-      movie.promotionalElements[link].media = createExternalMedia(
-        movie.promotionalElements[link].media
-      );
+      const media = movie.promotionalElements[link].media;
+      movie.promotionalElements[link].media = createExternalMedia({
+        url: media.url ? media.url : media.urls && media.urls.original ? media.urls.original : '',
+      });
       // DELETE
       for (const key of legacyKeysExternalMedia) {
         delete movie.promotionalElements[link].media[key];
@@ -90,15 +91,17 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
       const media = movie.promotionalElements[link].media;
       movie.promotionalElements[link].media = createHostedMedia({
         ref: media.ref ? media.ref : media.originalRef ? media.originalRef : '',
-        url: media.url ? media.url : ''
+        url: media.url ? media.url : media.urls && media.urls.original ? media.urls.original : '',
       });
       // DELETE
       legacyKeysHostedMedia.forEach(key => delete movie.promotionalElements[link].media[key]);
     }
 
     // update and move banner to main
-    movie.main.banner = updateImgRef<PromotionalHostedMedia>(movie.promotionalElements['banner'], 'media');
-    if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
+    if (movie.promotionalElements['banner']) {
+      movie.main.banner = updateImgRef<PromotionalHostedMedia>(movie.promotionalElements['banner'], 'media');
+      delete movie.promotionalElements['banner'];
+    }
 
     // update and move poster to main
     movie.promotionalElements?.['poster']?.forEach((poster: PromotionalHostedMedia, index: number) => {
@@ -112,11 +115,13 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
 
     // update still photos from an array with old ImgRef to a record with new ImgRef
     const still_photo: Record<string, PromotionalHostedMedia> = {};
-    (movie.promotionalElements.still_photo as any).forEach((still, index) => {
-      if (!!still.media?.ref || !!still.media?.urls?.original) {
-        still_photo[`${index}`] = updateImgRef<PromotionalHostedMedia>(still, 'media');
-      }
-    });
+    if (movie.promotionalElements.still_photo && movie.promotionalElements.still_photo.length) {
+      (movie.promotionalElements.still_photo as any).forEach((still, index) => {
+        if (!!still.media?.ref || !!still.media?.urls?.original) {
+          still_photo[`${index}`] = updateImgRef<PromotionalHostedMedia>(still, 'media');
+        }
+      });
+    }
     movie.promotionalElements.still_photo = still_photo;
 
     // remove trailer
