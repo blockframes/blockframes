@@ -23,8 +23,11 @@ export default class FestivalInvitationsPage {
     cy.get('festival-invitation invitation-list invitation-item').contains(ACCEPTED);
   }
 
-  clickGoToEvent() {
+  openMoreMenu() {
     cy.get('festival-invitation [test-id=more]').first().click();
+  }
+
+  clickGoToEvent() {
     cy.get('[test-id=go-to-event]').click();
     return new FestivalMarketplaceEventPage();
   }

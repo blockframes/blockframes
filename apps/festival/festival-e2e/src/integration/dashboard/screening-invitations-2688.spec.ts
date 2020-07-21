@@ -29,7 +29,7 @@ describe('User invites other users to his private screening', () => {
     clearDataAndPrepareTest();
   });
 
-  it(`User creates a screening and invites ${PARTICIPANT_1_NAME} and Sarah Gregory to the screening`, () => {
+  it(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
@@ -53,9 +53,11 @@ describe('User invites other users to his private screening', () => {
     cy.wait(2000)
     p2.acceptInvitationScreening();
     // Wait for post request to finish
+    // TODO: verify UI has changed instead of wait
     cy.wait(2000);
 
     // Assets video runs
+    p2.openMoreMenu();
     const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
     const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
@@ -74,6 +76,7 @@ describe('User invites other users to his private screening', () => {
     cy.wait(2000);
     p2.refuseInvitationScreening();
     // Wait for post request to finish
+    // TODO: verify UI has changed instead of wait
     cy.wait(5000);
   });
 
