@@ -8,7 +8,8 @@ import {
   ChangeDetectorRef,
   Directive,
   TemplateRef,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 
 // Blockframes
@@ -33,7 +34,7 @@ export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
 
   private sub: Subscription;
 
-  private activeIndex: number;
+  private activeIndex: number = 0;
 
   private _formList: FormList<any>
   @Input()
