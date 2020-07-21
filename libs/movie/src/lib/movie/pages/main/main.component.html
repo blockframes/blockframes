@@ -4,7 +4,8 @@
 
     <form [formGroup]="main" fxLayout="column" fxLayoutGap="24px">
 
-      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+      <h1>Reference</h1>
+      <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>International title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title" [formControl]="main.title.get('international')" required />
@@ -20,9 +21,9 @@
             Original title is <b>required</b>
           </mat-error>
         </mat-form-field>
-      </div>
+      </section>
 
-      <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
+      <section fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Content Type</mat-label>
           <mat-select test-id="content-type" [formControl]="main.get('contentType')">
@@ -36,10 +37,10 @@
           <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="main.get('internalRef')" />
           <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
         </mat-form-field>
-      </div>
+      </section>
 
       <h1>Images</h1>
-      <section class="content-holder">
+      <article class="content-holder">
         <h5>Poster Image</h5>
         <span>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</span>
         <drop-cropper
@@ -50,9 +51,9 @@
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
-      </section>
+      </article>
 
-      <section class="content-holder">
+      <article class="content-holder">
         <h5>Film Page Banner Image</h5>
         <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
         <drop-cropper
@@ -63,10 +64,10 @@
             <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
           </drop-cropper>
-      </section>
+      </article>
 
       <h1>General Information</h1>
-      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+      <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Production Year</mat-label>
           <input matInput [formControl]="main.get('releaseYear')" required type="number"/>
@@ -78,7 +79,7 @@
             <span>{{ status.label }}</span>
           </ng-template>
         </static-select>
-      </div>
+      </section>
 
       <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
 
@@ -86,7 +87,7 @@
 
       <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
 
-      <div flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+      <section flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" class="full-width">
           <ng-template let-status>
             <span>{{ status.label }}</span>
@@ -101,7 +102,7 @@
             Only positive values are accepted.
           </mat-error>
         </mat-form-field>
-      </div>
+      </section>
 
 
       <h1>Directors</h1>
