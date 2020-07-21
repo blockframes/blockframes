@@ -3,150 +3,133 @@
   <ng-container tunnel-form>
 
     <form [formGroup]="main" fxLayout="column" fxLayoutGap="24px">
-      <div class="form-reference">
-        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>International title</mat-label>
-            <input test-id="international-title" matInput type="text" placeholder="International title" [formControl]="main.title.get('international')" required />
-            <mat-error *ngIf="main.title.get('international').hasError('required')">
-              International title is <b>required</b>
-            </mat-error>
-          </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Original title</mat-label>
-            <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="main.title.get('original')" required />
-            <mat-error *ngIf="main.title.get('original').hasError('required')">
-              Original title is <b>required</b>
-            </mat-error>
-          </mat-form-field>
-        </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>International title</mat-label>
+          <input test-id="international-title" matInput type="text" placeholder="International title" [formControl]="main.title.get('international')" required />
+          <mat-error *ngIf="main.title.get('international').hasError('required')">
+            International title is <b>required</b>
+          </mat-error>
+        </mat-form-field>
 
-        <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Content Type</mat-label>
-            <mat-select test-id="content-type" [formControl]="main.get('contentType')">
-              <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
-                {{ type.value }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Reference</mat-label>
-            <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="main.get('internalRef')" />
-            <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Original title</mat-label>
+          <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="main.title.get('original')" required />
+          <mat-error *ngIf="main.title.get('original').hasError('required')">
+            Original title is <b>required</b>
+          </mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-images">
-        <h1>Images</h1>
-        <div class="content-holder">
-          <h5>Poster Image</h5>
-          <span>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</span>
-          <drop-cropper
-            [storagePath]="movieId | ref: 'movie' : 'banner'"
-            ratio="banner"
-            [form]="main.banner.get('media').get('original')">
-            <h3 type>Banner Image*</h3>
-            <p class="mat-body-2" dimensions>Ratio : 16:9</p>
+      <div fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="start start">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Content Type</mat-label>
+          <mat-select test-id="content-type" [formControl]="main.get('contentType')">
+            <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
+              {{ type.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Reference</mat-label>
+          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="main.get('internalRef')" />
+          <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <h1>Images</h1>
+      <section class="content-holder">
+        <h5>Poster Image</h5>
+        <span>The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.</span>
+        <drop-cropper
+          [storagePath]="movieId | ref: 'movie' : 'banner'"
+          ratio="banner"
+          [form]="main.banner.get('media').get('original')">
+          <h3 type>Banner Image*</h3>
+          <p class="mat-body-2" dimensions>Ratio : 16:9</p>
+          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+        </drop-cropper>
+      </section>
+
+      <section class="content-holder">
+        <h5>Film Page Banner Image</h5>
+        <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
+        <drop-cropper
+            [storagePath]="movieId | ref: 'movie' : 'poster'"
+            ratio="poster"
+            [form]="main.poster.get('media').get('original')">
+            <h3 type>Poster*</h3>
+            <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
           </drop-cropper>
-        </div>
+      </section>
 
-        <div class="content-holder">
-          <h5>Film Page Banner Image</h5>
-          <span>The poster image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.</span>
-          <drop-cropper
-              [storagePath]="movieId | ref: 'movie' : 'poster'"
-              ratio="poster"
-              [form]="main.poster.get('media').get('original')">
-              <h3 type>Poster*</h3>
-              <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
-              <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-            </drop-cropper>
-        </div>
+      <h1>General Information</h1>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Production Year</mat-label>
+          <input matInput [formControl]="main.get('releaseYear')" required type="number"/>
+          <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
+        </mat-form-field>
+
+        <static-select scope="RELEASE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" class="full-width">
+          <ng-template let-status>
+            <span>{{ status.label }}</span>
+          </ng-template>
+        </static-select>
       </div>
 
-      <div class="form-general-information" fxLayout="column">
-        <h1>General Information</h1>
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Production Year</mat-label>
-            <input matInput [formControl]="main.get('releaseYear')" required type="number"/>
-            <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
-          </mat-form-field>
+      <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
 
-          <static-select scope="MOVIE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" class="full-width">
-            <ng-template let-status>
-              <span>{{ status.label }}</span>
-            </ng-template>
-          </static-select>
-        </div>
+      <chips-autocomplete [form]="main.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
 
-        <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
+      <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
 
-        <chips-autocomplete [form]="main.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
+      <div flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+        <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" class="full-width">
+          <ng-template let-status>
+            <span>{{ status.label }}</span>
+          </ng-template>
+        </static-select>
 
-        <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
-
-        <div flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-          <static-select scope="MOVIE_STATUS" [control]="main.get('status')" label="To be determineted/Estimated/Confirmed" class="full-width">
-            <ng-template let-status>
-              <span>{{ status.label }}</span>
-            </ng-template>
-          </static-select>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Running Time</mat-label>
-            <input matInput type="number" min="0" [formControl]="main.get('totalRunTime')" name="runningTime"/>
-            <mat-hint>In minutes</mat-hint>
-            <mat-error *ngIf="main.hasError('min')">
-              Only positive values are accepted.
-            </mat-error>
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Running Time</mat-label>
+          <input matInput type="number" min="0" [formControl]="main.get('totalRunTime')" name="runningTime"/>
+          <mat-hint>In minutes</mat-hint>
+          <mat-error *ngIf="main.hasError('min')">
+            Only positive values are accepted.
+          </mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-directors" fxLayout="column">
-        <h1>Directors</h1>
-        <movie-form-directors [form]="main.get('directors')"></movie-form-directors>
-      </div>
+
+      <h1>Directors</h1>
+      <article *ngFor="let control of directors.controls; let i = index; let last = last">
+        <!-- Display Name -->
+        <form-display-name [form]="control"></form-display-name>
+        <!--  Shot Biography -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Director's Filmography</mat-label>
+          <textarea matInput [formControl]="control.get('filmography')"></textarea>
+          <mat-hint>Selective Filmography to present the director.</mat-hint>
+        </mat-form-field>
+
+        <!-- Add / Delete -->
+        <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+          <button mat-mini-fab color="warn" (click)="directors.removeAt(i)" aria-label="Remove a director form">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+          <span class="mat-caption">Delete additional director</span>
+        </footer>
+        <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+          <button mat-mini-fab color="primary" (click)="directors.add()" aria-label="Remove a director form">
+            <mat-icon svgIcon="add"></mat-icon>
+          </button>
+          <span class="mat-caption">Add Director</span>
+        </footer>
+      </article>
+
     </form>
-
-    <!-- General Information -->
-    <!-- <mat-card>
-      <mat-card-header>
-        <mat-card-title>General Information</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
-        <mat-divider></mat-divider>
-        <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
-        <p class="mat-body-2">Principal Cast Members</p>
-        <movie-form-sales-cast role="CAST_ROLES" [form]="salesCast.get('cast')"></movie-form-sales-cast>
-      </mat-card-content>
-    </mat-card> -->
-
-    <!-- Directors -->
-    <!-- <mat-card>
-      <mat-card-header>
-        <mat-card-title>Director{ main.get('directors').controls.length, plural,=1 {} other {s}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-form-directors [form]="main.get('directors')"></movie-form-directors>
-      </mat-card-content>
-    </mat-card> -->
-
-    <!-- Festival -->
-    <!-- <mat-card>
-      <mat-card-header>
-        <mat-card-title i18n>Festival{ festivalPrizes.get('prizes').controls.length, plural,=1 {} other {s}}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-form-festival-prizes [form]="festivalPrizes"></movie-form-festival-prizes>
-      </mat-card-content>
-    </mat-card> -->
-
   </ng-container>
 </tunnel-page>

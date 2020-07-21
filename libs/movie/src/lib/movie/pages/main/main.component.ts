@@ -20,23 +20,11 @@ export class MovieFormMainComponent {
     return this.form.get('main');
   }
 
-  get distributors() {
-    return this.production.get('stakeholders').get('distributor');
-  }
-
-  get salesInfo() {
-    return this.form.get('salesInfo');
-  }
-
   get production() {
     return this.form.get('production');
   }
 
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
-
-  get festivalPrizes() {
-    return this.form.get('festivalPrizes');
+  get directors() {
+    return this.main.get('directors');
   }
 }
