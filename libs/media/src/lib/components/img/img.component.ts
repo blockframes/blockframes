@@ -4,35 +4,7 @@ import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
 import { getAssetPath, HostedMedia } from '@blockframes/media/+state/media.model';
 import { getImgSize } from '@blockframes/media/+state/media.firestore';
-
-interface ImageParameters {
-  auto?:string;
-  fit?:  'clamp' | 'clip' | 'crop' | 'facearea' | 'fill' | 'fillmax' | 'max' | 'min' | 'scale';
-  width?: number;
-  height?: number;
-}
-
-function formatParameter(parameters: ImageParameters): string {
-  let result = '';
-
-  if (!!parameters.auto) {
-    result += `auto=${parameters.auto}&`;
-  }
-
-  if (!!parameters.fit) {
-    result += `fit=${parameters.fit}&`;
-  }
-
-  if (!!parameters.width) {
-    result += `w=${parameters.width}&`;
-  }
-
-  if (!!parameters.width) {
-    result += `h=${parameters.height}&`;
-  }
-
-  return result;
-}
+import { calculateViewPortWidth } from '@blockframes/media/directives/image-reference/imgix-helpers';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',
@@ -76,16 +48,11 @@ export class ImgComponent implements OnInit, OnDestroy {
 
     const sizeParameters = { ...this.parameters };
 
-    // we do this to get a defined range of possible width to take advantage of image caching
-    // this is basically a tradeoff between network request size and caching
-    // low threshold = small request size and lower use of caching = bigger imagix bill, but smaller load time
-    // big threshold = lots of caching = smaller imgix bill but app might be slower because of bigger images
-    const THRESHOLD = 200;
+    const viewPortWidth = calculateViewPortWidth();
 
     // load the smallest image size possible
     sizeParameters.width = Math.min(
-      // get the nearest viewport size in steps of <THRESHOLD>px,
-      (Math.ceil(window.innerWidth/THRESHOLD)*THRESHOLD), // for THRESHOLD = 200 we get : 98 -> 200, 125 -> 200, 200 -> 200, 201 -> 400, 550 -> 600, 700 -> 800, etc...
+      viewPortWidth,
       this.parameters.width || Infinity // in case width is undefined we pick Infinity instead
     );
 
