@@ -2,7 +2,7 @@
   <ng-content select="bf-form-list-table"></ng-content>
 </ng-container>
 <ng-template #form>
-  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: localForm }">
+  <ng-template [ngTemplateOutlet]="formView" >
   </ng-template>
   <button mat-stroked-button color="primary" (click)="saveForm()">
     <mat-icon svgIcon="floppy"></mat-icon>
