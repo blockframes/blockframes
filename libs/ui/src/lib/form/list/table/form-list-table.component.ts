@@ -6,7 +6,9 @@ import {
   Input,
   AfterViewInit,
   ContentChildren,
-  QueryList
+  QueryList,
+  EventEmitter,
+  Output
 } from '@angular/core';
 
 // Material
@@ -16,9 +18,6 @@ import { MatPaginator } from '@angular/material/paginator';
 // Blockframes
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
-
-// Component
-import { FormListComponent } from '../form-list.component';
 
 @Component({
   selector: '[displayedColumns] [dataSource] bf-form-list-table',
@@ -39,13 +38,14 @@ export class FormListTableComponent implements AfterViewInit {
   get dataSource() { return this._dataSource as any }
   set dataSource(data: any[]) {
     this._dataSource = new MatTableDataSource(data);
-    if (this.test) {
+ /*    if (this.test) {
       this._dataSource.paginator = this.paginator
     }
-    this.test = true
+    this.test = true */
   }
 
-  constructor(/* private formList: FormListComponent */) { }
+  @Output() selectedRow = new EventEmitter<number>()
+  @Output() removeIndex = new EventEmitter<number>()
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
@@ -57,17 +57,11 @@ export class FormListTableComponent implements AfterViewInit {
     this.displayedColumns.push('actions')
   }
 
-  selectRow(index: number) {
+  removeEntity(index: number) {
     if (index || index === 0) {
- /*      this.formList.selectRow(index); */
-    }
-  }
-
-  removeValueFromDataSource(index: number) {
-    if (index || index === 0) {
-/*       this.formList.removeControlFromList(index)
+      this.removeIndex.emit(index);
       this._dataSource.data.splice(index, 1);
-      this._dataSource._updateChangeSubscription(); */
+      this._dataSource._updateChangeSubscription();
     }
   }
 }
