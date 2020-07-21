@@ -20,9 +20,9 @@ import { MovieFormTotalRuntimeModule } from '@blockframes/movie/form/main/total-
 import { MovieFormFestivalPrizesModule } from '@blockframes/movie/form/festival-prizes/festival-prizes.module';
 import { MovieFormOriginalReleasesModule } from '@blockframes/movie/form/sales-info/original-releases/original-releases.module';
 import { MovieFormSalesCastModule } from '@blockframes/movie/form/sales-cast/sales-cast.module';
-import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
-import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
+import { MovieFormImagesModule } from '@blockframes/movie/form/main/images/images.module';
+import { MovieFormGeneralInformationModule } from '@blockframes/movie/form/main/general-information/general-information.module';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -38,9 +38,9 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
     MovieFormFestivalPrizesModule,
     MovieFormOriginalReleasesModule,
     MovieFormSalesCastModule,
+    MovieFormImagesModule,
+    MovieFormGeneralInformationModule,
     TunnelPageModule,
-    CropperModule,
-    ReferencePathModule,
     ChipsAutocompleteModule,
     // Material
     MatCardModule,
