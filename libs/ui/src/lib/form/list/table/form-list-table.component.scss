@@ -1,6 +1,10 @@
 :host {
   display: block;
+}
+
+.table-container {
   overflow: auto;
+  width: 100%;
   /* width */
   ::-webkit-scrollbar {
     width: 10px;
@@ -22,11 +26,16 @@ table {
 }
 
 mat-paginator {
+  width: 100%;
   bottom: 0px;
   position: sticky;
   z-index: 10;
 }
 
 .mat-table-sticky {
-  width: 100px;
+  width: 60px;
+}
+
+.action-buttons {
+  display: flex;
 }
