@@ -22,7 +22,6 @@ import { ReferencePathModule } from '@blockframes/media/directives/media/referen
 // Blockframes UI
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { FormDisplayNameModule } from '@blockframes/ui/form';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 import { MovieFormMainComponent } from './main.component';
@@ -43,7 +42,6 @@ import { MovieFormMainComponent } from './main.component';
     ReferencePathModule,
     CropperModule,
     StaticSelectModule,
-    FormDisplayNameModule,
 
     // Material
     MatDividerModule,
