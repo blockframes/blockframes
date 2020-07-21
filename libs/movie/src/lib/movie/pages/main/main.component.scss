@@ -4,6 +4,16 @@ mat-divider + * {
   padding-top: 16px;
 }
 
-mat-card {
+.full-width {
   width: 100%;
+}
+
+form {
+  .content-holder {
+    margin-bottom: 24px;
+
+    h5 {
+      margin-bottom: 24px;
+    }
+  }
 }
