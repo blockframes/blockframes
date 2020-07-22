@@ -12,7 +12,7 @@ import { ContractQuery } from '@blockframes/contract/contract/+state/contract.qu
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NegotiationComponent {
-
+  panelOpenState: boolean;
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
   titles$ = this.query.titles$;

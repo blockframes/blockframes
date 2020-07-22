@@ -78,16 +78,16 @@
                 <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
               </movie-banner-actions>
             </movie-banner>
-            <ng-container *ngIf="rightForms.get(movie.id) as rights else noRight" >
+            <ng-container *ngIf="rightForms.get(movie.id) as rights; else noRight" >
               <ng-container *ngIf="rights.value.length else noRight" >
                 <catalog-right-list [rights]="rights.value"></catalog-right-list>
               </ng-container>
-              <ng-template #noRight >
-                <a mat-button [routerLink]="['..', movie.id]" color="warn">
-                  Add a right on this title.
-                </a>
-              </ng-template>
             </ng-container>
+            <ng-template #noRight >
+              <a mat-button [routerLink]="['..', movie.id]" color="warn">
+                Add a right on this title.
+              </a>
+            </ng-template>
           </mat-card>
         </ng-container>
         <button class="submit" mat-flat-button color="accent" (click)="submit()">
