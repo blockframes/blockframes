@@ -8,6 +8,12 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep } from './tools';
 import readline from 'readline';
+import { getCollection } from 'apps/backend-functions/src/data/internals';
+import { PublicUser } from '@blockframes/user/types';
+import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { db } from 'apps/backend-functions/src/internals/firebase';
+import { createHostedMedia } from '@blockframes/media/+state/media.model';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -144,4 +150,18 @@ export async function createUsers(): Promise<any> {
   const users = await readUsersFromSTDIN();
   const usersWithPassword = users.map(user => ({ ...user, password: 'password' }));
   return createAllUsers(usersWithPassword, auth);
+}
+
+export async function generateWatermarks() {
+
+  // activate maintenance to prevent cloud functions to trigger
+  await startMaintenance();
+
+  const users = await getCollection<PublicUser>('users');
+  const promises = users.map(user => upsertWatermark(user));
+  await Promise.all(promises);
+
+  // deactivate maintenance
+  await endMaintenance();
+
 }
