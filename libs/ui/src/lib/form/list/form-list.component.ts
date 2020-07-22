@@ -11,6 +11,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 
 // Blockframes
 import { FormList } from '@blockframes/utils/form';
@@ -41,12 +42,11 @@ export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
   get formList() { return this._formList }
   set formList(list) {
     this._formList = list;
-    this.localForm = list;
   };
 
   @Input() buttonText: string;
 
-  public localForm: FormList<any>
+  public localForm: FormGroup
 
   public tableView: boolean;
 
@@ -82,9 +82,7 @@ export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
 
   public editItem(index: number) {
     if (this.isNotNull(index)) {
-      /* Reset the local form, otherwise at the next iteration we are at the wrong level of the controls array */
-      this.localForm = this.formList;
-      this.localForm = this.localForm.at(index)
+      this.localForm = this.formList.at(index)
       this.tableView = false;
       this.cdr.markForCheck();
     }
@@ -103,13 +101,9 @@ export class FormListComponent implements OnInit, AfterContentInit, OnDestroy {
 
   public removeControlFromList(index: number) {
     if (this.formList.controls.length === 1) {
-      /* If only one control is left and we are going to remove it, we need a placeholder. The placeholder
-      will get used for the template router outlet context. We always need a valid form group that we can pass
-      to the outlet, otherwise it will throw an error. This is why we are shifting with the indices.  */
-      this.activeIndex = 0;
-      this.formList.add([]);
+      this.localForm = this.formList.last();
+      this.localForm.reset()
       this.formList.removeAt(index);
-      this.localForm = this.formList.at(index);
       this.tableView = false;
     } else {
       this.formList.removeAt(index);
