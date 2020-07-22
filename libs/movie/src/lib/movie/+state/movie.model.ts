@@ -11,6 +11,7 @@ import {
   MovieStory,
   Prize,
   PromotionalElement,
+  MovieLanguageSpecificationContainer,
   Title,
   MovieLanguageSpecification,
   MovieLanguageTypes,
@@ -309,7 +310,7 @@ export function createMovieLanguageSpecification(
 }
 
 export function populateMovieLanguageSpecification(
-  spec: Partial<any>,
+  spec: Partial<MovieLanguageSpecificationContainer>,
   slug: LanguagesSlug,
   type: MovieLanguageTypes,
   value: boolean = true
