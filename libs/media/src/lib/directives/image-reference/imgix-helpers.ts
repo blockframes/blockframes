@@ -10,7 +10,17 @@ export interface ImageParameters {
   height?: number;
 }
 
-export function formatParameter(parameters: ImageParameters): string {
+/**
+ * Transform an `ImageParameters` object into the query string part of an url, ready to sent to imgix.
+ * @example
+ * const param: ImageParameters = {
+ *   fit: 'crop',
+ *   width: 100,
+ *   height: 100
+ * };
+ * formatParameters(param); // '?fit=crop&w=100&h=100&'
+ */
+export function formatParameters(parameters: ImageParameters): string {
   let query = '';
 
   if (!!parameters.auto) {
@@ -30,32 +40,4 @@ export function formatParameter(parameters: ImageParameters): string {
   }
 
   return query;
-}
-
-/**
- * Calculate the nearest viewport size in steps of `THRESHOLD`px
- * @param THRESHOLD steps in px to round the current `window.innerWidth`, default value is `200`
- * @example
- * // for THRESHOLD = 200 we get :
- * 98 -> 200,
- * 125 -> 200,
- * 200 -> 200,
- * 201 -> 400,
- * 550 -> 600,
- * 700 -> 800,
- * etc...
- */
-export function calculateViewPortWidth(THRESHOLD:number=200) { // TODO THIS IS NOT COOL
-
-  if (!window || !window.innerWidth) return 1000;
-
-  if (THRESHOLD < 1) THRESHOLD = 1;
-
-  // we do this to get a defined range of possible width to take advantage of image caching
-  // this is basically a tradeoff between network request size and caching
-  // low threshold = small request size and lower use of caching = bigger imgix bill, but smaller load time
-  // big threshold = lots of caching = smaller imgix bill but app might be slower because of bigger images
-
-  // get the nearest viewport size in steps of <THRESHOLD>px,
-  return Math.ceil(window.innerWidth / THRESHOLD) * THRESHOLD;
 }
