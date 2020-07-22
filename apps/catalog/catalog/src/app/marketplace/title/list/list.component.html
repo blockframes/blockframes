@@ -1,5 +1,12 @@
 <title-list [titles]="movieSearchResults$ | async">
 
+  <!-- App Bar Search -->
+  <ng-template titleAppBarSearch>
+    <form class="app-bar" [formGroup]="filterForm">
+      <input type="text" formControlName="query">
+    </form>
+  </ng-template>
+
   <!-- SORT -->
   <ng-template titleSort>
 
@@ -89,6 +96,9 @@
 
   </title-filter>
 
+  <button mat-icon-button (click)="clear()">
+    <mat-icon svgIcon="close"></mat-icon>
+  </button>
 
   <!-- TITLE CARD -->
   <ng-template titleCard let-title>

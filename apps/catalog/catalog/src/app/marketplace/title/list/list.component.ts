@@ -3,7 +3,8 @@ import { FormControl } from '@angular/forms';
 import {
   Component,
   ChangeDetectionStrategy,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 
 // Blockframes
@@ -11,12 +12,11 @@ import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { Observable, combineLatest, of } from 'rxjs';
-import { map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, startWith, tap } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith } from 'rxjs/operators';
 
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
-import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -25,6 +25,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit {
+
   public movieSearchResults$: Observable<any>;
 
   public sortByControl: FormControl = new FormControl('Title');
@@ -32,29 +33,29 @@ export class ListComponent implements OnInit {
 
   public filterForm = new MovieSearchForm();
 
-  constructor(private movieService: MovieService, private dynTitle: DynamicTitleService) { }
+  constructor(private movieService: MovieService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     // On catalog, we want only movie available for catalog
     this.filterForm.appAccess.add('catalog');
-    this.dynTitle.setPageTitle('Library');
-    const movies$ = this.filterForm.valueChanges.pipe(
+    this.movieSearchResults$ = combineLatest([
+      this.sortByControl.valueChanges.pipe(startWith('Title')),
+      this.filterForm.valueChanges
+    ]).pipe(
       debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(_ => this.filterForm.search()),
+      switchMap(() => this.filterForm.search()),
       pluck('hits'),
-      map(results => results.map(movie => movie.objectID)),
-      /* We want to return an empty array if the user type something we cant find a match for */
-      switchMap(movieIds => movieIds.length ? this.movieService.valueChanges(movieIds) : of([]))
+      map(result => result.map(movie => movie.objectID)),
+      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
+      map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))),
     );
-    const sortBy$ = this.sortByControl.valueChanges.pipe(
-      startWith(this.sortByControl.value)
-    );
-    this.movieSearchResults$ = combineLatest([movies$, sortBy$]).pipe(
-      map(([movies, sortBy]) => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))
-      )
-    )
+  }
+
+  clear() {
+    const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
+    this.filterForm.reset(initial);
+    this.cdr.markForCheck();
   }
 }
