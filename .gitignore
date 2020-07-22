@@ -60,3 +60,6 @@ env/env.ts
 env/env.hugo.ts
 tools/credentials/*
 secrets.sh
+
+# cache
+.cache
