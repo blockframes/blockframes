@@ -11,7 +11,9 @@ import readline from 'readline';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { db } from 'apps/backend-functions/src/internals/firebase';
+import { createHostedMedia } from '@blockframes/media/+state/media.model';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -151,22 +153,19 @@ export async function createUsers(): Promise<any> {
 }
 
 export async function generateWatermarks() {
-  try {
-    const users = await getCollection<PublicUser>('users');
-    const { storage } = loadAdminServices();
-    const bucket = storage.bucket(getStorageBucketName());
 
-    const promises = users.map(async user => {
-      const ref = `users/${user.uid}/watermark/${user.uid}.svg`;
-      const to = bucket.file(ref);
-      const [exists] = await to.exists();
-      if (!exists) {
-        return upsertWatermark(user);
-      }
-      return;
-    });
-    return await Promise.all(promises);
-  } catch (error) {
-    console.log(`An error happened while generating Watermarks: ${error.message}`);
+  // activate migration to prevent cloud functions to trigger
+  await startMaintenance();
+
+  const users = await getCollection<PublicUser>('users');
+  const promises = []
+  for (const user of users) {
+    promises.push(db.doc(`users/${user.uid}`).update({ watermark: createHostedMedia() }));
+    promises.push(upsertWatermark(user));
   }
+  await Promise.all(promises);
+
+  // deactivate migration
+  await endMaintenance();
+
 }

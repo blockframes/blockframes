@@ -272,10 +272,10 @@ export const relayerSend = functions.https
 //--------------------------------
 
 /** Trigger: on every file uploaded to the storage. */
-export const onFileUpload = functions.storage.object().onFinalize(data => linkFile(data))
+export const onFileUpload = functions.storage.object().onFinalize(data => skipInMaintenance(linkFile(data)))
 
 //--------------------------------
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => unlinkFile(data))
+export const onFileDelete = functions.storage.object().onDelete(data => skipInMaintenance(unlinkFile(data)))
