@@ -276,7 +276,15 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
+export interface MovieLanguageSpecification {
+  original: boolean;
+  dubbed: boolean;
+  subtitle: boolean;
+  caption: boolean;
+}
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+
 
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
@@ -284,7 +292,7 @@ export interface MovieOriginalReleaseRaw<D> {
   media?: MediasSlug
 }
 
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> { }
 
 export interface MovieRating {
   country: TerritoriesSlug;
