@@ -4,7 +4,6 @@ import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { MovieBudgetForm } from '@blockframes/movie/form/budget/budget.form'
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -24,13 +23,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery
   ) { }
 
-  formList
   ngOnInit() {
-    this.formList = new MovieBudgetForm({
-      boxOffice: [{ value: 52, territory: 'germany', unit: 'boxoffice_dollar' },
-      { value: 52, territory: 'germany', unit: 'boxoffice_dollar' }, { value: 52, territory: 'germany', unit: 'boxoffice_dollar' },
-      { value: 52, territory: 'germany', unit: 'boxoffice_dollar' }]
-    });
 
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
@@ -53,10 +46,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
-  displayedColumns = ['Territory', 'Value', 'Box Office', '1', '2', '3'];
-  add() {
-    this.formList.controls.boxOffice.add({ value: Math.random(), territory: 'germany', unit: 'boxoffice_dollar' })
-  }
-  log(x) { console.log(x) }
 }
