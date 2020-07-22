@@ -1,3 +1,5 @@
+import { firebase } from '@env';
+import { getImgSize } from '@blockframes/media/+state/media.model';
 
 export interface ImageParameters {
   /** automatic optimization : https://docs.imgix.com/apis/url/auto/auto */
@@ -35,9 +37,22 @@ export function formatParameters(parameters: ImageParameters): string {
     query += `w=${parameters.width}&`;
   }
 
-  if (!!parameters.width) {
+  if (!!parameters.height) {
     query += `h=${parameters.height}&`;
   }
 
   return query;
+}
+
+export function generateImageSrcset(ref: string, parameters: ImageParameters) {
+
+  const sizes = getImgSize(ref);
+
+  const urls = sizes.map(size => {
+    const sizeParameters = { ...parameters, width: size };
+    const query = formatParameters(sizeParameters);
+    return `https://${firebase.projectId}.imgix.net/${ref}?${query} ${size}w`;
+  });
+
+  return urls.join(', ');
 }

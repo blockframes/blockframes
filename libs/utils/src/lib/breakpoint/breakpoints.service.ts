@@ -14,34 +14,6 @@ export class BreakpointsService {
   lg = this.createBreakpoint([ 'Large' ]);
   xl = this.createBreakpoint([ 'XLarge' ]);
 
-  /** Observable that tell whats the current active breakpoint name */
-  current: Observable<keyof Breakpoints> = combineLatest([this.xs, this.sm, this.md, this.lg, this.xl]).pipe(
-    map(([XSmall, Small, Medium, Large, XLarge]) => {
-      if (XSmall) return 'XSmall';
-      else if (Small) return 'Small';
-      else if (Medium) return 'Medium';
-      else if (Large) return 'Large';
-      else if (XLarge) return 'XLarge';
-      else return 'Large';
-    }),
-  );
-
-  /**
-   * Observable that tell whats the current active breakpoint width in px.
-   * The width is defined by the Google's Material Design specs
-   * https://material.io/design/layout/responsive-layout-grid.html#breakpoints
-   */
-  currentWidth = this.current.pipe(
-    map(bp => {
-      switch(bp) {
-        case 'XSmall': return 600;
-        case 'Small': return 1024;
-        case 'Medium': return 1440;
-        default: return 1920;
-      }
-    })
-  );
-
   // Greater Than
   gtXs = this.createBreakpoint([ 'Small', 'Medium', 'Large', 'XLarge' ]);
   gtSm = this.createBreakpoint([ 'Medium', 'Large', 'XLarge' ]);

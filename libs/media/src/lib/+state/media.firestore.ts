@@ -40,26 +40,25 @@ export function createHostedMedia(media?: Partial<HostedMedia>): HostedMedia {
 
 /**
  * This array contains the different image sizes.
- * @note it **does not** contains the `original` key
  */
-export const imgSizeDirectory = ['lg', 'md', 'xs', 'fallback'] as const;
+export const imgSizeDirectory = ['lg', 'md', 'xs'] as const;
 export type ImgSizeDirectory = (typeof imgSizeDirectory)[number];
 
 export type ImageSizes = Record<ImgSizeDirectory, number>;
 
-export function getImgSize(url: string): ImageSizes {
-  if (url.includes('avatar')) {
-    return { xs: 50, md: 100, lg: 300, fallback: 1024 };
-  } else if (url.includes('logo')) {
-    return { xs: 50, md: 100, lg: 300, fallback: 1024 };
-  } else if (url.includes('poster')) {
-    return { xs: 200, md: 400, lg: 600, fallback: 1024 };
-  } else if (url.includes('banner')) {
-    return { xs: 300, md: 600, lg: 1200, fallback: 1024 };
-  } else if (url.includes('still')) {
-    return { xs: 50, md: 100, lg: 200, fallback: 1024 };
+export function getImgSize(ref: string) {
+  if (ref.includes('avatar')) {
+    return [50, 100, 300];
+  } else if (ref.includes('logo')) {
+    return [50, 100, 300];
+  } else if (ref.includes('poster')) {
+    return [200, 400, 600];
+  } else if (ref.includes('banner')) {
+    return [300, 600, 1200];
+  } else if (ref.includes('still')) {
+    return [50, 100, 200];
   } else {
-    throw new Error(`Unknown Image Format in ${url}, known format are 'avatar', 'logo', 'poster', 'banner', 'still'`);
+    return [1024];
   }
 }
 
