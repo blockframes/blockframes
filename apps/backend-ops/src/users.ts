@@ -154,18 +154,14 @@ export async function createUsers(): Promise<any> {
 
 export async function generateWatermarks() {
 
-  // activate migration to prevent cloud functions to trigger
+  // activate maintenance to prevent cloud functions to trigger
   await startMaintenance();
 
   const users = await getCollection<PublicUser>('users');
-  const promises = []
-  for (const user of users) {
-    promises.push(db.doc(`users/${user.uid}`).update({ watermark: createHostedMedia() }));
-    promises.push(upsertWatermark(user));
-  }
+  const promises = users.map(user => upsertWatermark(user));
   await Promise.all(promises);
 
-  // deactivate migration
+  // deactivate maintenance
   await endMaintenance();
 
 }
