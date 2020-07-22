@@ -4,8 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
-// Component
+// Components
 import { MovieFormShellComponent } from './shell.component';
+import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
+import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -14,8 +16,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
 
 @NgModule({
   declarations: [MovieFormShellComponent],
