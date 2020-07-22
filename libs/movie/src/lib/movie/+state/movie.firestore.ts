@@ -276,7 +276,6 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
-export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 
 export interface MovieOriginalReleaseRaw<D> {
