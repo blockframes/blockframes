@@ -154,6 +154,6 @@ export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'publ
  * This check if org have access to a specific module in at least one app
  * @param org
  */
-export function canAccessModule(module: Module, org: OrganizationDocumentWithDates) {
+export function canAccessModule(module: Module, org: OrganizationBase<any>) {
   return app.some(a => org.appAccess[a]?.[module])
 }
