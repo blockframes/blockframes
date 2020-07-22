@@ -67,13 +67,9 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     );
     // Show Paginator if table size goes beyond page size
     this.showPaginator$ = values$.pipe(
-      map(value => {
-        /* We need to reconnect the paginator in order to force a rerendering of the pagination */
-        if (value.length >= this.pageSize) {
-          this.dataSource.paginator = this.paginator
-        }
-        return value.length >= this.pageSize
-      }),
+      map(value => value.length >= this.pageSize),
+      /* We need to reconnect the paginator in order to force a rerendering of the pagination */
+      tap(isVisible => isVisible ? this.dataSource.paginator = this.paginator : null),
       distinctUntilChanged()
     );
     // Keep the table updated
@@ -101,7 +97,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   edit(index: number) {
     this.formItem = this.form.at(index);
     this.showSave = false;
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   // Remove one line in the form
@@ -113,5 +109,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   save() {
     this.form.push(this.formItem);
     this.showSave = false;
+    this.cdr.markForCheck();
   }
 }
