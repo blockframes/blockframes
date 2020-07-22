@@ -71,6 +71,13 @@ const steps: TunnelStep[] = [{
 })
 export class MovieTunnelComponent implements TunnelRoot, OnInit {
   steps = steps;
+
+
+  //////////////////////////////////////
+  // EVERYTHING BELOW WILL BE REMOVED //
+  //////////////////////////////////////
+
+
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
