@@ -56,12 +56,19 @@ export async function cleanDeprecatedData() {
 
   // Compare and update/delete documents with references to non existing documents
   await cleanNotifications(notifications, existingIds);
-  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>))
-  await cleanUsers(users, organizationIds, auth)
-  await cleanOrganizations(organizations, userIds, movieIds)
-  await cleanPermissions(permissions, organizationIds)
-  await cleanMovies(movies)
-  await cleanDocsIndex(docsIndex, existingIds)
+  console.log('Cleaned notifications');
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  console.log('Cleaned invitations');
+  await cleanUsers(users, organizationIds, auth);
+  console.log('Cleaned users');
+  await cleanOrganizations(organizations, userIds, movieIds);
+  console.log('Cleaned orgs');
+  await cleanPermissions(permissions, organizationIds);
+  console.log('Cleaned permissions');
+  await cleanMovies(movies);
+  console.log('Cleaned movies');
+  await cleanDocsIndex(docsIndex, existingIds);
+  console.log('Cleaned docsIndex');
 
   return true;
 }
