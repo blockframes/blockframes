@@ -1,31 +1,35 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms'
 
 // Components
-import { FormListTableComponent } from './form-list-table.component';
+import { FormTableComponent, FormViewDirective } from './form-table.component';
 
-// Blockframes
+
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 
 // Material
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     ColRefModule,
 
     // Material
+    MatButtonModule,
+    MatIconModule,
     MatTableModule,
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
   ],
-  declarations: [FormListTableComponent],
-  exports: [FormListTableComponent, ColRefModule]
+  declarations: [FormTableComponent, FormViewDirective],
+  exports: [FormTableComponent, FormViewDirective, ColRefModule]
 })
-export class FormListTableModule { }
+export class FormTableModule { }
