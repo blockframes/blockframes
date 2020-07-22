@@ -30,7 +30,7 @@ export async function cleanStorage() {
  * @param bucket 
  */
 async function cleanMovieDir(bucket: Bucket) {
-    // Movie dir should not exists
+  // Movie dir should not exists
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
   let deleted = 0;
 
