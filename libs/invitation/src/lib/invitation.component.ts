@@ -5,7 +5,7 @@ import { InvitationQuery, InvitationService } from './+state';
   selector: 'invitation-view',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationComponent {
 
