@@ -310,7 +310,7 @@ export function createMovieLanguageSpecification(
 }
 
 export function populateMovieLanguageSpecification(
-  spec: Partial<MovieLanguageSpecificationContainer>,
+  spec: Partial<any>,
   slug: LanguagesSlug,
   type: MovieLanguageTypes,
   value: boolean = true
