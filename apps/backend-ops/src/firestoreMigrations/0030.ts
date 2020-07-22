@@ -8,38 +8,60 @@ import { PromotionalElement } from '@blockframes/movie/+state/movie.model';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { HostedMedia } from '@blockframes/media/+state/media.model';
+import { File as GFile, Bucket } from '@google-cloud/storage';
+import { getDocument } from 'apps/backend-functions/src/data/internals';
 
 const rowsConcurrency = 10;
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 
-/**
- * Migrate old ImgRef objects to new one.
- */
 export async function upgrade(db: Firestore, storage: Storage) {
   console.log('//////////////');
-  console.log('// Processing watermarks');
+  console.log('// [DB] Processing watermarks');
   console.log('//////////////');
   await db
     .collection('users')
     .get()
-    .then(async users => await updateWatermarks(users, storage));
-
+    .then(async users => await updateWatermarks(users));
+  console.log('Updated watermark.');
 
   console.log('//////////////');
-  console.log('// Processing movies');
+  console.log('// [DB] Processing movies');
   console.log('//////////////');
   await db
     .collection('movies')
     .get()
     .then(async movies => await updateMovies(movies, storage));
 
-  console.log('Updated watermark.');
+  console.log('Updated movies.');
+
+  console.log('//////////////');
+  console.log('// [STORAGE] Processing movies');
+  console.log('//////////////');
+
+  const bucket = storage.bucket(getStorageBucketName());
+  const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
+  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
+
+
+  console.log('//////////////');
+  console.log('// [STORAGE] Processing users');
+  console.log('//////////////');
+
+  const cleanUsersDirOutput = await cleanUsersDir(bucket);
+  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "users" directory.`);
+
+
+  console.log('//////////////');
+  console.log('// [STORAGE] Processing orgs');
+  console.log('//////////////');
+
+  const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
+  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
 }
 
 async function updateWatermarks(
-  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-  _: Storage
+  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(users.docs, async (doc) => {
     const updatedUser = await updateUserWaterMark(doc.data() as PublicUser);
@@ -47,6 +69,10 @@ async function updateWatermarks(
   });
 }
 
+/**
+ * @dev Updates watermark structure on DB and creates svg file in the right folder
+ * @param user 
+ */
 const updateUserWaterMark = async (user: PublicUser) => {
   try {
     const watermark = await _upsertWatermark(user);
@@ -127,10 +153,10 @@ const changeResourceDirectory = async (
     let oldRef = '';
     if (url.includes(`movie%2F${movieId}%2FPresentationDeck`)) {
       oldRef = `movie/${movieId}/PresentationDeck/${fileName}`;
-      newRef = `movies/${movieId}/promotionalElements.presentation_deck.media/${fileName}`;
+      newRef = `movies/${movieId}/promotionalElements.presentation_deck/${fileName}`;
     } else if (url.includes(`movie%2F${movieId}%2FScenario`)) {
       oldRef = `movie/${movieId}/Scenario/${fileName}`;
-      newRef = `movies/${movieId}/promotionalElements.scenario.media/${fileName}`;
+      newRef = `movies/${movieId}/promotionalElements.scenario/${fileName}`;
     } else {
       // @TODO (#3175) is there other cases  ?
       console.log('@TODO (#3175) is there other cases ?');
@@ -164,4 +190,119 @@ const changeResourceDirectory = async (
     console.log(`Error : ${e.message}`);
     return EMPTY_REF;
   }
+}
+
+/**
+ * Deletes everything that is not original
+ * and removes files that are not linked in DB
+ * @param bucket 
+ */
+async function cleanMoviesDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
+
+  let deleted = 0;
+
+  for (const f of files) {
+    if (haveImgSize(f)) {
+      if (isOriginal(f)) {
+        const movieId = f.name.split('/')[1];
+        const movie = await getDocument<any>(`movies/${movieId}`);
+        if (!!movie && !findImgRefInMovie(movie, f.name)) { // This is the "intermediary" ImgRef structure
+          if (await f.delete()) { deleted++; }
+        }
+      } else {
+        if (await f.delete()) { deleted++; }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+/**
+ * Deletes everything that is not original
+ * and removes files that are not linked in DB
+ * @param bucket 
+ */
+async function cleanUsersDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
+  let deleted = 0;
+
+  for (const f of files) {
+    if (haveImgSize(f)) {
+      if (isOriginal(f)) {
+        const userId = f.name.split('/')[1];
+        const user = await getDocument<any>(`users/${userId}`);
+        if (!!user && user.avatar.original.ref !== f.name) { // This is the "intermediary" ImgRef structure
+          if (await f.delete()) { deleted++; }
+        }
+      } else {
+        if (await f.delete()) { deleted++; }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+/**
+ * Deletes everything that is not original
+ * and removes files that are not linked in DB
+ * @param bucket 
+ */
+async function cleanOrgsDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
+  let deleted = 0;
+
+  for (const f of files) {
+    if (haveImgSize(f)) {
+      if (isOriginal(f)) {
+        const orgId = f.name.split('/')[1];
+        const org = await getDocument<any>(`orgs/${orgId}`);
+        if (!!org && org.logo.original.ref !== f.name) { // This is the "intermediary" ImgRef structure
+          if (await f.delete()) { deleted++; }
+        }
+      } else {
+        if (await f.delete()) { deleted++; }
+      }
+    }
+  }
+
+  return { deleted, total: files.length };
+}
+
+
+function isOriginal(file: GFile) {
+  return getImgSize(file) === 'original';
+}
+
+function haveImgSize(file: GFile) {
+  return getImgSize(file) !== '';
+}
+
+function getImgSize(file: GFile) {
+  let size = '';
+  ['lg', 'md', 'xs', 'fallback', 'original'].forEach(s => {
+    if (file.name.includes(`/${s}/`)) {
+      size = s;
+    }
+  });
+
+  return size;
+}
+
+function findImgRefInMovie(movie: any, ref: string) {
+
+  if (movie.main.banner?.media.original.ref === ref) {  // This is the "intermediary" ImgRef structure
+    return true;
+  }
+  if (movie.main.poster?.media.original.ref === ref) {  // This is the "intermediary" ImgRef structure
+    return true;
+  }
+
+  if (Object.values(movie.promotionalElements.still_photo).some((p: any) => p.media.ref === ref)) {
+    return true;
+  }
+
+  return false;
 }
