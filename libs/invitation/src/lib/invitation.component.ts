@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationQuery, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationQuery, InvitationService } from './+state';
 
 @Component({
-  selector: 'catalog-invitation',
+  selector: 'invitation-view',
   templateUrl: './invitation.component.html',
   styleUrls: ['./invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,7 +15,7 @@ export class InvitationComponent {
   constructor(private query: InvitationQuery, private service: InvitationService) { }
 
   acceptAll() {
-    const invitations = this.query.getAll().filter(invitation => this.query.isToMe(invitation));
+    const invitations = this.query.getAll().filter(i => this.query.isToMe(i));
     for (const invitation of invitations) {
       this.service.acceptInvitation(invitation);
     }

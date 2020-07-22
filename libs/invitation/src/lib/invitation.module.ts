@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { InvitationComponent } from './invitation.component';
-import { InvitationListModule } from '@blockframes/invitation/components/list/list.module';
+import { InvitationListModule } from './components/list/list.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
