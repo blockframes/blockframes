@@ -13,9 +13,6 @@ table {
 
 mat-paginator {
   width: 100%;
-  bottom: 0px;
-  position: sticky;
-  z-index: 10;
 }
 
 .mat-table-sticky {
@@ -32,7 +29,8 @@ mat-paginator {
 
 ::-webkit-scrollbar-track {
   height: 10px;
-  background: linear-gradient(to bottom, transparent 30%, #cfd8ff 30%, #cfd8ff 70%, transparent 70%);
+  background-color: var(--primary);
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb {
