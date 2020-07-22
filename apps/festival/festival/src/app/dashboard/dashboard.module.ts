@@ -40,7 +40,7 @@ const routes: Routes = [{
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
     },
     {
       path: 'import', // Import bulk of movies
