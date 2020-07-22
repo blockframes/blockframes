@@ -36,7 +36,7 @@ export class FormViewDirective { }
   styleUrls: ['./form-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private sub: Subscription;
 
