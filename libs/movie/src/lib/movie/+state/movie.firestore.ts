@@ -311,8 +311,6 @@ export interface MovieRating {
   value: string,
 }
 
-export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
-
 export interface MovieMain {
   banner: PromotionalImage;
   contentType?: ContentType;
