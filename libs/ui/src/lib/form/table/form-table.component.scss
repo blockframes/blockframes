@@ -1,0 +1,39 @@
+:host {
+  display: block;
+}
+
+.table-container {
+  overflow: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+mat-paginator {
+  width: 100%;
+}
+
+.mat-table-sticky {
+  width: 60px;
+}
+
+.action-buttons {
+  display: flex;
+}
+
+::-webkit-scrollbar {
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  height: 10px;
+  background-color: var(--primary);
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a49f5;
+  border-radius: 10px;
+}
