@@ -15,7 +15,9 @@
             uploadOnFirestore="true"
             return="imgRef"
             accept="['.pdf']"
+            [form]="control"
             [types]="['application/pdf']"
+            [storagePath]=""
             (storeUploaded)="importPDF($event, i)">
             <h3 type>Upload files</h3>
             <p class="mat-caption" format>Accepted Formats: .pdf</p>

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { EventForm } from '@blockframes/event/form/event.form';
+import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
@@ -39,7 +39,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const eventId$ = this.route.params.pipe(pluck('eventId'));

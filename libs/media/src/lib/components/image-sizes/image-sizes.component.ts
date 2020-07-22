@@ -9,5 +9,5 @@ import { ImgRef } from '@blockframes/media/+state/media.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageSizeComponent {
-  @Input() imgRef: ImgRef;
+  @Input() imgRef: any; // any is needed for the keyvalue pipe. This page will disapear with imgix
 }
