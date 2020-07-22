@@ -24,6 +24,10 @@ export class MovieFormSynopsisComponent implements OnInit {
     this.values$ = this.keywords.valueChanges.pipe(startWith(this.keywords.value));
   }
 
+  get logline() {
+    return this.form.get('story').get('logline');
+  }
+
   get synopsis() {
     return this.form.get('story').get('synopsis');
   }

@@ -1,6 +1,11 @@
 :host {
   display: block;
 }
+
 section {
   width: 100%;
+}
+
+mat-divider {
+  border-top-width: 2px;
 }
