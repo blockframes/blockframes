@@ -15,7 +15,6 @@ import {
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
-  MovieLanguageSpecificationContainer,
   MovieOriginalRelease,
   MovieRating,
   MovieDocumentWithDates,
@@ -322,7 +321,7 @@ export function createMovieLanguageSpecification(
 }
 
 export function populateMovieLanguageSpecification(
-  spec: Partial<MovieLanguageSpecificationContainer>,
+  spec: Partial<any>,
   slug: LanguagesSlug,
   type: MovieLanguageTypes,
   value: boolean = true
