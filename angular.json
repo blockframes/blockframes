@@ -544,6 +544,7 @@
             "main": "apps/catalog/catalog/src/main.ts",
             "polyfills": "apps/catalog/catalog/src/polyfills.ts",
             "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
+            "aot": true,
             "stylePreprocessorOptions": {
               "includePaths": ["styles"]
             },
@@ -561,7 +562,10 @@
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
-            "dev": {},
+            "dev": {
+              "optimization": true,
+              "buildOptimizer": true
+            },
             "production": {
               "fileReplacements": [
                 {
