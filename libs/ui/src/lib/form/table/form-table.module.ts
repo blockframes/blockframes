@@ -1,7 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms'
 
 // Components
 import { FormTableComponent, FormViewDirective } from './form-table.component';
@@ -18,7 +17,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 @NgModule({
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     ColRefModule,
 
     // Material
