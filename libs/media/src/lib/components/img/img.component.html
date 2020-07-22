@@ -1,11 +1,1 @@
-<picture>
-
-  <!-- Ref -->
-  <source *ngIf="refSrc" [srcset]="refSrc" type="image/webp" />
-
-  <!-- Asset -->
-  <source *ngIf="assetSrc" [srcset]="assetSrc" type="{{ 'image/' + format }}" />
-
-  <!-- If picture is not supported -->
-  <img [src]="assetSrc" [alt]="alt" />
-</picture>
+<img [srcset]="srcset" [src]="src" [alt]="alt" (error)="error()">
