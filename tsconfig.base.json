@@ -64,6 +64,7 @@
   },
   "angularCompilerOptions": {
     "enableIvy": true,
+    "fullTemplateTypeCheck": true,
     "strictTemplates": false
   },
   "exclude": ["node_modules", "tmp"]
