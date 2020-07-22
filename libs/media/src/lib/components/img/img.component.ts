@@ -3,8 +3,8 @@ import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
 import { getAssetPath, HostedMedia } from '@blockframes/media/+state/media.model';
-import { getImgSize } from '@blockframes/media/+state/media.firestore';
-import { calculateViewPortWidth } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',
@@ -15,16 +15,20 @@ import { calculateViewPortWidth } from '@blockframes/media/directives/image-refe
 export class ImgComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
-  private asset$ = new BehaviorSubject('');
 
   private parameters: ImageParameters = {
     auto: 'compress,enhance,format',
     fit: 'crop',
   };
 
-  public srcset: string;
+  private ref$ = new BehaviorSubject('');
+  public refSrc: string;
+
+  private asset$ = new BehaviorSubject('');
   public assetSrc: string;
+
   public format: string;
 
   /** The alt attribute for the image */
@@ -34,30 +38,20 @@ export class ImgComponent implements OnInit, OnDestroy {
   //           MEDIA IMAGE INPUT
   // -----------------------------------
 
+  /** width of the image in px */
   @Input() set width(w: number) {
     this.parameters.width = w;
   }
 
+  /** height of the image in px */
   @Input() set height(h: number) {
     this.parameters.height = h;
   }
 
+  /** the image to display */
   @Input() set ref(image: HostedMedia) {
-
     if (!image.ref) return;
-
-    const sizeParameters = { ...this.parameters };
-
-    const viewPortWidth = calculateViewPortWidth();
-
-    // load the smallest image size possible
-    sizeParameters.width = Math.min(
-      viewPortWidth,
-      this.parameters.width || Infinity // in case width is undefined we pick Infinity instead
-    );
-
-    const query = formatParameter(sizeParameters);
-    this.srcset = `https://blockframes-pl-2.imgix.net/${image.ref}?${query}`;
+    this.ref$.next(image.ref);
   }
 
   // -----------------------------------
@@ -91,6 +85,7 @@ export class ImgComponent implements OnInit, OnDestroy {
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
+    private breakpointsService: BreakpointsService,
   ) {}
 
   ngOnInit() {
@@ -102,10 +97,34 @@ export class ImgComponent implements OnInit, OnDestroy {
       map(([local, global]) => local || global)
     );
 
-    this.sub = combineLatest([ this.asset$, theme$ ]).subscribe(([asset, theme]) => {
+    // apply latest changes
+    this.sub = combineLatest([
+      this.asset$,
+      this.ref$,
+      theme$,
+      this.breakpointsService.currentWidth,
+    ]).subscribe(([asset, ref, theme, width]) => {
+
+      // asset
       this.assetSrc = getAssetPath(asset, theme, this.type);
       this.format = this.assetSrc.split('.').pop();
-      this.cdr.markForCheck();
+
+      // ref
+      if (!!ref) {
+        // copy the image parameters because we might change the width
+        const sizeParameters = { ...this.parameters };
+
+        // get the smallest image width
+        sizeParameters.width = Math.min(
+          width,
+          this.parameters.width || Infinity // in case width is undefined we pick Infinity instead
+        );
+
+        const query = formatParameters(sizeParameters);
+        this.refSrc = `https://blockframes-pl-2.imgix.net/${ref}?${query}`;
+      }
+
+      this.cdr.markForCheck()
     });
   }
 
