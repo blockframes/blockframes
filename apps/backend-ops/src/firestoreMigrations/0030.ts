@@ -2,7 +2,7 @@ import { Firestore, Storage } from '../admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { HostedMedia } from '@blockframes/media/+state/media.model';
-import { File as GFile, Bucket } from '@google-cloud/storage';
+import { File as GFile } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
 
@@ -230,7 +230,7 @@ const changeResourceDirectory = async (
  * and removes files that are not linked in DB
  * @param bucket 
  */
-async function cleanMovieDir(bucket: Bucket) {
+async function cleanMovieDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
 
   let deleted = 0;
@@ -251,7 +251,7 @@ async function cleanMovieDir(bucket: Bucket) {
  * and removes files that are not linked in DB
  * @param bucket 
  */
-async function cleanMoviesDir(bucket: Bucket) {
+async function cleanMoviesDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
 
   let deleted = 0;
@@ -272,7 +272,7 @@ async function cleanMoviesDir(bucket: Bucket) {
  * and removes files that are not linked in DB
  * @param bucket 
  */
-async function cleanUsersDir(bucket: Bucket) {
+async function cleanUsersDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
   let deleted = 0;
 
@@ -292,7 +292,7 @@ async function cleanUsersDir(bucket: Bucket) {
  * and removes files that are not linked in DB
  * @param bucket 
  */
-async function cleanOrgsDir(bucket: Bucket) {
+async function cleanOrgsDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
   let deleted = 0;
 
