@@ -16,6 +16,14 @@ export class MovieFormMainComponent {
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
 
+  get international() {
+    return this.main.title.get('international');
+  }
+
+  get original() {
+    return this.main.title.get('original');
+  }
+
   get main() {
     return this.form.get('main');
   }
