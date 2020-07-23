@@ -7,7 +7,6 @@ import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
-const rowsConcurrency = 10;
 
 export async function upgrade(db: Firestore, storage: Storage) {
 

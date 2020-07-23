@@ -10,8 +10,6 @@ import { runChunks } from './tools';
 // export ENV=dev && npx ng build backend-ops --configuration=dev
 // still S512yYOhaMlezFIgUnrF
 
-const rowsConcurrency = 10;
-
 export async function cleanStorage() {
   const { storage } = loadAdminServices();
   const bucket = storage.bucket(getStorageBucketName());

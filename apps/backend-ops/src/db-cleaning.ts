@@ -13,8 +13,6 @@ import { runChunks } from './tools';
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 const dayInMillis = 1000 * 60 * 60 * 24;
-const rowsConcurrency = 10;
-
 /** 
  * @dev This is the date of a mystic event from the ancient times which led to madness the most relentless developers.
  * This is also known as the date of an incomplete image migration affecting invitations and notifications (src: wikipedia).

@@ -14,8 +14,6 @@ const EMPTY_REF: OldImgRef = {
   urls: { original: '' }
 };
 
-const rowsConcurrency = 10;
-
 /**
  * Migrate old ImgRef objects to new one.
  */
