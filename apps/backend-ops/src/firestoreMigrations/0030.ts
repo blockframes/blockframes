@@ -2,9 +2,6 @@ import { Firestore, Storage } from '../admin';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { chunk } from 'lodash'
-import { MovieDocument } from 'apps/backend-functions/src/data/types';
-import { PromotionalElement } from '@blockframes/movie/+state/movie.model';
-
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { HostedMedia } from '@blockframes/media/+state/media.model';
@@ -26,6 +23,26 @@ export async function upgrade(db: Firestore, storage: Storage) {
   console.log('Updated watermark.');
 
   console.log('//////////////');
+  console.log('// [DB] Processing Users');
+  console.log('//////////////');
+  await db
+    .collection('users')
+    .get()
+    .then(async users => await updateUsers(users, storage));
+
+  console.log('Updated users.');
+
+  console.log('//////////////');
+  console.log('// [DB] Processing Orgs');
+  console.log('//////////////');
+  await db
+    .collection('orgs')
+    .get()
+    .then(async orgs => await updateOrgs(orgs, storage));
+
+  console.log('Updated orgs.');
+
+  console.log('//////////////');
   console.log('// [DB] Processing movies');
   console.log('//////////////');
   await db
@@ -43,14 +60,12 @@ export async function upgrade(db: Firestore, storage: Storage) {
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
 
-
   console.log('//////////////');
   console.log('// [STORAGE] Processing users');
   console.log('//////////////');
 
   const cleanUsersDirOutput = await cleanUsersDir(bucket);
   console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "users" directory.`);
-
 
   console.log('//////////////');
   console.log('// [STORAGE] Processing orgs');
@@ -84,13 +99,64 @@ const updateUserWaterMark = async (user: PublicUser) => {
   return user;
 };
 
+async function updateUsers(
+  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  storage: Storage
+) {
+  return Promise.all(
+    users.docs.map(async doc => {
+      const user = doc.data() as any; // create intermeidary
+
+      if (user.avatar?.original?.ref) {
+        const avatar = user.avatar?.original;
+        user.avatar = await changeResourceDirectory(avatar, storage, user.uid);
+      }
+      await doc.ref.set(user);
+    })
+  );
+}
+
+async function updateOrgs(
+  orgs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  storage: Storage
+) {
+  return Promise.all(
+    orgs.docs.map(async doc => {
+      const org = doc.data() as any; // create intermeidary
+
+      if (org.logo?.original?.ref) {
+        const logo = org.logo?.original;
+        org.logo = await changeResourceDirectory(logo, storage, org.id);
+      }
+      await doc.ref.set(org);
+    })
+  );
+}
+
 async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
   return Promise.all(
     movies.docs.map(async doc => {
-      const movie = doc.data() as MovieDocument;
+      const movie = doc.data() as any; // create intermeidary
+
+      if (movie.main.banner?.media?.original?.ref) {
+        const banner = movie.main.banner;
+        movie.main.banner = await changeResourceDirectory(banner.media.original, storage, movie.id);
+      }
+
+      if (movie.main.poster?.media?.original?.ref) {
+        const poster = movie.main.poster;
+        movie.main.poster = await changeResourceDirectory(poster.media.original, storage, movie.id);
+      }
+
+      if (!!movie.promotionalElements.still_photo) {
+        for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
+          const still = movie.promotionalElements.still_photo[stillKey];
+          movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media.original, storage, movie.id);
+        }
+      }
 
       const keys = ['presentation_deck', 'scenario'];
       // We search for pdf that are not in the good directory
@@ -98,8 +164,8 @@ async function updateMovies(
         if (!!movie.promotionalElements[key]) {
 
           const value: PromotionalHostedMedia = movie.promotionalElements[key];
-          if (value.media.url.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with an "s"
-            movie.promotionalElements[key] = await updateMovieField(value, storage, movie.id);
+          if (value.media?.url.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with a "s"
+            movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
           }
 
         }
@@ -108,16 +174,6 @@ async function updateMovies(
       await doc.ref.set(movie);
     })
   );
-}
-
-const updateMovieField = async <T extends PromotionalElement>(
-  value: T,
-  storage: Storage,
-  movieId: string,
-): Promise<T> => {
-  const newImageRef = await changeResourceDirectory(value, storage, movieId);
-  value['media'] = newImageRef;
-  return value;
 }
 
 async function runChunks(docs, cb) {
@@ -130,18 +186,14 @@ async function runChunks(docs, cb) {
   }
 }
 
-
 const changeResourceDirectory = async (
-  element: PromotionalElement,
+  media: HostedMedia,
   storage: Storage,
-  movieId: string
+  docId: string
 ): Promise<HostedMedia> => {
 
-  // get the current ref
-  const media = element['media'];
-
   // ### get the old file
-  const { url } = media as HostedMedia;
+  const { url, ref } = media;
 
   // ### copy it to a new location
   const bucket = storage.bucket(getStorageBucketName());
@@ -151,13 +203,31 @@ const changeResourceDirectory = async (
 
     let newRef = '';
     let oldRef = '';
-    if (url.includes(`movie%2F${movieId}%2FPresentationDeck`)) {
-      oldRef = `movie/${movieId}/PresentationDeck/${fileName}`;
-      newRef = `movies/${movieId}/promotionalElements.presentation_deck/${fileName}`;
-    } else if (url.includes(`movie%2F${movieId}%2FScenario`)) {
-      oldRef = `movie/${movieId}/Scenario/${fileName}`;
-      newRef = `movies/${movieId}/promotionalElements.scenario/${fileName}`;
+    if (url.includes(`movie%2F${docId}%2FPresentationDeck`)) {
+      oldRef = `movie/${docId}/PresentationDeck/${fileName}`; // we don't have ref for pdf medias so we recreate it
+      newRef = `movies/${docId}/promotionalElements.presentation_deck/${fileName}`;
+    } else if (url.includes(`movie%2F${docId}%2FScenario`)) {
+      oldRef = `movie/${docId}/Scenario/${fileName}`; // we don't have ref for pdf medias so we recreate it
+      newRef = `movies/${docId}/promotionalElements.scenario/${fileName}`;
+    } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
+      oldRef = ref;
+      newRef = `movies/${docId}/main.banner/${ref.split('/').pop()}`;
+    } else if (ref.includes(`movies/${docId}/promotionalElements.poster`)) {
+      oldRef = ref;
+      newRef = `movies/${docId}/main.poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
+    } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
+      oldRef = ref;
+      const regex = /(\.|\[)(?<value>[0-9]{1})\]?\./gi;
+      const [_, __, index] = regex.exec(ref);
+      newRef = `movies/${docId}/promotionalElements.still_photo/${index}/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
+    } else if (ref.includes(`users/${docId}/avatar`)) {
+      oldRef = ref;
+      newRef = `users/${docId}/avatar/${ref.split('/').pop()}`;
+    } else if (ref.includes(`orgs/${docId}/logo`)) {
+      oldRef = ref;
+      newRef = `orgs/${docId}/logo/${ref.split('/').pop()}`;
     } else {
+      console.log(ref);
       // @TODO (#3175) is there other cases  ?
       console.log('@TODO (#3175) is there other cases ?');
     }
@@ -182,7 +252,7 @@ const changeResourceDirectory = async (
       media.ref = newRef;
       return media;
     } else {
-      console.log(`Empty ref for : ${movieId}`);
+      console.log(`Ref ${ref} not found for : ${docId}`);
       return EMPTY_REF;
     }
 
@@ -203,16 +273,12 @@ async function cleanMoviesDir(bucket: Bucket) {
   let deleted = 0;
 
   for (const f of files) {
-    if (haveImgSize(f)) {
-      if (isOriginal(f)) {
-        const movieId = f.name.split('/')[1];
-        const movie = await getDocument<any>(`movies/${movieId}`);
-        if (!!movie && !findImgRefInMovie(movie, f.name)) { // This is the "intermediary" ImgRef structure
-          if (await f.delete()) { deleted++; }
-        }
-      } else {
-        if (await f.delete()) { deleted++; }
-      }
+    const movieId = f.name.split('/')[1];
+    const movie = await getDocument<any>(`movies/${movieId}`); // w8 "final" movieDoc
+    if (haveImgSize(f) && !isOriginal(f)) {
+      if (await f.delete()) { deleted++; }
+    } else if (!!movie && !findImgRefInMovie(movie, f.name)) {
+      if (await f.delete()) { deleted++; }
     }
   }
 
@@ -229,16 +295,12 @@ async function cleanUsersDir(bucket: Bucket) {
   let deleted = 0;
 
   for (const f of files) {
-    if (haveImgSize(f)) {
-      if (isOriginal(f)) {
-        const userId = f.name.split('/')[1];
-        const user = await getDocument<any>(`users/${userId}`);
-        if (!!user && user.avatar.original.ref !== f.name) { // This is the "intermediary" ImgRef structure
-          if (await f.delete()) { deleted++; }
-        }
-      } else {
-        if (await f.delete()) { deleted++; }
-      }
+    const userId = f.name.split('/')[1];
+    const user = await getDocument<any>(`users/${userId}`); // w8 "final" movieDoc
+    if (haveImgSize(f) && !isOriginal(f)) {
+      if (await f.delete()) { deleted++; }
+    } else if (!!user && user.avatar?.ref !== f.name) {
+      if (await f.delete()) { deleted++; }
     }
   }
 
@@ -255,16 +317,12 @@ async function cleanOrgsDir(bucket: Bucket) {
   let deleted = 0;
 
   for (const f of files) {
-    if (haveImgSize(f)) {
-      if (isOriginal(f)) {
-        const orgId = f.name.split('/')[1];
-        const org = await getDocument<any>(`orgs/${orgId}`);
-        if (!!org && org.logo.original.ref !== f.name) { // This is the "intermediary" ImgRef structure
-          if (await f.delete()) { deleted++; }
-        }
-      } else {
-        if (await f.delete()) { deleted++; }
-      }
+    const orgId = f.name.split('/')[1];
+    const org = await getDocument<any>(`orgs/${orgId}`); // w8 "final" movieDoc
+    if (haveImgSize(f) && !isOriginal(f)) {
+      if (await f.delete()) { deleted++; }
+    } else if (!!org && org.logo?.ref !== f.name) {
+      if (await f.delete()) { deleted++; }
     }
   }
 
@@ -291,18 +349,27 @@ function getImgSize(file: GFile) {
   return size;
 }
 
-function findImgRefInMovie(movie: any, ref: string) {
+function findImgRefInMovie(movie: any, ref: string) { // w8 final moviedoc structure
 
-  if (movie.main.banner?.media.original.ref === ref) {  // This is the "intermediary" ImgRef structure
-    return true;
-  }
-  if (movie.main.poster?.media.original.ref === ref) {  // This is the "intermediary" ImgRef structure
+  if (movie.main.banner?.ref === ref) {  // This is the "final" ImgRef structure
     return true;
   }
 
-  if (Object.values(movie.promotionalElements.still_photo).some((p: any) => p.media.ref === ref)) {
+  if (movie.main.poster?.ref === ref) {  // This is the "final" ImgRef structure
     return true;
   }
+
+  if (Object.values(movie.promotionalElements?.still_photo).some((p: any) => p.ref === ref)) {
+    return true;
+  }
+
+  if (movie.promotionalElements.scenario?.ref === ref) {
+    return true;
+  };
+
+  if (movie.promotionalElements.presentation_deck?.ref === ref) {
+    return true;
+  };
 
   return false;
 }

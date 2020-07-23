@@ -5,8 +5,9 @@ import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-fu
 import { getDocument } from 'apps/backend-functions/src/data/internals'
 
 // @TODO (#3175) temp 
-// gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com 
+// gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com && node dist/apps/backend-ops/main.js restore
 // export ENV=dev && npx ng build backend-ops --configuration=dev
+// still S512yYOhaMlezFIgUnrF
 
 export async function cleanStorage() {
   const { storage } = loadAdminServices();
@@ -181,7 +182,7 @@ async function cleanWatermarkDir(bucket: Bucket) {
 }
 
 
-// usefull still ?
+// @TODO (#3175) rework
 async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string = '/promotionalElements.') {
   if (!file.name.includes(pattern)) {
     try {

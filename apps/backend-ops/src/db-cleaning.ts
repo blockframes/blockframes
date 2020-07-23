@@ -98,6 +98,8 @@ function cleanNotifications(
             notification.user.avatar = createHostedMedia();
           }
           await doc.ref.update(notification);
+        } else {
+          // @TODO (#3175] use org logo or user avatar
         }
       }
     })
@@ -135,6 +137,8 @@ function cleanInvitations(
           invitation.toUser.avatar = createHostedMedia();
         }
         await doc.ref.update(invitation);
+      } else {
+        // @TODO (#3175] use org logo or user avatar
       }
     }
   });
@@ -165,6 +169,8 @@ async function cleanUsers(
         if (invalidOrganization) {
           delete user.orgId;
           await userDoc.ref.update(user);
+        } else if (!user.avatar.ref) {
+          await userDoc.ref.update({ avatar: createHostedMedia() });
         }
       }
     } else {
@@ -188,7 +194,7 @@ function cleanOrganizations(
       await orgDoc.ref.set(org);
     }
 
-    const { userIds, movieIds } = org as OrganizationDocument;
+    const { userIds, movieIds, logo } = org as OrganizationDocument;
 
     const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
     if (validUserIds.length !== userIds.length) {
@@ -199,6 +205,11 @@ function cleanOrganizations(
     if (validMovieIds.length !== movieIds.length) {
       await orgDoc.ref.update({ movieIds: validMovieIds });
     }
+
+    if (!logo.ref) {
+      await orgDoc.ref.update({ logo: createHostedMedia() });
+    }
+
   });
 }
 
@@ -226,6 +237,8 @@ function cleanMovies(
     if (movie.distributionRights) {
       delete movie.distributionRights;
     }
+
+    // @TODO (#3175] clean trailer link & old img ref structuires
 
     await movieDoc.ref.update(movie);
   });
