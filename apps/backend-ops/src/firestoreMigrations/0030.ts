@@ -1,26 +1,13 @@
 import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash'
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { HostedMedia } from '@blockframes/media/+state/media.model';
 import { File as GFile, Bucket } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 
-const rowsConcurrency = 10;
-
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 
 export async function upgrade(db: Firestore, storage: Storage) {
-  console.log('//////////////');
-  console.log('// [DB] Processing watermarks');
-  console.log('//////////////');
-  await db
-    .collection('users')
-    .get()
-    .then(async users => await updateWatermarks(users));
-  console.log('Updated watermark.');
 
   console.log('//////////////');
   console.log('// [DB] Processing Users');
@@ -75,37 +62,19 @@ export async function upgrade(db: Firestore, storage: Storage) {
   console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
 }
 
-async function updateWatermarks(
-  users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
-) {
-  return runChunks(users.docs, async (doc) => {
-    const updatedUser = await updateUserWaterMark(doc.data() as PublicUser);
-    await doc.ref.set(updatedUser);
-  });
-}
-
 /**
- * @dev Updates watermark structure on DB and creates svg file in the right folder
- * @param user 
+ * Moves resources to the right folder on storage and updates
+ * the model
+ * @param users 
+ * @param storage 
  */
-const updateUserWaterMark = async (user: PublicUser) => {
-  try {
-    const watermark = await _upsertWatermark(user);
-    user.watermark = watermark;
-  } catch (e) {
-    console.log(`Error while updating user ${user.uid} watermark. Reason: ${e.message}`);
-  }
-
-  return user;
-};
-
 async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
   return Promise.all(
     users.docs.map(async doc => {
-      const user = doc.data() as any; // create intermeidary
+      const user = doc.data() as any; // @TODO #(3175) create intermediary model
 
       if (user.avatar?.original?.ref) {
         const avatar = user.avatar?.original;
@@ -116,13 +85,19 @@ async function updateUsers(
   );
 }
 
+/**
+ * Moves resources to the right folder on storage and updates
+ * the model
+ * @param orgs 
+ * @param storage 
+ */
 async function updateOrgs(
   orgs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
   return Promise.all(
     orgs.docs.map(async doc => {
-      const org = doc.data() as any; // create intermeidary
+      const org = doc.data() as any; // @TODO #(3175) create intermediary model
 
       if (org.logo?.original?.ref) {
         const logo = org.logo?.original;
@@ -133,13 +108,19 @@ async function updateOrgs(
   );
 }
 
+/**
+ * Moves resources to the right folder on storage and updates
+ * the model
+ * @param movies 
+ * @param storage 
+ */
 async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
   return Promise.all(
     movies.docs.map(async doc => {
-      const movie = doc.data() as any; // create intermeidary
+      const movie = doc.data() as any; // @TODO #(3175) create intermediary model
 
       if (movie.main.banner?.media?.original?.ref) {
         const banner = movie.main.banner;
@@ -174,16 +155,6 @@ async function updateMovies(
       await doc.ref.set(movie);
     })
   );
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
-  }
 }
 
 const changeResourceDirectory = async (

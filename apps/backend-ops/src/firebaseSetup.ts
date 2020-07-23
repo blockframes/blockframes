@@ -64,6 +64,11 @@ export async function upgrade() {
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
+  // @todo(#3066) Reactivate Cleaning process when unit tested
+  // console.info('Generating watermarks...');
+  // await generateWatermarks();
+  // console.info('Watermarks generated!');
+
   process.exit(0);
 }
 
