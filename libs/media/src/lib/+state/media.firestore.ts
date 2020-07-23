@@ -82,13 +82,13 @@ export function getImgSize(url: string): ImageSizes {
   }
 }
 
-export interface UploadFile {
+export interface UploadData {
   /**
   * firebase storage upload path *(or ref)*,
   * @note **Make sure that the path param does not include the filename.**
   * @note **Make sure that the path ends with a `/`.**
   */
   path: string,
-  data: Blob,
+  data: Blob | File,
   fileName: string,
 }

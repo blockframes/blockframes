@@ -6,19 +6,22 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { UploadFile, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
-
-// Blockframes
-import { get } from 'lodash';
-import { map, takeWhile } from "rxjs/operators";
+import { UploadData, ImgRef, imgSizeDirectory, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
 import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
-import { delay } from "@blockframes/utils/helpers";
-import { UploadTaskSnapshot } from "@angular/fire/storage/interfaces";
+import { delay, BehaviorStore } from "@blockframes/utils/helpers";
+
+// Rxjs
+import { map, takeWhile } from "rxjs/operators";
+
+// Lodash
+import { get } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
+
+  private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
 
   private overlayOptions = {
     height: '400px',
@@ -43,33 +46,14 @@ export class MediaService {
     .catch(() => false);
   }
 
-  async uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
-
+  async upload(uploadFiles: UploadData | UploadData[]) {
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
-
     const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
-    (Promise as any).allSettled(tasks as AngularFireUploadTask[]).then(() => delay(5000).then(() => this.detachWidget));
-    this.showWidget(tasks);
-
-  }
-
-  /**
-   * @description This function handles the upload process for one or many files. Make sure that
-   * the oath param doesn't include the filename.
-   * @param path should only have the path and not the file name in it
-   * @param file
-   */
-  uploadFile(path: string, file: File | FileList) {
-    const tasks = [];
-    if (file instanceof File) {
-      tasks.push(this.storage.upload(path.concat(file.name), file));
-    } else {
-      for (let index = 0; index < file.length; index++) {
-        tasks.push(this.storage.upload(path.concat(file.item(index).name), file.item(index)));
-      }
-    }
-    (Promise as any).allSettled(tasks as Promise<UploadTaskSnapshot>[]).then(() => delay(5000).then(() => this.detachWidget));
-    this.showWidget(tasks);
+    this.addTasks(tasks);
+    (Promise as any).allSettled(tasks)
+      .then(() => delay(5000))
+      .then(() => this.detachWidget());
+    this.showWidget();
   }
 
   /**
@@ -87,16 +71,29 @@ export class MediaService {
     }
   }
 
-  public detachWidget() {
-    this.overlayRef.detach();
-    delete this.overlayRef;
+  private addTasks(tasks: AngularFireUploadTask[]) {
+    const t = this._tasks.value;
+    t.push(...tasks);
+    this._tasks.value = t
   }
 
-  private async showWidget(tasks?: AngularFireUploadTask[]) {
+  private detachWidget() {
+    if (!this.overlayRef) return;
+
+    const canClose = this._tasks.value.every(task => task.task.snapshot.state === 'success');
+    if (canClose) {
+      this.overlayRef.detach();
+      delete this.overlayRef;
+      const tasks = this._tasks.value.filter(task => task.task.snapshot.state !== 'success');
+      this._tasks.value = tasks;
+    }
+  }
+
+  private async showWidget() {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
       const instance = new ComponentPortal(UploadWidgetComponent);
-      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: tasks }]});
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }]});
       this.overlayRef.attach(instance);
     }
   }
@@ -130,15 +127,12 @@ export class MediaService {
         }
 
         // upload the new file
-        if (mediaForm.blobOrFile instanceof File) {
-          await this.uploadFile(mediaForm.ref, mediaForm.blobOrFile);
-        } else {
-          await this.uploadBlob({
-            data: mediaForm.blobOrFile,
-            path: mediaForm.ref,
-            fileName: mediaForm.fileName
-          });
-        }
+        this.upload({
+          data: mediaForm.blobOrFile,
+          path: mediaForm.ref,
+          fileName: mediaForm.fileName
+        });
+
       }
     });
     await Promise.all(promises);

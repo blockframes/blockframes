@@ -3,7 +3,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 
 @NgModule()
 export class YandexMetricaModule {
-  public static forRoot(config: number): ModuleWithProviders {
+  public static forRoot(config: number): ModuleWithProviders<YandexMetricaModule> {
     return {
       ngModule: YandexMetricaModule,
       providers: [YandexMetricaService, { provide: YM_CONFIG, useValue: config }]

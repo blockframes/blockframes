@@ -2,12 +2,12 @@
 <ng-container *ngIf="(invitations$ | async).length; else noFeed">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <h1>Invitations</h1>
-    <button mat-button (click)="acceptAll()">
+    <button mat-button test-id="invitation-accept-all" (click)="acceptAll()">
       <mat-icon svgIcon="check_circle"></mat-icon>
       <span>Accept all</span>
     </button>
   </header>
-  <invitation-list [invitations]="invitations$ | async" class="mat-elevation-z0"></invitation-list>
+  <invitation-list [invitations]="invitations$ | async" class="surface"></invitation-list>
 </ng-container>
 
 <ng-template #noFeed>

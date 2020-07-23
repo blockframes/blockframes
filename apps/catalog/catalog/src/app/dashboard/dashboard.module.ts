@@ -27,7 +27,7 @@ const routes: Routes = [
         path: 'home',   // Home (dashboard if film, welcome if not)
         canActivate: [MovieOrganizationListGuard],
         canDeactivate: [MovieOrganizationListGuard],
-        loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
+        loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
         path: 'notifications',
@@ -44,11 +44,7 @@ const routes: Routes = [
         loadChildren: () => import('@blockframes/import').then(m => m.ImportModule)
       },
       {
-        path: 'search',  // Result of a search on the main searchbar
-        loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule)
-      },
-      {
-        path: 'titles',
+        path: 'title',
         canActivate: [OrganizationContractListGuard],
         canDeactivate: [OrganizationContractListGuard],
         children: [{

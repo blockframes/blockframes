@@ -12,7 +12,7 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { FormGroup } from '@angular/forms';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedMediaFormValue } from '@blockframes/media/+state/media.model';
+import { HostedMediaFormValue, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -73,20 +73,15 @@ const steps: TunnelStep[] = [{
 })
 export class MovieTunnelComponent implements TunnelRoot, OnInit {
   steps = steps;
+
+
+  //////////////////////////////////////
+  // EVERYTHING BELOW WILL BE REMOVED //
+  //////////////////////////////////////
+
+
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
-
-  public bannerMediaForm = new HostedMediaForm(this.query.getActive().main.banner.media.original);
-  public posterMediaForms = new FormGroup({
-    '0': new HostedMediaForm(this.query.getActive().main.poster.media.original),
-  });
-
-  public stillPhotoMediaForms = new FormGroup({
-    '0': new HostedMediaForm(this.query.getActive().promotionalElements.still_photo['0'].media.original),
-  });
-
-  public presentationDeckMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.presentation_deck.media);
-  public scenarioMediaForm = new HostedMediaForm(this.query.getActive().promotionalElements.scenario.media);
 
   public exitRoute: string;
 
@@ -110,17 +105,11 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    await this.service.update(movie.id, movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
 
-    await this.mediaService.uploadOrDeleteMedia([
-      this.bannerMediaForm.value,
+    await this.service.update(movie.id, documentToUpdate);
 
-      ...Object.keys(this.posterMediaForms.controls).map(key => this.posterMediaForms.get(key).value as HostedMediaFormValue),
-      ...Object.keys(this.stillPhotoMediaForms.controls).map(key => this.stillPhotoMediaForms.get(key).value as HostedMediaFormValue),
-
-      this.presentationDeckMediaForm.value,
-      this.scenarioMediaForm.value,
-    ]);
+    await this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();

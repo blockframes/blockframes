@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="tasklist.length as itemCount" class="mat-card">
+<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount" class="mat-card">
   <mat-expansion-panel expanded>
     <mat-expansion-panel-header i18n>Uploading {{ itemCount }} item{ itemCount,
       plural, =1 {} other {s} }
@@ -11,7 +11,7 @@
         thank you for your patience! You can continue using the platform</caption>
 
       <div fxLayout="column-reverse" fxLayoutGap="24px">
-        <ng-container *ngFor="let task$ of tasklist; let i = index">
+        <ng-container *ngFor="let task$ of tasks.$ | async; let i = index">
           <ng-container [ngSwitch]="task$ | state | async">
             <div fxLayout="row" fxLayoutGap="8px">
               <img [src]="getFileType(task$.task.snapshot.ref.name)">
@@ -54,7 +54,7 @@
 
               <!-- Error -->
               <ng-template ngSwitchCase="canceled">
-                <button mat-icon-button (click)="tasklist.splice(i, 1)">
+                <button mat-icon-button (click)="remove(i)">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
@@ -64,14 +64,14 @@
                 <button mat-icon-button (click)="task$.resume()">
                   <mat-icon svgIcon="play_circle"></mat-icon>
                 </button>
-                <button mat-icon-button (click)="task$.cancel()">
+                <button mat-icon-button (click)="cancel(task$)">
                   <mat-icon svgIcon="cross_circle"></mat-icon>
                 </button>
               </ng-template>
 
               <!-- Finished -->
               <ng-template ngSwitchCase="success">
-                <button mat-icon-button (click)="tasklist.splice(i, 1)">
+                <button mat-icon-button (click)="remove(i)">
                   <mat-icon svgIcon="check_circle"></mat-icon>
                 </button>
               </ng-template>

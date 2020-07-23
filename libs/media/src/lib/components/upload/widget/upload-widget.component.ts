@@ -1,8 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-
-// RxJs
 import { AngularFireUploadTask } from '@angular/fire/storage';
+
+// Blockframes
+import { BehaviorStore } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -12,8 +13,9 @@ import { AngularFireUploadTask } from '@angular/fire/storage';
 })
 export class UploadWidgetComponent {
 
+
   constructor(
-    @Inject('tasks') public tasklist: AngularFireUploadTask[],
+    @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
   ) {}
 
   getFileType(file: string) {
@@ -30,6 +32,17 @@ export class UploadWidgetComponent {
       default:
         return '/assets/images/dark/image.webp';
     }
+  }
+
+  cancel(task: AngularFireUploadTask) {
+    task.resume();
+    task.cancel();
+  }
+
+  remove(index: number) {
+    const tasks = this.tasks.value;
+    tasks.splice(index, 1);
+    this.tasks.value = tasks;
   }
 
 }

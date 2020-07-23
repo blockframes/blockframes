@@ -1,0 +1,8 @@
+@mixin surface-theme($theme) {
+  $background: map-get($theme, background);
+  .surface {
+    background-color: mat-color($background, card);
+    padding: 8px;
+    border-radius: 4px;
+  }
+}

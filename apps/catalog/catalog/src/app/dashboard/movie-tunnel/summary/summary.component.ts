@@ -52,7 +52,7 @@ export class TunnelSummaryComponent {
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         const movieId = this.query.getActiveId();
-        this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
+        this.router.navigate(['../../../../title', movieId, 'details'], { relativeTo: this.route })
       })
     } else {
       // Log the invalid forms

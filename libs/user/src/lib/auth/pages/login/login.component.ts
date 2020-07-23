@@ -46,7 +46,13 @@ export class LoginComponent implements OnInit {
       await this.service.signin(email.trim(), password);
       // Reset page title to default
       this.dynTitle.setPageTitle();
-      this.router.navigate(['c']);
+      const redirectTo = localStorage.getItem('redirectTo');
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo');
+        this.router.navigate([redirectTo]);
+      } else {
+        this.router.navigate(['c']);
+      }
     } catch (err) {
       console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
@@ -63,7 +69,13 @@ export class LoginComponent implements OnInit {
       await this.service.signup(email.trim(), password, { ctx: { firstName, lastName } });
       // Reset page title to default
       this.dynTitle.setPageTitle();
-      this.router.navigate(['c']);
+      const redirectTo = localStorage.getItem('redirectTo');
+      if (redirectTo) {
+        localStorage.removeItem('redirectTo');
+        this.router.navigate([redirectTo]);
+      } else {
+        this.router.navigate(['c']);
+      }
     } catch (err) {
 
       switch (err.code) {

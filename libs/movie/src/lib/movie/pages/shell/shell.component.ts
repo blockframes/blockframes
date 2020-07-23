@@ -6,11 +6,11 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'movie-form-shell',

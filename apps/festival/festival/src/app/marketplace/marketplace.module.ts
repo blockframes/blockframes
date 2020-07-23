@@ -17,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
-
 const routes: Routes = [{
   path: '',
   component: MarketplaceComponent,
