@@ -68,6 +68,9 @@ export class FormListComponent<T> implements OnInit {
   // Remove one line in the form
   remove(index: number) {
     this.form.removeAt(index);
+    if (!this.form.length) {
+      this.add()
+    }
   }
 
   // Push the form into the list
