@@ -9,7 +9,7 @@
   <article class="org-info">
     <div fxLayoutAlign="start center">
       <a matRipple [routerLink]="['/c/o/marketplace/organization/', org.id]" class="org-image">
-        <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       </a>
       <div>
         <p class="org-name">{{ org | orgName }}</p>

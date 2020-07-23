@@ -1,4 +1,4 @@
-﻿<ng-container *ngIf="hasNotifications$ | async; else noFeed">
+<ng-container *ngIf="hasNotifications$ | async; else noFeed">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <h1>Activity Feed</h1>
     <button mat-button (click)="markAll()">
@@ -12,7 +12,8 @@
 <ng-template #noFeed>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no notification yet.</h1>
-    <p>You haven't received any notifications at this time.</p>
+
+   <p>You haven't received any notifications at this time.</p>
     <img asset="no_titles.webp" alt="No title image">
   </section>
 </ng-template>

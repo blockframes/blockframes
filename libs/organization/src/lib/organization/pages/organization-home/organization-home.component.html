@@ -8,7 +8,7 @@
   <mat-radio-group [formControl]="link" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
     <!-- Create Org -->
     <mat-card matRipple (click)="link.setValue('create')" fxLayout="column" fxLayoutAlign="center center">
-      <bf-img asset="add_organization.webp"></bf-img>
+      <img asset="add_organization.webp">
       <mat-radio-button value="create" ><b>Create your Organization</b></mat-radio-button>
       <p>
         My company doesn't have a page yet.
@@ -18,7 +18,7 @@
     </mat-card>
     <!-- Find Org -->
     <mat-card matRipple (click)="link.setValue('find')" fxLayout="column" fxLayoutAlign="center center">
-      <bf-img asset="find_organization.webp"></bf-img>
+      <img asset="find_organization.webp">
       <mat-radio-button value="find"><b>Find your Organization</b></mat-radio-button>
       <p>
         My company page has already been created.

@@ -5,7 +5,7 @@
   <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
     <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
       <div *ngIf="movie.main.poster.media as poster">
-        <bf-img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"></bf-img>
+        <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster">
       </div>
       <div class="movie-info">
         <h4>{{ getTitle(movie) }}</h4>
