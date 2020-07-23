@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 import { shareReplay, distinctUntilChanged, map } from "rxjs/operators";
-import { Observable, combineLatest } from "rxjs";
+import { Observable } from "rxjs";
 
 export type Breakpoints = typeof Breakpoints;
 

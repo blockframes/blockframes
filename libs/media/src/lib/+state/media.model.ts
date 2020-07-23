@@ -1,4 +1,4 @@
-import { HostedMediaFormValue, clearHostedMediaFormValue, HostedMedia } from './media.firestore';
+import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 export * from './media.firestore';
@@ -61,36 +61,6 @@ function mediaNeedsUpdate(media: HostedMediaFormValue) {
 
 export function getFileNameFromPath(path: string) {
   return path.split('/').pop()
-}
-
-
-// TODO issue#3283 DO WE  REALLY NEED ALL THE CODE BELLOW ???
-
-/** Return the url of the image */
-export function getImageUrl(image: HostedMedia) {
-  return image.url;
-}
-
-const formats = {
-  avatar: {
-    height: 100,
-    width: 100
-  },
-  banner: {
-    height: 1080,
-    width: 1920
-  },
-  poster: {
-    height: 160,
-    width: 120
-  }
-} as const;
-
-export type Formats = keyof typeof formats;
-
-export function getRatio(format: Formats) {
-  const { height, width } = formats[format];
-  return width / height;
 }
 
 /** Used this only for background to let the browser deal with that with picture */
