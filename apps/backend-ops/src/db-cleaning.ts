@@ -241,12 +241,57 @@ function cleanMovies(
     const movie = movieDoc.data() as any;
 
     // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
-    // @TODO (#3175) It seams that this object on root comes from an un-cleaned movie document from Akita that have been updated as is on DB.
     if (movie.distributionRights) {
       delete movie.distributionRights;
     }
 
-    // @TODO (#3175] clean trailer link & old img ref structuires cf 1eJm06mvagJDNJ2yAlDt
+    if(movie.promotionalElements.presentation_deck?.media){
+      if(movie.promotionalElements.presentation_deck?.media.url) {
+        movie.promotionalElements.presentation_deck = movie.promotionalElements.presentation_deck.media.url;
+      } else {
+        movie.promotionalElements.presentation_deck = '';
+      }
+    }
+
+    if(movie.promotionalElements.promo_reel_link?.media){
+      if(movie.promotionalElements.promo_reel_link?.media.url) {
+        movie.promotionalElements.promo_reel_link = movie.promotionalElements.promo_reel_link.media.url;
+      } else {
+        movie.promotionalElements.promo_reel_link = '';
+      }
+    }
+
+    if(movie.promotionalElements.scenario?.media){
+      if(movie.promotionalElements.scenario?.media.url) {
+        movie.promotionalElements.scenario = movie.promotionalElements.scenario.media.url;
+      } else {
+        movie.promotionalElements.scenario = '';
+      }
+    }
+ 
+    if(movie.promotionalElements.screener_link?.media){
+      if(movie.promotionalElements.screener_link?.media.url) {
+        movie.promotionalElements.screener_link = movie.promotionalElements.screener_link.media.url;
+      } else {
+        movie.promotionalElements.screener_link = '';
+      }
+    }
+
+    if(movie.promotionalElements.teaser_link?.media){
+      if(movie.promotionalElements.teaser_link?.media.url) {
+        movie.promotionalElements.teaser_link = movie.promotionalElements.teaser_link.media.url;
+      } else {
+        movie.promotionalElements.teaser_link = '';
+      }
+    }
+
+    if(movie.promotionalElements.trailer_link?.media){
+      if(movie.promotionalElements.trailer_link?.media.url) {
+        movie.promotionalElements.trailer_link = movie.promotionalElements.trailer_link.media.url;
+      } else {
+        movie.promotionalElements.trailer_link = '';
+      }
+    }
 
     await movieDoc.ref.update(movie);
   });
