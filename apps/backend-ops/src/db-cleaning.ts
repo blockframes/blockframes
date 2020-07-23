@@ -8,7 +8,7 @@ import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firest
 import { createHostedMedia } from '@blockframes/media/+state/media.model';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
-import { chunk } from 'lodash';
+import { runChunks } from './tools';
 
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -265,7 +265,6 @@ function cleanDocsIndex(
 
 }
 
-
 /**
  * Check each type of notification and return false if a referenced document doesn't exist
  * @param notification the notification to check
@@ -354,15 +353,5 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       );
     default:
       return false;
-  }
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
   }
 }

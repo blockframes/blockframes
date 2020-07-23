@@ -6,8 +6,8 @@ import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash'
 import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
+import { runChunks } from '../tools';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -239,15 +239,5 @@ const updateImgRef = async (
   } catch (e) {
     console.log('Empty ref');
     return EMPTY_REF;
-  }
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
   }
 }

@@ -4,7 +4,7 @@ import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestor
 import { HostedMedia } from '@blockframes/media/+state/media.model';
 import { File as GFile, Bucket } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
-import { chunk } from 'lodash';
+import { runChunks } from '../tools';
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 const rowsConcurrency = 10;
@@ -367,14 +367,4 @@ function findImgRefInMovie(movie: any, ref: string) { // w8 final moviedoc struc
   };
 
   return false;
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
-  }
 }
