@@ -4,8 +4,10 @@ import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestor
 import { HostedMedia } from '@blockframes/media/+state/media.model';
 import { File as GFile, Bucket } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
+import { chunk } from 'lodash';
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
+const rowsConcurrency = 10;
 
 export async function upgrade(db: Firestore, storage: Storage) {
 
@@ -47,6 +49,9 @@ export async function upgrade(db: Firestore, storage: Storage) {
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
 
+  const cleanMovieDirOutput = await cleanMovieDir(bucket);
+  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "movie" directory.`);
+
   console.log('//////////////');
   console.log('// [STORAGE] Processing users');
   console.log('//////////////');
@@ -72,17 +77,16 @@ async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    users.docs.map(async doc => {
-      const user = doc.data() as any; // @TODO #(3175) create intermediary model
+  return runChunks(users.docs, async (doc) => {
+    const user = doc.data() as any; // @TODO #(3175) create intermediary model
 
-      if (user.avatar?.original?.ref) {
-        const avatar = user.avatar?.original;
-        user.avatar = await changeResourceDirectory(avatar, storage, user.uid);
-      }
-      await doc.ref.set(user);
-    })
-  );
+    if (user.avatar?.original?.ref) {
+      const avatar = user.avatar?.original;
+      user.avatar = await changeResourceDirectory(avatar, storage, user.uid);
+    }
+    await doc.ref.set(user);
+  });
+
 }
 
 /**
@@ -95,17 +99,16 @@ async function updateOrgs(
   orgs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    orgs.docs.map(async doc => {
-      const org = doc.data() as any; // @TODO #(3175) create intermediary model
+  return runChunks(orgs.docs, async (doc) => {
+    const org = doc.data() as any; // @TODO #(3175) create intermediary model
 
-      if (org.logo?.original?.ref) {
-        const logo = org.logo?.original;
-        org.logo = await changeResourceDirectory(logo, storage, org.id);
-      }
-      await doc.ref.set(org);
-    })
-  );
+    if (org.logo?.original?.ref) {
+      const logo = org.logo?.original;
+      org.logo = await changeResourceDirectory(logo, storage, org.id);
+    }
+    await doc.ref.set(org);
+  });
+
 }
 
 /**
@@ -118,43 +121,41 @@ async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   storage: Storage
 ) {
-  return Promise.all(
-    movies.docs.map(async doc => {
-      const movie = doc.data() as any; // @TODO #(3175) create intermediary model
+  return runChunks(movies.docs, async (doc) => {
+    const movie = doc.data() as any; // @TODO #(3175) create intermediary model
 
-      if (movie.main.banner?.media?.original?.ref) {
-        const banner = movie.main.banner;
-        movie.main.banner = await changeResourceDirectory(banner.media.original, storage, movie.id);
+    if (movie.main.banner?.media?.original?.ref) {
+      const banner = movie.main.banner;
+      movie.main.banner = await changeResourceDirectory(banner.media.original, storage, movie.id);
+    }
+
+    if (movie.main.poster?.media?.original?.ref) {
+      const poster = movie.main.poster;
+      movie.main.poster = await changeResourceDirectory(poster.media.original, storage, movie.id);
+    }
+
+    if (!!movie.promotionalElements.still_photo) {
+      for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
+        const still = movie.promotionalElements.still_photo[stillKey];
+        movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media.original, storage, movie.id);
       }
+    }
 
-      if (movie.main.poster?.media?.original?.ref) {
-        const poster = movie.main.poster;
-        movie.main.poster = await changeResourceDirectory(poster.media.original, storage, movie.id);
-      }
+    const keys = ['presentation_deck', 'scenario'];
+    // We search for pdf that are not in the good directory
+    for (const key of keys) {
+      if (!!movie.promotionalElements[key]) {
 
-      if (!!movie.promotionalElements.still_photo) {
-        for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
-          const still = movie.promotionalElements.still_photo[stillKey];
-          movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media.original, storage, movie.id);
+        const value: PromotionalHostedMedia = movie.promotionalElements[key];
+        if (value.media?.url.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with a "s"
+          movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
         }
+
       }
+    }
 
-      const keys = ['presentation_deck', 'scenario'];
-      // We search for pdf that are not in the good directory
-      for (const key of keys) {
-        if (!!movie.promotionalElements[key]) {
-
-          const value: PromotionalHostedMedia = movie.promotionalElements[key];
-          if (value.media?.url.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with a "s"
-            movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
-          }
-
-        }
-      }
-
-      await doc.ref.set(movie);
-    })
-  );
+    await doc.ref.set(movie);
+  });
 }
 
 const changeResourceDirectory = async (
@@ -238,12 +239,12 @@ const changeResourceDirectory = async (
  * and removes files that are not linked in DB
  * @param bucket 
  */
-async function cleanMoviesDir(bucket: Bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
+async function cleanMovieDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
 
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
     const movie = await getDocument<any>(`movies/${movieId}`); // w8 "final" movieDoc
     if (haveImgSize(f) && !isOriginal(f)) {
@@ -251,7 +252,30 @@ async function cleanMoviesDir(bucket: Bucket) {
     } else if (!!movie && !findImgRefInMovie(movie, f.name)) {
       if (await f.delete()) { deleted++; }
     }
-  }
+  });
+
+  return { deleted, total: files.length };
+}
+
+/**
+ * Deletes everything that is not original
+ * and removes files that are not linked in DB
+ * @param bucket 
+ */
+async function cleanMoviesDir(bucket: Bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
+
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+    const movieId = f.name.split('/')[1];
+    const movie = await getDocument<any>(`movies/${movieId}`); // w8 "final" movieDoc
+    if (haveImgSize(f) && !isOriginal(f)) {
+      if (await f.delete()) { deleted++; }
+    } else if (!!movie && !findImgRefInMovie(movie, f.name)) {
+      if (await f.delete()) { deleted++; }
+    }
+  });
 
   return { deleted, total: files.length };
 }
@@ -265,7 +289,7 @@ async function cleanUsersDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     const userId = f.name.split('/')[1];
     const user = await getDocument<any>(`users/${userId}`); // w8 "final" movieDoc
     if (haveImgSize(f) && !isOriginal(f)) {
@@ -273,7 +297,7 @@ async function cleanUsersDir(bucket: Bucket) {
     } else if (!!user && user.avatar?.ref !== f.name && user.watermark?.ref !== f.name) {
       if (await f.delete()) { deleted++; }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -287,7 +311,7 @@ async function cleanOrgsDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     const orgId = f.name.split('/')[1];
     const org = await getDocument<any>(`orgs/${orgId}`); // w8 "final" movieDoc
     if (haveImgSize(f) && !isOriginal(f)) {
@@ -295,7 +319,7 @@ async function cleanOrgsDir(bucket: Bucket) {
     } else if (!!org && org.logo?.ref !== f.name) {
       if (await f.delete()) { deleted++; }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -343,4 +367,14 @@ function findImgRefInMovie(movie: any, ref: string) { // w8 final moviedoc struc
   };
 
   return false;
+}
+
+async function runChunks(docs, cb) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = c.map(cb);
+    await Promise.all(promises);
+  }
 }
