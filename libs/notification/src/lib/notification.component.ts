@@ -5,7 +5,7 @@ import { NotificationService } from './+state';
 
 
 @Component({
-  selector: 'dashboard-notification',
+  selector: 'notification-view',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
