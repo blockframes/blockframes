@@ -1,4 +1,4 @@
-import { loadAdminServices, Auth } from './admin';
+import { loadAdminServices, Auth, Firestore } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { User, PublicUser } from '@blockframes/user/+state/user.firestore';
@@ -59,7 +59,7 @@ export async function cleanDeprecatedData() {
   console.log('Cleaned notifications');
   await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
-  await cleanUsers(users, organizationIds, auth);
+  await cleanUsers(users, organizationIds, auth, db);
   console.log('Cleaned users');
   await cleanOrganizations(organizations, userIds, movieIds);
   console.log('Cleaned orgs');
@@ -151,7 +151,8 @@ async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175) w8
 async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
-  auth: Auth
+  auth: Auth,
+  db: Firestore,
 ) {
 
   // Check if auth users have their record on DB
@@ -193,8 +194,21 @@ async function cleanUsers(
       }
     } else {
       // User does not exists on auth, should be deleted.
-      // @TODO (#3175) check if user can be deleted (permission, org etc)
-      await userDoc.ref.delete();
+      if (!user.orgId || !existingOrganizationIds.includes(user.orgId)) {
+        await userDoc.ref.delete();
+        console.log(`Deleted ${user.uid}.`);
+      } else {
+        const orgDoc = await db.doc(`orgs/${user.orgId}`).get();
+        const org = orgDoc.data() as OrganizationDocument;
+        const userIds = org.userIds.filter(u => u !== user.uid);
+        await orgDoc.ref.update({ userIds });
+        const permDoc = await db.doc(`permissions/${user.orgId}`).get();
+        const permission = permDoc.data() as PermissionsDocument;
+        delete permission.roles[user.uid];
+        await permDoc.ref.update({ roles: permission.roles });
+        await userDoc.ref.delete();
+        console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
+      }
     }
   });
 }
