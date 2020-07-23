@@ -69,6 +69,18 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
   ) { }
 
+  @HostListener('error')
+  error() {
+
+    const asset = this.asset$.getValue();
+    const local = this.localTheme$.getValue();
+    const global = this.themeService.theme;
+    const theme = local || global;
+
+    this.srcset = getAssetPath(asset, theme, this.type);
+    this.src = this.srcset
+  }
+
   ngOnInit() {
     // Can force a local theme
     const theme$ = combineLatest([
@@ -105,17 +117,5 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  @HostListener('error')
-  error() {
-
-    const asset = this.asset$.getValue();
-    const local = this.localTheme$.getValue();
-    const global = this.themeService.theme;
-    const theme = local || global;
-
-    this.srcset = getAssetPath(asset, theme, this.type);
-    this.src = this.srcset
   }
 }
