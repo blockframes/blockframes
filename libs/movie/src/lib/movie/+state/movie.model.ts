@@ -1,14 +1,6 @@
 import {
-  MovieBudget,
-  MovieFestivalPrizes,
-  MovieMain,
-  MovieProduction,
-  MoviePromotionalDescription,
   MoviePromotionalElements,
   MovieReview,
-  MovieSalesCast,
-  MovieSalesInfoDocumentWithDates as MovieSalesInfo,
-  MovieStory,
   Prize,
   PromotionalElement,
   MovieLanguageSpecificationContainer,
@@ -42,17 +34,9 @@ import { createMovieAppAccess } from '@blockframes/utils/apps';
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
 export {
   PromotionalElement,
-  MovieBudget,
-  MovieFestivalPrizes,
-  MovieMain,
-  MoviePromotionalDescription,
   MoviePromotionalElements,
-  MovieSalesCast,
-  MovieStory,
-  MovieVersionInfo,
   MovieStakeholders,
   Prize,
-  MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieAnalytics,
   MovieReview
 } from './movie.firestore';
@@ -71,59 +55,22 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     id: params.id,
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
-    movieReview: [],
-    ...params,
-    versionInfo: { languages: createLanguageKey(params.versionInfo?.languages ? params.versionInfo.languages : {}) },
-    main: createMovieMain(params.main),
-    story: createMovieStory(params.story),
-    promotionalElements: createMoviePromotionalElements(params.promotionalElements),
-    promotionalDescription: createMoviePromotionalDescription(params.promotionalDescription),
-    salesCast: createMovieSalesCast(params.salesCast),
-    salesInfo: createMovieSalesInfo(params.salesInfo),
-    festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
-    budget: createMovieBudget(params.budget),
-    production: createMovieProduction(params.production),
-  };
-}
-
-export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
-  const languageSpecifications = {}
-  for (const language in languages) {
-    languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
-  }
-  return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
-}
-
-/** A factory function that creates MovieMain */
-export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
-  return {
-    title: {
-      original: '',
-      international: ''
-    },
+    contentType: 'feature_film',
     directors: [],
     genres: [],
-    contentType: 'feature_film',
     originalLanguages: [],
     originCountries: [],
-    status: null,
-    customGenres: [],
     releaseYear: null,
+    storeConfig: createStoreConfig(),
+    synopsis: '',
+    title: createTitle(),
     ...params,
-    storeConfig: createStoreConfig(params.storeConfig),
-    banner: createPromotionalImage(params.banner),
-    poster: createPromotionalImage(params.poster),
+    promotional: createMoviePromotional(params.promotional),
   };
 }
 
-/** A factory function that creates Production section */
-export function createMovieProduction(params: Partial<MovieProduction> = {}): MovieProduction {
-  return {
-    stakeholders: createMovieStakeholders(params.stakeholders),
-  };
-}
-
-export function createMoviePromotionalElements(
+// Function to create promotional section
+export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {},
   initDefault: boolean = true
 ): MoviePromotionalElements {
@@ -150,15 +97,6 @@ export function createMoviePromotionalElements(
   return elements;
 }
 
-export function createMoviePromotionalDescription(
-  params: Partial<MoviePromotionalDescription> = {}
-): MoviePromotionalDescription {
-  return {
-    keyAssets: '',
-    keywords: [],
-    ...params
-  };
-}
 
 function createPromotionalElement(
   promotionalElement: Partial<PromotionalElement> = {}
@@ -203,136 +141,12 @@ export function createPromotionalImage(
   };
 }
 
-export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): MovieSalesCast {
-  return {
-    producers: [],
-    cast: [],
-    crew: [],
-    ...params
-  };
-}
-
-export function createMovieOriginalRelease(
-  params: Partial<MovieOriginalRelease> = {}
-): MovieOriginalRelease {
-  return {
-    country: null,
-    ...params,
-    date: toDate(params.date),
-  };
-}
-
-export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
-  return {
-    country: null,
-    value: '',
-    ...params
-  };
-}
-
-export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
-  return {
-    certifications: [],
-    broadcasterCoproducers: [],
-    scoring: null,
-    color: null,
-    rating: [],
-    originalRelease: [],
-    format: null,
-    formatQuality: null,
-    soundFormat: '',
-    physicalHVRelease: null,
-    ...params
-  };
-}
-
-export function createMovieStory(params: Partial<MovieStory> = {}): MovieStory {
-  return {
-    synopsis: '',
-    logline: '',
-    ...params
-  };
-}
-
-export function createMovieFestivalPrizes(
-  params: Partial<MovieFestivalPrizes> = {}
-): MovieFestivalPrizes {
-  return {
-    prizes: [],
-    ...params
-  };
-}
-
-export function createPrize(prize: Partial<Prize> = {}): Prize {
-  return {
-    name: '',
-    year: null,
-    prize: '',
-    logo: createImgRef(),
-    ...prize
-  };
-}
-
 export function createTitle(title: Partial<Title> = {}): Title {
   return {
     original: '',
     international: '',
     ...title
   };
-}
-
-export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
-  return {
-    unit: 'boxoffice_dollar',
-    value: 0,
-    territory: null,
-    ...params,
-  }
-}
-
-export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
-  return {
-    boxOffice: [],
-    ...params,
-    totalBudget: createPrice(params.totalBudget),
-    estimatedBudget: createRange<number>(params.estimatedBudget),
-  };
-}
-
-export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
-  return {
-    criticName: '',
-    journalName: '',
-    criticQuote: '',
-    revueLink: '',
-    ...params,
-  };
-}
-
-export function createMovieLanguageSpecification(
-  params: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    caption: false,
-    ...params
-  };
-}
-
-export function populateMovieLanguageSpecification(
-  spec: Partial<MovieLanguageSpecificationContainer>,
-  slug: LanguagesSlug,
-  type: MovieLanguageTypes,
-  value: boolean = true
-) {
-  if (!spec[slug]) {
-    spec[slug] = createMovieLanguageSpecification();
-  }
-
-  spec[slug][type] = value;
-  return spec;
 }
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
@@ -342,31 +156,6 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
     ...params,
     appAccess: createMovieAppAccess(params.appAccess)
   };
-}
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
-}
-
-export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
-  return {
-    executiveProducer: [],
-    coProducer: [],
-    broadcasterCoproducer: [],
-    lineProducer: [],
-    distributor: [],
-    salesAgent: [],
-    laboratory: [],
-    financier: [],
-    ...stakeholders
-  }
 }
 
 export function createMovieLegalDocuments(
@@ -390,9 +179,9 @@ export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMe
  * @param movies
  */
 export function getMovieTitleList(movies: Movie[]): string[] {
-  const movieTitles = movies.map(movie => movie.main.title.international
-    ? movie.main.title.international
-    : movie.main.title.original
+  const movieTitles = movies.map(movie => movie.title.international
+    ? movie.title.international
+    : movie.title.original
   )
   return movieTitles;
 }

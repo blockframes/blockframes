@@ -31,78 +31,56 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 
 /** Generic interface of a Movie */
 interface MovieRaw<D> {
-  _type: 'movies';
-  _meta?: DocumentMeta;
-  id: string;
-  documents: MovieLegalDocuments;
-
-  // Sections
-  budget: MovieBudget;
-  festivalPrizes: MovieFestivalPrizes;
-  main: MovieMain;
-  movieReview: MovieReview[];
-  production: MovieProduction;
-  promotionalElements: MoviePromotionalElements;
-  promotionalDescription: MoviePromotionalDescription;
-  salesCast: MovieSalesCast;
-  salesInfo: MovieSalesInfoRaw<D>;
-  story: MovieStory;
-  versionInfo: MovieVersionInfo;
-
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
-}
-
-interface NewMovie<D> {
   // Every field concerning the document
   _type: 'movies';
   _meta?: DocumentMeta;
   id: string;
   documents: MovieLegalDocuments;
 
+  // Only section left
+  promotional: MoviePromotionalElements;
+
   // Every field concerning the movie
-  banner: PromotionalImage;
+  banner?: PromotionalImage;
   boxOffice?: BoxOffice[],
-  cast: Cast[],
-  certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  contentType?: ContentType;
-  crew: Crew[],
+  cast?: Cast[],
+  certifications?: CertificationsSlug[],
+  color?: ColorsSlug,
+  contentType: ContentType; //! required
+  crew?: Crew[],
   customGenres?: string[],
-  directors?: Director[], // TODO issue#3179
+  directors: Director[], //! required
   estimatedBudget?: NumberRange,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
-  genres?: GenresSlug[],
+  genres: GenresSlug[], //! required
+  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
+  // TODO we will need more visibility on the upload part to take the final decision
+  // TODO we also need to consider how to differentiate full movies from trailer
   hostedVideo?: string;
   internalRef?: string,
-  keyAssets: string,
-  keywords: string[],
-  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
-  logline: string,
-  originalLanguages?: LanguagesSlug[],
-  originalRelease: MovieOriginalReleaseRaw<D>[],
-  originCountries?: TerritoriesSlug[],
-  poster: PromotionalImage;
-  prizes: Prize[],
-  producers: Producer[],
-  rating: MovieRating[],
-  releaseYear?: number,
-  review: MovieReview[],
-  scoring: ScoringSlug,
+  keyAssets?: string,
+  keywords?: string[],
+  languages?: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+  logline?: string,
+  originalLanguages: LanguagesSlug[], //! required
+  originalRelease?: MovieOriginalReleaseRaw<D>[],
+  originCountries: TerritoriesSlug[], //! required
+  poster?: PromotionalImage;
+  prizes?: Prize[],
+  producers?: Producer[],
+  rating?: MovieRating[],
+  releaseYear: number, //! required
+  review?: MovieReview[],
+  scoring?: ScoringSlug,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   status?: MovieStatusSlug,
-  storeConfig?: StoreConfig;
-  synopsis: string,
-  title: Title,
+  storeConfig: StoreConfig, //! required
+  synopsis: string, //! required
+  title: Title, //! required
   totalBudget?: Price,
   totalRunTime?: number | string;
-
-  // Only section left
-  promotional: MoviePromotionalElements;
 }
 
 /** Document model of a Movie */
@@ -123,52 +101,6 @@ export interface PublicMovie {
 // MOVIE SECTIONS //
 ////////////////////
 
-export interface MovieBudget {
-  /**
-   * @dev If the budget is fixed, we use totalBudget
-   */
-  totalBudget?: Price,
-  /**
-   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
-   * @see BUDGET_LIST for possible values
-   * */
-  estimatedBudget?: NumberRange,
-  /** @dev More information needed. What is this about ? */
-  boxOffice?: BoxOffice[],
-}
-
-export interface MovieFestivalPrizes {
-  prizes: Prize[]
-}
-
-export interface MovieMain {
-  banner: PromotionalImage;
-  contentType?: ContentType;
-  customGenres?: string[],
-  directors?: Director[], // TODO issue#3179
-  genres?: GenresSlug[],
-  internalRef?: string,
-  originCountries?: TerritoriesSlug[],
-  originalLanguages?: LanguagesSlug[],
-  poster: PromotionalImage;
-  releaseYear?: number,
-  status?: MovieStatusSlug,
-  storeConfig?: StoreConfig;
-  title: Title,
-  totalRunTime?: number | string;
-}
-
-export interface MovieReview {
-  criticName?: string,
-  criticQuote?: string,
-  journalName?: string,
-  revueLink?: string,
-}
-
-export interface MovieProduction {
-  stakeholders?: MovieStakeholders,
-}
-
 export interface MoviePromotionalElements {
   presentation_deck: PromotionalHostedMedia,
   promo_reel_link: PromotionalExternalMedia,
@@ -177,40 +109,6 @@ export interface MoviePromotionalElements {
   still_photo: Record<string, PromotionalImage>,
   teaser_link: PromotionalExternalMedia,
   trailer_link: PromotionalExternalMedia,
-}
-
-export interface MoviePromotionalDescription {
-  keyAssets: string,
-  keywords: string[],
-}
-
-export interface MovieSalesCast {
-  cast: Cast[],
-  crew: Crew[],
-  producers: Producer[],
-}
-
-interface MovieSalesInfoRaw<D> {
-  certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
-  originalRelease: MovieOriginalReleaseRaw<D>[],
-  rating: MovieRating[],
-  scoring: ScoringSlug,
-  soundFormat?: SoundFormatSlug,
-}
-
-export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
-}
-
-export interface MovieStory {
-  logline: string,
-  synopsis: string,
-}
-
-export interface MovieVersionInfo {
-  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 }
 
 ////////////////////
@@ -349,46 +247,6 @@ export interface MovieRating {
   value: string,
 }
 
-export interface MovieMain {
-  banner: PromotionalImage;
-  contentType?: ContentType;
-  customGenres?: string[],
-  directors?: Director[], // TODO issue#3179
-  genres?: GenresSlug[],
-  internalRef?: string,
-  originCountries?: TerritoriesSlug[],
-  originalLanguages?: LanguagesSlug[],
-  poster: PromotionalImage;
-  releaseYear?: number,
-  status?: MovieStatusSlug,
-  storeConfig?: StoreConfig;
-  title: Title,
-  totalRunTime?: number | string;
-}
-
-export interface MovieProduction {
-  stakeholders?: MovieStakeholders,
-}
-
-interface MovieSalesInfoRaw<D> {
-  broadcasterCoproducers: string[],
-  certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
-  originalRelease: MovieOriginalReleaseRaw<D>[],
-  physicalHVRelease: D,
-  rating: MovieRating[],
-  scoring: ScoringSlug,
-  soundFormat?: SoundFormatSlug,
-}
-
-export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
-}
-
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
-}
-
 export interface MovieReview {
   criticName?: string,
   journalName?: string,
@@ -401,32 +259,6 @@ export interface DocumentMeta {
   createdBy: string;
   updatedBy?: string,
   deletedBy?: string
-}
-
-/** Generic interface of a Movie */
-interface MovieRaw<D> {
-  _type: 'movies';
-  _meta?: DocumentMeta;
-  id: string;
-  documents: MovieLegalDocuments;
-
-  // Sections
-  main: MovieMain;
-  story: MovieStory;
-  promotionalElements: MoviePromotionalElements;
-  promotionalDescription: MoviePromotionalDescription;
-  salesCast: MovieSalesCast;
-  salesInfo: MovieSalesInfoRaw<D>;
-  versionInfo: MovieVersionInfo;
-  festivalPrizes: MovieFestivalPrizes;
-  budget: MovieBudget;
-  movieReview: MovieReview[];
-  production: MovieProduction;
-
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
 }
 
 export interface MovieLegalDocuments {
