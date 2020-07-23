@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
@@ -19,14 +19,12 @@ import { MovieFormKeywordsModule } from '@blockframes/movie/form/promotional-des
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 import { MovieFormSynopsisComponent } from './synopsis.component';
-import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [MovieFormSynopsisComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FlexLayoutModule,
 
     // Movie Form Modules
     MovieFormKeywordsModule,
