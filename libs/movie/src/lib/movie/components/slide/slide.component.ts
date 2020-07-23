@@ -13,12 +13,12 @@ interface MovieSliderView {
 
 function createMovieSliderView(movie: Movie): MovieSliderView {
     return {
-        directors: movie.main?.directors || '',
+        directors: movie.directors || '',
         titles: {
-            international: movie.main?.title.international || '',
-            original: movie.main?.title.original || ''
+            international: movie.title.international || '',
+            original: movie.title.original || ''
         },
-        synopsis: movie.story?.synopsis || ''
+        synopsis: movie.synopsis || ''
     }
 }
 

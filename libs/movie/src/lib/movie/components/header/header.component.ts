@@ -16,13 +16,13 @@ import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
-    directors: movie.main.directors,
+    directors: movie.directors,
     title: {
-      original: movie.main.title.original,
-      international: movie.main.title.international
+      original: movie.title.original,
+      international: movie.title.international
     },
-    banner: movie.main.banner,
-    poster: movie.main.poster,
+    banner: movie.banner,
+    poster: movie.poster,
   }
 }
 

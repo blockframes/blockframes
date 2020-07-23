@@ -1,33 +1,20 @@
 import {
   MoviePromotionalElements,
-  MovieReview,
-  Prize,
   PromotionalElement,
-  MovieLanguageSpecificationContainer,
   Title,
-  MovieLanguageSpecification,
-  MovieLanguageTypes,
   StoreConfig,
-  MovieOriginalRelease,
-  MovieRating,
   MovieDocumentWithDates,
-  BoxOffice,
-  MovieStakeholders,
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta,
-  LanguageRecord,
   PromotionalExternalMedia,
   PromotionalImage,
   PromotionalHostedMedia,
 } from './movie.firestore';
 import { createImgRef, createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
-import { toDate } from '@blockframes/utils/helpers';
-import { createPrice } from '@blockframes/utils/common-interfaces';
+
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 // Export for other files
@@ -61,11 +48,11 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     originalLanguages: [],
     originCountries: [],
     releaseYear: null,
-    storeConfig: createStoreConfig(),
     synopsis: '',
-    title: createTitle(),
     ...params,
     promotional: createMoviePromotional(params.promotional),
+    storeConfig: createStoreConfig(params.storeConfig),
+    title: createTitle(params.title),
   };
 }
 
