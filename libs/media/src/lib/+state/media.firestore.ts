@@ -38,30 +38,6 @@ export function createHostedMedia(media?: Partial<HostedMedia>): HostedMedia {
   }
 }
 
-/**
- * This array contains the different image sizes.
- */
-export const imgSizeDirectory = ['lg', 'md', 'xs'] as const;
-export type ImgSizeDirectory = (typeof imgSizeDirectory)[number];
-
-export type ImageSizes = Record<ImgSizeDirectory, number>;
-
-export function getImgSize(ref: string) {
-  if (ref.includes('avatar')) {
-    return [50, 100, 300];
-  } else if (ref.includes('logo')) {
-    return [50, 100, 300];
-  } else if (ref.includes('poster')) {
-    return [200, 400, 600];
-  } else if (ref.includes('banner')) {
-    return [300, 600, 1200];
-  } else if (ref.includes('still')) {
-    return [50, 100, 200];
-  } else {
-    return [1024];
-  }
-}
-
 export interface UploadData {
   /**
   * firebase storage upload path *(or ref)*,
