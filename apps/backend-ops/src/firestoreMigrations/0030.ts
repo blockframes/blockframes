@@ -144,12 +144,8 @@ async function updateMovies(
     // We search for pdf that are not in the good directory
     for (const key of keys) {
       if (!!movie.promotionalElements[key]) {
-
         const value: PromotionalHostedMedia = movie.promotionalElements[key];
-        if (value.media?.url.includes(`movie%2F${movie.id}%2F`)) { // shoud be movies with a "s"
-          movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
-        }
-
+        movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
       }
     }
 
@@ -183,6 +179,14 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/main.banner/${ref.split('/').pop()}`;
+    } else if (url.includes(`movies%2F${docId}%2FpromotionalElements.presentation_deck.media`)) {
+      oldRef = `movies/${docId}/promotionalElements.presentation_deck.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
+      newRef = `movies/${docId}/promotionalElements.presentation_deck/${fileName}`;
+      console.log(newRef);
+    } else if (url.includes(`movies%2F${docId}%2FpromotionalElements.scenario.media`)) {
+      oldRef = `movies/${docId}/promotionalElements.scenario.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
+      newRef = `movies/${docId}/promotionalElements.scenario/${fileName}`;
+      console.log(newRef);
     } else if (ref.includes(`movies/${docId}/promotionalElements.poster`)) {
       oldRef = ref;
       newRef = `movies/${docId}/main.poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
@@ -198,24 +202,29 @@ const changeResourceDirectory = async (
       oldRef = ref;
       newRef = `orgs/${docId}/logo/${ref.split('/').pop()}`;
     }
-
-    const to = bucket.file(newRef);
-    const from = bucket.file(oldRef);
-
-    const [exists] = await from.exists();
-
-    if (exists) {
-      console.log(`copying ${oldRef} to ${newRef}`);
-      await from.copy(to);
-      console.log('copy OK');
-
-      // delete previous image
-      await from.delete();
-      console.log('Removed previous');
-
-      return newRef;
+    
+    if(newRef){
+      const to = bucket.file(newRef);
+      const from = bucket.file(oldRef);
+  
+      const [exists] = await from.exists();
+  
+      if (exists) {
+        console.log(`copying ${oldRef} to ${newRef}`);
+        await from.copy(to);
+        console.log('copy OK');
+  
+        // delete previous image
+        await from.delete();
+        console.log('Removed previous');
+  
+        return newRef;
+      } else {
+        console.log(`Ref ${ref} not found for : ${docId}`);
+        return EMPTY_REF;
+      }
     } else {
-      console.log(`Ref ${ref} not found for : ${docId}`);
+      console.log(`Ref not found for : ${docId}`);
       return EMPTY_REF;
     }
 

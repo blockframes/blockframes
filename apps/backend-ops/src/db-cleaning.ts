@@ -283,7 +283,7 @@ function cleanMovies(
 
     if (movie.promotionalElements.presentation_deck?.media) {
       if (movie.promotionalElements.presentation_deck?.media.url) {
-        movie.promotionalElements.presentation_deck = movie.promotionalElements.presentation_deck.media.url;
+        movie.promotionalElements.presentation_deck = movie.promotionalElements.presentation_deck.media.ref;
       } else {
         movie.promotionalElements.presentation_deck = '';
       }
@@ -299,7 +299,7 @@ function cleanMovies(
 
     if (movie.promotionalElements.scenario?.media) {
       if (movie.promotionalElements.scenario?.media.url) {
-        movie.promotionalElements.scenario = movie.promotionalElements.scenario.media.url;
+        movie.promotionalElements.scenario = movie.promotionalElements.scenario.media.ref;
       } else {
         movie.promotionalElements.scenario = '';
       }
