@@ -169,7 +169,7 @@ async function cleanUsers(
         if (invalidOrganization) {
           delete user.orgId;
           await userDoc.ref.update(user);
-        } else if (!user.avatar.ref) {
+        } else if (!user.avatar?.ref || (user as any).avatar?.original) {
           await userDoc.ref.update({ avatar: createHostedMedia() });
         }
       }
@@ -206,7 +206,7 @@ function cleanOrganizations(
       await orgDoc.ref.update({ movieIds: validMovieIds });
     }
 
-    if (!logo.ref) {
+    if (!logo.ref || (logo as any).original) {
       await orgDoc.ref.update({ logo: createHostedMedia() });
     }
 

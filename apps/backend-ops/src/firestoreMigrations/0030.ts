@@ -299,7 +299,7 @@ async function cleanUsersDir(bucket: Bucket) {
     const user = await getDocument<any>(`users/${userId}`); // w8 "final" movieDoc
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
-    } else if (!!user && user.avatar?.ref !== f.name) {
+    } else if (!!user && user.avatar?.ref !== f.name && user.watermark?.ref !== f.name) {
       if (await f.delete()) { deleted++; }
     }
   }
