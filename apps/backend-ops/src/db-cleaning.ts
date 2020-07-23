@@ -8,10 +8,12 @@ import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firest
 import { createHostedMedia } from '@blockframes/media/+state/media.model';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
+import { chunk } from 'lodash';
 
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 const dayInMillis = 1000 * 60 * 60 * 24;
+const rowsConcurrency = 10;
 
 /** 
  * @dev This is the date of a mystic event from the ancient times which led to madness the most relentless developers.
@@ -78,34 +80,29 @@ function cleanNotifications(
   existingIds: string[]
 ) {
 
-  let p = Promise.resolve();
-
-  for (const doc of notifications.docs) {
-    p = p.then(async () => {
-      const notification = doc.data() as NotificationDocument;
-      const outdatedNotification = !isNotificationValid(notification, existingIds);
-      if (outdatedNotification) {
-        await doc.ref.delete();
-      } else {
-        // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
-        // @dev If the cleaning is made after Jun 24 + imagesMigrationTimestamp, this should have no effects
-        // @dev This should also have no effect if hotfix/1.6.3 have been deployed
-        const notificationTimestamp = notification.date.toMillis();
-        if (notificationTimestamp < imagesMigrationTimestamp) {
-          if (notification.organization) {
-            notification.organization.logo = createHostedMedia();
-          } else if (notification.user) {
-            notification.user.avatar = createHostedMedia();
-          }
-          await doc.ref.update(notification);
-        } else {
-          // @TODO (#3175] use org logo or user avatar
+  return runChunks(notifications.docs, async (doc) => {
+    const notification = doc.data() as NotificationDocument;
+    const outdatedNotification = !isNotificationValid(notification, existingIds);
+    if (outdatedNotification) {
+      await doc.ref.delete();
+    } else {
+      // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
+      // @dev If the cleaning is made after Jun 24 + imagesMigrationTimestamp, this should have no effects
+      // @dev This should also have no effect if hotfix/1.6.3 have been deployed
+      const notificationTimestamp = notification.date.toMillis();
+      if (notificationTimestamp < imagesMigrationTimestamp) {
+        if (notification.organization) {
+          notification.organization.logo = createHostedMedia();
+        } else if (notification.user) {
+          notification.user.avatar = createHostedMedia();
         }
+        await doc.ref.update(notification);
+      } else {
+        // @TODO (#3175] use org logo or user avatar
       }
-    })
-  }
+    }
+  });
 
-  return p;
 }
 
 function cleanInvitations(
@@ -113,7 +110,7 @@ function cleanInvitations(
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  invitations.docs.map(async doc => {
+  return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as InvitationDocument;
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
@@ -154,7 +151,7 @@ async function cleanUsers(
   // @TODO (#3066) recreate this situation
   await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
-  users.docs.map(async userDoc => {
+  return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as User;
 
     // Check if a DB user have a record in Auth.
@@ -169,8 +166,19 @@ async function cleanUsers(
         if (invalidOrganization) {
           delete user.orgId;
           await userDoc.ref.update(user);
-        } else if (!user.avatar?.ref || (user as any).avatar?.original) {
-          await userDoc.ref.update({ avatar: createHostedMedia() });
+        }
+
+        let update: any = {};
+        if (!user.avatar?.ref || (user as any).avatar?.original) {
+          update.avatar = createHostedMedia();
+        }
+
+        if ((user as any).watermark?.urls) {
+          update.watermark = createHostedMedia();
+        }
+
+        if (update.avatar || update.watermark) {
+          await userDoc.ref.update(update);
         }
       }
     } else {
@@ -186,7 +194,7 @@ function cleanOrganizations(
   existingUserIds: string[],
   existingMovieIds: string[]
 ) {
-  organizations.docs.map(async orgDoc => {
+  return runChunks(organizations.docs, async (orgDoc) => {
     const org = orgDoc.data();
 
     if (org.members) {
@@ -217,7 +225,7 @@ function cleanPermissions(
   permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[]
 ) {
-  permissions.docs.map(async permissionDoc => {
+  return runChunks(permissions.docs, async (permissionDoc) => {
     const { id } = permissionDoc.data() as PermissionsDocument;
     const invalidPermission = !existingOrganizationIds.includes(id);
     if (invalidPermission) {
@@ -229,7 +237,7 @@ function cleanPermissions(
 function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
-  movies.docs.map(async movieDoc => {
+  return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any;
 
     // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
@@ -249,16 +257,12 @@ function cleanDocsIndex(
   existingIds: string[]
 ) {
 
-  let p = Promise.resolve();
-  for (const doc of docsIndex.docs) {
-    p = p.then(async () => {
-      if (!existingIds.includes(doc.id)) {
-        await doc.ref.delete();
-      }
-    })
-  }
+  return runChunks(docsIndex.docs, async (doc) => {
+    if (!existingIds.includes(doc.id)) {
+      await doc.ref.delete();
+    }
+  });
 
-  return p;
 }
 
 
@@ -350,5 +354,15 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
       );
     default:
       return false;
+  }
+}
+
+async function runChunks(docs, cb) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = c.map(cb);
+    await Promise.all(promises);
   }
 }
