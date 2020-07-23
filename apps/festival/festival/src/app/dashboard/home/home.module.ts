@@ -27,7 +27,6 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     FlexLayoutModule,
     MovieAnalyticsChartModule,
     ImageReferenceModule,
-
     // Material
     MatButtonModule,
     MatIconModule,

@@ -6,16 +6,14 @@
   <ng-container *ngIf="list.length">
     <mat-list class="surface">
       <mat-list-item *ngFor="let item of list; let index = index">
-        <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }">
+        <ng-template [ngTemplateOutlet]="itemRef || text" [ngTemplateOutletContext]="{ $implicit: item }" matLine>
         </ng-template>
-        <span>
-          <button mat-icon-button (click)="edit(index)">
-            <mat-icon svgIcon="pencil"></mat-icon>
-          </button>
-          <button mat-icon-button (click)="remove(index)">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-        </span>
+        <button mat-icon-button (click)="edit(index)">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="remove(index)">
+          <mat-icon svgIcon="trash"></mat-icon>
+        </button>
       </mat-list-item>
     </mat-list>
   </ng-container>
@@ -35,6 +33,6 @@
 <ng-container *ngIf="showSave">
   <button mat-stroked-button color="primary" (click)="save()">
     <mat-icon svgIcon="floppy"></mat-icon>
-    Save
+    <span>Save</span>
   </button>
 </ng-container>
