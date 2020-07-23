@@ -8,6 +8,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
+import { syncStorage } from './syncStorage';
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
@@ -36,6 +37,10 @@ export async function prepareForTesting() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
+
+  console.info('Syncing firestore with storage');
+  await syncStorage();
+  console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }
