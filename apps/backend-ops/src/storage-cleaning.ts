@@ -3,11 +3,14 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { File as GFile, Bucket } from '@google-cloud/storage';
 import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
 import { getDocument } from 'apps/backend-functions/src/data/internals'
+import { chunk } from 'lodash';
 
 // @TODO (#3175) temp 
 // gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com && node dist/apps/backend-ops/main.js restore
 // export ENV=dev && npx ng build backend-ops --configuration=dev
 // still S512yYOhaMlezFIgUnrF
+
+const rowsConcurrency = 10;
 
 export async function cleanStorage() {
   const { storage } = loadAdminServices();
@@ -35,7 +38,7 @@ async function cleanMovieDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "movie/" root
       const d = await smartDelete(f, files);
@@ -53,7 +56,7 @@ async function cleanMovieDir(bucket: Bucket) {
         deleted = deleted + d;
       }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -62,7 +65,7 @@ async function cleanMoviesDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "movies/" root
       const d = await smartDelete(f, files);
@@ -79,7 +82,7 @@ async function cleanMoviesDir(bucket: Bucket) {
         deleted = deleted + d;
       }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -95,7 +98,7 @@ async function cleanOrgsDir(bucket: Bucket) {
   let deleted = 0;
   const pattern = '/logo';
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "orgs/" root
       const d = await smartDelete(f, files, pattern);
@@ -112,7 +115,7 @@ async function cleanOrgsDir(bucket: Bucket) {
         deleted = deleted + d;
       }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -122,7 +125,7 @@ async function cleanUsersDir(bucket: Bucket) {
   let deleted = 0;
   const pattern = '/avatar';
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2 || f.name.split('/').length === 3) {
       // Clean files at "users/" or "user/{$userId}/" root
       const d = await smartDelete(f, files, pattern);
@@ -139,7 +142,7 @@ async function cleanUsersDir(bucket: Bucket) {
         deleted = deleted + d;
       }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -153,7 +156,7 @@ async function cleanWatermarkDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
   let deleted = 0;
 
-  for (const f of files) {
+  await runChunks(files, async (f) => {
     if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
       if (await f.delete()) {
@@ -176,7 +179,7 @@ async function cleanWatermarkDir(bucket: Bucket) {
         }
       }
     }
-  }
+  });
 
   return { deleted, total: files.length };
 }
@@ -214,3 +217,12 @@ async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string 
   return deleted;
 }
 
+async function runChunks(docs, cb) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = c.map(cb);
+    await Promise.all(promises);
+  }
+}
