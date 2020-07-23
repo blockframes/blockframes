@@ -51,7 +51,7 @@
           <drop-cropper
             [storagePath]="movie.id | ref: 'movie' : 'still' : stillForm.key"
             ratio="still"
-            [form]="stillForm.value.get('media').get('original')">
+            [form]="stillForm.value.get('media')">
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>

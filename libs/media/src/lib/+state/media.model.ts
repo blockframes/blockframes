@@ -1,4 +1,4 @@
-import { ImgRef, HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
+import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 export * from './media.firestore';
@@ -59,37 +59,8 @@ function mediaNeedsUpdate(media: HostedMediaFormValue) {
   return media.delete || (!!media.ref && !!media.blobOrFile);
 }
 
-const formats = {
-  avatar: {
-    height: 100,
-    width: 100
-  },
-  banner: {
-    height: 1080,
-    width: 1920
-  },
-  poster: {
-    height: 160,
-    width: 120
-  }
-} as const;
-
-export type Formats = keyof typeof formats;
-
-export function getRatio(format: Formats) {
-  const { height, width } = formats[format];
-  return width / height;
-}
-
 export function getFileNameFromPath(path: string) {
   return path.split('/').pop()
-}
-
-/** Return the url of the original image, unless we are on Safari
- * were it returns the fallback image instead
- */
-export function getImageUrl(image: ImgRef) {
-  return isSafari() ? image.fallback.url : image.original.url;
 }
 
 /** Used this only for background to let the browser deal with that with picture */

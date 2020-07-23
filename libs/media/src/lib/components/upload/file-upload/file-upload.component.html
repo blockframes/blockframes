@@ -5,7 +5,7 @@
   <section *ngSwitchCase="'waiting'">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
-        <bf-img asset="add_files.webp" alt="upload image"></bf-img>
+        <img asset="add_files.webp" alt="upload image">
       </button>
 
     </label>
@@ -18,7 +18,7 @@
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <bf-img asset="add_files.webp" alt="upload image" class="picture-hover"></bf-img>
+    <img asset="add_files.webp" alt="upload image" class="picture-hover">
   </section>
 
   <!-- Ready -->

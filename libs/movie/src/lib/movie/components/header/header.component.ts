@@ -10,8 +10,7 @@ import {
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { getAssetPath, getImageUrl } from '@blockframes/media/+state/media.model';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
@@ -42,15 +41,13 @@ export class HeaderComponent {
 
   constructor(private sanitazier: DomSanitizer, private location: Location) { }
 
-  @HostBinding('style.backgroundImage') background: SafeStyle;
+  // @HostBinding('style.backgroundImage') background: SafeStyle;
+
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {
       this.movie = movie;
       this.movieView = createMovieView(movie);
-      //TODO#2655: implement image-set directive to handle image size here
-      const url = getImageUrl(this.movieView.banner.media) || getAssetPath('empty_banner.webp', 'dark');
-      this.background = this.sanitazier.bypassSecurityTrustStyle(`url(${url})`);
     }
   }
 

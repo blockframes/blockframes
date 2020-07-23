@@ -18,7 +18,7 @@
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo; else nologo">
-        <bf-img class="logo" [ref]="logo" asset="empty_poster.webp"></bf-img>
+        <img class="logo" [ref]="logo" asset="empty_poster.webp">
       </ng-container>
       <ng-template #nologo>
         --

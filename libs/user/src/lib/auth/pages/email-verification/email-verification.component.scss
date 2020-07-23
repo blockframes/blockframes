@@ -9,7 +9,7 @@ form {
   margin-left: 50px;
 }
 
-bf-img {
+img {
   width: 500px;
 }
 
@@ -26,7 +26,7 @@ button {
 }
 
 @include layout-bp(xs) {
-  bf-img {
+  img {
     width: 200px;
   }
   form {
@@ -36,7 +36,7 @@ button {
 }
 
 @include layout-bp(sm) {
-  bf-img {
+  img {
     width: 300px;
   }
 }

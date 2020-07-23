@@ -13,7 +13,7 @@ p {
   margin-top: 0;
 }
 
-bf-img {
+img {
   height: 500px;
   width: 500px;
 }
@@ -30,7 +30,7 @@ a {
 
 // small
 @include layout-bp(sm) {
-  bf-img {
+  img {
     height: 300px;
     width: 300px;
   }
@@ -41,7 +41,7 @@ a {
   a {
     margin-top: 40px;
   }
-  bf-img {
+  img {
     height: 200px;
     width: 200px;
   }

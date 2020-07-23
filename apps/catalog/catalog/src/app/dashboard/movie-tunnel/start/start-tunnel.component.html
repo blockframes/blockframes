@@ -38,7 +38,7 @@
         <ng-container *ngFor="let content of cardContents">
           <mat-card>
             <article fxLayout="column" fxLayoutAlign="center center">
-              <bf-img [asset]="content.img" alt="{{ content.title }}"></bf-img>
+              <img [asset]="content.img" alt="{{ content.title }}">
               <div>
                 <h3>{{ content.title }}</h3>
               </div>
