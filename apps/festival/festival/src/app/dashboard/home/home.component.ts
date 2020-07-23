@@ -5,8 +5,6 @@ import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { MovieBudgetForm } from '@blockframes/movie/form/budget/budget.form'
-
-import { MovieBudgetForm } from '@blockframes/movie/form/budget/budget.form';
 @Component({
   selector: 'festival-dashboard-home',
   templateUrl: './home.component.html',
@@ -24,9 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery
   ) { }
-  list
+
   ngOnInit() {
-    this.list = new MovieBudgetForm({ boxOffice: [{ value: 2, territory: 'germany', unit: 'boxoffice_dollar' }, { value: 2, territory: 'germany', unit: 'boxoffice_dollar' }] })
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(
@@ -48,5 +45,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-  log(x) { console.log(x)}
 }

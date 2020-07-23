@@ -1,4 +1,4 @@
-<!-- <ng-container *ngIf="(hasMovies$ | async) else noMovie">
+<ng-container *ngIf="(hasMovies$ | async) else noMovie">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -18,7 +18,7 @@
 </ng-container>
 
 <!-- @TODO (#2891) -->
-<!-- <ng-template #noMovie>
+<ng-template #noMovie>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no title yet.</h1>
     <p class="mat-body-1">
@@ -37,15 +37,4 @@
       </mat-card>
     </article>
   </section>
-</ng-template> -->
-
-<bf-form-list [form]="list.controls.boxOffice">
-  <ng-template let-text>{{ text.unit }} {{text.value }} {{text.territory }}</ng-template>
-  <ng-template formView let-form>
-    <div [formGroup]="form">
-      <input formControlName="unit">
-      test
-    </div>
-    <button (click)="log(form)">Log ME</button>
-  </ng-template>
-</bf-form-list>
+</ng-template>

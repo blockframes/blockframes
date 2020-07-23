@@ -12,14 +12,16 @@ import {
 
 // RxJs
 import { Observable } from 'rxjs';
-import { startWith, tap } from 'rxjs/operators';
+import { startWith, tap, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
 
-
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
+
+@Directive({ selector: '[itemRef]' })
+export class ItemRefDirective { }
 
 @Component({
   selector: '[form] bf-form-list',
@@ -31,7 +33,7 @@ export class FormListComponent<T> implements OnInit {
 
   @Input() form: FormList<T>;
 
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  @ContentChild(ItemRefDirective, { read: TemplateRef}) itemRef: TemplateRef<any>
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
 
   list$: Observable<any[]>;
@@ -43,7 +45,8 @@ export class FormListComponent<T> implements OnInit {
   ngOnInit() {
     this.list$ = this.form.valueChanges.pipe(
       startWith(this.form.value),
-      tap(value => value ? this.formItem = this.form.at(0) : this.add()));
+      tap(value => value.length ? this.formItem = this.form.at(0) : this.add()),
+      distinctUntilChanged())
   }
 
   // Add a clean form and show save button
