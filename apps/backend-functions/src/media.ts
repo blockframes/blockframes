@@ -3,13 +3,11 @@ import * as admin from 'firebase-admin';
 import { get } from 'lodash';
 import { HostedMedia } from '@blockframes/media/+state/media.model';
 
-async function getDocAndPath(data: functions.storage.ObjectMetadata) {
-  // the storage path of the file
-  const filePath = data.name;
-
-  if (!filePath) {
-    throw new Error('Upload Error : Undefined File Path');
-  }
+/**
+ * 
+ * @param filePath the storage path of the file
+ */
+export async function getDocAndPath(filePath: string) {
 
   const filePathElements = filePath.split('/');
 
@@ -30,7 +28,7 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
   const docSnapshot = await doc.get();
 
   if (!docSnapshot.exists) {
-    throw new Error('Upload Error : File Path point to a firestore document that does not exists');
+    throw new Error('File Path point to a firestore document that does not exists');
   }
 
   const docData = docSnapshot.data()!;
@@ -55,8 +53,12 @@ async function getDocAndPath(data: functions.storage.ObjectMetadata) {
  */
 export async function linkFile(data: functions.storage.ObjectMetadata) {
 
+  if (!data.name) {
+    throw new Error('Upload Error : Undefined File Path');
+  }
+
   // get the needed values
-  const { filePath, doc, fieldToUpdate } = await getDocAndPath(data);
+  const { filePath, doc, fieldToUpdate } = await getDocAndPath(data.name);
 
   // create an access url
   const bucket = admin.storage().bucket(data.bucket);
@@ -91,8 +93,12 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
  */
 export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
+  if (!data.name) {
+    throw new Error('Delete Error : Undefined File Path');
+  }
+
   // get the needed values
-  const { doc, docData, fieldToUpdate } = await getDocAndPath(data);
+  const { doc, docData, fieldToUpdate } = await getDocAndPath(data.name);
 
   // if firestore wasn't link to this file, we should not unlink it
   const media: HostedMedia = get(docData, fieldToUpdate);
