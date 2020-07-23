@@ -55,10 +55,6 @@ export async function cleanDeprecatedData() {
   const existingIds = movieIds.concat(organizationIds, eventIds, userIds);
 
   // Compare and update/delete documents with references to non existing documents
-  await cleanNotifications(notifications, existingIds);
-  console.log('Cleaned notifications');
-  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
-  console.log('Cleaned invitations');
   await cleanUsers(users, organizationIds, auth, db);
   console.log('Cleaned users');
   await cleanOrganizations(organizations, userIds, movieIds);
@@ -69,6 +65,10 @@ export async function cleanDeprecatedData() {
   console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
   console.log('Cleaned docsIndex');
+  await cleanNotifications(notifications, existingIds);
+  console.log('Cleaned notifications');
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  console.log('Cleaned invitations');
 
   return true;
 }
@@ -92,14 +92,14 @@ function cleanNotifications(
 
 async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175) w8 "final" doc structure
   if (notification.organization) {
-    const doc = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
-    notification.organization.logo = doc.logo || '';
+    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
+    notification.organization.logo = d.logo || '';
   }
 
   if (notification.user) {
-    const doc = await getDocument<PublicUser>(`users/${notification.user.uid}`);
-    notification.user.avatar = doc.avatar || '';
-    notification.user.watermark = doc.watermark || '';
+    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
+    notification.user.avatar = d.avatar || '';
+    notification.user.watermark = d.watermark || '';
   }
 
   await doc.ref.update(notification);
@@ -124,25 +124,25 @@ function cleanInvitations(
 async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
-    const doc = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
-    invitation.fromOrg.logo = doc.logo || '';
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
+    invitation.fromOrg.logo = d.logo || '';
   }
 
   if (invitation.toOrg?.id) {
-    const doc = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
-    invitation.toOrg.logo = doc.logo || '';
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
+    invitation.toOrg.logo = d.logo || '';
   }
 
   if (invitation.fromUser?.uid) {
-    const doc = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
-    invitation.fromUser.avatar = doc.avatar || '';
-    invitation.fromUser.watermark = doc.watermark || '';
+    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
+    invitation.fromUser.avatar = d.avatar || '';
+    invitation.fromUser.watermark = d.watermark || '';
   }
 
   if (invitation.toUser?.uid) {
-    const doc = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    invitation.toUser.avatar = doc.avatar || '';
-    invitation.toUser.watermark = doc.watermark || '';
+    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
+    invitation.toUser.avatar = d.avatar || '';
+    invitation.toUser.watermark = d.watermark || '';
   }
 
   await doc.ref.update(invitation);
@@ -176,7 +176,7 @@ async function cleanUsers(
           await userDoc.ref.update(user);
         }
 
-        let update: any = {};
+        const update: any = {};
         let updateObj = false;
         if (!user.avatar || (user as any).avatar?.original) {
           update.avatar = '';

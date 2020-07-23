@@ -46,7 +46,7 @@ export async function upgrade(db: Firestore) {
 
 async function updateUsers(db: Firestore, users: PublicUser[]) {
   for (const user of users) {
-     let updatedUser = updateImgRef(user, 'avatar') as PublicUser;
+    const updatedUser = updateImgRef(user, 'avatar') as PublicUser;
     db.doc(`users/${user.uid}`).set(updatedUser);
   }
 }

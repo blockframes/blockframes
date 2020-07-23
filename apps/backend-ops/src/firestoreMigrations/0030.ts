@@ -6,7 +6,7 @@ import { File as GFile } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
 
-const EMPTY_REF: string = '';
+const EMPTY_REF = '';
 
 export async function upgrade(db: Firestore, storage: Storage) {
 
