@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
+﻿import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { NotificationService } from '@blockframes/notification/+state';
+import { NotificationQuery } from './+state/notification.query';
+import { NotificationService } from './+state';
+
 
 @Component({
-  selector: 'catalog-marketplace-notification',
+  selector: 'dashboard-notification',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

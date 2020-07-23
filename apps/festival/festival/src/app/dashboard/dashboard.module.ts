@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
@@ -36,7 +36,7 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
     {
       path: 'invitations',
