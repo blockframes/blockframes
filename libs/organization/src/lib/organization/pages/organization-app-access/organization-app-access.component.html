@@ -4,12 +4,12 @@
 
   <mat-radio-group [formControl]="access" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
     <mat-card matRipple (click)="access.setValue('dashboard')" fxLayout="column" fxLayoutAlign="center center">
-      <bf-img asset="seller_dashboard.webp"></bf-img>
+      <img asset="seller_dashboard.webp">
       <mat-radio-button value="dashboard"><b>Seller's Dashboard</b></mat-radio-button>
     </mat-card>
 
     <mat-card matRipple (click)="access.setValue('marketplace')" fxLayout="column" fxLayoutAlign="center center">
-      <bf-img asset="buyer_marketplace.webp"></bf-img>
+      <img asset="buyer_marketplace.webp">
       <mat-radio-button value="marketplace"><b>Buyer's Marketplace</b></mat-radio-button>
     </mat-card>
   </mat-radio-group>

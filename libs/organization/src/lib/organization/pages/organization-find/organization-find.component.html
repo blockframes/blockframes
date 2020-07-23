@@ -1,7 +1,7 @@
 <section fxLayout="column" fxLayoutAlign="center center" test-id="content">
   <h1>Find your Organization</h1>
   <mat-card fxLayout="column" fxLayoutAlign="center center">
-    <bf-img asset="find_organization.webp"></bf-img>
+    <img asset="find_organization.webp">
     <algolia-autocomplete [index]="orgIndex" keyToDisplay="name" label="Organization name"
      (selectionChange)="updateValue($event)">
       <ng-template let-result>

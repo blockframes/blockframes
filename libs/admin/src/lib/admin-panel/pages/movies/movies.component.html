@@ -17,7 +17,7 @@
     showPaginator>
     <ng-template colRef="main.poster" let-posters>
       <ng-container *ngIf="posters && posters.media as poster;">
-        <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
+        <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
     </ng-template>
     <ng-template colRef="id" let-id>
