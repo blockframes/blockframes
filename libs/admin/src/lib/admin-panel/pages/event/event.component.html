@@ -20,7 +20,7 @@
             </mat-card-title>
             <ng-container
               *ngIf="movie.main.poster && movie.main.poster.media as poster;">
-              <bf-img mat-card-avatar [ref]="poster" asset="empty_poster.webp"></bf-img>
+              <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
             </ng-container>
           </mat-card-header>
 

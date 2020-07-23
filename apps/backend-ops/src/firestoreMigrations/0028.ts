@@ -5,7 +5,7 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { chunk } from 'lodash'
 import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
 
@@ -176,9 +176,7 @@ const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storag
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    const watermark = await _upsertWatermark(user as any); // _upsertWatermark only require uid, email, firstName, lastName, witch are common between the 2 types
-    user.watermark.ref = watermark.ref;
-    user.watermark.urls.original = watermark.url;
+    await upsertWatermark(user as any); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }

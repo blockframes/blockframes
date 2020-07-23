@@ -8,7 +8,7 @@
         <mat-card-title>Upload Documents</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let control of chainOfTitles.controls; let i = index; let last = last">
+        <ng-container *ngFor="let control of chainOfTitles; let i = index; let last = last">
           <file-upload
             test-id="chain-titles"
             storagePath=""

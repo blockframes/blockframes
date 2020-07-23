@@ -1,5 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { getKeyIfExists } from '../helpers';
+import { CommonModule } from '@angular/common';
 
 const registeredObjects = [
   'unitBox',
@@ -12,7 +13,7 @@ const registeredObjects = [
   'orgActivity'
 ] as const;
 
-type Label = typeof registeredObjects[number];
+export type Label = typeof registeredObjects[number];
 
 @Pipe({
   name: 'toLabel'
@@ -61,3 +62,11 @@ export class ToLabelPipe implements PipeTransform {
     return this.imports[type];
   }
 }
+
+
+@NgModule({
+  declarations: [ToLabelPipe],
+  imports: [CommonModule],
+  exports: [ToLabelPipe]
+})
+export class ToLabelModule {}
