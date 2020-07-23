@@ -1,6 +1,6 @@
 import { loadAdminServices } from './admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
-import { File as GFile, Bucket } from '@google-cloud/storage';
+import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
 import { getDocument } from 'apps/backend-functions/src/data/internals'
 import { runChunks } from './tools';
