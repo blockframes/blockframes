@@ -5,11 +5,6 @@ import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-fu
 import { getDocument } from 'apps/backend-functions/src/data/internals'
 import { runChunks } from './tools';
 
-// @TODO (#3175) temp 
-// gsutil -m rsync -r gs://blockframes.appspot.com gs://blockframes-bruce.appspot.com && node dist/apps/backend-ops/main.js restore
-// export ENV=dev && npx ng build backend-ops --configuration=dev
-// still S512yYOhaMlezFIgUnrF
-
 export async function cleanStorage() {
   const { storage } = loadAdminServices();
   const bucket = storage.bucket(getStorageBucketName());
@@ -39,20 +34,15 @@ async function cleanMovieDir(bucket: Bucket) {
   await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "movie/" root
-      const d = await smartDelete(f, files);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
-      const d = await smartDelete(f, files);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else {
       const movieId = f.name.split('/')[1];
       // We check if the file is used before removing it
       const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
-      if (!movie) {
-        const d = await smartDelete(f, files);
-        deleted = deleted + d;
-      }
+      if (!movie && await f.delete()) {deleted++;}
     }
   });
 
@@ -66,19 +56,14 @@ async function cleanMoviesDir(bucket: Bucket) {
   await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "movies/" root
-      const d = await smartDelete(f, files);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
-      const d = await smartDelete(f, files);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else {
       const movieId = f.name.split('/')[1];
       const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
-      if (!movie) {
-        const d = await smartDelete(f, files);
-        deleted = deleted + d;
-      }
+      if (!movie && await f.delete()) {deleted++;}
     }
   });
 
@@ -94,24 +79,18 @@ async function cleanMoviesDir(bucket: Bucket) {
 async function cleanOrgsDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
   let deleted = 0;
-  const pattern = '/logo';
 
   await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2) {
       // Clean files at "orgs/" root
-      const d = await smartDelete(f, files, pattern);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
-      const d = await smartDelete(f, files, pattern);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else {
       const orgId = f.name.split('/')[1];
       const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-      if (!org) {
-        const d = await smartDelete(f, files, pattern);
-        deleted = deleted + d;
-      }
+      if (!org && await f.delete()) {deleted++;}
     }
   });
 
@@ -121,24 +100,18 @@ async function cleanOrgsDir(bucket: Bucket) {
 async function cleanUsersDir(bucket: Bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
   let deleted = 0;
-  const pattern = '/avatar';
 
   await runChunks(files, async (f) => {
     if (f.name.split('/').length === 2 || f.name.split('/').length === 3) {
       // Clean files at "users/" or "user/{$userId}/" root
-      const d = await smartDelete(f, files, pattern);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
-      const d = await smartDelete(f, files, pattern);
-      deleted = deleted + d;
+      if (await f.delete()) {deleted++;}
     } else {
       const userId = f.name.split('/')[1];
       const user = await getDocument<PublicUser>(`users/${userId}`);
-      if (!user) {
-        const d = await smartDelete(f, files, pattern);
-        deleted = deleted + d;
-      }
+      if (!user && await f.delete()) {deleted++;}
     }
   });
 
@@ -157,60 +130,17 @@ async function cleanWatermarkDir(bucket: Bucket) {
   await runChunks(files, async (f) => {
     if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
-      if (await f.delete()) {
-        deleted++;
-      }
+      if (await f.delete()) {deleted++;}
     } else {
       const userId = f.name.split('/')[1].replace('.svg', '');
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!!user) {
-        if (user.watermark.ref === f.name) {
+        if (user.watermark === f.name) {
           console.log('This should not have happened if migration 29 went well..');
-        } else {
-          if (await f.delete()) {
-            deleted++;
-          }
-        }
-      } else {
-        if (await f.delete()) {
-          deleted++;
-        }
-      }
+        } else if (await f.delete()) { deleted++; }
+      } else if (await f.delete()) { deleted++; }
     }
   });
 
   return { deleted, total: files.length };
-}
-
-
-// @TODO (#3175) rework
-async function smartDelete(file: GFile, existingFiles: GFile[], pattern: string = '/promotionalElements.') {
-  if (!file.name.includes(pattern)) {
-    try {
-      await file.delete();
-      return 1;
-    } catch (error) {
-      return 0;
-    }
-  }
-
-  // We try to delete all previous sizes
-  let deleted = 0;
-  const fileParts = file.name.split('/');
-  const ressourcesPath = file.name.replace(`${fileParts[fileParts.length - 2]}/${fileParts[fileParts.length - 1]}`, '');
-
-  for (const size of ['lg', 'md', 'xs', 'fallback', 'original']) {
-    const customeSizePath = `${ressourcesPath}${size}`;
-    if (!existingFiles.some(f => f.name.includes(customeSizePath))) {
-      try {
-        await file.delete();
-        deleted++;
-      } catch (error) {
-        //
-      }
-
-    }
-  }
-
-  return deleted;
 }

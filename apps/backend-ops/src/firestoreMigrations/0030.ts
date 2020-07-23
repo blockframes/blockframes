@@ -6,7 +6,7 @@ import { File as GFile, Bucket } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
 
-const EMPTY_REF: HostedMedia = { ref: '', url: '' };
+const EMPTY_REF: string = '';
 
 export async function upgrade(db: Firestore, storage: Storage) {
 
@@ -161,7 +161,7 @@ const changeResourceDirectory = async (
   media: HostedMedia,
   storage: Storage,
   docId: string
-): Promise<HostedMedia> => {
+): Promise<string> => {
 
   // ### get the old file
   const { url, ref } = media;
@@ -197,10 +197,6 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`orgs/${docId}/logo`)) {
       oldRef = ref;
       newRef = `orgs/${docId}/logo/${ref.split('/').pop()}`;
-    } else {
-      console.log(ref);
-      // @TODO (#3175) is there other cases  ?
-      console.log('@TODO (#3175) is there other cases ?');
     }
 
     const to = bucket.file(newRef);
@@ -213,15 +209,11 @@ const changeResourceDirectory = async (
       await from.copy(to);
       console.log('copy OK');
 
-      const [signedUrl] = await to.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
-
       // delete previous image
       await from.delete();
       console.log('Removed previous');
 
-      media.url = signedUrl;
-      media.ref = newRef;
-      return media;
+      return newRef;
     } else {
       console.log(`Ref ${ref} not found for : ${docId}`);
       return EMPTY_REF;
@@ -245,12 +237,10 @@ async function cleanMovieDir(bucket: Bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // w8 "final" movieDoc
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175) w8 "final" doc structure
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
-    } else if (!!movie && !findImgRefInMovie(movie, f.name)) {
-      if (await f.delete()) { deleted++; }
-    }
+    } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
   });
 
   return { deleted, total: files.length };
@@ -268,12 +258,10 @@ async function cleanMoviesDir(bucket: Bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // w8 "final" movieDoc
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175) w8 "final" doc structure
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
-    } else if (!!movie && !findImgRefInMovie(movie, f.name)) {
-      if (await f.delete()) { deleted++; }
-    }
+    } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
   });
 
   return { deleted, total: files.length };
@@ -290,12 +278,10 @@ async function cleanUsersDir(bucket: Bucket) {
 
   await runChunks(files, async (f) => {
     const userId = f.name.split('/')[1];
-    const user = await getDocument<any>(`users/${userId}`); // w8 "final" movieDoc
+    const user = await getDocument<any>(`users/${userId}`); // @TODO (#3175) w8 "final" doc structure
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
-    } else if (!!user && user.avatar?.ref !== f.name && user.watermark?.ref !== f.name) {
-      if (await f.delete()) { deleted++; }
-    }
+    } else if (!!user && user.avatar !== f.name && user.watermark !== f.name && await f.delete()) { deleted++; }
   });
 
   return { deleted, total: files.length };
@@ -312,12 +298,10 @@ async function cleanOrgsDir(bucket: Bucket) {
 
   await runChunks(files, async (f) => {
     const orgId = f.name.split('/')[1];
-    const org = await getDocument<any>(`orgs/${orgId}`); // w8 "final" movieDoc
+    const org = await getDocument<any>(`orgs/${orgId}`); // @TODO (#3175) w8 "final" doc structure
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
-    } else if (!!org && org.logo?.ref !== f.name) {
-      if (await f.delete()) { deleted++; }
-    }
+    } else if (!!org && org.logo !== f.name && await f.delete()) { deleted++; }
   });
 
   return { deleted, total: files.length };
@@ -343,25 +327,25 @@ function getImgSize(file: GFile) {
   return size;
 }
 
-function findImgRefInMovie(movie: any, ref: string) { // w8 final moviedoc structure
+function findImgRefInMovie(movie: any, ref: string) { // @TODO (#3175) w8 "final" doc structure
 
-  if (movie.main.banner?.ref === ref) {  // This is the "final" ImgRef structure
+  if (movie.main.banner === ref) {
     return true;
   }
 
-  if (movie.main.poster?.ref === ref) {  // This is the "final" ImgRef structure
+  if (movie.main.poster === ref) {
     return true;
   }
 
-  if (Object.values(movie.promotionalElements?.still_photo).some((p: any) => p.ref === ref)) {
+  if (Object.values(movie.promotionalElements?.still_photo).some((p: any) => p === ref)) {
     return true;
   }
 
-  if (movie.promotionalElements.scenario?.ref === ref) {
+  if (movie.promotionalElements.scenario === ref) {
     return true;
   };
 
-  if (movie.promotionalElements.presentation_deck?.ref === ref) {
+  if (movie.promotionalElements.presentation_deck === ref) {
     return true;
   };
 

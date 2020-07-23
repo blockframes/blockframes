@@ -5,7 +5,6 @@ import { User } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
-import { createHostedMedia } from '@blockframes/media/+state/media.model';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
@@ -79,7 +78,7 @@ function cleanNotifications(
 ) {
 
   return runChunks(notifications.docs, async (doc) => {
-    const notification = doc.data() as NotificationDocument;
+    const notification = doc.data() as any; // @TODO (#3175) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
@@ -90,9 +89,9 @@ function cleanNotifications(
       const notificationTimestamp = notification.date.toMillis();
       if (notificationTimestamp < imagesMigrationTimestamp) {
         if (notification.organization) {
-          notification.organization.logo = createHostedMedia();
+          notification.organization.logo = '';
         } else if (notification.user) {
-          notification.user.avatar = createHostedMedia();
+          notification.user.avatar = '';
         }
         await doc.ref.update(notification);
       } else {
@@ -109,7 +108,7 @@ function cleanInvitations(
   events: EventDocument<EventMeta>[],
 ) {
   return runChunks(invitations.docs, async (doc) => {
-    const invitation = doc.data() as InvitationDocument;
+    const invitation = doc.data() as any; // @TODO (#3175) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
@@ -120,16 +119,16 @@ function cleanInvitations(
 
       if (invitationTimestamp < imagesMigrationTimestamp) {
         if (invitation.fromOrg) {
-          invitation.fromOrg.logo = createHostedMedia();
+          invitation.fromOrg.logo = '';
         }
         if (invitation.toOrg) {
-          invitation.toOrg.logo = createHostedMedia();
+          invitation.toOrg.logo = '';
         }
         if (invitation.fromUser) {
-          invitation.fromUser.avatar = createHostedMedia();
+          invitation.fromUser.avatar = '';
         }
         if (invitation.toUser) {
-          invitation.toUser.avatar = createHostedMedia();
+          invitation.toUser.avatar = '';
         }
         await doc.ref.update(invitation);
       } else {
@@ -167,15 +166,18 @@ async function cleanUsers(
         }
 
         let update: any = {};
-        if (!user.avatar?.ref || (user as any).avatar?.original) {
-          update.avatar = createHostedMedia();
+        let updateObj = false;
+        if (!user.avatar || (user as any).avatar?.original) {
+          update.avatar = '';
+          updateObj = true;
         }
 
         if ((user as any).watermark?.urls) {
-          update.watermark = createHostedMedia();
+          update.watermark = '';
+          updateObj = true;
         }
 
-        if (update.avatar || update.watermark) {
+        if (updateObj) {
           await userDoc.ref.update(update);
         }
       }
@@ -212,8 +214,8 @@ function cleanOrganizations(
       await orgDoc.ref.update({ movieIds: validMovieIds });
     }
 
-    if (!logo.ref || (logo as any).original) {
-      await orgDoc.ref.update({ logo: createHostedMedia() });
+    if (!logo || (logo as any).original) {
+      await orgDoc.ref.update({ logo: '' });
     }
 
   });
@@ -244,7 +246,7 @@ function cleanMovies(
       delete movie.distributionRights;
     }
 
-    // @TODO (#3175] clean trailer link & old img ref structuires
+    // @TODO (#3175] clean trailer link & old img ref structuires cf 1eJm06mvagJDNJ2yAlDt
 
     await movieDoc.ref.update(movie);
   });
