@@ -1,13 +1,14 @@
 import { loadAdminServices, Auth } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { User } from '@blockframes/user/+state/user.firestore';
-import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
+import { User, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
+import { getDocument } from 'apps/backend-functions/src/data/internals';
 
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -83,23 +84,25 @@ function cleanNotifications(
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      // Updating ImgRef if notification created before Jun 24 2020 (image migration) 
-      // @dev If the cleaning is made after Jun 24 + imagesMigrationTimestamp, this should have no effects
-      // @dev This should also have no effect if hotfix/1.6.3 have been deployed
-      const notificationTimestamp = notification.date.toMillis();
-      if (notificationTimestamp < imagesMigrationTimestamp) {
-        if (notification.organization) {
-          notification.organization.logo = '';
-        } else if (notification.user) {
-          notification.user.avatar = '';
-        }
-        await doc.ref.update(notification);
-      } else {
-        // @TODO (#3175] use org logo or user avatar
-      }
+      await _cleanNotification(doc, notification);
     }
   });
 
+}
+
+async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175) w8 "final" doc structure
+  if (notification.organization) {
+    const doc = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
+    notification.organization.logo = doc.logo;
+  }
+
+  if (notification.user) {
+    const doc = await getDocument<PublicUser>(`users/${notification.user.uid}`);
+    notification.user.avatar = doc.avatar;
+    notification.user.watermark = doc.watermark;
+  }
+
+  await doc.ref.update(notification);
 }
 
 function cleanInvitations(
@@ -113,29 +116,36 @@ function cleanInvitations(
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      // Clearing ImgRef if invitation created before Jun 24 2020 (image migration) 
-      // @TODO (#3066) mock an invitation created before Jun 24
-      const invitationTimestamp = invitation.date.toMillis();
-
-      if (invitationTimestamp < imagesMigrationTimestamp) {
-        if (invitation.fromOrg) {
-          invitation.fromOrg.logo = '';
-        }
-        if (invitation.toOrg) {
-          invitation.toOrg.logo = '';
-        }
-        if (invitation.fromUser) {
-          invitation.fromUser.avatar = '';
-        }
-        if (invitation.toUser) {
-          invitation.toUser.avatar = '';
-        }
-        await doc.ref.update(invitation);
-      } else {
-        // @TODO (#3175] use org logo or user avatar
-      }
+      await _cleanInvitation(doc, invitation);
     }
   });
+}
+
+async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175) w8 "final" doc structure
+
+  if (invitation.fromOrg?.id) {
+    const doc = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
+    invitation.fromOrg.logo = doc.logo;
+  }
+
+  if (invitation.toOrg?.id) {
+    const doc = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
+    invitation.toOrg.logo = doc.logo;
+  }
+
+  if (invitation.fromUser?.uid) {
+    const doc = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
+    invitation.fromUser.avatar = doc.avatar;
+    invitation.fromUser.watermark = doc.watermark;
+  }
+
+  if (invitation.toUser?.uid) {
+    const doc = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
+    invitation.toUser.avatar = doc.avatar;
+    invitation.toUser.watermark = doc.watermark;
+  }
+
+  await doc.ref.update(invitation);
 }
 
 async function cleanUsers(
@@ -245,48 +255,48 @@ function cleanMovies(
       delete movie.distributionRights;
     }
 
-    if(movie.promotionalElements.presentation_deck?.media){
-      if(movie.promotionalElements.presentation_deck?.media.url) {
+    if (movie.promotionalElements.presentation_deck?.media) {
+      if (movie.promotionalElements.presentation_deck?.media.url) {
         movie.promotionalElements.presentation_deck = movie.promotionalElements.presentation_deck.media.url;
       } else {
         movie.promotionalElements.presentation_deck = '';
       }
     }
 
-    if(movie.promotionalElements.promo_reel_link?.media){
-      if(movie.promotionalElements.promo_reel_link?.media.url) {
+    if (movie.promotionalElements.promo_reel_link?.media) {
+      if (movie.promotionalElements.promo_reel_link?.media.url) {
         movie.promotionalElements.promo_reel_link = movie.promotionalElements.promo_reel_link.media.url;
       } else {
         movie.promotionalElements.promo_reel_link = '';
       }
     }
 
-    if(movie.promotionalElements.scenario?.media){
-      if(movie.promotionalElements.scenario?.media.url) {
+    if (movie.promotionalElements.scenario?.media) {
+      if (movie.promotionalElements.scenario?.media.url) {
         movie.promotionalElements.scenario = movie.promotionalElements.scenario.media.url;
       } else {
         movie.promotionalElements.scenario = '';
       }
     }
- 
-    if(movie.promotionalElements.screener_link?.media){
-      if(movie.promotionalElements.screener_link?.media.url) {
+
+    if (movie.promotionalElements.screener_link?.media) {
+      if (movie.promotionalElements.screener_link?.media.url) {
         movie.promotionalElements.screener_link = movie.promotionalElements.screener_link.media.url;
       } else {
         movie.promotionalElements.screener_link = '';
       }
     }
 
-    if(movie.promotionalElements.teaser_link?.media){
-      if(movie.promotionalElements.teaser_link?.media.url) {
+    if (movie.promotionalElements.teaser_link?.media) {
+      if (movie.promotionalElements.teaser_link?.media.url) {
         movie.promotionalElements.teaser_link = movie.promotionalElements.teaser_link.media.url;
       } else {
         movie.promotionalElements.teaser_link = '';
       }
     }
 
-    if(movie.promotionalElements.trailer_link?.media){
-      if(movie.promotionalElements.trailer_link?.media.url) {
+    if (movie.promotionalElements.trailer_link?.media) {
+      if (movie.promotionalElements.trailer_link?.media.url) {
         movie.promotionalElements.trailer_link = movie.promotionalElements.trailer_link.media.url;
       } else {
         movie.promotionalElements.trailer_link = '';
