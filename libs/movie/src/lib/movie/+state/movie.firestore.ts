@@ -55,6 +55,56 @@ interface MovieRaw<D> {
   hostedVideo?: string;
 }
 
+interface NewMovie<D> {
+  // Every field concerning the document
+  _type: 'movies';
+  _meta?: DocumentMeta;
+  id: string;
+  documents: MovieLegalDocuments;
+
+  // Every field concerning the movie
+  banner: PromotionalImage;
+  boxOffice?: BoxOffice[],
+  cast: Cast[],
+  certifications: CertificationsSlug[],
+  color: ColorsSlug,
+  contentType?: ContentType;
+  crew: Crew[],
+  customGenres?: string[],
+  directors?: Director[], // TODO issue#3179
+  estimatedBudget?: NumberRange,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  genres?: GenresSlug[],
+  hostedVideo?: string;
+  internalRef?: string,
+  keyAssets: string,
+  keywords: string[],
+  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+  logline: string,
+  originalLanguages?: LanguagesSlug[],
+  originalRelease: MovieOriginalReleaseRaw<D>[],
+  originCountries?: TerritoriesSlug[],
+  poster: PromotionalImage;
+  prizes: Prize[],
+  producers: Producer[],
+  rating: MovieRating[],
+  releaseYear?: number,
+  review: MovieReview[],
+  scoring: ScoringSlug,
+  soundFormat?: SoundFormatSlug,
+  stakeholders?: MovieStakeholders,
+  status?: MovieStatusSlug,
+  storeConfig?: StoreConfig;
+  synopsis: string,
+  title: Title,
+  totalBudget?: Price,
+  totalRunTime?: number | string;
+
+  // Only section left
+  promotional: MoviePromotionalElements;
+}
+
 /** Document model of a Movie */
 export interface MovieDocument extends MovieRaw<Timestamp> {
 }
@@ -112,7 +162,6 @@ export interface MovieReview {
   criticName?: string,
   criticQuote?: string,
   journalName?: string,
-  publicationDate?: Date;
   revueLink?: string,
 }
 
@@ -142,13 +191,11 @@ export interface MovieSalesCast {
 }
 
 interface MovieSalesInfoRaw<D> {
-  broadcasterCoproducers: string[],
   certifications: CertificationsSlug[],
   color: ColorsSlug,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   originalRelease: MovieOriginalReleaseRaw<D>[],
-  physicalHVRelease: D,
   rating: MovieRating[],
   scoring: ScoringSlug,
   soundFormat?: SoundFormatSlug,
@@ -275,13 +322,6 @@ export interface BoxOffice {
   unit: UnitBox,
   value: number,
   territory: TerritoriesSlug,
-}
-
-export interface MovieLanguageSpecification {
-  original: boolean;
-  dubbed: boolean;
-  subtitle: boolean;
-  caption: boolean;
 }
 
 export interface MovieLanguageSpecification {
