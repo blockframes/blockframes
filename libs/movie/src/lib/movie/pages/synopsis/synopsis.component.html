@@ -1,68 +1,78 @@
 <tunnel-page>
   <h1 subtitle>Storyline Elements</h1>
-  <section tunnel-form fxLayout="column" fxLayoutGap="24px">
+  <ng-container tunnel-form>
+    <form [formGroup]="form">
 
-    <article fxLayout="column" fxLayoutGap="24px">
-      <h3>Logline</h3>
-      <mat-form-field appearance="outline" fxFlex>
-        <textarea matInput
-          [formControl]="logline"
-          cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
-          placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
-        <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
-      </mat-form-field>
-    </article>
+      <section fxLayout="column" fxLayoutGap="24px">
+        <h3>Logline</h3>
+        <article fxLayout="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
+            <textarea matInput
+              [formControl]="logline"
+              cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
+              placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
+            <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
+          </mat-form-field>
+        </article>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <article fxLayout="column" fxLayoutGap="24px">
-      <h3>Synopsis*</h3>
-      <mat-form-field appearance="outline" fxFlex>
-        <textarea matInput
-          [formControl]="synopsis"
-          cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
-          placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
-        <mat-hint align="start">{{ synopsis.value.length }} / 1000</mat-hint>
-      </mat-form-field>
-    </article>
+      <section  fxLayout="column" fxLayoutGap="24px">
+        <h3>Synopsis*</h3>
+        <article fxLayout="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
+            <textarea matInput
+              [formControl]="synopsis"
+              cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
+              placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
+            <mat-hint align="start">{{ synopsis.value.length }} / 1000</mat-hint>
+          </mat-form-field>
+        </article>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <article fxLayout="column" fxLayoutGap="24px">
-      <h3>Key Assets</h3>
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Key Assets</mat-label>
-        <textarea matInput maxlength="750" cdkTextareaAutosize cdkAutosizeMinRows="5" type="string"
-        placeholder="ex. interesting facts such as the film track, or other trivia"
-        [formControl]="keyAssets">
-        </textarea>
-        <mat-hint align="start">e.g Shipwreck, Iceberg, Forbidden Love</mat-hint>
-      </mat-form-field>
-    </article>
+      <section  fxLayout="column" fxLayoutGap="24px">
+        <h3>Key Assets</h3>
+        <article fxLayout="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Key Assets</mat-label>
+            <textarea matInput maxlength="750" cdkTextareaAutosize cdkAutosizeMinRows="5" type="string"
+            placeholder="ex. interesting facts such as the film track, or other trivia"
+            [formControl]="keyAssets">
+            </textarea>
+            <mat-hint align="start">e.g Shipwreck, Iceberg, Forbidden Love</mat-hint>
+          </mat-form-field>
+        </article>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <article fxLayout="column" fxLayoutGap="24px">
-      <h3>Keywords</h3>
-      <mat-form-field appearance="outline">
-        <mat-label>Keywords</mat-label>
-        <mat-chip-list #chipList>
-          <ng-container *ngFor="let value of values$ | async; let i = index">
-            <mat-chip removable="true" (removed)="remove(i)">
-              <span>{{ value }}</span>
-              <mat-icon matChipRemove svgIcon="close"></mat-icon>
-            </mat-chip>
-          </ng-container>
-        </mat-chip-list>
-        <input matInput
-        [formControl]="keyword"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="add($event)"
-        />
-        <mat-hint>Separate keywords with commas or enter key</mat-hint>
-      </mat-form-field>
-    </article>
+      <section  fxLayout="column" fxLayoutGap="24px">
+        <h3>Keywords</h3>
+        <article fxLayout="column" fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>Keywords</mat-label>
+            <mat-chip-list #chipList>
+              <ng-container *ngFor="let value of values$ | async; let i = index">
+                <mat-chip removable="true" (removed)="remove(i)">
+                  <span>{{ value }}</span>
+                  <mat-icon matChipRemove svgIcon="close"></mat-icon>
+                </mat-chip>
+              </ng-container>
+            </mat-chip-list>
+            <input matInput
+            [formControl]="keyword"
+            [matChipInputFor]="chipList"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            (matChipInputTokenEnd)="add($event)"
+            />
+            <mat-hint>Separate keywords with commas or enter key</mat-hint>
+          </mat-form-field>
+        </article>
+      </section>
 
-  </section>
+    </form>
+  </ng-container>
 </tunnel-page>
