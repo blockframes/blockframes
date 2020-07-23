@@ -47,13 +47,30 @@ export async function cleanDeprecatedData() {
     users.docs.map(user => user.data().uid)
   ]);
 
-  const existingIds = movieIds.concat(organizationIds, eventIds, userIds);
 
   // Compare and update/delete documents with references to non existing documents
   await cleanUsers(users, organizationIds, auth, db);
   console.log('Cleaned users');
   await cleanOrganizations(organizations, userIds, movieIds);
   console.log('Cleaned orgs');
+
+  // Getting all collections we need to reload
+  const [
+    organizations2,
+    users2,
+  ] = await Promise.all([
+    db.collection('orgs').get(),
+    db.collection('users').get(),
+  ]);
+
+  // Reloading users and org list after possible deletion
+  const [organizationIds2, userIds2] = await Promise.all([
+    organizations2.docs.map(organization => organization.data().id),
+    users2.docs.map(user => user.data().uid)
+  ]);
+
+  const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
+
   await cleanPermissions(permissions, organizationIds);
   console.log('Cleaned permissions');
   await cleanMovies(movies);
