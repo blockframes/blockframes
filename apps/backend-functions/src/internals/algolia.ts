@@ -72,43 +72,43 @@ export function storeSearchableMovie(
   }
 
   try {
-    const movieAppAccess = movie.main.storeConfig!.appAccess;
+    const movieAppAccess = movie.storeConfig!.appAccess;
 
     const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
 
       // searchable keys
       title: {
-        international: movie.main.title.international || '',
-        original: movie.main.title.original,
+        international: movie.title.international || '',
+        original: movie.title.original,
       },
-      directors: !!movie.main.directors ?
-        movie.main.directors.map((director) => `${director.firstName} ${director.lastName}`) :
+      directors: !!movie.directors ?
+        movie.directors.map((director) => `${director.firstName} ${director.lastName}`) :
         [],
-      keywords: movie.promotionalDescription.keywords,
+      keywords: !!movie.keywords ? movie.keywords : [],
 
       // facets
-      genres: !!movie.main.genres ? movie.main.genres : [],
-      originCountries: !!movie.main.originCountries ? movie.main.originCountries : [],
+      genres: !!movie.genres ? movie.genres : [],
+      originCountries: !!movie.originCountries ? movie.originCountries : [],
       languages: {
-        original: !!movie.main.originalLanguages ? movie.main.originalLanguages: [],
-        dubbed: !!movie.versionInfo.languages ?
-          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.dubbed) :
+        original: !!movie.originalLanguages ? movie.originalLanguages: [],
+        dubbed: !!movie.languages ?
+          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.dubbed) :
           [],
-        subtitle: !!movie.versionInfo.languages ?
-          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.subtitle) :
+        subtitle: !!movie.languages ?
+          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.subtitle) :
           [],
-        caption: !!movie.versionInfo.languages ?
-          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.caption) :
+        caption: !!movie.languages ?
+          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.caption) :
           [],
       },
-      status: !!movie.main.status ? movie.main.status : '',
-      storeConfig: movie.main.storeConfig?.status || '',
-      budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
+      status: !!movie.status ? movie.status : '',
+      storeConfig: movie.storeConfig?.status || '',
+      budget: movie.totalBudget?.amount || movie.estimatedBudget?.from || 0,
       orgName: organizationName,
-      storeType: movie.main.storeConfig?.storeType || '',
+      storeType: movie.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
-        app.filter(a => movie.main.storeConfig?.appAccess[a]) :
+        app.filter(a => movie.storeConfig?.appAccess[a]) :
         [],
     };
 
