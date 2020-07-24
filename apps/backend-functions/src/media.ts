@@ -7,7 +7,11 @@ import { HostedMedia } from '@blockframes/media/+state/media.firestore';
  * 
  * @param filePath the storage path of the file
  */
-export async function getDocAndPath(filePath: string) {
+export async function getDocAndPath(filePath: string | undefined) {
+
+  if (!filePath) {
+    throw new Error('Upload Error : Undefined File Path');
+  }
 
   const filePathElements = filePath.split('/');
 
@@ -53,10 +57,6 @@ export async function getDocAndPath(filePath: string) {
  */
 export async function linkFile(data: functions.storage.ObjectMetadata) {
 
-  if (!data.name) {
-    throw new Error('Upload Error : Undefined File Path');
-  }
-
   // get the needed values
   const { filePath, doc, fieldToUpdate } = await getDocAndPath(data.name);
 
@@ -92,10 +92,6 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
  * `cannot read property 'url' of undefined` errors
  */
 export async function unlinkFile(data: functions.storage.ObjectMetadata) {
-
-  if (!data.name) {
-    throw new Error('Delete Error : Undefined File Path');
-  }
 
   // get the needed values
   const { doc, docData, fieldToUpdate } = await getDocAndPath(data.name);

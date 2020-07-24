@@ -11,9 +11,7 @@ import readline from 'readline';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
-import { db } from 'apps/backend-functions/src/internals/firebase';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -155,7 +153,11 @@ export async function createUsers(): Promise<any> {
 export async function generateWatermarks() {
 
   // activate maintenance to prevent cloud functions to trigger
-  await startMaintenance();
+  let startedMaintenance: boolean = false;
+  if (!await isInMaintenance()) {
+    startedMaintenance = true;
+    await startMaintenance();
+  }
 
   const users = await getCollection<PublicUser>('users');
 
@@ -164,6 +166,6 @@ export async function generateWatermarks() {
   });
 
   // deactivate maintenance
-  await endMaintenance();
+  if (startedMaintenance) await endMaintenance();
 
 }
