@@ -6,7 +6,10 @@
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import request from 'request';
+import { resolve } from 'path';
 
+import { config } from 'dotenv';
+config();
 export type Auth = admin.auth.Auth;
 export type Firestore = admin.firestore.Firestore;
 export type Storage = admin.storage.Storage;
@@ -27,11 +30,18 @@ export function loadAdminServices(): AdminServices {
   if (!admin.apps.length) {
     admin.initializeApp({
       ...firebase,
-      credential: admin.credential.applicationDefault(),
+      credential: admin.credential.cert(
+        resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
+      )
     });
   }
 
-  return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase, storage: admin.storage() };
+  return {
+    auth: admin.auth(),
+    db: admin.firestore(),
+    firebaseConfig: firebase,
+    storage: admin.storage()
+  };
 }
 
 function getRestoreURL(appURL: string): string {
@@ -45,13 +55,14 @@ function getBackupURL(appURL: string): string {
 /**
  * Trigger a firestore database restore operation for the given project
  */
-export async function restore(appURL: string) {
+export async function restore(appURL: string, anonymize?: boolean) {
   if (process.env['ADMIN_PASSWORD'] === undefined) {
     throw new Error('no ADMIN_PASSWORD in your env, we need this to trigger backups / restores');
   }
 
   const url = getRestoreURL(appURL);
   const form = {
+    anonymize,
     password: process.env['ADMIN_PASSWORD']
   };
 
@@ -61,7 +72,9 @@ export async function restore(appURL: string) {
       if (error) {
         reject(error);
       } else if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(`invalid status code on restore: ${response.statusCode}. Check your firebase functions logs (admin function)`)
+        reject(
+          `invalid status code on restore: ${response.statusCode}. Check your firebase functions logs (admin function)`
+        );
       } else {
         resolve(response);
       }
@@ -93,4 +106,3 @@ export async function backup(appURL: string) {
     });
   });
 }
-

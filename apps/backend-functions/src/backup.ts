@@ -5,6 +5,8 @@ import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
 import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from './maintenance';
+import { cleanUsers, clearOrgs} from '@blockframes/testing/lib/firebase/anon-firestore'
+import type express from 'express';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
@@ -201,7 +203,11 @@ function reEncodeObject(x: any): any {
   }
 }
 
-export const restore = async (req: any, resp: any) => {
+export const restore = async (req: express.Request, resp: express.Response) => {
+
+  const { anonymize } = req.body;
+
+
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
   const files: GFile[] = (await bucket.getFiles())[0];
@@ -249,6 +255,13 @@ export const restore = async (req: any, resp: any) => {
 
   promises.push(readerDone);
   await Promise.all(promises);
+
+  if (anonymize) {
+    // Anon the DB before ending maintenance
+    console.log('DB ANONIMISATION ENABLED')
+    await clearOrgs(db)
+    await cleanUsers(db)
+  }
 
   await endMaintenance();
 

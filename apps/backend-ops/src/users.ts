@@ -3,11 +3,18 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { UserConfig, USERS } from './assets/users.fixture';
+import { UserConfig } from './assets/users.fixture';
+import usersFixture from 'tools/users.fixture.json';
 import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep } from './tools';
 import readline from 'readline';
+
+export let USERS = usersFixture;
+
+export function updateUSERS(data: any[]) {
+  USERS = data;
+}
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -32,7 +39,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map(user => createUserIfItDoesntExists(auth, user));
+  const ps = users.map(user => createUserIfItDoesntExists(auth, user).catch(console.warn));
   return Promise.all(ps);
 }
 
