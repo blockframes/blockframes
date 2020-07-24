@@ -1,5 +1,5 @@
 <mat-toolbar class="flex-container">
-  <bf-img asset="archipel_market.webp"  alt="Archipel Market Logo" class="item-center"></bf-img>
+  <img asset="archipel_market.webp"  alt="Archipel Market Logo" class="item-center">
   <span class="item-right">
     <ng-container *ngIf="!loading else isLoading">
       <a mat-icon-button [routerLink]="routeBeforeTunnel">
@@ -37,7 +37,7 @@
         <ng-container *ngFor="let content of cardContents">
           <mat-card>
             <article fxLayout="column" fxLayoutAlign="center center">
-              <bf-img [asset]="content.img"></bf-img>
+              <img [asset]="content.img">
               <div>
                 <h3>{{ content.title }}</h3>
               </div>
