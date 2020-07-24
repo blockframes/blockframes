@@ -1,8 +1,8 @@
-<form [formGroup]="promotionalElements">
+<form [formGroup]="promotional">
   <!-- OTHER PROMOTIONAL ELEMENTS -->
   <h3> Other Promotional Elements </h3>
-  <div formArrayName="promotionalElements">
-    <ng-container *ngFor="let element of promotionalElements.controls; let i = index">
+  <div formArrayName="promotional">
+    <ng-container *ngFor="let element of promotional.controls; let i = index">
       <div [formGroupName]="i" class="full-width">
         <mat-form-field appearance="outline" class="small-width">
           <mat-label>Label</mat-label>

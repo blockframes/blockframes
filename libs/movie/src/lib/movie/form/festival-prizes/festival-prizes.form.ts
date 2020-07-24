@@ -1,11 +1,11 @@
-import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
+import { Prize } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { yearValidators } from '@blockframes/utils/form/validators';
 
 // TODO #2284
 function createPrizeFormControl(entity?: Partial<Prize>) {
-  const { name, year, prize, logo, premiere } = createPrize(entity);
+  const { name, year, prize, logo, premiere } = entity;
   return {
     name: new FormControl(name),
     year: new FormControl(year, [yearValidators]),
@@ -23,19 +23,19 @@ export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
   }
 }
 
-function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestivalPrizes>) {
-  const entity = createMovieFestivalPrizes(festivalprizes);
+function createMoviePrizesControls(festivalprizes) {
+  const entity = festivalprizes;
   return {
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el))
   }
 }
 
-export type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
+export type MoviePrizesControl = ReturnType<typeof createMoviePrizesControls>
 
-export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
+export class MoviePrizesForm extends FormEntity<MoviePrizesControl>{
 
-  constructor(story?: MovieFestivalPrizes) {
-    super(createMovieFestivalPrizesControls(story));
+  constructor(prizes) {
+    super(createMoviePrizesControls(prizes));
   }
 
   get prizes() {

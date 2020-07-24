@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { MoviePromotionalElementsForm } from './promotional-elements.form';
+import { MoviePromotionalForm } from './promotional-elements.form';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
@@ -15,7 +15,7 @@ export class MovieFormPromotionalElementsComponent {
     this.staticModels = staticModels;
   }
 
-  get promotionalElements(): MoviePromotionalElementsForm {
-    return this.controlContainer.control as MoviePromotionalElementsForm;
+  get promotional(): MoviePromotionalForm {
+    return this.controlContainer.control as MoviePromotionalForm;
   }
 }

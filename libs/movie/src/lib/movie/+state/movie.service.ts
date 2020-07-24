@@ -43,7 +43,7 @@ export class MovieService extends CollectionService<MovieState> {
       _meta: { createdBy },
       ...movieImported
     });
-    movie.main.storeConfig = {
+    movie.storeConfig = {
       ...createStoreConfig(),
       appAccess: createMovieAppAccess({ [appName]: true })
     };
@@ -113,8 +113,8 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.stakeholders) delete movie.stakeholders;
 
     // transform { media: string } into { media: ImgRef }
-    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
-      movie.promotionalElements.promotionalElements.forEach(el => {
+    if (!!movie.promotional) {
+      movie.promotional.forEach(el => {
         if (typeof el.media === typeof 'string') {
           el.media = createImgRef(el.media);
         }
@@ -129,7 +129,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
+    const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
 
     return movies.length ? createMovie(movies[0]) : undefined;
   }
