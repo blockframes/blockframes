@@ -110,8 +110,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     releaseYear: null,
     ...params,
     storeConfig: createStoreConfig(params.storeConfig),
-    banner: createPromotionalImage(params.banner),
-    poster: createPromotionalImage(params.poster),
+    banner: createPromotionalHostedMedia(params.banner),
+    poster: createPromotionalHostedMedia(params.poster),
   };
 }
 
