@@ -2,13 +2,12 @@ import { loadAdminServices } from './admin';
 import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/firebase';
 import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
-import { createHostedMedia } from '@blockframes/media/+state/media.model';
 import { has, get } from 'object-path';
 import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
 
 enum mediaFieldType {
-  hostedMedia,
-  recordOfHostedMedia
+  single,
+  record
 }
 
 // reference to the location of all hosted medias in the db
@@ -16,24 +15,24 @@ const mediaReferences = [
   { 
     collection: 'users',
     fields: [
-      { field: 'watermark', type: mediaFieldType.hostedMedia },
-      { field: 'avatar', type: mediaFieldType.hostedMedia },
+      { field: 'watermark', type: mediaFieldType.single },
+      { field: 'avatar', type: mediaFieldType.single },
     ]
   },
   { 
     collection: 'orgs', 
     fields: [
-      { field: 'logo', type: mediaFieldType.hostedMedia }
+      { field: 'logo', type: mediaFieldType.single }
     ]
   },
   {
     collection: 'movies',
     fields: [
-      { field: 'main.banner.media', type: mediaFieldType.hostedMedia }, // TODO issue #3291
-      { field: 'main.poster.media', type: mediaFieldType.hostedMedia }, // TODO issue #3291
-      { field: 'promotionalElements.still_photo', type: mediaFieldType.recordOfHostedMedia },
-      { field: 'promotionalElements.presentation_deck', type: mediaFieldType.hostedMedia },
-      { field: 'promotionalElements.scenario', type: mediaFieldType.hostedMedia },
+      { field: 'banner', type: mediaFieldType.single },
+      { field: 'poster', type: mediaFieldType.single },
+      { field: 'promotional.still_photo', type: mediaFieldType.record },
+      { field: 'promotional.presentation_deck', type: mediaFieldType.single },
+      { field: 'promotional.scenario', type: mediaFieldType.single },
     ]
   }
 ];
@@ -62,20 +61,19 @@ export async function syncStorage() {
       const docRef = db.collection(ref.collection).doc(docId);
       
       for (const field of ref.fields) {
-
-        let data = {};
+        let data;
 
         switch (field.type) {
-          case mediaFieldType.hostedMedia:
+          case mediaFieldType.single:
             // single media
-            data = createHostedMedia();
+            data = '';
             break;
-          case mediaFieldType.recordOfHostedMedia:
+          case mediaFieldType.record:
             // record of media
             const record = get(doc, field.field);
             for (const key in record) {
-              data[key] = {};
-              data[key].media = createHostedMedia(); // TODO issue #3291
+              data = {};
+              data[key] = '';
             }
             break;
           default:
@@ -108,19 +106,13 @@ export async function syncStorage() {
       }
 
       const currentMediaValue = get(docData, fieldToUpdate);
-      if (!!currentMediaValue.ref) {
+      if (!!currentMediaValue) {
         throw new Error(`Duplicate File: reference is already set by another file.`);
       } 
-      
-      const [ signedUrl ] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2'
-      });
 
       // link the firestore
       // ! this will not work with array in the path like for poster
-      await doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+      await doc.update({[fieldToUpdate]: filePath });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
     }
