@@ -2,37 +2,38 @@ import { loadAdminServices } from './admin';
 import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/firebase';
 import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
-import { createHostedMedia, createImgRef } from '@blockframes/media/+state/media.model';
-import { has } from 'object-path';
+import { createHostedMedia } from '@blockframes/media/+state/media.model';
+import { has, get } from 'object-path';
 import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
 
 enum mediaFieldType {
   hostedMedia,
-  imgRef,
-  recordOfImgRefs
+  recordOfHostedMedia
 }
 
-// reference to the location of all medias in the db
+// reference to the location of all hosted medias in the db
 const mediaReferences = [
   { 
     collection: 'users',
     fields: [
       { field: 'watermark', type: mediaFieldType.hostedMedia },
-      { field: 'avatar', type: mediaFieldType.imgRef },
+      { field: 'avatar', type: mediaFieldType.hostedMedia },
     ]
   },
   { 
     collection: 'orgs', 
     fields: [
-      { field: 'logo', type: mediaFieldType.imgRef }
+      { field: 'logo', type: mediaFieldType.hostedMedia }
     ]
   },
   {
     collection: 'movies',
     fields: [
-      { field: 'main.banner.media', type: mediaFieldType.imgRef }, // TODO issue #3291
-      { field: 'main.poster.media', type: mediaFieldType.imgRef }, // TODO issue #3291
-      { field: 'promotionalElements.still_photo', type: mediaFieldType.recordOfImgRefs }
+      { field: 'main.banner.media', type: mediaFieldType.hostedMedia }, // TODO issue #3291
+      { field: 'main.poster.media', type: mediaFieldType.hostedMedia }, // TODO issue #3291
+      { field: 'promotionalElements.still_photo', type: mediaFieldType.recordOfHostedMedia },
+      { field: 'promotionalElements.presentation_deck', type: mediaFieldType.hostedMedia },
+      { field: 'promotionalElements.scenario', type: mediaFieldType.hostedMedia },
     ]
   }
 ];
@@ -42,7 +43,7 @@ const mediaReferences = [
  */
 export async function syncStorage() {
 
-  let startedMaintenance: boolean = false;
+  let startedMaintenance = false;
   if (!await isInMaintenance()) {
     startedMaintenance = true;
     await startMaintenance();
@@ -61,20 +62,21 @@ export async function syncStorage() {
       const docRef = db.collection(ref.collection).doc(docId);
       
       for (const field of ref.fields) {
-        let data; 
+
+        let data = {};
 
         switch (field.type) {
           case mediaFieldType.hostedMedia:
-            // media field without different sizes
+            // single media
             data = createHostedMedia();
             break;
-          case mediaFieldType.imgRef:
-            // media field with different sizes
-            data = createImgRef();
-            break;
-          case mediaFieldType.recordOfImgRefs:
-            // media field with multiple medias
-            data = {};
+          case mediaFieldType.recordOfHostedMedia:
+            // record of media
+            const record = get(doc, field.field);
+            for (const key in record) {
+              data[key] = {};
+              data[key].media = createHostedMedia(); // TODO issue #3291
+            }
             break;
           default:
             throw new Error('Unknown field type for media reference');
@@ -86,7 +88,7 @@ export async function syncStorage() {
     }
 
     await Promise.all(unlinkPromises);
-  
+
   }
 
   console.log('//////////////');
@@ -97,39 +99,19 @@ export async function syncStorage() {
   const bucket = storage.bucket(getStorageBucketName());
   const [files] = await bucket.getFiles();
 
-  const linkPromises = files.map(async file => {
+  for (const file of files) {
     try {
       const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(file.name);
 
       if (!has(docData, fieldToUpdate)) {
-
-        // OPTION 1
-        // exclude records of imgRefs from not finding a record because it will never exist.
-        const records = []
-        mediaReferences.forEach(ref => {
-          ref.fields.forEach(field => {
-            if (field.type === mediaFieldType.recordOfImgRefs) {
-              records.push(field.field);
-            }
-          })
-        })
-
-        if (!records.some(record => file.name.includes(record))) { 
-          throw new Error(`Lost File: no media field available in db`);
-        }
-
-        // OPTION 2
-        // Empty the references in the record; delete the empty ones at the end of the script?
-        // If we dont delete the empty references, its ugly in the front-end.
-        
-        // OPTION 3
-        // Check whether the path to the records exists but delete all the references in it.
-        // If the path to the records doesnt exist, then it is a lost file
-        // If it does exist, then the files can be added to the record
-        // e.g. Only check if promotionalElements.still_photo exists, but not check if promotionalElements.still_photo.0.media exists.
-
+        throw new Error(`Lost File: no media field available in db`);
       }
 
+      const currentMediaValue = get(docData, fieldToUpdate);
+      if (!!currentMediaValue.ref) {
+        throw new Error(`Duplicate File: reference is already set by another file.`);
+      } 
+      
       const [ signedUrl ] = await file.getSignedUrl({
         action: 'read',
         expires: '01-01-3000',
@@ -138,13 +120,11 @@ export async function syncStorage() {
 
       // link the firestore
       // ! this will not work with array in the path like for poster
-      return doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+      await doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
     }
-  });
-
-  await Promise.all(linkPromises);
+  }
 
   if (startedMaintenance) await endMaintenance();
 
