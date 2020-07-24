@@ -9,11 +9,17 @@ import {
   DocumentMeta,
   PromotionalExternalMedia,
   PromotionalHostedMedia,
+  MovieStakeholders,
+  MovieLanguageSpecification,
+  LanguageRecord
 } from './movie.firestore';
 import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
+import { createPrice } from '@blockframes/utils/common-interfaces';
+import { createRange } from '@blockframes/utils/common-interfaces/range';
+import { LanguagesSlug } from '@blockframes/utils/static-model';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -34,12 +40,13 @@ export interface SyncMovieAnalyticsOptions {
   filterBy: (movie: Movie) => boolean
 }
 
-/** A factory function that creates Movie with only required fields */
+/** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
+    // Mandatory fields
     contentType: 'feature_film',
     directors: [],
     genres: [],
@@ -47,10 +54,40 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     originCountries: [],
     releaseYear: null,
     synopsis: '',
+    // Optionnal fields
+    boxOffice: [],
+    cast: [],
+    certifications: [],
+    color: null,
+    crew: [],
+    customGenres: [],
+    format: null,
+    formatQuality: null,
+    hostedVideo: '',
+    internalRef: '',
+    keyAssets: '',
+    keywords: [],
+    logline: '',
+    originalRelease: [],
+    prizes: [],
+    producers: [],
+    productionStatus: null,
+    rating: [],
+    review: [],
+    scoring: null,
+    soundFormat: '',
+    totalRunTime: null,
+
     ...params,
+    banner: createPromotionalHostedMedia(params.banner),
+    estimatedBudget: createRange<number>(params.estimatedBudget),
+    languages: createLanguageKey(params.languages ? params.languages : {}),
+    poster: createPromotionalHostedMedia(params.poster),
     promotional: createMoviePromotional(params.promotional),
+    stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
+    totalBudget: createPrice(params.totalBudget),
   };
 }
 
@@ -110,6 +147,26 @@ export function createPromotionalHostedMedia(
   };
 }
 
+export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
+  const languageSpecifications = {}
+  for (const language in languages) {
+    languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
+  }
+  return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
+}
+
+export function createMovieLanguageSpecification(
+  params: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    caption: false,
+    ...params
+  };
+}
+
 export function createTitle(title: Partial<Title> = {}): Title {
   return {
     original: '',
@@ -125,6 +182,20 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
     ...params,
     appAccess: createMovieAppAccess(params.appAccess)
   };
+}
+
+export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
+  return {
+    executiveProducer: [],
+    coProducer: [],
+    broadcasterCoproducer: [],
+    lineProducer: [],
+    distributor: [],
+    salesAgent: [],
+    laboratory: [],
+    financier: [],
+    ...stakeholders
+  }
 }
 
 export function createMovieLegalDocuments(

@@ -69,7 +69,7 @@ function updateOrgs(db: Firestore, orgs: Organization[]) {
   }
 }
 
-async function updateMovies(db: Firestore, movies: Movie[]) {
+async function updateMovies(db: Firestore, movies) {
   const externalMediaLinks = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link'];
   const hostedMediaLinks = ['presentation_deck', 'scenario'];
   const legacyKeysExternalMedia = ['originalFileName', 'originalRef', 'ref'];

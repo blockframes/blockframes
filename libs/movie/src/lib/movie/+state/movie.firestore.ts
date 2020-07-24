@@ -69,13 +69,13 @@ interface MovieRaw<D> {
   poster?: PromotionalHostedMedia;
   prizes?: Prize[],
   producers?: Producer[],
+  productionStatus?: MovieStatusSlug,
   rating?: MovieRating[],
   releaseYear: number, //! required
   review?: MovieReview[],
   scoring?: ScoringSlug,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
-  status?: MovieStatusSlug,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
