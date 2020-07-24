@@ -8,7 +8,6 @@ import {
   MovieLegalDocuments,
   DocumentMeta,
   PromotionalExternalMedia,
-  PromotionalImage,
   PromotionalHostedMedia,
 } from './movie.firestore';
 import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
@@ -59,9 +58,9 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
 
-  const newStills: Record<string, PromotionalImage> = {};
+  const newStills: Record<string, PromotionalHostedMedia> = {};
   for (const key in params.still_photo) {
-    newStills[key] = createPromotionalImage(params.still_photo[key]);
+    newStills[key] = createPromotionalHostedMedia(params.still_photo[key]);
   }
 
   const elements: MoviePromotionalElements = {
@@ -108,17 +107,6 @@ export function createPromotionalHostedMedia(
     ...promotionalElement,
     ...promotionalHostedMedia,
     media: createHostedMedia(promotionalHostedMedia.media),
-  };
-}
-
-export function createPromotionalImage(
-  promotionalImage: Partial<PromotionalImage> = {}
-): PromotionalImage {
-  const promotionalElement = createPromotionalElement(promotionalImage);
-  return {
-    ...promotionalImage,
-    ...promotionalElement,
-    media: createHostedMedia(promotionalImage.media),
   };
 }
 

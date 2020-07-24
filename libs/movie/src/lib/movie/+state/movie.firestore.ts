@@ -41,7 +41,7 @@ interface MovieRaw<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  banner?: PromotionalImage;
+  banner?: PromotionalHostedMedia;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
   certifications?: CertificationsSlug[],
@@ -66,7 +66,7 @@ interface MovieRaw<D> {
   originalLanguages: LanguagesSlug[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
   originCountries: TerritoriesSlug[], //! required
-  poster?: PromotionalImage;
+  poster?: PromotionalHostedMedia;
   prizes?: Prize[],
   producers?: Producer[],
   rating?: MovieRating[],
@@ -106,7 +106,7 @@ export interface MoviePromotionalElements {
   promo_reel_link: PromotionalExternalMedia,
   scenario: PromotionalHostedMedia,
   screener_link: PromotionalExternalMedia,
-  still_photo: Record<string, PromotionalImage>,
+  still_photo: Record<string, PromotionalHostedMedia>,
   teaser_link: PromotionalExternalMedia,
   trailer_link: PromotionalExternalMedia,
 }
@@ -202,12 +202,6 @@ export interface PromotionalExternalMedia extends PromotionalElement {
 }
 
 export interface PromotionalHostedMedia extends PromotionalElement {
-  media: HostedMedia,
-}
-
-export interface PromotionalImage extends PromotionalElement {
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
   media: HostedMedia,
 }
 
