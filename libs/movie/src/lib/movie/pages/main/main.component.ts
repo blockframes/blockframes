@@ -33,6 +33,6 @@ export class MovieFormMainComponent {
   }
 
   get directors() {
-    return this.main.get('directors');
+    return this.form.get('directors');
   }
 }

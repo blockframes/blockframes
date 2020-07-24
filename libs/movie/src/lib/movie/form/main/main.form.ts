@@ -89,12 +89,12 @@ type StakeholderMapControl = {
 // TITLE
 
 export class TitleForm extends FormEntity<TitleFormControl> {
-  constructor(title?: Movie['main']['title']) {
+  constructor(title?: Movie['title']) {
     super(createTitleFormControl(title));
   }
 }
 
-function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
+function createTitleFormControl(title?: Partial<Movie['title']>) {
   const { original, international } = createTitle(title);
   return {
     original: new FormControl(original),
@@ -107,12 +107,12 @@ type TitleFormControl = ReturnType<typeof createTitleFormControl>;
 // STORE CONFIG
 
 export class StoreConfigForm extends FormEntity<StoreConfigControl> {
-  constructor(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+  constructor(storeConfig?: Partial<Movie['storeConfig']>) {
     super(createStoreConfigFormControl(storeConfig));
   }
 }
 
-function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+function createStoreConfigFormControl(storeConfig?: Partial<Movie['storeConfig']>) {
   const { appAccess, status, storeType } = createStoreConfig(storeConfig);
   return {
     appAccess: new AppAccessForm(appAccess),
@@ -126,12 +126,12 @@ type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
 // APP ACCESS
 
 export class AppAccessForm extends FormEntity<AppAccessControl> {
-  constructor(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+  constructor(appAccess?: Partial<Movie['storeConfig']['appAccess']>) {
     super(createAppAccessFormControl(appAccess));
   }
 }
 
-function createAppAccessFormControl(appAccess?: Partial<Movie['main']['storeConfig']['appAccess']>) {
+function createAppAccessFormControl(appAccess?: Partial<Movie['storeConfig']['appAccess']>) {
   const { catalog, festival } = createMovieAppAccess(appAccess);
   return {
     catalog: new FormControl(catalog),
@@ -142,7 +142,7 @@ function createAppAccessFormControl(appAccess?: Partial<Movie['main']['storeConf
 type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
-  const entity = createMovieMain(main);
+  const entity = main;
   return {
     internalRef: new FormControl(entity.internalRef),
     title: new TitleForm(entity.title),
@@ -168,40 +168,8 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     super(createMovieMainControls(main));
   }
 
-  public get genres() {
-    return this.get('genres');
-  }
-
-  public get customGenres() {
-    return this.get('customGenres');
-  }
-
-  get originCountries() {
-    return this.get('originCountries');
-  }
-
-  get originalLanguages() {
-    return this.get('originalLanguages');
-  }
-
-  get storeConfig() {
-    return this.get('storeConfig');
-  }
-
-  get title() {
-    return this.get('title');
-  }
-
   get directors() {
     return this.get('directors');
-  }
-
-  get banner() {
-    return this.get('banner');
-  }
-
-  get poster() {
-    return this.get('poster');
   }
 
   public addDirector(credit?: Partial<Credit>): void {
