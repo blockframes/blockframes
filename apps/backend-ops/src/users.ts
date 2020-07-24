@@ -153,7 +153,7 @@ export async function createUsers(): Promise<any> {
 export async function generateWatermarks() {
 
   // activate maintenance to prevent cloud functions to trigger
-  let startedMaintenance: boolean = false;
+  let startedMaintenance = false;
   if (!await isInMaintenance()) {
     startedMaintenance = true;
     await startMaintenance();
