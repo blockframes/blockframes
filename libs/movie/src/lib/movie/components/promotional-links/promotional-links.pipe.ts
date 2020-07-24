@@ -10,7 +10,7 @@ import { ExternalMedia } from '@blockframes/media/+state/media.model';
 export class PromotionalLinksPipe implements PipeTransform {
   transform(links: string[], movie: Movie) {
     return links.map(link => {
-      const { url } = (movie.promotionalElements[link].media as ExternalMedia);
+      const { url } = (movie.promotional[link].media as ExternalMedia);
       if (!!url) {
         const shouldDownload = ['scenario', 'presentation_deck'].includes(link);
         const linkLabel = getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link);

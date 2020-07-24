@@ -1,23 +1,12 @@
 import { FormArray, FormControl } from '@angular/forms';
-import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
-import { MoviePromotionalDescriptionForm } from './promotional-description/promotional-description.form';
-import { MovieStoryForm } from './story/story.form';
-import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
 import { Movie, createMovie, createMovieLegalDocuments } from '../+state';
-import { MovieSalesInfoForm } from './sales-info/sales-info.form';
-import { MovieVersionInfoForm } from './version-info/version-info.form';
-import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
-import { MovieReviewForm } from './review/review.form';
-import { MovieBudgetForm } from './budget/budget.form';
-import { MovieProductionForm } from './production.form';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MovieTechnicalInfoForm } from './techincal-info.form';
 
@@ -60,19 +49,7 @@ export class MovieLegalDocumentsForm extends FormEntity<MovieLegalDocumentsContr
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
   return {
-    main: new MovieMainForm(entity.main),
-    production: new MovieProductionForm(entity.production),
-    promotionalElements: new MoviePromotionalElementsForm(entity.promotionalElements),
-    promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
-    story: new MovieStoryForm(entity.story),
-    salesCast: new MovieSalesCastForm(entity.salesCast),
-    salesInfo: new MovieSalesInfoForm(entity.salesInfo),
-    versionInfo: new FormEntity({
-      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, createLanguageControl)
-    }),
-    festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
-    budget: new MovieBudgetForm(entity.budget),
-    movieReview: FormList.factory(entity.movieReview, review => new MovieReviewForm(review)),
+    promotional: new MoviePromotionalElementsForm(entity.promotional),
     documents: new MovieLegalDocumentsForm(entity.documents),
     technicalInformation: new MovieTechnicalInfoForm(entity.salesInfo)
   }
@@ -105,49 +82,5 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
         abstractControl.clear();
       }
     });
-  }
-
-  get main() {
-    return this.get('main');
-  }
-
-  get festivalPrizes() {
-    return this.get('festivalPrizes');
-  }
-
-  get salesCast() {
-    return this.get('salesCast');
-  }
-
-  get salesInfo() {
-    return this.get('salesInfo');
-  }
-
-  get promotionalDescription() {
-    return this.get('promotionalDescription');
-  }
-
-  get story() {
-    return this.get('story');
-  }
-
-  get movieReview() {
-    return this.get('movieReview');
-  }
-
-  get budget() {
-    return this.get('budget');
-  }
-
-  get versionInfo() {
-    return this.get('versionInfo');
-  }
-
-  get promotionalElements() {
-    return this.get('promotionalElements');
-  }
-
-  get production() {
-    return this.get('production');
   }
 }

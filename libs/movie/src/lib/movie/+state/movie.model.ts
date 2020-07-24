@@ -46,11 +46,11 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     originalLanguages: [],
     originCountries: [],
     releaseYear: null,
-    storeConfig: createStoreConfig(),
     synopsis: '',
-    title: createTitle(),
     ...params,
     promotional: createMoviePromotional(params.promotional),
+    storeConfig: createStoreConfig(params.storeConfig),
+    title: createTitle(params.title),
   };
 }
 
