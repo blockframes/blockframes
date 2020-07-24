@@ -187,22 +187,6 @@ async function cleanUsers(
           delete user.orgId;
           await userDoc.ref.update(user);
         }
-
-        const update: any = {};
-        let updateObj = false;
-        if (!user.avatar || (user as any).avatar?.original) {
-          update.avatar = '';
-          updateObj = true;
-        }
-
-        if ((user as any).watermark?.urls) {
-          update.watermark = '';
-          updateObj = true;
-        }
-
-        if (updateObj) {
-          await userDoc.ref.update(update);
-        }
       }
     } else {
       // User does not exists on auth, should be deleted.
@@ -238,7 +222,7 @@ function cleanOrganizations(
       await orgDoc.ref.set(org);
     }
 
-    const { userIds, movieIds, logo } = org as OrganizationDocument;
+    const { userIds, movieIds } = org as OrganizationDocument;
 
     const validUserIds = userIds.filter(userId => existingUserIds.includes(userId));
     if (validUserIds.length !== userIds.length) {
@@ -248,10 +232,6 @@ function cleanOrganizations(
     const validMovieIds = movieIds.filter(movieId => existingMovieIds.includes(movieId));
     if (validMovieIds.length !== movieIds.length) {
       await orgDoc.ref.update({ movieIds: validMovieIds });
-    }
-
-    if (!logo || (logo as any).original) {
-      await orgDoc.ref.update({ logo: '' });
     }
 
   });
@@ -274,59 +254,11 @@ function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data() as any;
+    const movie = movieDoc.data() as any; // @TODO (#3175) W8 final doc structure
 
     // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
     if (movie.distributionRights) {
       delete movie.distributionRights;
-    }
-
-    if (movie.promotionalElements.presentation_deck?.media) {
-      if (movie.promotionalElements.presentation_deck?.media.url) {
-        movie.promotionalElements.presentation_deck = movie.promotionalElements.presentation_deck.media.ref;
-      } else {
-        movie.promotionalElements.presentation_deck = '';
-      }
-    }
-
-    if (movie.promotionalElements.promo_reel_link?.media) {
-      if (movie.promotionalElements.promo_reel_link?.media.url) {
-        movie.promotionalElements.promo_reel_link = movie.promotionalElements.promo_reel_link.media.url;
-      } else {
-        movie.promotionalElements.promo_reel_link = '';
-      }
-    }
-
-    if (movie.promotionalElements.scenario?.media) {
-      if (movie.promotionalElements.scenario?.media.url) {
-        movie.promotionalElements.scenario = movie.promotionalElements.scenario.media.ref;
-      } else {
-        movie.promotionalElements.scenario = '';
-      }
-    }
-
-    if (movie.promotionalElements.screener_link?.media) {
-      if (movie.promotionalElements.screener_link?.media.url) {
-        movie.promotionalElements.screener_link = movie.promotionalElements.screener_link.media.url;
-      } else {
-        movie.promotionalElements.screener_link = '';
-      }
-    }
-
-    if (movie.promotionalElements.teaser_link?.media) {
-      if (movie.promotionalElements.teaser_link?.media.url) {
-        movie.promotionalElements.teaser_link = movie.promotionalElements.teaser_link.media.url;
-      } else {
-        movie.promotionalElements.teaser_link = '';
-      }
-    }
-
-    if (movie.promotionalElements.trailer_link?.media) {
-      if (movie.promotionalElements.trailer_link?.media.url) {
-        movie.promotionalElements.trailer_link = movie.promotionalElements.trailer_link.media.url;
-      } else {
-        movie.promotionalElements.trailer_link = '';
-      }
     }
 
     await movieDoc.ref.update(movie);

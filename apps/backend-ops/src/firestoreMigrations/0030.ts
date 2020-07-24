@@ -82,7 +82,12 @@ async function updateUsers(
     if (user.avatar?.original?.ref) {
       const avatar = user.avatar?.original;
       user.avatar = await changeResourceDirectory(avatar, storage, user.uid);
+    } else {
+      user.avatar = '';
     }
+
+    user.watermark = '';
+
     await doc.ref.set(user);
   });
 
@@ -104,6 +109,8 @@ async function updateOrgs(
     if (org.logo?.original?.ref) {
       const logo = org.logo?.original;
       org.logo = await changeResourceDirectory(logo, storage, org.id);
+    } else {
+      org.logo = '';
     }
     await doc.ref.set(org);
   });
@@ -126,11 +133,15 @@ async function updateMovies(
     if (movie.main.banner?.media?.original?.ref) {
       const banner = movie.main.banner;
       movie.main.banner = await changeResourceDirectory(banner.media.original, storage, movie.id);
+    } else {
+      movie.main.banner = '';
     }
 
     if (movie.main.poster?.media?.original?.ref) {
       const poster = movie.main.poster;
       movie.main.poster = await changeResourceDirectory(poster.media.original, storage, movie.id);
+    } else {
+      movie.main.poster = '';
     }
 
     if (!!movie.promotionalElements.still_photo) {
@@ -138,6 +149,8 @@ async function updateMovies(
         const still = movie.promotionalElements.still_photo[stillKey];
         movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media.original, storage, movie.id);
       }
+    } else {
+      movie.promotionalElements.still_photo = {};
     }
 
     const keys = ['presentation_deck', 'scenario'];
@@ -146,6 +159,40 @@ async function updateMovies(
       if (!!movie.promotionalElements[key]) {
         const value: PromotionalHostedMedia = movie.promotionalElements[key];
         movie.promotionalElements[key] = await changeResourceDirectory(value.media, storage, movie.id);
+      } else {
+        movie.promotionalElements[key] = '';
+      }
+    }
+
+    if (movie.promotionalElements.promo_reel_link?.media) {
+      if (movie.promotionalElements.promo_reel_link?.media.url) {
+        movie.promotionalElements.promo_reel_link = movie.promotionalElements.promo_reel_link.media.url;
+      } else {
+        movie.promotionalElements.promo_reel_link = '';
+      }
+    }
+
+    if (movie.promotionalElements.screener_link?.media) {
+      if (movie.promotionalElements.screener_link?.media.url) {
+        movie.promotionalElements.screener_link = movie.promotionalElements.screener_link.media.url;
+      } else {
+        movie.promotionalElements.screener_link = '';
+      }
+    }
+
+    if (movie.promotionalElements.teaser_link?.media) {
+      if (movie.promotionalElements.teaser_link?.media.url) {
+        movie.promotionalElements.teaser_link = movie.promotionalElements.teaser_link.media.url;
+      } else {
+        movie.promotionalElements.teaser_link = '';
+      }
+    }
+
+    if (movie.promotionalElements.trailer_link?.media) {
+      if (movie.promotionalElements.trailer_link?.media.url) {
+        movie.promotionalElements.trailer_link = movie.promotionalElements.trailer_link.media.url;
+      } else {
+        movie.promotionalElements.trailer_link = '';
       }
     }
 
@@ -172,29 +219,27 @@ const changeResourceDirectory = async (
     let oldRef = '';
     if (url.includes(`movie%2F${docId}%2FPresentationDeck`)) {
       oldRef = `movie/${docId}/PresentationDeck/${fileName}`; // we don't have ref for pdf medias so we recreate it
-      newRef = `movies/${docId}/promotionalElements.presentation_deck/${fileName}`;
+      newRef = `movies/${docId}/promotional.presentation_deck/${fileName}`;
     } else if (url.includes(`movie%2F${docId}%2FScenario`)) {
       oldRef = `movie/${docId}/Scenario/${fileName}`; // we don't have ref for pdf medias so we recreate it
-      newRef = `movies/${docId}/promotionalElements.scenario/${fileName}`;
+      newRef = `movies/${docId}/promotional.scenario/${fileName}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
       oldRef = ref;
-      newRef = `movies/${docId}/main.banner/${ref.split('/').pop()}`;
+      newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
     } else if (url.includes(`movies%2F${docId}%2FpromotionalElements.presentation_deck.media`)) {
       oldRef = `movies/${docId}/promotionalElements.presentation_deck.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
-      newRef = `movies/${docId}/promotionalElements.presentation_deck/${fileName}`;
-      console.log(newRef);
+      newRef = `movies/${docId}/promotional.presentation_deck/${fileName}`;
     } else if (url.includes(`movies%2F${docId}%2FpromotionalElements.scenario.media`)) {
       oldRef = `movies/${docId}/promotionalElements.scenario.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
-      newRef = `movies/${docId}/promotionalElements.scenario/${fileName}`;
-      console.log(newRef);
+      newRef = `movies/${docId}/promotional.scenario/${fileName}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.poster`)) {
       oldRef = ref;
-      newRef = `movies/${docId}/main.poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
+      newRef = `movies/${docId}/poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
       oldRef = ref;
       const regex = /(\.|\[)(?<value>[0-9]{1})\]?\./gi;
       const [_, __, index] = regex.exec(ref);
-      newRef = `movies/${docId}/promotionalElements.still_photo/${index}/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
+      newRef = `movies/${docId}/promotional.still_photo/${index}/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`users/${docId}/avatar`)) {
       oldRef = ref;
       newRef = `users/${docId}/avatar/${ref.split('/').pop()}`;
@@ -202,22 +247,22 @@ const changeResourceDirectory = async (
       oldRef = ref;
       newRef = `orgs/${docId}/logo/${ref.split('/').pop()}`;
     }
-    
-    if(newRef){
+
+    if (newRef) {
       const to = bucket.file(newRef);
       const from = bucket.file(oldRef);
-  
+
       const [exists] = await from.exists();
-  
+
       if (exists) {
         console.log(`copying ${oldRef} to ${newRef}`);
         await from.copy(to);
         console.log('copy OK');
-  
+
         // delete previous image
         await from.delete();
         console.log('Removed previous');
-  
+
         return newRef;
       } else {
         console.log(`Ref ${ref} not found for : ${docId}`);
