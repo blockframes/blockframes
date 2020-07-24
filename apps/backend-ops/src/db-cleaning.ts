@@ -9,6 +9,7 @@ import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
 const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -16,6 +17,7 @@ const dayInMillis = 1000 * 60 * 60 * 24;
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
+  await startMaintenance();
   const { db, auth } = loadAdminServices();
 
   // Getting all collections we need to check
@@ -82,6 +84,7 @@ export async function cleanDeprecatedData() {
   await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
+  await endMaintenance();
   return true;
 }
 

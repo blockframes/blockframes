@@ -5,10 +5,12 @@ import { HostedMedia } from '@blockframes/media/+state/media.model';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
 const EMPTY_REF = '';
 
 export async function upgrade(db: Firestore, storage: Storage) {
+  await startMaintenance();
 
   console.log('//////////////');
   console.log('// [DB] Processing Users');
@@ -64,6 +66,8 @@ export async function upgrade(db: Firestore, storage: Storage) {
 
   const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
   console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
+
+  await endMaintenance();
 }
 
 /**

@@ -4,8 +4,10 @@ import { File as GFile } from '@google-cloud/storage';
 import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
 import { getDocument } from 'apps/backend-functions/src/data/internals'
 import { runChunks } from './tools';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
 export async function cleanStorage() {
+  await startMaintenance();
   const { storage } = loadAdminServices();
   const bucket = storage.bucket(getStorageBucketName());
 
@@ -19,6 +21,7 @@ export async function cleanStorage() {
   console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "users" directory.`);
   const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
   console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "watermark" directory.`);
+  await endMaintenance();
 }
 
 /**
