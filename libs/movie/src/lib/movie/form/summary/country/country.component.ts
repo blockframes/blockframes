@@ -19,4 +19,4 @@ export class MovieSummaryCountryComponent implements OnInit {
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
-} 
+}

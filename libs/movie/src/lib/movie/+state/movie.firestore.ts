@@ -11,8 +11,6 @@ import {
   FormatQualitySlug,
   FormatSlug,
   GenresSlug,
-  ResourceSizesSlug,
-  ResourceRatioSlug
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
