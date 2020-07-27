@@ -20,21 +20,27 @@ const tunnelRoutes: Routes = [
         path: 'main',
         loadChildren: () => import('@blockframes/movie/pages/main/main.module').then(m => m.MovieFormMainModule)
       },
+      // Page 3
       {
         path: 'synopsis',
         loadChildren: () => import('@blockframes/movie/pages/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
       },
       // Page 4
       {
+        path: 'production',
+        loadChildren: () => import('@blockframes/movie/pages/production/production.module').then(m => m.MovieFormProductionModule)
+      },
+      // Page 5
+      {
         path: 'credits',
         loadChildren: () => import('@blockframes/movie/pages/credits/credits.module').then(m => m.CreditsModule)
       },
-      // Page 5
+      // Page 6
       {
         path: 'budget',
         loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
       },
-      // Page 6
+      // Page 7
       {
         path: 'technical-info',
         loadChildren: () =>
