@@ -19,4 +19,12 @@ export class MovieFormTechnicalInfoComponent {
     get quality() {
         return this.form.get('technicalInformation').get('quality');
     }
+
+    get color() {
+        return this.form.get('technicalInformation').get('color');
+    }
+
+    get format() {
+        return this.form.get('technicalInformation').get('format');
+    }
 }
