@@ -9,4 +9,7 @@
       </ng-template>
     </mat-option>
   </mat-select>
+  <mat-hint *ngIf="hintText" [align]="hintAlign">
+    {{ hintText }}
+  </mat-hint>
 </mat-form-field>

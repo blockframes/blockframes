@@ -6,12 +6,12 @@
       <article *ngFor="let control of cast.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Producer's Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required />
+            <mat-label>First Name</mat-label>
+            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required placeholder="eg: Cast Member’s First Name" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Producer's Lastname</mat-label>
+            <mat-label>Last Name</mat-label>
             <input test-id="first-name" matInput [formControl]="control.get('lastName')" required />
           </mat-form-field>
         </div>
@@ -48,6 +48,68 @@
           <mat-icon svgIcon="add"></mat-icon>
         </button>
         <span class="mat-caption">Remove a Cast Member</span>
+      </footer>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section id="crew-member">
+      <h3>Crew Member</h3>
+      <article *ngFor="let control of crew.controls; let i = index; let last = last">
+        <div fxLayout fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>First Name</mat-label>
+            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required placeholder="eg: Crew Member’s First Name" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Last Name</mat-label>
+            <input test-id="first-name" matInput [formControl]="control.get('lastName')" required />
+          </mat-form-field>
+        </div>
+
+        <div fxLayout fxLayoutGap="24px">
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Status</mat-label>
+            <mat-select matInput [formControl]="control.get('status')">
+              <mat-option *ngFor="let status of castStatus" [value]="status.slug">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+            <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
+          </mat-form-field>
+
+          <static-select [control]="control.get('role')"
+            scope="CREW_ROLES"
+            label="Role"
+            hintText="Please specify crew member's role in your project (director of photography, score composer, writer...)"
+            hintAlign="start"
+            fxFlex></static-select>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput [formControl]="control.get('description')"></textarea>
+          <mat-hint>Additional information about the crew member.</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Filmography</mat-label>
+          <textarea matInput [formControl]="control.get('filmography')"></textarea>
+        </mat-form-field>
+
+        <footer fxLayout="column" fxLayoutAlign="center center">
+          <button mat-mini-fab color="warn" (click)="crew.removeAt(i)" aria-label="Add a Crew Member">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+          <span class="mat-caption">Add a Crew Member</span>
+        </footer>
+      </article>
+      <footer fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="crew.add()" aria-label="Remove a Crew Member">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+        <span class="mat-caption">Remove a Crew Member</span>
       </footer>
     </section>
 
