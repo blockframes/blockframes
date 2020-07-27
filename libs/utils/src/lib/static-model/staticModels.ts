@@ -218,6 +218,16 @@ const models = {
       'label': 'Completed'
     }
   ] as const,
+  'CAST_STATUS': [
+    {
+      'slug': 'notconfirmed',
+      'label': 'Not Confirmed'
+    },
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    }
+  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },
