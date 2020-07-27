@@ -80,6 +80,7 @@ export async function syncStorage() {
             throw new Error('Unknown field type for media reference');
         }
 
+        // ! this will not work with array in the path
         const promise = docRef.update({[field.field]: data});
         unlinkPromises.push(promise);
       }
@@ -102,16 +103,16 @@ export async function syncStorage() {
       const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(file.name);
 
       if (!has(docData, fieldToUpdate)) {
-        throw new Error(`Lost File: no media field available in db`);
+        throw new Error(`Lost File: no media field available in db. Applies to file ${file.name}`);
       }
 
       const currentMediaValue = get(docData, fieldToUpdate);
       if (!!currentMediaValue) {
-        throw new Error(`Duplicate File: reference is already set by another file.`);
+        throw new Error(`Duplicate File: reference is already set by another file. Applies to file ${file.name}`);
       } 
 
       // link the firestore
-      // ! this will not work with array in the path like for poster
+      // ! this will not work with array in the path
       await doc.update({[fieldToUpdate]: filePath });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
