@@ -44,4 +44,8 @@ export class MediaImageComponent {
       .push(new MoviePromotionalHostedMediaForm());
   }
 
+  trackByFn(index) {
+    return index;
+  }
+
 }
