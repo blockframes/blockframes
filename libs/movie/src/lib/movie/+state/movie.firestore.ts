@@ -301,7 +301,7 @@ export interface MovieRating {
 }
 
 export interface MovieMain {
-  banner: PromotionalImage;
+  banner: PromotionalHostedMedia ;
   contentType?: ContentType;
   customGenres?: string[],
   directors?: Director[], // TODO issue#3179
@@ -309,7 +309,7 @@ export interface MovieMain {
   internalRef?: string,
   originCountries?: TerritoriesSlug[],
   originalLanguages?: LanguagesSlug[],
-  poster: PromotionalImage;
+  poster: PromotionalHostedMedia ;
   releaseYear?: number,
   status?: MovieStatusSlug,
   storeConfig?: StoreConfig;
