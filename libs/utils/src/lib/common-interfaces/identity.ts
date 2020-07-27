@@ -123,6 +123,8 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     lastName: '',
     role: '',
     filmography: '',
+    description: '',
+    status: '',
     avatar: createHostedMedia(),
     ...params
   } as T;

@@ -15,11 +15,14 @@ function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>) {
 export type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
 function createCreditControls(credit?: Partial<Credit>) {
-  const { firstName, lastName, role } = createCredit(credit);
+  const { firstName, lastName, role, description, filmography, status } = createCredit(credit);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
     role: new FormControl(role),
+    description: new FormControl(description),
+    filmography: new FormControl(filmography),
+    status: new FormControl(status),
   }
 }
 

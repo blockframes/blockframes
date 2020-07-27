@@ -32,8 +32,8 @@ const tunnelRoutes: Routes = [
       },
       // Page 5
       {
-        path: 'credits',
-        loadChildren: () => import('@blockframes/movie/pages/credits/credits.module').then(m => m.CreditsModule)
+        path: 'artistic',
+        loadChildren: () => import('@blockframes/movie/pages/artistic/artistic.module').then(m => m.MovieFormArtisticModule)
       },
       // Page 6
       {
