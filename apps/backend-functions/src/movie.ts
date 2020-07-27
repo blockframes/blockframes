@@ -71,8 +71,8 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const isMovieSubmitted = isSubmitted(before.main.storeConfig, after.main.storeConfig);
-  const isMovieAccepted = isAccepted(before.main.storeConfig, after.main.storeConfig);
+  const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
+  const isMovieAccepted = isAccepted(before.storeConfig, after.storeConfig);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -113,16 +113,16 @@ export async function onMovieUpdate(
 
 
   // REMOVING EMPTY STILL_PHOTOs
-  const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
-    .some(key => !after.promotionalElements.still_photo[key].media.ref);
+  const hasEmptyStills = Object.keys(after.promotional.still_photo)
+    .some(key => !after.promotional.still_photo[key].media.ref);
 
   // if we found at least one empty still_photo, we update with only the none empty ones
   if (hasEmptyStills) {
     const notEmptyStills: Record<string, PromotionalHostedMedia> = {};
 
-    Object.keys(after.promotionalElements.still_photo)
-      .filter(key => !!after.promotionalElements.still_photo[key].media.ref)
-      .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+    Object.keys(after.promotional.still_photo)
+      .filter(key => !!after.promotional.still_photo[key].media.ref)
+      .forEach(key => notEmptyStills[key] = after.promotional.still_photo[key]);
 
     change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
   }

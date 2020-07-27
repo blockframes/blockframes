@@ -102,7 +102,7 @@ export function storeSearchableMovie(
           Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.caption) :
           [],
       },
-      status: !!movie.status ? movie.status : '',
+      status: !!movie.productionStatus ? movie.productionStatus : '',
       storeConfig: movie.storeConfig?.status || '',
       budget: movie.totalBudget?.amount || movie.estimatedBudget?.from || 0,
       orgName: organizationName,
