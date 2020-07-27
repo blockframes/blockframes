@@ -23,6 +23,9 @@ const steps: TunnelStep[] = [{
     path: 'synopsis',
     label: 'Storyline Elements'
   }, {
+    path: 'production',
+    label: 'Production Information'
+  }, {
     path: 'credits',
     label: 'Credits'
   }, {
