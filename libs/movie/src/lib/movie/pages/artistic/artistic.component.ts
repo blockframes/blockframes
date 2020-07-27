@@ -14,13 +14,15 @@ export class MovieFormArtisticComponent {
 
   constructor(private shell: MovieFormShellComponent) {}
 
+  get crew() {
+    return this.salesCast.get('crew');
+  }
+
   get cast() {
-    console.log('controles', this.salesCast.get('cast').controls);
     return this.salesCast.get('cast');
   }
 
   get salesCast() {
-    console.log('controls', this.form.get('salesCast').controls);
     return this.form.get('salesCast');
   }
 
