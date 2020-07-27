@@ -1,61 +1,70 @@
 <tunnel-page>
-  <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Storyline Elements</h1>
-  <section tunnel-form>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Synopsis</mat-card-title>
-      </mat-card-header>
-      <!-- TODO##1416 stoyline component -->
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Storyline</mat-label>
-          <textarea matInput [formControl]="synopsis" cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="1000" type="string"></textarea>
-          <mat-hint align="end">{{ synopsis.value.length }} / 1000</mat-hint>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Key Assets</mat-card-title>
-      </mat-card-header>
-      <!-- TODO#1478 Sync Data and UI  -->
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Key Assets</mat-label>
-          <textarea matInput maxlength="750" cdkTextareaAutosize cdkAutosizeMinRows="5" type="string"
-          placeholder="ex. interesting facts such as the film track, or other trivia"
-          [formControl]="keyAssets">
-          </textarea>
-          <mat-hint align="end">{{ keyAssets.value.length }} / 750</mat-hint>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Keywords</mat-card-title>
-      </mat-card-header>
-      <!-- TODO#1478 Sync Data and UI  -->
-      <mat-card-content>
-        <mat-form-field appearance="outline">
-          <mat-label>Keywords</mat-label>
-          <mat-chip-list #chipList>
-            <ng-container *ngFor="let value of values$ | async; let i = index">
-              <mat-chip removable="true" (removed)="remove(i)">
-                <span>{{ value }}</span>
-                <mat-icon matChipRemove svgIcon="close"></mat-icon>
-              </mat-chip>
-            </ng-container>
-          </mat-chip-list>
-          <input matInput
-          [formControl]="keyword"
-          [matChipInputFor]="chipList"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="add($event)"
-          />
-          <mat-hint>Separate keywords with commas or enter key</mat-hint>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-  </section>
+  <ng-container tunnel-form>
+    <section>
+      <h3>Logline</h3>
+      <mat-form-field appearance="outline">
+        <textarea matInput
+          [formControl]="logline"
+          cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
+          placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
+        <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section>
+      <h3>Synopsis*</h3>
+      <mat-form-field appearance="outline">
+        <textarea matInput
+          [formControl]="synopsis"
+          cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
+          placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic." required></textarea>
+        <mat-hint align="start">{{ synopsis.value.length }} / 1000</mat-hint>
+        <mat-error *ngIf="synopsis.hasError('required')">
+          Please fill in your project synopsis.
+        </mat-error>
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section>
+      <h3>Key Assets</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Key Assets</mat-label>
+        <textarea matInput maxlength="750" cdkTextareaAutosize cdkAutosizeMinRows="5" type="string"
+        placeholder="e.g. Titanic is one of the most awarded films and biggest box-office successes of all time, starring young award-winning Kate Winslet and Leonardo DiCaprio, with an original soundtrack from Céline Dion."
+        [formControl]="keyAssets">
+        </textarea>
+        <mat-hint align="start">Highlight your film's main selling point(s).</mat-hint>
+      </mat-form-field>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <section>
+      <h3>Keywords</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Keywords</mat-label>
+        <mat-chip-list #chipList>
+          <ng-container *ngFor="let value of values$ | async; let i = index">
+            <mat-chip removable="true" (removed)="remove(i)">
+              <span>{{ value }}</span>
+              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+            </mat-chip>
+          </ng-container>
+        </mat-chip-list>
+        <input matInput
+        [formControl]="keyword"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="add($event)"
+        placeholder="e.g. Ship, Shipwreck, Disaster, Iceberg, Young Love, Forbidden Love, Social Class"
+        />
+        <mat-hint>Use commas or press Enter key to separate keywords.</mat-hint>
+      </mat-form-field>
+    </section>
+  </ng-container>
 </tunnel-page>
