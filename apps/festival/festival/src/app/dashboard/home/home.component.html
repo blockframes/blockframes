@@ -31,10 +31,20 @@
         <img asset="add_title.webp" alt="Add title image">
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
-      <mat-card fxLayout="column" >
+      <mat-card fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">
         <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>
   </section>
 </ng-template>
+
+
+<bf-form-list [form]="list.controls.boxOffice">
+  <ng-template itemRef let-test>{{test.value }}</ng-template>
+  <ng-template formView let-cool>
+    <div [formGroup]="cool">
+      <input formControlName="value">
+    </div>
+  </ng-template>
+</bf-form-list>

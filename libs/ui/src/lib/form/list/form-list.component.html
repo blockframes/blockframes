@@ -30,9 +30,12 @@
 
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<ng-container *ngIf="showSave">
+<ng-container>
   <button mat-stroked-button color="primary" (click)="save()">
     <mat-icon svgIcon="floppy"></mat-icon>
     <span>Save</span>
   </button>
 </ng-container> 
+
+
+<button (click)="addThat()">add</button>

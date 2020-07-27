@@ -19,7 +19,8 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { FormListModule} from '@blockframes/ui/form/list/form-list.module';
 @NgModule({
   declarations: [HomeComponent],
   imports: [
@@ -27,6 +28,8 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     FlexLayoutModule,
     MovieAnalyticsChartModule,
     ImageReferenceModule,
+    FormListModule,
+    ReactiveFormsModule,
 
     // Material
     MatButtonModule,

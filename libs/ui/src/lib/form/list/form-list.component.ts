@@ -39,6 +39,7 @@ export class FormListComponent<T> implements OnInit {
   list$: Observable<any[]>;
   showSave: boolean;
   formItem: FormEntity<EntityControl<T>, T>;
+  activeIndex: number;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -60,6 +61,7 @@ export class FormListComponent<T> implements OnInit {
 
   // Edit existing form, we don't want save button as content is updated in real time
   edit(index: number) {
+    this.activeIndex = index
     this.formItem = this.form.at(index);
     this.showSave = false;
     this.cdr.markForCheck();
@@ -75,8 +77,20 @@ export class FormListComponent<T> implements OnInit {
 
   // Push the form into the list
   save() {
-    this.form.push(this.formItem);
-    this.showSave = false;
+    console.log(this.form.length)
+    if(this.form.length) {
+/* 
+      this.form.at(this.activeIndex).setValue(this.formItem.value) */
+      /*    this.form.push(this.formItem); */
+      this.showSave = false;
+    } else {
+      this.form.push(this.formItem);
+    }
     this.cdr.markForCheck();
+  }
+
+  addThat() {
+    this.form.add()
+    this.formItem = this.formItem = this.form.at(this.form.length -1);
   }
 } 
