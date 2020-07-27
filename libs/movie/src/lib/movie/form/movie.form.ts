@@ -9,7 +9,7 @@ import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MovieTechnicalInfoForm } from './techincal-info.form';
-import { TitleForm, DirectorForm, StoreConfigForm } from './main/main.form';
+import { TitleForm, DirectorForm, StoreConfigForm, StakeholderMapForm } from './main/main.form';
 import { yearValidators } from '@blockframes/utils/form/validators/validators';
 import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { BoxOfficeForm } from './budget/budget.form';
@@ -66,41 +66,42 @@ function createMovieControls(movie: Partial<Movie>) {
 
     // Root data
     banner: new MoviePromotionalHostedMediaForm(entity.banner),
+    boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
+    cast: FormList.factory(entity.cast, el => new CreditForm(el)),
+    certifications: new FormControl(entity.certifications),
+    color: new FormControl(entity.color),
     contentType: new FormControl(entity.contentType),
+    crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    genres: new FormStaticArray(entity.genres, 'GENRES'),
-    internalRef: new FormControl(entity.internalRef),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
-    poster: new MoviePromotionalHostedMediaForm(entity.poster),
-    releaseYear: new FormControl(entity.releaseYear, [yearValidators]),
-    productionStatus: new FormControl(entity.productionStatus),
-    storeConfig: new StoreConfigForm(entity.storeConfig),
-    title: new TitleForm(entity.title),
-    totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
-    totalBudget: new PriceForm(entity.totalBudget),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
-    boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
-    prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
-    keywords: FormList.factory(entity.keywords),
-    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
-    review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
-    producers: FormList.factory(entity.producers, el => new CreditForm(el)),
-    cast: FormList.factory(entity.cast, el => new CreditForm(el)),
-    crew: FormList.factory(entity.crew, el => new CreditForm(el)),
-    scoring: new FormControl(entity.scoring),
-    color: new FormControl(entity.color),
-    rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
-    certifications: new FormControl(entity.certifications),
-    originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    soundFormat: new FormControl(entity.soundFormat),
-    logline:  new FormControl(entity.logline, [Validators.maxLength(180)]),
-    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
+    genres: new FormStaticArray(entity.genres, 'GENRES'),
+    internalRef: new FormControl(entity.internalRef),
+    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
+    keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
+    logline:  new FormControl(entity.logline, [Validators.maxLength(180)]),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
+    originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
+    poster: new MoviePromotionalHostedMediaForm(entity.poster),
+    prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    producers: FormList.factory(entity.producers, el => new CreditForm(el)),
+    productionStatus: new FormControl(entity.productionStatus),
+    rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
+    releaseYear: new FormControl(entity.releaseYear, [yearValidators]),
+    review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
+    scoring: new FormControl(entity.scoring),
+    soundFormat: new FormControl(entity.soundFormat),
+    stakeholders: new StakeholderMapForm(entity.stakeholders),
+    storeConfig: new StoreConfigForm(entity.storeConfig),
+    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
+    title: new TitleForm(entity.title),
+    totalBudget: new PriceForm(entity.totalBudget),
+    totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
   }
 }
 
