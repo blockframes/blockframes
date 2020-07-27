@@ -38,3 +38,12 @@
     </article>
   </section>
 </ng-template>
+
+<bf-form-list [form]="list.controls.boxOffice">
+  <ng-template itemRef let-test>{{test.value }}</ng-template>
+  <ng-template formView let-cool>
+    <div [formGroup]="cool">
+      <input formControlName="value">
+    </div>
+  </ng-template>
+</bf-form-list> 

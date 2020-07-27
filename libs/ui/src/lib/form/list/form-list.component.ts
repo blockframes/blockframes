@@ -12,7 +12,7 @@ import {
 
 // RxJs
 import { Observable } from 'rxjs';
-import { startWith, distinctUntilChanged } from 'rxjs/operators';
+import { startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
@@ -39,6 +39,8 @@ export class FormListComponent<T> implements OnInit {
   list$: Observable<any[]>;
   showSave: boolean;
   formItem: FormEntity<EntityControl<T>, T>;
+  showForm: boolean;
+  activeIndex: number;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -48,7 +50,9 @@ export class FormListComponent<T> implements OnInit {
       distinctUntilChanged())
 
     if (!this.form.length) {
-      this.add()
+      this.add();
+      this.showForm = true
+      this.showSave = true
     }
   }
 
@@ -60,8 +64,10 @@ export class FormListComponent<T> implements OnInit {
 
   // Edit existing form, we don't want save button as content is updated in real time
   edit(index: number) {
+    this.activeIndex = index
     this.formItem = this.form.at(index);
-    this.showSave = false;
+    this.showSave = true;
+    this.showForm = true;
     this.cdr.markForCheck();
   }
 
@@ -70,13 +76,31 @@ export class FormListComponent<T> implements OnInit {
     this.form.removeAt(index);
     if (!this.form.length) {
       this.add()
+      this.showSave = true;
+      this.showForm = true;
     }
   }
 
   // Push the form into the list
   save() {
-    this.form.push(this.formItem);
+    console.log(this.form.length)
+    if (this.form.length) {
+      /* 
+            this.form.at(this.activeIndex).setValue(this.formItem.value) */
+      /*    this.form.push(this.formItem); */
+
+    } else {
+      this.form.push(this.formItem);
+    }
+    this.showForm = false;
     this.showSave = false;
     this.cdr.markForCheck();
+  }
+
+  addThat() {
+    this.form.add()
+    this.formItem = this.formItem = this.form.at(this.form.length - 1);
+    this.showSave = true;
+    this.showForm = true;
   }
 } 
