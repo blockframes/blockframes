@@ -1,7 +1,8 @@
-import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils/form/forms';
+import { Prize } from '../../+state';
+import { FormEntity } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { yearValidators } from '@blockframes/utils/form/validators';
+import { createHostedMedia } from '@blockframes/media/+state/media.model';
 
 // TODO #2284
 function createPrizeFormControl(entity?: Partial<Prize>) {
@@ -23,44 +24,12 @@ export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
   }
 }
 
-function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestivalPrizes>) {
-  const entity = createMovieFestivalPrizes(festivalprizes);
+export function createPrize(prize: Partial<Prize> = {}): Prize {
   return {
-    prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el))
-  }
-}
-
-export type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
-
-export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
-
-  constructor(story?: MovieFestivalPrizes) {
-    super(createMovieFestivalPrizesControls(story));
-  }
-
-  get prizes() {
-    return this.get('prizes');
-  }
-
-  public getPrize(i: number) {
-    return this.prizes.controls[i];
-  }
-
-  public addPrize(): void {
-    const credit = new MoviePrizeForm();
-    this.prizes.push(credit);
-  }
-
-  public removePrize(i: number): void {
-    this.prizes.removeAt(i);
-  }
-
-  public setImage(image: string, index: number): void {
-    this.prizes.controls[index].get('logo').setValue(image);
-  }
-
-  public removeImage(index: number): void {
-    this.prizes.controls[index].get('logo').setValue('');
-  }
-
+    name: '',
+    year: null,
+    prize: '',
+    logo: createHostedMedia(),
+    ...prize
+  };
 }

@@ -1,4 +1,4 @@
-import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
+import { Credit, Movie, MovieStakeholders, createTitle, createStoreConfig, createMovieStakeholders } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
@@ -141,7 +141,7 @@ function createAppAccessFormControl(appAccess?: Partial<Movie['storeConfig']['ap
 
 type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 
-function createMovieMainControls(main : Partial<MovieMain> = {}) {
+function createMovieMainControls(main : Partial<Movie> = {}) {
   const entity = main;
   return {
     internalRef: new FormControl(entity.internalRef),
@@ -151,7 +151,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     genres: new FormStaticArray(entity.genres, 'GENRES'),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
-    status: new FormControl(entity.status),
+    productionStatus: new FormControl(entity.productionStatus),
     totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
     contentType: new FormControl(entity.contentType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
@@ -164,7 +164,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
 export type MovieMainControl = ReturnType<typeof createMovieMainControls>
 
 export class MovieMainForm extends FormEntity<MovieMainControl>{
-  constructor(main: MovieMain) {
+  constructor(main: Movie) {
     super(createMovieMainControls(main));
   }
 
