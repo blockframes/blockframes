@@ -16,6 +16,8 @@ export class StaticSelectComponent {
   }
   @Input() control: FormStaticValue<Scope>;
   @Input() label?: string;
+  @Input() hintText?: string;
+  @Input() hintAlign: string;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 }
