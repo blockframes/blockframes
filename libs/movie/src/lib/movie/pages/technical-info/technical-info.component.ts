@@ -12,15 +12,11 @@ export class MovieFormTechnicalInfoComponent {
 
     constructor(private shell: MovieFormShellComponent) { }
 
-    get movieSalesInfo() {
-        return this.form.get('salesInfo');
+    get soundFormat() {
+        return this.form.get('technicalInformation').get('sound');
     }
 
-    get movieVersionInfo() {
-        return this.form.get('versionInfo').get('languages');
-    }
-
-    get movieOriginalLanguages() {
-        return this.form.get('main').get('originalLanguages');
+    get quality() {
+        return this.form.get('technicalInformation').get('quality');
     }
 }

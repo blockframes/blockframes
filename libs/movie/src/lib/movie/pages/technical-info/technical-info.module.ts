@@ -1,6 +1,6 @@
-import { MovieFormFormatModule } from '@blockframes/movie/form/sales-info/format/format.module';
-import { MovieFormVersionInfoModule } from '@blockframes/movie/form/version-info/version-info.module';
+// Blockframes
 import { MovieFormTechnicalInfoComponent } from './technical-info.component';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 // Angular
@@ -9,8 +9,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-// Materials
-import { MatCardModule } from '@angular/material/card';
+// Material
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [MovieFormTechnicalInfoComponent],
@@ -18,11 +19,11 @@ import { MatCardModule } from '@angular/material/card';
     ReactiveFormsModule,
     TunnelPageModule,
     FlexLayoutModule,
-    MovieFormFormatModule,
-    MovieFormVersionInfoModule,
+    StaticSelectModule,
 
     // Material
-    MatCardModule,
+    MatFormFieldModule,
+    MatSelectModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: MovieFormTechnicalInfoComponent }]),

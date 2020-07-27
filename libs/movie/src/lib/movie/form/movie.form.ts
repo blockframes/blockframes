@@ -19,6 +19,7 @@ import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { MovieTechnicalInfoForm } from './techincal-info.form';
 
 // LEGAL DOCUMENTS
 
@@ -73,6 +74,7 @@ function createMovieControls(movie: Partial<Movie>) {
     budget: new MovieBudgetForm(entity.budget),
     movieReview: FormList.factory(entity.movieReview, review => new MovieReviewForm(review)),
     documents: new MovieLegalDocumentsForm(entity.documents),
+    technicalInformation: new MovieTechnicalInfoForm(entity.salesInfo)
   }
 }
 

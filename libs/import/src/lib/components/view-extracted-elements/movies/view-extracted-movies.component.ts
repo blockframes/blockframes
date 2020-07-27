@@ -145,7 +145,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         const movie = {
           main: createMovieMain(),
           promotionalDescription: createMoviePromotionalDescription(),
-          promotionalElements: createMoviePromotionalElements({}, false),
+          promotionalElements: createMoviePromotionalElements({}),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
           versionInfo: { languages: {} }, // TODO issue #1596
