@@ -29,19 +29,11 @@ export class MovieFormProductionComponent {
   }
 
   get producers() {
-    return this.salesCast.get('producers');
+    return this.form.get('producers');
   }
 
   get stakeholders() {
-    return this.production.get('stakeholders');
-  }
-
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
-
-  get production() {
-    return this.form.get('production');
+    return this.form.get('stakeholders');
   }
 
 }

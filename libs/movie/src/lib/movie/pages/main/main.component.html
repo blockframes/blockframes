@@ -29,7 +29,7 @@
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Content Type</mat-label>
-          <mat-select test-id="content-type" [formControl]="main.get('contentType')">
+          <mat-select test-id="content-type" [formControl]="contentType">
             <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
               {{ type.value }}
             </mat-option>
@@ -37,7 +37,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Reference</mat-label>
-          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="main.get('internalRef')" />
+          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="form.get('internalRef')" />
           <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
         </mat-form-field>
       </article>
@@ -53,7 +53,7 @@
         <drop-cropper
           [storagePath]="movieId | ref: 'movie' : 'banner'"
           ratio="banner"
-          [form]="main.banner.get('media')">
+          [form]="banner">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -66,7 +66,7 @@
         <drop-cropper
             [storagePath]="movieId | ref: 'movie' : 'poster'"
             ratio="poster"
-            [form]="main.poster.get('media')">
+            [form]="poster">
             <h3 type>Poster*</h3>
             <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -81,30 +81,30 @@
       <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
-          <input matInput [formControl]="main.get('releaseYear')" required type="number" placeholder="YYYY"/>
+          <input matInput [formControl]="form.get('releaseYear')" required type="number" placeholder="YYYY"/>
           <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
-          <mat-error *ngIf="main.hasError('required', 'releaseYear')">
+          <mat-error *ngIf="form.hasError('required', 'releaseYear')">
             Release Year is required.
           </mat-error>
         </mat-form-field>
 
-        <static-select scope="RELEASE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" fxFlex></static-select>
+        <static-select scope="RELEASE_STATUS" [control]="form.get('status')" label="Estimated/Confirmed" fxFlex></static-select>
       </article>
 
-      <chips-autocomplete [form]="main.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
+      <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES" placeholder="Country"></chips-autocomplete>
 
-      <chips-autocomplete [form]="main.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
+      <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
 
-      <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
+      <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select>
+        <static-select scope="SCREENING_STATUS" [control]="form.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="main.get('totalRunTime')" name="runningTime"/>
+          <input matInput type="number" min="0" [formControl]="form.get('totalRunTime')" name="runningTime"/>
           <mat-hint>In minutes</mat-hint>
-          <mat-error *ngIf="main.hasError('min', 'totalRunTime')">
+          <mat-error *ngIf="form.hasError('min', 'totalRunTime')">
             Only positive values are accepted.
           </mat-error>
         </mat-form-field>

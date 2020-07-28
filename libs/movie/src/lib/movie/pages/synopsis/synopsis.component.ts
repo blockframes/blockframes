@@ -25,7 +25,7 @@ export class MovieFormSynopsisComponent implements OnInit {
   }
 
   get logline() {
-    return this.form.get('story').get('logline');
+    return this.form.get('logline');
   }
 
   get synopsis() {
