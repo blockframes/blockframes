@@ -1,6 +1,19 @@
-.test {
-  hr {
+.line-button {
+  display: flex;
+  align-items: center;
+
+  span {
+    white-space: nowrap;
+    margin-right: 16px;
+  }
+
+  #line {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-right: 16px;
+  }
+
+  mat-divider {
     width: 100%;
   }
-  display: flex;
 }

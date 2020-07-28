@@ -16,6 +16,7 @@
         </button>
       </mat-list-item>
     </mat-list>
+    <span class="mat-caption">Changes are going to be saved automatically</span>
   </ng-container>
 </ng-container>
 
@@ -28,17 +29,13 @@
 <!-- VIEW -->
 <!---------->
 
-<ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }" *ngIf="showForm">
+<ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<ng-container *ngIf="showSave">
-  <button mat-stroked-button color="primary" (click)="save()">
-    <mat-icon svgIcon="floppy"></mat-icon>
-    <span>Save</span>
+
+<div class="line-button">
+  <mat-divider id="line"></mat-divider>
+  <span>{{ buttonText }}</span>
+  <button mat-mini-fab color="primary" (click)="addControl()">
+    <mat-icon svgIcon="add"></mat-icon>
   </button>
-</ng-container>
-
-
-<div class="test">
-  <hr>
-  <button (click)="addThat()">Save Director</button>
 </div>

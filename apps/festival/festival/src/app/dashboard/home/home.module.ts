@@ -22,6 +22,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormListModule} from '@blockframes/ui/form/list/form-list.module';
+import { FormTableModule } from '@blockframes/ui/form/table/form-table.module'
 
 @NgModule({
   declarations: [HomeComponent],
@@ -31,6 +32,7 @@ import { FormListModule} from '@blockframes/ui/form/list/form-list.module';
     MovieAnalyticsChartModule,
     ImageReferenceModule,
     FormListModule,
+    FormTableModule,
     ReactiveFormsModule,
 
     // Material

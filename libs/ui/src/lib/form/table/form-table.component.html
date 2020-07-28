@@ -32,9 +32,10 @@
   </table>
 </div>
 <ng-container *ngIf="showPaginator$ | async">
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons (page)="updateIndex($event)">
   </mat-paginator>
 </ng-container>
+<span class="mat-caption">Changes are going to be saved automatically</span>
 ​
 <!-- Fallback if no template is provided for a column -->
 <ng-template #text let-content>{{content | json}}</ng-template>
@@ -45,9 +46,11 @@
 ​
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<ng-container *ngIf="showSave">
-  <button mat-stroked-button color="primary" (click)="save()">
-    <mat-icon svgIcon="floppy"></mat-icon>
-    <span>Save</span>
+
+<div class="line-button">
+  <mat-divider id="line"></mat-divider>
+  <span>{{ buttonText }}</span>
+  <button mat-mini-fab color="primary" (click)="addControl()">
+    <mat-icon svgIcon="add"></mat-icon>
   </button>
-</ng-container>
+</div>

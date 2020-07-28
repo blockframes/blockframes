@@ -9,6 +9,7 @@ import { FormListComponent, ItemRefDirective, FormViewDirective } from './form-l
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
     // Material
     MatListModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDividerModule
   ],
   exports: [FormListComponent, FormViewDirective, ItemRefDirective],
   declarations: [FormListComponent, FormViewDirective, ItemRefDirective],
