@@ -10,8 +10,6 @@ import {
   PARTICIPANT_1_NAME,
   PARTICIPANT_2_NAME,
   ORG_NAME,
-  PARTICIPANT_1_NOTIFICATION_NAME,
-  PARTICIPANT_2_NOTIFICATION_NAME,
   USER_2
 } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
@@ -54,7 +52,9 @@ describe('User invites other users to his private screening', () => {
     p2.acceptInvitationScreening();
     // Wait for post request to finish
     // TODO: verify UI has changed instead of wait
-    cy.wait(2000);
+    cy.wait(5000);
+    // TODO: remove the reload after that issue#3379 is fixed
+    cy.reload();
 
     // Assets video runs
     p2.openMoreMenu();
@@ -85,8 +85,8 @@ describe('User invites other users to his private screening', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()
-    p2.verifyNotification(PARTICIPANT_1_NOTIFICATION_NAME, true);
-    p2.verifyNotification(PARTICIPANT_2_NOTIFICATION_NAME, false);
+    p2.verifyNotification(PARTICIPANT_1_NAME, true);
+    p2.verifyNotification(PARTICIPANT_2_NAME, false);
   });
 
   it('Pamela logs in, go on event page, asserts she can\'t access to the video and force the url', () => {
