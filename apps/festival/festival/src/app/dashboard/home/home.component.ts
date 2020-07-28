@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
