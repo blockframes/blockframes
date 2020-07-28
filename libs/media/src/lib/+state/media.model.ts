@@ -1,6 +1,11 @@
 import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
+import { OrganizationForm, Organization } from '@blockframes/organization/+state';
+import { PublicUser } from '@blockframes/user/types';
+import { Movie } from '@blockframes/movie/+state';
 export * from './media.firestore';
 
 /**
@@ -9,17 +14,17 @@ export * from './media.firestore';
  * and **not the front**.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
-export function extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms(document: any, form: any) {
+export function extractMediaFromDocumentBeforeUpdate(document: Organization | PublicUser | Movie, form: MovieForm | OrganizationForm | ProfileForm): any {
 
   const cleanedDocument = cloneDeep(document);
 
   const medias = extractMediaFromDocument(cleanedDocument);
+  updateMediaFormInForm(form);
+  
   return {
     documentToUpdate: cleanedDocument,
     mediasToUpload: medias,
   };
-
-  updateMediaFormInForm(form);
 }
 
 function extractMediaFromDocument(document: any) {
@@ -51,7 +56,7 @@ function extractMediaFromDocument(document: any) {
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
 function updateMediaFormInForm(form: any) {
-  if ("controls" in form) {
+  if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];
       if (isMedia(control.value)) {
