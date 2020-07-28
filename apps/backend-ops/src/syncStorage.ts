@@ -4,6 +4,9 @@ import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { has, get } from 'object-path';
 import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { PublicUser } from '@blockframes/user/types';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 enum mediaFieldType {
   single,
@@ -53,11 +56,11 @@ export async function syncStorage() {
   console.log('//////////////');
 
   for (const ref of mediaReferences) {
-    const docs = await getCollection<any>(ref.collection);
+    const docs = await getCollection<PublicUser | Organization | Movie>(ref.collection);
     const unlinkPromises = [];
 
     for (const doc of docs) {
-      const docId = doc.id ? doc.id : doc.uid;
+      const docId = isPublicUser(doc) ? doc.uid : doc.id;
       const docRef = db.collection(ref.collection).doc(docId);
       
       for (const field of ref.fields) {
@@ -121,4 +124,8 @@ export async function syncStorage() {
 
   if (startedMaintenance) await endMaintenance();
 
+}
+
+function isPublicUser(data: PublicUser | Organization | Movie): data is PublicUser {
+  return (<PublicUser>data).uid !== undefined;
 }
