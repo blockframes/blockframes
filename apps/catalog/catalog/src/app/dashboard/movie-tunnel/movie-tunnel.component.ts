@@ -9,10 +9,8 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { FormGroup } from '@angular/forms';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedMediaFormValue, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdate, updateMediaFormInForm } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -99,6 +97,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
+    updateMediaFormInForm(this.form);
 
     await this.service.update(movie.id, documentToUpdate);
 

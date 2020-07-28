@@ -27,7 +27,6 @@ function extractMediaFromDocument(document: any) {
 
     if (isMedia(document[key])) {
 
-
       if (mediaNeedsUpdate(document[key])) {
         medias.push(document[key]);
       }
@@ -44,6 +43,32 @@ function extractMediaFromDocument(document: any) {
     }
   }
   return medias;
+}
+
+/**
+ * Loops over form looking for mediaForms that need to be updated and then resets that form.
+ */
+export function updateMediaFormInForm(form: any) {
+  if ("controls" in form) {
+    for (const key in form.controls) {
+      const control = form.controls[key];
+      if (isMedia(control.value)) {
+        if (mediaNeedsUpdate(control.value)) {
+
+          // emptying values in blobOrFile and delete to prevent redoing the action on multiple submits.
+          // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
+          control.patchValue({
+            blobOrFile: '',
+            delete: false,
+            oldRef: `${control.ref.value}${control.fileName.value}`,
+          });
+
+        }
+      } else if (typeof control === 'object' && !!control) {
+        updateMediaFormInForm(control);
+      }
+    }
+  }
 }
 
 function isMedia(obj: any) {
