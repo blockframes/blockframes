@@ -44,7 +44,7 @@
       </mat-card-header>
       <mat-card-content>
 
-        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue ; let i = index">
+        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue; let i = index; trackBy: trackByFn">
 
           <span class="still mat-body-2">Still # {{ i }}</span>
 
