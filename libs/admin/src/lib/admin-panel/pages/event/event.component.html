@@ -16,10 +16,10 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>
-              Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+              Event for : {{ movie.title.international }} ({{ movie.internalRef }})
             </mat-card-title>
             <ng-container
-              *ngIf="movie.main.poster && movie.main.poster.media as poster;">
+              *ngIf="movie.poster && movie.poster.media as poster;">
               <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
             </ng-container>
           </mat-card-header>

@@ -14,7 +14,7 @@ function isReleaseYearBetween(movie: Movie, range: DateRange): boolean {
   }
   // prevent from default error that property is undefined
   if (typeof range.from && typeof range.to) {
-    return movie.main.releaseYear >= range.from.getFullYear() && movie.main.releaseYear <= range.to.getFullYear();
+    return movie.releaseYear >= range.from.getFullYear() && movie.releaseYear <= range.to.getFullYear();
   }
 }
 
@@ -55,9 +55,9 @@ function hasGenres(movie: Movie, movieGenre: string[]): boolean {
   }
   // we have to make it lowercase to make sure we are comparing correctly
   const movieGenreToLowerCase = movieGenre.map(type => type.toLowerCase());
-  for (let i = 0; i < movie.main.genres.length; i++) {
+  for (let i = 0; i < movie.genres.length; i++) {
     for (let k = 0; k < movieGenreToLowerCase.length; k++) {
-      if (movie.main.genres[i] === movieGenreToLowerCase[k]) {
+      if (movie.genres[i] === movieGenreToLowerCase[k]) {
         return true;
       }
     }
@@ -83,7 +83,7 @@ function isProductionStatus(movie: Movie, movieStatus: string[]): boolean {
   // we have to make it lowercase to make sure we are comparing correctly
   const movieStatusToLowerCase = movieStatus.map(status => status.toLowerCase());
   for (let i = 0; i < movieStatusToLowerCase.length; i++) {
-    if (movieStatusToLowerCase[i] === movie.main.status) {
+    if (movieStatusToLowerCase[i] === movie.status) {
       return true;
     }
   }
@@ -114,7 +114,7 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
     return true;
   }
   for (const country of countries) {
-    if (movie.main.originCountries.includes(country.toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
+    if (movie.originCountries.includes(country.toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
       return true;
     }
   }
@@ -129,7 +129,7 @@ function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
   if (!storeTypes.length) {
     return true;
   }
-  return storeTypes.includes(movie.main.storeConfig.storeType);
+  return storeTypes.includes(movie.storeConfig.storeType);
 }
 
 /**

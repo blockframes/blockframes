@@ -34,10 +34,10 @@ export class TitleViewComponent implements OnInit {
   }
 
   public getPoster(movie: Movie) {
-    return movie.main.poster.media;
+    return movie.poster.media;
   }
 
   public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+    return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 }

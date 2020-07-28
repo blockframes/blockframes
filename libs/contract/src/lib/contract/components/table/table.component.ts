@@ -87,7 +87,7 @@ export class ContractTableComponent {
       territories: this.rightQuery.getTerritoriesFromContract(contract.lastVersion),
       creationDate: contract.lastVersion.creationDate,
       moviesLength: contract.titleIds.length,
-      titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.main.title.international),
+      titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.title.international),
       price: getTotalPrice(contract.lastVersion.titles),
       paid: contract.lastVersion.status === 'paid' ? 'Yes' : 'No',
       status: contract.lastVersion.status

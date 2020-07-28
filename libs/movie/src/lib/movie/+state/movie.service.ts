@@ -127,7 +127,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
+    const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
 
     return movies.length ? createMovie(movies[0]) : undefined;
   }

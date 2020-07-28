@@ -39,11 +39,11 @@
   </ng-template>
   <ng-template colRef="movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
-      <ng-container *ngIf="movie.main.poster && movie.main.poster.media as poster;">
+      <ng-container *ngIf="movie.poster && movie.poster.media as poster;">
         <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
-        <span>{{ movie.main.title.international }} ({{ movie.main.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ movie.title.international }} ({{ movie.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>

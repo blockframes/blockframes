@@ -36,23 +36,23 @@ export class OrganizationComponent implements OnInit {
 
   public versionColumnsMovies = {
     'id': 'Id',
-    'main.internalRef': 'Internal Ref',
-    'main.poster': 'Poster',
-    'main.title.original': 'Original title',
-    'main.releaseYear': 'Release year',
-    'main.storeConfig.status': 'Status',
-    'main.storeConfig.storeType': 'Store type',
+    'internalRef': 'Internal Ref',
+    'poster': 'Poster',
+    'title.original': 'Original title',
+    'releaseYear': 'Release year',
+    'storeConfig.status': 'Status',
+    'storeConfig.storeType': 'Store type',
     'edit': 'Edit',
   };
 
   public initialColumnsMovies: string[] = [
     'id',
-    'main.poster',
-    'main.internalRef',
-    'main.title.original',
-    'main.releaseYear',
-    'main.storeConfig.status',
-    'main.storeConfig.storeType',
+    'poster',
+    'internalRef',
+    'title.original',
+    'releaseYear',
+    'storeConfig.status',
+    'storeConfig.storeType',
     'edit',
   ];
 
@@ -151,11 +151,11 @@ export class OrganizationComponent implements OnInit {
   filterPredicateMovies(data: any, filter) {
     const columnsToFilter = [
       'id',
-      'main.internalRef',
-      'main.title.original',
-      'main.releaseYear',
-      'main.storeConfig.status',
-      'main.storeConfig.storeType',
+      'internalRef',
+      'title.original',
+      'releaseYear',
+      'storeConfig.status',
+      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

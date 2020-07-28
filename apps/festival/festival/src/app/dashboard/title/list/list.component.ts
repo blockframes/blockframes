@@ -32,14 +32,14 @@ function createTitleView(
   movie: Movie,
   analytics: MovieAnalytics[]
 ): TitleView {
-  const statusLabel = movie.main?.status ? getCodeIfExists('MOVIE_STATUS', movie.main?.status) : '';
+  const statusLabel = movie.productionStatus ? getCodeIfExists('MOVIE_STATUS', movie.productionStatus) : '';
   return {
     id: movie.id,
-    title: movie.main.title.international,
+    title: movie.title.international,
     view: getMovieTotalViews(analytics, movie.id)?.toString(),
-    director: movie.main.directors,
+    director: movie.directors,
     productionStatus: statusLabel,
-    status: movie.main.storeConfig.status
+    status: movie.storeConfig.status
   };
 }
 
@@ -75,7 +75,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival))
+      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival))
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 

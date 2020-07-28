@@ -1,11 +1,11 @@
 <ul>
   <li>
     <strong>Release Year </strong>
-    <missing-control [control]="main.get('releaseYear')" [link]="link"></missing-control>
+    <missing-control [control]="movie.get('releaseYear')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Production Company </strong>
-    <ng-container *ngFor="let producer of production.get('stakeholders').get('executiveProducer').controls; let isLast = last">
+    <ng-container *ngFor="let producer of movie.get('stakeholders').get('executiveProducer').controls; let isLast = last">
       <missing-control [control]="producer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="producer.get('countries').value.length">
         <span> (</span>
@@ -19,7 +19,7 @@
   </li>
   <li>
     <strong>Producers </strong>
-    <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
+    <ng-container *ngFor="let producer of movie.get('producers').controls; let isLast = last">
       <ng-container *ngIf="producerHasNoValue(producer) else displayProducer">
         <a [routerLink]="link" class="missing-control">
           Missing
@@ -38,7 +38,7 @@
   </li>
   <li>
     <strong>Co-Production </strong>
-    <ng-container *ngFor="let coProducer of production.get('stakeholders').get('coProducer').controls; let isLast = last">
+    <ng-container *ngFor="let coProducer of movie.get('stakeholders').get('coProducer').controls; let isLast = last">
       <missing-control [control]="coProducer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="coProducer.get('countries').value.length">
         <span> (</span>
@@ -50,7 +50,7 @@
       <span>{{ isLast ? '' : ', '}}</span>
     </ng-container>
   </li>
-  <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
+  <ng-container *ngFor="let artist of movie.get('crew').controls; let isLast = last">
     <li>
       <ng-container *ngIf="artist.get('role').value else role">
         <strong>{{ artist.get('role').value | translateSlug: 'CREW_ROLES' }}&nbsp;</strong>

@@ -16,7 +16,7 @@ export class TitleComponent implements OnInit, OnDestroy {
   @HostBinding('@scaleIn') private animePage;
   private sub: Subscription;
   // Todo Try to filter movie before sync with the store
-  public titles$ = this.query.selectAll({filterBy: movies => movies.main.storeConfig.status === 'accepted' && movies.main.storeConfig.appAccess.festival});
+  public titles$ = this.query.selectAll({filterBy: movies => movies.storeConfig.status === 'accepted' && movies.storeConfig.appAccess.festival});
 
   constructor(
     private service: MovieService,

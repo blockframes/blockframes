@@ -18,16 +18,16 @@ export class MarketplaceMovieMainComponent {
   promoLinks = promoLinks;
   constructor(private movieQuery: MovieQuery) { }
 
-  public hasLink({ promotionalElements }: Movie): boolean {
-    return this.promoLinks.some(link => !!promotionalElements[link].media.url);
+  public hasLink({ promotional }: Movie): boolean {
+    return this.promoLinks.some(link => !!promotional[link].media.url);
   }
 
   public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
-    if(movie.promotionalElements[link].media.url) {
+    if(movie.promotional[link].media.url) {
       const isDownload = link === 'scenario' || link === 'presentation_deck';
       const isAccent = link === 'scenario' || link === 'promo_reel_link'
       return {
-        url: movie.promotionalElements[link].media.url,
+        url: movie.promotional[link].media.url,
         icon: isDownload ? 'download' : 'play',
         label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`,
         color: isAccent ? 'accent' : 'primary'
@@ -35,8 +35,8 @@ export class MarketplaceMovieMainComponent {
     }
   }
 
-  public hasStory({ story, promotionalDescription }: Movie): boolean {
-    return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets)
+  public hasStory({ synopsis, keywords, keyAssets }: Movie): boolean {
+    return !!(synopsis || keywords.length > 0 || keyAssets)
   }
 
   public getPrize(prize) {
@@ -47,7 +47,7 @@ export class MarketplaceMovieMainComponent {
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getStakeholder(movie: Movie, role: string) {
-    return movie.production.stakeholders[role].map(stakeholder => {
+    return movie.stakeholders[role].map(stakeholder => {
       return (stakeholder.countries && !!stakeholder.countries.length)
         ? `${stakeholder.displayName} (${stakeholder.countries.map(country => getLabelBySlug('TERRITORIES', country))})`
         :  stakeholder.displayName;
@@ -55,19 +55,19 @@ export class MarketplaceMovieMainComponent {
   }
 
   public getSalesCast(movie: Movie, role: string) {
-    return movie.salesCast[role].map(cast => {
+    return movie.cast[role].map(cast => {
       return (cast.role && !! cast.role.length)
       ? `${cast.firstName} ${cast.lastName} (${cast.role})`
       : `${cast.firstName} ${cast.lastName}`
     })
   }
 
-  public hasBudget({ budget, salesInfo, movieReview}: Movie): boolean {
+  public hasBudget({ boxOffice, rating, certifications, review}: Movie): boolean {
     return !!(
-      budget.boxOffice.length ||
-      salesInfo.certifications.length ||
-      salesInfo.rating.length ||
-      movieReview.length
+      boxOffice.length ||
+      certifications.length ||
+      rating.length ||
+      review.length
     )
   }
 

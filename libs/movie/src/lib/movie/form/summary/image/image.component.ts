@@ -15,12 +15,12 @@ export class MovieSummaryImageComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.form.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.form.promotional.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   get photoHasNoValue() {
     try {
-      const stillPhotos: Record<string, PromotionalHostedMedia> = this.form.promotionalElements.get('still_photo').value;
+      const stillPhotos: Record<string, PromotionalHostedMedia> = this.form.promotional.get('still_photo').value;
       const keys = Object.keys(stillPhotos);
 
       // if there is no still photos

@@ -162,17 +162,17 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //////////////////
 
         // INTERNAL REF (Film Code)
-        movie.main.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
+        movie.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
 
         // WORK TYPE
         if (spreadSheetRow[SpreadSheetMovie.contentType]) {
           const key = getKeyIfExists(contentType, spreadSheetRow[SpreadSheetMovie.contentType]);
           if (key) {
-            movie.main.contentType = key;
+            movie.contentType = key;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.contentType',
+              field: 'movie.contentType',
               name: 'Work Type',
               reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.contentType].trim().toLowerCase()}`,
               hint: 'Edit corresponding sheet field.'
@@ -182,12 +182,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // ORIGINAL TITLE (Original Title)
         if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
-          movie.main.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
+          movie.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
         }
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
+          movie.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
         }
 
         // TODO issue #3091
@@ -198,7 +198,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //   label: 'Poster',
         //   media: poster,
         // });
-        // movie.main.poster = moviePoster;
+        // movie.poster = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -206,15 +206,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // INTERNATIONAL TITLE (International Title)
         if (spreadSheetRow[SpreadSheetMovie.internationalTitle]) {
-          movie.main.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
+          movie.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
         }
 
         // Total Run Time
         if (spreadSheetRow[SpreadSheetMovie.length]) {
           if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-            movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+            movie.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
           } else {
-            movie.main.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
+            movie.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
           }
         }
 
@@ -297,15 +297,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // ORIGIN COUNTRIES (Countries of Origin)
         if (spreadSheetRow[SpreadSheetMovie.originCountries]) {
-          movie.main.originCountries = [];
+          movie.originCountries = [];
           spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
             const country = getCodeIfExists('TERRITORIES', c);
             if (country) {
-              movie.main.originCountries.push(country);
+              movie.originCountries.push(country);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.originCountries',
+                field: 'originCountries',
                 name: 'Countries of origin',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
@@ -489,15 +489,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
-          movie.main.genres = [];
+          movie.genres = [];
           spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: ExtractCode<'GENRES'>) => {
             const genre = getCodeIfExists('GENRES', g);
             if (genre) {
-              movie.main.genres.push(genre);
+              movie.genres.push(genre);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.genres',
+                field: 'genres',
                 name: 'Genres',
                 reason: `${g} not found in genres list`,
                 hint: 'Edit corresponding sheet field.'
@@ -551,16 +551,16 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = [];
+          movie.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
-              movie.main.originalLanguages.push(language);
+              movie.originalLanguages.push(language);
               populateMovieLanguageSpecification(movie.versionInfo.languages, language, 'original', true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.originalLanguages',
+                field: 'originalLanguages',
                 name: 'Languages',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
@@ -702,21 +702,21 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
           const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
           if (movieStatus) {
-            movie.main.status = movieStatus;
+            movie.status = movieStatus;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.status',
+              field: 'movie.status',
               name: 'Production status',
               reason: 'Production status could not be parsed',
               hint: 'Edit corresponding sheet field.'
             });
           }
         } else {
-          movie.main.status = getCodeIfExists('MOVIE_STATUS', 'finished');
+          movie.status = getCodeIfExists('MOVIE_STATUS', 'finished');
           importErrors.errors.push({
             type: 'warning',
-            field: 'movie.main.status',
+            field: 'movie.status',
             name: 'Production status',
             reason: 'Production status not found, assumed "Completed"',
             hint: 'Edit corresponding sheet field.'
@@ -820,7 +820,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //     media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
         //     ratio: 'rectangle'
         //   });
-        //   movie.main.banner = promotionalElement;
+        //   movie.banner = promotionalElement;
         // } else {
         //   importErrors.errors.push({
         //     type: 'warning',
@@ -944,21 +944,21 @@ export class ViewExtractedMoviesComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetMovie.storeType]) {
             const key = getKeyIfExists(storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
             if (key) {
-              movie.main.storeConfig.storeType = key;
+              movie.storeConfig.storeType = key;
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.storeConfig.storeType',
+                field: 'movie.storeConfig.storeType',
                 name: 'Movie store type',
                 reason: `Could not parse store type : ${spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase()}`,
                 hint: 'Edit corresponding sheet field.'
               });
             }
           } else {
-            movie.main.storeConfig.storeType = 'line_up';
+            movie.storeConfig.storeType = 'line_up';
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.storeConfig.storeType',
+              field: 'movie.storeConfig.storeType',
               name: 'Movie store type',
               reason: `Store type not found, assumed "${storeType.line_up}"`,
               hint: 'Edit corresponding sheet field.'
@@ -969,21 +969,21 @@ export class ViewExtractedMoviesComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetMovie.movieStatus]) {
             const key = getKeyIfExists(storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
             if (key) {
-              movie.main.storeConfig.status = key;
+              movie.storeConfig.status = key;
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.storeConfig.status',
+                field: 'movie.storeConfig.status',
                 name: 'Movie store status',
                 reason: `Could not parse store status : ${spreadSheetRow[SpreadSheetMovie.movieStatus].trim().toLowerCase()}`,
                 hint: 'Edit corresponding sheet field.'
               });
             }
           } else {
-            movie.main.storeConfig.status = 'draft';
+            movie.storeConfig.status = 'draft';
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.storeConfig.status',
+              field: 'movie.storeConfig.status',
               name: 'Movie store status',
               reason: `Store status not found, assumed "${storeStatus.draft}"`,
               hint: 'Edit corresponding sheet field.'
@@ -1033,30 +1033,30 @@ export class ViewExtractedMoviesComponent implements OnInit {
     // REQUIRED FIELDS
     //////////////////
 
-    if (!movie.main.internalRef) {
+    if (!movie.internalRef) {
       errors.push({
         type: 'error',
-        field: 'main.internalRef',
+        field: 'internalRef',
         name: 'Film Code ',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.main.title.original) {
+    if (!movie.title.original) {
       errors.push({
         type: 'error',
-        field: 'main.title.original',
+        field: 'title.original',
         name: 'Original title',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.main.directors.length === 0) {
+    if (movie.directors.length === 0) {
       errors.push({
         type: 'error',
-        field: 'main.directors',
+        field: 'directors',
         name: 'Directors',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1064,10 +1064,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
     }
 
     // TODO issue #3091
-    // if (!movie.main.poster) {
+    // if (!movie.poster) {
     //   errors.push({
     //     type: 'error',
-    //     field: 'main.poster',
+    //     field: 'poster',
     //     name: 'Poster',
     //     reason: 'Required field is missing',
     //     hint: 'Add poster URL in corresponding column.'
@@ -1078,20 +1078,20 @@ export class ViewExtractedMoviesComponent implements OnInit {
     // OPTIONAL FIELDS
     //////////////////
 
-    if (!movie.main.title.international) {
+    if (!movie.title.international) {
       errors.push({
         type: 'warning',
-        field: 'main.title.international',
+        field: 'title.international',
         name: 'International title',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.main.totalRunTime) {
+    if (!movie.totalRunTime) {
       errors.push({
         type: 'warning',
-        field: 'main.totalRunTime',
+        field: 'totalRunTime',
         name: 'Total Run Time',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1120,10 +1120,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.main.originCountries.length === 0) {
+    if (movie.originCountries.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.originCountries',
+        field: 'originCountries',
         name: 'Countries of origin',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1170,10 +1170,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.main.genres.length === 0) {
+    if (movie.genres.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.genres',
+        field: 'genres',
         name: 'Genres',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1210,10 +1210,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.main.originalLanguages.length === 0) {
+    if (movie.originalLanguages.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.originalLanguages',
+        field: 'originalLanguages',
         name: 'Languages',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

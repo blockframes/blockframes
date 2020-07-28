@@ -6,10 +6,10 @@ import { app } from '@blockframes/utils/apps';
 function createMovieAdminControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
-    storeStatus: new FormControl(movie.main.storeConfig.status),
-    storeType: new FormControl(movie.main.storeConfig.storeType),
-    productionStatus: new FormControl(movie.main.status),
-    internalRef: new FormControl(movie.main.internalRef),
+    storeStatus: new FormControl(movie.storeConfig.status),
+    storeType: new FormControl(movie.storeConfig.storeType),
+    productionStatus: new FormControl(movie.status),
+    internalRef: new FormControl(movie.internalRef),
   };
 }
 
@@ -26,7 +26,7 @@ function createAppAccessMovieControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   const appAccess = {} as any;
   for (const a of app) {
-    appAccess[a] = new FormControl(movie.main.storeConfig.appAccess[a])
+    appAccess[a] = new FormControl(movie.storeConfig.appAccess[a])
   }
   return appAccess;
 }

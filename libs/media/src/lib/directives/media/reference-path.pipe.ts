@@ -2,8 +2,8 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
 const referencesPaths = {
     movie: {
-        banner: (docId: string) => `movies/${docId}/main.banner.media`,
-        poster: (docId: string) => `movies/${docId}/main.poster.media`,
+        banner: (docId: string) => `movies/${docId}/banner.media`,
+        poster: (docId: string) => `movies/${docId}/poster.media`,
         still: (docId: string, elementId: string) => `movies/${docId}/promotionalElements.still_photo.${elementId}.media`,
     },
     profile: {
