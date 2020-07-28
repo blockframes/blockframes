@@ -83,8 +83,8 @@ async function updateUsers(
   return runChunks(users.docs, async (doc) => {
     const user = doc.data() as any; // @TODO #(3175) create intermediary model
 
-    if (user.avatar?.original?.ref) {
-      const avatar = user.avatar?.original;
+    if (user.avatar?.ref) {
+      const avatar = user.avatar;
       user.avatar = await changeResourceDirectory(avatar, storage, user.uid);
     } else {
       user.avatar = '';
@@ -110,8 +110,8 @@ async function updateOrgs(
   return runChunks(orgs.docs, async (doc) => {
     const org = doc.data() as any; // @TODO #(3175) create intermediary model
 
-    if (org.logo?.original?.ref) {
-      const logo = org.logo?.original;
+    if (org.logo?.ref) {
+      const logo = org.logo;
       org.logo = await changeResourceDirectory(logo, storage, org.id);
     } else {
       org.logo = '';
@@ -134,16 +134,16 @@ async function updateMovies(
   return runChunks(movies.docs, async (doc) => {
     const movie = doc.data() as any; // @TODO #(3175) create intermediary model
 
-    if (movie.main.banner?.media?.original?.ref) {
+    if (movie.main.banner?.media?.ref) {
       const banner = movie.main.banner;
-      movie.main.banner = await changeResourceDirectory(banner.media.original, storage, movie.id);
+      movie.main.banner = await changeResourceDirectory(banner.media, storage, movie.id);
     } else {
       movie.main.banner = '';
     }
 
-    if (movie.main.poster?.media?.original?.ref) {
+    if (movie.main.poster?.media?.ref) {
       const poster = movie.main.poster;
-      movie.main.poster = await changeResourceDirectory(poster.media.original, storage, movie.id);
+      movie.main.poster = await changeResourceDirectory(poster.media, storage, movie.id);
     } else {
       movie.main.poster = '';
     }
@@ -151,7 +151,7 @@ async function updateMovies(
     if (!!movie.promotionalElements.still_photo) {
       for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
         const still = movie.promotionalElements.still_photo[stillKey];
-        movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media.original, storage, movie.id);
+        movie.promotionalElements.still_photo[stillKey] = await changeResourceDirectory(still.media, storage, movie.id);
       }
     } else {
       movie.promotionalElements.still_photo = {};
