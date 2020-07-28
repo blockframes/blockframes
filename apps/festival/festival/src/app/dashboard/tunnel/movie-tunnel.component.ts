@@ -10,7 +10,7 @@ import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate, updateMediaFormInForm } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -85,8 +85,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
-    updateMediaFormInForm(this.form);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms(movie, this.form);
 
     await this.service.update(movie.id, documentToUpdate);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);

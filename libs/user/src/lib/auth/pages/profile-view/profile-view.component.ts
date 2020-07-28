@@ -11,7 +11,7 @@ import { EditPasswordForm } from '@blockframes/utils/form/controls/password.cont
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate, updateMediaFormInForm } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'auth-profile-view',
@@ -57,8 +57,7 @@ export class ProfileViewComponent implements OnInit {
       } else {
         const uid = this.authQuery.userId;
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm.value);
-        updateMediaFormInForm(this.profileForm);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms(this.profileForm.value, this.profileForm);
 
         await this.authService.update({ uid, ...documentToUpdate });
         this.mediaService.uploadOrDeleteMedia(mediasToUpload);

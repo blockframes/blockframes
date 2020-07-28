@@ -9,7 +9,7 @@ export * from './media.firestore';
  * and **not the front**.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
-export function extractMediaFromDocumentBeforeUpdate(document: any) {
+export function extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms(document: any, form: any) {
 
   const cleanedDocument = cloneDeep(document);
 
@@ -18,6 +18,8 @@ export function extractMediaFromDocumentBeforeUpdate(document: any) {
     documentToUpdate: cleanedDocument,
     mediasToUpload: medias,
   };
+
+  updateMediaFormInForm(form);
 }
 
 function extractMediaFromDocument(document: any) {
@@ -48,7 +50,7 @@ function extractMediaFromDocument(document: any) {
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
-export function updateMediaFormInForm(form: any) {
+function updateMediaFormInForm(form: any) {
   if ("controls" in form) {
     for (const key in form.controls) {
       const control = form.controls[key];

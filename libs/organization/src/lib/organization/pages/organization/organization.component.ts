@@ -4,7 +4,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate, updateMediaFormInForm } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'organization-edit',
@@ -34,8 +34,7 @@ export class OrganizationComponent implements OnInit {
           throw new Error('Your organization profile information are not valid');
         }
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm.value);
-        updateMediaFormInForm(this.organizationForm);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdateAndUpdateMediaForms(this.organizationForm.value, this.organizationForm);
         this.service.update(this.query.getActiveId(), documentToUpdate);
         this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
