@@ -4,8 +4,6 @@ import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/+state
 import { map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { MovieBudgetForm } from '@blockframes/movie/form/budget/budget.form';
-import { MovieMainForm } from '@blockframes/movie/form/main/main.form';
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -24,11 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private orgQuery: OrganizationQuery
   ) { }
-list
-dir
+
   ngOnInit() {
-    this.list = new MovieBudgetForm({})
-    this.dir = new MovieBudgetForm()
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(

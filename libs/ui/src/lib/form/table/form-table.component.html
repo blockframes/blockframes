@@ -32,10 +32,11 @@
   </table>
 </div>
 <ng-container *ngIf="showPaginator$ | async">
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons (page)="updateIndex($event)">
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons
+    (page)="updateIndex($event)">
   </mat-paginator>
 </ng-container>
-<span class="mat-caption">Changes are going to be saved automatically</span>
+<span *ngIf="showTable$ | async" class="mat-caption">All changes are automatically saved.</span>
 ​
 <!-- Fallback if no template is provided for a column -->
 <ng-template #text let-content>{{content | json}}</ng-template>

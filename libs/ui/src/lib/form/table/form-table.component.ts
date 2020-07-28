@@ -52,7 +52,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   showPaginator$: Observable<boolean>;
   activeIndex: number;
   pageSize = 5;
-  pageIndex = { pageIndex: 0, pageSize: this.pageSize };
+  /* We need to keep track of the current page since it will affect the index that we are working on */
+  pageConfig = { pageIndex: 0, pageSize: this.pageSize };
   formItem: FormEntity<EntityControl<T>, T>;
   dataSource = new MatTableDataSource<T>();
 
@@ -101,6 +102,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     this.formItem = this.form.createControl({});
   }
 
+  /* If there is no control in the form it adds one adds a default one for the user to work on. */
   addControl() {
     if (this.isFormEmpty) {
       this.form.push(this.formItem)
@@ -114,29 +116,38 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   // Edit existing form
   edit(index: number) {
-    this.activeIndex = index
-    if (this.pageIndex) {
-      this.activeIndex = this.pageIndex.pageIndex * this.pageSize + index
-    }
+    this.calculateCurrentIndex(index);
     this.formItem = this.form.at(this.activeIndex);
     this.cdr.markForCheck();
   }
-  
+
   // Remove one line in the form
   remove(index: number) {
-    this.form.removeAt(index);
-    if (this.activeIndex === index) {
-      /* We don't want to set the formItem to a negative index */
-      this.activeIndex = index - 1 < 0 ? 0 : index - 1;
-      this.formItem = this.form.at(this.activeIndex)
-      if (this.isFormEmpty) {
-        this.add()
-      }
+    this.calculateCurrentIndex(index);
+    this.form.removeAt(this.activeIndex);
+    this.formItem = this.form.at(this.activeIndex ? this.activeIndex - 1 : 0)
+    if (this.isFormEmpty) {
+      this.add()
     }
   }
 
+  /**
+   * @description function that gets triggered whenever the paginator fires his page event.
+   * @param page 
+   */
   updateIndex(page: PageEvent) {
-    this.pageIndex = { pageIndex: page.pageIndex, pageSize: page.pageSize }
-    console.log(this.pageIndex)
+    this.pageConfig = { pageIndex: page.pageIndex, pageSize: page.pageSize }
+  }
+
+  /**
+   * @description Since we got a paginator and we work with the index of the rows of the tables, 
+   * we need to calculate the correct index for the source we are working on.
+   * @param index of the table row
+   */
+  private calculateCurrentIndex(index: number) {
+    this.activeIndex = index;
+    if (this.pageConfig.pageIndex) {
+      this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
+    }
   }
 }
