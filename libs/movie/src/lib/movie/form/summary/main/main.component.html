@@ -19,7 +19,7 @@
   <li>
     <strong>Reference # </strong><missing-control [control]="movie.get('internalRef')" [link]="link"></missing-control>
   </li>
-  <ng-container *ngFor="let director of movie.get('directors').controls">
+  <ng-container *ngFor="let director of movie.directors.controls">
     <li>
       <strong>Director Name </strong>
       <ng-container *ngIf="directorHasErrorRequired(director) else display">

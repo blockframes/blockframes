@@ -2,7 +2,7 @@
   <!-- Files with reference -->
   <li *ngFor="let ref of fileRefs | keyvalue">
     <strong>{{ ref.value }} </strong>
-    <missing-control [control]="promotionalElements.get(ref.key).get('media').get('url')" [link]="link">
+    <missing-control [control]="promotional.get(ref.key).get('media').get('url')" [link]="link">
       <ng-template let-media>
         {{ media.originalFileName }}
       </ng-template>
@@ -11,6 +11,6 @@
   <!-- Links -->
   <li *ngFor="let link of fileLinks | keyvalue">
     <strong>{{ link.value }} </strong>
-    <missing-control [control]="promotionalElements.get(link.key).get('media').get('url')" [link]="link"></missing-control>
+    <missing-control [control]="promotional.get(link.key).get('media').get('url')" [link]="link"></missing-control>
   </li>
 </ul>

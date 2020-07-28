@@ -113,6 +113,50 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     super(createMovieControls(movie));
   }
 
+  get directors() {
+    return this.get('directors');
+  }
+
+  get keywords() {
+    return this.get('keywords');
+  }
+
+  get keyAssets() {
+    return this.get('keyAssets');
+  }
+
+  get cast() {
+    return this.get('cast');
+  }
+
+  get producers() {
+    return this.get('producers');
+  }
+
+  get crew() {
+    return this.get('crew');
+  }
+
+  get rating() {
+    return this.get('rating');
+  }
+
+  get originalRelease() {
+    return this.get('originalRelease');
+  }
+
+  get prizes() {
+    return this.get('prizes');
+  }
+
+  get logline() {
+    return this.get('logline');
+  }
+
+  get synopsis() {
+    return this.get('synopsis');
+  }
+
   reset(value?: EntityControl<Movie>, options?: {
     onlySelf?: boolean;
     emitEvent?: boolean;

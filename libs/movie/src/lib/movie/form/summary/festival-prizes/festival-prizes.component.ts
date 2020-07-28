@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieFestivalPrizesForm, MoviePrizeForm } from '@blockframes/movie/form/festival-prizes/festival-prizes.form';
+import { MoviePrizeForm } from '@blockframes/movie/form/festival-prizes/festival-prizes.form';
+import { MovieForm } from '../../movie.form';
 
 @Component({
   selector: '[festivalPrizes] movie-summary-festival-prizes',
@@ -8,13 +9,13 @@ import { MovieFestivalPrizesForm, MoviePrizeForm } from '@blockframes/movie/form
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryFestivalPrizesComponent implements OnInit {
-  @Input() festivalPrizes: MovieFestivalPrizesForm;
+  @Input() movie: MovieForm;
   @Input() link: string;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.festivalPrizes.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {

@@ -101,7 +101,7 @@
               <span> {{ getStakeholder(movie, 'coProducer') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.producers.length > 0">
-            <li><strong i18n>Producer{movie.salesCast.producers.length, plural,=1 {} other {s}}</strong>
+            <li><strong i18n>Producer{movie.producers.length, plural,=1 {} other {s}}</strong>
               <span> {{ getSalesCast(movie, 'producers', 'PRODUCER_ROLES') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.stakeholders as stakeholders">

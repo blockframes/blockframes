@@ -1,16 +1,16 @@
 <ul>
   <li>
     <strong>Budget </strong>
-    <ng-container *ngIf="!budget.get('estimatedBudget').value.label else displayBudget">
+    <ng-container *ngIf="!movie.get('estimatedBudget').value.label else displayBudget">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayBudget>
-      {{ budget.get('estimatedBudget').value.label }}
+      {{ movie.get('estimatedBudget').value.label }}
     </ng-template>
   </li>
-  <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
+  <ng-container *ngFor="let boxOffice of movie.get('boxOffice').controls">
     <li fxLayout="row" fxFlexAlign="start center">
       <strong>Box Office&nbsp;</strong>
       <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
@@ -34,25 +34,25 @@
   </ng-container>
   <li>
     <strong>Quotas </strong>
-    <ng-container *ngIf="!salesInfo.get('certifications').value.length else displayQuotas">
+    <ng-container *ngIf="!movie.get('certifications').value.length else displayQuotas">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayQuotas>
-      <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
+      <ng-container *ngFor="let value of movie.get('certifications').value; let isLast = last">
         {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
       </ng-container>
     </ng-template>
   </li>
-  <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
+  <ng-container *ngFor="let rating of movie.get('rating').controls">
     <li>
       <strong>Rating </strong>
       <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link" *ngIf="rating.get('country').value"></missing-control>
       <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>
-  <ng-container *ngFor="let review of movieReview.controls">
+  <ng-container *ngFor="let review of review.controls">
     <li>
       <strong>Film Review </strong>
       <ng-container *ngIf="!reviewHasNoValue(review) else display">

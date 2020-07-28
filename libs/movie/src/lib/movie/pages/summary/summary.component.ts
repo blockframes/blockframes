@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
 })
 export class MovieFormSummaryComponent {
   form = this.shell.form;
-  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+  isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
   )
 
@@ -40,8 +40,8 @@ export class MovieFormSummaryComponent {
     if (this.form.valid) {
       const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
-      movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      movie.main.storeConfig.appAccess.festival = true;
+      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.storeConfig.appAccess.festival = true;
       await this.service.update(movie.id, movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });

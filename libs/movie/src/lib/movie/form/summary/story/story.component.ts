@@ -1,7 +1,6 @@
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieStoryForm } from '../../story/story.form';
-import { MoviePromotionalDescriptionForm } from '../../promotional-description/promotional-description.form';
+import { MovieForm } from '../../movie.form';
 
 @Component({
   selector: '[story] [promotionalDescription] movie-summary-story',
@@ -13,14 +12,12 @@ export class MovieSummaryStoryComponent implements OnInit {
 
   public separatorKeysCodes = [ENTER, COMMA]
 
-  @Input() story: MovieStoryForm;
-  @Input() promotionalDescription: MoviePromotionalDescriptionForm;
+  @Input() movie: MovieForm;
   @Input() link: string;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.story.valueChanges.subscribe(_ => this.cdr.markForCheck());
-    this.promotionalDescription.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 }

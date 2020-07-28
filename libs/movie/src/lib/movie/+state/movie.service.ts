@@ -111,8 +111,8 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.stakeholders) delete movie.stakeholders;
 
     // transform { media: string } into { media: ImgRef }
-    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
-      movie.promotionalElements.promotionalElements.forEach(el => {
+    if (!!movie.promotional) {
+      movie.promotional.forEach(el => {
         if (typeof el.media === typeof 'string') {
           el.media = createHostedMedia(el.media);
         }

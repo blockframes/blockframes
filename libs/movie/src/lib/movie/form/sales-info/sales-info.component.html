@@ -80,7 +80,7 @@
   <h3> Original Release(s) </h3>
   <div formArrayName="originalRelease" *ngFor="let release of salesInfo.originalRelease.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <h4>{{ getOriginalRelease(i) }}</h4>  
+      <h4>{{ getOriginalRelease(i) }}</h4>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Date</mat-label>
         <input matInput placeholder="Choose release date" formControlName="date" />

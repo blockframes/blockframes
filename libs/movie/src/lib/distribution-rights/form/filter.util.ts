@@ -24,7 +24,7 @@ function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in Languag
     }
     const languages = Object.keys(language);
     for (const lang of languages) {
-        const movieLanguage = movie.versionInfo.languages[lang];
+        const movieLanguage = movie.languages[lang];
         const filterLanguage = language[lang];
 
         // When no checkbox is checked, don't filter.
@@ -32,7 +32,7 @@ function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in Languag
           return true;
         }
 
-        if (movie.versionInfo.languages.hasOwnProperty(lang)) {
+        if (movie.languages.hasOwnProperty(lang)) {
           if (filterLanguage.original && movieLanguage.original) {
             return true;
           }
@@ -68,7 +68,7 @@ function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
   if (!movieBudget.length) {
     return true;
   }
-  const movieEstimatedBudget = movie.budget.estimatedBudget;
+  const movieEstimatedBudget = movie.estimatedBudget;
   for (const budget of movieBudget) {
     if (budget.from === movieEstimatedBudget.from && budget.to === movieEstimatedBudget.to) {
       return true;
@@ -83,7 +83,7 @@ function isProductionStatus(movie: Movie, movieStatus: string[]): boolean {
   // we have to make it lowercase to make sure we are comparing correctly
   const movieStatusToLowerCase = movieStatus.map(status => status.toLowerCase());
   for (let i = 0; i < movieStatusToLowerCase.length; i++) {
-    if (movieStatusToLowerCase[i] === movie.status) {
+    if (movieStatusToLowerCase[i] === movie.productionStatus) {
       return true;
     }
   }
@@ -97,7 +97,7 @@ function hasCertifications(movie: Movie, movieCertification: string[]): boolean 
   const movieFilterCertificationToLowerCase = movieCertification.map(certification =>
     certification.toLowerCase()
   );
-  const movieCertificationToLowerCase = movie.salesInfo.certifications.map(cert =>
+  const movieCertificationToLowerCase = movie.certifications.map(cert =>
     cert.toLowerCase()
   );
   for (let i = 0; i <= movieFilterCertificationToLowerCase.length; i++) {
