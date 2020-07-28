@@ -123,8 +123,7 @@ export function createMovieProduction(params: Partial<MovieProduction> = {}): Mo
 }
 
 export function createMoviePromotionalElements(
-  params: Partial<MoviePromotionalElements> = {},
-  initDefault: boolean = true
+  params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
 
   const newStills: Record<string, PromotionalHostedMedia> = {};
