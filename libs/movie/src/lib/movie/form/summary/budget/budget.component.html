@@ -10,7 +10,7 @@
       {{ movie.get('estimatedBudget').value.label }}
     </ng-template>
   </li>
-  <ng-container *ngFor="let boxOffice of movie.get('boxOffice').controls">
+  <ng-container *ngFor="let boxOffice of boxOffice.controls">
     <li fxLayout="row" fxFlexAlign="start center">
       <strong>Box Office&nbsp;</strong>
       <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
@@ -45,7 +45,7 @@
       </ng-container>
     </ng-template>
   </li>
-  <ng-container *ngFor="let rating of movie.get('rating').controls">
+  <ng-container *ngFor="let rating of rating.controls">
     <li>
       <strong>Rating </strong>
       <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link" *ngIf="rating.get('country').value"></missing-control>

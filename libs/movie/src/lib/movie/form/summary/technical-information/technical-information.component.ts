@@ -8,7 +8,7 @@ import {
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[salesInfo] [versionInfo] movie-summary-technical-information',
+  selector: '[movie] movie-summary-technical-information',
   templateUrl: './technical-information.component.html',
   styleUrls: ['./technical-information.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

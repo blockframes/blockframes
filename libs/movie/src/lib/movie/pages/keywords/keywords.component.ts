@@ -12,7 +12,7 @@ export class MovieFormKeywordsComponent {
 
   constructor(private shell: MovieFormShellComponent) { }
 
-  get promotionalDescription() {
-    return this.form.get('promotionalDescription');
+  get keywords() {
+    return this.form.get('keywords');
   }
 }

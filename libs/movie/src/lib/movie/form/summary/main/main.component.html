@@ -11,10 +11,10 @@
     <strong>Production Status </strong><missing-control [control]="movie.get('productionStatus')" scope="MOVIE_STATUS" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Original Title </strong><missing-control [control]="movie.get('title').get('original')" [link]="link"></missing-control>
+    <strong>Original Title </strong><missing-control [control]="movie.get('title.original')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>International Title </strong><missing-control [control]="movie.get('title').get('international')" [link]="link"></missing-control>
+    <strong>International Title </strong><missing-control [control]="movie.get('title.international')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Reference # </strong><missing-control [control]="movie.get('internalRef')" [link]="link"></missing-control>

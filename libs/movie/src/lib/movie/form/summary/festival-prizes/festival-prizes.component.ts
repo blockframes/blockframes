@@ -3,7 +3,7 @@ import { MoviePrizeForm } from '@blockframes/movie/form/festival-prizes/festival
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[festivalPrizes] movie-summary-festival-prizes',
+  selector: '[movie] movie-summary-festival-prizes',
   templateUrl: './festival-prizes.component.html',
   styleUrls: ['./festival-prizes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

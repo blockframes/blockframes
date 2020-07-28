@@ -62,7 +62,6 @@ function createMovieControls(movie: Partial<Movie>) {
     // Sections
     promotional: new MoviePromotionalElementsForm(entity.promotional),
     documents: new MovieLegalDocumentsForm(entity.documents),
-    technicalInformation: new MovieTechnicalInfoForm(entity.salesInfo),
 
     // Root data
     banner: new MoviePromotionalHostedMediaForm(entity.banner),
@@ -113,6 +112,14 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     super(createMovieControls(movie));
   }
 
+  get banner() {
+    return this.get('banner');
+  }
+
+  get promotional() {
+    return this.get('promotional');
+  }
+
   get directors() {
     return this.get('directors');
   }
@@ -127,6 +134,14 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get cast() {
     return this.get('cast');
+  }
+
+  get review() {
+    return this.get('review');
+  }
+
+  get poster() {
+    return this.get('poster');
   }
 
   get producers() {
@@ -145,12 +160,28 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('originalRelease');
   }
 
+  get originCountries() {
+    return this.get('originCountries');
+  }
+
+  get originalLanguages() {
+    return this.get('originalLanguages');
+  }
+
   get prizes() {
     return this.get('prizes');
   }
 
   get logline() {
     return this.get('logline');
+  }
+
+  get boxOffice() {
+    return this.get('boxOffice');
+  }
+
+  get stakeholders() {
+    return this.get('stakeholders');
   }
 
   get synopsis() {

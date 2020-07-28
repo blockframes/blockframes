@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieSalesCastForm, CreditForm } from '../../sales-cast/sales-cast.form';
+import { CreditForm } from '../../sales-cast/sales-cast.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[salesCast] [main] [production] movie-summary-credit',
+  selector: '[movie] movie-summary-credit',
   templateUrl: './credit.component.html',
   styleUrls: ['./credit.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -20,7 +20,7 @@ export class MovieFormMediaImageComponent {
   ) { }
 
   addStill() {
-    this.form.promotionalElements
+    this.form.promotional
       .get('still_photo')
       .push(new MoviePromotionalElementsForm());
   }

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } 
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[main] movie-summary-information',
+  selector: '[movie] movie-summary-information',
   templateUrl: './information.component.html',
   styleUrls: ['./information.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

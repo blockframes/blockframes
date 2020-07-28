@@ -13,22 +13,22 @@ export class MovieFormBudgetComponent {
   constructor(private shell: MovieFormShellComponent) { }
 
   get estimatedBudget() {
-    return this.form.get('budget').get('estimatedBudget');
+    return this.form.get('estimatedBudget');
   }
 
   get certifications() {
-    return this.form.get('salesInfo').get('certifications');
+    return this.form.get('certifications');
   }
 
   get rating() {
-    return this.form.get('salesInfo').get('rating');
+    return this.form.get('rating');
   }
 
   get boxOffice() {
-    return this.form.get('budget').get('boxOffice');
+    return this.form.get('boxOffice');
   }
 
   get review() {
-    return this.form.get('movieReview');
+    return this.form.get('review');
   }
 }

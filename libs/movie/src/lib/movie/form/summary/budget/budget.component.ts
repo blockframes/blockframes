@@ -5,7 +5,7 @@ import { MovieReviewForm } from '../../review/review.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[budget] [salesInfo] [movieReview] movie-summary-budget',
+  selector: '[movie] [movieReview] movie-summary-budget',
   templateUrl: './budget.component.html',
   styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,5 +23,9 @@ export class MovieSummaryBudgetComponent implements OnInit {
 
   public reviewHasNoValue(review: MovieReviewForm) {
     return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
+  }
+
+  get boxOffice() {
+    return this.movie.get('boxOffice');
   }
 }

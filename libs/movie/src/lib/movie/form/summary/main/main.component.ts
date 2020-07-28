@@ -3,7 +3,7 @@ import { DirectorForm } from '@blockframes/movie/form/main/main.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[main] movie-summary-main',
+  selector: '[movie] movie-summary-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

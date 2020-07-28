@@ -1,7 +1,7 @@
 import { FormEntity, FormStaticValue } from '@blockframes/utils/form';
-import { MovieSalesInfo } from '../+state';
+import { Movie } from '../+state';
 
-function createMovieTechnicalInfoControl(salesInfo: Partial<MovieSalesInfo>) {
+function createMovieTechnicalInfoControl(salesInfo: Partial<Movie>) {
   return {
     color: new FormStaticValue(salesInfo.color, 'COLORS'),
     format: new FormStaticValue(salesInfo.format, 'MOVIE_FORMAT'),
@@ -13,8 +13,8 @@ function createMovieTechnicalInfoControl(salesInfo: Partial<MovieSalesInfo>) {
 type MovieTechnicalInfoControl = ReturnType<typeof createMovieTechnicalInfoControl>;
 
 export class MovieTechnicalInfoForm extends FormEntity<MovieTechnicalInfoControl> {
-  constructor(salesInfo: MovieSalesInfo) {
+  constructor(salesInfo: Movie) {
     const control = createMovieTechnicalInfoControl(salesInfo)
     super(control)
   }
-} 
+}
