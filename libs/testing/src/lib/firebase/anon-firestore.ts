@@ -1,80 +1,113 @@
-import type { firestore } from "firebase-admin"
-import * as faker from 'faker'
+import { firestore } from 'firebase-admin';
+import * as faker from 'faker';
 
-export async function clearOrgs(db: firestore.Firestore) {
-    console.log('starting orgs anonimisation')
-    const orgsQuerySnapshot = await db.collection('orgs').get()
-    const orgs = orgsQuerySnapshot.docs.map(snapshot => {
-      const org = snapshot.data()
-      org.id = snapshot.id;
+export async function cleanOrgs(db: firestore.Firestore) {
+  console.log('starting orgs anonimisation');
+  const orgsQuerySnapshot = await db.collection('orgs').get();
+  const updates = orgsQuerySnapshot.docs.map(snapshot => {
+    const org = snapshot.data();
+    org.id = snapshot.id;
 
-      const companyName = faker.company.companyName()
-      const denomination = {
-        full: companyName,
-        public: companyName
-      }
-      org.denomination = denomination;
-      const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName.replace(/\s/g, '').replace(/\W/g,'')}-fakeOrg@cascade8.com`
-      org.email = email;
-      const { ref } = snapshot;
-      return { org, ref };
-    })
-    return Promise.all(orgs.map(update => update.ref.set(update.org, {merge: true})))
+    const companyName = faker.company.companyName();
+    const denomination = {
+      full: companyName,
+      public: companyName
+    };
+    org.denomination = denomination;
+    const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName
+      .replace(/\s/g, '')
+      .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
+    org.email = email;
 
+    return snapshot.ref.set(org, { merge: false });
+  });
+  return Promise.all(updates);
 }
 
 /**
  * This function will take a db as a parameter and clean it's emails as per anonimisation policy
  */
 export async function cleanUsers(db: firestore.Firestore) {
-  // const users = await db.collection('users').get()
-  // users.forEach(snapshot => {
-  //   const user = snapshot.data()
-  //   const uid = snapshot.id;
-  //   const { email, firstName, lastName, orgId } = user;
-  //   console.log(uid, email, firstName, lastName, orgId)
-  // })
+  console.log('starting user anonimisation');
+  const usersQuerySnapshot = await db.collection('users').get();
+  const orgsQuerySnapshot = await db.collection('orgs').get();
+  const orgs = orgsQuerySnapshot.docs.map(snapshot => {
+    const org = snapshot.data();
+    org.id = snapshot.id;
+    return org;
+  });
+  const users = usersQuerySnapshot.docs.map(snapshot => {
+    const user = snapshot.data();
+    user.id = snapshot.id;
+    return user;
+  });
 
-    console.log('starting email anonimisation')
-    const usersQuerySnapshot = await db.collection('users').get()
-    const orgsQuerySnapshot = await db.collection('orgs').get()
-    const orgs = orgsQuerySnapshot.docs.map(snapshot => {
-      const orgId = snapshot.id
-      const org = snapshot.data()
-      org.id = orgId;
-      return org
-    })
-    const users = usersQuerySnapshot.docs.map(snapshot => {
-      const uid = snapshot.id;
-      const user = snapshot.data()
-      user.id = uid;
-      return user;
-    })
+  const updates = users.map(user => {
+    const { orgId } = user;
+    const org = orgs.find(thisOrg => thisOrg.id === orgId);
+    const firstName = faker.name.firstName();
+    const lastName = faker.name.lastName();
+    let newEmail = `${firstName}.${lastName}-${org?.denomination?.full.replace(/\W/g, '') ??
+      'company'}-fake@cascade8.com`;
+    newEmail = newEmail.replace(/\s/g, '');
+    newEmail = newEmail.toLowerCase();
 
-    const updates = users.map(user => {
-      const { orgId } = user;
-      const org = orgs.find(thisOrg => {
-        return thisOrg.id === orgId
-      })
-      const firstName = faker.name.firstName()
-      const lastName = faker.name.lastName()
-      let newEmail = `${firstName}.${lastName}-${org?.denomination?.full.replace(/\W/g, '') ?? 'company'}-fake@cascade8.com`
-      newEmail = newEmail.replace(/\s/g, '')
-      newEmail = newEmail.toLowerCase()
+    return db
+      .collection('users')
+      .doc(user.id)
+      .set({ firstName, lastName, email: newEmail }, { merge: true });
+  });
+  return Promise.all(updates);
+}
 
-      console.log(newEmail)
-      return {
-        ref: db.collection('users').doc(user.id),
-        data: {firstName, lastName, email: newEmail}
-      }
+export async function cleanNotifications(db: firestore.Firestore) {
+  console.log('started notifications anonimisation');
+  const [orgsQuerySnapshot, usersQuerySnapshot, notificationsQuerySnapshot] = await Promise.all([
+    db.collection('orgs').get(),
+    db.collection('users').get(),
+    db.collection('notifications').get()
+  ]);
+  const orgs = orgsQuerySnapshot.docs.map(snapshot => snapshot.data());
+  const users = usersQuerySnapshot.docs.map(snapshot => snapshot.data());
 
-    })
-    return Promise.all(updates.map(update => update.ref.set(update.data, {merge: true})))
-    // transaction.set()
-    // const orgRefs = users.docs.map(snapshot => {
-    //   const user = snapshot.data()
-    //   const { orgId } = user;
-    //   return db.collection('orgs').doc(orgId)
-    // })
-    // const orgs = await transaction.getAll(...orgRefs)
+  const updates = notificationsQuerySnapshot.docs.map(snapshot => {
+    const notification = snapshot.data();
+    notification.id = snapshot.id;
+    const { organisation: { id: orgId } = { id: '' } } = notification;
+    // tslint:disable-next-line: no-non-null-assertion
+    const org = orgs.find(thisOrg => thisOrg.id === orgId);
+    if (notification?.organisation?.denomination)
+      notification.organisation.denomination = org?.denomination || {};
+    const { user: { uid } = { uid: '' } } = notification;
+    const user = users.find(thisUser => thisUser.uid === uid);
+    delete user?.watermark;
+    notification.user = user || {};
+    return snapshot.ref.set(notification, { merge: false });
+  });
+  return Promise.all(updates);
+}
+
+export async function cleanInvitations(db: firestore.Firestore) {
+  console.log('started invitations anonimisation');
+
+  const [orgsQuerySnapshot, usersQuerySnapshot, invitationsQuerySnapshot] = await Promise.all([
+    db.collection('orgs').get(),
+    db.collection('users').get(),
+    db.collection('invitations').get()
+  ]);
+  const orgs = orgsQuerySnapshot.docs.map(snapshot => snapshot.data());
+  const users = usersQuerySnapshot.docs.map(snapshot => snapshot.data());
+
+  const updates = invitationsQuerySnapshot.docs.map(snapshot => {
+    const invitation = snapshot.data();
+    const { fromOrg: { id: orgId } = { id: '' } } = invitation;
+    const org = orgs.find(thisOrg => thisOrg.id === orgId);
+    invitation.fromOrg = org || {};
+    const { toUser: { uid } = { uid: '' } } = invitation;
+    const user = users.find(thisUser => thisUser.uid === uid);
+    delete user?.watermark;
+    invitation.toUser = user || {};
+    return snapshot.ref.set(invitation, { merge: false });
+  });
+  return Promise.all(updates);
 }
