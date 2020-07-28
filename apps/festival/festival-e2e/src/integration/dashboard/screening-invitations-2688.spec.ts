@@ -50,9 +50,6 @@ describe('User invites other users to his private screening', () => {
     const p2: FestivalInvitationsPage = p1.goToInvitations();
     cy.wait(2000)
     p2.acceptInvitationScreening();
-    // Wait for post request to finish
-    // TODO: verify UI has changed instead of wait
-    cy.wait(5000);
     // TODO: remove the reload after that issue#3379 is fixed
     cy.reload();
 
@@ -75,9 +72,6 @@ describe('User invites other users to his private screening', () => {
     const p2 = p1.goToInvitations();
     cy.wait(2000);
     p2.refuseInvitationScreening();
-    // Wait for post request to finish
-    // TODO: verify UI has changed instead of wait
-    cy.wait(5000);
   });
 
   it('Event create logs in and verifies the accepted invitations', () => {
