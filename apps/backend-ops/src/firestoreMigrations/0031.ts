@@ -200,7 +200,46 @@ async function updateMovies(
       }
     }
 
-    // @TODO (#3175)  festival prize => logo + directors + ?? 
+    if (movie.main.directors && movie.main.directors.length) {
+      movie.main.directors = movie.main.directors.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    const fieldsToReset = [
+      'executiveProducer',
+      'coProducer',
+      'broadcasterCoproducer',
+      'lineProducer',
+      'distributor',
+      'salesAgent',
+      'laboratory',
+      'financier'
+    ];
+
+    fieldsToReset.forEach(f => {
+      if(movie.main.stakeholders[f] && movie.main.stakeholders[f].length){
+        movie.main.stakeholders[f] = movie.main.stakeholders[f].map(o => {
+          if(o.logo){
+            o.logo = '';
+          }
+          if(o.avatar){
+            o.avatar = '';
+          }
+          return o;
+        });
+      }
+    });
+
+    if(movie.festivalPrizes?.prizes && movie.festivalPrizes.prizes.length) {
+      movie.festivalPrizes.prizes = movie.festivalPrizes.prizes.map(o => {
+        if(o.logo){
+          o.logo = '';
+        }
+        return o;
+      });
+    }
 
     await doc.ref.set(movie);
   });
