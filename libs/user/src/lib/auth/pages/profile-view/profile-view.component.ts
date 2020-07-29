@@ -53,7 +53,7 @@ export class ProfileViewComponent implements OnInit {
     try {
       // update profile
       if (this.profileForm.invalid) {
-        throw new Error('Your profile information is not valid.')
+        throw new Error('Your profile information are not valid.')
       } else {
         const uid = this.authQuery.userId;
 
@@ -66,7 +66,7 @@ export class ProfileViewComponent implements OnInit {
       }
       // update password
       if (this.passwordForm.dirty) {
-        if (this.passwordForm.invalid) throw new Error('Your information to change your password is not valid.');
+        if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
         const { current, next } = this.passwordForm.value;
         this.authService.updatePassword(current, next);
         this.snackBar.open('Password changed.', 'close', { duration: 2000 });
