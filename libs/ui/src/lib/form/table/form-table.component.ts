@@ -25,7 +25,7 @@ import { Observable, Subscription } from 'rxjs';
 
 // Material
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Directive({ selector: '[formView]' })
 export class FormViewDirective { }
@@ -36,12 +36,13 @@ export class FormViewDirective { }
   styleUrls: ['./form-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   private sub: Subscription;
 
   @Input() displayedColumns: string[] = [];
   @Input() form: FormList<T>;
+  @Input() buttonText: string = 'Add';
 
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -49,8 +50,10 @@ export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;
-  showSave: boolean;
+  activeIndex: number;
   pageSize = 5;
+  /* We need to keep track of the current page since it will affect the index that we are working on */
+  pageConfig = { pageIndex: 0, pageSize: this.pageSize };
   formItem: FormEntity<EntityControl<T>, T>;
   dataSource = new MatTableDataSource<T>();
 
@@ -62,7 +65,6 @@ export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
     // Show table if there are controls
     this.showTable$ = values$.pipe(
       map(value => !!value.length),
-      tap(value => value ? this.formItem = this.form.at(0) : this.add()),
       distinctUntilChanged()
     );
     // Show Paginator if table size goes beyond page size
@@ -77,6 +79,11 @@ export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
       this.dataSource.data = values;
       this.cdr.markForCheck();
     });
+
+    /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
+    if (this.isFormEmpty) {
+      this.add();
+    }
   }
 
   ngAfterViewInit() {
@@ -86,29 +93,62 @@ export class FormTableComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
-  // Add a clean form and show save button
-  add() {
-    this.formItem = this.form.createControl({});
-    this.showSave = true;
+  get isFormEmpty() {
+    return !this.form.length
   }
 
-  // Edit existing form, we don't want save button as content is updated in real time
+  // Add a clean form
+  add() {
+    this.formItem = this.form.createControl({});
+  }
+
+  /* If there is no control in the form it adds a default one for the user to work on. */
+  addControl() {
+    if (this.isFormEmpty) {
+      this.form.push(this.formItem)
+    }
+    const control = this.form.createControl({})
+    this.form.push(control)
+    this.formItem = control;
+    this.activeIndex = this.form.length - 1
+    this.cdr.markForCheck()
+  }
+
+  // Edit existing form
   edit(index: number) {
-    this.formItem = this.form.at(index);
-    this.showSave = false;
+    this.calculateCurrentIndex(index);
+    this.formItem = this.form.at(this.activeIndex);
     this.cdr.markForCheck();
   }
 
   // Remove one line in the form
   remove(index: number) {
-    this.form.removeAt(index);
+    this.calculateCurrentIndex(index);
+    this.form.removeAt(this.activeIndex);
+    /* We don't want a negative index to be set. */
+    this.formItem = this.form.at(this.activeIndex ? this.activeIndex - 1 : 0)
+    if (this.isFormEmpty) {
+      this.add()
+    }
   }
 
-  // Push the form into the list
-  save() {
-    this.form.push(this.formItem);
-    this.showSave = false;
-    this.cdr.markForCheck();
+  /**
+   * @description function that gets triggered whenever the paginator fires his page event.
+   * @param page 
+   */
+  updateIndex(page: PageEvent) {
+    this.pageConfig = { pageIndex: page.pageIndex, pageSize: page.pageSize }
+  }
+
+  /**
+   * @description We are getting the index in the context of the paginator. Meaning if you are on page two
+   * and click the second row, you get the index 1. But this is not the correct index in the perspective of the list.
+   * @param index of the table row
+   */
+  private calculateCurrentIndex(index: number) {
+    this.activeIndex = index;
+    if (this.pageConfig.pageIndex) {
+      this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
+    }
   }
 }
