@@ -54,10 +54,10 @@ async function updateUsers(db: Firestore, users: PublicUser[]) {
 }
 
 function updateUserWatermark(user: PublicUser) {
-  if (user.watermark?.url) return user; // already has new format
-  const url = user?.watermark?.['urls']?.['original'] || user.watermark?.url;
-  user.watermark = createHostedMedia({
-    ref: user.watermark?.ref || '',
+  if ((user.watermark as any)?.url) return user; // already has new format
+  const url = user?.watermark?.['urls']?.['original'] || (user.watermark as any)?.url;
+  (user.watermark as any) = createHostedMedia({
+    ref: (user.watermark as any)?.ref || '',
     url: url || ''
   });
   return user;

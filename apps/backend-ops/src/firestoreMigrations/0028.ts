@@ -1,13 +1,13 @@
 import { Firestore, Storage } from '../admin';
-import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
-import { PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { chunk } from 'lodash'
-import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
+import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument, createOldHostedMedia as createHostedMedia } from './old-types';
+
+type PromotionalElement = any;
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -78,9 +78,9 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
-      notification.organization.logo = createHostedMedia();
+      (notification.organization.logo as any) = createHostedMedia();
     } else if (notification.user) {
-      notification.user.avatar = createHostedMedia();
+      (notification.user.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(notification);
   });
@@ -91,16 +91,16 @@ async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<Fi
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createHostedMedia();
+      (invitation.fromOrg.logo as any) = createHostedMedia();
     }
     if (invitation.toOrg) {
-      invitation.toOrg.logo = createHostedMedia();
+      (invitation.toOrg.logo as any) = createHostedMedia();
     }
     if (invitation.fromUser) {
-      invitation.fromUser.avatar = createHostedMedia();
+      (invitation.fromUser.avatar as any) = createHostedMedia();
     }
     if (invitation.toUser) {
-      invitation.toUser.avatar = createHostedMedia();
+      (invitation.toUser.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(invitation);
 

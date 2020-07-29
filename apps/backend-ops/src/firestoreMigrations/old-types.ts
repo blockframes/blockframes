@@ -119,7 +119,7 @@ export interface OldHostedMedia extends OldExternalMedia{
   ref: string;
 }
 
-export function createOldHostedMedia(media: Partial<OldHostedMedia>): OldHostedMedia {
+export function createOldHostedMedia(media?: Partial<OldHostedMedia>): OldHostedMedia {
   return {
     ref: media.ref || '',
     url: media.url || '',
