@@ -101,7 +101,7 @@ describe('User create a screening', () => {
     const p12: FestivalScreeningPage = p11.clickBackToEventList();
   });
 
-  it.skip("Request invitation's screening", () => {
+  it("Request invitation's screening", () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
@@ -111,14 +111,14 @@ describe('User create a screening', () => {
     p4.clickAskForInvitation();
   });
 
-  it.skip('Accept screening request', () => {
+  it('Accept screening request', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
 
-  it.skip('Verify that request is accepted', () => {
+  it('Verify that request is accepted', () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
@@ -128,7 +128,7 @@ describe('User create a screening', () => {
   });
 
   // #2695
-  it.skip('User add public screening to his calendar', () => {
+  it('User add public screening to his calendar', () => {
     signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
