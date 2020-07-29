@@ -27,7 +27,7 @@ const tunnelRoutes: Routes = [
       // Page 4
       {
         path: 'credits',
-        loadChildren: () => import('@blockframes/movie/pages/credits/credits.module').then(m => m.CreditsModule)
+        loadChildren: () => import('@blockframes/movie/pages/artistic/artistic.module').then(m => m.MovieFormArtisticModule)
       },
       // Page 5
       {

@@ -14,12 +14,12 @@ export class EstimatedBudgetComponent {
 
   public budgetList: string[] = BUDGET_LIST.map(budget => budget.label);
 
-  getLabel() {
-    return this.form.value.label;
-  }
+  // getLabel() {
+  //   return this.form.value.label;
+  // }
 
-  setForm(label: string) {
-    const budget = BUDGET_LIST.find(b => b.label === label);
-    this.form.setValue(budget);
-  }
+  // setForm(label: string) {
+  //   const budget = BUDGET_LIST.find(b => b.label === label);
+  //   this.form.setValue(budget);
+  // }
 }

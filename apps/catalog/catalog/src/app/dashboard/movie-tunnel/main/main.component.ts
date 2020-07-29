@@ -15,27 +15,27 @@ export class TunnelMainComponent {
     this.dynTitle.setPageTitle('Main information', 'Title information')
   }
 
-  get main() {
-    return this.form.get('main');
-  }
+  // get main() {
+  //   return this.form.get('main');
+  // }
 
-  get distributors() {
-    return this.production.get('stakeholders').get('distributor');
-  }
+  // get distributors() {
+  //   return this.production.get('stakeholders').get('distributor');
+  // }
 
-  get salesInfo() {
-    return this.form.get('salesInfo');
-  }
+  // get salesInfo() {
+  //   return this.form.get('salesInfo');
+  // }
 
-  get production() {
-    return this.form.get('production');
-  }
+  // get production() {
+  //   return this.form.get('production');
+  // }
 
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
+  // get salesCast() {
+  //   return this.form.get('salesCast');
+  // }
 
-  get festivalPrizes() {
-    return this.form.get('festivalPrizes');
-  }
+  // get festivalPrizes() {
+  //   return this.form.get('festivalPrizes');
+  // }
 }

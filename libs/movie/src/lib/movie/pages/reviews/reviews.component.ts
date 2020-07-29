@@ -13,15 +13,11 @@ export class MovieFormReviewscComponent {
   constructor(private shell: MovieFormShellComponent) {}
 
   get prizes() {
-    return this.festival.get('prizes');
-  }
-
-  get festival() {
-    return this.form.get('festivalPrizes');
+    return this.form.get('prizes');
   }
 
   get reviews() {
-    return this.form.get('movieReview');
+    return this.form.get('review');
   }
 
 }

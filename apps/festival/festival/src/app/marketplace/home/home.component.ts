@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 
 // RxJs
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
-    const selectMovies = (status: MovieMain['status']) => {
+    const selectMovies = (status: Movie['productionStatus']) => {
       return this.movieQuery.selectAll({
         filterBy: movies => movies.productionStatus === status && movies.storeConfig.appAccess.festival && movies.storeConfig.status === "accepted"
       });

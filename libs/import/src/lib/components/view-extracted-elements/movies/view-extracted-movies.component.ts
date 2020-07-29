@@ -2,24 +2,11 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatTableDataSource } from '@angular/material/table';
 import {
   Movie,
-  createMovieMain,
-  createMoviePromotionalDescription,
-  createMovieSalesCast,
-  createMovieSalesInfo,
-  createMovieFestivalPrizes,
-  createMovieBudget,
-  createMoviePromotionalElements,
-  createPrize,
-  populateMovieLanguageSpecification,
   MovieService,
-  createMovieRating,
-  createMovieOriginalRelease,
-  createMovieStory,
   createDocumentMeta,
-  createBoxOffice,
-  createMovieReview,
   createPromotionalHostedMedia,
   createPromotionalExternalMedia,
+  createMoviePromotional,
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -143,15 +130,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle] && spreadSheetRow[SpreadSheetMovie.internalRef]) {
         const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
         const movie = {
-          main: createMovieMain(),
-          promotionalDescription: createMoviePromotionalDescription(),
-          promotionalElements: createMoviePromotionalElements({}),
-          salesCast: createMovieSalesCast(),
-          salesInfo: createMovieSalesInfo(),
-          versionInfo: { languages: {} }, // TODO issue #1596
-          festivalPrizes: createMovieFestivalPrizes(),
-          budget: createMovieBudget(),
-          story: createMovieStory(),
+          promotional: createMoviePromotional({}),
+          languages: { languages: {} }, // TODO issue #1596
           ...existingMovie ? cleanModel(existingMovie) : undefined
         } as Movie;
 
