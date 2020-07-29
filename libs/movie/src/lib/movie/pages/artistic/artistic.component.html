@@ -12,7 +12,7 @@
 
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Last Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('lastName')" required />
+            <input test-id="last-name" matInput [formControl]="control.get('lastName')" required />
           </mat-form-field>
         </div>
 
@@ -37,17 +37,17 @@
         </mat-form-field>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="cast.removeAt(i)" aria-label="Add a Cast Member">
+          <button mat-mini-fab color="warn" (click)="cast.removeAt(i)" aria-label="Remove a Cast Member">
             <mat-icon svgIcon="trash"></mat-icon>
           </button>
-          <span class="mat-caption">Add a Cast Member</span>
+          <span class="mat-caption">Remove a Cast Member</span>
         </footer>
       </article>
       <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="cast.add()" aria-label="Remove a Cast Member">
+        <button mat-mini-fab color="primary" (click)="cast.add()" aria-label="Add a Cast Member">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
-        <span class="mat-caption">Remove a Cast Member</span>
+        <span class="mat-caption">Add a Cast Member</span>
       </footer>
     </section>
 
@@ -99,17 +99,17 @@
         </mat-form-field>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="crew.removeAt(i)" aria-label="Add a Crew Member">
+          <button mat-mini-fab color="warn" (click)="crew.removeAt(i)" aria-label="Remove a Crew Member">
             <mat-icon svgIcon="trash"></mat-icon>
           </button>
-          <span class="mat-caption">Add a Crew Member</span>
+          <span class="mat-caption">Remove a Crew Member</span>
         </footer>
       </article>
       <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="crew.add()" aria-label="Remove a Crew Member">
+        <button mat-mini-fab color="primary" (click)="crew.add()" aria-label="Add a Crew Member">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
-        <span class="mat-caption">Remove a Crew Member</span>
+        <span class="mat-caption">Add a Crew Member</span>
       </footer>
     </section>
 

@@ -37,10 +37,15 @@ const tunnelRoutes: Routes = [
       },
       // Page 6
       {
+        path: 'reviews',
+        loadChildren: () => import('@blockframes/movie/pages/reviews/reviews.module').then(m => m.MovieFormReviewsModule)
+      },
+      // Page 7
+      {
         path: 'budget',
         loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
       },
-      // Page 7
+      // Page 8
       {
         path: 'technical-info',
         loadChildren: () =>
