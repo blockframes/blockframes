@@ -94,7 +94,7 @@ function cleanNotifications(
 ) {
 
   return runChunks(notifications.docs, async (doc) => {
-    const notification = doc.data() as any; // @TODO (#3175) w8 "final" doc structure
+    const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
@@ -105,7 +105,7 @@ function cleanNotifications(
 
 }
 
-async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175) w8 "final" doc structure
+async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
@@ -126,7 +126,7 @@ function cleanInvitations(
   events: EventDocument<EventMeta>[],
 ) {
   return runChunks(invitations.docs, async (doc) => {
-    const invitation = doc.data() as any; // @TODO (#3175) w8 "final" doc structure
+    const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
@@ -136,7 +136,7 @@ function cleanInvitations(
   });
 }
 
-async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175) w8 "final" doc structure
+async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
@@ -257,7 +257,7 @@ function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data() as any; // @TODO (#3175) W8 final doc structure
+    const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
 
     // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
     if (movie.distributionRights) {
