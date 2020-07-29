@@ -29,6 +29,9 @@ const steps: TunnelStep[] = [{
     path: 'artistic',
     label: 'Artistic Team'
   }, {
+    path: 'reviews',
+    label: 'Selection & Reviews'
+  }, {
     path: 'credits',
     label: 'Credits'
   }, {
