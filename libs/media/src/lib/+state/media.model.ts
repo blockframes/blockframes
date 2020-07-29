@@ -3,11 +3,10 @@ import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { Organization } from '@blockframes/organization/+state';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { PublicUser } from '@blockframes/user/types';
-import { Movie } from '@blockframes/movie/+state';
-export * from './media.firestore';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 /**
  * This function **clean** a document from it's medias before updating it in the firestore.
@@ -15,7 +14,9 @@ export * from './media.firestore';
  * and **not the front**.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
-export function extractMediaFromDocumentBeforeUpdate(document: Organization | PublicUser | Movie, form: MovieForm | OrganizationForm | ProfileForm): any {
+export function extractMediaFromDocumentBeforeUpdate(
+  form: MovieForm | ProfileForm | OrganizationForm,
+  document: Organization | PublicUser | Movie = form.value): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(document);
 

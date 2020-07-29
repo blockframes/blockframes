@@ -13,7 +13,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 import { db } from 'apps/backend-functions/src/internals/firebase';
-import { createHostedMedia } from '@blockframes/media/+state/media.model';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
  * @param auth  Firestore Admin Auth object
