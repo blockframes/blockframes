@@ -1,5 +1,5 @@
 import { Firestore } from '../admin';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.model';
+import { OldHostedMedia as HostedMedia, createOldHostedMedia as createHostedMedia } from './old-types';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 import { chunk } from 'lodash';
 

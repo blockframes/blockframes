@@ -7,7 +7,6 @@ import {
   LanguagesSlug,
   SubLicensorRoleSlug
 } from "@blockframes/utils/static-model/types";
-import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
 type Timestamp = firestore.Timestamp;
@@ -176,7 +175,7 @@ export interface ContractLegalDocuments {
 export interface LegalDocument {
   id: string,
   label: string,
-  media: HostedMedia,
+  media: string,
   language?: LanguagesSlug,
   country?: TerritoriesSlug,
 }

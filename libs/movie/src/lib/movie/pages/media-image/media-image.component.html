@@ -14,7 +14,7 @@
         <drop-cropper
           [storagePath]="movieId | ref: 'movie' : 'banner'"
           ratio="banner"
-          [form]="form.main.banner.get('media')">
+          [form]="form.main.banner">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -32,7 +32,7 @@
         <drop-cropper
           [storagePath]="movieId | ref: 'movie' : 'poster'"
           ratio="poster"
-          [form]="form.main.poster.get('media')">
+          [form]="form.main.poster">
           <h3 type>Poster*</h3>
           <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -55,7 +55,7 @@
           <drop-cropper
             [storagePath]="movieId | ref: 'movie' : 'still' : stillForm.key"
             ratio="still"
-            [form]="stillForm.value.get('media').get('original')">
+            [form]="stillForm">
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>

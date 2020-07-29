@@ -6,7 +6,7 @@ import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { yearValidators } from '@blockframes/utils/form/validators/validators';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { MoviePromotionalHostedMediaForm } from '../promotional-elements/promotional-elements.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 // CREDIT
 
@@ -156,8 +156,8 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     contentType: new FormControl(entity.contentType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
-    banner: new MoviePromotionalHostedMediaForm(entity.banner),
-    poster: new MoviePromotionalHostedMediaForm(entity.poster),
+    banner: new HostedMediaForm(entity.banner),
+    poster: new HostedMediaForm(entity.poster),
   }
 }
 

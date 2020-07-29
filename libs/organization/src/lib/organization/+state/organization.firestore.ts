@@ -1,7 +1,6 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 
 
@@ -16,7 +15,7 @@ interface Denomination {
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
-  logo: HostedMedia;
+  logo: string;
 }
 
 /** Document model of an Organization */
@@ -124,7 +123,7 @@ export function createOrganizationBase(
     ...params,
     addresses: createAddressSet(params.addresses),
     denomination: createDenomination(params.denomination),
-    logo: createHostedMedia(params.logo),
+    logo: params.logo || '',
     appAccess: createOrgAppAccess(params.appAccess),
   };
 }

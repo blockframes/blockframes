@@ -51,7 +51,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   }
 
   public getPoster(movie: Movie) {
-    return movie.main.poster.media;
+    return movie.main.poster;
   }
 
   public getDirectors(movie: Movie) {

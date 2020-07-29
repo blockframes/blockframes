@@ -10,7 +10,7 @@
         <mat-card-content>
           <file-upload
           test-id="presentation-deck"
-          [form]="form.promotionalElements.get('presentation_deck').get('media')"
+          [form]="form.promotionalElements.get('presentation_deck')"
           [storagePath]="presentationPath"
           accept="['.pdf']"
           [types]="['application/pdf']"
@@ -28,7 +28,7 @@
         <mat-card-content>
           <file-upload
           test-id="scenario"
-          [form]="form.promotionalElements.get('scenario').get('media')"
+          [form]="form.promotionalElements.get('scenario')"
           [storagePath]="scenarioPath"
           accept="['.pdf']"
           [types]="['application/pdf']"

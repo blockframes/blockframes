@@ -10,7 +10,6 @@ import {
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieStory,
   Prize,
-  PromotionalElement,
   MovieLanguageSpecificationContainer,
   Title,
   MovieLanguageSpecification,
@@ -25,10 +24,7 @@ import {
   MovieLegalDocuments,
   DocumentMeta,
   LanguageRecord,
-  PromotionalExternalMedia,
-  PromotionalHostedMedia,
 } from './movie.firestore';
-import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -40,7 +36,6 @@ import { createMovieAppAccess } from '@blockframes/utils/apps';
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
 export {
-  PromotionalElement,
   MovieBudget,
   MovieFestivalPrizes,
   MovieMain,
@@ -110,8 +105,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     releaseYear: null,
     ...params,
     storeConfig: createStoreConfig(params.storeConfig),
-    banner: createPromotionalHostedMedia(params.banner),
-    poster: createPromotionalHostedMedia(params.poster),
+    banner: params.banner || '',
+    poster: params.poster || '',
   };
 }
 
@@ -126,9 +121,9 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
 
-  const newStills: Record<string, PromotionalHostedMedia> = {};
+  const newStills: Record<string, string> = {};
   for (const key in params.still_photo) {
-    newStills[key] = createPromotionalHostedMedia(params.still_photo[key]);
+    newStills[key] = params.still_photo[key];
   }
 
   const elements: MoviePromotionalElements = {
@@ -136,13 +131,13 @@ export function createMoviePromotionalElements(
 
     still_photo: newStills,
 
-    presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
-    scenario: createPromotionalHostedMedia(params.scenario),
+    presentation_deck: params.presentation_deck || '',
+    scenario: params.scenario || '',
 
-    promo_reel_link: createPromotionalExternalMedia(params.promo_reel_link),
-    screener_link: createPromotionalExternalMedia(params.screener_link),
-    trailer_link: createPromotionalExternalMedia(params.trailer_link),
-    teaser_link: createPromotionalExternalMedia(params.teaser_link),
+    promo_reel_link: params.promo_reel_link || '',
+    screener_link: params.screener_link || '',
+    trailer_link: params.trailer_link || '',
+    teaser_link: params.teaser_link || '',
   };
 
   return elements;
@@ -155,38 +150,6 @@ export function createMoviePromotionalDescription(
     keyAssets: '',
     keywords: [],
     ...params
-  };
-}
-
-function createPromotionalElement(
-  promotionalElement: Partial<PromotionalElement> = {}
-): PromotionalElement {
-  promotionalElement = promotionalElement || {};
-  return {
-    label: '',
-    ...promotionalElement
-  }
-}
-
-export function createPromotionalExternalMedia(
-  promotionalExternalMedia: Partial<PromotionalExternalMedia> = {}
-): PromotionalExternalMedia {
-  const promotionalElement = createPromotionalElement(promotionalExternalMedia);
-  return {
-    ...promotionalElement,
-    ...promotionalExternalMedia,
-    media: createExternalMedia(promotionalExternalMedia.media),
-  };
-}
-
-export function createPromotionalHostedMedia(
-  promotionalHostedMedia: Partial<PromotionalHostedMedia> = {}
-): PromotionalHostedMedia {
-  const promotionalElement = createPromotionalElement(promotionalHostedMedia);
-  return {
-    ...promotionalElement,
-    ...promotionalHostedMedia,
-    media: createHostedMedia(promotionalHostedMedia.media),
   };
 }
 
@@ -255,7 +218,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: createHostedMedia(),
+    logo: '',
     ...prize
   };
 }

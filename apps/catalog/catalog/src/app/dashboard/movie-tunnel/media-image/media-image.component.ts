@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { MoviePromotionalHostedMediaForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 @Component({
   selector: 'catalog-tunnel-media-image',
@@ -41,7 +41,7 @@ export class MediaImageComponent {
   addStill() {
     this.form.promotionalElements
       .get('still_photo')
-      .push(new MoviePromotionalHostedMediaForm());
+      .push(new HostedMediaForm());
   }
 
   trackByFn(index) {

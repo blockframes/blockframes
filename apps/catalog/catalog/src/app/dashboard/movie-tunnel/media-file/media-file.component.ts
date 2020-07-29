@@ -21,11 +21,11 @@ export class MediaFileComponent {
 
   public movie = this.movieQuery.getActive();
 
-  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck.media/`;
-  public presentationMediaForm = this.form.promotionalElements.get('presentation_deck').get('media');
+  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck/`;
+  public presentationMediaForm = this.form.promotionalElements.get('presentation_deck');
 
-  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario.media/`;
-  public scenarioMediaForm = this.form.promotionalElements.get('scenario').get('media');
+  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario/`;
+  public scenarioMediaForm = this.form.promotionalElements.get('scenario');
 
   get promotionalElements() {
     return this.form.get('promotionalElements');

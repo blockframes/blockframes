@@ -1,4 +1,3 @@
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.model';
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
@@ -34,13 +33,13 @@ interface IdentityRaw {
 export interface Person extends IdentityRaw {
   firstName?: string,
   lastName?: string,
-  avatar?: HostedMedia,
+  avatar?: string,
 }
 
 export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
-  logo?: HostedMedia;
+  logo?: string;
   countries?: TerritoriesSlug[],
 }
 
@@ -104,7 +103,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
     orgId: '',
     countries: [],
     ...params,
-    logo: createHostedMedia(params.logo),
+    logo: params.logo || '',
   }
 }
 
@@ -125,7 +124,7 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     filmography: '',
     description: '',
     status: '',
-    avatar: createHostedMedia(),
+    avatar: '',
     ...params
   } as T;
 }

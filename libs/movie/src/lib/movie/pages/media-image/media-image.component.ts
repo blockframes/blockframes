@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MoviePromotionalElementsForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 @Component({
   selector: 'movie-form-media-image',
@@ -22,7 +22,7 @@ export class MovieFormMediaImageComponent {
   addStill() {
     this.form.promotionalElements
       .get('still_photo')
-      .push(new MoviePromotionalElementsForm());
+      .push(new HostedMediaForm());
   }
 
 }

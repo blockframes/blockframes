@@ -15,7 +15,6 @@ import {
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
@@ -90,7 +89,7 @@ export interface MovieFestivalPrizes {
 }
 
 export interface MovieMain {
-  banner: PromotionalHostedMedia;
+  banner: string;
   contentType?: ContentType;
   customGenres?: string[],
   directors?: Director[], // TODO issue#3179
@@ -98,7 +97,7 @@ export interface MovieMain {
   internalRef?: string,
   originCountries?: TerritoriesSlug[],
   originalLanguages?: LanguagesSlug[],
-  poster: PromotionalHostedMedia;
+  poster: string;
   releaseYear?: number,
   status?: MovieStatusSlug,
   storeConfig?: StoreConfig;
@@ -119,13 +118,13 @@ export interface MovieProduction {
 }
 
 export interface MoviePromotionalElements {
-  presentation_deck: PromotionalHostedMedia,
-  promo_reel_link: PromotionalExternalMedia,
-  scenario: PromotionalHostedMedia,
-  screener_link: PromotionalExternalMedia,
-  still_photo: Record<string, PromotionalHostedMedia>,
-  teaser_link: PromotionalExternalMedia,
-  trailer_link: PromotionalExternalMedia,
+  presentation_deck: string,
+  promo_reel_link: string,
+  scenario: string,
+  screener_link: string,
+  still_photo: Record<string, string>,
+  teaser_link: string,
+  trailer_link: string,
 }
 
 export interface MoviePromotionalDescription {
@@ -242,20 +241,8 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
-  logo?: HostedMedia,
+  logo?: string,
   premiere?: PremiereType,
-}
-
-export interface PromotionalElement {
-  label: string;
-}
-
-export interface PromotionalExternalMedia extends PromotionalElement {
-  media: ExternalMedia,
-}
-
-export interface PromotionalHostedMedia extends PromotionalElement {
-  media: HostedMedia,
 }
 
 export interface Title {

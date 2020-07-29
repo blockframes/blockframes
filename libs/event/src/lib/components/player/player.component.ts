@@ -3,6 +3,7 @@ import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { ImageParameters, generateBackgroundImageUrl } from '@blockframes/media/directives/image-reference/imgix-helpers';
 
 type Timeout = NodeJS.Timeout;
 
@@ -79,7 +80,12 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    const watermarkUrl = this.authQuery.user.watermark.url;
+    const watermarkRef = this.authQuery.user.watermark;
+    const parameters: ImageParameters = {
+      auto: 'compress,enhance,format',
+      fit: 'crop',
+    };
+    const watermarkUrl = generateBackgroundImageUrl(watermarkRef, parameters);
     await this.loadScript();
     this.initPlayer(watermarkUrl);
   }

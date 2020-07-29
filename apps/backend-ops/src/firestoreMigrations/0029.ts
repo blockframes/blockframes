@@ -2,10 +2,11 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
+import { createOldHostedMedia as createHostedMedia, OldExternalMedia as ExternalMedia } from './old-types';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
+
+type PromotionalHostedMedia = any;
 
 /**
  * Migrate old medias & images and some refactoring on the movie.
@@ -99,7 +100,7 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
 
     // update and move banner to main
     if (movie.promotionalElements['banner']) {
-      movie.main.banner = updateImgRef<PromotionalHostedMedia>(movie.promotionalElements['banner'], 'media');
+      movie.main.banner = updateImgRef<any>(movie.promotionalElements['banner'], 'media');
       delete movie.promotionalElements['banner'];
     }
 
@@ -136,10 +137,10 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
 }
 
 /**
- * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url} 
+ * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url}
  * But references points to old structore on storage.
- * @param element 
- * @param property 
+ * @param element
+ * @param property
  */
 function updateImgRef<T extends (PublicUser | Organization | PromotionalHostedMedia)>(
   element: T,

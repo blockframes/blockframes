@@ -1,10 +1,9 @@
 import { db, functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
-import { HostedMedia } from '@blockframes/media/+state/media.model';
 
 /**
- * 
+ *
  * @param filePath the storage path of the file
  */
 export async function getDocAndPath(filePath: string | undefined) {
@@ -97,8 +96,8 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
   const { doc, docData, fieldToUpdate } = await getDocAndPath(data.name);
 
   // if firestore wasn't link to this file, we should not unlink it
-  const media: HostedMedia = get(docData, fieldToUpdate);
-  if (data.name !== media.ref) {
+  const ref = get(docData, fieldToUpdate);
+  if (data.name !== ref) {
     return;
   }
 

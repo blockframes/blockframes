@@ -92,10 +92,10 @@
   <mat-card *ngIf="movie">
     <h2>Promotional Elements :</h2>
 
-    <admin-image-sizes *ngIf="movie.main.banner.media" title="Movie banner" [form]="movie.main.banner.media">
+    <admin-image-sizes *ngIf="movie.main.banner" title="Movie banner" [form]="movie.main.banner">
       <h3>Movie Banner</h3>
     </admin-image-sizes>
-    <admin-image-sizes *ngIf="movie.main.poster.media" title="Movie poster" [form]="movie.main.poster.media">
+    <admin-image-sizes *ngIf="movie.main.poster" title="Movie poster" [form]="movie.main.poster">
       <h3>Movie poster</h3>
     </admin-image-sizes>
   </mat-card>

@@ -6,7 +6,6 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -114,14 +113,14 @@ export async function onMovieUpdate(
 
   // REMOVING EMPTY STILL_PHOTOs
   const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
-    .some(key => !after.promotionalElements.still_photo[key].media.ref);
+    .some(key => !after.promotionalElements.still_photo[key]);
 
   // if we found at least one empty still_photo, we update with only the none empty ones
   if (hasEmptyStills) {
-    const notEmptyStills: Record<string, PromotionalHostedMedia> = {};
+    const notEmptyStills: Record<string, string> = {};
 
     Object.keys(after.promotionalElements.still_photo)
-      .filter(key => !!after.promotionalElements.still_photo[key].media.ref)
+      .filter(key => !!after.promotionalElements.still_photo[key])
       .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
 
     change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });

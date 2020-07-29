@@ -160,7 +160,7 @@
           showLoader
           showPaginator>
           <ng-template colRef="movie.main.poster" let-posters>
-            <ng-container *ngIf="posters.media as poster; else noposter">
+            <ng-container *ngIf="posters as poster; else noposter">
               <img class="poster" [ref]="poster" asset="empty_poster.webp">
             </ng-container>
             <ng-template #noposter>

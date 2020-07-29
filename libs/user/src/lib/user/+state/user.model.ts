@@ -1,6 +1,5 @@
 import { UserRole } from "@blockframes/permissions/types";
 import { User } from "@blockframes/auth/+state/auth.store";
-import { HostedMedia, createHostedMedia } from "@blockframes/media/+state/media.firestore";
 
 export * from './user.firestore';
 
@@ -13,8 +12,8 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   uid: string;
   firstName?: string;
   lastName?: string;
-  avatar?: HostedMedia;
-  watermark?: HostedMedia;
+  avatar?: string;
+  watermark?: string;
   role?: UserRole;
 }
 
@@ -24,8 +23,8 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
     uid: user.uid,
     firstName: user.firstName,
     lastName: user.lastName,
-    avatar: createHostedMedia(user.avatar),
-    watermark: createHostedMedia(user.watermark),
+    avatar: user.avatar || '',
+    watermark: user.watermark || '',
     email: user.email,
     roles: [],
     role,

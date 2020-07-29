@@ -18,8 +18,6 @@ import {
   createDocumentMeta,
   createBoxOffice,
   createMovieReview,
-  createPromotionalHostedMedia,
-  createPromotionalExternalMedia,
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -611,11 +609,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Screener link',
-            media: spreadSheetRow[SpreadSheetMovie.screenerLink],
-          });
-          movie.promotionalElements.screener_link = promotionalElement;
+          movie.promotionalElements.screener_link = spreadSheetRow[SpreadSheetMovie.screenerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -628,12 +622,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PROMO REEL LINK
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Promo reel link',
-            media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
-          });
-
-          movie.promotionalElements.promo_reel_link = promotionalElement;
+          movie.promotionalElements.promo_reel_link = spreadSheetRow[SpreadSheetMovie.promoReelLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -646,12 +635,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // TRAILER LINK
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Trailer link',
-            media: spreadSheetRow[SpreadSheetMovie.trailerLink],
-          });
-
-          movie.promotionalElements.trailer_link = promotionalElement;
+          movie.promotionalElements.trailer_link = spreadSheetRow[SpreadSheetMovie.trailerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -664,12 +648,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PITCH TEASER LINK
         if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Pitch teaser link',
-            media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
-          });
-
-          movie.promotionalElements.teaser_link = promotionalElement;
+          movie.promotionalElements.teaser_link = spreadSheetRow[SpreadSheetMovie.pitchTeaserLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -682,12 +661,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Scenario link',
-            media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
-          });
-          // TODO issue#3091
-          movie.promotionalElements.scenario = promotionalElement;
+          movie.promotionalElements.scenario = spreadSheetRow[SpreadSheetMovie.scenarioLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -853,12 +827,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRESENTATION DECK
         if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Presentation deck',
-            media: spreadSheetRow[SpreadSheetMovie.presentationDeck],
-          });
-          // TODO issue#3091
-          movie.promotionalElements.presentation_deck = promotionalElement;
+          movie.promotionalElements.presentation_deck = spreadSheetRow[SpreadSheetMovie.presentationDeck];
         } else {
           importErrors.errors.push({
             type: 'warning',

@@ -1,16 +1,14 @@
 import { Pipe, PipeTransform, NgModule } from "@angular/core";
-import { HostedMedia } from "@blockframes/media/+state/media.model";
-
 
 @Pipe({
   name: 'isEmptyImgRef'
 })
 export class EmptyImagePipe implements PipeTransform {
   transform(
-    image: HostedMedia
+    ref: string
   ): boolean {
     try {
-      return !image.ref;
+      return !ref;
     } catch (error) {
       console.warn(error);
       return true;

@@ -1,7 +1,6 @@
 import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
-export * from './media.firestore';
 
 /**
  * This function **clean** a document from it's medias before updating it in the firestore.

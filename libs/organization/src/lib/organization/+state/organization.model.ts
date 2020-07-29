@@ -8,7 +8,6 @@ import {
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 export {
   OrganizationStatus,
@@ -49,7 +48,7 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
   return {
     id: org.id || '',
     denomination: createDenomination(org.denomination),
-    logo: createHostedMedia(org.logo)
+    logo: org.logo || '',
   }
 }
 

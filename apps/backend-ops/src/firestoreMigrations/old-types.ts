@@ -111,3 +111,17 @@ export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRe
   };
 }
 
+export interface OldExternalMedia {
+  url: string;
+}
+
+export interface OldHostedMedia extends OldExternalMedia{
+  ref: string;
+}
+
+export function createOldHostedMedia(media: Partial<OldHostedMedia>): OldHostedMedia {
+  return {
+    ref: media.ref || '',
+    url: media.url || '',
+  }
+}

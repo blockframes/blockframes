@@ -1,6 +1,5 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
@@ -9,7 +8,7 @@ export interface Profile {
   lastName: string;
   phoneNumber: string;
   position: string;
-  avatar: HostedMedia;
+  avatar: string;
   email: string;
 }
 
@@ -21,7 +20,7 @@ export function createProfile(params: Partial<User> = {}): Profile {
     position: '',
     email: '',
     ...params,
-    avatar: createHostedMedia(params.avatar),
+    avatar: params.avatar || '',
   };
 }
 
