@@ -102,7 +102,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     this.formItem = this.form.createControl({});
   }
 
-  /* If there is no control in the form it adds one adds a default one for the user to work on. */
+  /* If there is no control in the form it adds a default one for the user to work on. */
   addControl() {
     if (this.isFormEmpty) {
       this.form.push(this.formItem)
@@ -125,6 +125,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   remove(index: number) {
     this.calculateCurrentIndex(index);
     this.form.removeAt(this.activeIndex);
+    /* We don't want a negative index to be set. */
     this.formItem = this.form.at(this.activeIndex ? this.activeIndex - 1 : 0)
     if (this.isFormEmpty) {
       this.add()
@@ -140,8 +141,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   }
 
   /**
-   * @description Since we got a paginator and we work with the index of the rows of the tables, 
-   * we need to calculate the correct index for the source we are working on.
+   * @description We are getting the index in the context of the paginator. Meaning if you are on page two
+   * and click the second row, you get the index 1. But this is not the correct index in the perspective of the list.
    * @param index of the table row
    */
   private calculateCurrentIndex(index: number) {

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 // Components
 import { FormTableComponent, FormViewDirective } from './form-table.component';
+import { LineButtonModule } from '../line-button/line-button.module';
 
 // Blockframes
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
@@ -19,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ColRefModule,
+    LineButtonModule,
 
     // Material
     MatButtonModule,

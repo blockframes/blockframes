@@ -63,7 +63,7 @@ export class FormListComponent<T> implements OnInit {
     this.formItem = this.form.createControl({});
   }
 
-  /* If there is no control in the form it adds one adds a default one for the user to work on. */
+  /* If there is no control in the form it adds a default one for the user to work on. */
   addControl() {
     if (this.isFormEmpty) {
       this.form.push(this.formItem)
