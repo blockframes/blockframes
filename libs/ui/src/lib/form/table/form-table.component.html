@@ -45,9 +45,4 @@
 ​
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<ng-container *ngIf="showSave">
-  <button mat-stroked-button color="primary" (click)="save()">
-    <mat-icon svgIcon="floppy"></mat-icon>
-    <span>Save</span>
-  </button>
-</ng-container>
+<bf-line-button [buttonText]="buttonText" (buttonClick)="addControl()"></bf-line-button> 

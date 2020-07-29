@@ -32,13 +32,14 @@ export class ItemRefDirective { }
 export class FormListComponent<T> implements OnInit {
 
   @Input() form: FormList<T>;
+  @Input() buttonText: string = 'Add';
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
 
   list$: Observable<any[]>;
-  showSave: boolean;
   formItem: FormEntity<EntityControl<T>, T>;
+  activeIndex: number;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -47,36 +48,49 @@ export class FormListComponent<T> implements OnInit {
       startWith(this.form.value),
       distinctUntilChanged())
 
-    if (!this.form.length) {
-      this.add()
+    /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
+    if (this.isFormEmpty) {
+      this.add();
     }
   }
 
-  // Add a clean form and show save button
-  add() {
-    this.formItem = this.form.createControl({});
-    this.showSave = true;
+  get isFormEmpty() {
+    return !this.form.length
   }
 
-  // Edit existing form, we don't want save button as content is updated in real time
+  // Add a clean form
+  add() {
+    this.formItem = this.form.createControl({});
+  }
+
+  /* If there is no control in the form it adds a default one for the user to work on. */
+  addControl() {
+    if (this.isFormEmpty) {
+      this.form.push(this.formItem)
+    }
+    const control = this.form.createControl({})
+    this.form.push(control)
+    this.formItem = control;
+    this.activeIndex = this.form.length - 1
+    this.cdr.markForCheck()
+  }
+
+  // Edit existing form
   edit(index: number) {
+    this.activeIndex = index
     this.formItem = this.form.at(index);
-    this.showSave = false;
     this.cdr.markForCheck();
   }
 
   // Remove one line in the form
   remove(index: number) {
     this.form.removeAt(index);
-    if (!this.form.length) {
-      this.add()
+    if (this.activeIndex === index) {
+      this.activeIndex = index - 1 < 0 ? 0 : index - 1;
+      this.formItem = this.form.at(this.activeIndex)
+      if (this.isFormEmpty) {
+        this.add()
+      }
     }
   }
-
-  // Push the form into the list
-  save() {
-    this.form.push(this.formItem);
-    this.showSave = false;
-    this.cdr.markForCheck();
-  }
-}
+} 
