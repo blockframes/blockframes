@@ -16,17 +16,21 @@ export interface ImageParameters {
 }
 
 function getImgSize(ref: string) {
-  if (ref.includes('avatar')) {
-    return [50, 100, 300];
-  } else if (ref.includes('logo')) {
-    return [50, 100, 300];
-  } else if (ref.includes('poster')) {
-    return [200, 400, 600];
-  } else if (ref.includes('banner')) {
-    return [300, 600, 1200];
-  } else if (ref.includes('still')) {
-    return [50, 100, 200];
-  } else {
+  try {
+    if (ref.includes('avatar')) {
+      return [50, 100, 300];
+    } else if (ref.includes('logo')) {
+      return [50, 100, 300];
+    } else if (ref.includes('poster')) {
+      return [200, 400, 600];
+    } else if (ref.includes('banner')) {
+      return [300, 600, 1200];
+    } else if (ref.includes('still')) {
+      return [50, 100, 200];
+    } else {
+      return [1024];
+    }
+  } catch (_) {
     return [1024];
   }
 }

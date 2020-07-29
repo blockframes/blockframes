@@ -31,7 +31,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   /** the image to display */
   @Input() set ref(ref: string) {
-    if (!ref) return;
+    if (!ref || typeof ref !== 'string') return;
     this.ref$.next(ref);
   }
 
