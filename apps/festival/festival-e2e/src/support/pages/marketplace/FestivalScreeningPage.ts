@@ -38,4 +38,9 @@ export default class FestivalScreeningPage {
     cy.get('festival-screening event-screening-item h3').first().click();
     return new FestivalMarketplaceEventPage();
   }
+
+  clickSpecificEvent(eventName: string) {
+    cy.get('festival-screening event-screening-item h3').contains(eventName).click();
+    return new FestivalMarketplaceEventPage();
+  }
 }
