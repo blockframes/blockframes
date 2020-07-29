@@ -13,7 +13,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'invitations' })
+@CollectionConfig({ path: 'invitations', resetOnUpdate: true })
 export class InvitationService extends CollectionService<InvitationState> {
   constructor(
     store: InvitationStore,
