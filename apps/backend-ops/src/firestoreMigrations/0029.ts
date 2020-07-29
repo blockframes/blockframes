@@ -46,20 +46,9 @@ export async function upgrade(db: Firestore) {
 
 async function updateUsers(db: Firestore, users: PublicUser[]) {
   for (const user of users) {
-    let updatedUser = updateUserWatermark(user);
-    updatedUser = updateImgRef(user, 'avatar') as PublicUser;
+    const updatedUser = updateImgRef(user, 'avatar') as PublicUser;
     db.doc(`users/${user.uid}`).set(updatedUser);
   }
-}
-
-function updateUserWatermark(user: PublicUser) {
-  if (user.watermark?.url) return user; // already has new format
-  const url = user?.watermark?.['urls']?.['original'] || user.watermark?.url;
-  user.watermark = createHostedMedia({
-    ref: user.watermark?.ref || '',
-    url: url || ''
-  });
-  return user;
 }
 
 function updateOrgs(db: Firestore, orgs: Organization[]) {

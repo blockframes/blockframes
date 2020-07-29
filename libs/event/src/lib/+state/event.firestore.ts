@@ -1,5 +1,4 @@
 import { firestore } from 'firebase/app';
-import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 type Timestamp = firestore.Timestamp;
@@ -30,11 +29,6 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   end: D;
   allDay: boolean,
   meta: Meta;
-}
-
-export interface EventPrivateConfig extends PrivateConfig{
-  /** @dev private url to access screening */
-  url: string;
 }
 
 // firestore documents

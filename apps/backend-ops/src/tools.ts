@@ -1,3 +1,5 @@
+import { chunk } from "lodash";
+
 /**
  * Transform a regular function into a function that stop the process.
  * Uses this to run commands from the CLI. Works with promises too.
@@ -23,3 +25,13 @@ export const sleep = ms => {
     setTimeout(resolve, ms);
   });
 };
+
+export async function runChunks(docs, cb, rowsConcurrency = 10) {
+  const chunks = chunk(docs, rowsConcurrency);
+  for (let i = 0; i < chunks.length; i++) {
+    const c = chunks[i];
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = c.map(cb);
+    await Promise.all(promises);
+  }
+}
