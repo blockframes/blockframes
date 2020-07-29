@@ -26,14 +26,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Status</mat-label>
-            <mat-select matInput [formControl]="control.get('premiere')">
-              <mat-option *ngFor="let premiere of premiereType" [value]="premiere.slug">
-                {{ premiere.label }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <static-select scope="PREMIERE_TYPE" [control]="control.get('premiere')" label="Status" fxFlex></static-select>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
