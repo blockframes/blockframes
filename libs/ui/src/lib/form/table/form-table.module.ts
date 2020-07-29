@@ -14,7 +14,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -27,8 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatIconModule,
     MatTableModule,
     MatPaginatorModule,
-    MatIconModule,
-    MatDividerModule
+    MatIconModule
   ],
   declarations: [FormTableComponent, FormViewDirective],
   exports: [FormTableComponent, FormViewDirective, ColRefModule]

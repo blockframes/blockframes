@@ -12,7 +12,7 @@ import {
 
 // RxJs
 import { Observable } from 'rxjs';
-import { startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { EntityControl, FormEntity, FormList } from '@blockframes/utils/form';
