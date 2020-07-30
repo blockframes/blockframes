@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { ActivatedRoute } from '@angular/router';
+import { MovieVersionInfoForm } from '@blockframes/movie/form/version-info/version-info.form';
 
 @Component({
   selector: 'movie-form-available-materials',
@@ -10,14 +12,19 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 export class MovieFormAvailableMaterialscComponent {
   form = this.shell.form;
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
 
-  get version() {
-    return this.form.get('versionInfo');
+  public getPath(segment: string) {
+    const { movieId } = this.route.snapshot.params;
+    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+  }
+
+  get versionInfo() {
+    return this.form.get('versionInfo') as MovieVersionInfoForm;
   }
 
   get hasKeys() {
-    return Object.keys(this.version.controls).length;
+    return Object.keys(this.versionInfo.controls).length;
   }
 
 }

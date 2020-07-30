@@ -89,7 +89,6 @@
         <static-select scope="RELEASE_STATUS" [control]="main.get('status')" label="Estimated/Confirmed" fxFlex></static-select>
       </article>
 
-
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <static-select scope="SCREENING_STATUS" [control]="main.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select>
 
@@ -107,7 +106,7 @@
     <mat-divider></mat-divider>
 
     <section id="directors">
-      <h3>Director{ directors.controls.length, plural,=1 {} other {s}}</h3>
+      <h3>Directors</h3>
       <article *ngFor="let control of directors.controls; let i = index; let last = last" fxLayout="column">
 
         <div fxLayout fxLayoutGap="24px">
