@@ -43,8 +43,16 @@ export class MainComponent {
     }).join(', ');
   }
 
-  public getSalesCrew(movie: Movie, role: string, scope: Scope) {
-    return movie.crew[role].map(crew => {
+  public getProducers(movie: Movie, scope: Scope) {
+    return movie.producers.map(producer => {
+      return (producer.role && !! producer.role.length)
+        ? `${producer.firstName} ${producer.lastName} (${getLabelBySlug(scope, producer.role)})`
+        : `${producer.firstName} ${producer.lastName}`;
+    }).join(', ');
+  }
+
+  public getSalesCrew(movie: Movie, scope: Scope) {
+    return movie.crew.map(crew => {
       return {
           role: crew.role,
           firstName: crew.firstName,

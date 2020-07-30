@@ -102,7 +102,7 @@
           </ng-container>
           <ng-container *ngIf="movie.producers.length > 0">
             <li><strong i18n>Producer{movie.producers.length, plural,=1 {} other {s}}</strong>
-              <span> {{ getSalesCast(movie, 'producers', 'PRODUCER_ROLES') }}</span></li>
+              <span> {{ getProducers(movie, 'PRODUCER_ROLES') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.stakeholders as stakeholders">
             <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length,
@@ -115,7 +115,7 @@
         </ng-container>
         <ng-container *ngIf="movie.crew.length > 0">
           <h5>Artistic Crew</h5>
-          <li *ngFor="let crew of getSalesCrew(movie, 'crew', 'CREW_ROLES')">
+          <li *ngFor="let crew of getSalesCrew(movie, 'CREW_ROLES')">
             <strong i18n>{{ crew.label }} </strong>
             <span>{{ crew.firstName }} {{ crew.lastName }}</span>
           </li>
