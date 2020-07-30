@@ -259,7 +259,7 @@ export function cleanMovies(
       delete movie.distributionRights;
     }
 
-    await movieDoc.ref.set(movie); // @TODO (#3066) check if "update" works instead of "set" outside of emulator
+    await movieDoc.ref.set(movie);
   });
 }
 
