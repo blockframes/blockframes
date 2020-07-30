@@ -34,7 +34,7 @@ describe('Invitations Test Suite', () => {
 
   afterEach(() => clearFirestoreData({projectId: 'test'}))
 
-  it('Should check notif service is created', () => {
+  it('Should check invitation service is created', () => {
     expect(service).toBeTruthy();
   })
 
@@ -50,5 +50,31 @@ describe('Invitations Test Suite', () => {
     is.formatToFirestore = jest.fn();
     is.formatToFirestore({} as any);
     expect(is.formatToFirestore).toHaveBeenCalled();
+  });
+
+  it('Should invitation status become accepted', async () => {
+    await db.doc('invitations/1').set({ status: 'pending' });
+    await service.acceptInvitation({
+      id: '1',
+      type: 'attendEvent',
+      mode: 'invitation',
+      status: 'pending',
+      date: new Date()
+    });
+    const doc = await db.doc('invitations/1').ref.get();
+    expect(doc.data().status).toBe('accepted');
+  });
+
+  it('Should invitation status become declined', async () => {
+    await db.doc('invitations/2').set({ status: 'pending' });
+    await service.declineInvitation({
+      id: '2',
+      type: 'attendEvent',
+      mode: 'invitation',
+      status: 'pending',
+      date: new Date()
+    });
+    const doc = await db.doc('invitations/2').ref.get();
+    expect(doc.data().status).toBe('declined');
   });
 });
