@@ -73,6 +73,10 @@ export async function upgrade() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
+  console.info('Syncing firestore with storage');
+  await syncStorage();
+  console.info('Firestore is now synced with storage!');
+
   process.exit(0);
 }
 

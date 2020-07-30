@@ -12,7 +12,6 @@ import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
 import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
-import { syncStorage } from './syncStorage';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -165,8 +164,6 @@ export async function generateWatermarks() {
   await runChunks(users, async (user) => {
     await upsertWatermark(user);
   });
-
-  await syncStorage();
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();
