@@ -45,7 +45,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form, movie);
 
     await this.service.update(movie.id, documentToUpdate);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);
