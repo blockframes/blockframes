@@ -6,7 +6,7 @@ import {
   USER_1,
   USER_3,
   USER_4,
-  PRIVATE_EVENTNAME,
+  PRIVATE_EVENTNAME_1,
   PARTICIPANT_1_NAME,
   PARTICIPANT_2_NAME,
   ORG_NAME,
@@ -35,7 +35,7 @@ describe('User invites other users to his private screening', () => {
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
     const p3: EventEditPage = p2.createDetailedEventToday(NOW);
-    p3.addEventTitle(PRIVATE_EVENTNAME);
+    p3.addEventTitle(PRIVATE_EVENTNAME_1);
     p3.checkAllDay();
     p3.selectMovie(MOVIE_TITLE);
     p3.inviteUser([USER_2.email, USER_3.email]);

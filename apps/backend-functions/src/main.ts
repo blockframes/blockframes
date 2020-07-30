@@ -21,7 +21,6 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
-import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
@@ -126,7 +125,7 @@ export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
 
 /** Trigger: when a permission document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
-  'permissions/{orgID}/documentPermissions/{docId}',
+  'permissions/{orgID}/documentPermissions/{docID}',
   onDocumentPermissionCreate
 );
 
@@ -201,13 +200,6 @@ export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
   onContractWrite
 );
-
-//---------------------------------
-//  Private documents Management //
-//---------------------------------
-
-export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
-export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
 
 //--------------------------------
 //       Apps Management        //

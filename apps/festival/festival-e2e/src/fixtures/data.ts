@@ -4,7 +4,10 @@ import { USERS } from '@blockframes/e2e/utils/users';
 export const NOW = new Date();
 export let TOMORROW = new Date(NOW);
 export const ORG_NAME = 'Curtis, Klein and Romero';
-export const PRIVATE_EVENTNAME = 'Private Event';
+export const PRIVATE_EVENTNAME_1 = 'Private Event 1';
+export const PRIVATE_EVENTNAME_2 = 'Private Event 2';
+export const PRIVATE_EVENTNAME_3 = 'Private Event 3';
+
 export const PUBLIC_EVENTNAME = 'Public Event';
 
 export const PARTICIPANT_1_NAME = 'Bryant John';

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from "@angular/core";
-import { HostedMedia } from "@blockframes/media/+state/media.model";
+import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 
 
 @Pipe({

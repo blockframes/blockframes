@@ -1,7 +1,7 @@
 import { Firestore } from '../admin';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.model';
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
-import { chunk } from 'lodash';
+import { runChunks } from '../tools';
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 
@@ -120,12 +120,4 @@ async function updateMovies(
   });
 }
 
-async function runChunks(docs, cb, rowsConcurrency = 10) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
-  }
-}
+
