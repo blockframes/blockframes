@@ -1,3 +1,4 @@
+import { chunk } from 'lodash';
 import { firestore } from 'firebase-admin';
 import * as faker from 'faker';
 
@@ -19,10 +20,39 @@ export async function cleanOrgs(db: firestore.Firestore) {
       .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
     org.email = email;
 
-    return snapshot.ref.set(org, { merge: false });
+    // return snapshot.ref.set(org, { merge: false });
+    return { ref: snapshot.ref, org };
   });
-  return Promise.all(updates);
+  return runChunks(
+    updates,
+    update => {
+      return update.ref.set(update.org, { merge: false });
+    },
+    25
+  );
+  // return Promise.all(updates);
 }
+
+// export async function cleanOrgs(db: firestore.Firestore) {
+//   console.log('starting orgs anonimisation');
+//   const orgsQuerySnapshot = await db.collection('orgs').get();
+//   return runChunks(orgsQuerySnapshot.docs, snapshot => {
+//     const org = snapshot.data();
+//     org.id = snapshot.id;
+//     const companyName = faker.company.companyName();
+//     const denomination = {
+//       full: companyName,
+//       public: companyName
+//     };
+//     org.denomination = denomination;
+//     const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName
+//       .replace(/\s/g, '')
+//       .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
+//     org.email = email;
+//     // return snapshot.ref.set(org, { merge: false });
+//     return snapshot.ref.set(org);
+//   });
+// }
 
 /**
  * This function will take a db as a parameter and clean it's emails as per anonimisation policy
@@ -52,12 +82,14 @@ export async function cleanUsers(db: firestore.Firestore) {
     newEmail = newEmail.replace(/\s/g, '');
     newEmail = newEmail.toLowerCase();
 
-    return db
-      .collection('users')
-      .doc(user.id)
-      .set({ firstName, lastName, email: newEmail }, { merge: true });
+    // return db .collection('users') .doc(user.id) .set({ firstName, lastName, email: newEmail }, { merge: true });
+    return {
+      ref: db.collection('users').doc(user.id),
+      data: { firstName, lastName, email: newEmail }
+    };
   });
-  return Promise.all(updates);
+  return runChunks(updates, update => update.ref.set(update.data, { merge: true }));
+  // return Promise.all(updates);
 }
 
 export async function cleanNotifications(db: firestore.Firestore) {
@@ -82,9 +114,11 @@ export async function cleanNotifications(db: firestore.Firestore) {
     const user = users.find(thisUser => thisUser.uid === uid);
     delete user?.watermark;
     notification.user = user || {};
-    return snapshot.ref.set(notification, { merge: false });
+    // return snapshot.ref.set(notification, { merge: false });
+    return { ref: snapshot.ref, data: notification };
   });
-  return Promise.all(updates);
+  return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
+  // return Promise.all(updates);
 }
 
 export async function cleanInvitations(db: firestore.Firestore) {
@@ -107,7 +141,33 @@ export async function cleanInvitations(db: firestore.Firestore) {
     const user = users.find(thisUser => thisUser.uid === uid);
     delete user?.watermark;
     invitation.toUser = user || {};
-    return snapshot.ref.set(invitation, { merge: false });
+    // return snapshot.ref.set(invitation, { merge: false });
+    return { ref: snapshot.ref, data: invitation };
   });
-  return Promise.all(updates);
+  // return Promise.all(updates);
+  return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
 }
+
+export async function runChunks<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
+  const chunks = chunk(batch, chunkSize);
+  return chunks.map(async (subChunk, i) => {
+    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    const promises = subChunk.map(cb);
+    return await Promise.all(promises);
+  });
+  // function* getChunk() {
+  //   yield chunks.pop().map(chunk => chunk.map())
+  // }
+
+  // for (let i = 0; i < chunks.length; i++) {
+  //   const chunk = chunks[i];
+  //   console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+  //   const promises = chunk.map(cb);
+  //   await Promise.all(promises);
+  // }
+}
+
+//  await runChunks(moviesTestSet, async (m) => {
+//       const movieRef = db.collection('movies').doc(m.id);
+//       await movieRef.set(m);
+//     }, 50);
