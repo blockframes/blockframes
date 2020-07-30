@@ -24,7 +24,7 @@ export interface AdminServices {
 }
 
 export function loadAdminServices(): AdminServices {
-  if (!admin.apps.length) {
+  if (!admin.apps.length) { // @TODO (#3066 Mano) Something to change here ?
     admin.initializeApp({
       ...firebase,
       credential: admin.credential.applicationDefault(),

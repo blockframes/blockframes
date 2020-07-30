@@ -42,13 +42,12 @@ export async function cleanDeprecatedData() {
   ]);
 
   // Getting existing document ids to compare
-  const [movieIds, organizationIds, eventIds, userIds] = await Promise.all([
+  const [movieIds, organizationIds, eventIds, userIds] = [
     movies.docs.map(movie => movie.data().id),
     organizations.docs.map(organization => organization.data().id),
     events.docs.map(event => event.data().id),
     users.docs.map(user => user.data().uid)
-  ]);
-
+  ];
 
   // Compare and update/delete documents with references to non existing documents
   await cleanUsers(users, organizationIds, auth, db);
@@ -57,19 +56,16 @@ export async function cleanDeprecatedData() {
   console.log('Cleaned orgs');
 
   // Getting all collections we need to reload
-  const [
-    organizations2,
-    users2,
-  ] = await Promise.all([
+  const [organizations2, users2] = await Promise.all([
     db.collection('orgs').get(),
     db.collection('users').get(),
   ]);
 
   // Reloading users and org list after possible deletion
-  const [organizationIds2, userIds2] = await Promise.all([
+  const [organizationIds2, userIds2] = [
     organizations2.docs.map(organization => organization.data().id),
     users2.docs.map(user => user.data().uid)
-  ]);
+  ];
 
   const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
 
@@ -212,7 +208,7 @@ async function cleanUsers(
   });
 }
 
-function cleanOrganizations(
+export function cleanOrganizations(
   organizations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingUserIds: string[],
   existingMovieIds: string[]
@@ -240,7 +236,7 @@ function cleanOrganizations(
   });
 }
 
-function cleanPermissions(
+export function cleanPermissions(
   permissions: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[]
 ) {
@@ -253,7 +249,7 @@ function cleanPermissions(
   });
 }
 
-export async function cleanMovies(
+export function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {

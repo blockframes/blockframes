@@ -20,18 +20,24 @@ config();
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FeaturesList {
   if (offline) { // ** Connect to emulator
     const firebaseTest = firebaseFunctionsTest();
-    //projectId cannot have '.' in the string; need whole numbers
-    const projectId = 'test' + testIndex++;
+    if (!admin.apps.length) { // @TODO (#3066 Mano)
 
-    // initialize test database
-    process.env.GCLOUD_PROJECT = projectId;
-    process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    admin.initializeApp({ projectId });
+      //projectId cannot have '.' in the string; need whole numbers
+      const projectId = 'test' + testIndex++;
+      // @TODO (#3066 Mano) I had to use blockframes-bruce because of 
+      // initializeApp in firebase.ts
+      //const projectId = 'blockframes-bruce'; 
+
+      // initialize test database
+      process.env.GCLOUD_PROJECT = projectId;
+      process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+      admin.initializeApp({ projectId });
+    }
     return firebaseTest;
   }
 
   const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
-  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebase, ...overrideConfig  }, pathToServiceAccountKey);
+  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebase, ...overrideConfig }, pathToServiceAccountKey);
   const runtimeConfig = require(resolve(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);
   return testObj;
