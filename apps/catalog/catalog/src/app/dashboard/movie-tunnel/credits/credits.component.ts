@@ -27,8 +27,8 @@ export class CreditsComponent {
   //   return this.form.get('production');
   // }
 
-  get production() {
-    return this.form.get('production');
-  }
+  // get production() {
+  //   return this.form.get('production');
+  // }
 
 }

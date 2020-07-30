@@ -2,7 +2,6 @@ import { Prize, Movie } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { yearValidators } from '@blockframes/utils/form/validators';
-import { createHostedMedia } from '@blockframes/media/+state/media.model';
 
 // TODO #2284
 function createPrizeFormControl(entity?: Partial<Prize>) {
@@ -11,7 +10,6 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
     name: new FormControl(name),
     year: new FormControl(year, [yearValidators]),
     prize: new FormControl(prize),
-    logo: new FormControl(logo),
     premiere: new FormControl(premiere),
   }
 }
@@ -29,7 +27,6 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: createHostedMedia(),
     ...prize
   };
 }

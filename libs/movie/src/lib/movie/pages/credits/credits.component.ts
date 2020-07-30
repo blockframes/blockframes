@@ -12,16 +12,4 @@ export class MovieFormCreditsComponent {
 
   constructor(private shell: MovieFormShellComponent) { }
 
-  get main() {
-    return this.form.get('main');
-  }
-
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
-
-  get production() {
-    return this.form.get('production');
-  }
-
 }
