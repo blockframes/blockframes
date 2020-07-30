@@ -60,3 +60,4 @@ env/env.ts
 env/env.hugo.ts
 tools/credentials/*
 tools/users.fixture.json
+secrets.sh

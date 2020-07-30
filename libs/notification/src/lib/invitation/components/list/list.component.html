@@ -6,20 +6,17 @@
       <p class="mat-body-2" *ngIf="invitationList.length">
         {{ timeFrame | labelByDate }}
       </p>
+      <mat-divider *ngIf="invitationList.length"></mat-divider>
 
       <!-- Display all invitations -->
-      <ng-container *ngFor="let invitation of invitationList">
-        <ng-template
-          [ngTemplateOutlet]="itemTemplate || default"
-          [ngTemplateOutletContext]="{ $implicit: invitation }">
+      <ng-container *ngFor="let invitation of invitationList | slice:pageConfig.from:pageConfig.to">
+        <ng-template [ngTemplateOutlet]="itemTemplate || default" [ngTemplateOutletContext]="{ $implicit: invitation }">
         </ng-template>
       </ng-container>
-      <div class="divider" *ngIf="invitationList.length">
-        <mat-divider inset></mat-divider>
-      </div>
-
     </ng-container>
   </ng-container>
+  <mat-paginator [length]="invitations.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    (page)="setPage($event)"></mat-paginator>
 </mat-list>
 
 <ng-template #default let-invitation>

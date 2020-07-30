@@ -1,8 +1,12 @@
 <ng-container *ngIf="hasNotifications$ | async; else noFeed">
-  <h1>Activity Feed</h1>
-  <mat-card>
-    <notification-list [notifications]="notifications$ | async"></notification-list>
-  </mat-card>
+  <header fxLayout="row" fxLayoutAlign="space-between start">
+    <h1>Activity Feed</h1>
+    <button mat-button (click)="markAll()">
+      <mat-icon svgIcon="read"></mat-icon>
+      <span>Mark all as read</span>
+    </button>
+  </header>
+  <notification-list [notifications]="notifications$ | async" class="mat-elevation-z0"></notification-list>
 </ng-container>
 
 <ng-template #noFeed>

@@ -4,6 +4,9 @@
 @import './theme.scss';
 @import './variables.scss';
 
+:root {
+  --layout-margin: 24px;
+}
 
 * {
   box-sizing: border-box;

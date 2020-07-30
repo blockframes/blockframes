@@ -6,6 +6,7 @@
       <h2 *ngIf="notificationList.length">
         {{ timeFrame | labelByDate }}
       </h2>
+      <mat-divider *ngIf="notifications.length"></mat-divider>
 
       <!-- Display all notifications -->
       <ng-container *ngFor="let notification of notificationList">
@@ -14,12 +15,11 @@
           [ngTemplateOutletContext]="{ $implicit: notification }">
         </ng-template>
       </ng-container>
-      <div class="divider" *ngIf="notificationList.length">
-        <mat-divider inset></mat-divider>
-      </div>
 
     </ng-container>
   </ng-container>
+  <mat-paginator [length]="notifications.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+  (page)="setPage($event)"></mat-paginator>
 </mat-list>
 
 <ng-template #default let-notification>

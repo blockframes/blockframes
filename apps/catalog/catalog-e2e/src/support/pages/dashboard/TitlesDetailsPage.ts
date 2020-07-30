@@ -12,7 +12,7 @@ export default class TitlesDetailsPage {
   }
 
   public clickTitles() {
-    cy.get('catalog-layout mat-sidenav mat-nav-list a').contains(TITLES).click();
+    cy.get('catalog-marketplace mat-sidenav mat-nav-list a').contains(TITLES).click();
     return new TitlesListPage();
   }
 }

@@ -13,12 +13,12 @@ export class CatalogLandingPageComponent {
   public tabTitle = [
     {
       title: 'Maximize sales on library titles and access new buyers.',
-      imgSrc: '/assets/images/seller_perspective.jpg',
+      imgAsset: 'seller_perspective.webp',
       description: ''
     },
     {
       title: 'Buy quality content from a multitude of rights holders in one single package.',
-      imgSrc: '/assets/images/buyer_perspective.jpg',
+      imgAsset: 'buyer_perspective.webp',
       description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
     }
   ]

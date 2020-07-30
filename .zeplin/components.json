@@ -125,6 +125,18 @@
                     "Organization Minimal Card"
                 ]
             }
+        },
+        {
+            "path": "libs/organization/src/lib/organization/components/banner/banner.stories.ts",
+            "zeplinNames": [
+                "component/encart/sellers"
+            ],
+            "storybook": {
+                "kind": "Featured Sales Agent Banner",
+                "storybook": [
+                    "Featured Sales Agent Banner"
+                ]
+            }
         }
     ],
     "github": {

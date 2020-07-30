@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDet
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
-import { getMediaUrl, getImgSize, ImgRef, imgSizeDirectory } from '@blockframes/media/+state/media.model';
+import { getMediaUrl, getImgSize, ImgRef, imgSizeDirectory, getAssetPath } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: '[ref] bf-img, [asset] bf-img',
@@ -14,11 +14,12 @@ export class ImgComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
   private asset$ = new BehaviorSubject('');
-  
+
   public srcset: string;
   public srcFallback: string;
   public assetSrc: string;
   public assetFallback: string;
+  public format: string;
 
   @Input() alt: string;
 
@@ -69,13 +70,8 @@ export class ImgComponent implements OnInit, OnDestroy {
     );
 
     this.sub = combineLatest([ this.asset$, theme$ ]).subscribe(([asset, theme]) => {
-      const format = asset.split('.').pop();
-      if (format === 'webp') {
-        this.assetSrc = `assets/${this.type}/${theme}/${asset}`;
-        this.assetFallback = `assets/${this.type}/${theme}-fallback/${asset.replace('.webp', '.png')}`;
-      } else {
-        this.assetFallback = `assets/${this.type}/${theme}/${asset}`;
-      }
+      this.format = asset.split('.').pop();
+      this.assetSrc = getAssetPath(asset, theme, this.type);
       this.cdr.markForCheck();
     });
   }

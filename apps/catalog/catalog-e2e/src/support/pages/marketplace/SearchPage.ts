@@ -57,12 +57,12 @@ export default class SearchPage extends NavbarPage {
   }
 
   public selectMovie(movieName: string) {
-    cy.get('article').contains('movie-card', movieName, {timeout: 30000}).find('a').click();
+    cy.get('movie-card').contains(movieName, {timeout: 30000}).find('a').click();
     return new ViewPage();
   }
 
   public clickWishlistButton(movieName: string) {
-    cy.get('article').contains('movie-card', movieName).find('button[test-id=heart-button]').click();
+    cy.get('movie-card').contains(movieName).parent().parent().find('button[test-id=heart-button]').click();
   }
 }
 
