@@ -1,0 +1,18 @@
+<tunnel-page>
+  <h1 subtitle>Available Materials</h1>
+  <ng-container tunnel-form>
+    <section id="festival">
+      <h3>Original Version</h3>
+      <article *ngFor="let control of version.controls; let i = index; let last = last">
+        <strong>Add Version </strong>
+        <ng-template #displayVersions>
+          <ng-container *ngFor="let version of version.controls.languages.controls | keyvalue; let isLast = last">
+            {{ version.key | translateSlug: "LANGUAGES" }} :
+            {{ version.value.value | versionPipe }}
+            {{ isLast ? '' : '| ' }}
+          </ng-container>
+        </ng-template>
+      </article>
+    </section>
+  </ng-container>
+</tunnel-page>

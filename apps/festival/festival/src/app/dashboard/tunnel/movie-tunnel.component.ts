@@ -29,11 +29,16 @@ const steps: TunnelStep[] = [{
     path: 'artistic',
     label: 'Artistic Team'
   }, {
-    path: 'credits',
-    label: 'Credits'
-  }, {
-    path: 'budget',
-    label: 'Budget, Quotas, Critics',
+    path: 'reviews',
+    label: 'Selection & Reviews'
+  },
+  {
+    path: 'technical-info',
+    label: 'Technical Information'
+  },
+  {
+    path: 'materials',
+    label: 'Available Materials'
   }]
 }, {
   title: 'Media',

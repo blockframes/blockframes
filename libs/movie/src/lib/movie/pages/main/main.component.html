@@ -107,7 +107,7 @@
     <mat-divider></mat-divider>
 
     <section id="directors">
-      <h3>Directors</h3>
+      <h3>Director{ directors.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of directors.controls; let i = index; let last = last" fxLayout="column">
 
         <div fxLayout fxLayoutGap="24px">

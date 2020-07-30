@@ -43,8 +43,12 @@ const tunnelRoutes: Routes = [
       // Page 7
       {
         path: 'technical-info',
-        loadChildren: () =>
-          import('@blockframes/movie/pages/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+        loadChildren: () => import('@blockframes/movie/pages/technical-info/technical-info.module').then(m => m.MovieFormTunnelTechnicalInfoModule)
+      },
+      // Page 9
+      {
+        path: 'materials',
+        loadChildren: () => import('@blockframes/movie/pages/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
       // Page 10
       {

@@ -30,4 +30,4 @@ import { MatSelectModule } from '@angular/material/select';
   ],
   exports: [MovieFormTechnicalInfoComponent]
 })
-export class TunnelTechnicalInfoModule {}
+export class MovieFormTunnelTechnicalInfoModule {}
