@@ -1,4 +1,4 @@
-﻿import { AuthWelcomePage, AuthLoginPage } from "../pages/auth";
+﻿import { AuthLoginPage } from "../pages/auth";
 import { User } from "./type";
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
@@ -13,8 +13,7 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
 
 /** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
 export function signIn(user: Partial<User>) {
-  const p1: AuthWelcomePage = new AuthWelcomePage();
-  const p2: AuthLoginPage = p1.clickCallToAction();
+  const p2: AuthLoginPage = new AuthLoginPage();
   p2.switchMode();
   p2.fillSignin(user);
   p2.clickSignIn();

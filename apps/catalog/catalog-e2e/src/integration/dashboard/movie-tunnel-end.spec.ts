@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import { LandingPage } from '../../support/pages/landing';
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelStorylinePage, TunnelCreditsPage, TunnelSummaryPage, TitlesDetailsPage, TitlesListPage, TitlesActivityPage } from "../../support/pages/dashboard";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
@@ -18,7 +19,9 @@ const SYNOPSIS = 'An up-close-and-personal portrait of the fashion icon, Karl La
 const PRODUCTION_YEAR = '2006';
 
 beforeEach(() => {
-  clearDataAndPrepareTest();
+  clearDataAndPrepareTest('/');
+  const p1 = new LandingPage();
+  p1.clickSignup();   
   signInAndNavigateToMain();
 });
 
