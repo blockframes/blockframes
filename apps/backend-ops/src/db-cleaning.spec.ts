@@ -7,7 +7,7 @@ const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-te
 let db;
 jest.setTimeout(30000);
 
-describe('Migration script', () => {
+describe('DB cleaning script', () => {
   beforeEach(async () => {
     initFunctionsTestMock();
     db = firestore();
