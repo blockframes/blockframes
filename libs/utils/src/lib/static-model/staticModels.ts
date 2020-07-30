@@ -228,6 +228,24 @@ const models = {
       'label': 'Confirmed'
     }
   ] as const,
+  'PREMIERE_TYPE': [
+    {
+      'slug': 'world',
+      'label': 'World'
+    },
+    {
+      'slug': 'international',
+      'label': 'International'
+    },
+    {
+      'slug': 'national',
+      'label': 'National'
+    },
+    {
+      'slug': 'market',
+      'label': 'Market'
+    }
+  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },
