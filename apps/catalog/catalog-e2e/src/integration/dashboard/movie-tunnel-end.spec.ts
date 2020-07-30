@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 
-import { LandingPage } from '../../support/pages/landing';
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelStorylinePage, TunnelCreditsPage, TunnelSummaryPage, TitlesDetailsPage, TitlesListPage, TitlesActivityPage } from "../../support/pages/dashboard";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
@@ -20,8 +19,6 @@ const PRODUCTION_YEAR = '2006';
 
 beforeEach(() => {
   clearDataAndPrepareTest('/');
-  const p1 = new LandingPage();
-  p1.clickSignup();   
   signInAndNavigateToMain();
 });
 

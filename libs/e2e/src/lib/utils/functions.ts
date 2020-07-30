@@ -13,10 +13,10 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
 
 /** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
 export function signIn(user: Partial<User>) {
-  const p2: AuthLoginPage = new AuthLoginPage();
-  p2.switchMode();
-  p2.fillSignin(user);
-  p2.clickSignIn();
+  const p1: AuthLoginPage = new AuthLoginPage();
+  p1.switchMode();
+  p1.fillSignin(user);
+  p1.clickSignIn();
 }
 
 export function uploadFile(p: string, type: string, testId: string): any {
