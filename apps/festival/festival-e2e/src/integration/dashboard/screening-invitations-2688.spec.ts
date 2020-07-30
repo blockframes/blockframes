@@ -78,7 +78,6 @@ describe('User invites other users to his private screening', () => {
   });
 
   it('Event create logs in and verifies the accepted invitations', () => {
-    cy.visit('/auth/welcome');
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()

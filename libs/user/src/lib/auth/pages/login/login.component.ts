@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.isSignin = !(this.route.snapshot.fragment === 'login');
+    this.isSignin = (this.route.snapshot.fragment === 'signup');
     this.isSignin
       ? this.dynTitle.setPageTitle('Create an account')
       : this.dynTitle.setPageTitle('Login')
