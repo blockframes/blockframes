@@ -253,18 +253,17 @@ function cleanPermissions(
   });
 }
 
-function cleanMovies(
+export async function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
 
-    // @TODO (#3066) mock a movie with distributionRights on root document to test deletion
     if (movie.distributionRights) {
       delete movie.distributionRights;
     }
 
-    await movieDoc.ref.update(movie);
+    await movieDoc.ref.set(movie); // @TODO (#3066) check if "update" works instead of "set" outside of emulator
   });
 }
 
