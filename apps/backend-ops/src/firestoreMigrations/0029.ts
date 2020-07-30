@@ -3,7 +3,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
+import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.firestore';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
 

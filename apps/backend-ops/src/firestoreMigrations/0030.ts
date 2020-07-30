@@ -1,5 +1,5 @@
 import { Firestore } from '../admin';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.model';
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 import { runChunks } from '../tools';
 

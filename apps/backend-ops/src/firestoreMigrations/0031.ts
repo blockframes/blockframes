@@ -1,7 +1,7 @@
 import { Firestore, Storage } from '../admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { HostedMedia } from '@blockframes/media/+state/media.model';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
