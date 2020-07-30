@@ -1,8 +1,0 @@
-<mat-form-field appearance="outline">
-  <mat-label>Budget Range</mat-label>
-  <mat-select test-id="budget-range" (valueChange)="setForm($event)" [value]="getLabel()" >
-    <mat-option *ngFor="let budget of budgetList" [value]="budget">
-      {{ budget }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>

@@ -41,7 +41,6 @@ import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-au
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
-import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
@@ -61,7 +60,6 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     TitleListLayoutModule,
     WishlistButtonModule,
     TitleFilterModule,
-    MovieFormEstimatedBudgetModule,
     LanguageFilterModule,
     BudgetFilterModule,
     StaticCheckBoxesModule,

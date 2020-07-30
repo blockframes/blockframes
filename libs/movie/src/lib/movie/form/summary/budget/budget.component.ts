@@ -5,14 +5,14 @@ import { MovieReviewForm } from '../../review/review.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({
-  selector: '[movie] [movieReview] movie-summary-budget',
+  selector: '[movie] [review] movie-summary-budget',
   templateUrl: './budget.component.html',
   styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryBudgetComponent implements OnInit {
   @Input() movie: MovieForm;
-  @Input() movieReview: FormList<MovieReview>;
+  @Input() review: FormList<MovieReview>;
   @Input() link: string;
 
   constructor(private cdr: ChangeDetectorRef) {}
@@ -27,5 +27,9 @@ export class MovieSummaryBudgetComponent implements OnInit {
 
   get boxOffice() {
     return this.movie.get('boxOffice');
+  }
+
+  get rating() {
+    return this.movie.get('rating');
   }
 }

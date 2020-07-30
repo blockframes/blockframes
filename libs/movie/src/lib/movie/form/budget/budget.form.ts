@@ -2,8 +2,7 @@ import { FormEntity, FormValue, FormList } from '@blockframes/utils/form';
 import { FormControl, Validators } from '@angular/forms';
 import { BoxOffice } from '../../+state/movie.firestore';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
-import { Movie, createMovie } from '@blockframes/movie/+state';
+import { createMovie, Movie } from '@blockframes/movie/+state';
 
 export const BUDGET_LIST: NumberRange[] = [
   { from: 0, to: 1000000, label: 'Less than $1 million' },
@@ -14,6 +13,21 @@ export const BUDGET_LIST: NumberRange[] = [
   { from: 10000000, to: 20000000, label: '$10 - 20 millions' },
   { from: 20000000, to: 999999999, label: 'More than $20 millions' },
 ];
+
+function createBudgetFormControl(entity?: Partial<Movie>) {
+  const { boxOffice } = createMovie(entity);
+  return {
+    boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el))
+  }
+}
+
+export type BudgetFormControl = ReturnType<typeof createBudgetFormControl>;
+
+export class MovieBudgetForm extends FormEntity<BudgetFormControl> {
+  constructor(budget?: Movie) {
+    super(createBudgetFormControl(budget));
+  }
+}
 
 // Box Office
 
@@ -26,7 +40,7 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   }
 }
 
-type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>;
+export type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>;
 
 export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
   constructor(boxOffice?: Partial<BoxOffice>) {
@@ -42,3 +56,4 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
     ...params,
   }
 }
+

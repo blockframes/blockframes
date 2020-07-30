@@ -11,7 +11,14 @@ import {
   PromotionalHostedMedia,
   MovieStakeholders,
   MovieLanguageSpecification,
-  LanguageRecord
+  LanguageRecord,
+  MovieRating,
+  MovieReview,
+  MovieOriginalRelease,
+  Prize,
+  MovieLanguageSpecificationContainer,
+  MovieLanguageTypes,
+  BoxOffice
 } from './movie.firestore';
 import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -20,6 +27,7 @@ import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { createPrice } from '@blockframes/utils/common-interfaces';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { toDate } from '@blockframes/utils/helpers';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -167,6 +175,44 @@ export function createMovieLanguageSpecification(
   };
 }
 
+export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
+  return {
+    country: null,
+    value: '',
+    ...params
+  };
+}
+
+export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
+  return {
+    criticName: '',
+    journalName: '',
+    criticQuote: '',
+    revueLink: '',
+    ...params,
+  };
+}
+
+export function createMovieOriginalRelease(
+  params: Partial<MovieOriginalRelease> = {}
+): MovieOriginalRelease {
+  return {
+    country: null,
+    ...params,
+    date: toDate(params.date),
+  };
+}
+
+export function createPrize(prize: Partial<Prize> = {}): Prize {
+  return {
+    name: '',
+    year: null,
+    prize: '',
+    logo: createHostedMedia(),
+    ...prize
+  };
+}
+
 export function createTitle(title: Partial<Title> = {}): Title {
   return {
     original: '',
@@ -184,6 +230,15 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
   };
 }
 
+export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
+  return {
+    unit: 'boxoffice_dollar',
+    value: 0,
+    territory: null,
+    ...params,
+  }
+}
+
 export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
   return {
     executiveProducer: [],
@@ -196,6 +251,20 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     financier: [],
     ...stakeholders
   }
+}
+
+export function populateMovieLanguageSpecification(
+  spec: Partial<MovieLanguageSpecificationContainer>,
+  slug: LanguagesSlug,
+  type: MovieLanguageTypes,
+  value: boolean = true
+) {
+  if (!spec[slug]) {
+    spec[slug] = createMovieLanguageSpecification();
+  }
+
+  spec[slug][type] = value;
+  return spec;
 }
 
 export function createMovieLegalDocuments(

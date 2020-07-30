@@ -18,6 +18,6 @@ export class MovieSummaryInformationComponent implements OnInit {
   }
 
   public get genres() {
-    return [this.movie.genres, ...this.movie.customGenres.controls];
+    return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
 }
