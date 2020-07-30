@@ -2,7 +2,7 @@
   <h1 subtitle>Artistic Team</h1>
   <ng-container tunnel-form>
     <section id="cast-member">
-      <h3>Cast Member</h3>
+      <h3>Cast Member{ cast.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of cast.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
@@ -54,7 +54,7 @@
     <mat-divider></mat-divider>
 
     <section id="crew-member">
-      <h3>Crew Member</h3>
+      <h3>Crew Member{ crew.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of crew.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>

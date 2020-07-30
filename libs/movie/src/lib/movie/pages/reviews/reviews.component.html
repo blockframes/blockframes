@@ -2,7 +2,7 @@
   <h1 subtitle>Selection & Reviews</h1>
   <ng-container tunnel-form>
     <section id="festival">
-      <h3>Festival & Awards</h3>
+      <h3>Festival & Award{ prizes.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of prizes.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
@@ -47,7 +47,7 @@
     <mat-divider></mat-divider>
 
     <section id="reviews">
-      <h3>Film Reviews</h3>
+      <h3>Film Review{ reviews.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of reviews.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>

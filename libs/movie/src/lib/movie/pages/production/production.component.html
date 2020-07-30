@@ -2,7 +2,7 @@
   <h1 subtitle>Production Information</h1>
   <ng-container tunnel-form>
     <section id="company">
-      <h3>Production Company</h3>
+      <h3>Production Compan{ executiveProducer.controls.length, plural,=1 {y} other {ies}}</h3>
       <article *ngFor="let control of executiveProducer.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
@@ -31,7 +31,7 @@
     <mat-divider></mat-divider>
 
     <section id="co-company">
-      <h3>Co-production Company</h3>
+      <h3>Co-production Compan{ coProducer.controls.length, plural,=1 {y} other {ies}}</h3>
       <article *ngFor="let control of coProducer.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
@@ -60,7 +60,7 @@
     <mat-divider></mat-divider>
 
     <section id="producers">
-      <h3>Producer(s)</h3>
+      <h3>Producer{ producers.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of producers.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
@@ -96,7 +96,7 @@
     <mat-divider></mat-divider>
 
     <section id="distributors">
-      <h3>Distributor(s)</h3>
+      <h3>Distributor{ distributors.controls.length, plural,=1 {} other {s}}</h3>
       <article *ngFor="let control of distributors.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
