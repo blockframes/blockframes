@@ -3,10 +3,15 @@
   <ng-container tunnel-form>
     <section id="festival">
       <h3>Original Version</h3>
-      <article *ngFor="let control of version.controls; let i = index; let last = last">
+      <article>
         <strong>Add Version </strong>
+        <ng-container *ngIf="!hasKeys else displayVersions">
+          <a [routerLink]="getPath('technical-info')" class="missing-control">
+            Missing
+          </a>
+        </ng-container>
         <ng-template #displayVersions>
-          <ng-container *ngFor="let version of version.controls.languages.controls | keyvalue; let isLast = last">
+          <ng-container *ngFor="let version of versionInfo.controls.languages.controls | keyvalue; let isLast = last">
             {{ version.key | translateSlug: "LANGUAGES" }} :
             {{ version.value.value | versionPipe }}
             {{ isLast ? '' : '| ' }}
