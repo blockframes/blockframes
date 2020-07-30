@@ -1,10 +1,10 @@
-import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
+import { Credit, Movie, createMovie } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 
-function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>) {
-  const entity = createMovieSalesCast(salesCast);
+function createMovieSalesCastControls(salesCast?: Partial<Movie>) {
+  const entity = createMovie(salesCast);
   return {
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
@@ -35,7 +35,7 @@ export class CreditForm extends FormEntity<CreditControl>{
 }
 
 export class MovieSalesCastForm extends FormEntity<MovieSalesCastControl>{
-  constructor(salesCast?: MovieSalesCast) {
+  constructor(salesCast?: Movie) {
     super(createMovieSalesCastControls(salesCast));
   }
 

@@ -134,7 +134,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * @description function that gets triggered whenever the paginator fires his page event.
-   * @param page 
+   * @param page
    */
   updateIndex(page: PageEvent) {
     this.pageConfig = { pageIndex: page.pageIndex, pageSize: page.pageSize }

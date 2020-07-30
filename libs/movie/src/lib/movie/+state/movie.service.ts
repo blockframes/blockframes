@@ -13,7 +13,6 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -26,7 +25,6 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private userService: UserService,
     private orgService: OrganizationService,
-    private mediaService: MediaService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -42,7 +40,7 @@ export class MovieService extends CollectionService<MovieState> {
       _meta: { createdBy },
       ...movieImported
     });
-    movie.main.storeConfig = {
+    movie.storeConfig = {
       ...createStoreConfig(),
       appAccess: createMovieAppAccess({ [appName]: true })
     };
@@ -112,8 +110,8 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.stakeholders) delete movie.stakeholders;
 
     // transform { media: string } into { media: ImgRef }
-    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
-      movie.promotionalElements.promotionalElements.forEach(el => {
+    if (!!movie.promotional) {
+      movie.promotional.forEach(el => {
         if (typeof el.media === typeof 'string') {
           el.media = createHostedMedia(el.media);
         }
@@ -128,7 +126,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
+    const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
 
     return movies.length ? createMovie(movies[0]) : undefined;
   }

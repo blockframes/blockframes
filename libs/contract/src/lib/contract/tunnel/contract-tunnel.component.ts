@@ -43,7 +43,7 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
     title: 'Exploitation Rights',
     icon: 'world',
     routes: movies.map(movie => ({
-      path: movie.id, label: movie.main.title.international
+      path: movie.id, label: movie.title.international
     }))
   }, {
     ...steps[1]

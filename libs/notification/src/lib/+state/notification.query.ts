@@ -58,6 +58,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
 
   public getPoster(id: string): HostedMedia {
     const movie = this.movieQuery.getEntity(id);
-    return !!movie && movie.main.poster ? movie.main.poster.media : createHostedMedia();
+    return !!movie && movie.poster ? movie.poster.media : createHostedMedia();
   }
 }

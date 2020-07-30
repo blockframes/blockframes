@@ -11,9 +11,9 @@ export class MovieImagePipe implements PipeTransform {
   transform(movie: Movie, size: 'poster' | 'banner' | 'avatar' ): HostedMedia {
     switch (size) {
       case 'poster':
-        return movie.main.poster?.media;
+        return movie.poster?.media;
       case 'banner':
-        return movie.main.banner?.media;
+        return movie.banner?.media;
     }
   }
 }

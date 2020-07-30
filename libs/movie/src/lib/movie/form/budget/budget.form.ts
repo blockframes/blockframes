@@ -1,10 +1,8 @@
-import { MovieBudget, createMovieBudget } from '../../+state/movie.model'
 import { FormEntity, FormValue, FormList } from '@blockframes/utils/form';
 import { FormControl, Validators } from '@angular/forms';
 import { BoxOffice } from '../../+state/movie.firestore';
-import { createBoxOffice } from '../../+state/movie.model';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
+import { createMovie, Movie } from '@blockframes/movie/+state';
 
 export const BUDGET_LIST: NumberRange[] = [
   { from: 0, to: 1000000, label: 'Less than $1 million' },
@@ -16,12 +14,9 @@ export const BUDGET_LIST: NumberRange[] = [
   { from: 20000000, to: 999999999, label: 'More than $20 millions' },
 ];
 
-function createBudgetFormControl(entity?: Partial<MovieBudget>) {
-  const { totalBudget, estimatedBudget, boxOffice } = createMovieBudget(entity);
+function createBudgetFormControl(entity?: Partial<Movie>) {
+  const { boxOffice } = createMovie(entity);
   return {
-    totalBudget: new PriceForm(totalBudget),
-    // We use FormControl because objet { from, to } is one value (cannot update separately)
-    estimatedBudget: new FormControl(estimatedBudget),
     boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el))
   }
 }
@@ -29,7 +24,7 @@ function createBudgetFormControl(entity?: Partial<MovieBudget>) {
 export type BudgetFormControl = ReturnType<typeof createBudgetFormControl>;
 
 export class MovieBudgetForm extends FormEntity<BudgetFormControl> {
-  constructor(budget?: MovieBudget) {
+  constructor(budget?: Movie) {
     super(createBudgetFormControl(budget));
   }
 }
@@ -45,10 +40,20 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   }
 }
 
-type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>;
+export type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>;
 
 export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
   constructor(boxOffice?: Partial<BoxOffice>) {
     super(createBoxOfficeFormControl(boxOffice))
   }
 }
+
+export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
+  return {
+    unit: 'boxoffice_dollar',
+    value: 0,
+    territory: null,
+    ...params,
+  }
+}
+

@@ -1,25 +1,25 @@
 <ul>
   <li>
     <strong>Content Type </strong>
-    <missing-control [control]="main.get('contentType')" [link]="link">
+    <missing-control [control]="movie.get('contentType')" [link]="link">
       <ng-template #content>
-        {{ main.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
+        {{ movie.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
       </ng-template>
     </missing-control>
   </li>
   <li>
-    <strong>Production Status </strong><missing-control [control]="main.get('status')" scope="MOVIE_STATUS" [link]="link"></missing-control>
+    <strong>Production Status </strong><missing-control [control]="movie.get('productionStatus')" scope="MOVIE_STATUS" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Original Title </strong><missing-control [control]="main.title.get('original')" [link]="link"></missing-control>
+    <strong>Original Title </strong><missing-control [control]="movie.get('title').get('original')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>International Title </strong><missing-control [control]="main.title.get('international')" [link]="link"></missing-control>
+    <strong>International Title </strong><missing-control [control]="movie.get('title').get('international')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Reference # </strong><missing-control [control]="main.get('internalRef')" [link]="link"></missing-control>
+    <strong>Reference # </strong><missing-control [control]="movie.get('internalRef')" [link]="link"></missing-control>
   </li>
-  <ng-container *ngFor="let director of main.directors.controls">
+  <ng-container *ngFor="let director of movie.directors.controls">
     <li>
       <strong>Director Name </strong>
       <ng-container *ngIf="directorHasErrorRequired(director) else display">

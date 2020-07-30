@@ -25,19 +25,19 @@ export class MovieFormSynopsisComponent implements OnInit {
   }
 
   get logline() {
-    return this.form.get('story').get('logline');
+    return this.form.get('logline');
   }
 
   get synopsis() {
-    return this.form.get('story').get('synopsis');
+    return this.form.get('synopsis');
   }
 
   get keyAssets() {
-    return this.form.get('promotionalDescription').get('keyAssets');
+    return this.form.get('keyAssets');
   }
 
   get keywords() {
-    return this.form.get('promotionalDescription').get('keywords');
+    return this.form.get('keywords');
   }
 
   public add(event: MatChipInputEvent): void {

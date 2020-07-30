@@ -25,9 +25,9 @@ export class ScreeningBackgroundPipe implements PipeTransform {
       return;
     }
     if (size === 'large') {
-      return movie.main.poster.media;
+      return movie.poster.media;
     } else if (size === 'small') {
-      return movie.main.banner.media;
+      return movie.banner.media;
     }
   }
 }

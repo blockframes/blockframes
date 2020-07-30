@@ -13,18 +13,18 @@ export class MovieFormTechnicalInfoComponent {
     constructor(private shell: MovieFormShellComponent) { }
 
     get soundFormat() {
-        return this.form.get('technicalInformation').get('sound');
+        return this.form.get('soundFormat');
     }
 
     get quality() {
-        return this.form.get('technicalInformation').get('quality');
+        return this.form.get('formatQuality');
     }
 
     get color() {
-        return this.form.get('technicalInformation').get('color');
+        return this.form.get('color');
     }
 
     get format() {
-        return this.form.get('technicalInformation').get('format');
+        return this.form.get('format');
     }
 }

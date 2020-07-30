@@ -14,21 +14,21 @@
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>
-          {{ movie.main.contentType | toLabel: 'contentType' | async }}
-          <ng-container *ngIf="movie.main.contentType && movie.main.status">|</ng-container>
-          {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
-          <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|
-          {{ movie.main.totalRunTime }} min
+          {{ movie.contentType | toLabel: 'contentType' | async }}
+          <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
+          {{ movie.productionStatus | translateSlug: 'MOVIE_STATUS' }}
+          <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|
+          {{ movie.totalRunTime }} min
           </ng-container>
         </h4>
-        <h1>{{ movie.main.title.international }}</h1>
+        <h1>{{ movie.title.international }}</h1>
         <h6>{{ getDirectors(movie) }}</h6>
         <span>
-          <ng-container *ngFor="let country of movie.main.originCountries">
+          <ng-container *ngFor="let country of movie.originCountries">
             {{ country | translateSlug: 'TERRITORIES'}},
           </ng-container>
-          <ng-container *ngIf="movie.main.releaseYear">
-            {{ movie.main.releaseYear }}
+          <ng-container *ngIf="movie.releaseYear">
+            {{ movie.releaseYear }}
           </ng-container>
         </span>
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">

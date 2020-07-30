@@ -11,7 +11,7 @@
         title{version.titleIds.length, plural, =1 {} other {s}}:
       </p>
       <ul>
-        <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
+        <li *ngFor="let title of titles$ | async">{{ title.title.international }}</li>
       </ul>
     </mat-card-content>
     <mat-card-actions fxLayout="row" fxLayoutAlign="end end">
@@ -54,7 +54,7 @@
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
-              <h3>{{ movie.main.title.international }}</h3>
+              <h3>{{ movie.title.international }}</h3>
               <ng-container *ngIf="(activeVersion$ | async) as version">
                 <span *ngIf="version.titles[movie.id].price as price">
                   {{ price.amount | currency : price.currency }}
@@ -65,14 +65,14 @@
           <mat-divider></mat-divider>
           <ng-template matExpansionPanelContent>
             <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-              <img [ref]="movie.main.poster.media" asset="empty_poster.webp" alt="Movie poster" >
+              <img [ref]="movie.poster.media" asset="empty_poster.webp" alt="Movie poster" >
               <div>
                 <p>
                   {{ getDirectors(movie) }}
                 </p>
                 <p class="mat-body-2">
-                  <span>{{ movie.main.originCountries | translateSlug: 'TERRITORIES'}}, </span>
-                  <span> {{ movie.main.releaseYear }}</span>
+                  <span>{{ movie.originCountries | translateSlug: 'TERRITORIES'}}, </span>
+                  <span> {{ movie.releaseYear }}</span>
                 </p>
               </div>
             </article>

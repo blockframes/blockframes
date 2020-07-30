@@ -59,8 +59,8 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
     );
     this.sub = this.routerQuery.select('state').subscribe(data => {
       data.url.includes('main')
-        ? this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Main information')
-        : this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Avails')
+        ? this.dynTitle.setPageTitle(`${this.movieQuery.getActive().title.international}`, 'Main information')
+        : this.dynTitle.setPageTitle(`${this.movieQuery.getActive().title.international}`, 'Avails')
     })
   }
 
@@ -73,35 +73,35 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
     const movie = this.movieQuery.getActive();
     this.analytics.event('promoReelOpened', {
       movieId: movie.id,
-      movie: movie.main.title.original
+      movie: movie.title.original
     });
   }
 
   public addToWishlist() {
     const movie = this.movieQuery.getActive();
-    const title = movie.main.title.international;
+    const title = movie.title.international;
     this.cartService.updateWishlist(movie);
     this.analytics.event('addedToWishlist', {
       movieId: movie.id,
-      movieTitle: movie.main.title.original
+      movieTitle: movie.title.original
     });
     this.snackbar.open(`Title ${title} has been added.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist() {
     const movie = this.movieQuery.getActive();
-    const title = movie.main.title.international;
+    const title = movie.title.international;
     this.cartService.updateWishlist(movie);
     this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
-      movieTitle: movie.main.title.original
+      movieTitle: movie.title.original
     });
     this.snackbar.open(`Title ${title} has been removed.`, 'close', { duration: 2000 });
   }
 
   public getTitle(movie: Movie) {
-    const { totalRunTime, genres, originalLanguages } = movie.main;
-    const contentTypeRegistered = movie.main.contentType;
+    const { totalRunTime, genres, originalLanguages } = movie;
+    const contentTypeRegistered = movie.contentType;
     return [
       getKeyIfExists(contentType, contentTypeRegistered) ? contentType[contentTypeRegistered] : '',
       typeof totalRunTime === 'number' ? `${totalRunTime} min` : '',
@@ -111,12 +111,12 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   }
 
   public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+    return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getOriginalCountries(movie: Movie) {
-    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.releaseYear}`;
+    return `${movie.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.releaseYear}`;
   }
 
 

@@ -15,16 +15,20 @@ export class CreditsComponent {
     this.dynTitle.setPageTitle('Credits', 'Title information')
   }
 
-  get main() {
-    return this.form.get('main');
-  }
+  // get main() {
+  //   return this.form.get('main');
+  // }
 
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
+  // get salesCast() {
+  //   return this.form.get('salesCast');
+  // }
 
-  get production() {
-    return this.form.get('production');
-  }
+  // get production() {
+  //   return this.form.get('production');
+  // }
+
+  // get production() {
+  //   return this.form.get('production');
+  // }
 
 }

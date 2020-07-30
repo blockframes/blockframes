@@ -19,11 +19,11 @@ export class BannerComponent {
 
   @Input() set movie(movie: Movie) {
     if (movie) {
-      this.poster = movie.main.poster.media;
-      this.title = movie.main.title;
-      this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
-      this.countries = movie.main.originCountries;
-      this.date = movie.main.releaseYear;
+      this.poster = movie.poster.media;
+      this.title = movie.title;
+      this.director = movie.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
+      this.countries = movie.originCountries;
+      this.date = movie.releaseYear;
     }
   }
 }

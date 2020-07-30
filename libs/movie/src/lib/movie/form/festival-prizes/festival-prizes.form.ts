@@ -1,4 +1,4 @@
-import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
+import { Prize, Movie } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { yearValidators } from '@blockframes/utils/form/validators';
@@ -10,7 +10,6 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
     name: new FormControl(name),
     year: new FormControl(year, [yearValidators]),
     prize: new FormControl(prize),
-    logo: new FormControl(logo),
     premiere: new FormControl(premiere),
   }
 }
@@ -23,7 +22,25 @@ export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
   }
 }
 
-function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestivalPrizes>) {
+export function createPrize(prize: Partial<Prize> = {}): Prize {
+  return {
+    name: '',
+    year: null,
+    prize: '',
+    ...prize
+  };
+}
+
+export function createMovieFestivalPrizes(
+  params: Partial<Movie> = {}
+): Partial<Movie> {
+  return {
+    prizes: [],
+    ...params
+  };
+}
+
+function createMovieFestivalPrizesControls(festivalprizes?: Partial<Movie>) {
   const entity = createMovieFestivalPrizes(festivalprizes);
   return {
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el))
@@ -34,7 +51,7 @@ export type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPr
 
 export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
 
-  constructor(story?: MovieFestivalPrizes) {
+  constructor(story?: Movie) {
     super(createMovieFestivalPrizesControls(story));
   }
 
@@ -53,14 +70,6 @@ export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesContr
 
   public removePrize(i: number): void {
     this.prizes.removeAt(i);
-  }
-
-  public setImage(image: string, index: number): void {
-    this.prizes.controls[index].get('logo').setValue(image);
-  }
-
-  public removeImage(index: number): void {
-    this.prizes.controls[index].get('logo').setValue('');
   }
 
 }

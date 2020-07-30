@@ -7,7 +7,6 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieFormBudgetComponent } from './budget.component';
 
 // Forms
-import { MovieFormEstimatedBudgetModule } from '@blockframes/movie/form/budget/estimated-budget/estimated-budget.module';
 import { MovieFormBoxOfficeModule } from '@blockframes/movie/form/budget/box-office/box-office.module';
 import { MovieFormCertificationsModule } from '@blockframes/movie/form/sales-info/certifications/certifications.module';
 import { MovieFormRatingsModule } from '@blockframes/movie/form/sales-info/ratings/ratings.module';
@@ -22,7 +21,6 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     ReactiveFormsModule,
     TunnelPageModule,
-    MovieFormEstimatedBudgetModule,
     MovieFormBoxOfficeModule,
     MovieFormCertificationsModule,
     MovieFormRatingsModule,

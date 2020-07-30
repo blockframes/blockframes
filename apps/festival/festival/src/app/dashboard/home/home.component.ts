@@ -23,13 +23,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     private orgQuery: OrganizationQuery
   ) { }
 
+  formList
   ngOnInit() {
 
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.status === 'accepted')),
+      map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted')),
       shareReplay(1)
     )
 

@@ -61,13 +61,13 @@ export class ContractComponent implements OnInit {
   // Table TITLES
   public versionColumnsTableTitles = {
     'id': 'Movie Id',
-    'movie.main.internalRef': 'Internal Ref',
-    'movie.main.poster': 'Poster',
-    'movie.main.title.original': 'Original title',
-    'movie.main.releaseYear': 'Release year',
+    'movie.internalRef': 'Internal Ref',
+    'movie.poster': 'Poster',
+    'movie.title.original': 'Original title',
+    'movie.releaseYear': 'Release year',
     'price': 'Price',
-    'movie.main.storeConfig.status': 'Status',
-    'movie.main.storeConfig.storeType': 'Store type',
+    'movie.storeConfig.status': 'Status',
+    'movie.storeConfig.storeType': 'Store type',
     'rights': 'rights',
     'explorerights': 'All rights for this title',
     'edit': 'Edit',
@@ -75,13 +75,13 @@ export class ContractComponent implements OnInit {
 
   public initialColumnsTableTitles: string[] = [
     'id',
-    'movie.main.internalRef',
-    'movie.main.poster',
-    'movie.main.title.original',
-    'movie.main.releaseYear',
+    'movie.internalRef',
+    'movie.poster',
+    'movie.title.original',
+    'movie.releaseYear',
     'price',
-    'movie.main.storeConfig.status',
-    'movie.main.storeConfig.storeType',
+    'movie.storeConfig.status',
+    'movie.storeConfig.storeType',
     'rights',
     'explorerights',
     'edit',
@@ -91,13 +91,13 @@ export class ContractComponent implements OnInit {
   filterPredicateTableTitles(data: any, filter) {
     const columnsToFilter = [
       'id',
-      'movie.main.internalRef',
-      'movie.main.poster',
-      'movie.main.title.original',
-      'movie.main.releaseYear',
+      'movie.internalRef',
+      'movie.poster',
+      'movie.title.original',
+      'movie.releaseYear',
       'price',
-      'movie.main.storeConfig.status',
-      'movie.main.storeConfig.storeType',
+      'movie.storeConfig.status',
+      'movie.storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

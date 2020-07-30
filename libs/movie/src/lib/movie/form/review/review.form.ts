@@ -1,6 +1,5 @@
 import { FormControl } from '@angular/forms';
 import { MovieReview } from '../../+state/movie.firestore';
-import { createMovieReview } from '../../+state/movie.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { urlValidators } from '@blockframes/utils/form';
 
@@ -19,5 +18,15 @@ export type MovieReviewControls = ReturnType<typeof createMovieReviewControl>;
 export class MovieReviewForm extends FormEntity<MovieReviewControls, MovieReview> {
   constructor(review?: Partial<MovieReview>) {
     super(createMovieReviewControl(review));
+  }
+}
+
+export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
+  return {
+    criticName: '',
+    journalName: '',
+    criticQuote: '',
+    revueLink: '',
+    ...params,
   }
 }

@@ -22,24 +22,24 @@ export class MediaImageComponent {
     this.dynTitle.setPageTitle('Promotional images', 'Title information');
   }
 
-  get promotionalElements() {
-    return this.form.get('promotionalElements')
+  get promotional() {
+    return this.form.get('promotional')
   }
 
-  get banner() {
-    return this.form.main.banner;
-  }
+  // get banner() {
+  //   return this.form.main.banner;
+  // }
 
-  get poster() {
-    return this.form.main.poster;
-  }
+  // get poster() {
+  //   return this.form.main.poster;
+  // }
 
-  get stillPhoto() {
-    return this.promotionalElements.get('still_photo');
-  }
+  // get stillPhoto() {
+  //   return this.promotionalElements.get('still_photo');
+  // }
 
   addStill() {
-    this.form.promotionalElements
+    this.form.promotional
       .get('still_photo')
       .push(new MoviePromotionalHostedMediaForm());
   }

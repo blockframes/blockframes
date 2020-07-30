@@ -17,22 +17,22 @@ export class MovieFormMainComponent {
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
 
   get international() {
-    return this.main.title.get('international');
+    return this.form.get('title').get('international');
   }
 
   get original() {
-    return this.main.title.get('original');
+    return this.form.get('title').get('original');
   }
 
-  get main() {
-    return this.form.get('main');
+  get banner() {
+    return this.form.get('banner').get('media');
   }
 
-  get production() {
-    return this.form.get('production');
+  get poster() {
+    return this.form.get('poster').get('media');
   }
 
   get directors() {
-    return this.main.get('directors');
+    return this.form.get('directors');
   }
 }

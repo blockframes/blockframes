@@ -10,7 +10,7 @@
         <mat-card-content>
           <file-upload
           test-id="presentation-deck"
-          [form]="form.promotionalElements.get('presentation_deck').get('media')"
+          [form]="form.promotional.get('presentation_deck').get('media')"
           [storagePath]="presentationPath"
           accept="['.pdf']"
           [types]="['application/pdf']"
@@ -28,7 +28,7 @@
         <mat-card-content>
           <file-upload
           test-id="scenario"
-          [form]="form.promotionalElements.get('scenario').get('media')"
+          [form]="form.promotional.get('scenario').get('media')"
           [storagePath]="scenarioPath"
           accept="['.pdf']"
           [types]="['application/pdf']"
@@ -44,7 +44,7 @@
         <mat-card-title>File Links</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-promotional-links [form]="promotionalElements"></movie-form-promotional-links>
+        <movie-form-promotional-links [form]="promotional"></movie-form-promotional-links>
       </mat-card-content>
     </mat-card>
   </ng-container>

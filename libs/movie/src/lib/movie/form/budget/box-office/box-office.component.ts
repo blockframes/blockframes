@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetFormControl } from '../budget.form';
 import { UnitBox, unitBox } from '@blockframes/movie/+state/movie.firestore';
-import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 function toUnit(unit: UnitBox) {
@@ -28,10 +27,10 @@ export class BoxOfficeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.units$ = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
-    );
+    // this.units$ = this.form.valueChanges.pipe(
+    //   startWith(this.form.value),
+    //   map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
+    // );
   }
 
 }

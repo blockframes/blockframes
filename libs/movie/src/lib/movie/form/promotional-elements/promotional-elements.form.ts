@@ -1,4 +1,4 @@
-import { MoviePromotionalElements, createMoviePromotionalElements, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
+import { MoviePromotionalElements, createMoviePromotional, createPromotionalHostedMedia, createPromotionalExternalMedia } from '../../+state';
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { PromotionalHostedMedia, PromotionalExternalMedia } from '@blockframes/movie/+state/movie.firestore';
@@ -50,7 +50,7 @@ export class MoviePromotionalHostedMediaForm extends FormEntity<PromotionalHoste
 // ------------------------------
 
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
-  const entity = createMoviePromotionalElements(promotionalElements);
+  const entity = createMoviePromotional(promotionalElements);
 
   const stillPhotoControls: Record<string, MoviePromotionalHostedMediaForm> = {};
   for (const key in entity.still_photo) {

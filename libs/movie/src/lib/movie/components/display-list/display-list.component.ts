@@ -37,12 +37,12 @@ export class MovieDisplayListComponent {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${movie.title.international} has been added to your selection.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${movie.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 }

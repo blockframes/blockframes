@@ -10,14 +10,14 @@
         <mat-card-subtitle>The banner image will be used at the top of the film page in the marketplace</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper
+        <!-- <drop-cropper
           [storagePath]="movie.id | ref: 'movie' : 'banner'"
           ratio="banner"
           [form]="banner.get('media')">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-      </drop-cropper>
+      </drop-cropper> -->
       </mat-card-content>
     </mat-card>
     <!-- Poster -->
@@ -26,14 +26,14 @@
         <mat-card-title></mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper
+        <!-- <drop-cropper
           [storagePath]="movie.id | ref: 'movie' : 'poster'"
           ratio="poster"
           [form]="poster.get('media')">
           <h3 type>Poster</h3>
           <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-        </drop-cropper>
+        </drop-cropper> -->
       </mat-card-content>
     </mat-card>
 
@@ -44,7 +44,7 @@
       </mat-card-header>
       <mat-card-content>
 
-        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue; let i = index; trackBy: trackByFn">
+        <!-- <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue; let i = index; trackBy: trackByFn">
 
           <span class="still mat-body-2">Still # {{ i }}</span>
 
@@ -59,7 +59,7 @@
 
           <mat-divider [inset]="true"></mat-divider>
 
-        </ng-container>
+        </ng-container> -->
 
         <footer fxLayout="column" fxLayoutAlign="center center">
           <button mat-mini-fab color="primary" (click)="addStill()" aria-label="Add a director form">
