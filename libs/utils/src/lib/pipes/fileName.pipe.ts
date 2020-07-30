@@ -6,6 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FileNamePipe implements PipeTransform {
   transform(file: string) {
+    if (!file || typeof file !== 'string')  return '';
     const arrayedRef = file.split('/');
     return arrayedRef.pop();
   }

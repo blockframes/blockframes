@@ -7,8 +7,8 @@
       </a>
     </ng-container>
     <ng-template #banner>
-      <a [href]="form.main.banner.value.url" target="_blank">
-        {{ form.main.banner.value | fileName }}
+      <a [href]="form.main.banner.oldRef.value" target="_blank">
+        {{ form.main.banner.oldRef.value | fileName }}
       </a>
     </ng-template>
   </li>
@@ -20,8 +20,8 @@
       </a>
     </ng-container>
     <ng-template #poster>
-      <a [href]="form.main.poster.value.url" target="_blank">
-        {{ form.main.poster.value | fileName }}
+      <a [href]="form.main.poster.oldRef.value" target="_blank">
+        {{ form.main.poster.oldRef.value | fileName }}
       </a>
     </ng-template>
   </li>

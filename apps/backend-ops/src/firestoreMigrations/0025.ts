@@ -1,10 +1,11 @@
 import { Firestore, Storage } from '../admin';
-import { PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { OldImgRef, OldPublicUser, OldPublicOrganization, OldMovieImgRefDocument } from './old-types';
+
+type PromotionalElement = any;
 
 const EMPTY_REF: OldImgRef = {
   ref: '',

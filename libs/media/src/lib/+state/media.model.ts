@@ -59,6 +59,7 @@ function mediaNeedsUpdate(media: HostedMediaFormValue) {
 }
 
 export function getFileNameFromPath(path: string) {
+  if (!path || typeof path !== 'string') return '';
   return path.split('/').pop()
 }
 
