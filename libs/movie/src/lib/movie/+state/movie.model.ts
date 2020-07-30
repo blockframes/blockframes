@@ -1,6 +1,7 @@
 import {
   MoviePromotionalElements,
   PromotionalElement,
+  MovieLanguageSpecificationContainer,
   Title,
   StoreConfig,
   MovieDocumentWithDates,
@@ -16,7 +17,6 @@ import {
   MovieReview,
   MovieOriginalRelease,
   Prize,
-  MovieLanguageSpecificationContainer,
   MovieLanguageTypes,
   BoxOffice
 } from './movie.firestore';

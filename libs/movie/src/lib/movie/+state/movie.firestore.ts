@@ -10,7 +10,7 @@ import {
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
-  GenresSlug
+  GenresSlug,
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
@@ -222,6 +222,7 @@ export interface MovieLanguageSpecification {
 }
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+
 
 export interface MovieOriginalReleaseRaw<D> {
   date: D;

@@ -57,7 +57,7 @@ export class ProfileViewComponent implements OnInit {
       } else {
         const uid = this.authQuery.userId;
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm.value);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm);
 
         await this.authService.update({ uid, ...documentToUpdate });
         this.mediaService.uploadOrDeleteMedia(mediasToUpload);

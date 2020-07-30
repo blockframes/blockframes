@@ -100,20 +100,4 @@
     </admin-image-sizes>
   </mat-card>
 
-  <mat-card *ngIf="movie">
-    <h2>Movie private config :</h2>
-
-    <ng-container *ngIf="privateConfigForm">
-      <form [formGroup]="privateConfigForm" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Something private</mat-label>
-          <input matInput type="text" placeholder="Something private" formControlName="url" />
-        </mat-form-field>
-        <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
-        </mat-card-actions>
-      </form>
-    </ng-container>
-  </mat-card>
-
 </main>

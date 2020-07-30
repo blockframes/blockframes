@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   formList
   ngOnInit() {
+
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
     const titles$ = this.orgQuery.selectActive().pipe(

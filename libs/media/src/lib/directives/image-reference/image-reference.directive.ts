@@ -15,7 +15,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
 
   private parameters: ImageParameters = {
-    auto: 'compress,enhance,format',
+    auto: 'compress,format',
     fit: 'crop',
   };
 
@@ -25,6 +25,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   @HostBinding('srcset') srcset: string;
   @HostBinding('src') src: string;
   @HostBinding('alt') alt: string;
+  @HostBinding('loading') loading = 'lazy';
 
   // -----------------------------------
   //           MEDIA IMAGE INPUT

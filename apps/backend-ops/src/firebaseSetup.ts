@@ -8,6 +8,8 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
+import { cleanDeprecatedData } from './db-cleaning';
+import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
 
 export async function prepareForTesting() {
@@ -26,6 +28,7 @@ export async function prepareForTesting() {
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused data...')
   // await cleanDeprecatedData();
+  // await cleanStorage();
   // console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
@@ -54,11 +57,21 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
+  // @todo(#3066) Reactivate Cleaning process when unit tested
+  // console.info('Cleaning unused data...')
+  // await cleanDeprecatedData();
+  // await cleanStorage();
+  // console.info('Data clean and fresh!')
+
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
 
   process.exit(0);
 }

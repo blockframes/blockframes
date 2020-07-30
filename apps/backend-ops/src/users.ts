@@ -6,11 +6,13 @@
 import { UserConfig, USERS } from './assets/users.fixture';
 import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
-import { sleep } from './tools';
+import { sleep, runChunks } from './tools';
 import readline from 'readline';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { db } from 'apps/backend-functions/src/internals/firebase';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
 
 /**
@@ -46,7 +48,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
  * @param expectedUsers
  * @param auth
  */
-async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
   let pageToken;
 
   do {
@@ -160,8 +162,10 @@ export async function generateWatermarks() {
   }
 
   const users = await getCollection<PublicUser>('users');
-  const promises = users.map(user => upsertWatermark(user));
-  await Promise.all(promises);
+
+  await runChunks(users, async (user) => {
+    await upsertWatermark(user);
+  });
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();

@@ -10,7 +10,6 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest, of } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -148,23 +147,4 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-  /**
-   * @dev ADMIN method
-   * Https callable function to set privateConfig for a movie.
-   */
-  public async setMoviePrivateConfig(movieId: string, privateConfig: PrivateConfig): Promise<any> {
-    const f = this.functions.httpsCallable('setDocumentPrivateConfig');
-    return f({ docId: movieId, config: privateConfig }).toPromise();
-  }
-
-  /**
-   * @dev ADMIN method
-   * Https callable function to get privateConfig for a movie.
-   * @param movieId
-   * @param keys the keys to retreive
-   */
-  public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig> {
-    const f = this.functions.httpsCallable('getDocumentPrivateConfig');
-    return f({ docId: movieId, keys }).toPromise();
-  }
 }

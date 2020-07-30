@@ -172,6 +172,14 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('directors');
   }
 
+  get banner() {
+    return this.get('banner');
+  }
+
+  get poster() {
+    return this.get('poster');
+  }
+
   public addDirector(credit?: Partial<Credit>): void {
     const entity = createCredit(credit);
     const creditControl = new DirectorForm(entity);

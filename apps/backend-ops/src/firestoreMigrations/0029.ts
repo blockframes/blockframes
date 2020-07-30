@@ -3,7 +3,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
+import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.firestore';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
 
@@ -46,20 +46,9 @@ export async function upgrade(db: Firestore) {
 
 async function updateUsers(db: Firestore, users: PublicUser[]) {
   for (const user of users) {
-    let updatedUser = updateUserWatermark(user);
-    updatedUser = updateImgRef(user, 'avatar') as PublicUser;
+    const updatedUser = updateImgRef(user, 'avatar') as PublicUser;
     db.doc(`users/${user.uid}`).set(updatedUser);
   }
-}
-
-function updateUserWatermark(user: PublicUser) {
-  if (user.watermark?.url) return user; // already has new format
-  const url = user?.watermark?.['urls']?.['original'] || user.watermark?.url;
-  user.watermark = createHostedMedia({
-    ref: user.watermark?.ref || '',
-    url: url || ''
-  });
-  return user;
 }
 
 function updateOrgs(db: Firestore, orgs: Organization[]) {

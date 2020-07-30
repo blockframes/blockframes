@@ -8,9 +8,6 @@ import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { createPrivateEventConfig } from '@blockframes/event/+state/event.model';
-import { PrivateConfigForm } from '../../forms/private-config.form';
-import { PrivateConfig } from '@blockframes/utils/common-interfaces';
 import { app } from '@blockframes/utils/apps';
 
 @Component({
@@ -24,7 +21,6 @@ export class MovieComponent implements OnInit {
   public movie: Movie;
   public movieForm: MovieAdminForm;
   public movieAppAccessForm: MovieAppAccessAdminForm;
-  public privateConfigForm: PrivateConfigForm;
   public storeType = storeType;
   public storeStatus = storeStatus;
   public staticModels = staticModels;
@@ -61,10 +57,6 @@ export class MovieComponent implements OnInit {
     this.movieForm = new MovieAdminForm(this.movie);
     this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
 
-    const privateConfig: false | PrivateConfig = await this.movieService.getMoviePrivateConfig(this.movieId)
-      .then(c => c).catch(_ => false);
-    this.privateConfigForm = new PrivateConfigForm(privateConfig || {});
-
     const rights = await this.distributionRightService.getMovieDistributionRights(this.movieId)
     this.rows = rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
 
@@ -97,22 +89,6 @@ export class MovieComponent implements OnInit {
     await this.movieService.updateById(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
-  }
-
-  public async setMoviePrivateConfig() {
-    if (this.privateConfigForm.invalid) {
-      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
-      return;
-    }
-    const eventConfig = createPrivateEventConfig({ url: this.privateConfigForm.get('url').value });
-    const callOutput = await this.movieService.setMoviePrivateConfig(this.movieId, eventConfig)
-      .then(_ => true).catch(_ => false);
-    if (callOutput) {
-      this.snackBar.open('Information updated!', 'close', { duration: 5000 });
-    } else {
-      this.snackBar.open('Error while updating private config.', 'close', { duration: 5000 });
-    }
-
   }
 
   public filterPredicate(data: any, filter: string) {

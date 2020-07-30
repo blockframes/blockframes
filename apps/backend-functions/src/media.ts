@@ -1,7 +1,7 @@
 import { db, functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
-import { HostedMedia } from '@blockframes/media/+state/media.model';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
  * 

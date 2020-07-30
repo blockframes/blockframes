@@ -18,7 +18,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   private localTheme$ = new BehaviorSubject<'dark' | 'light'>(null);
 
   private parameters: ImageParameters = {
-    auto: 'compress,enhance,format',
+    auto: 'compress,format',
     fit: 'crop',
   };
 
