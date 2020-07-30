@@ -118,27 +118,4 @@
   <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
-  <!-- Broadcaster coproducers -->
-  <h3> TV / Platform coproducer(s), if any </h3>
-  <div formArrayName="broadcasterCoproducers" *ngFor="let broadcasterCoproducer of salesInfo.broadcasterCoproducers.controls; let i = index">
-    <div class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Coproducers</mat-label>
-        <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="TV / Platform coproducer"
-          type="string"></textarea>
-      </mat-form-field>
-      <button *ngIf="salesInfo.broadcasterCoproducers.controls.length < 3" mat-icon-button color="primary"
-        (click)="salesInfo.addBroadcasterCoproducers()">
-        <mat-icon svgIcon="add"></mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="salesInfo.removeBroadcasterCoproducers(i)">
-        <mat-icon svgIcon="trash"></mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="salesInfo.broadcasterCoproducers.controls.length === 0">
-    <button mat-icon-button color="primary" (click)="salesInfo.addBroadcasterCoproducers()">
-      <mat-icon svgIcon="add"></mat-icon>
-    </button>
-  </ng-container>
 </form>

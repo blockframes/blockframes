@@ -8,7 +8,7 @@ function createMovieAdminControls(entity: Partial<Movie>) {
   return {
     storeStatus: new FormControl(movie.storeConfig.status),
     storeType: new FormControl(movie.storeConfig.storeType),
-    productionStatus: new FormControl(movie.status),
+    productionStatus: new FormControl(movie.productionStatus),
     internalRef: new FormControl(movie.internalRef),
   };
 }

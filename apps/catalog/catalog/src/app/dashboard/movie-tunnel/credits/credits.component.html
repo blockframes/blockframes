@@ -7,20 +7,20 @@
         <mat-card-title>Production information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-production-year [form]="main.get('releaseYear')"></movie-form-production-year>
+        <!-- <movie-form-production-year [form]="main.get('releaseYear')"></movie-form-production-year> -->
         <mat-divider></mat-divider>
         <h6 class="mat-body-2"  i18n>
           Production Compan{ main.get('stakeholders').get('executiveProducer').controls.length, plural, =1 {y} other {ies}}
         </h6>
-        <movie-form-stakeholders test-id="production" [form]="production.get('stakeholders').get('executiveProducer')"></movie-form-stakeholders>
+        <!-- <movie-form-stakeholders test-id="production" [form]="production.get('stakeholders').get('executiveProducer')"></movie-form-stakeholders> -->
         <mat-divider></mat-divider>
         <h6 class="mat-body-2"  i18n>
           Co-Production Compan{ main.get('stakeholders').get('coProducer').controls.length, plural, =1 {y} other {ies}}
         </h6>
-        <movie-form-stakeholders test-id="co-production" [form]="production.get('stakeholders').get('coProducer')"></movie-form-stakeholders>
+        <!-- <movie-form-stakeholders test-id="co-production" [form]="production.get('stakeholders').get('coProducer')"></movie-form-stakeholders> -->
         <mat-divider></mat-divider>
         <p class="mat-body-2">Producer{ salesCast.get('producers').controls.length, plural, =1 {} other {s}}</p>
-        <movie-form-sales-cast  test-id="producer" [form]="salesCast.get('producers')" role="PRODUCER_ROLES"></movie-form-sales-cast>
+        <!-- <movie-form-sales-cast  test-id="producer" [form]="salesCast.get('producers')" role="PRODUCER_ROLES"></movie-form-sales-cast> -->
       </mat-card-content>
     </mat-card>
 
@@ -31,7 +31,7 @@
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-sales-cast role="CREW_ROLES" [form]="salesCast.get('crew')" test-id="crew-member"></movie-form-sales-cast>
+        <!-- <movie-form-sales-cast role="CREW_ROLES" [form]="salesCast.get('crew')" test-id="crew-member"></movie-form-sales-cast> -->
       </mat-card-content>
     </mat-card>
   </ng-container>
