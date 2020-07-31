@@ -11,9 +11,9 @@ import { runChunks } from './tools';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
-const numberOfDaysToKeepNotifications = 14;
+export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
-const dayInMillis = 1000 * 60 * 60 * 24;
+export const dayInMillis = 1000 * 60 * 60 * 24;
 
 /** Reusable data cleaning script that can be updated along with data model */
 export async function cleanDeprecatedData() {
@@ -84,7 +84,7 @@ export async function cleanDeprecatedData() {
   return true;
 }
 
-function cleanNotifications(
+export function cleanNotifications(
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
@@ -167,14 +167,12 @@ async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  // @TODO (#3066) recreate this situation
   await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as User;
 
     // Check if a DB user have a record in Auth.
-    // @TODO (#3066) recreate this situation
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
     if (!!authUserId) {
       // Check if ids are the same 
