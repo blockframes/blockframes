@@ -584,6 +584,7 @@ export default models;
 export interface SlugAndLabel {
   label: string;
   slug: string;
+  value?: boolean; // for checkboxes
 }
 
 export interface CurrencyWithLabel {
