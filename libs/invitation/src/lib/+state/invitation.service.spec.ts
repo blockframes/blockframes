@@ -43,6 +43,7 @@ describe('Invitations Test Suite', () => {
     is.formatFromFirestore = jest.fn();
     is.formatFromFirestore({} as any);
     expect(is.formatFromFirestore).toHaveBeenCalled();
+    // TODO: issue#3415 test the output value
   });
 
   it('Formats invitation to firestore', () => {
@@ -50,6 +51,7 @@ describe('Invitations Test Suite', () => {
     is.formatToFirestore = jest.fn();
     is.formatToFirestore({} as any);
     expect(is.formatToFirestore).toHaveBeenCalled();
+    // TODO: issue#3415 test the output value
   });
 
   it('Should invitation status become accepted', async () => {
@@ -77,4 +79,6 @@ describe('Invitations Test Suite', () => {
     const doc = await db.doc('invitations/2').ref.get();
     expect(doc.data().status).toBe('declined');
   });
+
+  // TODO: issue#3415 implements tests for others functions
 });
