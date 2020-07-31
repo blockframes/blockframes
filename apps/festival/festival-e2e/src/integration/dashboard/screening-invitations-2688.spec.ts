@@ -53,8 +53,6 @@ describe('User invites other users to his private screening', () => {
     const p2: FestivalInvitationsPage = p1.goToInvitations();
     cy.wait(2000)
     p2.acceptInvitationScreening();
-    // TODO: remove the reload after that issue#3379 is fixed
-    cy.reload();
 
     // Assets video runs
     p2.openMoreMenu();

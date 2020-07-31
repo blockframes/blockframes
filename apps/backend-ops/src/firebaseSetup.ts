@@ -10,6 +10,7 @@ import { migrate } from './migrations';
 import { restore } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
+import { syncStorage } from './syncStorage';
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
@@ -40,6 +41,10 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
+  console.info('Syncing firestore with storage');
+  await syncStorage();
+  console.info('Firestore is now synced with storage!');
+
   process.exit(0);
 }
 
@@ -67,6 +72,10 @@ export async function upgrade() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
+
+  console.info('Syncing firestore with storage');
+  await syncStorage();
+  console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }

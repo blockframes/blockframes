@@ -3,6 +3,7 @@ import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks } from './users';
+import { syncStorage } from './syncStorage';
 
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
@@ -31,6 +32,8 @@ if (cmd === 'prepareForTesting') {
   exitable(upgradeAlgoliaMovies)();
 } else if (cmd === 'upgradeAlgoliaUsers') {
   exitable(upgradeAlgoliaUsers)();
+} else if (cmd === 'syncStorage') {
+  exitable(syncStorage)();
 } else {
   showHelp();
   process.exit(1);
