@@ -215,11 +215,16 @@ export interface BoxOffice {
 }
 
 export interface MovieLanguageSpecification {
+  // The original version is a gross version of the movie, without dubbed, subtitle, etc.
+  // So for example if a movie has 2 original languages, we will hear the two languages in the movie, without dubbed for one of the language
+  // In the form, we don't care of the language for the original version parameter.
+  // If this version is available, so every languages registered in the originalLanguage field will have a `original: true` data here.
   original: boolean;
   dubbed: boolean;
   subtitle: boolean;
   caption: boolean;
 }
+
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 
@@ -257,8 +262,8 @@ export interface MovieLegalDocuments {
 }
 
 export interface MovieStakeholders {
-  executiveProducer: Stakeholder[];
-  coProducer: Stakeholder[];
+  productionCompany: Stakeholder[]; // ex executiveProducer
+  coProductionCompany: Stakeholder[]; // ex coProducer
   broadcasterCoproducer: Stakeholder[];
   lineProducer: Stakeholder[];
   distributor: Stakeholder[];

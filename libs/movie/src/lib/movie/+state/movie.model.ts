@@ -62,7 +62,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     genres: [],
     originalLanguages: [],
     originCountries: [],
-    release: null,
     synopsis: '',
     // Optionnal fields
     boxOffice: [],
@@ -84,7 +83,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     productionStatus: null,
     rating: [],
     review: [],
-    runningTime: null,
     scoring: null,
     soundFormat: '',
 
@@ -94,6 +92,8 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: createPromotionalHostedMedia(params.poster),
     promotional: createMoviePromotional(params.promotional),
+    release: createReleaseYear(params.release),
+    runningTime: createRunningTime(params.runningTime),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
@@ -259,8 +259,8 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 
 export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
   return {
-    executiveProducer: [],
-    coProducer: [],
+    productionCompany: [],
+    coProductionCompany: [],
     broadcasterCoproducer: [],
     lineProducer: [],
     distributor: [],
