@@ -3,7 +3,7 @@ import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('catalog-marketplace');
+    cy.get('catalog-marketplace', {timeout: 10000});
   }
 
   public openProfileMenu(){
