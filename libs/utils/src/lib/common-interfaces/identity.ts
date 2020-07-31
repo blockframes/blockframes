@@ -1,6 +1,7 @@
 import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
+import { number } from '@storybook/addon-knobs';
 
 
 //////////////////////////
@@ -50,9 +51,14 @@ export interface Stakeholder extends StakeholderRaw {
  */
 export interface Credit extends Person {
   description?: string,
-  filmography?: string,
+  filmography?: Filmography[],
   status?: string,
 };
+
+export interface Filmography {
+  title?: string,
+  year?: number,
+}
 
 /**
  * @dev interface to represent a producer credit
@@ -122,10 +128,18 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     firstName: '',
     lastName: '',
     role: '',
-    filmography: '',
+    filmography: [],
     description: '',
     status: '',
     avatar: createHostedMedia(),
     ...params
   } as T;
+}
+
+export function createFilmography(params: Filmography): Filmography {
+  return {
+    title: '',
+    year: null,
+    ...params
+  }
 }

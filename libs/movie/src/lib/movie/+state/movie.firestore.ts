@@ -69,8 +69,9 @@ interface MovieRaw<D> {
   producers?: Producer[],
   productionStatus?: MovieStatusSlug,
   rating?: MovieRating[],
-  releaseYear: number, //! required
+  release: MovieRelease, //! required
   review?: MovieReview[],
+  runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
@@ -78,7 +79,6 @@ interface MovieRaw<D> {
   synopsis: string, //! required
   title: Title, //! required
   totalBudget?: Price,
-  totalRunTime?: number | string;
 }
 
 /** Document model of a Movie */
@@ -244,7 +244,6 @@ export interface MovieReview {
   journalName?: string,
   criticQuote?: string,
   revueLink?: string,
-  publicationDate?: Date;
 }
 
 export interface DocumentMeta {
@@ -266,6 +265,16 @@ export interface MovieStakeholders {
   salesAgent: Stakeholder[];
   laboratory: Stakeholder[];
   financier: Stakeholder[];
+}
+
+export interface MovieRelease {
+  year: number,
+  status: string,
+}
+
+export interface MovieRunningTime {
+  time: number,
+  status: string,
 }
 
 /////////////////////

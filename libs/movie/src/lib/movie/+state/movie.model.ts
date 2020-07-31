@@ -18,7 +18,9 @@ import {
   MovieOriginalRelease,
   Prize,
   MovieLanguageTypes,
-  BoxOffice
+  BoxOffice,
+  MovieRelease,
+  MovieRunningTime
 } from './movie.firestore';
 import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -60,7 +62,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     genres: [],
     originalLanguages: [],
     originCountries: [],
-    releaseYear: null,
+    release: null,
     synopsis: '',
     // Optionnal fields
     boxOffice: [],
@@ -82,9 +84,9 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     productionStatus: null,
     rating: [],
     review: [],
+    runningTime: null,
     scoring: null,
     soundFormat: '',
-    totalRunTime: null,
 
     ...params,
     banner: createPromotionalHostedMedia(params.banner),
@@ -218,6 +220,22 @@ export function createTitle(title: Partial<Title> = {}): Title {
     original: '',
     international: '',
     ...title
+  };
+}
+
+export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
+  return {
+    year: null,
+    status: '',
+    ...release
+  };
+}
+
+export function createRunningTime(runningTime: Partial<MovieRunningTime> = {}): MovieRunningTime {
+  return {
+    time: null,
+    status: '',
+    ...runningTime
   };
 }
 

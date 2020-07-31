@@ -17,7 +17,9 @@ import {
   createMovie,
   createMovieLegalDocuments,
   createTitle,
+  createReleaseYear,
   createStoreConfig,
+  createRunningTime,
   createMovieStakeholders,
   createMoviePromotional,
   createPromotionalExternalMedia,
@@ -35,7 +37,7 @@ import { HostedMediaForm, ExternalMediaForm } from '@blockframes/media/form/medi
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { FormValue } from '@blockframes/utils/form';
-import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, Stakeholder, createStakeholder, Filmography, createFilmography, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
@@ -113,8 +115,9 @@ function createMovieControls(movie: Partial<Movie>) {
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
-    releaseYear: new FormControl(entity.releaseYear, [yearValidators]),
+    release: new ReleaseYearForm(entity.release),
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
+    runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
@@ -122,7 +125,6 @@ function createMovieControls(movie: Partial<Movie>) {
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
     title: new TitleForm(entity.title),
     totalBudget: new PriceForm(entity.totalBudget),
-    totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
   }
 }
 
@@ -384,7 +386,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
     role: new FormControl(role),
-    filmography: new FormControl(filmography),
+    filmography: FormList.factory(filmography, el => new FilmographyForm(el)),
     description: new FormControl(description),
     status: new FormControl(status),
   }
@@ -403,23 +405,44 @@ export class CreditForm extends FormEntity<CreditFormControl> {
 // ------------------------------
 
 export class DirectorForm extends FormEntity<DirectorFormControl> {
-  constructor(director?: Partial<Credit>) {
+  constructor(director?: Partial<Director>) {
     super(createDirectorFormControl(director))
   }
 }
 
-function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName, filmography, status, description } = createCredit(director);
+function createDirectorFormControl(director?: Partial<Director>) {
+  const { firstName, lastName, filmography, status, description, category } = createCredit(director);
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),
-    filmography: new FormControl(filmography),
+    filmography: FormList.factory(filmography, el => new FilmographyForm(el)),
     description: new FormControl(description),
     status: new FormControl(status),
+    category: new FormControl(category)
   }
 }
 
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
+
+// ------------------------------
+//          FILMOGRAPHY
+// ------------------------------
+
+function createFilmographyFormControl(filmography?: Partial<Filmography>) {
+  const { year, title } = createFilmography(filmography);
+  return {
+    year: new FormControl(year),
+    title: new FormControl(title)
+  }
+}
+
+export type FilmographyFormControl = ReturnType<typeof createFilmographyFormControl>;
+
+export class FilmographyForm extends FormEntity<FilmographyFormControl> {
+  constructor(filmography?: Partial<Filmography>) {
+    super(createFilmographyFormControl(filmography));
+  }
+}
 
 // ------------------------------
 //       STAKEHOLDERS
@@ -484,6 +507,46 @@ function createTitleFormControl(title?: Partial<Movie['title']>) {
 }
 
 type TitleFormControl = ReturnType<typeof createTitleFormControl>;
+
+// ------------------------------
+//        RELEASE YEAR
+// ------------------------------
+
+export class ReleaseYearForm extends FormEntity<ReleaseYearFormControl> {
+  constructor(release?: Movie['release']) {
+    super(createReleaseYearFormControl(release));
+  }
+}
+
+function createReleaseYearFormControl(release?: Partial<Movie['release']>) {
+  const { year, status } = createReleaseYear(release);
+  return {
+    year: new FormControl(year, [yearValidators]),
+    status: new FormControl(status),
+  }
+}
+
+type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
+
+// ------------------------------
+//        RUNNING TIME
+// ------------------------------
+
+export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
+  constructor(runningTime?: Movie['runningTime']) {
+    super(createRunningTimeFormControl(runningTime));
+  }
+}
+
+function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
+  const { time, status } = createRunningTime(runningTime);
+  return {
+    time: new FormControl(time, [Validators.min(0)]),
+    status: new FormControl(status),
+  }
+}
+
+type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 
 // ------------------------------
 //       STORE CONFIG
