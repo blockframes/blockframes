@@ -11,7 +11,7 @@ let db;
 jest.setTimeout(30000);
 
 describe('DB cleaning script', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     initFunctionsTestMock();
     db = firestore();
 
@@ -57,19 +57,17 @@ describe('DB cleaning script', () => {
     const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movieIds)).length;
     expect(orgsTestSet.length).toEqual(cleanedOrgs);
   });
-  it('should clean permissions', async () => {
+  it('should remove permissions not belonging to existing org', async () => {
     const [permissionsBefore, organizations,] = await Promise.all([
       db.collection('permissions').get(),
       db.collection('orgs').get(),
     ]);
-
     const organizationIds = organizations.docs.map(organization => organization.data().id);
-    // @TODO (#3066) WIP
-    //await cleanPermissions(permissionsBefore, organizationIds);
+    const orgsToKeep = permissionsBefore.docs.filter(d => organizationIds.includes(d.id)).length;
 
-    /*const permissionsAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('permissions').get();
-    const cleanedOrgs = permissionsAfter.docs.filter(m => isOrgClean(m, userIds, movieIds)).length;
-    expect(orgsTestSet.length).toEqual(cleanedOrgs);*/
+    await cleanPermissions(permissionsBefore, organizationIds);
+    const permissionsAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('permissions').get();
+    expect(orgsToKeep).toEqual(permissionsAfter.docs.length);
   });
   it('should clean movies from unwanted attributes', async () => {
     const moviesAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('movies').get();
