@@ -6,6 +6,7 @@ import { cleanMovies, cleanOrganizations, cleanPermissions } from './db-cleaning
 const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
 const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-orgs.json');// @TODO (#3066) commit this file only when fully anonymised
 const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-permissions.json');// @TODO (#3066) commit this file only when fully anonymised
+const docsIndexTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/docsIndex.json');
 
 let db;
 jest.setTimeout(30000);
@@ -24,6 +25,12 @@ describe('DB cleaning script', () => {
     console.log('loading orgs data set...');
     await runChunks(orgsTestSet, async (d) => {
       const docRef = db.collection('orgs').doc(d.id);
+      await docRef.set(d);
+    }, 50, false);
+
+    console.log('loading permissions data set...');
+    await runChunks(permissionsTestSet, async (d) => {
+      const docRef = db.collection('permissions').doc(d.id);
       await docRef.set(d);
     }, 50, false);
 
