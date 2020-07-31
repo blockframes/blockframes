@@ -1,11 +1,12 @@
 import { firestore } from 'firebase-admin';
 import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
 import { runChunks } from './tools';
-import { cleanMovies, cleanOrganizations, cleanPermissions } from './db-cleaning';
+import { cleanMovies, cleanOrganizations, cleanPermissions, cleanDocsIndex } from './db-cleaning';
 
 const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
-const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-orgs.json');// @TODO (#3066) commit this file only when fully anonymised
-const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-permissions.json');// @TODO (#3066) commit this file only when fully anonymised
+const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');// @TODO (#3066) commit this file only when fully anonymised
+const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/permissions.json');// @TODO (#3066) commit this file only when fully anonymised
+const docsIndexTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/docsIndex.json');
 
 let db;
 jest.setTimeout(30000);
@@ -30,6 +31,12 @@ describe('DB cleaning script', () => {
     console.log('loading permissions data set...');
     await runChunks(permissionsTestSet, async (d) => {
       const docRef = db.collection('permissions').doc(d.id);
+      await docRef.set(d);
+    }, 50, false);
+
+    console.log('loading docsIndex data set...');
+    await runChunks(docsIndexTestSet, async (d) => {
+      const docRef = db.collection('docsIndex').doc(d.id);
       await docRef.set(d);
     }, 50, false);
 
@@ -70,11 +77,27 @@ describe('DB cleaning script', () => {
     expect(orgsToKeep).toEqual(permissionsAfter.docs.length);
   });
   it('should clean movies from unwanted attributes', async () => {
-    const moviesAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('movies').get();
-    await cleanMovies(moviesAfter);
     const moviesBefore: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('movies').get();
-    const cleanedMovies = moviesBefore.docs.filter(m => isMovieClean(m)).length;
+    await cleanMovies(moviesBefore);
+    const moviesAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('movies').get();
+    const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
     expect(moviesTestSet.length).toEqual(cleanedMovies);
+  });
+  it('should remove documents undefined or not linked to existing document from docsIndex ', async () => {
+
+    const [docsIndexBefore, movies,] = await Promise.all([
+      db.collection('docsIndex').get(),
+      db.collection('movies').get()
+    ]);
+
+    const movieIds = movies.docs.map(m => m.id);
+    const docsToKeep = docsIndexBefore.docs.filter(d => movieIds.includes(d.id)).length;
+    
+    await cleanDocsIndex(docsIndexBefore, movieIds);
+
+    const docsIndexAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('docsIndex').get();
+
+    expect(docsToKeep).toEqual(docsIndexAfter.docs.length);
   });
 });
 

@@ -263,7 +263,7 @@ export function cleanMovies(
   });
 }
 
-function cleanDocsIndex(
+export function cleanDocsIndex(
   docsIndex: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
