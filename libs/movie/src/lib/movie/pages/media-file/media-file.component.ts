@@ -25,6 +25,6 @@ export class MovieFormMediaFileComponent {
 
   // get the ImgRef generated from firestorage and update url of media for each path
   importPDF(imgRef, path: 'scenario' | 'presentation_deck') {
-    this.form.get('promotional').get(path).get('media').patchValue(imgRef);
+    this.form.get('promotional').get(path).patchValue(imgRef);
   }
 }

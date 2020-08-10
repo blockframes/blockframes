@@ -28,6 +28,8 @@ import {
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
+import { Movie, createMovie, createMovieLegalDocuments } from '../+state';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
@@ -88,7 +90,7 @@ function createMovieControls(movie: Partial<Movie>) {
     documents: new MovieLegalDocumentsForm(entity.documents),
 
     // Root data
-    banner: new MoviePromotionalHostedMediaForm(entity.banner),
+    banner: new HostedMediaForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
@@ -110,7 +112,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
-    poster: new MoviePromotionalHostedMediaForm(entity.poster),
+    poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
