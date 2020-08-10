@@ -1,9 +1,13 @@
 import { Firestore, Storage } from '../admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
-import { PromotionalElement, Credit } from '@blockframes/movie/+state/movie.model';
+import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from 'apps/backend-functions/src/data/types';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+
+import {
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalElement
+} from './old-types';
 
 /**
  * Migrate old ImgRef objects to new one.

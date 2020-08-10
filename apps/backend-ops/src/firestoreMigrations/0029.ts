@@ -2,10 +2,14 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.firestore';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
+
+import {
+  OldExternalMedia as ExternalMedia,
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalHostedMedia
+} from './old-types';
 
 /**
  * Migrate old medias & images and some refactoring on the movie.
@@ -125,10 +129,10 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
 }
 
 /**
- * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url} 
+ * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url}
  * But references points to old structore on storage.
- * @param element 
- * @param property 
+ * @param element
+ * @param property
  */
 function updateImgRef<T extends (PublicUser | Organization | PromotionalHostedMedia)>(
   element: T,

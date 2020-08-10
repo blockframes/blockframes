@@ -1,7 +1,11 @@
 import { Firestore } from '../admin';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 import { runChunks } from '../tools';
+
+import {
+  OldHostedMedia as HostedMedia,
+  createOldHostedMedia as createHostedMedia,
+} from './old-types';
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 
