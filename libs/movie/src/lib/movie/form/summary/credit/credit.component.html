@@ -1,11 +1,11 @@
 <ul>
   <li>
     <strong>Release Year </strong>
-    <missing-control [control]="movie.get('releaseYear')" [link]="link"></missing-control>
+    <missing-control [control]="movie.get('release').get('year')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Production Company </strong>
-    <ng-container *ngFor="let producer of movie.stakeholders.get('executiveProducer').controls; let isLast = last">
+    <ng-container *ngFor="let producer of movie.stakeholders.get('productionCompany').controls; let isLast = last">
       <missing-control [control]="producer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="producer.get('countries').value.length">
         <span> (</span>
@@ -38,7 +38,7 @@
   </li>
   <li>
     <strong>Co-Production </strong>
-    <ng-container *ngFor="let coProducer of movie.stakeholders.get('coProducer').controls; let isLast = last">
+    <ng-container *ngFor="let coProducer of movie.stakeholders.get('coProductionCompany').controls; let isLast = last">
       <missing-control [control]="coProducer.get('displayName')" [link]="link"></missing-control>
       <ng-container *ngIf="coProducer.get('countries').value.length">
         <span> (</span>

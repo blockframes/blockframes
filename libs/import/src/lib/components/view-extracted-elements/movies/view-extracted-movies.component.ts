@@ -198,9 +198,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // Total Run Time
         if (spreadSheetRow[SpreadSheetMovie.length]) {
           if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-            movie.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+            movie.runningTime.time = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
           } else {
-            movie.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
+            movie.runningTime.time = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
           }
         }
 
@@ -245,11 +245,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
                   movie.stakeholders.lineProducer.push(stakeHolder);
                   break;
                 case 'co-producer':
-                  movie.stakeholders.coProducer.push(stakeHolder);
+                  movie.stakeholders.coProductionCompany.push(stakeHolder);
                   break;
                 case 'executive-producer':
                 default:
-                  movie.stakeholders.executiveProducer.push(stakeHolder);
+                  movie.stakeholders.productionCompany.push(stakeHolder);
                   break;
               }
             } else {
@@ -1074,10 +1074,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (!movie.totalRunTime) {
+    if (!movie.runningTime) {
       errors.push({
         type: 'warning',
-        field: 'totalRunTime',
+        field: 'runningTime',
         name: 'Total Run Time',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

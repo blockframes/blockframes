@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieReview } from '@blockframes/movie/+state/movie.model';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { MovieReviewForm } from '../../review/review.form';
+import { MovieReviewForm } from '../../movie.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({

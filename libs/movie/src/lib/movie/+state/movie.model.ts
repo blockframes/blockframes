@@ -18,7 +18,9 @@ import {
   MovieOriginalRelease,
   Prize,
   MovieLanguageTypes,
-  BoxOffice
+  BoxOffice,
+  MovieRelease,
+  MovieRunningTime
 } from './movie.firestore';
 import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -60,7 +62,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     genres: [],
     originalLanguages: [],
     originCountries: [],
-    releaseYear: null,
     synopsis: '',
     // Optionnal fields
     boxOffice: [],
@@ -84,7 +85,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     review: [],
     scoring: null,
     soundFormat: '',
-    totalRunTime: null,
 
     ...params,
     banner: createPromotionalHostedMedia(params.banner),
@@ -92,6 +92,8 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: createPromotionalHostedMedia(params.poster),
     promotional: createMoviePromotional(params.promotional),
+    release: createReleaseYear(params.release),
+    runningTime: createRunningTime(params.runningTime),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
@@ -221,6 +223,22 @@ export function createTitle(title: Partial<Title> = {}): Title {
   };
 }
 
+export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
+  return {
+    year: null,
+    status: '',
+    ...release
+  };
+}
+
+export function createRunningTime(runningTime: Partial<MovieRunningTime> = {}): MovieRunningTime {
+  return {
+    time: null,
+    status: '',
+    ...runningTime
+  };
+}
+
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     status: 'draft',
@@ -241,8 +259,8 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 
 export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
   return {
-    executiveProducer: [],
-    coProducer: [],
+    productionCompany: [],
+    coProductionCompany: [],
     broadcasterCoproducer: [],
     lineProducer: [],
     distributor: [],

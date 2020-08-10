@@ -21,11 +21,11 @@ export class MovieFormProductionComponent {
   }
 
   get coProducer() {
-    return this.stakeholders.get('coProducer');
+    return this.stakeholders.get('coProductionCompany');
   }
 
   get executiveProducer() {
-    return this.stakeholders.get('executiveProducer');
+    return this.stakeholders.get('productionCompany');
   }
 
   get producers() {

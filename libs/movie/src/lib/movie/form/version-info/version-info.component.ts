@@ -20,7 +20,7 @@ import { FormStaticValue } from '@blockframes/utils/form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 // Form
-import { MovieVersionInfoForm, VersionSpecificationForm } from './version-info.form';
+import { MovieVersionInfoForm, VersionSpecificationForm } from '../movie.form';
 import { createMovieLanguageSpecification } from '../../+state/movie.model';
 
 @Component({

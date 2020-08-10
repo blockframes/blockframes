@@ -69,8 +69,9 @@ interface MovieRaw<D> {
   producers?: Producer[],
   productionStatus?: MovieStatusSlug,
   rating?: MovieRating[],
-  releaseYear: number, //! required
+  release: MovieRelease, //! required
   review?: MovieReview[],
+  runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
@@ -78,7 +79,6 @@ interface MovieRaw<D> {
   synopsis: string, //! required
   title: Title, //! required
   totalBudget?: Price,
-  totalRunTime?: number | string;
 }
 
 /** Document model of a Movie */
@@ -215,11 +215,16 @@ export interface BoxOffice {
 }
 
 export interface MovieLanguageSpecification {
+  // The original version is a gross version of the movie, without dubbed, subtitle, etc.
+  // So for example if a movie has 2 original languages, we will hear the two languages in the movie, without dubbed for one of the language
+  // In the form, we don't care of the language for the original version parameter.
+  // If this version is available, so every languages registered in the originalLanguage field will have a `original: true` data here.
   original: boolean;
   dubbed: boolean;
   subtitle: boolean;
   caption: boolean;
 }
+
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 
@@ -244,7 +249,6 @@ export interface MovieReview {
   journalName?: string,
   criticQuote?: string,
   revueLink?: string,
-  publicationDate?: Date;
 }
 
 export interface DocumentMeta {
@@ -258,14 +262,24 @@ export interface MovieLegalDocuments {
 }
 
 export interface MovieStakeholders {
-  executiveProducer: Stakeholder[];
-  coProducer: Stakeholder[];
+  productionCompany: Stakeholder[];
+  coProductionCompany: Stakeholder[];
   broadcasterCoproducer: Stakeholder[];
   lineProducer: Stakeholder[];
   distributor: Stakeholder[];
   salesAgent: Stakeholder[];
   laboratory: Stakeholder[];
   financier: Stakeholder[];
+}
+
+export interface MovieRelease {
+  year: number,
+  status: string,
+}
+
+export interface MovieRunningTime {
+  time: number,
+  status: string,
 }
 
 /////////////////////

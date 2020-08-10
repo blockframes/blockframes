@@ -50,9 +50,14 @@ export interface Stakeholder extends StakeholderRaw {
  */
 export interface Credit extends Person {
   description?: string,
-  filmography?: string,
+  filmography?: Filmography[],
   status?: string,
 };
+
+export interface Filmography {
+  title?: string,
+  year?: number,
+}
 
 /**
  * @dev interface to represent a producer credit
@@ -122,10 +127,18 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     firstName: '',
     lastName: '',
     role: '',
-    filmography: '',
+    filmography: createFilmography(),
     description: '',
     status: '',
     avatar: createHostedMedia(),
     ...params
   } as T;
+}
+
+export function createFilmography(params: Partial<Filmography> = {}): Filmography {
+  return {
+    title: '',
+    year: 0,
+    ...params
+  }
 }

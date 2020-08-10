@@ -100,11 +100,11 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   }
 
   public getTitle(movie: Movie) {
-    const { totalRunTime, genres, originalLanguages } = movie;
+    const { runningTime, genres, originalLanguages } = movie;
     const contentTypeRegistered = movie.contentType;
     return [
       getKeyIfExists(contentType, contentTypeRegistered) ? contentType[contentTypeRegistered] : '',
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : '',
+      typeof runningTime.time === 'number' ? `${runningTime.time} min` : '',
       genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
       originalLanguages.map(language => language).join(', ')
     ].filter(value => !!value).join(' | ');
@@ -116,7 +116,7 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getOriginalCountries(movie: Movie) {
-    return `${movie.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.releaseYear}`;
+    return `${movie.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.release.year}`;
   }
 
 
