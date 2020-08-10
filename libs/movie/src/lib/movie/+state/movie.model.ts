@@ -1,6 +1,5 @@
 import {
   MoviePromotionalElements,
-  PromotionalElement,
   MovieLanguageSpecificationContainer,
   Title,
   StoreConfig,
@@ -8,8 +7,6 @@ import {
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta,
-  PromotionalExternalMedia,
-  PromotionalHostedMedia,
   MovieStakeholders,
   MovieLanguageSpecification,
   LanguageRecord,
@@ -22,7 +19,6 @@ import {
   MovieRelease,
   MovieRunningTime
 } from './movie.firestore';
-import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
@@ -34,7 +30,6 @@ import { toDate } from '@blockframes/utils/helpers';
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
 export {
-  PromotionalElement,
   MoviePromotionalElements,
   MovieStakeholders,
   Prize,
@@ -87,10 +82,10 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     soundFormat: '',
 
     ...params,
-    banner: createPromotionalHostedMedia(params.banner),
+    banner: params.banner ?? '',
     estimatedBudget: createRange<number>(params.estimatedBudget),
     languages: createLanguageKey(params.languages ? params.languages : {}),
-    poster: createPromotionalHostedMedia(params.poster),
+    poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
     runningTime: createRunningTime(params.runningTime),
@@ -105,56 +100,23 @@ export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
 
-  const newStills: Record<string, PromotionalHostedMedia> = {};
+  const newStills: Record<string, string> = {};
   for (const key in params.still_photo) {
-    newStills[key] = createPromotionalHostedMedia(params.still_photo[key]);
+    newStills[key] = params.still_photo[key];
   }
 
   const elements: MoviePromotionalElements = {
     ...params,
     still_photo: newStills,
-    presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
-    scenario: createPromotionalHostedMedia(params.scenario),
-    promo_reel_link: createPromotionalExternalMedia(params.promo_reel_link),
-    screener_link: createPromotionalExternalMedia(params.screener_link),
-    trailer_link: createPromotionalExternalMedia(params.trailer_link),
-    teaser_link: createPromotionalExternalMedia(params.teaser_link),
+    presentation_deck: params.presentation_deck ?? '',
+    scenario: params.scenario ?? '',
+    promo_reel_link: params.promo_reel_link ?? '',
+    screener_link: params.screener_link ?? '',
+    trailer_link: params.trailer_link ?? '',
+    teaser_link: params.teaser_link ?? '',
   };
 
   return elements;
-}
-
-
-function createPromotionalElement(
-  promotionalElement: Partial<PromotionalElement> = {}
-): PromotionalElement {
-  promotionalElement = promotionalElement || {};
-  return {
-    label: '',
-    ...promotionalElement
-  }
-}
-
-export function createPromotionalExternalMedia(
-  promotionalExternalMedia: Partial<PromotionalExternalMedia> = {}
-): PromotionalExternalMedia {
-  const promotionalElement = createPromotionalElement(promotionalExternalMedia);
-  return {
-    ...promotionalElement,
-    ...promotionalExternalMedia,
-    media: createExternalMedia(promotionalExternalMedia.media),
-  };
-}
-
-export function createPromotionalHostedMedia(
-  promotionalHostedMedia: Partial<PromotionalHostedMedia> = {}
-): PromotionalHostedMedia {
-  const promotionalElement = createPromotionalElement(promotionalHostedMedia);
-  return {
-    ...promotionalElement,
-    ...promotionalHostedMedia,
-    media: createHostedMedia(promotionalHostedMedia.media),
-  };
 }
 
 export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
@@ -210,7 +172,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: createHostedMedia(),
+    logo: '',
     ...prize
   };
 }

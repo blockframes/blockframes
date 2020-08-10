@@ -1,5 +1,4 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
-import { HostedMedia } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
@@ -32,9 +31,9 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   // -----------------------------------
 
   /** the image to display */
-  @Input() set ref(image: HostedMedia) {
-    if (!image.ref) return;
-    this.ref$.next(image.ref);
+  @Input() set ref(image: string) {
+    if (!image) return;
+    this.ref$.next(image);
   }
 
   // -----------------------------------
