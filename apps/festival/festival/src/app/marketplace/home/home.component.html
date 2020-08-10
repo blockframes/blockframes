@@ -54,7 +54,7 @@
             </div>
             <bf-slider hideIndicators loop class="dark-contrast-theme">
               <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient"
-                [image]="movie.banner.media">
+                [image]="movie.banner">
                 <movie-slide [movie]="movie">
                   <movie-slide-cta>
                     <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"

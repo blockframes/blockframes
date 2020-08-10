@@ -11,6 +11,6 @@
   <!-- Links -->
   <li *ngFor="let link of fileLinks | keyvalue">
     <strong>{{ link.value }} </strong>
-    <missing-control [control]="promotional.get(link.key).get('media')" [link]="link"></missing-control>
+    <missing-control [control]="promotional.get(link.key)" [link]="link"></missing-control>
   </li>
 </ul>

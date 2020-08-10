@@ -19,15 +19,15 @@ export class MarketplaceMovieMainComponent {
   constructor(private movieQuery: MovieQuery) { }
 
   public hasLink({ promotional }: Movie): boolean {
-    return this.promoLinks.some(link => !!promotional[link].media.url);
+    return this.promoLinks.some(link => !!promotional[link]);
   }
 
   public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
-    if(movie.promotional[link].media.url) {
+    if(!!movie.promotional[link]) {
       const isDownload = link === 'scenario' || link === 'presentation_deck';
       const isAccent = link === 'scenario' || link === 'promo_reel_link'
       return {
-        url: movie.promotional[link].media.url,
+        url: movie.promotional[link],
         icon: isDownload ? 'download' : 'play',
         label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`,
         color: isAccent ? 'accent' : 'primary'

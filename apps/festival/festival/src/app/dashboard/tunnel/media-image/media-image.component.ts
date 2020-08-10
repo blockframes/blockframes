@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MoviePromotionalHostedMediaForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { ActivatedRoute } from '@angular/router';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 @Component({
   selector: 'festival-tunnel-media-image',
@@ -22,7 +22,7 @@ export class MediaImageComponent {
   addStill() {
     this.form.promotionalElements
       .get('still_photo')
-      .push(new MoviePromotionalHostedMediaForm());
+      .push(new HostedMediaForm());
   }
 
   trackByFn(index) {

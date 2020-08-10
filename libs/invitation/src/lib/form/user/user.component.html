@@ -3,7 +3,7 @@
     [separators]="separators" placeholder="Enter guest email">
     <ng-template let-user>
       <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
-        <img [ref]="user.avatar.media" asset="profil_user.webp" alt="Profile">
+        <img [ref]="user.avatar" asset="profil_user.webp" alt="Profile">
         <span *ngIf="user.firstName">{{ user | displayName }}</span>
         <span *ngIf="!user.firstName">{{ user.email }}</span>
       </div>
