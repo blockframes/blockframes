@@ -10,11 +10,10 @@
         <mat-card-content>
           <file-upload
           test-id="presentation-deck"
-          [form]="form.promotional.get('presentation_deck').get('media')"
+          [form]="form.promotional.get('presentation_deck')"
           [storagePath]="presentationPath"
           accept="['.pdf']"
-          [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'presentation_deck')">
+          [types]="['application/pdf']">
           <h3 type>Presentation Deck</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>
@@ -28,11 +27,10 @@
         <mat-card-content>
           <file-upload
           test-id="scenario"
-          [form]="form.promotional.get('scenario').get('media')"
+          [form]="form.promotional.get('scenario')"
           [storagePath]="scenarioPath"
           accept="['.pdf']"
-          [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'scenario')">
+          [types]="['application/pdf']">
           <h3 type>Script</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>
