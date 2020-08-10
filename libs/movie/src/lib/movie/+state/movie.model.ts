@@ -17,7 +17,7 @@ import {
   MovieLanguageTypes,
   BoxOffice,
   MovieRelease,
-  MovieRunningTime
+  MovieRunningTime,
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
