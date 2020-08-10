@@ -262,8 +262,8 @@ export interface MovieLegalDocuments {
 }
 
 export interface MovieStakeholders {
-  productionCompany: Stakeholder[]; // ex executiveProducer
-  coProductionCompany: Stakeholder[]; // ex coProducer
+  productionCompany: Stakeholder[];
+  coProductionCompany: Stakeholder[];
   broadcasterCoproducer: Stakeholder[];
   lineProducer: Stakeholder[];
   distributor: Stakeholder[];

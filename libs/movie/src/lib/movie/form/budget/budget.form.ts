@@ -1,4 +1,3 @@
-
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 
 export const BUDGET_LIST: NumberRange[] = [

@@ -12,38 +12,25 @@ export async function upgrade(db: Firestore) {
       cast: movie.cast.map(cast => {
         const { shortBiography } = cast;
         delete cast.shortBiography;
-        if (shortBiography) {
-          return {
-            ...cast,
-            description: shortBiography,
-            filmography: []
-          }
-        } else {
-          return {
-            ...cast,
-            filmography: []
-          }
+        return {
+          ...cast,
+          description: shortBiography || '',
+          filmography: []
         }
       }),
       crew: movie.crew.map(crew => {
         const { shortBiography } = crew;
         delete crew.shortBiography;
-        if (shortBiography) {
-          return {
-            ...crew,
-            description: shortBiography,
-            filmography: []
-          }
-        } else {
-          return {
-            ...crew,
-            filmography: []
-          }
+        return {
+          ...crew,
+          description: shortBiography || '',
+          filmography: []
         }
       }),
       directors: movie.directors.map(director => {
         return {
           ...director,
+          description: '',
           filmography: []
         }
       }),
@@ -54,7 +41,7 @@ export async function upgrade(db: Firestore) {
             role: 'executive-producer'
           }
         } else {
-          return { ...producer }
+          return producer;
         }
       }),
       release: {

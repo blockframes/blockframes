@@ -135,10 +135,10 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
   } as T;
 }
 
-export function createFilmography(params: Filmography): Filmography {
+export function createFilmography(params: Partial<Filmography>): Filmography {
   return {
     title: '',
-    year: null,
+    year: 0,
     ...params
   }
 }
