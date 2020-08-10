@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { BudgetFormControl } from '../budget.form';
 import { UnitBox, unitBox } from '@blockframes/movie/+state/movie.firestore';
 import { Observable } from 'rxjs';
 
@@ -20,7 +19,7 @@ type Unit = ReturnType<typeof toUnit>;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoxOfficeComponent implements OnInit {
-  @Input() form: BudgetFormControl['boxOffice'];
+  @Input() form;
   unitBox = unitBox;
   units$: Observable<Unit[]>;
 

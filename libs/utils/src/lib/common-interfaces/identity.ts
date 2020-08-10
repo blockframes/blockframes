@@ -127,7 +127,7 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     firstName: '',
     lastName: '',
     role: '',
-    filmography: [],
+    filmography: createFilmography(),
     description: '',
     status: '',
     avatar: createHostedMedia(),
@@ -135,7 +135,7 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
   } as T;
 }
 
-export function createFilmography(params: Partial<Filmography>): Filmography {
+export function createFilmography(params: Partial<Filmography> = {}): Filmography {
   return {
     title: '',
     year: 0,

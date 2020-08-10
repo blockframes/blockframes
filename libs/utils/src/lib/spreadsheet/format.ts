@@ -19,7 +19,7 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
 
   if (str.split(new RegExp(separator)).length > 2) {
     if (thirdItemType === 'filmography') {
-      credit.filmography = str.split(new RegExp(separator))[2].trim();
+      credit.filmography[0].title = str.split(new RegExp(separator))[2].trim();
     } else {
       const roleName = str.split(new RegExp(separator))[2];
       let role;

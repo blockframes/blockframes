@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MoviePrizeForm } from '@blockframes/movie/form/festival-prizes/festival-prizes.form';
+import { MoviePrizeForm } from '../../movie.form';
 import { MovieForm } from '../../movie.form';
 
 @Component({

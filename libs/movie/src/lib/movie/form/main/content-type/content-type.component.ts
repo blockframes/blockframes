@@ -1,7 +1,6 @@
 import { storeType, contentType } from '@blockframes/movie/+state/movie.firestore';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
-import { MovieMainForm } from '../main.form';
 
 
 @Component({
@@ -15,7 +14,7 @@ export class ContentTypeComponent {
   public freshness = storeType;
   public contentType = contentType;
 
-  @Input() form: MovieMainForm;
+  @Input() form;
 
   get title() {
     return this.form.get('title');

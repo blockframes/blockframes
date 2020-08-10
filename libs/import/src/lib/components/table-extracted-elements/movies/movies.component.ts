@@ -143,8 +143,8 @@ export class TableExtractedMoviesComponent implements OnInit {
       licensor.party.displayName = `${importState.movie.internalRef}'s producer`;
 
       // Lets try to add more info about licensor with movie producing company
-      if (importState.movie.stakeholders?.executiveProducer.length) {
-        const firstProducer = importState.movie.stakeholders?.executiveProducer.pop();
+      if (importState.movie.stakeholders?.productionCompany.length) {
+        const firstProducer = importState.movie.stakeholders?.coProductionCompany.pop();
         if (firstProducer.orgId) {
           licensor.party.orgId = firstProducer.orgId;
         } else if (firstProducer.displayName) {

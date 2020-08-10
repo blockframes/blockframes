@@ -27,7 +27,7 @@ export class MarketplaceHomeComponent implements OnInit {
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.releaseYear >= 2018 && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
+      filterBy: movies => movies.release.year >= 2018 && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
     const postProduction$ = this.movieQuery.selectAll({
       filterBy: movies => movies.productionStatus === 'post-production' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
@@ -69,10 +69,10 @@ export class MarketplaceHomeComponent implements OnInit {
 
   // TODO 1880 country short code
   public getMainInfo(movie: Movie) {
-    const { originCountries, totalRunTime, genres } = movie;
+    const { originCountries, runningTime, genres } = movie;
     return [
       originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
+      typeof runningTime.time === 'number' ? `${runningTime.time} min` : 'TBC',
       genres.slice(0, 2).map(genre => getLabelBySlug('GENRES', genre)).join(', '),
     ].filter(value => !!value).join(' | ');
   }

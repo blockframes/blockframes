@@ -1,4 +1,4 @@
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
   switch (sortIdentifier) {
@@ -7,10 +7,10 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
     case 'Director':
       return a.directors[0]?.lastName.localeCompare(b.directors[0]?.lastName);
     case 'Production Year':
-      if (b.releaseYear < a.releaseYear) {
+      if (b.release.year < a.release.year) {
         return -1;
       }
-      if (b.releaseYear > a.releaseYear) {
+      if (b.release.year > a.release.year) {
         return 1;
       }
       return 0;
