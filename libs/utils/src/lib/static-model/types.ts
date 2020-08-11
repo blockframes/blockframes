@@ -144,9 +144,20 @@ export const SOUND_FORMAT_SLUG = models['SOUND_FORMAT'].map(key => key.slug);
 export type SoundFormatLabel = typeof SOUND_FORMAT_LABEL[number];
 export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
 
-
 export const STORE_TYPE_LABEL = models['STORE_TYPE'].map(key => key.label);
 export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
 
 export type StoreTypeLabel = typeof STORE_TYPE_LABEL[number];
 export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];
+
+export const DIRECTOR_CATEGORY_LABEL = models['DIRECTOR_CATEGORY'].map(key => key.label);
+export const DIRECTOR_CATEGORY_SLUG = models['DIRECTOR_CATEGORY'].map(key => key.slug);
+
+export type DirectorCategoryLabel = typeof DIRECTOR_CATEGORY_LABEL[number];
+export type DirectorCategorySlug = typeof DIRECTOR_CATEGORY_SLUG[number];
+
+export const MEMBER_STATUS_LABEL = models['MEMBER_STATUS'].map(key => key.label);
+export const MEMBER_STATUS_SLUG = models['MEMBER_STATUS'].map(key => key.slug);
+
+export type MemberStatusLabel = typeof MEMBER_STATUS_LABEL[number];
+export type MemberStatusSlug = typeof MEMBER_STATUS_SLUG[number];

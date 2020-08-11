@@ -108,6 +108,38 @@ const models = {
       'label': 'Production Manager'
     },
   ] as const,
+  'DIRECTOR_CATEGORY': [
+    {
+      'slug': 'first-feature',
+      'label': 'First Feature'
+    },
+    {
+      'slug': 'rising-talent',
+      'label': 'Rising Talent'
+    },
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed Director'
+    },
+    {
+      'slug': 'prestige',
+      'label': 'Prestige'
+    }
+  ],
+  'MEMBER_STATUS': [
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    },
+    {
+      'slug': 'loosely-attached',
+      'label': 'Loosely Attached'
+    },
+    {
+      'slug': 'target',
+      'label': 'Target'
+    }
+  ],
   // TODO #2306
   'CAST_ROLES': [
     {
@@ -216,16 +248,6 @@ const models = {
     {
       'slug': 'finished',
       'label': 'Completed'
-    }
-  ] as const,
-  'CAST_STATUS': [
-    {
-      'slug': 'notconfirmed',
-      'label': 'Not Confirmed'
-    },
-    {
-      'slug': 'confirmed',
-      'label': 'Confirmed'
     }
   ] as const,
   'PREMIERE_TYPE': [
