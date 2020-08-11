@@ -45,7 +45,6 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
         form['createControl'] = createControl.bind(form);
         return form;
       } else {
-        console.log(value)
         const control = createControl(value);
         const form = new FormList<T>([control], validators);
         form['createControl'] = createControl.bind(form);
