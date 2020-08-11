@@ -31,7 +31,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 export class FormViewDirective { }
 
 @Component({
-  selector: '[displayedColumns] [form] bf-form-table',
+  selector: '[columns] [form] bf-form-table',
   templateUrl: './form-table.component.html',
   styleUrls: ['./form-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +40,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   private sub: Subscription;
 
-  @Input() displayedColumns: string[] = [];
+  @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
   @Input() buttonText: string = 'Add';
 
@@ -48,6 +48,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  tableColumns: string[] = [];
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;
   activeIndex: number;
@@ -60,7 +61,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.displayedColumns.push('actions')
+    this.tableColumns = Object.keys(this.columns);
+    this.tableColumns.push('actions')
     const values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     // Show table if there are controls
     this.showTable$ = values$.pipe(

@@ -119,14 +119,8 @@
 
     <section id="directors">
       <h3>Directors</h3>
-      <bf-form-table [displayedColumns]="displayedColumns" [form]="directors" buttonText="Add new Director">
-        <ng-template colRef="First Name" let-director>{{ director.firstName }} </ng-template>
-        <ng-template colRef="Last Name" let-director>{{ director.lastName }}</ng-template>
-        <ng-template colRef="Filmography" let-director>{{ director.filmography }}</ng-template>
-        <ng-template colRef="Status" let-director>{{ director.status }}</ng-template>
-        <ng-template colRef="Category" let-director>{{ director.category }}</ng-template>
-        <ng-template colRef="Film Title" let-director>{{ director.filmTitle }}</ng-template>
-        <ng-template colRef="Description" let-director>{{ director.description }}</ng-template>
+      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director">
+        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 

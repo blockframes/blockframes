@@ -8,6 +8,7 @@ import { FormTableComponent, FormViewDirective } from './form-table.component';
 
 // Blockframes
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
+import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     ColRefModule,
     FlexLayoutModule,
+    QueryListFindModule,
 
     // Material
     MatButtonModule,
