@@ -93,7 +93,7 @@ function createMovieControls(movie: Partial<Movie>) {
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
     color: new FormControl(entity.color),
-    contentType: new FormControl(entity.contentType),
+    contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
@@ -101,15 +101,15 @@ function createMovieControls(movie: Partial<Movie>) {
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: new FormStaticArray(entity.genres, 'GENRES'),
-    internalRef: new FormControl(entity.internalRef),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
+    internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline: new FormControl(entity.logline, [Validators.maxLength(180)]),
+    logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new MoviePromotionalHostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
@@ -354,7 +354,7 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
   return {
     name: new FormControl(name),
     year: new FormControl(year, [yearValidators]),
-    prize: new FormControl(prize),
+    prize: new FormControl(prize, [Validators.maxLength(200)]),
     premiere: new FormControl(premiere),
   }
 }
@@ -431,7 +431,7 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 function createFilmographyFormControl(filmography?: Partial<Filmography>) {
   const { year, title } = createFilmography(filmography);
   return {
-    year: new FormControl(year),
+    year: new FormControl(year, [yearValidators]),
     title: new FormControl(title)
   }
 }
@@ -521,8 +521,8 @@ export class ReleaseYearForm extends FormEntity<ReleaseYearFormControl> {
 function createReleaseYearFormControl(release?: Partial<Movie['release']>) {
   const { year, status } = createReleaseYear(release);
   return {
-    year: new FormControl(year, [yearValidators]),
-    status: new FormControl(status),
+    year: new FormControl(year, [yearValidators, Validators.required]),
+    status: new FormControl(status, [Validators.required]),
   }
 }
 
