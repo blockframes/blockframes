@@ -60,7 +60,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe(x => console.log(this.form))
     this.displayedColumns.push('actions')
     const values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     // Show table if there are controls
