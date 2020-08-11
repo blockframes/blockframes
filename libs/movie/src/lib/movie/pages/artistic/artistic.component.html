@@ -19,7 +19,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Status</mat-label>
           <mat-select matInput [formControl]="control.get('status')">
-            <mat-option *ngFor="let status of castStatus" [value]="status.slug">
+            <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
               {{ status.label }}
             </mat-option>
           </mat-select>
@@ -72,7 +72,7 @@
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Status</mat-label>
             <mat-select matInput [formControl]="control.get('status')">
-              <mat-option *ngFor="let status of castStatus" [value]="status.slug">
+              <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
                 {{ status.label }}
               </mat-option>
             </mat-select>
