@@ -8,7 +8,7 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 @Component({
@@ -35,7 +35,7 @@ export class ListComponent implements OnInit {
     this.filterForm.appAccess.add('festival');
     this.movieSearchResults$ = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges
+      this.filterForm.valueChanges.pipe(distinctUntilChanged())
     ]).pipe(
       debounceTime(300),
       switchMap(() => this.filterForm.search()),
