@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
 import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from './maintenance';
-import { cleanUsers, cleanOrgs, cleanInvitations, cleanNotifications, doubleCheck} from '@blockframes/testing/lib/firebase/anon-firestore'
+import { cleanOrgs} from '@blockframes/testing/lib/firebase/anon-firestore'
 import type express from 'express';
 
 type Firestore = admin.firestore.Firestore;
@@ -262,10 +262,10 @@ export const restore = async (req: express.Request, resp: express.Response) => {
     // Anon the DB before ending maintenance
     console.log('DB ANONIMISATION ENABLED')
     await cleanOrgs(db)
-    await cleanUsers(db)
-    await cleanInvitations(db)
-    await cleanNotifications(db)
-    await doubleCheck(db)
+    // await cleanUsers(db)
+    // await cleanInvitations(db)
+    // await cleanNotifications(db)
+    // await doubleCheck(db)
   }
 
   await endMaintenance();

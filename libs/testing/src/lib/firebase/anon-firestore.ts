@@ -1,35 +1,98 @@
 import { chunk as chunkArray } from 'lodash';
 import { firestore } from 'firebase-admin';
 import * as faker from 'faker';
+import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 
 const CHUNK_SIZE = 20;
 
+// const metaDoc = { '__META': { anon: true } }
+
+interface Update {
+  ref: firestore.DocumentReference<firestore.DocumentData>;
+  data: firestore.DocumentData;
+}
+
+async function applyUpdates(updates: Update[], db: firestore.Firestore) {
+  const chunks = chunkArray(updates, CHUNK_SIZE);
+  console.log(`Writing ${updates.length} updates with chunks size of ${CHUNK_SIZE}`);
+  for (const chunk of chunks) {
+    const batch = db.batch();
+    chunk.forEach(update => batch.set(update.ref, update.data, { merge: false }));
+    await batch.commit();
+  }
+}
+
+type CleanerFunction<T> = (doc: T) => Promise<T>;
+
+async function processQuerySnapshot(
+  func: CleanerFunction<any>,
+  querySnapshot: firestore.QuerySnapshot<firestore.DocumentData>,
+  db: firestore.Firestore
+) {
+  const updates: Update[] = [];
+  const { docs } = querySnapshot;
+  for (const snapshot of docs) {
+    const data = await func(snapshot.data());
+    const { ref } = snapshot;
+    updates.push({ ref, data });
+  }
+  await applyUpdates(updates, db);
+  // tslint:disable-next-line: no-non-null-assertion
+  return docs.pop()!;
+}
+
 export async function cleanOrgs(db: firestore.Firestore) {
   console.log('starting orgs anonimisation');
-  const orgsQuerySnapshot = await db.collection('orgs').get();
-  const updates = orgsQuerySnapshot.docs.map(snapshot => {
-    const org = snapshot.data();
-    org.id = snapshot.id;
-
+  async function cleanOrgsDocument(org: OrganizationDocument) {
     const companyName = faker.company.companyName();
-    const denomination = {
-      full: companyName,
-      public: companyName
-    };
-    org.denomination = denomination;
-    const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName
+    org.denomination = { full: companyName, public: companyName };
+    org.email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName}-fakeOrg@cascade8.com`
       .replace(/\s/g, '')
-      .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
-    org.email = email;
+      .replace(/\W/g, '');
+    return org;
+  }
 
-    // return snapshot.ref.set(org, { merge: false });
-    return { ref: snapshot.ref, org };
-  });
-  chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
-    const batch = db.batch();
-    chunk.forEach(update => batch.set(update.ref, update.org, { merge: false }));
-    await batch.commit();
-  });
+  let nextQuerySnapshot = await db
+    .collection('orgs')
+    .orderBy('id')
+    .limit(1000)
+    .get();
+
+  do {
+    const lastSnapshot = await processQuerySnapshot(cleanOrgsDocument, nextQuerySnapshot, db);
+    nextQuerySnapshot = await db
+      .collection('orgs')
+      .orderBy('id')
+      .startAfter(lastSnapshot)
+      .limit(1000)
+      .get();
+  } while (nextQuerySnapshot.size === 1000);
+  await processQuerySnapshot(cleanOrgsDocument, nextQuerySnapshot, db);
+
+  // // ***************
+  // console.log('starting orgs anonimisation');
+  // // const orgsQuerySnapshot = await db.collection('orgs').get();
+  // const updates = orgsQuerySnapshot.docs.map(snapshot => {
+  //   const org = snapshot.data();
+  //   org.id = snapshot.id;
+
+  //   const companyName = faker.company.companyName();
+  //   const denomination = { full: companyName, public: companyName };
+  //   org.denomination = denomination;
+  //   const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName
+  //     .replace(/\s/g, '')
+  //     .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
+  //   org.email = email;
+
+  //   // return snapshot.ref.set(org, { merge: false });
+  //   return { ref: snapshot.ref, org };
+  // });
+  // chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
+  //   const batch = db.batch();
+  //   chunk.forEach(update => batch.set(update.ref, update.org, { merge: false }));
+  //   await batch.commit();
+  // });
+
   // return runChunks(
   //   updates,
   //   update => {
