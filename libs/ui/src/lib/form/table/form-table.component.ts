@@ -31,7 +31,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 export class FormViewDirective { }
 
 @Component({
-  selector: '[displayedColumns] [form] bf-form-table',
+  selector: '[columns] [form] bf-form-table',
   templateUrl: './form-table.component.html',
   styleUrls: ['./form-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +40,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   private sub: Subscription;
 
-  @Input() displayedColumns: string[] = [];
+  @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
   @Input() buttonText: string = 'Add';
 
@@ -48,19 +48,21 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+  tableColumns: string[] = [];
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;
   activeIndex: number;
   pageSize = 5;
   /* We need to keep track of the current page since it will affect the index that we are working on */
-  pageConfig = { pageIndex: 0, pageSize: this.pageSize };
+  pageConfig = { pageIndex: 0, pageSize: 5 };
   formItem: FormEntity<EntityControl<T>, T>;
   dataSource = new MatTableDataSource<T>();
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.displayedColumns.push('actions')
+    this.tableColumns = Object.keys(this.columns);
+    this.tableColumns.push('actions')
     const values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     // Show table if there are controls
     this.showTable$ = values$.pipe(
@@ -93,6 +95,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
   get isFormEmpty() {
     return !this.form.length
   }
@@ -146,9 +149,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * @param index of the table row
    */
   private calculateCurrentIndex(index: number) {
-    this.activeIndex = index;
-    if (this.pageConfig.pageIndex) {
-      this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
-    }
+    this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
   }
 }

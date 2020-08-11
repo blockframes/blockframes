@@ -39,7 +39,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
 
   static factory<T, Control extends AbstractControl = any>(value: T[], createControl?: (value?: Partial<T>) => Control, validators?: Validator): FormList<T, Control> {
     if (createControl) {
-      const controls = value.map(createControl)
+      const controls = Array.isArray(value) ? value.map(createControl) : [createControl(value)];
       const form = new FormList<T>(controls, validators);
       form['createControl'] = createControl.bind(form);
       return form;

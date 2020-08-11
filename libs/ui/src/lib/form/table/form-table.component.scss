@@ -29,11 +29,26 @@ mat-paginator {
 
 ::-webkit-scrollbar-track {
   height: 10px;
-  background-color: var(--primary);
+  background-color: var(--active);
   opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #1a49f5;
   border-radius: 10px;
+}
+
+mat-divider {
+  width: 100%;
+}
+
+footer {
+  mat-divider {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-right: 16px;
+  }
+  span {
+    white-space: nowrap;
+  }
 }

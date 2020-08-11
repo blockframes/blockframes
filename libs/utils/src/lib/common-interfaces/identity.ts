@@ -4,7 +4,7 @@ import { Location } from "./utility";
 
 
 //////////////////////////
-// VARIOUS IDENTIY OBJECTS
+// VARIOUS IDENTITY OBJECTS
 // Inclusive & LGBT compatible model
 // Even a company can identify as a human!
 //////////////////////////
@@ -122,17 +122,18 @@ export function createParty(params: Partial<Party> = {}): Party {
   }
 }
 
-export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
+export function createCredit(params: Partial<Credit> = {}) {
   return {
     firstName: '',
     lastName: '',
     role: '',
-    filmography: createFilmography(),
+    filmography: [],
     description: '',
     status: '',
     avatar: createHostedMedia(),
+    category: '',
     ...params
-  } as T;
+  }
 }
 
 export function createFilmography(params: Partial<Filmography> = {}): Filmography {
