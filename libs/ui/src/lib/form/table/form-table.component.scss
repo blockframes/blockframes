@@ -38,12 +38,6 @@ mat-paginator {
   border-radius: 10px;
 }
 
-#divider-line {
-  border-top-color: var(--primary);
-  border-top-width: 2px;
-  margin-right: 16px;
-}
-
 mat-divider {
   width: 100%;
 }
@@ -51,6 +45,12 @@ mat-divider {
 .line-button {
   display: flex;
   align-items: baseline;
+
+  mat-divider {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-right: 16px;
+  }
 
   span {
     white-space: nowrap;
