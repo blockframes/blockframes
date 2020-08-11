@@ -32,6 +32,9 @@ const steps: TunnelStep[] = [{
     path: 'reviews',
     label: 'Selection & Reviews'
   }, {
+    path: 'additional-information',
+    label: 'Additional Information'
+  }, {
     path: 'credits',
     label: 'Credits'
   }, {

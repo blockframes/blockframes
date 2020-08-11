@@ -42,10 +42,15 @@ const tunnelRoutes: Routes = [
       },
       // Page 7
       {
+        path: 'additional-information',
+        loadChildren: () => import('@blockframes/movie/pages/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
+      },
+      // Page 8
+      {
         path: 'budget',
         loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
       },
-      // Page 8
+      // Page 9
       {
         path: 'technical-info',
         loadChildren: () =>
