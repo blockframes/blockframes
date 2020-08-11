@@ -15,7 +15,7 @@ export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'main.internalRef': 'Internal Ref',
-    'promotionalElements.poster': 'Poster',
+    'main.poster': 'Poster',
     'main.title.original': 'Original title',
     'org': 'Organization',
     'main.storeConfig.status': 'Status',
@@ -27,7 +27,7 @@ export class MoviesComponent implements OnInit {
 
   public initialColumns: string[] = [
     'id',
-    'promotionalElements.poster',
+    'main.poster',
     'main.internalRef',
     'main.title.original',
     'org',

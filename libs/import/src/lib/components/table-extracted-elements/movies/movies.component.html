@@ -84,17 +84,18 @@
     <td mat-cell *matCellDef="let element"> {{ element.movie.main.storeConfig.storeType | toLabel: 'storeType' | async  }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.promotionalElements.poster">
+  <!-- TODO issue #3091
+  <ng-container matColumnDef="movie.main.poster">
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.movie.promotionalElements.poster[0].media as poster; else noposter">
-        <bf-img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp"></bf-img>
+      <ng-container *ngIf="element.movie.main.poster.media as poster; else noposter">
+        <img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp">
       </ng-container>
       <ng-template #noposter>
         --
       </ng-template>
     </td>
-  </ng-container>
+  </ng-container> -->
 
   <ng-container matColumnDef="movie.main.productionYear">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Production Year </th>

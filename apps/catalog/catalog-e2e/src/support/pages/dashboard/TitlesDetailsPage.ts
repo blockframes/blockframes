@@ -1,10 +1,10 @@
-import TitlesListPage from "./TitlesListPage";
+﻿import TitlesListPage from "./TitlesListPage";
 
 const TITLES = 'My Titles';
 
 export default class TitlesDetailsPage {
   constructor() {
-    cy.get('catalog-title-view catalog-title-details');
+    cy.get('catalog-title-view catalog-title-details', { timeout: 10000 });
   }
 
   public assertTitleExists(title: string) {
@@ -12,7 +12,7 @@ export default class TitlesDetailsPage {
   }
 
   public clickTitles() {
-    cy.get('catalog-marketplace mat-sidenav mat-nav-list a').contains(TITLES).click();
+    cy.get('catalog-dashboard mat-sidenav mat-nav-list a').contains(TITLES).click();
     return new TitlesListPage();
   }
 }

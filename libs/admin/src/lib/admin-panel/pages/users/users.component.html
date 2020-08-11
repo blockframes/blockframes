@@ -9,7 +9,7 @@
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" showFilter [pageSize]="100" showLoader showPaginator>
     <ng-template colRef="avatar" let-avatar>
-      <bf-img class="avatar" [ref]="avatar" asset="empty_poster.webp"></bf-img>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
     </ng-template>
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
@@ -21,6 +21,10 @@
         <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
       <ng-template #noOrg>--</ng-template>
+    </ng-template>
+    <ng-template colRef="orgCountry" let-orgCountry>
+      <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
+      <ng-template #noOrgCountry>--</ng-template>
     </ng-template>
     <ng-template colRef="position" let-position>
       {{ position ? position : '--' }}

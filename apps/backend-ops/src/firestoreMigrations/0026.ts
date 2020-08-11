@@ -3,7 +3,7 @@ import { getStorageBucketName } from 'apps/backend-functions/src/internals/fireb
 import { PromotionalElement, Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from 'apps/backend-functions/src/data/types';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
  * Migrate old ImgRef objects to new one.
@@ -167,6 +167,6 @@ async function updateImgRef(
     return media;
   } else {
     // imgref is undefined, creating blank one
-    return createImgRef(media);
+    return createHostedMedia(media);
   }
 }

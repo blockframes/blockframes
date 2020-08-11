@@ -3,8 +3,8 @@ import { OrganizationForm } from '@blockframes/organization/forms/organization.f
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { extractToBeUpdatedMedia } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'organization-edit',
@@ -13,13 +13,13 @@ import { MediaService } from '@blockframes/media/+state/media.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationComponent implements OnInit {
-  public organizationForm;
+  public organizationForm: OrganizationForm;
 
   constructor(
     private query: OrganizationQuery,
     private service: OrganizationService,
     private snackBar: MatSnackBar,
-    private media: MediaService
+    private mediaService: MediaService
   ) { }
 
   ngOnInit() {
@@ -31,11 +31,13 @@ export class OrganizationComponent implements OnInit {
     try {
       if (this.organizationForm.dirty) {
         if (this.organizationForm.invalid) {
-          throw new Error('Your organization profile informations are not valid');
+          throw new Error('Your organization profile information are not valid');
         }
-        const [ org, media ] = extractToBeUpdatedMedia(this.organizationForm.value);
-        this.media.uploadOrDeleteMedia(media);
-        this.service.update(this.query.getActiveId(), org);
+
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm);
+        this.service.update(this.query.getActiveId(), documentToUpdate);
+        this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }
     } catch (error) {

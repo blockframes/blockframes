@@ -2,7 +2,7 @@
 <mat-tab-group animationDuration="1000ms" selectedIndex="0">
   <mat-tab [label]="tabNames[0]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
-      <bf-img class="perspective-image" fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image"></bf-img>
+      <img class="perspective-image" fxHide.xs [asset]="tabTitle[0].imgAsset" alt="seller image">
       <div>
         <h3>{{ tabTitle[0].title }}</h3>
         <ng-container *ngIf="tabTitle[0].description as description">
@@ -13,7 +13,7 @@
     <h5>Features</h5>
     <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of sellerFeatures">
-        <bf-img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image"></bf-img>
+        <img class="feature-image" [asset]="feature.imgAsset" alt="seller feature image">
         <div>
           <h3>{{ feature.title }}</h3>
           <p class="mat-body-1">{{ feature.description }}</p>
@@ -23,7 +23,7 @@
   </mat-tab>
   <mat-tab [label]="tabNames[1]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
-      <bf-img class="perspective-image" fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image"></bf-img>
+      <img class="perspective-image" fxHide.xs [asset]="tabTitle[1].imgAsset" alt="buyer image">
       <div>
         <h3>{{ tabTitle[1].title }}</h3>
         <ng-container *ngIf="tabTitle[1].description as description">
@@ -34,7 +34,7 @@
     <h5>Features</h5>
     <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
       <mat-card *ngFor="let feature of buyerFeatures">
-        <bf-img class="feature-image" [asset]="feature.imgAsset" alt="buyer feature image"></bf-img>
+        <img class="feature-image" [asset]="feature.imgAsset" alt="buyer feature image">
         <div>
           <h3>{{ feature.title }}</h3>
           <p class="mat-caption">{{ feature.description }}</p>

@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MoviePromotionalHostedMediaForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 
 @Component({
   selector: 'catalog-tunnel-media-image',
@@ -18,7 +19,7 @@ export class MediaImageComponent {
     private tunnel: MovieTunnelComponent,
     private movieQuery: MovieQuery,
     private dynTitle: DynamicTitleService) {
-    this.dynTitle.setPageTitle('Promotional images', 'Title information')
+    this.dynTitle.setPageTitle('Promotional images', 'Title information');
   }
 
   get promotionalElements() {
@@ -26,15 +27,25 @@ export class MediaImageComponent {
   }
 
   get banner() {
-    return this.promotionalElements.get('banner');
+    return this.form.main.banner;
   }
 
   get poster() {
-    return this.promotionalElements.get('poster');
+    return this.form.main.poster;
   }
 
   get stillPhoto() {
     return this.promotionalElements.get('still_photo');
+  }
+
+  addStill() {
+    this.form.promotionalElements
+      .get('still_photo')
+      .push(new MoviePromotionalHostedMediaForm());
+  }
+
+  trackByFn(index) {
+    return index;
   }
 
 }

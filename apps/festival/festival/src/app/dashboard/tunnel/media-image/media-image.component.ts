@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MoviePromotionalHostedMediaForm } from '@blockframes/movie/form/promotional-elements/promotional-elements.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'festival-tunnel-media-image',
@@ -11,24 +12,21 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class MediaImageComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) {}
+  public movieId = this.route.snapshot.params.movieId;
 
-  public movie = this.movieQuery.getActive();
+  constructor(
+    private tunnel: MovieTunnelComponent,
+    private route: ActivatedRoute,
+  ) { }
 
-  get promotionalElements() {
-    return this.form.get('promotionalElements')
+  addStill() {
+    this.form.promotionalElements
+      .get('still_photo')
+      .push(new MoviePromotionalHostedMediaForm());
   }
 
-  get banner() {
-    return this.promotionalElements.get('banner');
-  }
-
-  get poster() {
-    return this.promotionalElements.get('poster');
-  }
-
-  get stillPhoto() {
-    return this.promotionalElements.get('still_photo');
+  trackByFn(index) {
+    return index;
   }
 
 }

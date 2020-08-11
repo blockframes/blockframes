@@ -4,7 +4,7 @@
     <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
       <article fxLayout="column" fxLayoutAlign="space-between start">
         <span>{{ contract.id }} <admin-go-to type="contract" [id]="contract.id" [festival]="false" [suffix]="contract.type" ></admin-go-to></span>
-        
+
         <h2>Edit Form : </h2>
         <ng-container *ngIf="contractForm">
           <form [formGroup]="contractForm">
@@ -159,9 +159,9 @@
           showFilter
           showLoader
           showPaginator>
-          <ng-template colRef="movie.promotionalElements.poster" let-posters>
-            <ng-container *ngIf="posters[0].media as poster; else noposter">
-              <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
+          <ng-template colRef="movie.main.poster" let-posters>
+            <ng-container *ngIf="posters.media as poster; else noposter">
+              <img class="poster" [ref]="poster" asset="empty_poster.webp">
             </ng-container>
             <ng-template #noposter>
               --

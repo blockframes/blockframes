@@ -2,7 +2,7 @@ import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import readline from 'readline';
 import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
-import { Bucket, File as GFile } from '@google-cloud/storage';
+import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
 import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from './maintenance';
 import { cleanUsers, cleanOrgs, cleanInvitations, cleanNotifications, doubleCheck} from '@blockframes/testing/lib/firebase/anon-firestore'
@@ -44,7 +44,8 @@ class Queue {
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
 const getBackupBucket = async (): Promise<Bucket> => {
-  const bucket: Bucket = admin.storage().bucket(getBackupBucketName());
+  // July 2020: There are conflicts between firebase-admin type & google-cloud/storage. We need to use "as any"
+  const bucket: Bucket = admin.storage().bucket(getBackupBucketName()) as any;
   const exists = await bucket.exists();
 
   // The api returns an array.

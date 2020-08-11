@@ -4,7 +4,7 @@ import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
-import { ImgRefForm } from '@blockframes/media/directives/image-reference/image-reference.form'
+import { HostedMediaForm } from "@blockframes/media/form/media.form";
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
@@ -44,7 +44,7 @@ function createOrganizationFormControl(params?: Organization) {
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
-    logo: new ImgRefForm(organization.logo),
+    logo: new HostedMediaForm(organization.logo),
     // ISSUE#2692
     // bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
   }
@@ -60,6 +60,8 @@ export class OrganizationForm extends FormEntity<OrganizationFormControl> {
   get addresses() {
     return this.get('addresses');
   }
+
+  get logo() { return this.get('logo'); }
 }
 
 function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}) {

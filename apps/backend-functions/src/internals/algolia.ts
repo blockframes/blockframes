@@ -136,7 +136,7 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      avatar: user.avatar?.urls?.fallback || '',
+      avatar: user.avatar?.url || '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

@@ -12,30 +12,30 @@ section {
   margin-left: var(--layout-margin);
 }
 
-bf-img {
+img {
   border-radius: 50%;
 }
 
 @include layout-bp(gt-md) {
-  bf-img {
+  img {
     width: 180px;
-  }  
+  }
 }
 
 @include layout-bp(md) {
-  bf-img {
+  img {
     width: 140px;
   }
 }
 
 @include layout-bp(sm) {
-  bf-img {
+  img {
     width: 100px;
   }
 }
 
 @include layout-bp(xs) {
-  bf-img {
+  img {
     width: 80px;
   }
 }

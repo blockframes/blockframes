@@ -1,10 +1,10 @@
-import NavbarPage from './NavbarPage';
+﻿import NavbarPage from './NavbarPage';
 import SearchPage from './SearchPage';
 
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('catalog-home');
+    cy.get('catalog-home', {timeout: 10000});
   }
 
   public clickViewTheLibrary() {

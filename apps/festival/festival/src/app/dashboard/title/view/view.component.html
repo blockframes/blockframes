@@ -4,9 +4,13 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <!-- TODO#1763 get poster by countries from promotionalElements -->
        <ng-container *ngIf="getPoster(movie) as poster">
-        <bf-img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"></bf-img>
+        <img
+          class="movie-poster"
+          [ref]="poster"
+          asset="empty_poster.webp"
+          alt="movie poster"
+        >
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>

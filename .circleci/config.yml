@@ -14,7 +14,7 @@ references:
   start_firestore_emulator: &start_firestore_emulator
     run:
       name: start firestore emulator in background
-      command: npm run firebase:emulator
+      command: . ./.circleci/run-firebase-emulator.sh
       background: true
   production_only: &production_only
     filters:
@@ -34,7 +34,7 @@ references:
 
 commands:
   checkout_project:
-    description: 'Checkout the project with caching'
+    description: "Checkout the project with caching"
     steps:
       - checkout
       - restore_cache:
@@ -50,7 +50,7 @@ commands:
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
       - run:
-          name: 'Verify that this PR is not introducing weird package.json changes'
+          name: "Verify that this PR is not introducing weird package.json changes"
           command: |
             if git status | grep --quiet package.json; then
               echo "package.json changed after npm install, please verify your PR";
@@ -73,7 +73,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -87,7 +87,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -109,7 +109,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -152,7 +152,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -161,7 +161,7 @@ jobs:
       - run: npx cypress install
       - run: npm run build:all
       - slack/notify:
-          message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
+          message: "🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)"
       - do-exclusively/do-exclusively:
           token: $CIRCLE_TOKEN
           command: ./.circleci/deploy-and-test-e2e.sh
@@ -177,7 +177,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -186,7 +186,7 @@ jobs:
       - run: npx cypress install
       - run: npm run build:all
       - slack/notify:
-          message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
+          message: "🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)"
       - run: |
           npx firebase use staging &&
           cp firestore.rules firestore.rules.regular &&
@@ -219,7 +219,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -227,7 +227,7 @@ jobs:
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: '🚚 Deploying to production...'
+          message: "🚚 Deploying to production..."
       - run:
           command: |
             npx firebase use prod &&
@@ -247,7 +247,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -255,7 +255,7 @@ jobs:
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
+          message: "🛵 Deploying to staging.. (https://staging.blockframes.io/)"
       - run:
           command: |
             npx firebase use staging &&
@@ -276,7 +276,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -285,7 +285,7 @@ jobs:
       - run: cp env/demo/env.demo1.ts env/env.staging.ts # prevent rewrites
       - run: npm run build:all
       - slack/notify:
-          message: 'Deploying to demo1...'
+          message: "Deploying to demo1..."
       - run:
           command: |
             npx firebase use demo1 &&
@@ -356,7 +356,7 @@ workflows:
   nightly-e2e:
     triggers:
       - schedule:
-          cron: '0 0 * * *'
+          cron: "0 0 * * *"
           filters:
             branches:
               only:

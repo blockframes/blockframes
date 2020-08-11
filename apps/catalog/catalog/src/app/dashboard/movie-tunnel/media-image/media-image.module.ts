@@ -9,7 +9,7 @@ import { MediaImageComponent } from './media-image.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 //Pipes
-import { ReferencePathModule } from '@blockframes/utils/pipes/reference-path.pipe';
+import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

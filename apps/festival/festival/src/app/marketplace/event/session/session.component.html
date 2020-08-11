@@ -4,9 +4,9 @@
     <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center">
       <ng-container *ngIf="event.movie else noMovie">
         <ng-container *ngIf="showSession else showVideo">
-          <article class="dark-contrast-theme screen" [bgRef]="event.movie.promotionalElements.banner.media">
+          <article class="dark-contrast-theme screen" [bgRef]="event.movie.main.banner.media" bgAsset="empty_banner.webp">
             <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-              <bf-img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo"></bf-img>
+              <img class="organizationLogo" [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="organisation logo">
               <h4>{{ event.org | orgName }} presents</h4>
               <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
               <h2>by {{ event.movie.main.directors | displayName }}</h2>
@@ -25,7 +25,7 @@
           </article>
         </ng-template>
 
-        <bf-img asset="screening_now.webp" alt="Cinema room"></bf-img>
+        <img asset="screening_now.webp" alt="Cinema room">
       </ng-container>
 
       <ng-template #noMovie>
@@ -36,7 +36,7 @@
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
 
-      <article class="dark-contrast-theme screen" [style.background-image]="'url(assets/images/meeting.webp)'">
+      <article class="dark-contrast-theme screen" bgAsset="meeting.webp">
         <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
           <span class="mat-display-2">{{ event.title }}</span>
           <span class="mat-caption">Meeting now</span>
@@ -50,7 +50,7 @@
         </div>
       </article>
       <!-- TODO update the picture here with Mathilde's picture, she needs to validate with Marie to create it -->
-      <bf-img asset="meeting.webp" alt="Meeting room"></bf-img>
+      <img asset="meeting.webp" alt="Meeting room">
 
     </section>
   </ng-container>

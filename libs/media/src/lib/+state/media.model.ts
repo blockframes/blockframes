@@ -1,60 +1,100 @@
-import { ImgRef } from './media.firestore';
+import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
+import { cloneDeep } from 'lodash';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { PublicUser } from '@blockframes/user/types';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
-export * from './media.firestore';
+/**
+ * This function **clean** a document from it's medias before updating it in the firestore.
+ * We need to clean it because the backend functions are supposed to manage medias in the db,
+ * and **not the front**.
+ * The function also return an array of media to upload, we can then pass this array to the media service.
+ */
+export function extractMediaFromDocumentBeforeUpdate(
+  form: MovieForm | ProfileForm | OrganizationForm,
+  document: Organization | PublicUser | Movie = form.value): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
-export function extractToBeUpdatedMedia(origin: any) {
-  const value = Object.assign({}, origin);
-  const media = extractToBeUpdatedMediaValue(value);
-  return [value, media];
+  const cleanedDocument = cloneDeep(document);
+
+  const medias = extractMediaFromDocument(cleanedDocument);
+  updateMediaFormInForm(form);
+  
+  return {
+    documentToUpdate: cleanedDocument,
+    mediasToUpload: medias,
+  };
 }
 
-function extractToBeUpdatedMediaValue(value: any) {
-  let media: ImgRef[] = [];
-  for (const key in value) {
-    if (isMedia(value[key]) && mediaNeedsUpdate(value[key])) {
-      media.push(value[key]);
-      delete value[key];
-    } else if (typeof value[key] === 'object' && !!value[key]) {
-      const childMedia = extractToBeUpdatedMediaValue(value[key]);
-      media = media.concat(childMedia);
+function extractMediaFromDocument(document: any) {
+  let medias: HostedMediaFormValue[] = [];
+
+  for (const key in document) {
+
+    if (isMedia(document[key])) {
+
+      if (mediaNeedsUpdate(document[key])) {
+        medias.push(document[key]);
+      }
+
+      // convert an `HostedMediaFormValue` into an `HostedMedia`
+      // clear form values like `fileName`, `blobOrFile`, etc and keep only `ref` & `url`
+      document[key] = clearHostedMediaFormValue(document[key]);
+
+    } else if (typeof document[key] === 'object' && !!document[key]) {
+
+      const childMedias = extractMediaFromDocument(document[key]);
+      medias = medias.concat(childMedias);
+
     }
   }
-  return media;
+  return medias;
 }
 
-function isMedia(obj: any): boolean {
-  return typeof obj === 'object' && !!obj && 'ref' in obj && 'urls' in obj;
-}
+/**
+ * Loops over form looking for mediaForms that need to be updated and then resets that form.
+ */
+function updateMediaFormInForm(form: any) {
+  if ('controls' in form) {
+    for (const key in form.controls) {
+      const control = form.controls[key];
+      if (isMedia(control.value)) {
+        if (mediaNeedsUpdate(control.value)) {
 
-function mediaNeedsUpdate(obj: ImgRef): boolean {
-  return obj.delete || (!!obj.path && !!obj.blob);
-}
+          // emptying values in blobOrFile and delete to prevent redoing the action on multiple submits.
+          // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
+          control.patchValue({
+            blobOrFile: '',
+            delete: false,
+            oldRef: `${control.ref.value}${control.fileName.value}`,
+          });
 
-const formats = {
-  avatar: {
-    height: 100,
-    width: 100
-  },
-  banner: {
-    height: 1080,
-    width: 1920
-  },
-  poster: {
-    height: 160,
-    width: 120
+        }
+      } else if (typeof control === 'object' && !!control) {
+        updateMediaFormInForm(control);
+      }
+    }
   }
-} as const;
-
-export type Formats = keyof typeof formats;
-
-export function getRatio(format: Formats) {
-  const { height, width } = formats[format];
-  return width / height;
 }
 
-export function getMediaUrl(ref: ImgRef) {
-  return isSafari() ? ref.urls?.fallback : ref.urls?.original;
+function isMedia(obj: any) {
+  return (
+    typeof obj === 'object' &&
+    !!obj &&
+    'ref' in obj &&
+    'url' in obj
+  );
+}
+
+function mediaNeedsUpdate(media: HostedMediaFormValue) {
+  return media.delete || (!!media.ref && !!media.blobOrFile);
+}
+
+export function getFileNameFromPath(path: string) {
+  return path.split('/').pop()
 }
 
 /** Used this only for background to let the browser deal with that with picture */

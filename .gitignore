@@ -61,3 +61,6 @@ env/env.hugo.ts
 tools/credentials/*
 tools/users.fixture.json
 secrets.sh
+
+# cache
+.cache

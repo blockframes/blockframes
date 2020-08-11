@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 @Pipe({
   name: 'fileName'
 })
 export class FileNamePipe implements PipeTransform {
-  transform(ref: string) {
-    const arrayedRef = ref.split('/')
+  transform(file: HostedMedia | string) {
+    const arrayedRef = typeof file === 'string' ? file.split('/') : file.ref.split('/');
     return arrayedRef.pop();
   }
 }

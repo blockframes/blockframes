@@ -1,31 +1,37 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MoviePromotionalElementsForm } from '../../promotional-elements/promotional-elements.form';
+import { MovieForm } from '../../movie.form';
+import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
-  selector: '[promotionalElements] movie-summary-image',
+  selector: '[form] movie-summary-image',
   templateUrl: './image.component.html',
   styleUrls: ['./image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryImageComponent implements OnInit {
-  @Input() promotionalElements: MoviePromotionalElementsForm;
+  @Input() form: MovieForm;
   @Input() link: string;
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
-
-  get bannerHasNoValue() {
-    return !this.promotionalElements.get('banner').get('media').get('urls').get('original').value;
-  }
-
-  get posterHasNoValue() {
-    return !this.promotionalElements.get('poster').controls[0].controls['media'].value.urls?.original;
+    this.form.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   get photoHasNoValue() {
-    return !this.promotionalElements.get('still_photo').controls[0].controls['media'].value.urls?.original;
+    try {
+      const stillPhotos: Record<string, PromotionalHostedMedia> = this.form.promotionalElements.get('still_photo').value;
+      const keys = Object.keys(stillPhotos);
+
+      // if there is no still photos
+      return keys.length === 0 ?
+        true :
+        // or if at least one still photo as an empty url
+        keys.some(key => !stillPhotos[key].media.url);
+
+    } catch (error) {
+      console.warn(error);
+      return true;
+    }
   }
 }

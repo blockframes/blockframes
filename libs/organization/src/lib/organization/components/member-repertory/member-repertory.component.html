@@ -16,7 +16,7 @@
       {{ displayRole(role) }}
     </ng-template>
     <ng-template colRef="uid" let-uid>
-      <member-permissions 
+      <member-permissions
         [uid]="uid"
         (memberRemoved)="memberRemoved.emit(uid)"
         (updatedToSuperAdmin)="updatedToSuperAdmin.emit(uid)"
@@ -28,7 +28,7 @@
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
     <ng-template colRef="avatar" let-avatar>
-      <bf-img class="avatar" [ref]="avatar" asset="empty_poster.webp"></bf-img>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
     </ng-template>
   </bf-table-filter>
   <h6>What is “Grant permissions”?</h6>

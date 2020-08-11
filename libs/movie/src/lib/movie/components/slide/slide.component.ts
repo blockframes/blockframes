@@ -6,14 +6,14 @@ import { Movie, Credit } from '@blockframes/movie/+state';
 import { Title } from '@blockframes/movie/+state/movie.firestore';
 
 interface MovieSliderView {
-    directors: string | Credit[],
+    directors: Credit[],
     titles: Title,
     synopsis: string,
 }
 
 function createMovieSliderView(movie: Movie): MovieSliderView {
     return {
-        directors: movie.main?.directors || '',
+        directors: movie.main?.directors || [],
         titles: {
             international: movie.main?.title.international || '',
             original: movie.main?.title.original || ''

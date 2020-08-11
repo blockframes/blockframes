@@ -3,6 +3,9 @@ mat-card {
   mat-card-content {
     width: 100%;
     text-align: center;
+    mat-divider {
+      margin: 32px 0;
+    }
   }
 }
 

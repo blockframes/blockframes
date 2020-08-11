@@ -3,7 +3,7 @@ import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('catalog-marketplace');
+    cy.get('catalog-marketplace', {timeout: 10000});
   }
 
   public openProfileMenu(){
@@ -20,11 +20,13 @@ export default abstract class NavbarPage {
   }
 
   public clickWishlist() {
+    cy.get('main').scrollTo('top');
     cy.get('catalog-marketplace a[test-id=heart-icon]').click();
     return new WishlistPage();
   }
 
   public checkWishListCount(count: number) {
+    cy.get('main').scrollTo('top');
     cy.get('catalog-marketplace a[test-id=heart-icon]').should('contain', count);
   }
 
@@ -34,6 +36,7 @@ export default abstract class NavbarPage {
   }
 
   public assertWishListCountIsOne() {
+    cy.get('main').scrollTo('top');
     cy.get('catalog-marketplace a[test-id=heart-icon]').should('contain', 1);
   }
 

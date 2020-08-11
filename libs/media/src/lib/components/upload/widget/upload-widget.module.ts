@@ -8,6 +8,8 @@ import { UploadWidgetComponent } from './upload-widget.component';
 
 // Blockframes
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
+import { TaskProgressModule } from '../../../pipes/task-progress.pipe';
+import { TaskSnapshotModule } from '../../../pipes/task-state.pipe';
 
 // Material
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -23,6 +25,8 @@ import { MatDividerModule } from '@angular/material/divider';
 
     // Pipe
     MaxLengthModule,
+    TaskProgressModule,
+    TaskSnapshotModule,
 
     // Material
     MatExpansionModule,

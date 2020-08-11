@@ -1,8 +1,0 @@
-@mixin mat-elevation-theme($theme) {
-  $background: map-get($theme, background);
-  .mat-elevation-z0 {
-    background-color: mat-color($background, card);
-    padding: 8px;
-    border-radius: 4px;
-  }
-}

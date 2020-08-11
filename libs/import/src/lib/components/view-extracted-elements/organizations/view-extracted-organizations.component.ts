@@ -10,13 +10,13 @@ import { createOrganization, OrganizationService } from '@blockframes/organizati
 import { UserService } from '@blockframes/user/+state';
 import { Module } from '@blockframes/utils/apps';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { ImageUploader } from '@blockframes/media/+state/image-uploader.service';
+// import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 
 enum SpreadSheetOrganization {
   fullDenomination,
   publicDenomination,
   email,
-  logo,
+  // logo, TODO issue #3091
   activity,
   fiscalNumber,
   street,
@@ -48,8 +48,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private organizationService: OrganizationService,
     private userService: UserService,
-    // TODO issue 3091
-    private imageUploader: ImageUploader,
+    // private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
@@ -133,10 +132,11 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
           importErrors.org.email = spreadSheetRow[SpreadSheetOrganization.email].trim().toLowerCase();
         }
 
+        // TODO issue #3091
         // LOGO
-        if (spreadSheetRow[SpreadSheetOrganization.logo]) {
-          org.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetOrganization.logo]);
-        }
+        // if (spreadSheetRow[SpreadSheetOrganization.logo]) {
+        //   org.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetOrganization.logo]);
+        // }
 
         // ORG INFOS
         if (spreadSheetRow[SpreadSheetOrganization.activity]) {

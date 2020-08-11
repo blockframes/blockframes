@@ -5,7 +5,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
-  selector: 'organization-form',
+  selector: '[form] organization-form',
   templateUrl: './organization-form.component.html',
   styleUrls: ['./organization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,9 +13,10 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class OrganizationFormComponent {
 
   public orgId = this.query.getActiveId();
+
   @Input() form: OrganizationForm;
 
-  // TODO#2914 Reenable the cropper here when we found a solution
+  // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
   constructor(private service: OrganizationService, private query: OrganizationQuery) { }

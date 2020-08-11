@@ -2,7 +2,7 @@
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
-      <bf-img class="add-files-icon" asset="add_files.webp" alt="upload image"></bf-img>
+      <img class="add-files-icon" asset="add_files.webp" alt="upload image">
     </button>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[dimensions]"></ng-content>
@@ -44,7 +44,7 @@
         <img class="croppedImage" [src]="croppedImage || (previewUrl$ | async)" />
       </div>
       <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-        <ng-container *ngIf="useFileuploader">
+        <ng-container *ngIf="useFileUploader">
           <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
           <button mat-mini-fab color="primary">
             <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="Select new picture"></mat-icon>

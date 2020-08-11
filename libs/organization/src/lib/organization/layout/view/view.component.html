@@ -15,7 +15,7 @@
           <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
-        <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       </div>
     </div>
   </ng-template>
@@ -25,7 +25,7 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayoutGap="20px">
-      <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       <article fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
         <span class="mat-display-2">{{ org | orgName }}</span>

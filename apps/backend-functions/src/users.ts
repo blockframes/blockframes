@@ -127,7 +127,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.urls.original !== after.avatar?.urls.original
+    before.avatar?.url !== after.avatar?.url
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -181,8 +181,8 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
 /**
  * Create an user.
  * Used in admin panel by blockframes admins only
- * @param data 
- * @param context 
+ * @param data
+ * @param context
  */
 export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
   const { email, orgName, app } = data;

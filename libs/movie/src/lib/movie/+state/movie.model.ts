@@ -24,9 +24,11 @@ import {
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta,
-  LanguageRecord
+  LanguageRecord,
+  PromotionalExternalMedia,
+  PromotionalHostedMedia,
 } from './movie.firestore';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
+import { createExternalMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -108,6 +110,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     storeConfig: createStoreConfig(params.storeConfig),
     stakeholders: createMovieStakeholders(params.stakeholders),
     officialIds: createOfficialIds(params.officialIds),
+    banner: createPromotionalHostedMedia(params.banner),
+    poster: createPromotionalHostedMedia(params.poster),
   };
 }
 
@@ -115,24 +119,25 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {},
   initDefault: boolean = true
 ): MoviePromotionalElements {
-  const elements = {
-    trailer: [],
-    still_photo: [],
-    ...params,
-    poster: params.poster && params.poster.length ? params.poster : [],
-    banner: createPromotionalElement(params.banner),
-    presentation_deck: createPromotionalElement(params.presentation_deck),
-    scenario: createPromotionalElement(params.scenario),
-    promo_reel_link: createPromotionalElement(params.promo_reel_link),
-    screener_link: createPromotionalElement(params.screener_link),
-    trailer_link: createPromotionalElement(params.trailer_link),
-    teaser_link: createPromotionalElement(params.teaser_link),
-  };
 
-  // We want a default poster as we look for the first one
-  if (initDefault && (!params.poster || params.poster.length === 0)) {
-    elements.poster.push(createPromotionalElement());
+  const newStills: Record<string, PromotionalHostedMedia> = {};
+  for (const key in params.still_photo) {
+    newStills[key] = createPromotionalHostedMedia(params.still_photo[key]);
   }
+
+  const elements: MoviePromotionalElements = {
+    ...params,
+
+    still_photo: newStills,
+
+    presentation_deck: createPromotionalHostedMedia(params.presentation_deck),
+    scenario: createPromotionalHostedMedia(params.scenario),
+
+    promo_reel_link: createPromotionalExternalMedia(params.promo_reel_link),
+    screener_link: createPromotionalExternalMedia(params.screener_link),
+    trailer_link: createPromotionalExternalMedia(params.trailer_link),
+    teaser_link: createPromotionalExternalMedia(params.teaser_link),
+  };
 
   return elements;
 }
@@ -147,14 +152,35 @@ export function createMoviePromotionalDescription(
   };
 }
 
-export function createPromotionalElement(
+function createPromotionalElement(
   promotionalElement: Partial<PromotionalElement> = {}
 ): PromotionalElement {
   promotionalElement = promotionalElement || {};
   return {
     label: '',
+    ...promotionalElement
+  }
+}
+
+export function createPromotionalExternalMedia(
+  promotionalExternalMedia: Partial<PromotionalExternalMedia> = {}
+): PromotionalExternalMedia {
+  const promotionalElement = createPromotionalElement(promotionalExternalMedia);
+  return {
     ...promotionalElement,
-    media: createImgRef(promotionalElement.media)
+    ...promotionalExternalMedia,
+    media: createExternalMedia(promotionalExternalMedia.media),
+  };
+}
+
+export function createPromotionalHostedMedia(
+  promotionalHostedMedia: Partial<PromotionalHostedMedia> = {}
+): PromotionalHostedMedia {
+  const promotionalElement = createPromotionalElement(promotionalHostedMedia);
+  return {
+    ...promotionalElement,
+    ...promotionalHostedMedia,
+    media: createHostedMedia(promotionalHostedMedia.media),
   };
 }
 
@@ -224,7 +250,7 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
     name: '',
     year: null,
     prize: '',
-    logo: createImgRef(),
+    logo: createHostedMedia(),
     ...prize
   };
 }

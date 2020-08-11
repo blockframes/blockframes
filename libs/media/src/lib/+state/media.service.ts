@@ -1,22 +1,21 @@
 // Angular
-import { Injectable } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { AngularFireStorage, AngularFireUploadTask } from "@angular/fire/storage";
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
+import { AngularFirestore } from "@angular/fire/firestore";
 
 // State
-import { MediaStore, isDone } from "./media.store";
-import { MediaQuery } from "./media.query";
-import { UploadFile, ImgRef } from "./media.firestore";
+import { UploadData, HostedMediaFormValue } from "./media.firestore";
 
 // Blockframes
-import { UploadWidgetComponent } from '../components/upload/widget/upload-widget.component';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { UploadWidgetComponent } from "../components/upload/widget/upload-widget.component";
+import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
 
-  private tasks: Record<string, AngularFireUploadTask> = {};
+  private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
 
   private overlayOptions = {
     height: '400px',
@@ -28,153 +27,104 @@ export class MediaService {
   public overlayRef: OverlayRef;
 
   constructor(
-    private store: MediaStore,
-    private query: MediaQuery,
+    private db: AngularFirestore,
     private storage: AngularFireStorage,
     private overlay: Overlay
-  ) { }
+  ) {}
 
   /** Check if a file exists in the **Firebase storage** */
-  exists(path: string) {
-    return this.storage.ref(path).getDownloadURL().toPromise().then(() => true).catch(() => false);
+  async exists(path: string, fileName: string): Promise<boolean> {
+
+    return this.storage.ref(path).listAll().toPromise()
+    .then((res) => res.items.some(item => item.name === fileName))
+    .catch(() => false);
   }
 
-  uploadBlob(uploadFiles: UploadFile | UploadFile[]) {
-
-    if (Array.isArray(uploadFiles)) {
-      uploadFiles.forEach(uploadFile => this.uploadBlob(uploadFile));
-    } else {
-      this.upload(uploadFiles.path, uploadFiles.data, uploadFiles.fileName);
-    }
-  }
-  /**
-   * @description This function handles the upload process for one or many files. Make sure that
-   * the oath param doesn't include the filename.
-   * @param path should only have the path and not the file name in it
-   * @param file
-   */
-  uploadFile(path: string, file: File | FileList) {
-
-    if (file instanceof File) {
-      this.upload(path, file, file.name);
-    } else {
-      const promises = [];
-      for (let index = 0; index < file.length; index++) {
-        promises.push(this.upload(path, file.item(index), file.item(index).name));
-      }
-      Promise.all(promises);
-    }
-  }
-
-  /**
- * @description This function handles the upload process for one or many files. Make sure that
- * the oath param doesn't include the filename.
- * @param path should only have the path and not the file name in it
- * @param fileOrBlob
- * @param fileName
- */
-  private async upload(path: string, fileOrBlob: Blob | File, fileName: string) {
-    const sanitizedFileName: string = sanitizeFileName(fileName);
-    const exists = await this.exists(path.concat(sanitizedFileName));
-
+  async upload(uploadFiles: UploadData | UploadData[]) {
+    const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
+    const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
+    this.addTasks(tasks);
+    (Promise as any).allSettled(tasks)
+      .then(() => delay(5000))
+      .then(() => this.detachWidget());
     this.showWidget();
-
-    if (exists) {
-      throw new Error(`Upload Error : there is already a file @ ${sanitizedFileName}, please delete it before uploading a new file!`);
-    }
-
-    const uploading = this.query.isUploading(fileName);
-    if (uploading) {
-      throw new Error(`Upload Error : A file named ${fileName} is already uploading!`);
-    }
-
-    const task = this.storage.upload(path.concat(fileName), fileOrBlob);
-
-    this.store.upsert(fileName, {
-      status: 'uploading',
-      progress: 0,
-    });
-
-    task.percentageChanges().subscribe(p => this.store.update(fileName, { progress: p }));
-
-    this.tasks[fileName] = task;
-
-    task.then(
-      // on success
-      () => {
-        this.store.update(fileName, { status: 'succeeded' });
-        delete this.tasks[fileName];
-      },
-
-      // on error (canceled is treated by firebase as an error)
-      () => {
-        this.store.update(fileName, { status: 'canceled' });
-        delete this.tasks[fileName];
-      }
-    );
   }
 
-  removeFile(path: string) {
-    this.storage.ref(path).delete();
+  /**
+   * Delete a file from teh firebase storage.
+   * @note the function needs the **full** path of the file
+   * **this include the file name!**
+   * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
+   */
+  async removeFile(path: string) {
+    await this.storage.ref(path).delete().toPromise();
   }
 
-  pause(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].pause();
-      this.store.update(fileName, { status: 'paused' });
+  private addTasks(tasks: AngularFireUploadTask[]) {
+    const t = this._tasks.value;
+    t.push(...tasks);
+    this._tasks.value = t
+  }
+
+  private detachWidget() {
+    if (!this.overlayRef) return;
+
+    const canClose = this._tasks.value.every(task => task.task.snapshot.state === 'success');
+    if (canClose) {
+      this.overlayRef.detach();
+      delete this.overlayRef;
+      const tasks = this._tasks.value.filter(task => task.task.snapshot.state !== 'success');
+      this._tasks.value = tasks;
     }
   }
 
-  resume(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].resume();
-      this.store.update(fileName, { status: 'uploading' });
-    }
-  }
-
-  cancel(fileName: string) {
-    if (fileName in this.tasks && this.query.hasEntity(fileName)) {
-      this.tasks[fileName].cancel();
-      this.store.update(fileName, { status: 'canceled' });
-    }
-  }
-
-  /** Remove a single file from the store or remove all if no param is given*/
-  clear(fileName?: string) {
-    if (fileName) {
-      this.store.remove(fileName)
-    } else {
-      this.store.remove(upload => isDone(upload));
-    }
-  }
-
-  public detachWidget() {
-    this.overlayRef.detach()
-    delete this.overlayRef;
-  }
-
-  private showWidget() {
+  private async showWidget() {
     if (!this.overlayRef) {
       this.overlayRef = this.overlay.create(this.overlayOptions);
-      this.overlayRef.attach(new ComponentPortal(UploadWidgetComponent));
+      const instance = new ComponentPortal(UploadWidgetComponent);
+      instance.injector = Injector.create({ providers: [{ provide: 'tasks', useValue: this._tasks }]});
+      this.overlayRef.attach(instance);
     }
   }
 
-  uploadOrDeleteMedia(medias: ImgRef[]) {
-    medias.forEach(imgRef => {
-      if (imgRef.delete && imgRef.ref) {
-        this.removeFile(imgRef.ref);
-      } else if (!!imgRef.blob) {
-        if (imgRef.ref !== '') {
-          this.removeFile(imgRef.ref);
-        }
-        const file: UploadFile = {
-          path: imgRef.path,
-          data: imgRef.blob,
-          fileName: imgRef.fileName
-        }
-        this.uploadBlob(file);
+  async uploadOrDeleteMedia(mediaForms: HostedMediaFormValue[]) {
+    const promises = mediaForms.map(async mediaForm => {
+
+      if (!!mediaForm.fileName) {
+        // remove every characters after the 100th to avoid file too long error
+        // this way we don't need to sanitize name anymore
+        // (firebase also supports file names with unicode chars)
+        mediaForm.fileName = mediaForm.fileName.substr(0, 100);
       }
-    })
+
+      // if the file needs to be deleted and we know its path
+      if (mediaForm.delete && !!mediaForm.oldRef) {
+
+        await this.removeFile(mediaForm.oldRef);
+
+      // if we have a blob = the user created or updated the file
+      } else if (!!mediaForm.blobOrFile) {
+
+        // if the file already have a path it means that we are in an update
+        // we first need to delete the old file
+        if (mediaForm.oldRef !== '') {
+          try {
+            await this.removeFile(mediaForm.oldRef);
+          } catch (error) {
+            console.warn('Deletion of previous file failed, but new file will still be uploaded');
+          }
+        }
+
+        // upload the new file
+        this.upload({
+          data: mediaForm.blobOrFile,
+          path: mediaForm.ref,
+          fileName: mediaForm.fileName
+        });
+
+      }
+    });
+    await Promise.all(promises);
   }
+
 }

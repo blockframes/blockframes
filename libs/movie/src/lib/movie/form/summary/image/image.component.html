@@ -1,27 +1,27 @@
 <ul>
   <li>
     <strong>Banner </strong>
-    <ng-container *ngIf="bannerHasNoValue else banner">
+    <ng-container *ngIf="(form.main.banner.get('media').value | isEmptyImgRef) else banner">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #banner>
-      <ng-container *ngIf="promotionalElements.get('banner').get('media').value as bannerValue">
-        <a [href]="bannerValue.urls.lg" target="_blank">{{ bannerValue.ref | fileName }}</a>
-      </ng-container>
+      <a [href]="form.main.banner.get('media').value.url" target="_blank">
+        {{ form.main.banner.get('media').value | fileName }}
+      </a>
     </ng-template>
   </li>
   <li>
     <strong>Poster </strong>
-    <ng-container *ngIf="posterHasNoValue else poster">
+    <ng-container *ngIf="(form.main.poster.get('media').value | isEmptyImgRef)  else poster">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #poster>
-      <a [href]="promotionalElements.get('poster').controls[0].controls['media'].value.urls.lg" target="_blank">
-        {{ promotionalElements.get('poster').controls[0].controls['media'].value.ref | fileName }}
+      <a [href]="form.main.poster.get('media').value.url" target="_blank">
+        {{ form.main.poster.get('media').value | fileName }}
       </a>
     </ng-template>
   </li>
@@ -33,9 +33,9 @@
       </a>
     </ng-container>
     <ng-template #photos>
-      <ng-container *ngFor="let photo of promotionalElements.get('still_photo').controls; let isLast = last">
-        <a [href]="photo.get('media').get('urls').get('lg').value" target="_blank">
-          {{ photo.get('media').get('ref').value | fileName }} {{ isLast ? '' : '| '}}
+      <ng-container *ngFor="let photo of form.promotionalElements.get('still_photo').controls; let isLast = last">
+        <a [href]="photo.get('media').get('lg').get('url').value" target="_blank">
+          {{ photo.get('media').get('ref') | fileName }} {{ isLast ? '' : '| '}}
         </a>
       </ng-container>
     </ng-template>

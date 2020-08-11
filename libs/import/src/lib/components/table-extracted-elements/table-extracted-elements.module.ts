@@ -19,7 +19,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 // Libraries
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TableExtractedContractsComponent } from './contracts/contracts.component';

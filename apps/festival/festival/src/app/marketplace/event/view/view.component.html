@@ -22,7 +22,7 @@
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
           <h2>Organized by</h2>
           <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
-            <bf-img [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo"></bf-img>
+            <img [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo">
             <div fxLayout="column" fxLayoutGap="4px">
               <h6>{{ event.org | orgName }}</h6>
               <ng-container *ngIf="event.organizedBy as user">

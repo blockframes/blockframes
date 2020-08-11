@@ -6,6 +6,7 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -107,8 +108,25 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    return storeSearchableMovie(after, orgName(creatorOrg));
+    await storeSearchableMovie(after, orgName(creatorOrg));
   }
+
+
+  // REMOVING EMPTY STILL_PHOTOs
+  const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
+    .some(key => !after.promotionalElements.still_photo[key].media.ref);
+
+  // if we found at least one empty still_photo, we update with only the none empty ones
+  if (hasEmptyStills) {
+    const notEmptyStills: Record<string, PromotionalHostedMedia> = {};
+
+    Object.keys(after.promotionalElements.still_photo)
+      .filter(key => !!after.promotionalElements.still_photo[key].media.ref)
+      .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+
+    change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
+  }
+
 }
 
 /** Checks if the store status is going from draft to submitted. */

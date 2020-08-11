@@ -4,13 +4,13 @@
 import {
   NOW,
   USER_1,
-  USER_2,
   USER_3,
   USER_4,
-  PRIVATE_EVENTNAME,
+  PRIVATE_EVENTNAME_1,
   PARTICIPANT_1_NAME,
   PARTICIPANT_2_NAME,
-  ORG_NAME
+  ORG_NAME,
+  USER_2
 } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
@@ -18,21 +18,24 @@ import { MOVIES } from '@blockframes/e2e/utils/movies';
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, EventEditPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
+import { LandingPage } from '../../support/pages/landing';
 
 const MOVIE_TITLE = MOVIES[3].title.international;
 let SCREENING_URL: string;
 
 describe('User invites other users to his private screening', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest();
+    clearDataAndPrepareTest('/');
+    const p1 = new LandingPage();
+    p1.clickSignup();     
   });
 
-  it('User creates a screening and invites John Bryant and Sarah Gregory to the screening', () => {
+  it(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
     const p3: EventEditPage = p2.createDetailedEventToday(NOW);
-    p3.addEventTitle(PRIVATE_EVENTNAME);
+    p3.addEventTitle(PRIVATE_EVENTNAME_1);
     p3.checkAllDay();
     p3.selectMovie(MOVIE_TITLE);
     p3.inviteUser([USER_2.email, USER_3.email]);
@@ -50,11 +53,10 @@ describe('User invites other users to his private screening', () => {
     const p2: FestivalInvitationsPage = p1.goToInvitations();
     cy.wait(2000)
     p2.acceptInvitationScreening();
-    // Wait for post request to finish
-    cy.wait(2000);
 
     // Assets video runs
-    const p3: FestivalMarketplaceEventPage = p2.clickMore();
+    p2.openMoreMenu();
+    const p3: FestivalMarketplaceEventPage = p2.clickGoToEvent();
     const p4: FestivalMarketplaceScreeningPage = p3.clickJoinScreening();
 
     // Save the current url for the next test
@@ -71,12 +73,9 @@ describe('User invites other users to his private screening', () => {
     const p2 = p1.goToInvitations();
     cy.wait(2000);
     p2.refuseInvitationScreening();
-    // Wait for post request to finish
-    cy.wait(5000);
   });
 
   it('Event create logs in and verifies the accepted invitations', () => {
-    cy.visit('/auth/welcome');
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()

@@ -1,4 +1,4 @@
-﻿{
+{
   "projects": {
     "default": "blockframes-test",
     "prod": "blockframes",
@@ -187,6 +187,9 @@
       "hosting": {
         "catalog": [
           "blockframes-max"
+        ],
+        "festival": [
+          "blockframes-festival-max"
         ]
       }
     },

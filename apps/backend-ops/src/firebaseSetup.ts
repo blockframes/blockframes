@@ -4,12 +4,15 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { appUrl } from '@env';
-import { syncUsers } from './users';
+import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
 import { generateFixturesFile } from './anon-firestore';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { cleanDeprecatedData } from './db-cleaning';
+import { cleanStorage } from './storage-cleaning';
+import { syncStorage } from './syncStorage';
 
 export async function prepareForTesting() {
   console.info('Restoring backup...');
@@ -33,6 +36,7 @@ export async function prepareForTesting() {
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused data...')
   // await cleanDeprecatedData();
+  // await cleanStorage();
   // console.info('Data clean and fresh!')
 
   console.info('Preparing Algolia...');
@@ -40,6 +44,14 @@ export async function prepareForTesting() {
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
+
+  console.info('Syncing firestore with storage');
+  await syncStorage();
+  console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }
@@ -53,11 +65,21 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
+  // @todo(#3066) Reactivate Cleaning process when unit tested
+  // console.info('Cleaning unused data...')
+  // await cleanDeprecatedData();
+  // await cleanStorage();
+  // console.info('Data clean and fresh!')
+
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();
   await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
 
   process.exit(0);
 }

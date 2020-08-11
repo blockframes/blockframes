@@ -1,7 +1,7 @@
 import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '../../+state/movie.model';
 import { Title } from '../../+state/movie.firestore';
-import { ImgRef } from '@blockframes/media/+state/media.firestore';
+import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[movie] movie-banner',
@@ -11,7 +11,7 @@ import { ImgRef } from '@blockframes/media/+state/media.firestore';
 })
 export class BannerComponent {
 
-  public poster: ImgRef;
+  public poster: HostedMedia;
   public title: Title;
   public director: string;
   public countries: string[];
@@ -19,7 +19,7 @@ export class BannerComponent {
 
   @Input() set movie(movie: Movie) {
     if (movie) {
-      this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
+      this.poster = movie.main.poster.media;
       this.title = movie.main.title;
       this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
       this.countries = movie.main.originCountries;

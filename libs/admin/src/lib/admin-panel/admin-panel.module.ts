@@ -21,7 +21,7 @@ import { ContractTreeModule } from './components/contract-tree/contract-tree.mod
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';

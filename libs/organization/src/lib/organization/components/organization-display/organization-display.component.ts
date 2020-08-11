@@ -23,6 +23,8 @@ export class OrganizationDisplayComponent {
   }
 
   get org() {
-    return this.organizationInformations ? this.organizationInformations : this.organization;
+    return this.organizationInformations
+      ? this.organizationInformations.value
+      : this.organization;
   }
 }

@@ -1,11 +1,13 @@
 <ng-container [ngSwitch]="state">
+  <input #fileExplorer [accept]="accept" type="file" (change)="selected($event.target.files)" />
+
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
-        <bf-img asset="add_files.webp" alt="upload image"></bf-img>
+        <img asset="add_files.webp" alt="upload image">
       </button>
-      <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
+
     </label>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[format]"></ng-content>
@@ -16,31 +18,27 @@
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <bf-img asset="add_files.webp" alt="upload image" class="picture-hover"></bf-img>
+    <img asset="add_files.webp" alt="upload image" class="picture-hover">
   </section>
 
-  <!-- Uploading -->
-  <section *ngSwitchCase="'uploading'">
-    <div class="progress" *ngIf="(percentage | async) as pct">
-      <mat-progress-bar mode="determinate" [value]="pct"></mat-progress-bar>
-      <p class="mat-caption">{{ pct | number: '1.0-0' }} %</p>
-    </div>
-
-    <button mat-button (click)="task.cancel()">Cancel</button>
+  <!-- Ready -->
+  <section *ngSwitchCase="'ready'">
+    <h3>Your file is ready, it will be uploaded when you click on "Save".</h3>
+    <p class="mat-caption">{{ form.fileName.value }}</p>
+    <button mat-mini-fab color="warn">
+      <mat-icon (click)="reset(fileExplorer)" svgIcon="cross" matTooltip="Cancel"></mat-icon>
+    </button>
   </section>
 
-  <!-- Success -->
-  <section *ngSwitchCase="'success'">
-    <h3>Your file is successfully uploaded</h3>
-    <ng-container *ngIf="downloadURL as url">
-      <div fxLayout="column" fxLayoutGap="16px" fxLayoutAlign="start center">
-        <a [href]="url" target="_blank" rel="noopener" class="mat-body-2">
-          You can download it here.
-        </a>
-        <button mat-mini-fab color="warn">
-          <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete current file"></mat-icon>
-        </button>
-      </div>
-    </ng-container>
+  <!-- File -->
+  <section *ngSwitchCase="'file'">
+    <p class="mat-caption">{{ form.fileName.value }}</p>
+    <button mat-mini-fab color="primary">
+      <mat-icon (click)="fileExplorer.click()" svgIcon="document" matTooltip="Change file"></mat-icon>
+    </button>
+    <button mat-mini-fab color="warn">
+      <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete"></mat-icon>
+    </button>
   </section>
+
 </ng-container>

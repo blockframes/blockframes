@@ -8,15 +8,13 @@
         <mat-card-title>Upload Documents</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let control of chainOfTitles.controls; let i = index; let last = last">
+        <ng-container *ngFor="let control of chainOfTitles; let i = index; let last = last">
           <file-upload
             test-id="chain-titles"
-            path="pdf"
-            uploadOnFirestore="true"
-            return="imgRef"
+            storagePath=""
+            [form]="control.get('media')"
             accept="['.pdf']"
-            [types]="['application/pdf']"
-            (storeUploaded)="importPDF($event, i)">
+            [types]="['application/pdf']">
             <h3 type>Upload files</h3>
             <p class="mat-caption" format>Accepted Formats: .pdf</p>
           </file-upload>

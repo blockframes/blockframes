@@ -10,8 +10,6 @@ import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { map, debounceTime, switchMap, pluck, startWith } from 'rxjs/operators';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { algolia } from '@env';
-
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -27,8 +25,6 @@ export class ListComponent implements OnInit {
   public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
 
   public filterForm = new MovieSearchForm();
-
-  public movieIndexName = algolia.indexNameMovies;
 
   constructor(private movieService: MovieService, private cdr: ChangeDetectorRef) { }
 

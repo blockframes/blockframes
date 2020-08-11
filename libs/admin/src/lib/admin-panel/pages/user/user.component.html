@@ -4,7 +4,7 @@
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <mat-card  fxLayout="column" fxLayoutAlign="center">
         <mat-card-content fxLayout="row" fxLayoutAlign="center center">
-          <bf-img mat-card-avatar [ref]="user.avatar" asset="empty_poster.webp" alt="User avatar"></bf-img>
+          <img mat-card-avatar [ref]="user.avatar" asset="empty_poster.webp" alt="User avatar">
           <article class="information" fxLayout="column" fxLayoutAlign="start start">
             <h4>{{ user.firstName }} {{ user.lastName }}</h4>
             <h3>Main infos</h3>
@@ -26,7 +26,7 @@
               <li *ngIf="userOrgRole">
                 <b class="bf-dark-text">User Role : </b>
                 <span>{{ userOrgRole }}</span>
-                <member-permissions 
+                <member-permissions
                   [uid]="userId"
                   icon="pencil"
                   (memberRemoved)="removeMember($event)"
@@ -57,7 +57,7 @@
           </article>
         </mat-card-content>
       </mat-card>
-      <admin-image-sizes [imgRef]="user.avatar">
+      <admin-image-sizes [form]="user.avatar">
         <h3>Image sizes</h3>
       </admin-image-sizes>
     </article>

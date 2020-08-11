@@ -39,8 +39,8 @@
   </ng-template>
   <ng-template colRef="movie" let-movie>
     <div *ngIf="movie else noMovie" fxLayout="row">
-      <ng-container *ngIf="movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media as poster;">
-        <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
+      <ng-container *ngIf="movie.main.poster && movie.main.poster.media as poster;">
+        <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
         <span>{{ movie.main.title.international }} ({{ movie.main.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>

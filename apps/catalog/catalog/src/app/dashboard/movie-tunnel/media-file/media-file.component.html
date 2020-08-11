@@ -10,12 +10,11 @@
         <mat-card-content>
           <file-upload
           test-id="presentation-deck"
-          [path]="presentationPath"
-          uploadOnFirestore="true"
-          return="imgRef"
+          [storagePath]="presentationPath"
+          [form]="presentationMediaForm"
           accept="['.pdf']"
           [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'presentation_deck')">
+          >
           <h3 type>Presentation Deck</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>
@@ -29,12 +28,11 @@
         <mat-card-content>
           <file-upload
           test-id="scenario"
-          [path]="scenarioPath"
-          uploadOnFirestore="true"
-          return="imgRef"
+          [storagePath]="scenarioPath"
+          [form]="scenarioMediaForm"
           accept="['.pdf']"
           [types]="['application/pdf']"
-          (storeUploaded)="importPDF($event, 'scenario')">
+          >
           <h3 type>Script</h3>
           <p class="mat-caption" format>Accepted Formats: .pdf</p>
         </file-upload>

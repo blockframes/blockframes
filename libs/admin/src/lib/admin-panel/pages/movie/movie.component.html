@@ -92,30 +92,12 @@
   <mat-card *ngIf="movie">
     <h2>Promotional Elements :</h2>
 
-    <admin-image-sizes *ngIf="movie.promotionalElements.banner.media" title="Movie banner" [imgRef]="movie.promotionalElements.banner.media">
+    <admin-image-sizes *ngIf="movie.main.banner.media" title="Movie banner" [form]="movie.main.banner.media">
       <h3>Movie Banner</h3>
     </admin-image-sizes>
-    <ng-container *ngFor="let poster of movie.promotionalElements.poster; let i = index; let last = last">
-      <admin-image-sizes [imgRef]="poster.media">
-        <h3>Movie poster n°{{ i + 1 }}</h3>
-      </admin-image-sizes>
-    </ng-container>
-  </mat-card>
-  
-  <mat-card *ngIf="movie">
-    <h2>Movie private config :</h2>
-
-    <ng-container *ngIf="privateConfigForm">
-      <form [formGroup]="privateConfigForm" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Something private</mat-label>
-          <input matInput type="text" placeholder="Something private" formControlName="url" />
-        </mat-form-field>
-        <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
-        </mat-card-actions>
-      </form>
-    </ng-container>
+    <admin-image-sizes *ngIf="movie.main.poster.media" title="Movie poster" [form]="movie.main.poster.media">
+      <h3>Movie poster</h3>
+    </admin-image-sizes>
   </mat-card>
 
 </main>

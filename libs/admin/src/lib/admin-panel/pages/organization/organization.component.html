@@ -2,14 +2,14 @@
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
   <section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
     <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
-      
+
       <organization-display [organization]="org">
         <mat-card-header>
           <mat-card-title>{{ org | orgName:'long' }} </mat-card-title>
         </mat-card-header>
       </organization-display>
 
-      <admin-image-sizes [imgRef]="org.logo">
+      <admin-image-sizes [form]="org.logo">
         <h3>Image sizes</h3>
       </admin-image-sizes>
     </article>
@@ -136,7 +136,7 @@
         (updatedToMember)="updateRole($event, 'member')">
       </member-repertory>
     </article>
-    
+
     <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
       <article fxLayout="column" fxLayoutAlign="space-between start">
         <member-pending *ngIf="invitationsMember.length > 0"
@@ -146,7 +146,7 @@
         </member-pending>
       </article>
     </ng-container>
-    
+
     <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
       <article fxLayout="column" fxLayoutAlign="space-between start">
         <member-request *ngIf="invitations.length > 0"
@@ -173,9 +173,9 @@
         showFilter
         showLoader
         showPaginator>
-        <ng-template colRef="promotionalElements.poster" let-posters>
-          <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-            <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
+        <ng-template colRef="main.poster" let-posters>
+          <ng-container *ngIf="posters && posters.media as poster; else noposter">
+            <img class="poster" [ref]="poster" asset="empty_poster.webp">
           </ng-container>
           <ng-template #noposter>
             --

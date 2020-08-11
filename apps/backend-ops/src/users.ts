@@ -7,8 +7,11 @@ import { UserConfig } from './assets/users.fixture';
 import usersFixture from 'tools/users.fixture.json';
 import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
-import { sleep } from './tools';
+import { sleep, runChunks } from './tools';
 import readline from 'readline';
+import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { loadDBVersion } from './migrations';
 
 export let USERS = usersFixture;
 
@@ -49,7 +52,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
  * @param expectedUsers
  * @param auth
  */
-async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
   let pageToken;
 
   do {
@@ -151,4 +154,35 @@ export async function createUsers(): Promise<any> {
   const users = await readUsersFromSTDIN();
   const usersWithPassword = users.map(user => ({ ...user, password: 'password' }));
   return createAllUsers(usersWithPassword, auth);
+}
+
+export async function generateWatermarks() {
+  const { db } = loadAdminServices();
+  const dbVersion = await loadDBVersion(db);
+  // activate maintenance to prevent cloud functions to trigger
+  let startedMaintenance = false;
+  if (!await isInMaintenance()) {
+    startedMaintenance = true;
+    await startMaintenance();
+  }
+
+  const users = await db.collection('users').get();
+
+  await runChunks(users.docs, async (user) => {
+    const file = await upsertWatermark(user.data());
+    // We are in maintenance mode, trigger are stopped
+    // so we update manually the user document
+    if (dbVersion < 31) {
+      const [signedUrl] = await file.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
+      const watermark = { ref: file.name, url: signedUrl };
+      await user.ref.update({ watermark });
+    } else {
+      await user.ref.update({ watermark: file.name });
+    }
+
+  });
+
+  // deactivate maintenance
+  if (startedMaintenance) await endMaintenance();
+
 }

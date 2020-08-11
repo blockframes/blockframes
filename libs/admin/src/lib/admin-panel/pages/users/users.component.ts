@@ -22,7 +22,7 @@ export class UsersComponent implements OnInit {
     'lastName': 'LastName',
     'org': 'Organization',
     'type': 'Type',
-    'org.addresses.main.country': 'Country',
+    'orgCountry': 'Country',
     'userOrgRole': 'Role',
     'position': 'Position',
     'email': 'Email',
@@ -38,7 +38,7 @@ export class UsersComponent implements OnInit {
     'lastName',
     'org',
     'type',
-    'org.addresses.main.country',
+    'orgCountry',
     'userOrgRole',
     'position',
     'email',
@@ -73,6 +73,7 @@ export class UsersComponent implements OnInit {
           link: `/c/o/admin/panel/user/${u.uid}`,
         },
         org: org,
+        orgCountry: org && org.addresses.main.country ? org.addresses.main.country : undefined,
         userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
         type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
       }

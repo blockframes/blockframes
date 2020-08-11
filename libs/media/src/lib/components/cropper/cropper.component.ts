@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-import { ImgRefForm } from '../../directives/image-reference/image-reference.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -81,18 +81,18 @@ export class CropperComponent implements OnInit {
   @Input() set ratio(ratio: MediaRatioType) {
     this.cropRatio = mediaRatio[ratio];
   }
-  @Input() form?: ImgRefForm;
+  @Input() form?: HostedMediaForm;
   @Input() setWidth?: number;
   @Input() storagePath: string;
-  /** Disable fileuploader & delete buttons in 'show' step */
-  @Input() useFileuploader?= true;
+  /** Disable fileUploader & delete buttons in 'show' step */
+  @Input() useFileUploader?= true;
   @Input() useDelete?= true;
 
   constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
 
   ngOnInit() {
     // show current image
-    if (this.form.ref.value) {
+    if (this.form.ref?.value) {
       this.ref = this.storage.ref(this.form.ref.value);
       this.goToShow();
     }
@@ -127,10 +127,10 @@ export class CropperComponent implements OnInit {
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
 
       this.form.patchValue({
-        path: `${this.storagePath}/original/${fileName}`,
-        blob: blob,
+        ref: `${this.storagePath}/`,
+        blobOrFile: blob,
         delete: false,
-        fileName: fileName
+        fileName: fileName,
       })
       this.form.markAsDirty();
 
@@ -150,9 +150,6 @@ export class CropperComponent implements OnInit {
     }
 
     this.form.patchValue({
-      path: '',
-      blob: '',
-      fileName:'',
       delete: true
     })
     this.form.markAsDirty();
