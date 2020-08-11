@@ -1,6 +1,8 @@
-import { chunk } from 'lodash';
+import { chunk as chunkArray } from 'lodash';
 import { firestore } from 'firebase-admin';
 import * as faker from 'faker';
+
+const CHUNK_SIZE = 20;
 
 export async function cleanOrgs(db: firestore.Firestore) {
   console.log('starting orgs anonimisation');
@@ -23,36 +25,19 @@ export async function cleanOrgs(db: firestore.Firestore) {
     // return snapshot.ref.set(org, { merge: false });
     return { ref: snapshot.ref, org };
   });
-  return runChunks(
-    updates,
-    update => {
-      return update.ref.set(update.org, { merge: false });
-    },
-    25
-  );
-  // return Promise.all(updates);
+  chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
+    const batch = db.batch();
+    chunk.forEach(update => batch.set(update.ref, update.org, { merge: false }));
+    await batch.commit();
+  });
+  // return runChunks(
+  //   updates,
+  //   update => {
+  //     return update.ref.set(update.org, { merge: false });
+  //   },
+  //   25
+  // );
 }
-
-// export async function cleanOrgs(db: firestore.Firestore) {
-//   console.log('starting orgs anonimisation');
-//   const orgsQuerySnapshot = await db.collection('orgs').get();
-//   return runChunks(orgsQuerySnapshot.docs, snapshot => {
-//     const org = snapshot.data();
-//     org.id = snapshot.id;
-//     const companyName = faker.company.companyName();
-//     const denomination = {
-//       full: companyName,
-//       public: companyName
-//     };
-//     org.denomination = denomination;
-//     const email = `${faker.name.firstName()}.${faker.name.lastName()}-${companyName
-//       .replace(/\s/g, '')
-//       .replace(/\W/g, '')}-fakeOrg@cascade8.com`;
-//     org.email = email;
-//     // return snapshot.ref.set(org, { merge: false });
-//     return snapshot.ref.set(org);
-//   });
-// }
 
 /**
  * This function will take a db as a parameter and clean it's emails as per anonimisation policy
@@ -66,13 +51,9 @@ export async function cleanUsers(db: firestore.Firestore) {
     org.id = snapshot.id;
     return org;
   });
-  const users = usersQuerySnapshot.docs.map(snapshot => {
-    const user = snapshot.data();
-    user.id = snapshot.id;
-    return user;
-  });
 
-  const updates = users.map(user => {
+  const updates = usersQuerySnapshot.docs.map(snapshot => {
+    const user = snapshot.data();
     const { orgId } = user;
     const org = orgs.find(thisOrg => thisOrg.id === orgId);
     const firstName = faker.name.firstName();
@@ -84,11 +65,16 @@ export async function cleanUsers(db: firestore.Firestore) {
 
     // return db .collection('users') .doc(user.id) .set({ firstName, lastName, email: newEmail }, { merge: true });
     return {
-      ref: db.collection('users').doc(user.id),
+      ref: snapshot.ref,
       data: { firstName, lastName, email: newEmail }
     };
   });
-  return runChunks(updates, update => update.ref.set(update.data, { merge: true }));
+  // return runChunks(updates, update => update.ref.set(update.data, { merge: true }));
+  chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
+    const batch = db.batch();
+    chunk.forEach(update => batch.set(update.ref, update.data, { merge: true }));
+    await batch.commit();
+  });
   // return Promise.all(updates);
 }
 
@@ -105,20 +91,24 @@ export async function cleanNotifications(db: firestore.Firestore) {
   const updates = notificationsQuerySnapshot.docs.map(snapshot => {
     const notification = snapshot.data();
     notification.id = snapshot.id;
-    const { organisation: { id: orgId } = { id: '' } } = notification;
+    const { organization: { id: orgId } = { id: '' } } = notification;
     // tslint:disable-next-line: no-non-null-assertion
     const org = orgs.find(thisOrg => thisOrg.id === orgId);
-    if (notification?.organisation?.denomination)
-      notification.organisation.denomination = org?.denomination || {};
+    if (notification?.organization?.denomination)
+      notification.organization.denomination = org?.denomination || {};
     const { user: { uid } = { uid: '' } } = notification;
     const user = users.find(thisUser => thisUser.uid === uid);
     delete user?.watermark;
     notification.user = user || {};
-    // return snapshot.ref.set(notification, { merge: false });
     return { ref: snapshot.ref, data: notification };
   });
-  return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
-  // return Promise.all(updates);
+
+  chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
+    const batch = db.batch();
+    chunk.forEach(update => batch.set(update.ref, update.data, { merge: false }));
+    batch.commit();
+  });
+  // return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
 }
 
 export async function cleanInvitations(db: firestore.Firestore) {
@@ -141,33 +131,113 @@ export async function cleanInvitations(db: firestore.Firestore) {
     const user = users.find(thisUser => thisUser.uid === uid);
     delete user?.watermark;
     invitation.toUser = user || {};
-    // return snapshot.ref.set(invitation, { merge: false });
     return { ref: snapshot.ref, data: invitation };
   });
-  // return Promise.all(updates);
-  return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
+  chunkArray(updates, CHUNK_SIZE).forEach(async chunk => {
+    const batch = db.batch();
+    chunk.forEach(update => batch.set(update.ref, update.data, { merge: false }));
+    await batch.commit();
+  });
+  // return runChunks(updates, update => update.ref.set(update.data, { merge: false }));
 }
 
-export async function runChunks<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
-  const chunks = chunk(batch, chunkSize);
+export async function runChunks<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 20) {
+  const chunks = chunkArray(batch, chunkSize);
   return chunks.map(async (subChunk, i) => {
     console.log(`Processing chunk ${i + 1}/${chunks.length}`);
     const promises = subChunk.map(cb);
     return await Promise.all(promises);
   });
-  // function* getChunk() {
-  //   yield chunks.pop().map(chunk => chunk.map())
-  // }
-
-  // for (let i = 0; i < chunks.length; i++) {
-  //   const chunk = chunks[i];
-  //   console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-  //   const promises = chunk.map(cb);
-  //   await Promise.all(promises);
-  // }
 }
 
-//  await runChunks(moviesTestSet, async (m) => {
-//       const movieRef = db.collection('movies').doc(m.id);
-//       await movieRef.set(m);
-//     }, 50);
+export async function doubleCheck(db: firestore.Firestore) {
+  console.log('Double checking theres no prod data left...');
+  function isProdEmail(email: string | null): boolean {
+    if (typeof email !== 'string') {
+      console.count('Missing email found...');
+      return false;
+    }
+    return email.split('@').pop() !== 'cascade8.com';
+  }
+
+  const [
+    orgsQuerySnapshot,
+    usersQuerySnapshot,
+    invitationsQuerySnapshot,
+    notificationsQuerySnapshot
+  ] = await Promise.all([
+    db.collection('orgs').get(),
+    db.collection('users').get(),
+    db.collection('invitations').get(),
+    db.collection('notifications').get()
+  ]);
+  // All data loaded in memory at this stage
+  console.log('loaded db...');
+  const orgsFail = orgsQuerySnapshot.docs.filter(snapshot => {
+    const org = snapshot.data();
+    const email = org?.email as string;
+    if (!email) console.log('record found without email...');
+    return isProdEmail(email);
+  });
+  if (orgsFail.length) {
+    console.log(`orgs: ${orgsFail.length}`);
+    console.error(
+      'The following prod orgs was found',
+      orgsFail.map(snap => snap.id)
+    );
+  }
+
+  const usersFail = usersQuerySnapshot.docs.filter(snapshot => {
+    const user = snapshot.data();
+    const email = user?.email;
+    if (!email) console.log('record found without email...');
+    return isProdEmail(email);
+  });
+  if (usersFail.length) {
+    console.log(`users: ${usersFail.length}`);
+    console.error(
+      'The following prod data was found',
+      usersFail.map(snap => snap.id)
+    );
+  }
+
+  const invitationsFail = invitationsQuerySnapshot.docs.filter(snapshot => {
+    const invitation = snapshot.data();
+    const toEmail = invitation?.toUser?.email;
+    const fromEmail = invitation?.fromOrg?.email;
+    if (!toEmail || !fromEmail) console.log('record found without email');
+    return isProdEmail(toEmail) || isProdEmail(fromEmail);
+  });
+  if (invitationsFail.length) {
+    console.log(`invitations: ${invitationsFail.length}`);
+    console.error(
+      'The following prod data was found',
+      invitationsFail.map(snap => snap.id)
+    );
+    // invitationsFail.forEach(async snapshot => {
+    //   await snapshot.ref.update()
+    // })
+  }
+
+  const notificationsFail = notificationsQuerySnapshot.docs.filter(snapshot => {
+    const notification = snapshot.data();
+    const orgEmail = notification?.organization?.email;
+    const userEmail = notification?.user?.email;
+    return isProdEmail(orgEmail) || isProdEmail(userEmail);
+  });
+  if (notificationsFail.length) {
+    console.log(`notifications: ${notificationsFail.length}`);
+    console.error(
+      'The following prod data was found',
+      notificationsFail.map(snap => snap.id)
+    );
+  }
+  if (
+    !invitationsQuerySnapshot &&
+    !notificationsQuerySnapshot &&
+    !orgsQuerySnapshot &&
+    !usersQuerySnapshot
+  ) {
+    console.log('Your db is safely anonimised!');
+  }
+}

@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
 import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from './maintenance';
-import { cleanUsers, cleanOrgs, cleanInvitations, cleanNotifications} from '@blockframes/testing/lib/firebase/anon-firestore'
+import { cleanUsers, cleanOrgs, cleanInvitations, cleanNotifications, doubleCheck} from '@blockframes/testing/lib/firebase/anon-firestore'
 import type express from 'express';
 
 type Firestore = admin.firestore.Firestore;
@@ -264,6 +264,7 @@ export const restore = async (req: express.Request, resp: express.Response) => {
     await cleanUsers(db)
     await cleanInvitations(db)
     await cleanNotifications(db)
+    await doubleCheck(db)
   }
 
   await endMaintenance();
