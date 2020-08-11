@@ -30,7 +30,7 @@
 
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<footer class="line-button">
+<footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span>{{ buttonText }}</span>
   <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="formItem.invalid">

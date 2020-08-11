@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { FormListComponent, ItemRefDirective, FormViewDirective } from './form-list.component';
@@ -14,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 @NgModule({
   imports: [
     CommonModule,
+    FlexLayoutModule,
 
     // Material
     MatListModule,

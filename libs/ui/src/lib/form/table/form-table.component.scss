@@ -42,18 +42,13 @@ mat-divider {
   width: 100%;
 }
 
-.line-button {
-  display: flex;
-  align-items: baseline;
-
+footer {
   mat-divider {
     border-top-color: var(--primary);
     border-top-width: 2px;
     margin-right: 16px;
   }
-
   span {
     white-space: nowrap;
-    margin-right: 16px;
   }
 }

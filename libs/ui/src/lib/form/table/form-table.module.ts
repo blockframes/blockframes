@@ -1,10 +1,12 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { FormTableComponent, FormViewDirective } from './form-table.component';
 
+// Blockframes
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 
 // Material
@@ -18,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     ColRefModule,
+    FlexLayoutModule,
 
     // Material
     MatButtonModule,
