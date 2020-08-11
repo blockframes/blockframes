@@ -14,7 +14,10 @@ export class MovieFormMainComponent {
   public contentType = contentType;
   public movieId = this.route.snapshot.params.movieId;
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) {}
+  public displayedColumns = ['First Name', 'Last Name', 'Status', 'Category', 'Description',
+    'Film Title', 'Filmography']
+
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
   get international() {
     return this.form.get('title').get('international');
@@ -22,6 +25,10 @@ export class MovieFormMainComponent {
 
   get original() {
     return this.form.get('title').get('original');
+  }
+  
+  get contentTypeCtrl() {
+    return this.form.get('contentType')
   }
 
   get banner() {

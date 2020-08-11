@@ -53,13 +53,14 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   activeIndex: number;
   pageSize = 5;
   /* We need to keep track of the current page since it will affect the index that we are working on */
-  pageConfig = { pageIndex: 0, pageSize: this.pageSize };
+  pageConfig = { pageIndex: 0, pageSize: 5 };
   formItem: FormEntity<EntityControl<T>, T>;
   dataSource = new MatTableDataSource<T>();
 
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.form.valueChanges.subscribe(x => console.log(this.form))
     this.displayedColumns.push('actions')
     const values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     // Show table if there are controls
@@ -93,6 +94,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
+
   get isFormEmpty() {
     return !this.form.length
   }
@@ -146,9 +148,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * @param index of the table row
    */
   private calculateCurrentIndex(index: number) {
-    this.activeIndex = index;
-    if (this.pageConfig.pageIndex) {
-      this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
-    }
+    this.activeIndex = this.pageConfig.pageIndex * this.pageConfig.pageSize + index
   }
 }

@@ -30,4 +30,10 @@
 
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<bf-line-button [buttonText]="buttonText" (buttonClick)="addControl()"></bf-line-button>
+<div class="line-button">
+  <mat-divider id="line"></mat-divider>
+  <span>{{ buttonText }}</span>
+  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="formItem.invalid">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</div>

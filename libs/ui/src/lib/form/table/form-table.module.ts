@@ -2,9 +2,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// Components
+// Component
 import { FormTableComponent, FormViewDirective } from './form-table.component';
-import { LineButtonModule } from '../line-button/line-button.module';
 
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 
@@ -13,12 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
     CommonModule,
     ColRefModule,
-    LineButtonModule,
 
     // Material
     MatButtonModule,
@@ -27,6 +26,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
+    MatDividerModule,
   ],
   declarations: [FormTableComponent, FormViewDirective],
   exports: [FormTableComponent, FormViewDirective, ColRefModule]

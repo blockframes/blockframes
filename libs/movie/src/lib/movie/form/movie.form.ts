@@ -106,7 +106,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline:  new FormControl(entity.logline, [Validators.maxLength(180)]),
+    logline: new FormControl(entity.logline, [Validators.maxLength(180)]),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
@@ -415,7 +415,7 @@ function createDirectorFormControl(director?: Partial<Director>) {
   return {
     firstName: new FormControl(firstName, Validators.required),
     lastName: new FormControl(lastName, Validators.required),
-    filmography: FormList.factory(filmography, el => new FilmographyForm(el)),
+    filmography: new FormArray([new FilmographyForm(filmography[0]), new FilmographyForm(filmography[1]), new FilmographyForm(filmography[2])]),
     description: new FormControl(description),
     status: new FormControl(status),
     category: new FormControl(category)
