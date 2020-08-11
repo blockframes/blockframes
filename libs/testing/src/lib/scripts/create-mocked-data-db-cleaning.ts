@@ -2,8 +2,7 @@ const fs = require("fs");
 /**
  * This file is used to create mocked data for unit testing.
  * 
- * npm ci
- * npm run firebase:emulator
+ * @see apps/backend-ops/src/db-cleaning.spec.ts
  * 
  * Example usage:
  * npx ts-node libs/testing/src/lib/scripts/create-mocked-data-db-cleaning.ts "/home/bruce/Bureau/cascade8/ninja/db/2020-07-20T22 00 20.378Z-anonymised.jsonl"
