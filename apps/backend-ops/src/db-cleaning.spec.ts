@@ -22,6 +22,7 @@ import notificationsTestSet from '@blockframes/testing/mocked-data-unit-tests/no
 import eventsTestSet from '@blockframes/testing/mocked-data-unit-tests/events.json';
 import usersTestSet from '@blockframes/testing/mocked-data-unit-tests/users.json';
 
+type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 jest.setTimeout(30000);
 
 describe('DB cleaning script', () => {
@@ -64,14 +65,14 @@ describe('DB cleaning script', () => {
       adminServices.db.collection('orgs').get(),
       adminServices.db.collection('users').get()
     ]);
-    const organizationIds = organizations.docs.map(organization => organization.data().id);
+    const organizationIds = organizations.docs.map(ref => ref.id);
 
     const adminAuth = new AdminAuthMocked() as any;
     await cleanUsers(usersBefore, organizationIds, adminAuth, adminServices.db);
 
     // @TODO #3066 make more tests here
 
-    const usersAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('users').get();
+    const usersAfter: Snapshot = await adminServices.db.collection('users').get();
     const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u)).length;
     expect(2).toEqual(cleanedUsers);
   });
@@ -84,13 +85,13 @@ describe('DB cleaning script', () => {
     ]);
 
     const [movieIds, userIds] = [
-      movies.docs.map(movie => movie.data().id),
-      users.docs.map(user => user.data().uid)
+      movies.docs.map(ref => ref.id),
+      users.docs.map(ref => ref.id)
     ];
 
     await cleanOrganizations(organizationsBefore, userIds, movieIds);
 
-    const organizationsAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('orgs').get();
+    const organizationsAfter: Snapshot = await adminServices.db.collection('orgs').get();
     const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movieIds)).length;
     expect(orgsTestSet.length).toEqual(cleanedOrgs);
   });
@@ -100,31 +101,31 @@ describe('DB cleaning script', () => {
       adminServices.db.collection('permissions').get(),
       adminServices.db.collection('orgs').get(),
     ]);
-    const organizationIds = organizations.docs.map(organization => organization.data().id);
+    const organizationIds = organizations.docs.map(ref => ref.id);
     const orgsToKeep = permissionsBefore.docs.filter(d => organizationIds.includes(d.id)).length;
 
     await cleanPermissions(permissionsBefore, organizationIds);
-    const permissionsAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('permissions').get();
+    const permissionsAfter: Snapshot = await adminServices.db.collection('permissions').get();
     expect(orgsToKeep).toEqual(permissionsAfter.docs.length);
   });
 
   it('should clean movies from unwanted attributes', async () => {
-    const moviesBefore: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('movies').get();
+    const moviesBefore: Snapshot = await adminServices.db.collection('movies').get();
     await cleanMovies(moviesBefore);
-    const moviesAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('movies').get();
+    const moviesAfter: Snapshot = await adminServices.db.collection('movies').get();
     const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
     expect(moviesTestSet.length).toEqual(cleanedMovies);
   });
   it('should remove documents undefined or not linked to existing document from docsIndex', async () => {
     const [docsIndexBefore, movies,] = await Promise.all([
-      adminServices.db.collection('docsIndex').get(),
+      adminServices.db.collection('docsIndex').get(), // @TODO #3066 create collectionRef(path: string) method to factorize
       adminServices.db.collection('movies').get()
     ]);
 
     const movieIds = movies.docs.map(m => m.id);
     const docsToKeep = docsIndexBefore.docs.filter(d => movieIds.includes(d.id)).length;
     await cleanDocsIndex(docsIndexBefore, movieIds);
-    const docsIndexAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('docsIndex').get();
+    const docsIndexAfter: Snapshot = await adminServices.db.collection('docsIndex').get();
     expect(docsToKeep).toEqual(docsIndexAfter.docs.length);
   });
   it('should clean notifications', async () => {
@@ -140,7 +141,7 @@ describe('DB cleaning script', () => {
       .concat(users.docs.map(m => m.id))
 
     await cleanNotifications(adminServices, notificationsBefore, documentIds);
-    const notificationsAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('notifications').get();
+    const notificationsAfter: Snapshot = await adminServices.db.collection('notifications').get();
 
     const cleanOutput = notificationsAfter.docs.map(d => isNotificationClean(d));
     expect(every(cleanOutput)).toEqual(true);

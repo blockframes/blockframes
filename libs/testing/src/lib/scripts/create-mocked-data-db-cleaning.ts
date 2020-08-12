@@ -146,7 +146,7 @@ function cleanDocument(doc: any, collection: string) {
  * Retreive and store documents found in first argument
  * @param file 
  */
-async function getDocuments(file: string) {
+function getDocuments(file: string) {
   const documents = {
     movies: [],
     orgs: [],
@@ -157,7 +157,7 @@ async function getDocuments(file: string) {
     users: [],
   };
 
-  const data = await fs.readFileSync(file, 'utf8');
+  const data = fs.readFileSync(file, 'utf8');
   const lines = data.split('\n');
 
   for (const line of lines) {
@@ -187,33 +187,32 @@ const mockedData = {
   users: [],
 }
 
-getDocuments(pathToJsonFile).then(docs => {
+const docs = getDocuments(pathToJsonFile)
 
-  const collections = Object.keys(docs);
-  // First pass
-  for (const collection of collections) {
-    for (const d of docs[collection]) {
-      if (current[collection] !== undefined && current[collection] < max[collection] && idsToFetch[collection].includes(d.id || d.uid)) {
-        current[collection]++;
-        mockedData[collection].push(d);
-      }
+const collections = Object.keys(docs);
+
+// First pass
+for (const collection of collections) {
+  for (const d of docs[collection]) {
+    if (current[collection] !== undefined && current[collection] < max[collection] && idsToFetch[collection].includes(d.id || d.uid)) {
+      current[collection]++;
+      mockedData[collection].push(d);
     }
   }
+}
 
-  // Second pass
-  for (const collection of collections) {
-    for (const d of docs[collection]) {
-      if (current[collection] !== undefined && current[collection] < max[collection]) {
-        current[collection]++;
-        mockedData[collection].push(d);
-      }
+// Second pass
+for (const collection of collections) {
+  for (const d of docs[collection]) {
+    if (current[collection] !== undefined && current[collection] < max[collection]) {
+      current[collection]++;
+      mockedData[collection].push(d);
     }
   }
+}
 
-  return collections;
-}).then(async collections => {
-  for (const collection of collections) {
-    await fs.writeFileSync(`${outputDirectory}/${collection}.json`, JSON.stringify(mockedData[collection]))
-  }
-  console.log(`Data created to : ${outputDirectory}`);
-})
+
+for (const collection of collections) {
+  fs.writeFileSync(`${outputDirectory}/${collection}.json`, JSON.stringify(mockedData[collection]))
+}
+console.log(`Data created to : ${outputDirectory}`);
