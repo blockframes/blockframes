@@ -2,7 +2,7 @@ import { loadAdminServices } from './admin';
 import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { File as GFile } from '@google-cloud/storage';
 import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
-import { getDocument } from 'apps/backend-functions/src/data/internals'
+import { getDocument } from '@blockframes/firebase-utils';
 import { runChunks } from './tools';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
