@@ -4,7 +4,8 @@ const fs = require("fs");
  * 
  * @see apps/backend-ops/src/db-cleaning.spec.ts
  * 
- * Example usage:
+ * Example usage: 
+ * @TODO #3066 update this example
  * npx ts-node libs/testing/src/lib/scripts/create-mocked-data-db-cleaning.ts "/home/bruce/Bureau/cascade8/ninja/db/2020-07-20T22 00 20.378Z-anonymised.jsonl"
  */
 

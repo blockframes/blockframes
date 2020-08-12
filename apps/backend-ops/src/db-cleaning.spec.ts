@@ -29,7 +29,7 @@ describe('DB cleaning script', () => {
 
   beforeAll(async () => {
     const featList = initFunctionsTestMock();
-    adminServices = {
+    adminServices = { // @TODO #3066 Flatten everything
       auth: auth(),
       db: firestore(),
       storage: storage(),
