@@ -12,17 +12,15 @@ import {
   cleanUsers
 } from './db-cleaning';
 import { every } from 'lodash';
-import { AdminAuthMocked } from '../../../libs/testing/src//lib/firebase/adminAuthMocked';
+import { AdminAuthMocked } from '@blockframes/testing/lib/firebase/adminAuthMocked';
 import { AdminServices } from './admin';
-
-const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
-const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');
-const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/permissions.json');
-const docsIndexTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/docsIndex.json');
-const notificationsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/notifications.json'); // @TODO (#3066) commit this file only when fully anonymised
-const eventsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/events.json'); // @TODO (#3066) commit this file only when fully anonymised
-const usersTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/users.json');
-
+import moviesTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/movies.json';
+import orgsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/orgs.json';
+import permissionsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/permissions.json';
+import docsIndexTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/docsIndex.json';
+import notificationsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/notifications.json';
+import eventsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/events.json';
+import usersTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/users.json';
 
 jest.setTimeout(30000);
 
@@ -32,7 +30,7 @@ describe('DB cleaning script', () => {
   beforeAll(async () => {
     const featList = initFunctionsTestMock();
     adminServices = {
-      auth: auth(), 
+      auth: auth(),
       db: firestore(),
       storage: storage(),
       firebaseConfig: featList.firebaseConfig
@@ -208,11 +206,11 @@ function isNotificationClean(d: any) {
 
 function isUserClean(doc: any) {
   const d = doc.data();
-  if(d.surname !== undefined) { // old model
+  if (d.surname !== undefined) { // old model
     return false;
   }
 
-  if(d.name !== undefined) {// old model
+  if (d.name !== undefined) {// old model
     return false;
   }
 

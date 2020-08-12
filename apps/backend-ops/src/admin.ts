@@ -24,10 +24,12 @@ export interface AdminServices {
 }
 
 export function loadAdminServices(): AdminServices {
-  admin.initializeApp({
-    ...firebase,
-    credential: admin.credential.applicationDefault(),
-  });
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      ...firebase,
+      credential: admin.credential.applicationDefault(),
+    });
+  }
 
   return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase, storage: admin.storage() };
 }
