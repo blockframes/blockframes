@@ -32,7 +32,7 @@
         <img asset="add_title.webp" alt="Add title image">
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
-      <mat-card fxLayout="column" >
+      <mat-card fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">
         <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>
@@ -40,3 +40,4 @@
   </section>
 </ng-template>
 
+<movie-festival-prize-card [prize]="prize"></movie-festival-prize-card>

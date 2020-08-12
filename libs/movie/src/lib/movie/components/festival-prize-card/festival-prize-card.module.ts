@@ -1,5 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 // Component
 import { FestivalPrizeCardComponent } from './festival-prize-card.component';
@@ -8,7 +9,10 @@ import { FestivalPrizeCardComponent } from './festival-prize-card.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
-  imports: [ImageReferenceModule],
+  imports: [
+    CommonModule,
+    ImageReferenceModule
+  ],
   exports: [FestivalPrizeCardComponent],
   declarations: [FestivalPrizeCardComponent],
 })
