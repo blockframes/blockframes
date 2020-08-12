@@ -11,16 +11,6 @@ section {
   overflow: auto;
   white-space: nowrap;
   padding-bottom: 24px;
-
-  .direction {
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-}
-section:hover {
-  .direction {
-    opacity: 1;
-  }
 }
 
 button {
@@ -29,16 +19,4 @@ button {
 
 mat-card {
   min-width: 400px;
-}
-
-.direction {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  &.right {
-    right: 0;
-  }
-  &.left {
-    left: 0;
-  }
 }
