@@ -30,7 +30,6 @@ describe('DB cleaning script', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
     adminServices = loadAdminServices();
-
     console.log('loading data..');
     const promises = [];
     const sets = {
@@ -52,8 +51,8 @@ describe('DB cleaning script', () => {
     }
 
     await Promise.all(promises);
-
   });
+            
   it('should clean users by comparing auth and database', async () => {
     const [organizations, usersBefore] = await Promise.all([
       adminServices.db.collection('orgs').get(),
@@ -110,6 +109,7 @@ describe('DB cleaning script', () => {
     const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
     expect(moviesTestSet.length).toEqual(cleanedMovies);
   });
+      
   it('should remove documents undefined or not linked to existing document from docsIndex', async () => {
     const [docsIndexBefore, movies,] = await Promise.all([
       adminServices.db.collection('docsIndex').get(), // @TODO #3066 create collectionRef(path: string) method to factorize
@@ -122,6 +122,7 @@ describe('DB cleaning script', () => {
     const docsIndexAfter: Snapshot = await adminServices.db.collection('docsIndex').get();
     expect(docsToKeep).toEqual(docsIndexAfter.docs.length);
   });
+      
   it('should clean notifications', async () => {
     const [notificationsBefore, events, movies, users] = await Promise.all([
       adminServices.db.collection('notifications').get(),

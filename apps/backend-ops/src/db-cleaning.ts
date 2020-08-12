@@ -5,6 +5,9 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
+import { removeUnexpectedUsers } from './users';
+//import { UserConfig } from './assets/users.fixture';
+
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { UserConfig } from './assets/users.fixture';
@@ -17,7 +20,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const {db, auth} = adminServices;
+  const {db, auth} =  adminServices;
   await startMaintenance();
   // Getting all collections we need to check
   const [
