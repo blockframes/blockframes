@@ -4,7 +4,6 @@
     <section id="company">
       <h3>Production Company</h3>
       <bf-form-table [columns]="displayedColumnsProductionCompany" [form]="productionCompany" buttonText="Add Production Company">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -27,7 +26,6 @@
     <section id="co-company">
       <h3>Co-Production Company</h3>
       <bf-form-table [columns]="displayedColumnsCoProductionCompany" [form]="coProductionCompany" buttonText="Add Production Company">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -50,7 +48,6 @@
     <section id="producers">
       <h3>Producer(s)</h3>
       <bf-form-table [columns]="displayedColumnsProducers" [form]="producers" buttonText="Add Producer">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -78,7 +75,6 @@
     <section id="distributors">
       <h3>Distributor(s)</h3>
       <bf-form-table [columns]="displayedColumnsDistributors" [form]="distributors" buttonText="Add new Director">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -101,7 +97,6 @@
     <section id="sales">
       <h3>International Sales</h3>
       <bf-form-table [columns]="displayedColumnsInternationalSales" [form]="internationalSales" buttonText="Add Producer">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
         <ng-template formView let-form>
           <article [formGroup]="form">
 
