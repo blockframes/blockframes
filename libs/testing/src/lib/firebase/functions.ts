@@ -8,7 +8,7 @@ import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig? : {projectId : string}
+  firebaseConfig?: { projectId: string }
 }
 
 let testIndex = 0;
@@ -23,21 +23,16 @@ config();
  */
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   if (offline) { // ** Connect to emulator
-    let firebaseTest:any = firebaseFunctionsTest();
-    //if (!admin.apps.length) { // @TODO (#3066 Mano)
+    let firebaseTest: any = firebaseFunctionsTest();
 
-      //projectId cannot have '.' in the string; need whole numbers
-      const projectId = 'test' + testIndex++;
-      // @TODO (#3066 Mano) I had to use blockframes-bruce because of 
-      // initializeApp in firebase.ts
-      //const projectId = 'blockframes-bruce'; 
+    //projectId cannot have '.' in the string; need whole numbers
+    const projectId = 'test' + testIndex++;
 
-      // initialize test database
-      process.env.GCLOUD_PROJECT = projectId;
-      process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-      admin.initializeApp({ projectId });
-    //}
-    firebaseTest['firebaseConfig'] = {projectId};
+    // initialize test database
+    process.env.GCLOUD_PROJECT = projectId;
+    process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+    admin.initializeApp({ projectId });
+    firebaseTest['firebaseConfig'] = { projectId };
     return firebaseTest;
   }
 
