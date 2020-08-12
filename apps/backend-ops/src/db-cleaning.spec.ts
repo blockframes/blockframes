@@ -12,9 +12,9 @@ import {
   cleanUsers
 } from './db-cleaning';
 import { every } from 'lodash';
-
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { AdminServices } from './admin';
+import { AdminServices, loadAdminServices } from './admin';
+
 import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
 import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
 import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
