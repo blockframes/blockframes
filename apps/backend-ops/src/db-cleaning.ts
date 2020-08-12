@@ -1,12 +1,12 @@
-import { loadAdminServices, Auth, Firestore } from './admin';
+import { AdminServices, loadAdminServices, Auth, Firestore } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
-import { removeUnexpectedUsers } from './users';
-import { UserConfig } from './assets/users.fixture';
+//import { removeUnexpectedUsers } from './users';
+//import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
@@ -16,10 +16,10 @@ const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 
 /** Reusable data cleaning script that can be updated along with data model */
-export async function cleanDeprecatedData() {
-  await startMaintenance();
-  const { db, auth } = loadAdminServices();
 
+export async function cleanDeprecatedData(adminServices: AdminServices) {
+  const {db, auth} = adminServices;
+  await startMaintenance(db);
   // Getting all collections we need to check
   const [
     notifications,
@@ -75,40 +75,41 @@ export async function cleanDeprecatedData() {
   console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
   console.log('Cleaned docsIndex');
-  await cleanNotifications(notifications, existingIds);
+  await cleanNotifications(adminServices, notifications, existingIds);
   console.log('Cleaned notifications');
-  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
-  await endMaintenance();
+  await endMaintenance(db);
   return true;
 }
 
 export function cleanNotifications(
+  adminServices: AdminServices,
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-
+  const {db} = adminServices;
   return runChunks(notifications.docs, async (doc) => {
     const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      await _cleanNotification(doc, notification);
+      await _cleanNotification(db, doc, notification);
     }
   });
 
 }
 
-async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
-    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
+    const d = await getDocument<PublicOrganization>(db, `orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
   }
 
   if (notification.user) {
-    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
+    const d = await getDocument<PublicUser>(db, `users/${notification.user.uid}`);
     notification.user.avatar = d.avatar || '';
     notification.user.watermark = d.watermark || '';
   }
@@ -117,41 +118,43 @@ async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175
 }
 
 function cleanInvitations(
+  adminServices: AdminServices,
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
+  const {db} = adminServices;
   return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      await _cleanInvitation(doc, invitation);
+      await _cleanInvitation(db, doc, invitation);
     }
   });
 }
 
-async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
-    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
+    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || '';
   }
 
   if (invitation.toOrg?.id) {
-    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
+    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.toOrg.id}`);
     invitation.toOrg.logo = d.logo || '';
   }
 
   if (invitation.fromUser?.uid) {
-    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
+    const d = await getDocument<PublicUser>(db, `users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d.avatar || '';
     invitation.fromUser.watermark = d.watermark || '';
   }
 
   if (invitation.toUser?.uid) {
-    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
+    const d = await getDocument<PublicUser>(db, `users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d.avatar || '';
     invitation.toUser.watermark = d.watermark || '';
   }
@@ -167,7 +170,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+  //await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as any;
