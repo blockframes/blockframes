@@ -23,11 +23,9 @@ config();
  */
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   if (offline) { // ** Connect to emulator
-    const firebaseTest: any = firebaseFunctionsTest();
-
+    let firebaseTest:any = firebaseFunctionsTest();
     //projectId cannot have '.' in the string; need whole numbers
     const projectId = 'test' + testIndex++;
-
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
