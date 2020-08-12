@@ -29,7 +29,7 @@ jest.setTimeout(30000);
 describe('DB cleaning script', () => {
   let adminServices: AdminServices;
 
-  beforeAll(async () => { // #3066 use beforeEach after db-cleaning-ut ?
+  beforeAll(async () => {
     const featList = initFunctionsTestMock();
     adminServices = {
       auth: auth(), 

@@ -1,4 +1,3 @@
-//import { db } from './internals/firebase';
 import * as admin from 'firebase-admin';
 
 type Timestamp = admin.firestore.Timestamp;
@@ -12,23 +11,24 @@ interface IMaintenanceDoc {
 
 export const META_COLLECTION_NAME = '_META';
 
-const maintenanceRef = (db: admin.firestore.Firestore) => {
+const maintenanceRef = () => {
+  const db = admin.firestore();
   return db.collection(META_COLLECTION_NAME).doc('_MAINTENANCE');
 };
 
-export async function startMaintenance(db: admin.firestore.Firestore) {
-  return maintenanceRef(db).set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
+export async function startMaintenance() {
+  return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
 }
 
-export async function endMaintenance(db: admin.firestore.Firestore) {
-  return maintenanceRef(db).set({
+export async function endMaintenance() {
+  return maintenanceRef().set({
     endedAt: admin.firestore.FieldValue.serverTimestamp(),
     startedAt: null
   });
 }
 
-export async function isInMaintenance(db: admin.firestore.Firestore) {
-  const ref = maintenanceRef(db);
+export async function isInMaintenance() {
+  const ref = maintenanceRef();
   const doc = await ref.get();
 
   // we've never seen any maintenance
@@ -57,12 +57,12 @@ export async function isInMaintenance(db: admin.firestore.Firestore) {
 
 // TODO: take the time to fix the types,
 // probably turn this into a generic (f: T) to and preserve types.
-export const skipInMaintenance = (db: admin.firestore.Firestore, f: any) => {
+export const skipInMaintenance = (f: any) => {
   // return a new function that is:
   // the old function + a check that early exits when we are restoring.
   return async (...args: any[]) => {
     // early exit
-    if (await isInMaintenance(db)) {
+    if (await isInMaintenance()) {
       return true;
     }
 

@@ -17,7 +17,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
   const {db, auth} = adminServices;
-  await startMaintenance(db);
+  await startMaintenance();
   // Getting all collections we need to check
   const [
     notifications,
@@ -78,7 +78,7 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
   await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
-  await endMaintenance(db);
+  await endMaintenance();
   return true;
 }
 
