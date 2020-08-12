@@ -1,5 +1,4 @@
-import { auth, firestore, storage } from 'firebase-admin';
-import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
+import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
 import { runChunks } from './tools';
 import {
   cleanMovies,
@@ -13,7 +12,7 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { AdminServices } from './admin';
+import { AdminServices, loadAdminServices } from './admin';
 import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
 import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
 import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
@@ -29,13 +28,8 @@ describe('DB cleaning script', () => {
   let adminServices: AdminServices;
 
   beforeAll(async () => {
-    const featList = initFunctionsTestMock();
-    adminServices = { // @TODO #3066 Flatten everything
-      auth: auth(),
-      db: firestore(),
-      storage: storage(),
-      firebaseConfig: featList.firebaseConfig
-    };
+    initFunctionsTestMock();
+    adminServices = loadAdminServices();
 
     console.log('loading data..');
     const promises = [];
