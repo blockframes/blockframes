@@ -121,8 +121,8 @@ export interface OldHostedMedia extends OldExternalMedia{
 
 export function createOldHostedMedia(media?: Partial<OldHostedMedia>) {
   return {
-    ref: media.ref ?? '',
-    url: media.url ?? '',
+    ref: media?.ref ?? '',
+    url: media?.url ?? '',
   };
 }
 
