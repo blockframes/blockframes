@@ -1,5 +1,6 @@
-const { readFileSync, writeFileSync } = require('fs');
-const { resolve } = require('path');
+import { readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
+
 function anonymize({ docPath, content }) {
   // USERS
   if (docPath.includes('users/')) {
@@ -41,3 +42,4 @@ const output = file
   .map((json) => anonymize(json))
   .map((result) => JSON.stringify(result))
   .join('\n');
+writeFileSync(dest, output, 'utf-8');
