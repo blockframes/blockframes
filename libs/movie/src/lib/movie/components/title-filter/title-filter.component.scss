@@ -1,14 +1,23 @@
+::-webkit-scrollbar {
+  background-color: var(--primary);
+  height: 5px;
+}
+
 :host {
-  position: relative;
-  display: flex;
-  overflow: hidden;
+  width: 100%;
+}
+
+section {
+  overflow: auto;
+  white-space: nowrap;
+  padding-bottom: 24px;
 
   .direction {
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
   }
 }
-:host:hover {
+section:hover {
   .direction {
     opacity: 1;
   }
