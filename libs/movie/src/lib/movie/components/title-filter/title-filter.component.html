@@ -1,27 +1,22 @@
-<ng-container *ngFor="let filter of filters">
-  <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
-    {{filter.label}}
-  </button>
-  <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>{{ filter.label }}</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
-      </mat-card-content>
-      <mat-divider></mat-divider>
-      <mat-card-actions fxLayout fxLayoutAlign="end center">
-        <button mat-button (click)="filter.form.reset()">Clear</button>
-        <button mat-flat-button color="primary" (click)="filterWidget.close()">Save</button>
-      </mat-card-actions>
-    </mat-card>
-  </overlay-widget>
-</ng-container>
-
-<button class="direction left" mat-icon-button>
-  <mat-icon svgIcon="arrow_back"></mat-icon>
-</button>
-<button class="direction right" mat-icon-button>
-  <mat-icon svgIcon="arrow_forward"></mat-icon>
-</button>
+<section>
+  <ng-container *ngFor="let filter of filters">
+    <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
+      {{filter.label}}
+    </button>
+    <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ filter.label }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions fxLayout fxLayoutAlign="end center">
+          <button mat-button (click)="filter.form.reset()">Clear</button>
+          <button mat-flat-button color="primary" (click)="filterWidget.close()">Save</button>
+        </mat-card-actions>
+      </mat-card>
+    </overlay-widget>
+  </ng-container>
+</section>
