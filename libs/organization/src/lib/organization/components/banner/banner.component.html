@@ -1,7 +1,7 @@
 <header fxLayout fxLayoutAlign="space-between start">
   <h1>{{ org | orgName }}</h1>
   <a mat-button [routerLink]="['/c/o/marketplace/organization/', org.id]" color="primary">
-    <span>See all ({{ org.movieIds.length }})</span> <!-- TODO issue #3308 -->
+    <span>See all ({{ (org | orgMovies | async | filterBy:filterMovie)?.length }})</span>
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </a>
 </header>
@@ -13,7 +13,7 @@
       </a>
       <div>
         <p class="org-name">{{ org | orgName }}</p>
-        <p class="mat-caption">{{ org.movieIds.length }} films</p> <!-- TODO issue #3308 -->
+        <p class="mat-caption">{{ (org | orgMovies | async | filterBy:filterMovie)?.length }} films</p>
       </div>
     </div>
     <!-- TODO add detailed company description -->
