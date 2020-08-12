@@ -57,7 +57,7 @@
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import": ["libs/import/src/index.ts"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
-      "@blockframes/testing/*": ["libs/testing/src/*"],
+      "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"]
     }
   },

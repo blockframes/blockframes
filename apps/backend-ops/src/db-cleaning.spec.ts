@@ -1,5 +1,5 @@
 import { auth, firestore, storage } from 'firebase-admin';
-import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
+import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
 import { runChunks } from './tools';
 import {
   cleanMovies,
@@ -12,15 +12,15 @@ import {
   cleanUsers
 } from './db-cleaning';
 import { every } from 'lodash';
-import { AdminAuthMocked } from '@blockframes/testing/lib/firebase/adminAuthMocked';
+import { AdminAuthMocked } from '@blockframes/testing/firebase';
 import { AdminServices } from './admin';
-import moviesTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/movies.json';
-import orgsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/orgs.json';
-import permissionsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/permissions.json';
-import docsIndexTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/docsIndex.json';
-import notificationsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/notifications.json';
-import eventsTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/events.json';
-import usersTestSet from '@blockframes/testing/lib/mocked-data-unit-tests/users.json';
+import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
+import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
+import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
+import docsIndexTestSet from '@blockframes/testing/mocked-data-unit-tests/docsIndex.json';
+import notificationsTestSet from '@blockframes/testing/mocked-data-unit-tests/notifications.json';
+import eventsTestSet from '@blockframes/testing/mocked-data-unit-tests/events.json';
+import usersTestSet from '@blockframes/testing/mocked-data-unit-tests/users.json';
 
 jest.setTimeout(30000);
 
