@@ -28,12 +28,17 @@
 <!-- VIEW -->
 <!---------->
 
-<ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
-</ng-template>
-<footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+​<form *ngIf="formItem">
+  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+  </ng-template>
+  <button *ngIf="form.controls.length" (click)="cancel()" mat-button>Cancel</button>
+  <button [disabled]="formItem.invalid" type="submit" (click)="save()" color="primary" mat-button>Submit</button>
+</form>
+
+<footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span>{{ buttonText }}</span>
-  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="formItem.invalid">
+  <button mat-mini-fab color="primary" (click)="add()">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>

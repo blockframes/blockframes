@@ -40,7 +40,6 @@ import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 
-
 // LEGAL DOCUMENTS
 
 function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
@@ -93,7 +92,7 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres),
-    directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
+    directors: FormList.factory(entity.directors, el =>  new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
@@ -110,7 +109,7 @@ function createMovieControls(movie: Partial<Movie>) {
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
-    productionStatus: new FormControl(entity.productionStatus),
+    productionStatus: new FormStaticValue(entity.productionStatus, 'MOVIE_STATUS'),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     release: new ReleaseYearForm(entity.release),
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
@@ -168,6 +167,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('producers');
   }
 
+  get productionStatus() {
+    return this.get('productionStatus')
+  }
+
   get crew() {
     return this.get('crew');
   }
@@ -222,13 +225,6 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get synopsis() {
     return this.get('synopsis');
-  }
-
-  // DIRECTORS
-  public addDirector(credit?: Partial<Credit>): void {
-    const entity = createCredit(credit);
-    const creditControl = new DirectorForm(entity);
-    this.directors.push(creditControl);
   }
 
   public removeDirector(i: number): void {

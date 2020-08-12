@@ -1,4 +1,12 @@
 <ng-container *ngIf="steps$ | async as steps">
+  <mat-nav-list class="mat-expansion-panel-header-title">
+    <div fxLayout="row" fxLayoutAlign="start start">
+      <mat-icon svgIcon="home"></mat-icon>
+      <a routerLink="title-status" routerLinkActive="active">
+        Overview
+      </a>
+    </div>
+  </mat-nav-list>
   <mat-accordion *ngIf="steps.length">
     <mat-expansion-panel *ngFor="let panel of steps">
       <mat-expansion-panel-header>

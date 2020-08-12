@@ -42,7 +42,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
-  @Input() buttonText: string = 'Add';
+  @Input() buttonText = 'Add';
 
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -52,6 +52,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   showTable$: Observable<boolean>;
   showPaginator$: Observable<boolean>;
   activeIndex: number;
+  activeValue: T;
   pageSize = 5;
   /* We need to keep track of the current page since it will affect the index that we are working on */
   pageConfig = { pageIndex: 0, pageSize: 5 };
@@ -85,7 +86,10 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
     if (this.isFormEmpty) {
       this.add();
+    } else {
+      this.formItem = this.form.last();
     }
+    this.formItem.valueChanges.subscribe(x => console.log(this.formItem))
   }
 
   ngAfterViewInit() {
@@ -100,38 +104,48 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     return !this.form.length
   }
 
-  // Add a clean form
   add() {
     this.formItem = this.form.createControl({});
   }
 
-  /* If there is no control in the form it adds a default one for the user to work on. */
-  addControl() {
-    if (this.isFormEmpty) {
-      this.form.push(this.formItem)
+  save() {
+    if (this.formItem.valid) {
+      /* If active index is below 0 we want to push the formItem otherwise we are stuck where the table is not shown
+      and also no form */
+      if (typeof this.activeIndex === 'number' && !this.isFormEmpty && this.activeIndex >= 0) {
+        delete this.activeIndex;
+      } else {
+        this.form.push(this.formItem);
+      }
+      delete this.formItem;
+      this.cdr.markForCheck();
     }
-    const control = this.form.createControl({})
-    this.form.push(control)
-    this.formItem = control;
-    this.activeIndex = this.form.length - 1
-    this.cdr.markForCheck()
   }
 
-  // Edit existing form
+  cancel() {
+    if (typeof this.activeIndex === 'number') {
+      this.form.at(this.activeIndex).setValue(this.activeValue);
+      delete this.activeIndex;
+      delete this.activeValue;
+    }
+    delete this.formItem;
+  }
+
   edit(index: number) {
     this.calculateCurrentIndex(index);
     this.formItem = this.form.at(this.activeIndex);
+    this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }
 
-  // Remove one line in the form
   remove(index: number) {
     this.calculateCurrentIndex(index);
     this.form.removeAt(this.activeIndex);
-    /* We don't want a negative index to be set. */
-    this.formItem = this.form.at(this.activeIndex ? this.activeIndex - 1 : 0)
+    if (this.activeIndex > index) {
+      this.activeIndex--;
+    }
     if (this.isFormEmpty) {
-      this.add()
+      this.add();
     }
   }
 

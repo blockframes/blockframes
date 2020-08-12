@@ -12,9 +12,9 @@
           <ng-template [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row }">
           </ng-template>
         </ng-container>
-          <ng-template #default>
-            {{ row[column.key] }}
-          </ng-template>
+        <ng-template #default>
+          {{ row[column.key] }}
+        </ng-template>
       </td>
     </ng-container>
 
@@ -48,16 +48,24 @@
 <!---------->
 <!-- VIEW -->
 <!---------->
-​
-<ng-container *ngIf="!!formItem">
+​<div *ngIf="formItem">
   <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
   </ng-template>
-</ng-container>
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <button mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
+      <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+    </button>
+    <button mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+      <mat-icon svgIcon="floppy"></mat-icon>
+      <span>Submit</span>
+    </button>
+  </div>
+</div>
 
-<footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+<footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span>{{ buttonText }}</span>
-  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="!!formItem && formItem.invalid">
+  <button mat-mini-fab color="primary" (click)="add()">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>

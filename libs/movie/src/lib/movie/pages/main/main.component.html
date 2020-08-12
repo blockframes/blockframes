@@ -71,7 +71,15 @@
 
     <section id="general-information">
       <h3>General Information</h3>
-      <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
+      <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+
+        <!-- If Movie is released, don't show  TODO #3450-->
+        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+          <static-select scope="RELEASE_STATUS" [control]="form.release.get('status')" label="Estimated/Confirmed"
+            fxFlex>
+          </static-select>
+        </ng-container>
+
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
           <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
@@ -131,31 +139,35 @@
       <h3>Directors</h3>
       <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director">
         <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
-        <ng-template formView let-form>
-          <article [formGroup]="form">
+        <ng-template formView let-directorForm>
+          <article [formGroup]="directorForm">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
                 <input test-id="first-name" matInput formControlName="firstName" required />
-                <mat-error *ngIf="form.get('firstName').hasError('required')">Please specify Director's First Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('firstName').hasError('required')">Please specify Director's First Name.</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Last Name</mat-label>
                 <input test-id="last-name" matInput formControlName="lastName" required />
-                <mat-error *ngIf="form.get('lastName').hasError('required')">Please specify Director's Last Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('lastName').hasError('required')">Please specify Director's Last Name.</mat-error>
               </mat-form-field>
             </div>
 
             <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Director Status</mat-label>
-                <input matInput formControlName="status" />
-              </mat-form-field>
+
+              <!-- If Movie is released, don't show  TODO #3450-->
+              <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Director Status</mat-label>
+                  <input matInput formControlName="status" />
+                </mat-form-field>
+              </ng-container>
 
               <div fxLayout="column" fxLayoutAlign="start center">
 
-                <ng-container *ngFor="let filmography of form.get('filmography').controls">
+                <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
                   <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
                     <mat-form-field appearance="outline" fxFlex>
                       <mat-label>Director's Filmography</mat-label>

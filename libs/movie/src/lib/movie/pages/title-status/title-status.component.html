@@ -1,0 +1,39 @@
+<tunnel-page>
+  <h4 title>Some title small</h4>
+  <h1 subtitle>Title Status</h1>
+  <ng-container tunnel-form>
+    <section id="title-status">
+      <div fxLayout="row wrap" fxLayoutAlign="center start" fxLayoutGap="8px">
+        <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout fxLayoutAlign="space-around center">
+          <mat-card>
+            <img (click)="form.get('productionStatus').setValue('development')" asset="" />
+            <label>DEV</label>
+            <mat-radio-button value="development"></mat-radio-button>
+          </mat-card>
+          <mat-card>
+            <img (click)="form.get('productionStatus').setValue('shooting')" asset="" />
+            <label>shooting</label>
+            <mat-radio-button value="shooting"></mat-radio-button>
+          </mat-card>
+          <mat-card>
+            <img (click)="form.get('productionStatus').setValue('post-production')" asset="" />
+            <label>post prod</label>
+            <mat-radio-button value="post-production"></mat-radio-button>
+          </mat-card>
+          <mat-card>
+            <img (click)="form.get('productionStatus').setValue('finished')" asset="" />
+            <label>finish</label>
+            <mat-radio-button value="finished"></mat-radio-button>
+          </mat-card>
+          <!--      
+        NEW STATE INCOMING 
+      <mat-card>
+            <img (click)="form.setValue('development')" asset=""/>
+            <label>DEV</label>
+            <mat-radio-button #radio [value]="development"></mat-radio-button>
+          </mat-card> -->
+        </mat-radio-group>
+      </div>
+    </section>
+  </ng-container>
+</tunnel-page>

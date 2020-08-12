@@ -1,14 +1,19 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
+
 // Blockframes
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
+
+// Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { mergeDeep } from '@blockframes/utils/helpers';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+
+// RxJs
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -30,16 +35,16 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit {
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private mediaService: MediaService,
+    private mediaService: MediaService
   ) { }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
   }
 
   // Should save movie
   public async save() {
-    if(this.form.invalid) {
+    if (this.form.invalid) {
       this.snackBar.open('It seems that one or more fields have an error. Please check your movie form and try again.', 'close', { duration: 5000 });
       return;
     }
@@ -71,5 +76,4 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit {
       switchMap(shouldSave => shouldSave ? this.save() : of(false))
     );
   }
-
 }

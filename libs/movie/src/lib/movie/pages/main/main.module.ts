@@ -25,7 +25,13 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
+// Component
 import { MovieFormMainComponent } from './main.component';
+
+// Pipe
+import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module'
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -44,6 +50,8 @@ import { MovieFormMainComponent } from './main.component';
     CropperModule,
     StaticSelectModule,
     FormTableModule,
+    HasStatusModule,
+    FormListModule,
 
     // Material
     MatDividerModule,
