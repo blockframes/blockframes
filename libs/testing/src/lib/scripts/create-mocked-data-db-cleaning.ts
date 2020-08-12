@@ -189,7 +189,7 @@ const mockedData = {
 
 getDocuments(pathToJsonFile).then(docs => {
 
-  let collections = Object.keys(docs);
+  const collections = Object.keys(docs);
   // First pass
   for (const collection of collections) {
     for (const d of docs[collection]) {
