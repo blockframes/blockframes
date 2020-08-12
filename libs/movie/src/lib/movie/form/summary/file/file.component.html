@@ -2,9 +2,9 @@
   <!-- Files with reference -->
   <li *ngFor="let ref of fileRefs | keyvalue">
     <strong>{{ ref.value }} </strong>
-    <missing-control [control]="promotional.get(ref.key).get('media')" [link]="link">
+    <missing-control [control]="promotional.get(ref.key)" [link]="link">
       <ng-template let-media>
-        {{ media.originalFileName }}
+        {{ media.ref | fileName }}
       </ng-template>
     </missing-control>
   </li>

@@ -8,7 +8,7 @@
     </ng-container>
     <ng-template #banner>
       <a [href]="form.banner.value" target="_blank">
-        {{ form.banner.value | fileName }}
+        {{ form.banner.ref.value | fileName }}
       </a>
     </ng-template>
   </li>
@@ -21,7 +21,7 @@
     </ng-container>
     <ng-template #poster>
       <a [href]="form.poster.value" target="_blank">
-        {{ form.poster.value | fileName }}
+        {{ form.poster.ref.value | fileName }}
       </a>
     </ng-template>
   </li>
@@ -35,7 +35,7 @@
     <ng-template #photos>
       <ng-container *ngFor="let photo of form.promotional.get('still_photo').controls; let isLast = last">
         <a [href]="photo.value" target="_blank">
-          {{ photo.value | fileName }} {{ isLast ? '' : '| '}}
+          {{ photo.ref.value | fileName }} {{ isLast ? '' : '| '}}
         </a>
       </ng-container>
     </ng-template>
