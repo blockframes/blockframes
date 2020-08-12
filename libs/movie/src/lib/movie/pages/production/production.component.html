@@ -10,7 +10,7 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Production Company Name</mat-label>
-                <input test-id="company-name" matInput formControlName="displayName" required />
+                <input test-id="production-company-name" matInput formControlName="displayName" required />
               </mat-form-field>
 
               <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
@@ -25,14 +25,14 @@
 
     <section id="co-company">
       <h3>Co-Production Company</h3>
-      <bf-form-table [columns]="displayedColumnsCoProductionCompany" [form]="coProductionCompany" buttonText="Add Production Company">
+      <bf-form-table [columns]="displayedColumnsCoProductionCompany" [form]="coProductionCompany" buttonText="Add Co-Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Co-Production Company Name</mat-label>
-                <input test-id="company-name" matInput formControlName="displayName" required />
+                <input test-id="co-production-company-name" matInput formControlName="displayName" required />
               </mat-form-field>
 
               <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
@@ -54,12 +54,12 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Producer's Name</mat-label>
-                <input test-id="first-name" matInput formControlName="firstName" required />
+                <input test-id="producer-first-name" matInput formControlName="firstName" required />
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Producer's Lastname</mat-label>
-                <input test-id="first-name" matInput formControlName="lastName" required />
+                <input test-id="producer-last-name" matInput formControlName="lastName" required />
               </mat-form-field>
             </div>
 
@@ -74,14 +74,14 @@
 
     <section id="distributors">
       <h3>Distributor(s)</h3>
-      <bf-form-table [columns]="displayedColumnsDistributors" [form]="distributors" buttonText="Add new Director">
+      <bf-form-table [columns]="displayedColumnsDistributors" [form]="distributors" buttonText="Add Distribution Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Company Name</mat-label>
-                <input test-id="company-name" matInput formControlName="displayName" required />
+                <input test-id="distribution-company-name" matInput formControlName="displayName" required />
               </mat-form-field>
 
               <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Countries" fxFlex></chips-autocomplete>
@@ -96,14 +96,14 @@
 
     <section id="sales">
       <h3>International Sales</h3>
-      <bf-form-table [columns]="displayedColumnsInternationalSales" [form]="internationalSales" buttonText="Add Producer">
+      <bf-form-table [columns]="displayedColumnsInternationalSales" [form]="internationalSales" buttonText="Add Sales Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Company Name</mat-label>
-                <input test-id="company-name" matInput formControlName="displayName" required />
+                <input test-id="sales-company-name" matInput formControlName="displayName" required />
               </mat-form-field>
 
               <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
