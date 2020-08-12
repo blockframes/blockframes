@@ -22,7 +22,7 @@ const max = {
   permissions: 20,
   notifications: 20,
   events: 10,
-  users: 2,
+  users: 10,
   invitations: 10,
 }
 

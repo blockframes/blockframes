@@ -8,23 +8,24 @@ import {
   cleanDocsIndex,
   cleanNotifications,
   dayInMillis,
-  numberOfDaysToKeepNotifications
+  numberOfDaysToKeepNotifications,
+  cleanUsers
 } from './db-cleaning';
 import { every } from 'lodash';
-
+import { AdminAuthMocked } from '../../../libs/testing/src//lib/firebase/adminAuthMocked';
 const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
-const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');// @TODO (#3066) commit this file only when fully anonymised
+const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');
 const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/permissions.json');
 const docsIndexTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/docsIndex.json');
 const notificationsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/notifications.json'); // @TODO (#3066) commit this file only when fully anonymised
-const eventsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-events.json'); // @TODO (#3066) commit this file only when fully anonymised
+const eventsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/events.json'); // @TODO (#3066) commit this file only when fully anonymised
 const usersTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/users.json');
 
 let db;
 jest.setTimeout(30000);
 
 describe('DB cleaning script', () => {
-  beforeAll(async () => {
+  beforeAll(async () => { // #3066 use beforeEach after db-cleaning-ut
     initFunctionsTestMock();
     db = firestore();
 
@@ -72,10 +73,21 @@ describe('DB cleaning script', () => {
     }, 50, false);
 
   });
-  it.skip('should clean users by comparing auth and database', async () => {
-    // @TODO (#3066) firebase-emulator does not allow this (it uses remote db)
-    // await cleanUsers(users, organizationIds, auth, db);
-    // @TODO (#3066 Mano) can you share a snippet for this ?
+  it('should clean users by comparing auth and database', async () => {
+    const [organizations, usersBefore] = await Promise.all([
+      db.collection('orgs').get(),
+      db.collection('users').get()
+    ]);
+    const organizationIds = organizations.docs.map(organization => organization.data().id);
+
+    const auth = new AdminAuthMocked() as any;
+    await cleanUsers(usersBefore, organizationIds, auth, db);
+
+    // @TODO #3066 make more tests here
+
+    const usersAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await db.collection('users').get();
+    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u)).length;
+    expect(2).toEqual(cleanedUsers);
   });
   it('should clean organizations', async () => {
     const [movies, organizationsBefore, users] = await Promise.all([
@@ -152,7 +164,7 @@ function isMovieClean(d: any) {
 
 function isOrgClean(doc: any, existingUserIds: string[], existingMovieIds: string[]) {
   const o = doc.data();
-  if (o.members != undefined) {
+  if (o.members !== undefined) {
     return false;
   }
 
@@ -172,10 +184,23 @@ function isOrgClean(doc: any, existingUserIds: string[], existingMovieIds: strin
   return true;
 }
 
-function isNotificationClean(d) {
-  // @TODO (#3066) check also toUserId and user/org
+function isNotificationClean(d: any) {
+  // @TODO (#3066) check also toUserId and user/org ?
   const notificationTimestamp = d.data().date.toMillis();
   if (notificationTimestamp < new Date().getTime() - (dayInMillis * numberOfDaysToKeepNotifications)) {
+    return false;
+  }
+
+  return true;
+}
+
+function isUserClean(doc: any) {
+  const d = doc.data();
+  if(d.surname !== undefined) { // old model
+    return false;
+  }
+
+  if(d.name !== undefined) {// old model
     return false;
   }
 

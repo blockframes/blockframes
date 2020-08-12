@@ -1,14 +1,14 @@
 import { loadAdminServices, Auth, Firestore } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { User, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
-import { getDocument } from 'apps/backend-functions/src/data/internals';
+import { getDocument } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 
 export const numberOfDaysToKeepNotifications = 14;
@@ -159,7 +159,7 @@ async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #30
   await doc.ref.update(invitation);
 }
 
-async function cleanUsers(
+export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
   auth: Auth,
@@ -170,7 +170,7 @@ async function cleanUsers(
   await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
-    const user = userDoc.data() as User;
+    const user = userDoc.data() as any;
 
     // Check if a DB user have a record in Auth.
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
@@ -180,9 +180,25 @@ async function cleanUsers(
         console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
-        if (invalidOrganization) {
+        let update = false;
+
+        if (invalidOrganization) { // @todo #3066 create a test for this
           delete user.orgId;
-          await userDoc.ref.update(user);
+          update = true;
+        }
+
+        if (user.name !== undefined) {
+          delete user.name;
+          update = true;
+        }
+
+        if (user.surname !== undefined) {
+          delete user.surname;
+          update = true;
+        }
+
+        if (update) {
+          await userDoc.ref.set(user);
         }
       }
     } else {
@@ -253,11 +269,11 @@ export function cleanMovies(
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
 
-    if (movie.distributionRights) {
+    if (movie.distributionRights) { // @todo #3066 create a test for this
       delete movie.distributionRights;
+      await movieDoc.ref.set(movie);
     }
 
-    await movieDoc.ref.set(movie);
   });
 }
 
