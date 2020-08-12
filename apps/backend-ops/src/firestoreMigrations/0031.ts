@@ -5,7 +5,7 @@ import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { File as GFile } from '@google-cloud/storage';
 import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
-import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 
 const EMPTY_REF = '';
 

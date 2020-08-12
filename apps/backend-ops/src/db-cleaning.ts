@@ -1,15 +1,15 @@
-import { AdminServices, loadAdminServices, Auth, Firestore } from './admin';
+import { AdminServices, Auth, Firestore } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
-import { User, PublicUser } from '@blockframes/user/+state/user.firestore';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers } from './users';
 //import { UserConfig } from './assets/users.fixture';
+
 import { runChunks } from './tools';
-import { getDocument } from 'apps/backend-functions/src/data/internals';
-import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -19,7 +19,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
   const {db, auth} =  loadAdminServices();
-  await startMaintenance(db);
+  await startMaintenance();
   // Getting all collections we need to check
   const [
     notifications,
@@ -80,7 +80,7 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
   await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
-  await endMaintenance(db);
+  await endMaintenance();
   return true;
 }
 
@@ -104,12 +104,12 @@ export function cleanNotifications(
 
 async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${notification.organization.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
   }
 
   if (notification.user) {
-    const d = await getDocument<PublicUser>(db, `users/${notification.user.uid}`);
+    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
     notification.user.avatar = d.avatar || '';
     notification.user.watermark = d.watermark || '';
   }
@@ -138,23 +138,23 @@ function cleanInvitations(
 async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.fromOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || '';
   }
 
   if (invitation.toOrg?.id) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.toOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
     invitation.toOrg.logo = d.logo || '';
   }
 
   if (invitation.fromUser?.uid) {
-    const d = await getDocument<PublicUser>(db, `users/${invitation.fromUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d.avatar || '';
     invitation.fromUser.watermark = d.watermark || '';
   }
 
   if (invitation.toUser?.uid) {
-    const d = await getDocument<PublicUser>(db, `users/${invitation.toUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d.avatar || '';
     invitation.toUser.watermark = d.watermark || '';
   }
@@ -162,7 +162,7 @@ async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @
   await doc.ref.update(invitation);
 }
 
-async function cleanUsers(
+export async function cleanUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingOrganizationIds: string[],
   auth: Auth,
@@ -173,7 +173,7 @@ async function cleanUsers(
   //await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
-    const user = userDoc.data() as User;
+    const user = userDoc.data() as any;
 
     // Check if a DB user have a record in Auth.
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
@@ -183,9 +183,25 @@ async function cleanUsers(
         console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
-        if (invalidOrganization) {
+        let update = false;
+
+        if (invalidOrganization) { // @todo #3066 create a test for this
           delete user.orgId;
-          await userDoc.ref.update(user);
+          update = true;
+        }
+
+        if (user.name !== undefined) {
+          delete user.name;
+          update = true;
+        }
+
+        if (user.surname !== undefined) {
+          delete user.surname;
+          update = true;
+        }
+
+        if (update) {
+          await userDoc.ref.set(user);
         }
       }
     } else {
@@ -256,11 +272,11 @@ export function cleanMovies(
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
 
-    if (movie.distributionRights) {
+    if (movie.distributionRights) { // @todo #3066 create a test for this
       delete movie.distributionRights;
+      await movieDoc.ref.set(movie);
     }
 
-    await movieDoc.ref.set(movie);
   });
 }
 

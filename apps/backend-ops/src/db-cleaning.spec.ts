@@ -1,4 +1,5 @@
-import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
+import { auth, firestore, storage } from 'firebase-admin';
+import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
 import { runChunks } from './tools';
 import {
   cleanMovies,
@@ -7,18 +8,20 @@ import {
   cleanDocsIndex,
   cleanNotifications,
   dayInMillis,
-  numberOfDaysToKeepNotifications
+  numberOfDaysToKeepNotifications,
+  cleanUsers
 } from './db-cleaning';
 import { every } from 'lodash';
-import { AdminServices, loadAdminServices } from './admin';
 
-const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
-const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');// @TODO (#3066) commit this file only when fully anonymised
-const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/permissions.json');
-// const docsIndexTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/docsIndex.json');
-// const notificationsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/notifications.json'); // @TODO (#3066) commit this file only when fully anonymised
-// const eventsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-events.json'); // @TODO (#3066) commit this file only when fully anonymised
-// const usersTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/users.json');
+import { AdminAuthMocked } from '@blockframes/testing/firebase';
+import { AdminServices } from './admin';
+import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
+import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
+import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
+import docsIndexTestSet from '@blockframes/testing/mocked-data-unit-tests/docsIndex.json';
+import notificationsTestSet from '@blockframes/testing/mocked-data-unit-tests/notifications.json';
+import eventsTestSet from '@blockframes/testing/mocked-data-unit-tests/events.json';
+import usersTestSet from '@blockframes/testing/mocked-data-unit-tests/users.json';
 
 jest.setTimeout(30000);
 
@@ -28,7 +31,6 @@ describe('DB cleaning script', () => {
   beforeAll(async () => {
     initFunctionsTestMock();
     adminServices = loadAdminServices();
-    
     console.log('loading movies data set...');
     await runChunks(moviesTestSet, async (d) => {
       const docRef = adminServices.db.collection('movies').doc(d.id);
@@ -47,7 +49,6 @@ describe('DB cleaning script', () => {
       await docRef.set(d);
     }, 50, false);
 
-    /*
     console.log('loading docsIndex data set...');
     await runChunks(docsIndexTestSet, async (d) => {
       const docRef = adminServices.db.collection('docsIndex').doc(d.id);
@@ -72,14 +73,23 @@ describe('DB cleaning script', () => {
       const docRef = adminServices.db.collection('users').doc(d.uid);
       await docRef.set(d);
     }, 50, false);
-    */
 
   });
+  it('should clean users by comparing auth and database', async () => {
+    const [organizations, usersBefore] = await Promise.all([
+      adminServices.db.collection('orgs').get(),
+      adminServices.db.collection('users').get()
+    ]);
+    const organizationIds = organizations.docs.map(organization => organization.data().id);
 
-  it.skip('should clean users by comparing auth and database', async () => {
-    // @TODO (#3066) firebase-emulator does not allow this (it uses remote db)
-    // await cleanUsers(users, organizationIds, auth, db);
-    // @TODO (#3066 Mano) can you share a snippet for this ?
+    const adminAuth = new AdminAuthMocked() as any;
+    await cleanUsers(usersBefore, organizationIds, adminAuth, adminServices.db);
+
+    // @TODO #3066 make more tests here
+
+    const usersAfter: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await adminServices.db.collection('users').get();
+    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u)).length;
+    expect(2).toEqual(cleanedUsers);
   });
 
   it('should clean organizations', async () => {
@@ -159,7 +169,7 @@ function isMovieClean(d: any) {
 
 function isOrgClean(doc: any, existingUserIds: string[], existingMovieIds: string[]) {
   const o = doc.data();
-  if (o.members != undefined) {
+  if (o.members !== undefined) {
     return false;
   }
 
@@ -179,10 +189,23 @@ function isOrgClean(doc: any, existingUserIds: string[], existingMovieIds: strin
   return true;
 }
 
-function isNotificationClean(d) {
-  // @TODO (#3066) check also toUserId and user/org
+function isNotificationClean(d: any) {
+  // @TODO (#3066) check also toUserId and user/org ?
   const notificationTimestamp = d.data().date.toMillis();
   if (notificationTimestamp < new Date().getTime() - (dayInMillis * numberOfDaysToKeepNotifications)) {
+    return false;
+  }
+
+  return true;
+}
+
+function isUserClean(doc: any) {
+  const d = doc.data();
+  if (d.surname !== undefined) { // old model
+    return false;
+  }
+
+  if (d.name !== undefined) {// old model
     return false;
   }
 

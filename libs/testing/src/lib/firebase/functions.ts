@@ -8,7 +8,7 @@ import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 
 export interface FirebaseTestConfig extends FeaturesList {
-  firebaseConfig? : {projectId : string}
+  firebaseConfig?: { projectId: string }
 }
 
 let testIndex = 0;
@@ -26,11 +26,12 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
     let firebaseTest:any = firebaseFunctionsTest();
     //projectId cannot have '.' in the string; need whole numbers
     const projectId = 'test' + testIndex++;
+
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     admin.initializeApp({ projectId });
-    firebaseTest['firebaseConfig'] = {projectId};
+    firebaseTest['firebaseConfig'] = { projectId };
     return firebaseTest;
   }
 

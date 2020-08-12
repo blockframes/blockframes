@@ -6,8 +6,6 @@ export type DocumentReference = admin.firestore.DocumentReference;
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
-// @TODO (#3066 Mano)
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
 admin.initializeApp(functions.config().firebase);
 export const db = admin.firestore();
 export const auth = admin.auth();

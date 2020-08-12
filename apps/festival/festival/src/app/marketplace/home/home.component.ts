@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .valueChanges(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
 
     this.featuredOrg$ = this.orgs$.pipe(
       map(orgs => orgs.filter(org => org.movieIds.length > 3)),
