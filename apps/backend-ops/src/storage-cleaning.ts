@@ -1,6 +1,6 @@
 import { loadAdminServices } from './admin';
 import { File as GFile } from '@google-cloud/storage';
-import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
+import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';  // @TODO #3066 remove this call to backend-functions
 import { getDocument } from '@blockframes/firebase-utils';
 import { runChunks } from './tools';
 import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';

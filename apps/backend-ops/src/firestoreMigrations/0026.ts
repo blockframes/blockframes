@@ -1,7 +1,7 @@
 import { Firestore, Storage } from '../admin';
 import { PromotionalElement, Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
-import { PublicOrganization } from 'apps/backend-functions/src/data/types';
+import { PublicOrganization } from 'apps/backend-functions/src/data/types';  // @TODO #3066 remove this call to backend-functions
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
