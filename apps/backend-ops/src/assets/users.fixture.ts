@@ -1,10 +1,5 @@
-export interface UserConfig {
-  uid: string;
-  email: string;
-  password: string;
-
-  [key: string]: any;
-}
+import { UserConfig } from "@blockframes/firebase-utils";
+export { UserConfig };
 
 export const USERS: UserConfig[] = [
   {

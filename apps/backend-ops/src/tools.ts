@@ -20,12 +20,6 @@ export function showHelp() {
   console.log('TODO: write a documentation');
 }
 
-export const sleep = ms => {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
-};
-
 export async function runChunks(docs, cb, rowsConcurrency = 10, verbose = true) {
   const chunks = chunk(docs, rowsConcurrency);
   for (let i = 0; i < chunks.length; i++) {

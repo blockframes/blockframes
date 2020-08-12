@@ -6,9 +6,8 @@ import { OrganizationDocument, PublicOrganization } from '@blockframes/organizat
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { runChunks } from './tools';
-import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { getDocument, startMaintenance, endMaintenance, removeUnexpectedUsers } from '@blockframes/firebase-utils';
 import { UserConfig } from './assets/users.fixture';
-import { removeUnexpectedUsers } from './users';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -169,7 +168,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  // await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth); @TODO #3066 uncomment
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as any;
