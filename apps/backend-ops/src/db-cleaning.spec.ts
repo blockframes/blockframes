@@ -1,4 +1,3 @@
-import { auth, firestore, storage } from 'firebase-admin';
 import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
 import { runChunks } from './tools';
 import {
@@ -11,7 +10,7 @@ import {
   numberOfDaysToKeepNotifications
 } from './db-cleaning';
 import { every } from 'lodash';
-import { AdminServices } from './admin';
+import { AdminServices, loadAdminServices } from './admin';
 
 const moviesTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/movies.json'); // @TODO (#3066) commit this file only when fully anonymised
 const orgsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/orgs.json');// @TODO (#3066) commit this file only when fully anonymised
@@ -21,22 +20,15 @@ const permissionsTestSet = require('../../../libs/testing/src/lib/mocked-data-un
 // const eventsTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/2020-07-20T22 00 20.378Z-anonymised-mocked-events.json'); // @TODO (#3066) commit this file only when fully anonymised
 // const usersTestSet = require('../../../libs/testing/src/lib/mocked-data-unit-tests/users.json');
 
-let db;
 jest.setTimeout(30000);
 
 describe('DB cleaning script', () => {
   let adminServices: AdminServices;
 
   beforeAll(async () => {
-    const featList = initFunctionsTestMock();
-    adminServices = {
-      auth: auth(), 
-      db: firestore(),
-      storage: storage(),
-      firebaseConfig: featList.firebaseConfig
-    };
-    //db = firestore();
-
+    initFunctionsTestMock();
+    adminServices = loadAdminServices();
+    
     console.log('loading movies data set...');
     await runChunks(moviesTestSet, async (d) => {
       const docRef = adminServices.db.collection('movies').doc(d.id);

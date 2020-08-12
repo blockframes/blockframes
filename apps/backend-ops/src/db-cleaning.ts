@@ -18,7 +18,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const {db, auth} = adminServices;
+  const {db, auth} =  loadAdminServices();
   await startMaintenance(db);
   // Getting all collections we need to check
   const [
