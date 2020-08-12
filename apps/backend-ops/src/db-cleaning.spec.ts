@@ -87,8 +87,8 @@ describe('DB cleaning script', () => {
     ]);
     const organizationIds = organizations.docs.map(organization => organization.data().id);
 
-    const auth = new AdminAuthMocked() as any;
-    await cleanUsers(usersBefore, organizationIds, auth, adminServices.db);
+    const adminAuth = new AdminAuthMocked() as any;
+    await cleanUsers(usersBefore, organizationIds, adminAuth, adminServices.db);
 
     // @TODO #3066 make more tests here
 

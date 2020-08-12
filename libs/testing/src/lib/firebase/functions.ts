@@ -23,7 +23,7 @@ config();
  */
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   if (offline) { // ** Connect to emulator
-    let firebaseTest: any = firebaseFunctionsTest();
+    const firebaseTest: any = firebaseFunctionsTest();
 
     //projectId cannot have '.' in the string; need whole numbers
     const projectId = 'test' + testIndex++;
