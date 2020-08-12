@@ -7,6 +7,8 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { UserConfig } from './assets/users.fixture';
+import { removeUnexpectedUsers } from './users';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -40,10 +42,10 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
 
   // Getting existing document ids to compare
   const [movieIds, organizationIds, eventIds, userIds] = [
-    movies.docs.map(movie => movie.data().id),
-    organizations.docs.map(organization => organization.data().id),
-    events.docs.map(event => event.data().id),
-    users.docs.map(user => user.data().uid)
+    movies.docs.map(ref => ref.id),
+    organizations.docs.map(ref => ref.id),
+    events.docs.map(ref => ref.id),
+    users.docs.map(ref => ref.id)
   ];
 
   // Compare and update/delete documents with references to non existing documents
@@ -60,8 +62,8 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
 
   // Reloading users and org list after possible deletion
   const [organizationIds2, userIds2] = [
-    organizations2.docs.map(organization => organization.data().id),
-    users2.docs.map(user => user.data().uid)
+    organizations2.docs.map(ref => ref.id),
+    users2.docs.map(ref => ref.id)
   ];
 
   const existingIds = movieIds.concat(organizationIds2, eventIds, userIds2);
@@ -167,7 +169,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  //await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
+  // await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth); @TODO #3066 uncomment
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as any;
@@ -187,12 +189,12 @@ export async function cleanUsers(
           update = true;
         }
 
-        if (user.name !== undefined) {
+        if (user.name) {
           delete user.name;
           update = true;
         }
 
-        if (user.surname !== undefined) {
+        if (user.surname) {
           delete user.surname;
           update = true;
         }
