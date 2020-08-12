@@ -40,9 +40,7 @@
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
       "@blockframes/invitation/*": ["libs/invitation/src/lib/*"],
-      "@blockframes/invitation/types": [
-        "libs/invitation/src/lib/+state/invitation.firestore.ts"
-      ],
+      "@blockframes/invitation/types": ["libs/invitation/src/lib/+state/invitation.firestore.ts"],
       "@blockframes/notification/types": [
         "libs/notification/src/lib/+state/notification.firestore.ts"
       ],
@@ -59,7 +57,8 @@
       "@blockframes/landing/*": ["libs/landing/src/lib/*"],
       "@blockframes/import": ["libs/import/src/index.ts"],
       "@blockframes/media/*": ["libs/media/src/lib/*"],
-      "@blockframes/testing/*": ["libs/testing/src/*"]
+      "@blockframes/testing/*": ["libs/testing/src/lib/*"],
+      "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

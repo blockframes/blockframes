@@ -1,4 +1,3 @@
-import { db } from './internals/firebase';
 import * as admin from 'firebase-admin';
 
 type Timestamp = admin.firestore.Timestamp;
@@ -13,6 +12,7 @@ interface IMaintenanceDoc {
 export const META_COLLECTION_NAME = '_META';
 
 const maintenanceRef = () => {
+  const db = admin.firestore();
   return db.collection(META_COLLECTION_NAME).doc('_MAINTENANCE');
 };
 
