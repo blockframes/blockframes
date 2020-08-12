@@ -84,26 +84,7 @@ const emptySalesCast = {
 function cleanDocument(doc: any, collection: string) {
   switch (collection) {
     case 'orgs':
-      doc.logo = '';
-      doc.addresses.main = emptyLocation;
-      doc.fiscalNumber = 'FR 76 ABC 123';
-      doc.denomination = {
-        public: `Public denomination ${doc.id}`,
-        full: `Full denomination ${doc.id}`
-      }
-      doc.bankAccounts = [];
-
-      // this is needed for db-cleaning unit testing:
-      if (doc.members && doc.members.length) {
-        doc.members = doc.members.map(m => ({
-          avatar: '',
-          watermark: `users/${m.uid}/watermark/${m.uid}.svg`,
-          phoneNumber: '',
-          lastName: `lastName ${m.uid}`,
-          firstName: `firstName ${m.uid}`,
-          position: ''
-        }))
-      }
+      cleanOrg(doc);
       break;
     case 'movies':
       doc.promotionalElements = emptyPromotionalElement;
@@ -118,28 +99,78 @@ function cleanDocument(doc: any, collection: string) {
       doc.festivalPrizes.prizes = [];
       break;
     case 'users':
-      doc.avatar = '';
-      doc.watermark = `users/${doc.uid}/watermark/${doc.uid}.svg`;
-      doc.phoneNumber = '';
-      doc.lastName = `lastName ${doc.uid}`;
-      doc.firstName = `firstName ${doc.uid}`;
-      doc.position = '';
-
-      // this is needed for db-cleaning unit testing:
-      if (doc.surname) {
-        doc.surname = `surname ${doc.uid}`;
+      cleanUser(doc);
+      break;
+    case 'events':
+      doc.title = `Event title ${doc.id}`;
+      break;
+    case 'invitations':
+      if (doc.toUser) {
+        cleanUser(doc.toUser);
       }
 
-      if (doc.name) {
-        doc.name = `name ${doc.uid}`;
+      if (doc.fromUser) {
+        cleanUser(doc.fromUser);
       }
 
+      if (doc.fromOrg) {
+        cleanOrg(doc.fromOrg);
+      }
+
+      if (doc.toOrg) {
+        cleanOrg(doc.toOrg);
+      }
+      doc.title = `Event title ${doc.id}`;
       break;
     case 'permissions':
     default:
       break;
   }
   return doc;
+}
+
+function cleanOrg(org: any) {
+  org.logo = '';
+  if (org.addresses) {
+    org.addresses.main = emptyLocation;
+  }
+
+  org.fiscalNumber = 'FR 76 ABC 123';
+  org.denomination = {
+    public: `Public denomination ${org.id}`,
+    full: `Full denomination ${org.id}`
+  }
+  org.bankAccounts = [];
+
+  // this is needed for db-cleaning unit testing:
+  if (org.members && org.members.length) {
+    org.members = org.members.map(m => ({
+      avatar: '',
+      watermark: `users/${m.uid}/watermark/${m.uid}.svg`,
+      phoneNumber: '',
+      lastName: `lastName ${m.uid}`,
+      firstName: `firstName ${m.uid}`,
+      position: ''
+    }))
+  }
+}
+
+function cleanUser(user: any) {
+  user.avatar = '';
+  user.watermark = `users/${user.uid}/watermark/${user.uid}.svg`;
+  user.phoneNumber = '';
+  user.lastName = `lastName ${user.uid}`;
+  user.firstName = `firstName ${user.uid}`;
+  user.position = '';
+
+  // this is needed for db-cleaning unit testing:
+  if (user.surname) {
+    user.surname = `surname ${user.uid}`;
+  }
+
+  if (user.name) {
+    user.name = `name ${user.uid}`;
+  }
 }
 
 /**
