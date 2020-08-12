@@ -169,7 +169,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  // await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth); @TODO #3066 uncomment
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as any;

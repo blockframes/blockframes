@@ -1,5 +1,5 @@
 import { loadAdminServices } from './admin';
-import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/firebase';
+import { db } from 'apps/backend-functions/src/internals/firebase';  // @TODO #3066 remove this call to backend-functions
 import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { has, get } from 'object-path';
@@ -8,6 +8,8 @@ import { PublicUser } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 enum mediaFieldType {
   hostedMedia,
@@ -99,7 +101,7 @@ export async function syncStorage() {
   console.log('//////////////');
 
   const { storage } = loadAdminServices();
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
   const [files] = await bucket.getFiles();
 
   for (const file of files) {
