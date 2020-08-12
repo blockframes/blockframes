@@ -10,6 +10,32 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 export class MovieFormProductionComponent {
   form = this.shell.form;
 
+  public displayedColumnsProductionCompany = {
+    displayName: 'Company Name',
+    countries: 'Production Country'
+  }
+
+  public displayedColumnsCoProductionCompany = {
+    displayName: 'Company Name',
+    countries: 'Co-Production Country'
+  }
+
+  public displayedColumnsProducers = {
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    role: 'Role'
+  }
+
+  public displayedColumnsDistributors = {
+    displayName: 'Display Name',
+    countries: 'Countries',
+  }
+
+  public displayedColumnsInternationalSales = {
+    displayName: 'Company Name',
+    countries: "Sales Company's Nationality"
+  }
+
   constructor(private shell: MovieFormShellComponent) { }
 
   get internationalSales() {
@@ -20,11 +46,11 @@ export class MovieFormProductionComponent {
     return this.stakeholders.get('distributor');
   }
 
-  get coProducer() {
+  get coProductionCompany() {
     return this.stakeholders.get('coProductionCompany');
   }
 
-  get executiveProducer() {
+  get productionCompany() {
     return this.stakeholders.get('productionCompany');
   }
 
