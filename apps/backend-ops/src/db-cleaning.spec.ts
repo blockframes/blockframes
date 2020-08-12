@@ -36,48 +36,27 @@ describe('DB cleaning script', () => {
       firebaseConfig: featList.firebaseConfig
     };
 
-    console.log('loading movies data set...');
-    await runChunks(moviesTestSet, async (d) => {
-      const docRef = adminServices.db.collection('movies').doc(d.id);
-      await docRef.set(d);
-    }, 50, false);
+    console.log('loading data..');
+    const promises = [];
+    const sets = {
+      movies: moviesTestSet,
+      orgs: orgsTestSet,
+      permissions: permissionsTestSet,
+      docsIndex: docsIndexTestSet,
+      events: eventsTestSet,
+      notifications: notificationsTestSet,
+      users: usersTestSet
+    };
 
-    console.log('loading orgs data set...');
-    await runChunks(orgsTestSet, async (d) => {
-      const docRef = adminServices.db.collection('orgs').doc(d.id);
-      await docRef.set(d);
-    }, 50, false);
+    for (const collection in sets) {
+      promises.push(runChunks(sets[collection], async (d) => {
+        const docRef = adminServices.db.collection(collection).doc(d.id || d.uid);
+        if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
+        await docRef.set(d);
+      }, 50, false));
+    }
 
-    console.log('loading permissions data set...');
-    await runChunks(permissionsTestSet, async (d) => {
-      const docRef = adminServices.db.collection('permissions').doc(d.id);
-      await docRef.set(d);
-    }, 50, false);
-
-    console.log('loading docsIndex data set...');
-    await runChunks(docsIndexTestSet, async (d) => {
-      const docRef = adminServices.db.collection('docsIndex').doc(d.id);
-      await docRef.set(d);
-    }, 50, false);
-
-    console.log('loading notifications data set...');
-    await runChunks(notificationsTestSet, async (d) => {
-      const docRef = adminServices.db.collection('notifications').doc(d.id);
-      if (d.date._seconds) { d.date = new Date(d.date._seconds * 1000) }
-      await docRef.set(d);
-    }, 50, false);
-
-    console.log('loading events data set...');
-    await runChunks(eventsTestSet, async (d) => {
-      const docRef = adminServices.db.collection('events').doc(d.id);
-      await docRef.set(d);
-    }, 50, false);
-
-    console.log('loading users data set...');
-    await runChunks(usersTestSet, async (d) => {
-      const docRef = adminServices.db.collection('users').doc(d.uid);
-      await docRef.set(d);
-    }, 50, false);
+    await Promise.all(promises);
 
   });
   it('should clean users by comparing auth and database', async () => {
