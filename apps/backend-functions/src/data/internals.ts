@@ -48,7 +48,7 @@ export function createPublicUserDocument(user: any = {}) {
  * @returns the organizations that are in the contract
  */
 export async function getOrganizationsOfContract(db: admin.firestore.Firestore, contract: ContractDocument): Promise<OrganizationDocument[]> {
-  const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(db, `orgs/${orgId}`));
+  const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
   return Promise.all(promises);
 }
 
@@ -75,7 +75,7 @@ export function getCount(db: admin.firestore.Firestore, collection: string): Pro
 
 /** Retrieve the list of superAdmins and admins of an organization */
 export async function getAdminIds(db: admin.firestore.Firestore, organizationId: string): Promise<string[]> {
-  const permissions = await getDocument<PermissionsDocument>(db, `permissions/${organizationId}`);
+  const permissions = await getDocument<PermissionsDocument>(`permissions/${organizationId}`);
 
   if (!permissions) {
     throw new Error(`organization: ${organizationId} does not exists`);
@@ -96,7 +96,7 @@ export async function getAdminIds(db: admin.firestore.Firestore, organizationId:
  */
 export async function getOrgAppKey(db: admin.firestore.Firestore, _org: OrganizationDocument | string): Promise<App> {
   if (typeof _org === 'string') {
-    const org = await getDocument<OrganizationDocument>(db, `orgs/${_org}`);
+    const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
     return getOrgAppAccess(org)[0];
   } else {
     return getOrgAppAccess(_org)[0];

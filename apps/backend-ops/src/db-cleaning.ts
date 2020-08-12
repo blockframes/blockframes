@@ -102,12 +102,12 @@ export function cleanNotifications(
 
 async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${notification.organization.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
   }
 
   if (notification.user) {
-    const d = await getDocument<PublicUser>(db, `users/${notification.user.uid}`);
+    const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
     notification.user.avatar = d.avatar || '';
     notification.user.watermark = d.watermark || '';
   }
@@ -136,23 +136,23 @@ function cleanInvitations(
 async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.fromOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || '';
   }
 
   if (invitation.toOrg?.id) {
-    const d = await getDocument<PublicOrganization>(db, `orgs/${invitation.toOrg.id}`);
+    const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
     invitation.toOrg.logo = d.logo || '';
   }
 
   if (invitation.fromUser?.uid) {
-    const d = await getDocument<PublicUser>(db, `users/${invitation.fromUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
     invitation.fromUser.avatar = d.avatar || '';
     invitation.fromUser.watermark = d.watermark || '';
   }
 
   if (invitation.toUser?.uid) {
-    const d = await getDocument<PublicUser>(db, `users/${invitation.toUser.uid}`);
+    const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
     invitation.toUser.avatar = d.avatar || '';
     invitation.toUser.watermark = d.watermark || '';
   }
