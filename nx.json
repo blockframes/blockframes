@@ -84,6 +84,9 @@
     },
     "invitation": {
       "tags": []
+    },
+    "firebase-tools": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

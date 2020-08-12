@@ -11,6 +11,9 @@ import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { getDocument } from '@blockframes/firebase-tools';
+
+export { getDocument };
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -19,12 +22,6 @@ export function getCollection<T>(path: string): Promise<T[]> {
     .then(collection => collection.docs.map(doc => doc.data() as T));
 }
 
-export function getDocument<T>(path: string): Promise<T> {
-  return db
-    .doc(path)
-    .get()
-    .then(doc => doc.data() as T);
-}
 
 export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {

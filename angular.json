@@ -1392,6 +1392,38 @@
           "style": "scss"
         }
       }
+    },
+    "firebase-tools": {
+      "projectType": "library",
+      "root": "libs/firebase-tools",
+      "sourceRoot": "libs/firebase-tools/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/firebase-tools/tsconfig.lib.json",
+              "libs/firebase-tools/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/firebase-tools/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/firebase-tools/jest.config.js",
+            "tsConfig": "libs/firebase-tools/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/firebase-tools/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {
