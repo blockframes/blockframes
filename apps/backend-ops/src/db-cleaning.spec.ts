@@ -1,4 +1,4 @@
-import { initFunctionsTestMock } from '../../../libs/testing/src/lib/firebase/functions';
+import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
 import { runChunks } from './tools';
 import {
   cleanMovies,
