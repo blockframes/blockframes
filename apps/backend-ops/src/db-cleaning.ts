@@ -17,7 +17,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const {db, auth} = adminServices;
+  const { db, auth } = adminServices;
   await startMaintenance();
   // Getting all collections we need to check
   const [
@@ -88,7 +88,7 @@ export function cleanNotifications(
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  const {db} = adminServices;
+  const { db } = adminServices;
   return runChunks(notifications.docs, async (doc) => {
     const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
@@ -122,7 +122,7 @@ function cleanInvitations(
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  const {db} = adminServices;
+  const { db } = adminServices;
   return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);

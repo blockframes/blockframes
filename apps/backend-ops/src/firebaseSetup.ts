@@ -7,7 +7,7 @@ import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
-import { restore } from './admin';
+import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
@@ -26,10 +26,10 @@ export async function prepareForTesting() {
   console.info('Database ready for testing!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
+  // console.info('Cleaning unused data...');
+  // await cleanDeprecatedData(loadAdminServices());
   // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  // console.info('Data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -58,10 +58,10 @@ export async function upgrade() {
   console.info('Database ready for deploy!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
+  // console.info('Cleaning unused data...');
+  // await cleanDeprecatedData(loadAdminServices());
   // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  // console.info('Data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
