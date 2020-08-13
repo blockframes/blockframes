@@ -17,7 +17,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const {db, auth} =  adminServices;
+  const { db, auth } = adminServices;
   await startMaintenance();
   // Getting all collections we need to check
   const [
@@ -211,8 +211,10 @@ export async function cleanUsers(
         await orgDoc.ref.update({ userIds });
         const permDoc = await db.doc(`permissions/${user.orgId}`).get();
         const permission = permDoc.data() as PermissionsDocument;
-        delete permission.roles[user.uid];
-        await permDoc.ref.update({ roles: permission.roles });
+        if (!!permission) {
+          delete permission.roles[user.uid];
+          await permDoc.ref.update({ roles: permission.roles });
+        }
         await userDoc.ref.delete();
         console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
       }
