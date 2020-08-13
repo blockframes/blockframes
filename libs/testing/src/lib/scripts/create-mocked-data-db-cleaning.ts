@@ -76,6 +76,18 @@ const emptySalesCast = {
   producers: []
 }
 
+const emptyStakeholders = {
+  salesAgent: [],
+  coProducer: [],
+  laboratory: [],
+  financier: [],
+  distributor: [],
+  lineProducer: [],
+  executiveProducer: [],
+  broadcasterCoproducer: []
+};
+
+
 /**
  * Clean document from unwanted data
  * @param doc 
@@ -87,16 +99,7 @@ function cleanDocument(doc: any, collection: string) {
       cleanOrg(doc);
       break;
     case 'movies':
-      doc.promotionalElements = emptyPromotionalElement;
-      doc.hostedVideo = 'xxxxx';
-      doc.main.title.international = `International title ${doc.id}`;
-      doc.main.title.original = `Original title ${doc.id}`;
-      doc.story.logline = `Logline ${doc.id}`;
-      doc.story.synopsis = `Synopsis ${doc.id}`;
-      doc.main.directors = [];
-      doc.salesCast = emptySalesCast;
-      doc.salesInfo.originalRelease = [];
-      doc.festivalPrizes.prizes = [];
+      cleanMovie(doc);
       break;
     case 'users':
       cleanUser(doc);
@@ -121,6 +124,16 @@ function cleanDocument(doc: any, collection: string) {
         cleanOrg(doc.toOrg);
       }
       doc.title = `Event title ${doc.id}`;
+      break;
+    case 'notifications':
+      if (doc.user) {
+        cleanUser(doc.user);
+      }
+
+      if (doc.organization) {
+        cleanOrg(doc.organization);
+      }
+
       break;
     case 'permissions':
     default:
@@ -173,6 +186,24 @@ function cleanUser(user: any) {
   }
 }
 
+function cleanMovie(doc: any) {
+  doc.promotionalElements = emptyPromotionalElement;
+  doc.hostedVideo = 'xxxxx';
+  doc.main.title.international = `International title ${doc.id}`;
+  doc.main.title.original = `Original title ${doc.id}`;
+  doc.story.logline = `Logline ${doc.id}`;
+  doc.story.synopsis = `Synopsis ${doc.id}`;
+  doc.main.directors = [];
+  doc.main.internalRef = `Internal ref ${doc.id}`;
+  doc.main.stakeholders = emptyStakeholders;
+  doc.salesCast = emptySalesCast;
+  doc.salesInfo.originalRelease = [];
+  doc.festivalPrizes.prizes = [];
+  doc.distributionRights = [];
+  doc.promotionalDescription.keywords = [];
+  doc.promotionalDescription.keyAssets = `keyAssets ${doc.id}`;
+  doc.movieReview = [];
+}
 /**
  * Retreive and store documents found in first argument
  * @param file 
