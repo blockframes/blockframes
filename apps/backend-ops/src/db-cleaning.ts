@@ -101,7 +101,7 @@ export function cleanNotifications(
 
 }
 
-async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
@@ -122,19 +122,18 @@ function cleanInvitations(
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  const {db} = adminServices;
   return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      await _cleanInvitation(db, doc, invitation);
+      await _cleanInvitation(doc, invitation);
     }
   });
 }
 
-async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
