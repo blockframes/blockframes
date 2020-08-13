@@ -11,7 +11,7 @@ export class AdminAuthMocked {
     });
   }
 
-  listUsers(_: number, pageToken: any = undefined) {
+  listUsers(_: number, pageToken: any) {
     return new Promise((resolve) => {
       const out = {
         users: this.users,
