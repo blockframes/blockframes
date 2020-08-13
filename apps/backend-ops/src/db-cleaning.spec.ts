@@ -1,4 +1,3 @@
-import { auth, firestore, storage } from 'firebase-admin';
 import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
 import { runChunks } from './tools';
 import {
@@ -13,7 +12,7 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { AdminServices } from './admin';
+import { AdminServices, loadAdminServices } from './admin';
 import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
 import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
 import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
@@ -29,14 +28,8 @@ describe('DB cleaning script', () => {
   let adminServices: AdminServices;
 
   beforeAll(async () => {
-    const featList = initFunctionsTestMock();
-    adminServices = { // @TODO #3066 Flatten everything
-      auth: auth(),
-      db: firestore(),
-      storage: storage(),
-      firebaseConfig: featList.firebaseConfig
-    };
-
+    initFunctionsTestMock();
+    adminServices = loadAdminServices();
     console.log('loading data..');
     const promises = [];
     const sets = {
@@ -58,8 +51,8 @@ describe('DB cleaning script', () => {
     }
 
     await Promise.all(promises);
-
   });
+            
   it('should clean users by comparing auth and database', async () => {
     const [organizations, usersBefore] = await Promise.all([
       adminServices.db.collection('orgs').get(),
@@ -116,6 +109,7 @@ describe('DB cleaning script', () => {
     const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
     expect(moviesTestSet.length).toEqual(cleanedMovies);
   });
+      
   it('should remove documents undefined or not linked to existing document from docsIndex', async () => {
     const [docsIndexBefore, movies,] = await Promise.all([
       adminServices.db.collection('docsIndex').get(), // @TODO #3066 create collectionRef(path: string) method to factorize
@@ -128,6 +122,7 @@ describe('DB cleaning script', () => {
     const docsIndexAfter: Snapshot = await adminServices.db.collection('docsIndex').get();
     expect(docsToKeep).toEqual(docsIndexAfter.docs.length);
   });
+      
   it('should clean notifications', async () => {
     const [notificationsBefore, events, movies, users] = await Promise.all([
       adminServices.db.collection('notifications').get(),
@@ -140,7 +135,7 @@ describe('DB cleaning script', () => {
       .concat(events.docs.map(m => m.id))
       .concat(users.docs.map(m => m.id))
 
-    await cleanNotifications(adminServices, notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds);
     const notificationsAfter: Snapshot = await adminServices.db.collection('notifications').get();
 
     const cleanOutput = notificationsAfter.docs.map(d => isNotificationClean(d));
