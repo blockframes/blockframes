@@ -1,13 +1,185 @@
 <tunnel-page>
-  <h4 title>END</h4>
-  <h1 subtitle>Summary & Submission</h1>
-  <p description class="mat-body-1">
-    Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
-  </p>
-
   <ng-container tunnel-form>
+    <h4 title>END</h4>
+    <h1 subtitle>Summary Page</h1>
+    <p description class="mat-body-1">
+      Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
+    </p>
+
+    <section id="main-information">
+      <h3>Main Information</h3>
+      <article>
+        <h5>
+          Reference
+          <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <strong>International Title </strong>
+            <missing-control [control]="title.get('international')" [link]="getPath('main')"></missing-control>
+          </li>
+          <li>
+            <strong>Original Title </strong>
+            <missing-control [control]="title.get('original')" [link]="getPath('main')"></missing-control>
+          </li>
+          <li>
+            <strong>Content Type </strong>
+            <missing-control [control]="form.get('contentType')" [link]="getPath('main')">
+              <ng-template #content>
+                {{ form.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
+              </ng-template>
+            </missing-control>
+          </li>
+          <li>
+            <strong>Title Reference </strong>
+            <missing-control [control]="form.get('internalRef')" [link]="getPath('main')"></missing-control>
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h5>
+          Images
+          <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Film Page Banner Image </strong>
+            <ng-container *ngIf="(form.banner.get('media').value | isEmptyImgRef) else banner">
+              <a [routerLink]="getPath('main')" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #banner>
+              <a [href]="form.banner.get('media').value.url" target="_blank">
+                {{ form.banner.get('media').value | fileName }}
+              </a>
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Poster Image </strong>
+            <ng-container *ngIf="(form.poster.get('media').value | isEmptyImgRef) else poster">
+              <a [routerLink]="getPath('main')" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #poster>
+              <a [href]="form.poster.get('media').value.url" target="_blank">
+                {{ form.poster.get('media').value | fileName }}
+              </a>
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h5>
+          General Information
+          <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <strong>Release Date </strong>
+            <missing-control [control]="form.release.get('year')" [link]="getPath('main')"></missing-control>
+          </li>
+          <li>
+            <strong>Countries of origin </strong>
+            <ng-container *ngFor="let country of form.originCountries.controls; let isLast = last">
+              <missing-control [control]="country" scope="TERRITORIES" [link]="getPath('main')" [isLast]="isLast"></missing-control>
+            </ng-container>
+          </li>
+          <li>
+            <strong>Original Language </strong>
+            <ng-container *ngFor="let language of form.originalLanguages.controls; let isLast = last">
+              <missing-control [control]="language" scope="LANGUAGES" [link]="getPath('main')" [isLast]="isLast"></missing-control>
+            </ng-container>
+          </li>
+          <li>
+            <strong>Genres </strong>
+            <ng-container *ngFor="let genre of genres; let isLast = last">
+              <ng-container *ngIf="!isLast else last">
+                <missing-control [control]="genre" scope="GENRES" [link]="getPath('main')" [isLast]="isLast"></missing-control>
+              </ng-container>
+              <ng-template #last>
+                {{ genre.value }}
+              </ng-template>
+            </ng-container>
+          </li>
+          <li>
+            <strong>Running Time </strong>
+            <missing-control [control]="form.runningTime" [link]="getPath('main')">
+              <ng-template #content>{{ form.runningTime.get('time').value | duration }}</ng-template>
+            </missing-control>
+          </li>
+        </ul>
+      </article>
+      <article>
+        <h5>
+          Directors
+          <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <ng-container *ngFor="let director of form.directors.controls">
+            <li>
+              <strong>Director Name </strong>
+              <ng-container *ngIf="directorHasErrorRequired(director) else display">
+                <a [routerLink]="getPath('main')" class="mandatory-control">
+                  Mandatory
+                </a>
+              </ng-container>
+              <ng-template #display>
+                <missing-control [control]="director.get('firstName')" [link]="getPath('main')" isLast=false></missing-control>
+                <missing-control [control]="director.get('lastName')" [link]="getPath('main')"></missing-control>
+              </ng-template>
+            </li>
+            <li>
+              <strong>Director's Filmography </strong><missing-control [control]="director.get('filmography')" [link]="getPath('main')"></missing-control>
+            </li>
+          </ng-container>
+        </ul>
+      </article>
+    </section>
+
+    <section id="storyline-elements">
+      <h3>Storyline Elements</h3>
+      <article>
+        <h5>
+          Logline
+          <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h5></h5>
+      </article>
+      <article>
+        <h5></h5>
+      </article>
+      <article>
+        <h5></h5>
+      </article>
+    </section>
+
+    <section id="">
+      <h3></h3>
+
+    </section>
+
+    <section id="">
+      <h3></h3>
+
+    </section>
+
+    <section id="">
+      <h3></h3>
+
+    </section>
+
     <!-- Main card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Main Information</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -19,10 +191,10 @@
         <movie-summary-sales-cast [movie]="form" [link]="getPath('main')"></movie-summary-sales-cast>
         <movie-summary-festival-prizes [movie]="form" [link]="getPath('main')"></movie-summary-festival-prizes>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Story card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Storyline Elements</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -30,10 +202,10 @@
       <mat-card-content>
         <movie-summary-story [movie]="form" [link]="getPath('synopsis')"></movie-summary-story>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Credit card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Credits</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -41,10 +213,10 @@
       <mat-card-content>
         <movie-summary-credit [movie]="form" [link]="getPath('credits')"></movie-summary-credit>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Budget card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Budget, Quota & Critics</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -52,10 +224,10 @@
       <mat-card-content>
         <movie-summary-budget [movie]="form" [review]="form.review" [link]="getPath('budget')"></movie-summary-budget>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Technical Information card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Technical Information</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -63,10 +235,10 @@
       <mat-card-content>
         <movie-summary-technical-information [movie]="form" [link]="getPath('technical-info')"></movie-summary-technical-information>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Images card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Promotional Images</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -74,10 +246,10 @@
       <mat-card-content>
         <movie-summary-image [form]="form" [link]="getPath('images')"></movie-summary-image>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
     <!-- Files card -->
-    <mat-card>
+    <!-- <mat-card>
       <mat-card-header fxLayout="row" fxLayoutAlign="start center">
         <mat-card-title>Files & Links</mat-card-title>
         <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="pencil"></mat-icon></a>
@@ -85,7 +257,7 @@
       <mat-card-content>
         <movie-summary-file [promotional]="form.promotional" [link]="getPath('files&links')"></movie-summary-file>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
 
 
     <!-- Submit -->

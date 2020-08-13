@@ -8,6 +8,7 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
+import { DirectorForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -30,6 +31,18 @@ export class MovieFormSummaryComponent {
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery
   ) { }
+
+  public directorHasErrorRequired(director: DirectorForm) {
+    return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');
+  }
+
+  public get genres() {
+    return [this.form.get('genres'), ...this.form.get('customGenres').controls];
+  }
+
+  get title() {
+    return this.form.get('title');
+  }
 
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
