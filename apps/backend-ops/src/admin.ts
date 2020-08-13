@@ -24,7 +24,7 @@ export interface AdminServices {
 }
 
 export function loadAdminServices(): AdminServices {
-  if (!admin.apps.length) {
+  if (!admin.apps.length) {  
     admin.initializeApp({
       ...firebase,
       credential: admin.credential.applicationDefault(),

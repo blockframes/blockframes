@@ -5,10 +5,10 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
+import { removeUnexpectedUsers } from './users';
+import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
-import { UserConfig } from './assets/users.fixture';
-import { removeUnexpectedUsers } from './users';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
@@ -17,7 +17,7 @@ export const dayInMillis = 1000 * 60 * 60 * 24;
 /** Reusable data cleaning script that can be updated along with data model */
 
 export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const { db, auth } = adminServices;
+  const {db, auth} =  adminServices;
   await startMaintenance();
   // Getting all collections we need to check
   const [
@@ -74,9 +74,9 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
   console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
   console.log('Cleaned docsIndex');
-  await cleanNotifications(adminServices, notifications, existingIds);
+  await cleanNotifications(notifications, existingIds);
   console.log('Cleaned notifications');
-  await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
   await endMaintenance();
@@ -84,24 +84,22 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
 }
 
 export function cleanNotifications(
-  adminServices: AdminServices,
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  const { db } = adminServices;
   return runChunks(notifications.docs, async (doc) => {
     const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      await _cleanNotification(db, doc, notification);
+      await _cleanNotification(doc, notification);
     }
   });
 
 }
 
-async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
@@ -117,24 +115,22 @@ async function _cleanNotification(db: Firestore, doc: any, notification: any) { 
 }
 
 function cleanInvitations(
-  adminServices: AdminServices,
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  const { db } = adminServices;
   return runChunks(invitations.docs, async (doc) => {
     const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      await _cleanInvitation(db, doc, invitation);
+      await _cleanInvitation(doc, invitation);
     }
   });
 }
 
-async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
