@@ -54,15 +54,25 @@
         </div>
 
         <mat-form-field appearance="outline">
-          <mat-label>Earnings</mat-label>
-          <input test-id="earnings" matInput type="number" [formControl]="control.get('value')" min="0">
+          <mat-label>Figures</mat-label>
+          <input test-id="earnings" matInput type="number" [formControl]="control.get('value')" min="0" plceholder="Figures">
           <mat-error *ngIf="control.get('value').hasError('min')">
             Only positive values are accepted.
+          </mat-error>
+          <mat-error *ngIf="control.get('value').hasError('required')">
+            Please enter box office figures.
           </mat-error>
           <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}&nbsp;</span>
           <span *ngIf="units[i] !== '$'" matSuffix>&nbsp;{{ units[i] }}</span>
         </mat-form-field>
       </article>
+
+      <footer fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="boxOffice.add()" aria-label="Add a Box Office">
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+        <span>Add a Box Office</span>
+      </footer>
     </section>
 
     <section id="rating">

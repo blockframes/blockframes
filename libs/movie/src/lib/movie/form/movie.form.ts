@@ -27,7 +27,7 @@ import {
   createMovieLanguageSpecification,
 } from '../+state/movie.model';
 
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
@@ -107,7 +107,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new MoviePromotionalHostedMediaForm(entity.poster),
@@ -122,7 +122,7 @@ function createMovieControls(movie: Partial<Movie>) {
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
-    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
+    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
     totalBudget: new PriceForm(entity.totalBudget),
   }
@@ -332,7 +332,7 @@ export type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>
 
 export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
   constructor(boxOffice?: Partial<BoxOffice>) {
-    super(createBoxOfficeFormControl(boxOffice))
+    super(createBoxOfficeFormControl(boxOffice), [boxOfficeRequired])
   }
 }
 
@@ -344,6 +344,14 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
     ...params,
   }
 }
+
+const boxOfficeRequired: ValidatorFn = (form: BoxOfficeForm) => {
+  const territory = form.get('territory').value;
+  const value = form.get('value').value;
+  return territory !== ''  && value !== null
+    ? null
+    : { timeRequired: true };
+};
 
 // ------------------------------
 //         PRIZES
@@ -457,13 +465,12 @@ export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder>
 function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
   const { displayName, countries } = createStakeholder(stakeholder);
   return {
-    displayName: new FormControl(displayName),
-    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'))
+    displayName: new FormControl(displayName, Validators.required),
+    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'), Validators.required)
   }
 }
 
 type StakeholderControl = ReturnType<typeof createStakeholderControl>;
-
 
 // ------------------------------
 //       STAKEHOLDERS MAP
@@ -534,7 +541,7 @@ type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
 
 export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
   constructor(runningTime?: Movie['runningTime']) {
-    super(createRunningTimeFormControl(runningTime));
+    super(createRunningTimeFormControl(runningTime), [runningTimeRequired]);
   }
 }
 
@@ -547,6 +554,16 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
 }
 
 type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
+
+const runningTimeRequired: ValidatorFn = (form: RunningTimeForm) => {
+  const time = form.get('time').value;
+  const status = form.get('status').value;
+  if(status === "confirmed" && time === null) {
+    return { timeRequired: true };
+  } else {
+    return null;
+  }
+};
 
 // ------------------------------
 //       STORE CONFIG

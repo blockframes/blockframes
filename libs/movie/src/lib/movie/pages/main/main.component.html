@@ -8,41 +8,38 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>International title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title"
-            [formControl]="international" required max="30" />
-          <mat-hint align="start">This reference is for you only, to help you find your content more easily.
-            International title should not exceed 30 characters.</mat-hint>
+            [formControl]="international" required/>
           <mat-error *ngIf="international.hasError('required')">
             Please specify your project's international title.
-          </mat-error>
-          <mat-error *ngIf="international.hasError('max')">
-            International title cannot exceed 30 characters.
           </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Original title</mat-label>
-          <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original"
-            required />
-          <mat-error *ngIf="original.hasError('required')">
-            Original title is <b>required</b>
-          </mat-error>
+          <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original"/>
         </mat-form-field>
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Content Type</mat-label>
-          <mat-select test-id="content-type" [formControl]="contentTypeCtrl">
+          <mat-select test-id="content-type" [formControl]="contentTypeCtrl" required>
             <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
               {{ type.value }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="contentTypeCtrl.hasError('required')">
+            Please specify your project's content type.
+          </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Reference</mat-label>
           <input test-id="reference" matInput type="text" placeholder="Reference"
-            [formControl]="form.get('internalRef')" />
+            [formControl]="internalRef" />
           <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
+          <mat-error *ngIf="internalRef.hasError('maxlength')">
+            30 characters maximum.
+          </mat-error>
         </mat-form-field>
       </article>
     </section>
@@ -56,7 +53,7 @@
         <p>The poster image will be used as the main image to represent your film on the marketplace, and, more
           generally, for all film components requiring vertical formats on the marketplace.</p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="banner">
-          <h3 type>Banner Image*</h3>
+          <h3 type>Banner Image</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
@@ -67,7 +64,7 @@
         <p>The poster image will be used as a cover picture on your project page on the marketplace, and, more
           generally, for all film components requiring horizontal formats on the marketplace.</p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="poster">
-          <h3 type>Poster*</h3>
+          <h3 type>Poster</h3>
           <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
@@ -78,38 +75,61 @@
 
     <section id="general-information">
       <h3>General Information</h3>
-      <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+      <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
           <input matInput [formControl]="form.get('release').get('year')" required type="number" placeholder="YYYY" />
           <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
-            Release Year is required.
+            Please specify your project's release year.
           </mat-error>
         </mat-form-field>
 
-        <!-- TODO uncomment this when data model is ready -->
-        <!-- <static-select scope="RELEASE_STATUS" [control]="form.get('status')" label="Estimated/Confirmed" fxFlex></static-select> -->
+        <static-select
+        scope="RELEASE_STATUS"
+        [control]="form.get('release').get('status')"
+        label="Estimated/Confirmed *"
+        error="form.get('release').get('status').hasError('required')"
+        errorText="Please specify if the release date is estimated or confirmed."
+        fxFlex>
+        </static-select>
       </article>
 
-      <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES" placeholder="Country">
+      <chips-autocomplete
+      [form]="form.get('originCountries')"
+      model="TERRITORIES"
+      placeholder="Enter Country/ies of Origin">
+        <mat-label>Country of Origin *</mat-label>
+        <mat-error>Please specify your project's country of origin.</mat-error>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"></chips-autocomplete>
+      <chips-autocomplete
+      [form]="form.get('originalLanguages')"
+      model="LANGUAGES"
+      placeholder="Enter Original Language(s)">
+        <mat-label>Original Language(s) *</mat-label>
+        <mat-error>Please specify your project's original language(s).</mat-error>
+      </chips-autocomplete>
 
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <!-- TODO uncomment this when data model is ready -->
-        <!-- <static-select scope="SCREENING_STATUS" [control]="form.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select> -->
+        <static-select
+        scope="SCREENING_STATUS"
+        [control]="form.get('runningTime').get('status')"
+        label="To be determined/Estimated/Confirmed" fxFlex>
+        </static-select>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
           <input matInput type="number" min="0" [formControl]="form.get('runningTime').get('time')"
             name="runningTime" />
           <mat-hint>In minutes</mat-hint>
-          <mat-error *ngIf="form.hasError('min', 'runningTime.time')">
+          <mat-error *ngIf="runningTime.hasError('min')">
             Only positive values are accepted.
+          </mat-error>
+          <mat-error *ngIf="runningTime.hasError('required')">
+            Please specify your project's runtime.
           </mat-error>
         </mat-form-field>
       </article>
@@ -128,10 +148,12 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
                 <input test-id="first-name" matInput formControlName="firstName" required />
+                <mat-error *ngIf="form.get('firstName').hasError('required')">Please specify Director's First Name.</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Last Name</mat-label>
                 <input test-id="last-name" matInput formControlName="lastName" required />
+                <mat-error *ngIf="form.get('lastName').hasError('required')">Please specify Director's Last Name.</mat-error>
               </mat-form-field>
             </div>
 

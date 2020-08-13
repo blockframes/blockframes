@@ -11,8 +11,11 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Award/Selection</mat-label>
+            <mat-label>Awards/Selections</mat-label>
             <input test-id="prize" matInput [formControl]="control.get('prize')" required />
+            <mat-error *ngIf="control.get('prize').hasError('maxlength')">
+              Awards and selections should not exceed 200 characters.
+            </mat-error>
           </mat-form-field>
         </div>
 

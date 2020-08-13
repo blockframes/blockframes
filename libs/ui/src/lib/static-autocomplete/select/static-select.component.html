@@ -12,4 +12,7 @@
   <mat-hint *ngIf="hintText" [align]="hintAlign">
     {{ hintText }}
   </mat-hint>
+  <mat-error *ngIf="error">
+    {{ errorText }}
+  </mat-error>
 </mat-form-field>

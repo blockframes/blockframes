@@ -7,10 +7,13 @@
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" required />
+            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Production Company Name"/>
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Select a Country" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+            <mat-label>Production Country</mat-label>
+            <mat-error>Please specify Production Country.</mat-error>
+          </chips-autocomplete>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
@@ -36,10 +39,13 @@
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" required />
+            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Co-Production Company Name"/>
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Select a Country" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+            <mat-label>Co-Production Country</mat-label>
+            <mat-error>Please specify Co-Production Country.</mat-error>
+          </chips-autocomplete>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
@@ -65,12 +71,12 @@
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Producer's Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required />
+            <input test-id="first-name" matInput [formControl]="control.get('firstName')" placeholder="Producer's First Name"/>
           </mat-form-field>
 
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Producer's Lastname</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('lastName')" required />
+            <input test-id="first-name" matInput [formControl]="control.get('lastName')" placeholder="Producer's Last Name"/>
           </mat-form-field>
         </div>
 
@@ -101,10 +107,13 @@
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" required />
+            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Distribution Company Name"/>
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Select a Country" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Country/ies." fxFlex>
+            <mat-label>Enter Distribution Country/ies.</mat-label>
+            <mat-error>Please specify Distribution Country.</mat-error>
+          </chips-autocomplete>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
@@ -129,11 +138,14 @@
       <article *ngFor="let control of internationalSales.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Sales Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" required placeholder="eg: Sales Company Name" />
+            <mat-label>Company Name</mat-label>
+            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Sales Company Name" />
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Sales Company Nationality" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+            <mat-label>Sales Company's Nationality</mat-label>
+            <mat-error>Please specify Sales Company's Country.</mat-error>
+          </chips-autocomplete>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
