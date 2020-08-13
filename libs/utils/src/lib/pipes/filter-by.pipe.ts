@@ -3,8 +3,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 @Pipe({ name: 'filterBy' })
 export class FilterBy implements PipeTransform {
   transform<T>(items: T[], filter: (item: T) => boolean = (i) => true) {
-    if (!items) return;
-    return items.filter(filter);
+    return Array.isArray(items) ? items.filter(filter) : [];
   }
 }
 
