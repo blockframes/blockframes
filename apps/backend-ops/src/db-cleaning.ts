@@ -5,10 +5,10 @@ import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
+import { removeUnexpectedUsers } from './users';
+//import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
-import { UserConfig } from './assets/users.fixture';
-import { removeUnexpectedUsers } from './users';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
