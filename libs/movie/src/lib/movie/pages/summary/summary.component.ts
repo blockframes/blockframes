@@ -8,7 +8,7 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
-import { DirectorForm } from '@blockframes/movie/form/movie.form';
+import { DirectorForm, CreditForm, MoviePrizeForm, MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -34,6 +34,18 @@ export class MovieFormSummaryComponent {
 
   public directorHasErrorRequired(director: DirectorForm) {
     return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');
+  }
+
+  public producerHasNoValue(producer: CreditForm) {
+    return !producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value;
+  }
+
+  public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {
+    return !festivalPrize.get('name').value && !festivalPrize.get('prize').value && !festivalPrize.get('year').value && !festivalPrize.get('premiere').value;
+  }
+
+  public reviewHasNoValue(review: MovieReviewForm) {
+    return !review.get('criticName').value && !review.get('journalName').value && !review.get('criticQuote').value && !review.get('revueLink').value;
   }
 
   public get genres() {

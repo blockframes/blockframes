@@ -9,17 +9,19 @@ import { MovieFormSummaryComponent } from './summary.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes UI
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Blockframes Utils
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [MovieFormSummaryComponent],
@@ -35,11 +37,14 @@ import { EmptyImagePipeModule } from '@blockframes/media/directives/image-refere
     FileNameModule,
     FlexLayoutModule,
     DurationModule,
+    TranslateSlugModule,
 
     // Materials
+    MatChipsModule,
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatDividerModule,
     RouterModule.forChild([{ path: '', component: MovieFormSummaryComponent }])
   ],
 })
