@@ -68,15 +68,9 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
     throw new Error('Upload Error : File does not exists in the storage');
   }
 
-  const [ signedUrl ] = await file.getSignedUrl({
-    action: 'read',
-    expires: '01-01-3000',
-    version: 'v2'
-  });
-
   // link the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+  return doc.update({[fieldToUpdate]: filePath });
 }
 
 /**
@@ -103,5 +97,5 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
   // unlink the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: '', url: '' } });
+  return doc.update({[fieldToUpdate]: '' });
 }

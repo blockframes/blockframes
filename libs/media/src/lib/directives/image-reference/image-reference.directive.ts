@@ -97,7 +97,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       theme$,
     ]).subscribe(([asset, ref, theme]) => {
 
-      if (!!ref) {
+      if (!!ref && typeof ref === 'string') {
 
         // ref
         this.srcset = generateImageSrcset(ref, this.parameters);
