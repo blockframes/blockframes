@@ -355,7 +355,5 @@ async function resetDb(adminServices: AdminServices) {
     const docs = await adminServices.db.collection(collection).get();
     documents = documents.concat(docs.docs);
   }
-  return runChunks(documents, async (d) => {
-    await d.ref.delete();
-  })
+  return runChunks(documents, async d => await d.ref.delete(), 50, false);
 }
