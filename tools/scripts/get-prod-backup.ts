@@ -26,7 +26,7 @@ async function getProdBackup() {
     }
 
     // Dowload lastest backup
-    const destination = join(folder, last.name);
+    const destination = join(folder, 'backup-prod.jsonl');
     await last.download({ destination });
     console.log('Backup has been saved to:', destination);
 
