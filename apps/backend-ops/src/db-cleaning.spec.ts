@@ -134,7 +134,7 @@ describe('DB cleaning script', () => {
       .concat(events.docs.map(m => m.id))
       .concat(users.docs.map(m => m.id))
 
-    await cleanNotifications(adminServices, notificationsBefore, documentIds);
+    await cleanNotifications(notificationsBefore, documentIds);
     const notificationsAfter: Snapshot = await adminServices.db.collection('notifications').get();
 
     const cleanOutput = notificationsAfter.docs.map(d => isNotificationClean(d));

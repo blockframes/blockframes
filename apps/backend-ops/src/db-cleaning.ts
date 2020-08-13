@@ -74,9 +74,9 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
   console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
   console.log('Cleaned docsIndex');
-  await cleanNotifications(adminServices, notifications, existingIds);
+  await cleanNotifications(notifications, existingIds);
   console.log('Cleaned notifications');
-  await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
   await endMaintenance();
@@ -84,11 +84,9 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
 }
 
 export function cleanNotifications(
-  adminServices: AdminServices,
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  const {db} = adminServices;
   return runChunks(notifications.docs, async (doc) => {
     const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
     const outdatedNotification = !isNotificationValid(notification, existingIds);
@@ -117,7 +115,6 @@ async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175
 }
 
 function cleanInvitations(
-  adminServices: AdminServices,
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
   events: EventDocument<EventMeta>[],
