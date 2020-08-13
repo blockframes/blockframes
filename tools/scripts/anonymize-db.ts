@@ -31,9 +31,9 @@ function updateEmail(user) {
   }
 }
 // First argument
-const src = resolve(process.cwd(), process.argv[2] || 'db.jsonl');
+const src = resolve(process.cwd(), process.argv[2] || 'tmp/backup-prod.jsonl');
 // Second argument
-const dest = resolve(process.cwd(), process.argv[3] || 'out.jsonl');
+const dest = resolve(process.cwd(), process.argv[3] || 'tmp/restore-ci.jsonl');
 const file = readFileSync(src, 'utf-8');
 const output = file
   .split('\n')
