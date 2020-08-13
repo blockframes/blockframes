@@ -15,8 +15,13 @@ export class MovieFormMainComponent {
   public movieId = this.route.snapshot.params.movieId;
 
   public displayedColumns = {
-    firstName: 'First Name', lastName: 'Last Name', status: 'Status', category: 'Category', description: 'Description',
-    filmTitle: 'Film Title', filmography: 'Filmography'
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    status: 'Status',
+    category: 'Category',
+    description: 'Description',
+    filmTitle: 'Film Title',
+    filmography: 'Filmography'
   }
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
