@@ -1,9 +1,10 @@
 import { Firestore, Storage } from '../admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalElement, Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
-import { PublicOrganization } from 'apps/backend-functions/src/data/types';
+import { PublicOrganization } from 'apps/backend-functions/src/data/types';  // @TODO #3066 remove this call to backend-functions
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 /**
  * Migrate old ImgRef objects to new one.
@@ -150,7 +151,7 @@ async function updateImgRef(
 
       // Set the new folder in the bucket
       const newPngFile = ref.replace('/original/', '/fallback/').replace(fileName, newFileName);
-      const bucket = storage.bucket(getStorageBucketName());
+      const bucket = storage.bucket(storageBucket);
 
       const output = bucket.file(newPngFile);
       const [exists] = await output.exists();

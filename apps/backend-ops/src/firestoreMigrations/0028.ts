@@ -1,13 +1,14 @@
 import { Firestore, Storage } from '../admin';
 import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
-import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO #3066 remove this call to backend-functions
+import { upsertWatermark } from '@blockframes/firebase-utils';
 import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
 import { runChunks } from '../tools';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -174,7 +175,7 @@ const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storag
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    await upsertWatermark(user as any); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
+    await upsertWatermark(user as any, storageBucket); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }
@@ -207,7 +208,7 @@ const updateImgRef = async (
   const { ref } = media as OldImgRef;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const from = bucket.file(ref);
