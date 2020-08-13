@@ -30,7 +30,7 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     admin.initializeApp({ projectId });
-    firebaseTest['firebaseConfig'] = { projectId };
+    firebaseTest.firebaseConfig = { projectId };
     return firebaseTest;
   }
 
