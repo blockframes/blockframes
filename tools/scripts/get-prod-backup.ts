@@ -5,10 +5,23 @@ import * as admin from 'firebase-admin';
 import { config } from 'dotenv';
 config();
 
+if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
+  throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
+}
+
+let cert: string | admin.ServiceAccount;
+try {
+  // If service account is a stringified json object
+  cert = JSON.parse(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT)
+} catch (err) {
+  // If service account is a path
+  cert = process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT;
+}
+
 admin.initializeApp({
   storageBucket: backupBucket,
   projectId: firebase.projectId,
-  credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+  credential: admin.credential.cert(cert)
 });
 const storage = admin.storage();
 const folder = join(process.cwd(), 'tmp');
@@ -26,7 +39,7 @@ async function getProdBackup() {
     }
 
     // Dowload lastest backup
-    const destination = join(folder, last.name);
+    const destination = join(folder, 'backup-prod.jsonl');
     await last.download({ destination });
     console.log('Backup has been saved to:', destination);
 
