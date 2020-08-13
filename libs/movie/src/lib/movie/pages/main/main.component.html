@@ -78,7 +78,7 @@
       <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
-          <input matInput [formControl]="form.get('release').get('year')" required type="number" placeholder="YYYY" />
+          <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
           <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.
@@ -122,7 +122,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="form.get('runningTime').get('time')"
+          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
             name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error *ngIf="runningTime.hasError('min')">

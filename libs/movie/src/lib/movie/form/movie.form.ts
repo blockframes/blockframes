@@ -179,6 +179,18 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('rating');
   }
 
+  get release() {
+    return this.get('release');
+  }
+
+  get runningTime() {
+    return this.get('runningTime');
+  }
+
+  get genres() {
+    return this.get('genres');
+  }
+
   get originalRelease() {
     return this.get('originalRelease');
   }

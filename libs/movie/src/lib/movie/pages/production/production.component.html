@@ -3,164 +3,121 @@
   <ng-container tunnel-form>
     <section id="company">
       <h3>Production Company</h3>
-      <article *ngFor="let control of executiveProducer.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Production Company Name"/>
-          </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
-            <mat-label>Production Country</mat-label>
-            <mat-error>Please specify Production Country.</mat-error>
-          </chips-autocomplete>
-        </div>
+      <bf-form-table [columns]="producerColumns" [form]="productionCompany" buttonText="Add Production Company">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="executiveProducer.removeAt(i)" aria-label="Add a company">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Delete Production Company</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="executiveProducer.add()" aria-label="Remove a company">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add Production Company</span>
-      </footer>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Production Company Name</mat-label>
+              <input test-id="production-company-name" matInput formControlName="displayName" placeholder="Production Company Name" />
+            </mat-form-field>
+
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+              <mat-label>Production Country</mat-label>
+              <mat-error>Please specify Production Country.</mat-error>
+            </chips-autocomplete>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="co-company">
-      <h3>Co-production Company</h3>
-      <article *ngFor="let control of coProducer.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Co-Production Company Name"/>
-          </mat-form-field>
+      <h3>Co-Production Company</h3>
+      <bf-form-table [columns]="coProductionColumns" [form]="coProductionCompany" buttonText="Add Co-Production Company">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
-            <mat-label>Co-Production Country</mat-label>
-            <mat-error>Please specify Co-Production Country.</mat-error>
-          </chips-autocomplete>
-        </div>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Co-Production Company Name</mat-label>
+              <input test-id="co-production-company-name" matInput formControlName="displayName" placeholder="Co-Production Company Name" />
+            </mat-form-field>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="coProducer.removeAt(i)" aria-label="Add a co-company">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Delete Co-Production Company</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="coProducer.add()" aria-label="Remove a co-company">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add Co-Production Company</span>
-      </footer>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex>
+              <mat-label>Co-Production Country</mat-label>
+              <mat-error>Please specify Co-Production Country.</mat-error>
+            </chips-autocomplete>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="producers">
       <h3>Producer(s)</h3>
-      <article *ngFor="let control of producers.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Producer's Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('firstName')" placeholder="Producer's First Name"/>
-          </mat-form-field>
+      <bf-form-table [columns]="producerColumns" [form]="producers" buttonText="Add Producer">
+        <ng-template formView let-form>
+          <article [formGroup]="form">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Producer's Lastname</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('lastName')" placeholder="Producer's Last Name"/>
-          </mat-form-field>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Producer's First Name</mat-label>
+                <input test-id="producer-first-name" matInput formControlName="firstName" placeholder="Producer's First Name" />
+              </mat-form-field>
 
-        <div fxLayout fxLayoutGap="24px">
-          <static-select [control]="control.get('role')" scope="STAKEHOLDER_ROLES" label="Role" fxFlex></static-select>
-        </div>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Producer's Lastname</mat-label>
+                <input test-id="producer-last-name" matInput formControlName="lastName" placeholder="Producer's Last Name" />
+              </mat-form-field>
+            </div>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="producers.removeAt(i)" aria-label="Add a producer">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Delete Producer</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="producers.add()" aria-label="Remove a producer">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add Producer</span>
-      </footer>
+            <static-select [control]="form.get('role')" scope="STAKEHOLDER_ROLES" label="Role"></static-select>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="distributors">
       <h3>Distributor(s)</h3>
-      <article *ngFor="let control of distributors.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Distribution Company Name"/>
-          </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Country/ies." fxFlex>
-            <mat-label>Enter Distribution Country/ies.</mat-label>
-            <mat-error>Please specify Distribution Country.</mat-error>
-          </chips-autocomplete>
-        </div>
+      <bf-form-table [columns]="distributorColumns" [form]="distributors" buttonText="Add Distribution Company">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="distributors.removeAt(i)" aria-label="Add a distributor">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Delete Distributor</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="distributors.add()" aria-label="Remove a distributor">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add Distributor</span>
-      </footer>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Company Name</mat-label>
+                <input test-id="distribution-company-name" matInput formControlName="displayName" placeholder="Distribution Company Name" />
+              </mat-form-field>
+
+              <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Country/ies" fxFlex>
+                <mat-label>Enter Distribution Country/ies.</mat-label>
+                <mat-error>Please specify Distribution Country.</mat-error>
+              </chips-autocomplete>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="sales">
       <h3>International Sales</h3>
-      <article *ngFor="let control of internationalSales.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Company Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('displayName')" placeholder="Sales Company Name" />
-          </mat-form-field>
+      <bf-form-table [columns]="salesColumns" [form]="internationalSales" buttonText="Add Sales Company">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
-          <chips-autocomplete [form]="control.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
-            <mat-label>Sales Company's Nationality</mat-label>
-            <mat-error>Please specify Sales Company's Country.</mat-error>
-          </chips-autocomplete>
-        </div>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Company Name</mat-label>
+              <input test-id="sales-company-name" matInput formControlName="displayName" placeholder="Sales Company Name" />
+            </mat-form-field>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="internationalSales.removeAt(i)" aria-label="Add a sales company">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Delete Sales Company</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="internationalSales.add()" aria-label="Remove a sales company">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add Sales Company</span>
-      </footer>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex>
+              <mat-label>Sales Company's Nationality</mat-label>
+              <mat-error>Please specify Sales Company's Country.</mat-error>
+            </chips-autocomplete>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
   </ng-container>

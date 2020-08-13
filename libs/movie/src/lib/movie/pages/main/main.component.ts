@@ -15,18 +15,27 @@ export class MovieFormMainComponent {
   public movieId = this.route.snapshot.params.movieId;
 
   public displayedColumns = {
-    firstName: 'First Name', lastName: 'Last Name', status: 'Status', category: 'Category', description: 'Description',
-    filmTitle: 'Film Title', filmography: 'Filmography'
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    status: 'Status',
+    category: 'Category',
+    description: 'Description',
+    filmTitle: 'Film Title',
+    filmography: 'Filmography'
   }
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
+  get title() {
+    return this.form.get('title');
+  }
+
   get international() {
-    return this.form.get('title').get('international');
+    return this.title.get('international');
   }
 
   get original() {
-    return this.form.get('title').get('original');
+    return this.title.get('original');
   }
 
   get contentTypeCtrl() {
