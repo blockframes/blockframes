@@ -28,7 +28,7 @@
           <button mat-icon-button (click)="remove(index)">
             <mat-icon svgIcon="trash"></mat-icon>
           </button>
-        </span> 
+        </span>
       </td>
     </ng-container>
 
@@ -49,12 +49,15 @@
 <!-- VIEW -->
 <!---------->
 ​
-<ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
-</ng-template>
+<ng-container *ngIf="!!formItem">
+  <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
+  </ng-template>
+</ng-container>
+
 <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span>{{ buttonText }}</span>
-  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="formItem.invalid">
+  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="!!formItem && formItem.invalid">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>
