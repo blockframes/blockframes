@@ -305,12 +305,11 @@ jobs:
     environment:
       - ENV: production
       - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
-      - run: npm run get-latest-prod-db
-      - run: npm run anonymize-db
-      - run: npm run upload-db
+      - run: npm run db:download-prod
+      - run: npm run db:anonymize
+      - run: npm run db:upload-ci
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
