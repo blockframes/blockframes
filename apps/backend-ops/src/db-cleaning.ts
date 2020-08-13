@@ -184,7 +184,7 @@ export async function cleanUsers(
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
         let update = false;
 
-        if (invalidOrganization) { // @todo #3066 create a test for this
+        if (invalidOrganization) {
           delete user.orgId;
           update = true;
         }

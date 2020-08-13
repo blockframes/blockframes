@@ -73,7 +73,7 @@ describe('DB cleaning script', () => {
     // @TODO #3066 make more tests here
 
     const usersAfter: Snapshot = await adminServices.db.collection('users').get();
-    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u)).length;
+    const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
     expect(2).toEqual(cleanedUsers);
   });
 
@@ -184,13 +184,17 @@ function isNotificationClean(d: any) {
   return true;
 }
 
-function isUserClean(doc: any) {
+function isUserClean(doc: any, organizationIds: string[]) {
   const d = doc.data();
   if (d.surname !== undefined) { // old model
     return false;
   }
 
-  if (d.name !== undefined) {// old model
+  if (d.name !== undefined) { // old model
+    return false;
+  }
+
+  if (d.orgId && !organizationIds.includes(d.orgId)) {
     return false;
   }
 
