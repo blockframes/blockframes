@@ -95,7 +95,7 @@ export function cleanNotifications(
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      await _cleanNotification(db, doc, notification);
+      await _cleanNotification(doc, notification);
     }
   });
 
