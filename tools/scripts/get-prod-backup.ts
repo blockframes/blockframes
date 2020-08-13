@@ -5,10 +5,14 @@ import * as admin from 'firebase-admin';
 import { config } from 'dotenv';
 config();
 
+if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
+  throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
+}
+
 admin.initializeApp({
   storageBucket: backupBucket,
   projectId: firebase.projectId,
-  credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS)
+  credential: admin.credential.cert(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT)
 });
 const storage = admin.storage();
 const folder = join(process.cwd(), 'tmp');
