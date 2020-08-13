@@ -19,9 +19,9 @@ async function uploadDB() {
     if(!existsSync(restore)) {
       throw new Error(`File ${restore} doesn't exist.`);
     }
-    const destination = `${new Date().toISOString()}.jsonl`;
+    const destination = `${new Date().toISOString()}-ANONYMIZED.jsonl`;
     await storage.bucket(backupBucket).upload(restore, { destination });
-    console.log('Backup has been saved to:', destination);
+    console.log(`Restore DB has been saved to: ${backupBucket}/${destination}`);
 
   } catch (err) {
     if ('errors' in err) {
