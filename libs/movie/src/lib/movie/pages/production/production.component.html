@@ -3,7 +3,7 @@
   <ng-container tunnel-form>
     <section id="company">
       <h3>Production Company</h3>
-      <bf-form-table [columns]="displayedColumnsProductionCompany" [form]="productionCompany" buttonText="Add Production Company">
+      <bf-form-table [columns]="producerColumns" [form]="productionCompany" buttonText="Add Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -25,7 +25,7 @@
 
     <section id="co-company">
       <h3>Co-Production Company</h3>
-      <bf-form-table [columns]="displayedColumnsCoProductionCompany" [form]="coProductionCompany" buttonText="Add Co-Production Company">
+      <bf-form-table [columns]="coProductionColumns" [form]="coProductionCompany" buttonText="Add Co-Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -47,7 +47,7 @@
 
     <section id="producers">
       <h3>Producer(s)</h3>
-      <bf-form-table [columns]="displayedColumnsProducers" [form]="producers" buttonText="Add Producer">
+      <bf-form-table [columns]="producerColumns" [form]="producers" buttonText="Add Producer">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -74,7 +74,7 @@
 
     <section id="distributors">
       <h3>Distributor(s)</h3>
-      <bf-form-table [columns]="displayedColumnsDistributors" [form]="distributors" buttonText="Add Distribution Company">
+      <bf-form-table [columns]="distributorColumns" [form]="distributors" buttonText="Add Distribution Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -96,7 +96,7 @@
 
     <section id="sales">
       <h3>International Sales</h3>
-      <bf-form-table [columns]="displayedColumnsInternationalSales" [form]="internationalSales" buttonText="Add Sales Company">
+      <bf-form-table [columns]="salesColumns" [form]="internationalSales" buttonText="Add Sales Company">
         <ng-template formView let-form>
           <article [formGroup]="form">
 

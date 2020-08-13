@@ -10,28 +10,28 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 export class MovieFormProductionComponent {
   form = this.shell.form;
 
-  public displayedColumnsProductionCompany = {
+  public productionColumns = {
     displayName: 'Company Name',
     countries: 'Production Country'
   }
 
-  public displayedColumnsCoProductionCompany = {
+  public coProductionColumns = {
     displayName: 'Company Name',
     countries: 'Co-Production Country'
   }
 
-  public displayedColumnsProducers = {
+  public producerColumns = {
     firstName: 'First Name',
     lastName: 'Last Name',
     role: 'Role'
   }
 
-  public displayedColumnsDistributors = {
+  public distributorColumns = {
     displayName: 'Display Name',
     countries: 'Countries',
   }
 
-  public displayedColumnsInternationalSales = {
+  public salesColumns = {
     displayName: 'Company Name',
     countries: "Sales Company's Nationality"
   }
