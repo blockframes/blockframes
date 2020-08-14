@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';

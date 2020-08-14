@@ -40,22 +40,3 @@ const constants = {
 };
 
 export default constants;
-
-
-export type ContentType = keyof typeof constants.contentType;
-export type ContentTypeValue = typeof constants.contentType[ContentType];
-
-export type StoreType = keyof typeof constants.storeType;
-export type StoreTypeValue = typeof constants.storeType[StoreType];
-
-export type PremiereType = keyof typeof constants.premiereType;
-export type PremiereTypeValue = typeof constants.premiereType[PremiereType];
-
-export type UnitBox = keyof typeof constants.unitBox;
-export type UnitBoxValue = typeof constants.unitBox[UnitBox];
-
-export type StoreStatus = keyof typeof constants.storeStatus;
-export type StoreStatusValue = typeof constants.storeStatus[StoreStatus];
-
-export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
-export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
