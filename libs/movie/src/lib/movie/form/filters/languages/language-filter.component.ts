@@ -50,10 +50,15 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
     /** Updates selectedLanguages and versions FormList when reset is called on languagesFilterForm */
     this.formSub = this.languagesFilterForm.valueChanges.subscribe(res => {
-      if (!this.rebuildingForm && Object.keys(res).every(key => res[key].length === 0)) {
-        this.selectedLanguages.reset();
-        this.versions.reset();
-        this.cdr.markForCheck();
+      if (Object.keys(res).every(key => res[key].length === 0)) {
+        this.languagesFilterForm.markAsPristine();
+        if (!this.rebuildingForm) {
+          this.selectedLanguages.reset();
+          this.versions.reset();
+          this.cdr.markForCheck();
+        }
+      } else {
+        this.languagesFilterForm.markAsDirty();
       }
     })
   }

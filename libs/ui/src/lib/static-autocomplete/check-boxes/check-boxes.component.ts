@@ -50,6 +50,9 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
       if (isArray(res) && res.length === 0) {
         this.items.map(item => item.value = false);
         this.cdr.markForCheck();
+        this.form.markAsPristine();
+      } else {
+        this.form.markAsDirty();
       }
     })
   }

@@ -1,9 +1,9 @@
 <section>
   <ng-container *ngFor="let filter of filters">
-    <button [ngClass]="{ 'active-filter': filter.active }" mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
+    <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
       {{filter.label}}
     </button>
-    <overlay-widget #filterWidget (openedChanged)="filter.filterOpened = $event">
+    <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{ filter.label }}</mat-card-title>
