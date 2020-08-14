@@ -32,7 +32,6 @@ async function getProdBackup() {
   try {
     // Get latest backup DB
     const [files] = await storage.bucket(backupBucket).getFiles();
-    console.log('last file in array: ', files[files.length - 1].name);
     const last = files
       .sort(
         (a, b) =>
@@ -41,7 +40,8 @@ async function getProdBackup() {
       .pop();
     console.log('Latest backup:', last.metadata.timeCreated);
     console.log('File name: ', last.name);
-    console.dir('File metadata is: ', last.metadata);
+    console.log('File metadata is: ');
+    console.dir(last.metadata);
     console.log('Bucket name: ', last.bucket.name);
 
     // Ensure parent folder exist
