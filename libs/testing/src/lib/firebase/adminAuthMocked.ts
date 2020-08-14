@@ -1,8 +1,7 @@
-const authTestSet = require('../mocked-data-unit-tests/auth.json');
 
 export class AdminAuthMocked {
 
-  public users: any[] = authTestSet;
+  public users: any[] = [];
 
   getUserByEmail(email: string) {
     return new Promise((resolve) => {

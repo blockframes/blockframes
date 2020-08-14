@@ -8,10 +8,13 @@ export function getDocument<T>(path: string): Promise<T> {
     .then(doc => doc.data() as T);
 }
 
-export function getCollection<T>(path: string): Promise<T[]> {
+export function getCollectionRef<T>(path: string): Promise<FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>> {
   const db = admin.firestore();
   return db
     .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data() as T));
+    .get();
+}
+
+export function getCollection<T>(path: string): Promise<T[]> {
+  return getCollectionRef(path).then(collection => collection.docs.map(doc => doc.data() as T));
 }

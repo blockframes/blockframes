@@ -114,7 +114,7 @@ async function cleanOneNotification(doc: any, notification: any) { // @TODO (#31
   await doc.ref.update(notification);
 }
 
-function cleanInvitations(
+export function cleanInvitations(
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
   events: EventDocument<EventMeta>[],
@@ -131,7 +131,7 @@ function cleanInvitations(
 }
 
 async function cleanOneInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
-
+  // todo #3066 make a test like for notifications
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || '';
@@ -269,7 +269,7 @@ export function cleanMovies(
   return runChunks(movies.docs, async (movieDoc) => {
     const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
 
-    if (movie.distributionRights) { // @todo #3066 create a test for this
+    if (movie.distributionRights) {
       delete movie.distributionRights;
       await movieDoc.ref.set(movie);
     }
@@ -299,7 +299,6 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days
-  // @TODO (#3066) mock notifications with date > n days ||  date < n days and test deletion
   const notificationTimestamp = notification.date.toMillis();
   if (notificationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
     return false;
@@ -348,7 +347,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
     case 'attendEvent':
 
       if (existingIds.includes(invitation.docId)) {
-        const event = events.find(e => e.id = invitation.docId);
+        const event = events.find(e => e.id === invitation.docId);
         const eventEndTimestamp = event.end.toMillis();
 
         // Cleaning finished events
@@ -366,8 +365,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
           existingIds.includes(invitation.docId))
       );
     case 'joinOrganization':
-      // Cleaning not pending invitations more than n days
-      // @TODO (#3066) mock invitations not pending || pending and with date > n days ||  date < n days and test deletion
+      // Cleaning not pending invitations older than n days
       const invitationTimestamp = invitation.date.toMillis();
       if (invitation.status !== 'pending' && invitationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
         return false;
