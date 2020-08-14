@@ -32,22 +32,6 @@ export class MovieFormSummaryComponent {
     private routerQuery: RouterQuery
   ) { }
 
-  public directorHasErrorRequired(director: DirectorForm) {
-    return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');
-  }
-
-  public producerHasNoValue(producer: CreditForm) {
-    return !producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value;
-  }
-
-  public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {
-    return !festivalPrize.get('name').value && !festivalPrize.get('prize').value && !festivalPrize.get('year').value && !festivalPrize.get('premiere').value;
-  }
-
-  public reviewHasNoValue(review: MovieReviewForm) {
-    return !review.get('criticName').value && !review.get('journalName').value && !review.get('criticQuote').value && !review.get('revueLink').value;
-  }
-
   public get genres() {
     return [this.form.get('genres'), ...this.form.get('customGenres').controls];
   }
@@ -56,9 +40,11 @@ export class MovieFormSummaryComponent {
     return this.form.get('title');
   }
 
-  public getPath(segment: string) {
+  public getPath(segment: string, section?: string) {
     const { movieId } = this.route.snapshot.params;
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+    return section
+          ? `/c/o/dashboard/tunnel/movie/${movieId}/${segment}#${section}`
+          : `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
   public async submit() {
