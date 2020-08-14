@@ -12,7 +12,7 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { AdminServices, loadAdminServices } from './admin';
+import { loadAdminServices } from './admin';
 import moviesTestSet from '@blockframes/testing/mocked-data-unit-tests/movies.json';
 import orgsTestSet from '@blockframes/testing/mocked-data-unit-tests/orgs.json';
 import permissionsTestSet from '@blockframes/testing/mocked-data-unit-tests/permissions.json';
@@ -24,13 +24,15 @@ import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+let db: FirebaseFirestore.Firestore;
 
 describe('DB cleaning script - global tests', () => {
-  let adminServices: AdminServices;
 
   beforeAll(async () => {
     initFunctionsTestMock();
-    adminServices = loadAdminServices();
+    const adminServices = loadAdminServices();
+    db = adminServices.db;
+
     console.log('loading data..');
     const promises = [];
     const sets = {
@@ -44,7 +46,7 @@ describe('DB cleaning script - global tests', () => {
     };
 
     for (const collection in sets) {
-      promises.push(populate(adminServices, collection, sets[collection]));
+      promises.push(populate(db, collection, sets[collection]));
     }
 
     await Promise.all(promises);
@@ -52,15 +54,15 @@ describe('DB cleaning script - global tests', () => {
 
   it('should clean users by comparing auth and database', async () => {
     const [organizations, usersBefore] = await Promise.all([
-      adminServices.db.collection('orgs').get(),
-      adminServices.db.collection('users').get()
+      db.collection('orgs').get(),
+      db.collection('users').get()
     ]);
     const organizationIds = organizations.docs.map(ref => ref.id);
 
     const adminAuth = new AdminAuthMocked() as any;
-    await cleanUsers(usersBefore, organizationIds, adminAuth, adminServices.db);
+    await cleanUsers(usersBefore, organizationIds, adminAuth, db);
 
-    const usersAfter: Snapshot = await adminServices.db.collection('users').get();
+    const usersAfter: Snapshot = await db.collection('users').get();
     const cleanedUsers = usersAfter.docs.filter(u => isUserClean(u, organizationIds)).length;
 
     expect(cleanedUsers).toEqual(2);
@@ -68,9 +70,9 @@ describe('DB cleaning script - global tests', () => {
 
   it('should clean organizations', async () => {
     const [movies, organizationsBefore, users] = await Promise.all([
-      adminServices.db.collection('movies').get(),
-      adminServices.db.collection('orgs').get(),
-      adminServices.db.collection('users').get()
+      db.collection('movies').get(),
+      db.collection('orgs').get(),
+      db.collection('users').get()
     ]);
 
     const [movieIds, userIds] = [
@@ -80,51 +82,51 @@ describe('DB cleaning script - global tests', () => {
 
     await cleanOrganizations(organizationsBefore, userIds, movieIds);
 
-    const organizationsAfter: Snapshot = await adminServices.db.collection('orgs').get();
+    const organizationsAfter: Snapshot = await db.collection('orgs').get();
     const cleanedOrgs = organizationsAfter.docs.filter(m => isOrgClean(m, userIds, movieIds)).length;
     expect(cleanedOrgs).toEqual(orgsTestSet.length);
   });
 
   it('should remove permissions not belonging to existing org', async () => {
     const [permissionsBefore, organizations,] = await Promise.all([
-      adminServices.db.collection('permissions').get(),
-      adminServices.db.collection('orgs').get(),
+      db.collection('permissions').get(),
+      db.collection('orgs').get(),
     ]);
     const organizationIds = organizations.docs.map(ref => ref.id);
     const orgsToKeep = permissionsBefore.docs.filter(d => organizationIds.includes(d.id)).length;
 
     await cleanPermissions(permissionsBefore, organizationIds);
-    const permissionsAfter: Snapshot = await adminServices.db.collection('permissions').get();
+    const permissionsAfter: Snapshot = await db.collection('permissions').get();
     expect(permissionsAfter.docs.length).toEqual(orgsToKeep);
   });
 
   it('should clean movies from unwanted attributes', async () => {
-    const moviesBefore: Snapshot = await adminServices.db.collection('movies').get();
+    const moviesBefore: Snapshot = await db.collection('movies').get();
     await cleanMovies(moviesBefore);
-    const moviesAfter: Snapshot = await adminServices.db.collection('movies').get();
+    const moviesAfter: Snapshot = await db.collection('movies').get();
     const cleanedMovies = moviesAfter.docs.filter(m => isMovieClean(m)).length;
     expect(cleanedMovies).toEqual(moviesTestSet.length);
   });
 
   it('should remove documents undefined or not linked to existing document from docsIndex', async () => {
     const [docsIndexBefore, movies,] = await Promise.all([
-      adminServices.db.collection('docsIndex').get(), // @TODO #3066 create collectionRef(path: string) method to factorize
-      adminServices.db.collection('movies').get()
+      db.collection('docsIndex').get(), // @TODO #3066 create collectionRef(path: string) method to factorize
+      db.collection('movies').get()
     ]);
 
     const movieIds = movies.docs.map(m => m.id);
     const docsToKeep = docsIndexBefore.docs.filter(d => movieIds.includes(d.id)).length;
     await cleanDocsIndex(docsIndexBefore, movieIds);
-    const docsIndexAfter: Snapshot = await adminServices.db.collection('docsIndex').get();
+    const docsIndexAfter: Snapshot = await db.collection('docsIndex').get();
     expect(docsIndexAfter.docs.length).toEqual(docsToKeep);
   });
 
   it('should clean notifications', async () => {
     const [notificationsBefore, events, movies, users] = await Promise.all([
-      adminServices.db.collection('notifications').get(),
-      adminServices.db.collection('events').get(),
-      adminServices.db.collection('movies').get(),
-      adminServices.db.collection('users').get()
+      db.collection('notifications').get(),
+      db.collection('events').get(),
+      db.collection('movies').get(),
+      db.collection('users').get()
     ]);
 
     const documentIds = movies.docs.map(m => m.id)
@@ -132,7 +134,7 @@ describe('DB cleaning script - global tests', () => {
       .concat(users.docs.map(m => m.id))
 
     await cleanNotifications(notificationsBefore, documentIds);
-    const notificationsAfter: Snapshot = await adminServices.db.collection('notifications').get();
+    const notificationsAfter: Snapshot = await db.collection('notifications').get();
 
     const cleanOutput = notificationsAfter.docs.map(d => isNotificationClean(d));
     expect(every(cleanOutput)).toEqual(true);
@@ -141,27 +143,27 @@ describe('DB cleaning script - global tests', () => {
 
 
 describe('DB cleaning script - deeper tests', () => {
-  let adminServices: AdminServices;
 
   beforeAll(async () => {
-    adminServices = loadAdminServices();
+    const adminServices = loadAdminServices();
+    db = adminServices.db;
     // To be sure that tests are not polluted
-    await resetDb(adminServices);
+    await resetDb(db);
   });
 
   afterEach(async () => {
     // After each test, db is reseted
-    await resetDb(adminServices);
+    await resetDb(db);
   });
 
   it('should remove unexpected users from auth', async () => {
     const adminAuth = new AdminAuthMocked() as any;
 
     // Load our test set
-    await populate(adminServices, 'users', usersTestSet);
+    await populate(db, 'users', usersTestSet);
 
     // Check if data have been correctly added
-    const usersBefore = await adminServices.db.collection('users').get();
+    const usersBefore = await db.collection('users').get();
     expect(usersBefore.docs.length).toEqual(10);
 
     // Add a new auth user that is not on db
@@ -195,16 +197,16 @@ describe('DB cleaning script - deeper tests', () => {
     adminAuth.users = [];
 
     // Load our test set : only one user
-    await populate(adminServices, 'users', [testUser1, testUser2]);
+    await populate(db, 'users', [testUser1, testUser2]);
 
     // Check if users have been correctly added
-    const usersBefore = await adminServices.db.collection('users').get();
+    const usersBefore = await db.collection('users').get();
     expect(usersBefore.docs.length).toEqual(2);
 
-    await cleanUsers(usersBefore, [], adminAuth, adminServices.db);
+    await cleanUsers(usersBefore, [], adminAuth, db);
 
     // Check if user have been correctly removed
-    const usersAfter = await adminServices.db.collection('users').get();
+    const usersAfter = await db.collection('users').get();
     expect(usersAfter.docs.length).toEqual(0);
 
   });
@@ -221,25 +223,25 @@ describe('DB cleaning script - deeper tests', () => {
     adminAuth.users = [];
 
     // Load our test set : only one user
-    await populate(adminServices, 'users', [testUser]);
+    await populate(db, 'users', [testUser]);
     // Loading a fake org belonging to user
-    await populate(adminServices, 'orgs', [testOrg]);
+    await populate(db, 'orgs', [testOrg]);
     // Loading a fake permission document
-    await populate(adminServices, 'permissions', [testPermission]);
+    await populate(db, 'permissions', [testPermission]);
 
     // Check if user have been correctly added
-    const usersBefore = await adminServices.db.collection('users').get();
+    const usersBefore = await db.collection('users').get();
     expect(usersBefore.docs.length).toEqual(1);
 
     // Check if org have been correctly added
-    const orgsBefore = await adminServices.db.collection('orgs').get();
+    const orgsBefore = await db.collection('orgs').get();
     expect(orgsBefore.docs.length).toEqual(1);
 
     // Check permission org have been correctly added
-    const permissionsBefore = await adminServices.db.collection('permissions').get();
+    const permissionsBefore = await db.collection('permissions').get();
     expect(permissionsBefore.docs.length).toEqual(1);
 
-    await cleanUsers(usersBefore, [testOrg.id], adminAuth, adminServices.db);
+    await cleanUsers(usersBefore, [testOrg.id], adminAuth, db);
 
     /** 
      * In this scenario, user should be removed from DB because it was not found in Auth (empty)
@@ -247,17 +249,17 @@ describe('DB cleaning script - deeper tests', () => {
      * */
 
     // Check if user have been correctly removed
-    const usersAfter = await adminServices.db.collection('users').get();
+    const usersAfter = await db.collection('users').get();
     expect(usersAfter.docs.length).toEqual(0);
 
     // Check if userId have been removed from org
-    const orgsAfter = await adminServices.db.collection('orgs').get();
+    const orgsAfter = await db.collection('orgs').get();
     const orgAfter = orgsAfter.docs.pop().data();
     expect(orgAfter.userIds.length).toEqual(1);
     expect(orgAfter.userIds[0]).toEqual(anotherOrgMember);
 
     // Check if permissions have been updated
-    const permissionsAfter = await adminServices.db.collection('permissions').get();
+    const permissionsAfter = await db.collection('permissions').get();
     const permisisonAfter = permissionsAfter.docs.pop().data();
     expect(permisisonAfter.roles[anotherOrgMember]).toEqual('superAdmin');
     expect(permisisonAfter.roles[testUser.uid]).toBe(undefined);
@@ -265,8 +267,6 @@ describe('DB cleaning script - deeper tests', () => {
   });
 
 });
-
-
 
 function isMovieClean(d: any) {
   return d.data().distributionRights === undefined;
@@ -321,24 +321,23 @@ function isUserClean(doc: any, organizationIds: string[]) {
   return true;
 }
 
-
 ////////////
 // DB TOOLS
 ////////////
 
-function populate(adminServices: AdminServices, collection: string, set: any[]) {
+function populate(db: FirebaseFirestore.Firestore, collection: string, set: any[]) {
   return runChunks(set, async (d) => {
-    const docRef = adminServices.db.collection(collection).doc(d.id || d.uid);
+    const docRef = db.collection(collection).doc(d.id || d.uid);
     if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
     await docRef.set(d);
   }, 50, false)
 }
 
-async function resetDb(adminServices: AdminServices) {
+async function resetDb(db: FirebaseFirestore.Firestore) {
   const collections = ['movies', 'orgs', 'permissions', 'docsIndex', 'notifications', 'events', 'users', 'invitations'];
   const promises = [];
   for (const collection of collections) {
-    promises.push(adminServices.db.collection(collection).get());
+    promises.push(db.collection(collection).get());
   }
 
   let docs = [];
