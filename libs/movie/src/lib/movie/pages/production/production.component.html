@@ -3,16 +3,20 @@
   <ng-container tunnel-form>
     <section id="company">
       <h3>Production Company</h3>
+
       <bf-form-table [columns]="producerColumns" [form]="productionCompany" buttonText="Add Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
             <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Production Company Name</mat-label>
-                <input test-id="production-company-name" matInput formControlName="displayName" required />
-              </mat-form-field>
+              <mat-label>Production Company Name</mat-label>
+              <input test-id="production-company-name" matInput formControlName="displayName" placeholder="Production Company Name" />
+            </mat-form-field>
 
-              <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+              <mat-label>Production Country</mat-label>
+              <mat-error>Please specify Production Country.</mat-error>
+            </chips-autocomplete>
 
           </article>
         </ng-template>
@@ -27,12 +31,15 @@
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Co-Production Company Name</mat-label>
-                <input test-id="co-production-company-name" matInput formControlName="displayName" required />
-              </mat-form-field>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Co-Production Company Name</mat-label>
+              <input test-id="co-production-company-name" matInput formControlName="displayName" placeholder="Co-Production Company Name" />
+            </mat-form-field>
 
-              <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex>
+              <mat-label>Co-Production Country</mat-label>
+              <mat-error>Please specify Co-Production Country.</mat-error>
+            </chips-autocomplete>
 
           </article>
         </ng-template>
@@ -49,17 +56,19 @@
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Producer's Name</mat-label>
-                <input test-id="producer-first-name" matInput formControlName="firstName" required />
+                <mat-label>Producer's First Name</mat-label>
+                <input test-id="producer-first-name" matInput formControlName="firstName" placeholder="Producer's First Name" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Producer's Lastname</mat-label>
-                <input test-id="producer-last-name" matInput formControlName="lastName" required />
+                <input test-id="producer-last-name" matInput formControlName="lastName" placeholder="Producer's Last Name" />
               </mat-form-field>
             </div>
 
-            <static-select [control]="form.get('role')" scope="STAKEHOLDER_ROLES" label="Role"></static-select>
+            <static-select [control]="form.get('role')" scope="STAKEHOLDER_ROLES">
+              <mat-label>Role</mat-label>
+            </static-select>
 
           </article>
         </ng-template>
@@ -70,16 +79,20 @@
 
     <section id="distributors">
       <h3>Distributor(s)</h3>
+
       <bf-form-table [columns]="distributorColumns" [form]="distributors" buttonText="Add Distribution Company">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Company Name</mat-label>
-                <input test-id="distribution-company-name" matInput formControlName="displayName" required />
+                <input test-id="distribution-company-name" matInput formControlName="displayName" placeholder="Distribution Company Name" />
               </mat-form-field>
 
-              <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Countries" fxFlex></chips-autocomplete>
+              <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Enter Distribution Country/ies" fxFlex>
+                <mat-label>Enter Distribution Country/ies.</mat-label>
+                <mat-error>Please specify Distribution Country.</mat-error>
+              </chips-autocomplete>
 
           </article>
         </ng-template>
@@ -96,10 +109,13 @@
 
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Company Name</mat-label>
-              <input test-id="sales-company-name" matInput formControlName="displayName" required />
+              <input test-id="sales-company-name" matInput formControlName="displayName" placeholder="Sales Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex></chips-autocomplete>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country" fxFlex>
+              <mat-label>Sales Company's Nationality</mat-label>
+              <mat-error>Please specify Sales Company's Country.</mat-error>
+            </chips-autocomplete>
 
           </article>
         </ng-template>

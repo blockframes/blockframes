@@ -30,11 +30,10 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
-    // TODO: Enable this, but the data-model is not properly set.
-    // this.units$ = this.form.valueChanges.pipe(
-    //   startWith(this.form.value),
-    //   map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
-    // );
+    this.units$ = this.form.boxOffice.valueChanges.pipe(
+      startWith(this.form.boxOffice.value),
+      map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
+    );
   }
 
   get qualifications() {

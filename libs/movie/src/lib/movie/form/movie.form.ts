@@ -27,7 +27,7 @@ import {
   createMovieLanguageSpecification,
 } from '../+state/movie.model';
 
-import { FormArray, FormControl, Validators } from '@angular/forms';
+import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
@@ -93,7 +93,7 @@ function createMovieControls(movie: Partial<Movie>) {
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
     color: new FormControl(entity.color),
-    contentType: new FormControl(entity.contentType),
+    contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
@@ -101,15 +101,15 @@ function createMovieControls(movie: Partial<Movie>) {
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: new FormStaticArray(entity.genres, 'GENRES'),
-    internalRef: new FormControl(entity.internalRef),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.minLength(1)]),
+    internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline: new FormControl(entity.logline, [Validators.maxLength(180)]),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
+    logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
     poster: new MoviePromotionalHostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
@@ -122,7 +122,7 @@ function createMovieControls(movie: Partial<Movie>) {
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
-    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
+    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
     totalBudget: new PriceForm(entity.totalBudget),
   }
@@ -335,8 +335,8 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   const { unit, territory, value } = createBoxOffice(boxOffice);
   return {
     unit: new FormValue(unit),
-    territory: new FormControl(territory),
-    value: new FormControl(value, Validators.min(0))
+    territory: new FormControl(territory, Validators.required),
+    value: new FormControl(value, [Validators.min(0), Validators.required])
   }
 }
 
@@ -366,7 +366,7 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
   return {
     name: new FormControl(name),
     year: new FormControl(year, [yearValidators]),
-    prize: new FormControl(prize),
+    prize: new FormControl(prize, [Validators.maxLength(200)]),
     premiere: new FormControl(premiere),
   }
 }
@@ -443,7 +443,7 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 function createFilmographyFormControl(filmography?: Partial<Filmography>) {
   const { year, title } = createFilmography(filmography);
   return {
-    year: new FormControl(year),
+    year: new FormControl(year, [yearValidators]),
     title: new FormControl(title)
   }
 }
@@ -469,13 +469,12 @@ export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder>
 function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
   const { displayName, countries } = createStakeholder(stakeholder);
   return {
-    displayName: new FormControl(displayName),
-    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'))
+    displayName: new FormControl(displayName, Validators.required),
+    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'), Validators.required)
   }
 }
 
 type StakeholderControl = ReturnType<typeof createStakeholderControl>;
-
 
 // ------------------------------
 //       STAKEHOLDERS MAP
@@ -533,8 +532,8 @@ export class ReleaseYearForm extends FormEntity<ReleaseYearFormControl> {
 function createReleaseYearFormControl(release?: Partial<Movie['release']>) {
   const { year, status } = createReleaseYear(release);
   return {
-    year: new FormControl(year, [yearValidators]),
-    status: new FormControl(status),
+    year: new FormControl(year, [yearValidators, Validators.required]),
+    status: new FormControl(status, [Validators.required]),
   }
 }
 
@@ -546,7 +545,7 @@ type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
 
 export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
   constructor(runningTime?: Movie['runningTime']) {
-    super(createRunningTimeFormControl(runningTime));
+    super(createRunningTimeFormControl(runningTime), [runningTimeRequired]);
   }
 }
 
@@ -559,6 +558,14 @@ function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']
 }
 
 type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
+
+const runningTimeRequired: ValidatorFn = (form: RunningTimeForm) => {
+  const time = form.get('time').value;
+  const status = form.get('status').value;
+  return (status === "confirmed" && !time)
+    ? { timeRequired: true }
+    : null;
+};
 
 // ------------------------------
 //       STORE CONFIG
