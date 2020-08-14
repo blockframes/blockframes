@@ -46,7 +46,7 @@ describe('DB cleaning script - global tests', () => {
     };
 
     for (const collection in sets) {
-      promises.push(populate(db, collection, sets[collection]));
+      promises.push(populate(collection, sets[collection]));
     }
 
     await Promise.all(promises);
@@ -148,19 +148,19 @@ describe('DB cleaning script - deeper tests', () => {
     const adminServices = loadAdminServices();
     db = adminServices.db;
     // To be sure that tests are not polluted
-    await resetDb(db);
+    await resetDb();
   });
 
   afterEach(async () => {
     // After each test, db is reseted
-    await resetDb(db);
+    await resetDb();
   });
 
   it('should remove unexpected users from auth', async () => {
     const adminAuth = new AdminAuthMocked() as any;
 
     // Load our test set
-    await populate(db, 'users', usersTestSet);
+    await populate('users', usersTestSet);
 
     // Check if data have been correctly added
     const usersBefore = await db.collection('users').get();
@@ -197,7 +197,7 @@ describe('DB cleaning script - deeper tests', () => {
     adminAuth.users = [];
 
     // Load our test set : only one user
-    await populate(db, 'users', [testUser1, testUser2]);
+    await populate('users', [testUser1, testUser2]);
 
     // Check if users have been correctly added
     const usersBefore = await db.collection('users').get();
@@ -223,11 +223,11 @@ describe('DB cleaning script - deeper tests', () => {
     adminAuth.users = [];
 
     // Load our test set : only one user
-    await populate(db, 'users', [testUser]);
+    await populate('users', [testUser]);
     // Loading a fake org belonging to user
-    await populate(db, 'orgs', [testOrg]);
+    await populate('orgs', [testOrg]);
     // Loading a fake permission document
-    await populate(db, 'permissions', [testPermission]);
+    await populate('permissions', [testPermission]);
 
     // Check if user have been correctly added
     const usersBefore = await db.collection('users').get();
@@ -325,7 +325,7 @@ function isUserClean(doc: any, organizationIds: string[]) {
 // DB TOOLS
 ////////////
 
-function populate(db: FirebaseFirestore.Firestore, collection: string, set: any[]) {
+function populate(collection: string, set: any[]) {
   return runChunks(set, async (d) => {
     const docRef = db.collection(collection).doc(d.id || d.uid);
     if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
@@ -333,7 +333,7 @@ function populate(db: FirebaseFirestore.Firestore, collection: string, set: any[
   }, 50, false)
 }
 
-async function resetDb(db: FirebaseFirestore.Firestore) {
+async function resetDb() {
   const collections = ['movies', 'orgs', 'permissions', 'docsIndex', 'notifications', 'events', 'users', 'invitations'];
   const promises = [];
   for (const collection of collections) {
