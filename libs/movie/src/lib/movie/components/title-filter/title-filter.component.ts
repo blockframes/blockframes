@@ -21,8 +21,8 @@ export class FilterDirective implements OnInit {
   public color$: Observable<'primary' | ''>;
   constructor(public template: TemplateRef<any>) {}
 
-  set active(active: boolean) {
-    this.active$.next(active);
+  set active(isActive: boolean) {
+    this.active$.next(isActive);
   }
 
   ngOnInit() {
@@ -33,7 +33,6 @@ export class FilterDirective implements OnInit {
       map(([active]) => active || this.form.dirty),
       map(hasColor => hasColor ? 'primary' : '')
     );
-
   }
 }
 

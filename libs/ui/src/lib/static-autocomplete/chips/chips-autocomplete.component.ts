@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
 
@@ -59,7 +59,10 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
-    this.sub = this.form.valueChanges.subscribe(res => res.length ? this.form.markAsDirty() : this.form.markAsPristine());
+    this.sub = this.form.valueChanges.pipe(
+      map(res => !!res.length),
+      distinctUntilChanged()
+    ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
 
     this.items = staticModels[this.model];
 

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { map, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: '[form] filter-budget',
@@ -14,7 +15,10 @@ export class BudgetFilterComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   ngOnInit() {
-    this.sub = this.form.valueChanges.subscribe(res => !res || res === 0 ? this.form.markAsPristine() : this.form.markAsDirty());
+    this.sub = this.form.valueChanges.pipe(
+      map(res => !!res),
+      distinctUntilChanged()
+    ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
   }
 
   ngOnDestroy() {
