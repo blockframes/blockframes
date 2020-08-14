@@ -313,6 +313,13 @@ jobs:
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
+    triggers:
+      - schedule:
+          cron: '0 0 * * 0'
+          filters:
+            branches:
+              only:
+                - develop
     jobs:
       - push-anon-db-to-ci
   build-and-test:
