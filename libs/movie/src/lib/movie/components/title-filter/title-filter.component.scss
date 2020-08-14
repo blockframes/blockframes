@@ -17,6 +17,11 @@ button {
   margin-right: 16px;
 }
 
+.active-filter {
+  border-color: var(--primary) !important;
+  color: var(--primary);
+}
+
 mat-card {
   min-width: 400px;
 }
