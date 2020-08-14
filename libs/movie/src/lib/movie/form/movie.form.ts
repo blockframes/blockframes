@@ -562,11 +562,9 @@ type RunningTimeFormControl = ReturnType<typeof createRunningTimeFormControl>;
 const runningTimeRequired: ValidatorFn = (form: RunningTimeForm) => {
   const time = form.get('time').value;
   const status = form.get('status').value;
-  if(status === "confirmed" && time === null) {
-    return { timeRequired: true };
-  } else {
-    return null;
-  }
+  return (status === "confirmed" && !time)
+    ? { timeRequired: true }
+    : null;
 };
 
 // ------------------------------
