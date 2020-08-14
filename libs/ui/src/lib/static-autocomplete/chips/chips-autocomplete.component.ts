@@ -2,6 +2,7 @@ import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import {
   Component,
   OnInit,
+  OnDestroy,
   ViewChild,
   ElementRef,
   Input,
@@ -11,9 +12,9 @@ import {
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
@@ -24,7 +25,7 @@ import { staticModels } from '@blockframes/utils/static-model';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit {
+export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * The static model to display
@@ -50,10 +51,12 @@ export class ChipsAutocompleteComponent implements OnInit {
   public filteredItems$: Observable<any[]>;
   public values$: Observable<any[]>;
 
+  private sub: Subscription;
   private items: SlugAndLabel[];
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
+  @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
@@ -67,6 +70,13 @@ export class ChipsAutocompleteComponent implements OnInit {
       startWith(''),
       map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
+
+    this.sub = this.form.statusChanges.subscribe(status => this.chipList.errorState = status === 'INVALID')
+
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   /** Filter the items */

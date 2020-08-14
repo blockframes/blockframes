@@ -42,12 +42,20 @@ export class MovieFormMainComponent {
     return this.form.get('contentType')
   }
 
+  get internalRef() {
+    return this.form.get('internalRef')
+  }
+
   get banner() {
     return this.form.get('banner').get('media');
   }
 
   get poster() {
     return this.form.get('poster').get('media');
+  }
+
+  get runningTime() {
+    return this.form.get('runningTime').get('time');
   }
 
   get directors() {

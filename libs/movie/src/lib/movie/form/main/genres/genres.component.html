@@ -10,11 +10,14 @@
 <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
   <mat-form-field appearance="outline">
     <mat-label>Genres</mat-label>
-    <mat-select>
+    <mat-select required>
       <mat-option [value]="genre.slug" *ngFor="let genre of genres$ | async" (click)="add(genre.slug)">
         {{ genre.label }}
       </mat-option>
     </mat-select>
+    <mat-error *ngIf="!(genres$ | async).length">
+      Please specify your project's genre(s).
+    </mat-error>
   </mat-form-field>
 </article>
 

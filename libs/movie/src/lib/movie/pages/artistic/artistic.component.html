@@ -79,12 +79,12 @@
             <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
           </mat-form-field>
 
-          <static-select [control]="control.get('role')"
-            scope="CREW_ROLES"
-            label="Role"
-            hintText="Please specify crew member's role in your project (director of photography, score composer, writer...)"
-            hintAlign="start"
-            fxFlex></static-select>
+          <static-select [control]="control.get('role')" scope="CREW_ROLES" fxFlex>
+            <mat-label>Role</mat-label>
+            <mat-hint align="start">
+              Please specify crew member's role in your project (director of photography, score composer, writer...)
+            </mat-hint>
+          </static-select>
         </div>
 
         <mat-form-field appearance="outline">
