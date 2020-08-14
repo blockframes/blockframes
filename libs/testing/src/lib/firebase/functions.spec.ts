@@ -3,9 +3,6 @@ import { initFunctionsTestMock } from './functions';
 
 describe('firebase testing library', () => {
   it('should read the doc and get same data', async () => {
-    console.log(process.env.JEST_WORKER_ID);
-    const id = process.env.JEST_WORKER_ID;
-    expect(id).not.toBe("1");
     //Init Mocks and environment
     initFunctionsTestMock();
 
