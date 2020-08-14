@@ -5,9 +5,13 @@
       <h3>Release</h3>
       <article *ngFor="let control of originalRelease.controls; let i = index; let last = last">
         <div fxLayout fxLayoutGap="24px">
-          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
+            <mat-label>Country</mat-label>
+          </chips-autocomplete>
 
-          <static-select [control]="control.get('media')" scope="MEDIAS" label="Role" label="Select Release Media" fxFlex></static-select>
+          <static-select [control]="control.get('media')" scope="MEDIAS" fxFlex>
+            <mat-label>Release Media</mat-label>
+          </static-select>
         </div>
 
         <mat-form-field appearance="outline">

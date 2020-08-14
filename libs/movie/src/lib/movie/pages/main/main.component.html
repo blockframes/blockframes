@@ -85,13 +85,9 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select
-        scope="RELEASE_STATUS"
-        [control]="form.get('release').get('status')"
-        label="Estimated/Confirmed *"
-        error="form.get('release').get('status').hasError('required')"
-        errorText="Please specify if the release date is estimated or confirmed."
-        fxFlex>
+        <static-select scope="RELEASE_STATUS" [control]="form.release.get('status')" fxFlex>
+          <mat-label>Estimated/Confirmed *</mat-label>
+          <mat-error>Please specify if the release date is estimated or confirmed.</mat-error>
         </static-select>
       </article>
 
@@ -114,10 +110,8 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select
-        scope="SCREENING_STATUS"
-        [control]="form.get('runningTime').get('status')"
-        label="To be determined/Estimated/Confirmed" fxFlex>
+        <static-select scope="SCREENING_STATUS" [control]="form.get('runningTime').get('status')" fxFlex>
+          <mat-label>To be determined/Estimated/Confirmed</mat-label>
         </static-select>
 
         <mat-form-field appearance="outline" fxFlex>

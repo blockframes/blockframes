@@ -15,11 +15,6 @@ export class StaticSelectComponent {
     this._scope = staticModels[value];
   }
   @Input() control: FormStaticValue<Scope>;
-  @Input() label?: string;
-  @Input() hintText?: string;
-  @Input() hintAlign: string;
-  @Input() errorText?: string;
-  @Input() error?: string;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 }

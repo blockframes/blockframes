@@ -66,7 +66,9 @@
               </mat-form-field>
             </div>
 
-            <static-select [control]="form.get('role')" scope="STAKEHOLDER_ROLES" label="Role"></static-select>
+            <static-select [control]="form.get('role')" scope="STAKEHOLDER_ROLES">
+              <mat-label>Role</mat-label>
+            </static-select>
 
           </article>
         </ng-template>

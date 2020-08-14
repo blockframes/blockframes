@@ -101,15 +101,15 @@ function createMovieControls(movie: Partial<Movie>) {
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.minLength(1)]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
     poster: new MoviePromotionalHostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
@@ -335,8 +335,8 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   const { unit, territory, value } = createBoxOffice(boxOffice);
   return {
     unit: new FormValue(unit),
-    territory: new FormControl(territory),
-    value: new FormControl(value, Validators.min(0))
+    territory: new FormControl(territory, Validators.required),
+    value: new FormControl(value, [Validators.min(0), Validators.required])
   }
 }
 
@@ -344,7 +344,7 @@ export type BoxOfficeFormControl = ReturnType<typeof createBoxOfficeFormControl>
 
 export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
   constructor(boxOffice?: Partial<BoxOffice>) {
-    super(createBoxOfficeFormControl(boxOffice), [boxOfficeRequired])
+    super(createBoxOfficeFormControl(boxOffice))
   }
 }
 
@@ -356,14 +356,6 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
     ...params,
   }
 }
-
-const boxOfficeRequired: ValidatorFn = (form: BoxOfficeForm) => {
-  const territory = form.get('territory').value;
-  const value = form.get('value').value;
-  return territory !== ''  && value !== null
-    ? null
-    : { timeRequired: true };
-};
 
 // ------------------------------
 //         PRIZES

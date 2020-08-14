@@ -29,7 +29,9 @@
             </mat-error>
           </mat-form-field>
 
-          <static-select scope="PREMIERE_TYPE" [control]="control.get('premiere')" label="Status" fxFlex></static-select>
+          <static-select scope="PREMIERE_TYPE" [control]="control.get('premiere')" fxFlex>
+            <mat-label>Status</mat-label>
+          </static-select>
         </div>
 
         <footer fxLayout="column" fxLayoutAlign="center center">
