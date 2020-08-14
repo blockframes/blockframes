@@ -93,13 +93,13 @@ export function cleanNotifications(
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      await _cleanNotification(doc, notification);
+      await cleanOneNotification(doc, notification);
     }
   });
 
 }
 
-async function _cleanNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function cleanOneNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || '';
@@ -125,12 +125,12 @@ function cleanInvitations(
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      await _cleanInvitation(doc, invitation);
+      await cleanOneInvitation(doc, invitation);
     }
   });
 }
 
-async function _cleanInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function cleanOneInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
 
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);

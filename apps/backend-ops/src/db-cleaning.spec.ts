@@ -24,19 +24,6 @@ import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
-jest.setTimeout(30000);
-
-
-describe('Unit testing examples', () => {
-  it('should instruct you how to test expected errors', async () => {
-    try {
-      throw Error('test error');
-      // fail(); add fail to make sure that test did not pass because no error was raised
-    } catch (err) {
-      expect(err.message).toEqual('test error');
-    }
-  });
-});
 
 describe('DB cleaning script - global tests', () => {
   let adminServices: AdminServices;
@@ -178,7 +165,7 @@ describe('DB cleaning script - deeper tests', () => {
     expect(usersBefore.docs.length).toEqual(10);
 
     // Add a new auth user that is not on db
-    const fakeAuthUser = { uid: 'abc123', email: 'test@abc123.com' };
+    const fakeAuthUser = { uid: 'A', email: 'johndoe@fake.com' };
     adminAuth.users.push(fakeAuthUser);
 
     const authBefore = await adminAuth.listUsers();
@@ -200,9 +187,9 @@ describe('DB cleaning script - deeper tests', () => {
     const adminAuth = new AdminAuthMocked() as any;
 
     // User with no orgId
-    const testUser1 = { uid: '1M9DUDBATqayXXaXMYThZGtE9up1', email: 'bdelorme+users-392@cascade8.com' };
+    const testUser1 = { uid: 'A', email: 'johndoe@fake.com' };
     // User with fake orgId
-    const testUser2 = { uid: 'PlsmWeCu6WRIau8tWLFzkQTGe6F2', email: 'bdelorme+users-392@cascade8.com', orgId: 'fake-org-id' };
+    const testUser2 = { uid: 'B', email: 'johnmcclain@fake.com', orgId: 'fake-org-id' };
 
     // Set empty auth
     adminAuth.users = [];
@@ -225,8 +212,8 @@ describe('DB cleaning script - deeper tests', () => {
   it('should update org and permissions documents when deleting user with org', async () => {
     const adminAuth = new AdminAuthMocked() as any;
 
-    const testUser = { uid: '1M9DUDBATqayXXaXMYThZGtE9up1', email: 'bdelorme+users-392@cascade8.com', orgId: 'jnbHKBP5YLvRQGcyQ8In' };
-    const anotherOrgMember = 'dVwUQoJy56Too7QkmwFSeplWf643';
+    const testUser = { uid: 'A', email: 'johndoe@fake.com', orgId: 'orgA' };
+    const anotherOrgMember = 'B';
     const testOrg = { id: testUser.orgId, userIds: [anotherOrgMember, testUser.uid] };
     const testPermission = { id: testUser.orgId, roles: { [testUser.uid]: 'admin', [anotherOrgMember]: 'superAdmin' } };
 
@@ -349,11 +336,14 @@ function populate(adminServices: AdminServices, collection: string, set: any[]) 
 
 async function resetDb(adminServices: AdminServices) {
   const collections = ['movies', 'orgs', 'permissions', 'docsIndex', 'notifications', 'events', 'users', 'invitations'];
-
-  let documents = [];
+  const promises = [];
   for (const collection of collections) {
-    const docs = await adminServices.db.collection(collection).get();
-    documents = documents.concat(docs.docs);
+    promises.push(adminServices.db.collection(collection).get());
   }
-  return runChunks(documents, async d => await d.ref.delete(), 50, false);
+
+  let docs = [];
+  const result = await Promise.all(promises);
+  result.forEach(res => { docs = docs.concat(res.docs) });
+
+  return runChunks(docs, d => d.ref.delete(), 50, false);
 }

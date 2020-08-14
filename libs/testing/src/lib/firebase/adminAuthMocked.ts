@@ -23,11 +23,8 @@ export class AdminAuthMocked {
 
   deleteUser(uid: string) {
     return new Promise((resolve) => {
-      const user = this.users.some(u => u.uid === uid);
-      if (user) {
-        this.users = this.users.filter(u => u.uid !== uid);
-      }
-      resolve(user);
+      this.users = this.users.filter(u => u.uid !== uid);
+      resolve();
     });
   }
 }
