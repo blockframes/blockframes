@@ -36,8 +36,7 @@ async function getProdBackup() {
     const last = files
       .sort(
         (a, b) =>
-          new Date(a.metadata?.timeCreated).getMilliseconds() -
-          new Date(b.metadata?.timeCreated).getMilliseconds()
+          Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
       )
       .pop();
     console.log('Latest backup:', last.metadata.timeCreated);
