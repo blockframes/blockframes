@@ -5,6 +5,7 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.firestore';
 import { OldImgRef } from './old-types';
+import { getCollection } from '@blockframes/firebase-utils';
 
 /**
  * Migrate old medias & images and some refactoring on the movie.
@@ -22,21 +23,21 @@ import { OldImgRef } from './old-types';
  */
 export async function upgrade(db: Firestore) {
   try {
-    const users: PublicUser[] = await db.collection('users').get().then(ref => ref.docs.map(d => d.data() as PublicUser));
+    const users = await getCollection<PublicUser>('users');
     updateUsers(db, users);
   } catch (error) {
     console.log(`An error happened while updating users: ${error.message}`);
   }
 
   try {
-    const movies: Movie[] = await db.collection('movies').get().then(ref => ref.docs.map(d => d.data() as Movie));
+    const movies = await getCollection<Movie>('movies');
     updateMovies(db, movies);
   } catch (error) {
     console.log(`An error happened while updating movies: ${error.message}`);
   }
 
   try {
-    const orgs: Organization[] = await db.collection('orgs').get().then(ref => ref.docs.map(d => d.data() as Organization));
+    const orgs = await getCollection<Organization>('orgs');
     updateOrgs(db, orgs);
   } catch (error) {
     console.log(`An error happened while updating organizations: ${error.message}`);

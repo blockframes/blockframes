@@ -1,9 +1,8 @@
 import { loadAdminServices } from './admin';
 import { db } from 'apps/backend-functions/src/internals/firebase';  // @TODO #3066 remove this call to backend-functions
 import { getDocAndPath } from 'apps/backend-functions/src/media';  // @TODO #3066 remove this call to backend-functions
-import { getCollection } from 'apps/backend-functions/src/data/internals';  // @TODO #3066 remove this call to backend-functions
 import { has, get } from 'object-path';
-import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, isInMaintenance, getCollection } from '@blockframes/firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
