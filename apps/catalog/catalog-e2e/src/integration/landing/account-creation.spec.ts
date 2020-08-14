@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
 
+import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { AuthWelcomePage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
 
 const USER: Partial<User> = {
@@ -21,8 +22,9 @@ const LONG_PASSWORD = '123456789123456789123456789';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  const p1: AuthWelcomePage = new AuthWelcomePage();
-  p1.clickCallToAction();
+  cy.visit('/');
+  const p1 = new LandingPage();
+  p1.clickSignup();
 })
 
 describe('User can create new account', () => {

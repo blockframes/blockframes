@@ -7,7 +7,7 @@ import { admin, getStorageBucketName } from './firebase';
  * - Store the watermark file in the storage bucket
  * - User's firestore doc is updated by onFileUpload backend function
  */
-export async function upsertWatermark(user: PublicUser): Promise<void> {
+export async function upsertWatermark(user: PublicUser): Promise<any> {
 
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
@@ -22,4 +22,5 @@ export async function upsertWatermark(user: PublicUser): Promise<void> {
     file.createWriteStream({ contentType: 'image/svg+xml' }).end(watermark, () => res());
   });
 
+  return file;
 }
