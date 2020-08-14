@@ -12,9 +12,7 @@ export const auth = admin.auth();
 
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
-/**
- * @deprecated import vars from env directly instead of using this.
- */
+// @deprecated import vars from env directly instead of using this.
 export const getBackupBucketName = (): string => backupBucket;
 export const getStorageBucketName = (): string => storageBucket;
 
