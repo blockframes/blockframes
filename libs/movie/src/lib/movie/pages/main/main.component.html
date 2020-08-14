@@ -30,14 +30,16 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <mat-form-field appearance="outline" fxFlex>
+        <!-- <mat-form-field appearance="outline" fxFlex>
           <mat-label>Content Type</mat-label>
           <mat-select test-id="content-type" [formControl]="contentTypeCtrl">
             <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
               {{ type.value }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
+        </mat-form-field> -->
+        <static-select const="contentType" [constCtrl]="contentTypeCtrl" label="content type" fxFlex></static-select>
+
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Reference</mat-label>
           <input test-id="reference" matInput type="text" placeholder="Reference"
@@ -89,7 +91,7 @@
         </mat-form-field>
 
         <!-- TODO uncomment this when data model is ready -->
-        <!-- <static-select scope="RELEASE_STATUS" [control]="form.get('status')" label="Estimated/Confirmed" fxFlex></static-select> -->
+        <static-select scope="RELEASE_STATUS" [control]="form.release.get('status')" label="Estimated/Confirmed" fxFlex></static-select>
       </article>
 
       <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES" placeholder="Country">
@@ -101,7 +103,7 @@
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <!-- TODO uncomment this when data model is ready -->
-        <!-- <static-select scope="SCREENING_STATUS" [control]="form.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select> -->
+        <static-select scope="SCREENING_STATUS" [control]="form.runningTime.get('status')" label="To be determined/Estimated/Confirmed" fxFlex></static-select>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>

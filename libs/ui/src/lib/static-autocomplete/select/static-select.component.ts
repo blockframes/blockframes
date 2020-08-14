@@ -2,9 +2,10 @@ import { SlugAndLabel, Scope } from '@blockframes/utils/static-model/staticModel
 import { staticModels } from '@blockframes/utils/static-model';
 import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef } from '@angular/core';
 import { FormStaticValue } from '@blockframes/utils/form';
+import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: '[scope][control] static-select',
+  selector: 'static-select',
   templateUrl: './static-select.component.html',
   styleUrls: ['./static-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -14,7 +15,9 @@ export class StaticSelectComponent {
   @Input() set scope(value: string) {
     this._scope = staticModels[value];
   }
-  @Input() control: FormStaticValue<Scope>;
+  @Input() const;
+  @Input() scopeCtrl: FormStaticValue<Scope>;
+  @Input() constCtrl: FormControl;
   @Input() label?: string;
   @Input() hintText?: string;
   @Input() hintAlign: string;

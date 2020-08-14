@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaticSelectComponent } from './static-select.component';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { StaticSelectComponent } from './static-select.component';
     ReactiveFormsModule,
     MatIconModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    ToLabelModule
   ],
   declarations: [StaticSelectComponent],
   exports: [StaticSelectComponent]
