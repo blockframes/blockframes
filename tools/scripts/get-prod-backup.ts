@@ -32,7 +32,14 @@ async function getProdBackup() {
   try {
     // Get latest backup DB
     const [files] = await storage.bucket(backupBucket).getFiles();
-    const last = files.sort((a, b) => a.metadata?.timeCreated - b.metadata?.timeCreated).pop();
+    console.log('last file in array: ', files[files.length - 1].name);
+    const last = files
+      .sort(
+        (a, b) =>
+          new Date(a.metadata?.timeCreated).getMilliseconds() -
+          new Date(b.metadata?.timeCreated).getMilliseconds()
+      )
+      .pop();
     console.log('Latest backup:', last.metadata.timeCreated);
     console.log('File name: ', last.name);
     console.dir('File metadata is: ', last.metadata);
