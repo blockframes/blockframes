@@ -10,7 +10,7 @@ import { staticModels } from '@blockframes/utils/static-model';
 })
 export class MovieFormArtisticComponent {
   form = this.shell.form;
-  public castStatus = staticModels.CAST_STATUS;
+  public memberStatus = staticModels.MEMBER_STATUS;
 
   constructor(private shell: MovieFormShellComponent) {}
 

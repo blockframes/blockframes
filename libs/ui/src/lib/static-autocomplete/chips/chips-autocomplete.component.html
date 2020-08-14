@@ -1,4 +1,7 @@
 <mat-form-field appearance="outline">
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+  </mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
@@ -11,8 +14,11 @@
       (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
   <mat-hint>
-    <ng-content></ng-content>
+    <ng-content select="mat-hint"></ng-content>
   </mat-hint>
+  <mat-error>
+    <ng-content select="mat-error"></ng-content>
+  </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
   <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item['slug']">

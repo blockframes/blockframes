@@ -4,15 +4,20 @@
 
 <div *ngIf="showTable$ | async" class="table-container">
   <table mat-table [dataSource]="dataSource">
-    ​
-    <ng-container *ngFor="let column of cols;" [matColumnDef]="column.colRef">
-      <th mat-header-cell *matHeaderCellDef> {{ column.colRef }} </th>
+
+    <ng-container *ngFor="let column of columns | keyvalue" [matColumnDef]="column.key">
+      <th mat-header-cell *matHeaderCellDef> {{ column.value }} </th>
       <td mat-cell *matCellDef="let row">
-        <ng-template [ngTemplateOutlet]="column.template || text" [ngTemplateOutletContext]="{ $implicit: row }">
-        </ng-template>
+        <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
+          <ng-template [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row }">
+          </ng-template>
+        </ng-container>
+          <ng-template #default>
+            {{ row[column.key] }}
+          </ng-template>
       </td>
     </ng-container>
-    ​
+
     <ng-container matColumnDef="actions" stickyEnd>
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let index = index">
@@ -23,16 +28,17 @@
           <button mat-icon-button (click)="remove(index)">
             <mat-icon svgIcon="trash"></mat-icon>
           </button>
-        </span>
+        </span> 
       </td>
     </ng-container>
-    ​
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
   </table>
 </div>
 <ng-container *ngIf="showPaginator$ | async">
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" [pageSize]="pageSize" showFirstLastButtons
+    (page)="updateIndex($event)">
   </mat-paginator>
 </ng-container>
 ​
@@ -45,4 +51,10 @@
 ​
 <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
 </ng-template>
-<bf-line-button [buttonText]="buttonText" (buttonClick)="addControl()"></bf-line-button>
+<footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+  <mat-divider></mat-divider>
+  <span>{{ buttonText }}</span>
+  <button mat-mini-fab color="primary" (click)="addControl()" [disabled]="formItem.invalid">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</footer>

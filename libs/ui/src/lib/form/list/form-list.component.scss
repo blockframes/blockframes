@@ -1,0 +1,14 @@
+mat-divider {
+  width: 100%;
+}
+
+footer {
+  mat-divider {
+    border-top-color: var(--primary);
+    border-top-width: 2px;
+    margin-right: 16px;
+  }
+  span {
+    white-space: nowrap;
+  }
+}

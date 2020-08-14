@@ -4,12 +4,20 @@
   <ng-container tunnel-form>
     <div fxLayout="column" fxLayoutGap="32px">
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select [control]="format" scope="MOVIE_FORMAT" label="Shooting Format"></static-select>
-        <static-select [control]="quality" scope="MOVIE_FORMAT_QUALITY" label="Format Quality"></static-select>
+        <static-select [control]="format" scope="MOVIE_FORMAT">
+          <mat-label>Shooting Format</mat-label>
+        </static-select>
+        <static-select [control]="quality" scope="MOVIE_FORMAT_QUALITY">
+          <mat-label>Format Quality</mat-label>
+        </static-select>
       </div>
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select [control]="color" scope="COLORS" label="Color / Black & White"></static-select>
-        <static-select [control]="soundFormat" scope="SOUND_FORMAT" label="Sound Format"></static-select>
+        <static-select [control]="color" scope="COLORS" label="Color / Black & White">
+          <mat-label>Color / Black & White</mat-label>
+        </static-select>
+        <static-select [control]="soundFormat" scope="SOUND_FORMAT">
+          <mat-label>Sound Format</mat-label>
+        </static-select>
       </div>
     </div>
   </ng-container>
