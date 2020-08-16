@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie, MovieStakeholders } from '@blockframes/movie/+state/movie.model';
 
 const promoLinks = [
   'promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'
@@ -46,7 +46,7 @@ export class MarketplaceMovieMainComponent {
   }
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
-  public getStakeholder(movie: Movie, role: string) {
+  public getStakeholder(movie: Movie, role: keyof MovieStakeholders) {
     return movie.stakeholders[role].map(stakeholder => {
       return (stakeholder.countries && !!stakeholder.countries.length)
         ? `${stakeholder.displayName} (${stakeholder.countries.map(country => getLabelBySlug('TERRITORIES', country))})`
