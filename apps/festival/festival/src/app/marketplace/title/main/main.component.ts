@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { premiereType } from '@blockframes/movie/+state/movie.firestore';
+import { premiereType, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
 import { formatNumber } from '@angular/common';
 
 @Component({
@@ -27,7 +27,7 @@ export class MainComponent {
   }
 
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
-  public getStakeholder(movie: Movie, role: string) {
+  public getStakeholder(movie: Movie, role: keyof MovieStakeholders) {
     return movie.stakeholders[role].map(stakeholder => {
       return (stakeholder.countries && !!stakeholder.countries.length)
         ? `${stakeholder.displayName} (${stakeholder.countries.map(country => getLabelBySlug('TERRITORIES', country))})`
