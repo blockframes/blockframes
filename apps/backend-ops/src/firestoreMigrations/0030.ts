@@ -1,11 +1,11 @@
 import { Firestore } from '../admin';
-import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
 import { runChunks } from '../tools';
-
+import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import {
   OldHostedMedia as HostedMedia,
   createOldHostedMedia as createHostedMedia,
 } from './old-types';
+
 
 const EMPTY_REF: HostedMedia = { ref: '', url: '' };
 
