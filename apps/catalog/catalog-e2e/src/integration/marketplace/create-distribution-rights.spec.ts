@@ -1,8 +1,9 @@
 /// <reference types="cypress" />
 
+import { LandingPage } from '../../support/pages/landing';
 import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../../support/pages/marketplace';
 import { User, Availabilities } from '@blockframes/e2e/utils/type';
-import { AuthLoginPage, AuthWelcomePage } from '@blockframes/e2e/pages/auth';
+import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 
 const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',
@@ -33,16 +34,16 @@ const DISTRIBUTION_MEDIA_ARRAY = ['pay-tv', 'free-tv'];
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit('/auth');
+  cy.visit('/');
+  const p1 = new LandingPage();
+  p1.clickSignup();
   cy.viewport('ipad-2', 'landscape');
-
 });
 
 describe('test select movie from catalog', () => {
   it.skip('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
     // Connexion
-    const p1: AuthWelcomePage = new AuthWelcomePage();
-    const p2: AuthLoginPage = p1.clickCallToAction();
+    const p2: AuthLoginPage = new AuthLoginPage();
     p2.fillSignin(LOGIN_CREDENTIALS);
     p2.clickSignIn();
     const p3 = new HomePage();

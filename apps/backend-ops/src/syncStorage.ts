@@ -15,15 +15,15 @@ enum mediaFieldType {
 
 // reference to the location of all hosted medias in the db
 const mediaReferences = [
-  { 
+  {
     collection: 'users',
     fields: [
       { field: 'watermark', type: mediaFieldType.single },
       { field: 'avatar', type: mediaFieldType.single },
     ]
   },
-  { 
-    collection: 'orgs', 
+  {
+    collection: 'orgs',
     fields: [
       { field: 'logo', type: mediaFieldType.single }
     ]
@@ -62,7 +62,7 @@ export async function syncStorage() {
     for (const doc of docs) {
       const docId = isPublicUser(doc) ? doc.uid : doc.id;
       const docRef = db.collection(ref.collection).doc(docId);
-      
+
       for (const field of ref.fields) {
         let data;
 
@@ -112,7 +112,7 @@ export async function syncStorage() {
       const currentMediaValue = get(docData, fieldToUpdate);
       if (!!currentMediaValue) {
         throw new Error(`Duplicate File: reference is already set by another file. Applies to file ${file.name}`);
-      } 
+      }
 
       // link the firestore
       // ! this will not work with array in the path

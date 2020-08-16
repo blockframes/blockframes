@@ -18,7 +18,7 @@ const SYNOPSIS = 'An up-close-and-personal portrait of the fashion icon, Karl La
 const PRODUCTION_YEAR = '2006';
 
 beforeEach(() => {
-  clearDataAndPrepareTest();
+  clearDataAndPrepareTest('/');
   signInAndNavigateToMain();
 });
 

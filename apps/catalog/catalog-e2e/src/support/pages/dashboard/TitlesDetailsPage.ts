@@ -4,7 +4,7 @@ const TITLES = 'My Titles';
 
 export default class TitlesDetailsPage {
   constructor() {
-    cy.get('catalog-title-view catalog-title-details');
+    cy.get('catalog-title-view catalog-title-details', { timeout: 10000 });
   }
 
   public assertTitleExists(title: string) {

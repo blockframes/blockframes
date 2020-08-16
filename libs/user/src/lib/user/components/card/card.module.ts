@@ -8,6 +8,7 @@ import { CardComponent } from './card.component';
 
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     CommonModule,
     ImageReferenceModule,
     FlexLayoutModule,
+    MaxLengthModule
   ]
 })
 export class UserCardModule { }
