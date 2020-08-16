@@ -3,7 +3,7 @@ import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/f
 import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { has, get } from 'object-path';
-import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';

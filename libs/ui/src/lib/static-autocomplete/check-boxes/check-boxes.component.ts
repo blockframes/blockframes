@@ -46,10 +46,13 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
     this.items = staticModels[this.model]
 
     /** Unchecks checkmarks when value is updated directly on FormList */
-    this.form.valueChanges.subscribe(res => {
+    this.sub = this.form.valueChanges.subscribe(res => {
       if (isArray(res) && res.length === 0) {
         this.items.map(item => item.value = false);
         this.cdr.markForCheck();
+        this.form.markAsPristine();
+      } else {
+        this.form.markAsDirty();
       }
     })
   }

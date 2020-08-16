@@ -9,7 +9,7 @@ import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep, runChunks } from './tools';
 import readline from 'readline';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 
 /**

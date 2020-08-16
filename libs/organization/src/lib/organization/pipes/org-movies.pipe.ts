@@ -7,7 +7,7 @@ export class OrgMoviesPipe implements PipeTransform {
   constructor(private movieService: MovieService) {}
 
   transform(org: Organization, from: number = 0, to: number = org.movieIds.length) {
-    const movieIds = org.movieIds.splice(from, to);
+    const movieIds = Object.assign([], org.movieIds).splice(from, to);
     return this.movieService.valueChanges(movieIds);
   }
 }
