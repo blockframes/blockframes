@@ -9,8 +9,8 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationBannerComponent {
-  
+
   @Input() org: Organization;
 
-  filterMovie = (movie: Movie) => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.festival;
+  filterMovie = (movie: Movie) => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.festival;
 }
