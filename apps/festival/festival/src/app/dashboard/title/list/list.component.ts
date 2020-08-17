@@ -2,13 +2,14 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { startWith, map, switchMap } from 'rxjs/operators';
+import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface TitleView {
   id: string; // movieId
@@ -64,7 +65,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private service: MovieService,
     private orgQuery: OrganizationQuery,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -75,7 +77,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival))
+      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival)),
+      tap(movies => {
+        !!movies.length ?
+          this.dynTitle.setPageTitle('My titles') :
+          this.dynTitle.setPageTitle('My titles - Empty');
+      }),
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 

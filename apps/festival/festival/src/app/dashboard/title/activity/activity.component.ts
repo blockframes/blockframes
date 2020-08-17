@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-title-activity',
@@ -23,10 +24,12 @@ export class TitleActivityComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private contractQuery: ContractQuery
+    private contractQuery: ContractQuery,
+    private dynTitle: DynamicTitleService,
   ) {}
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Title page - Marketplace Activity');
     this.movieId = this.movieQuery.getActiveId();
     this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieId]);
     this.contracts$ = this.contractQuery.selectAll().pipe(
