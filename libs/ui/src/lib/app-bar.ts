@@ -3,9 +3,9 @@ import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { trigger, style, transition, animate, query } from '@angular/animations';
 import { Easing } from '@blockframes/utils/animations/animation-easing';
-import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { delay } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'app-bar',
@@ -84,7 +84,6 @@ export class AppContainerDirective {
 @Directive({ selector: '[pageBar]' })
 export class PageBarDirective implements AfterViewInit, OnDestroy {
   private observer: IntersectionObserver;
-  public isVisible$: Observable<boolean>;
   @Input() targetId: string;
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -93,7 +92,8 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
     private zone: NgZone,
   ) {}
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    await delay(500); // prevents sizes in entry.rootBounds to not be 0
     this.appContainer.appBar.attach(this.template)
     if (this.targetId) {
       this.zone.runOutsideAngular(() => {
