@@ -2,21 +2,20 @@ import {
   RelayerConfig,
   relayerDeployLogic,
   relayerRegisterENSLogic,
-  relayerSendLogic
+  relayerSendLogic,
 } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 import { functions } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
-import { onDocumentCreate, onDocumentDelete, onDocumentWrite } from './utils';
+import {
+  onDocumentCreate,
+  onDocumentDelete,
+  onDocumentWrite,
+} from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import {
-  onOrganizationCreate,
-  onOrganizationDelete,
-  onOrganizationUpdate,
-  accessToAppChanged
-} from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
 import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
@@ -29,6 +28,7 @@ import { linkFile, unlinkFile } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
+
 //--------------------------------
 //    Configuration             //
 //--------------------------------
@@ -40,7 +40,8 @@ import { skipInMaintenance } from '@blockframes/firebase-utils';
 const heavyConfig = {
   timeoutSeconds: 300,
   memory: '1GB'
-} as functions.RuntimeOptions;
+} as functions.RuntimeOptions
+
 
 //--------------------------------
 //    Users Management          //
@@ -54,16 +55,25 @@ export const createUser = functions.https.onCall(logErrors(users.createUser));
  *
  * We create a corresponding document in `users/userID`.
  */
-export const onUserCreate = functions.auth.user().onCreate(logErrors(users.onUserCreate));
+export const onUserCreate = functions.auth
+  .user()
+  .onCreate(logErrors(users.onUserCreate));
 
-export const onUserCreateDocument = onDocumentCreate('/users/{userID}', users.onUserCreateDocument);
+export const onUserCreateDocument = onDocumentCreate(
+  '/users/{userID}',
+  users.onUserCreateDocument
+);
 
 export const onUserUpdate = functions
   .runWith(heavyConfig) // user update can potentially trigger images processing
   .firestore.document('/users/{userID}')
   .onUpdate(skipInMaintenance(users.onUserUpdate));
 
-export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDelete);
+
+export const onUserDelete = onDocumentDelete(
+  '/users/{userID}',
+  users.onUserDelete
+);
 
 /** Trigger: REST call to send a verify email to a user. */
 // @TODO (#2821)
@@ -71,7 +81,8 @@ export const onUserDelete = onDocumentDelete('/users/{userID}', users.onUserDele
   .onCall(users.startVerifyEmailFlow);*/
 
 /** Trigger: REST call to send a reset password link to a user. */
-export const sendResetPasswordEmail = functions.https.onCall(users.startResetPasswordEmail);
+export const sendResetPasswordEmail = functions.https
+  .onCall(users.startResetPasswordEmail);
 
 //--------------------------------
 //        Misc Management       //
@@ -90,9 +101,7 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
 
 /** Trigger: REST call bigQuery to fetch analytics active users */
-export const getAnalyticsActiveUsers = functions.https.onCall(
-  logErrors(bigQuery.getAnalyticsActiveUsers)
-);
+export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery.getAnalyticsActiveUsers));
 
 //--------------------------------
 //      Player  Management      //
@@ -134,7 +143,10 @@ export const onInvitationUpdateEvent = onDocumentWrite(
 //    Events Management          //
 //--------------------------------
 
-export const onEventDeleteEvent = onDocumentDelete('events/{eventID}', logErrors(onEventDelete));
+export const onEventDeleteEvent = onDocumentDelete(
+  'events/{eventID}',
+  logErrors(onEventDelete)
+);
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUsers));
@@ -146,8 +158,7 @@ export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUs
 /**
  * Creates notifications when an event is about to start
  */
-export const scheduledNotifications = functions.pubsub
-  .schedule('0 4 * * *') // every day at 4 AM
+export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
   .onRun(_ => createNotificationsForEventsToStart());
 
 //--------------------------------
@@ -157,12 +168,15 @@ export const scheduledNotifications = functions.pubsub
 /**
  * Trigger: when a movie is created
  */
-export const onMovieCreateEvent = onDocumentCreate('movies/{movieId}', onMovieCreate);
+export const onMovieCreateEvent = onDocumentCreate(
+  'movies/{movieId}',
+  onMovieCreate
+);
 
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent = functions
+export const onMovieUpdateEvent =  functions
   .runWith(heavyConfig) // movie update can potentially trigger images processing
   .firestore.document('movies/{movieId}')
   .onUpdate(skipInMaintenance(onMovieUpdate));
@@ -170,7 +184,10 @@ export const onMovieUpdateEvent = functions
 /**
  * Trigger: when a movie is deleted
  */
-export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors(onMovieDelete));
+export const onMovieDeleteEvent = onDocumentDelete(
+  'movies/{movieId}',
+  logErrors(onMovieDelete)
+)
 
 //------------------------------------------------
 //   Contracts & Contracts Version Management   //
@@ -179,7 +196,10 @@ export const onMovieDeleteEvent = onDocumentDelete('movies/{movieId}', logErrors
 /**
  * Trigger: when a contract is created/updated/deleted
  */
-export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', onContractWrite);
+export const onContractWriteEvent = onDocumentWrite(
+  'contracts/{contractId}',
+  onContractWrite
+);
 
 //--------------------------------
 //       Apps Management        //
@@ -189,6 +209,7 @@ export const onContractWriteEvent = onDocumentWrite('contracts/{contractId}', on
  * Trigger: when a blockframes admin changed an org app access and wants to notify admins.
  */
 export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
+
 
 //--------------------------------
 //       Emails Management      //
@@ -204,7 +225,10 @@ export const onSendTestMail = functions.https.onCall(sendTestMail);
 //--------------------------------
 
 /** Trigger: when an organization is created. */
-export const onOrganizationCreateEvent = onDocumentCreate('orgs/{orgID}', onOrganizationCreate);
+export const onOrganizationCreateEvent = onDocumentCreate(
+  'orgs/{orgID}',
+  onOrganizationCreate
+);
 
 /** Trigger: when an organization is updated. */
 export const onOrganizationUpdateEvent = functions
@@ -213,7 +237,10 @@ export const onOrganizationUpdateEvent = functions
   .onUpdate(skipInMaintenance(logErrors(onOrganizationUpdate)));
 
 /** Trigger: when an organization is removed. */
-export const onOrganizationDeleteEvent = onDocumentDelete('orgs/{orgID}', onOrganizationDelete);
+export const onOrganizationDeleteEvent = onDocumentDelete(
+  'orgs/{orgID}',
+  onOrganizationDelete
+);
 
 //--------------------------------
 //            RELAYER           //
@@ -223,17 +250,14 @@ const RELAYER_CONFIG: RelayerConfig = {
   mnemonic
 };
 
-export const relayerDeploy = functions
-  .runWith({ timeoutSeconds: 540 })
-  .https.onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
+export const relayerDeploy = functions.runWith({ timeoutSeconds: 540 }).https
+  .onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
 
-export const relayerRegister = functions
-  .runWith({ timeoutSeconds: 540 })
-  .https.onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
+export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
+  .onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
 
-export const relayerSend = functions.https.onCall((data, context) =>
-  logErrors(relayerSendLogic(data, RELAYER_CONFIG))
-);
+export const relayerSend = functions.https
+  .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
 
 //--------------------------------
 //         File upload          //
