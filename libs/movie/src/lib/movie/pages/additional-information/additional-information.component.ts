@@ -54,7 +54,6 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
       startWith(this.form.boxOffice.value),
       map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
     );
-    console.log('form', this.form);
   }
 
   get qualifications() {
