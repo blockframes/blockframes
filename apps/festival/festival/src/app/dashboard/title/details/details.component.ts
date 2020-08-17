@@ -29,7 +29,7 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page - Film Details');
+    this.dynTitle.setPageTitle('Title page', 'Film Details');
     this.subscription = this.movieQuery.selectActive().subscribe(movie => {
       this.form = new MovieForm(movie);
       this.cdr.markForCheck();

@@ -22,7 +22,7 @@ export class InvitationComponent implements OnInit {
   ngOnInit() {
     !!this.query.getAll().length ?
       this.dynTitle.setPageTitle('Invitations List') :
-      this.dynTitle.setPageTitle('Invitations List - Empty');
+      this.dynTitle.setPageTitle('Invitations List', 'Empty');
   }
 
   acceptAll() {

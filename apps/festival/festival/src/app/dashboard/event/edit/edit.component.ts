@@ -44,7 +44,7 @@ export class EditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.dynTitle.setPageTitle('Add an event - Screening info');
+    this.dynTitle.setPageTitle('Add an event', 'Screening info');
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
     this.invitations$ = eventId$.pipe(

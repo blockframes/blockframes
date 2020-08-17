@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       tap(movies => {
         !!movies.length ?
           this.dynTitle.setPageTitle('Dashboard') :
-          this.dynTitle.setPageTitle('Dashboard - Empty');
+          this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),
       shareReplay(1)
     )

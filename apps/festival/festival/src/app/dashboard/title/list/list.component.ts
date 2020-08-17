@@ -81,7 +81,7 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(movies => {
         !!movies.length ?
           this.dynTitle.setPageTitle('My titles') :
-          this.dynTitle.setPageTitle('My titles - Empty');
+          this.dynTitle.setPageTitle('My titles', 'Empty');
       }),
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));

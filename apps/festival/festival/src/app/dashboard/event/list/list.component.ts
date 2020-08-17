@@ -47,7 +47,7 @@ export class EventListComponent implements OnInit {
       tap(events => {
         !!events.length ?
           this.dynTitle.setPageTitle('My events') :
-          this.dynTitle.setPageTitle('My events - Empty');
+          this.dynTitle.setPageTitle('My events', 'Empty');
       }),
     );
   }

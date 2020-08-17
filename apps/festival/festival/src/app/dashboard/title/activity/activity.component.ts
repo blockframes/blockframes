@@ -29,7 +29,7 @@ export class TitleActivityComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page - Marketplace Activity');
+    this.dynTitle.setPageTitle('Title page', 'Marketplace Activity');
     this.movieId = this.movieQuery.getActiveId();
     this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieId]);
     this.contracts$ = this.contractQuery.selectAll().pipe(
