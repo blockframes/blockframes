@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
-import { unitBox, UnitBox } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts, UnitBox } from '@blockframes/utils/static-model';
 import { startWith, map } from 'rxjs/operators';
 import { staticModels } from '@blockframes/utils/static-model';
 
@@ -22,7 +22,7 @@ type Unit = ReturnType<typeof toUnit>;
 })
 export class MovieFormAdditionalInformationComponent implements OnInit {
   form = this.shell.form;
-  unitBox = unitBox;
+  unitBox = staticConsts.unitBox;
   units$: Observable<Unit[]>;
   certifications = staticModels.CERTIFICATIONS.filter(cert =>
     (cert.slug !== 'awarded-film' && cert.slug !== 'a-list-cast'));
