@@ -26,11 +26,11 @@ export const sleep = ms => {
   });
 };
 
-export async function runChunks(docs, cb, rowsConcurrency = 10) {
+export async function runChunks(docs, cb, rowsConcurrency = 10, verbose = true) {
   const chunks = chunk(docs, rowsConcurrency);
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
+    if (verbose) { console.log(`Processing chunk ${i + 1}/${chunks.length}`); }
     const promises = c.map(cb);
     await Promise.all(promises);
   }

@@ -6,7 +6,7 @@ import { backup, Firestore, loadAdminServices, restore } from './admin';
 import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { appUrl } from '@env';
-import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
+import { endMaintenance, startMaintenance } from '@blockframes/firebase-utils';
 
 export const VERSION_ZERO = 2;
 

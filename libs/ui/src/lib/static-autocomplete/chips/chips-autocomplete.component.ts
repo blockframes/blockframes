@@ -8,13 +8,14 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
+  OnDestroy,
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
 
@@ -24,7 +25,7 @@ import { staticModels } from '@blockframes/utils/static-model';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit {
+export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * The static model to display
@@ -49,6 +50,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredItems$: Observable<any[]>;
   public values$: Observable<any[]>;
+  private sub: Subscription;
 
   private items: SlugAndLabel[];
 
@@ -57,6 +59,11 @@ export class ChipsAutocompleteComponent implements OnInit {
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
+    this.sub = this.form.valueChanges.pipe(
+      map(res => !!res.length),
+      distinctUntilChanged()
+    ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
+
     this.items = staticModels[this.model];
 
     if (this.placeholder === '') {
@@ -67,6 +74,10 @@ export class ChipsAutocompleteComponent implements OnInit {
       startWith(''),
       map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   /** Filter the items */
