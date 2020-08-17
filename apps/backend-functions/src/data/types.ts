@@ -6,10 +6,10 @@ export { MovieDocument, PublicMovie } from '@blockframes/movie/+state/movie.fire
 export { ContractDocument, PublicContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 export {
   OrganizationDocument,
-  OrganizationStatus,
   createOrganizationDocument,
   PublicOrganization
 } from '@blockframes/organization/+state/organization.firestore';
+export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 export {
   InvitationDocument,
   InvitationOrUndefined,

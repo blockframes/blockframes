@@ -80,19 +80,24 @@ export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];
 // TYPE FOR CONSTANTS
 
 export type ContentType = keyof typeof constants.contentType;
-export type ContentTypeValue = typeof constants.contentType[ContentType];
 
 export type StoreType = keyof typeof constants.storeType;
-export type StoreTypeValue = typeof constants.storeType[StoreType];
 
 export type PremiereType = keyof typeof constants.premiereType;
-export type PremiereTypeValue = typeof constants.premiereType[PremiereType];
 
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];
 
 export type StoreStatus = keyof typeof constants.storeStatus;
-export type StoreStatusValue = typeof constants.storeStatus[StoreStatus];
 
 export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
 export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
+
+export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+
+export type ContractStatus = keyof typeof constants.contractStatus;
+export type ContractType = keyof typeof constants.contractType;
+
+export type CartStatus = keyof typeof constants.cartStatus;
+export type OrgActivity = keyof typeof constants.orgActivity | '';
+export type OrganizationStatus = keyof typeof constants.organizationStatus;

@@ -1,14 +1,5 @@
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
-
-export const cartStatus = {
-  pending : 'Pending',
-  submitted: 'Submitted',
-  accepted : 'Accepted',
-  paid : 'Paid'
-} as const;
-
-export type CartStatus = keyof typeof cartStatus;
-export type CartStatusValue = typeof cartStatus[CartStatus];
+import { CartStatus } from '@blockframes/utils/static-model/types';
 
 export interface CatalogCart {
   name: string;

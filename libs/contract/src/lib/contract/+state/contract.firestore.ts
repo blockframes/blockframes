@@ -5,51 +5,17 @@ import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
-  SubLicensorRoleSlug
+  SubLicensorRoleSlug,
+  ContractStatus,
+  ContractType
 } from "@blockframes/utils/static-model/types";
 import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
 type Timestamp = firestore.Timestamp;
 
-export const contractStatus = {
-  accepted: 'Accepted',
-  paid: 'Paid',
-  unknown: 'Unknown',
-  waitingsignature: 'Waiting for signature',
-  waitingpayment: 'Waiting for payment',
-  rejected: 'Rejected',
-  aborted: 'Aborted',
-  /**
-   * @dev first status of a contract
-   * Starting from this status, the contract is visible by creator only
-   */
-  draft: 'Draft',
-  /**
-   * @dev once the user hit the submit button, the contract is waiting for approvment
-   * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
-   */
-  submitted: 'Submitted',
-  /**
-   * @dev when an admin checked a "submitted" contract and all seems good.
-   * Starting from this status, contract is visible for every parties
-   */
-  undernegotiation: 'Under negotiation',
-} as const;
-
-export type ContractStatus = keyof typeof contractStatus;
-export type ContractStatusValue = typeof contractStatus[ContractStatus];
-
 /** @dev Valid values of ContractStatus */
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];
-
-export const contractType = {
-  mandate: 'Mandate',
-  sale: 'Sale'
-} as const;
-
-export type ContractType = keyof typeof contractType;
-export type ContractTypeValue = typeof contractType[ContractType];
 
 interface ContractTitleDetailRaw<D> {
   /**

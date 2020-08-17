@@ -11,12 +11,12 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 export {
-  OrganizationStatus,
   WishlistStatus,
   OrganizationDocument,
   createOrganizationDocument,
   PLACEHOLDER_LOGO
 } from './organization.firestore';
+export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
