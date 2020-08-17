@@ -98,3 +98,6 @@ export type DistributionRightStatus = keyof typeof constants.distributionRightSt
 export type ContractStatus = keyof typeof constants.contractStatus;
 export type ContractType = keyof typeof constants.contractType;
 
+export type CartStatus = keyof typeof constants.cartStatus;
+export type OrgActivity = keyof typeof constants.orgActivity | '';
+export type OrganizationStatus = keyof typeof constants.organizationStatus;

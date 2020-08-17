@@ -109,6 +109,37 @@ const constants = {
     caption: 'Caption',
   },
 
+
+  // ------------- //
+  // ORGANISATION  //
+  // ------------- //
+  cartStatus: {
+    pending : 'Pending',
+    submitted: 'Submitted',
+    accepted : 'Accepted',
+    paid : 'Paid'
+  },
+  orgActivity: {
+    production: 'Production',
+    intlSales: 'International Sales',
+    distribution: 'Distribution',
+    tvBroadcast: 'Television Broadcast',
+    vodPlatform: 'VOD Platform',
+    theatricalExhibition: 'Theatrical Exhibition',
+    buyersRep: 'Buyer\'s Rep',
+    filmFestival: 'Film Festival',
+    filmFund: 'Film Fund',
+    filmLibrary: 'Film Library',
+    filmCommission: 'Film Commission',
+    financialInstitution: 'Financial Institution',
+    press: 'Press',
+    inflight: 'Inflight',
+  },
+  /** Status of an Organization, set to pending by default when an Organization is created. */
+  organizationStatus: {
+    pending: 'Pending',
+    accepted: 'Accepted'
+  }
 };
 
 export default constants;
