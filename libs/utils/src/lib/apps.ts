@@ -2,7 +2,7 @@
  * Apps definition
  */
 import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
-import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
+import { StoreStatus } from "@blockframes/utils/static-model/types";
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
@@ -108,8 +108,8 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
 
 /**
  * Returns the modules an org have access to for a particular app or for all apps
- * @param org 
- * @param a 
+ * @param org
+ * @param a
  * @example
  * // we don't know in witch app the module is
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']

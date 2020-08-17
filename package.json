@@ -54,7 +54,10 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && node ./decorate-angular-cli.js",
     "storybook:ui": "ng run ui:storybook",
     "storybook:movie": "ng run movie:storybook",
-    "prerender:festival": "ng build festival --prod && ng run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server"
+    "prerender:festival": "ng build festival --prod && ng run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
+    "db:download-prod": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/get-prod-backup.ts",
+    "db:anonymize": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/anonymize-db.ts",
+    "db:upload-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/upload-db.ts"
   },
   "private": true,
   "dependencies": {
@@ -105,7 +108,7 @@
     "@types/date-fns": "^2.6.0",
     "@types/sendgrid": "^4.3.0",
     "@types/sharp": "^0.24.0",
-    "akita-ng-fire": "^3.0.2",
+    "akita-ng-fire": "^3.0.3",
     "algoliasearch": "^3.33.0",
     "angular-calendar": "^0.28.5",
     "apexcharts": "^3.15.3",

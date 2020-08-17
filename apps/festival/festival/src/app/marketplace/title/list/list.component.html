@@ -3,7 +3,7 @@
   <!-- App Bar Search -->
   <ng-template titleAppBarSearch>
     <form class="app-bar" [formGroup]="filterForm">
-      <input type="text" formControlName="query">
+      <input type="text" formControlName="query" [value]="filterForm.query">
     </form>
   </ng-template>
 
@@ -29,7 +29,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query">
+        <input matInput type="text" formControlName="query" [value]="filterForm.query.valueChanges | async">
       </mat-form-field>
     </form>
 

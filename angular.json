@@ -1396,6 +1396,32 @@
           "style": "scss"
         }
       }
+    },
+    "firebase-utils": {
+      "root": "libs/firebase-utils",
+      "sourceRoot": "libs/firebase-utils/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/firebase-utils/tsconfig.lib.json",
+              "libs/firebase-utils/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/firebase-utils/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/firebase-utils/jest.config.js",
+            "tsConfig": "libs/firebase-utils/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

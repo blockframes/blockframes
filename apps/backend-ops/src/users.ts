@@ -8,12 +8,9 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep, runChunks } from './tools';
 import readline from 'readline';
-import { getCollection } from 'apps/backend-functions/src/data/internals';
-import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { db } from 'apps/backend-functions/src/internals/firebase';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
-import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
+import { loadDBVersion } from './migrations';
 
 /**
  * @param auth  Firestore Admin Auth object
@@ -153,7 +150,8 @@ export async function createUsers(): Promise<any> {
 }
 
 export async function generateWatermarks() {
-
+  const { db } = loadAdminServices();
+  const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
   if (!await isInMaintenance()) {
@@ -161,10 +159,20 @@ export async function generateWatermarks() {
     await startMaintenance();
   }
 
-  const users = await getCollection<PublicUser>('users');
+  const users = await db.collection('users').get();
 
-  await runChunks(users, async (user) => {
-    await upsertWatermark(user);
+  await runChunks(users.docs, async (user) => {
+    const file = await upsertWatermark(user.data());
+    // We are in maintenance mode, trigger are stopped
+    // so we update manually the user document
+    if (dbVersion < 31) {
+      const [signedUrl] = await file.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
+      const watermark = { ref: file.name, url: signedUrl };
+      await user.ref.update({ watermark });
+    } else {
+      await user.ref.update({ watermark: file.name });
+    }
+
   });
 
   // deactivate maintenance
