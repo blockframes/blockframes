@@ -21,25 +21,21 @@
             </div>
 
             <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline">
+              <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
                 <mat-label>Status</mat-label>
-                <mat-select matInput formControlName="status">
-                  <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
-                    {{ status.label }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
+                <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
+              </static-select>
 
               <div fxLayout="column" fxLayoutAlign="start center">
 
                 <ng-container *ngFor="let cast of form.get('filmography').controls">
                   <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
                     <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Cast's Filmography</mat-label>
+                      <mat-label>Film Title</mat-label>
                       <input matInput formControlName="title">
                     </mat-form-field>
                     <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Cast's Filmography</mat-label>
+                      <mat-label>Release Year</mat-label>
                       <input matInput formControlName="year">
                     </mat-form-field>
                   </div>
@@ -80,15 +76,10 @@
             </div>
 
             <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline" fxFlex>
+              <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
                 <mat-label>Status</mat-label>
-                <mat-select matInput test-id="crew-status" formControlName="status">
-                  <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
-                    {{ status.label }}
-                  </mat-option>
-                </mat-select>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
-              </mat-form-field>
+              </static-select>
 
               <static-select test-id="crew-role" type="model" [control]="form.get('role')" scope="CREW_ROLES" fxFlex>
                 <mat-label>Role</mat-label>
