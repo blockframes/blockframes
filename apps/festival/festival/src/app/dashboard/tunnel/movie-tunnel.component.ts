@@ -14,6 +14,11 @@ import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/
 
 const steps: TunnelStep[] = [
   {
+    title: 'Overview',
+    icon: 'home',
+    routes: [{path: 'title-status', label: 'Overview'}],
+  },
+  {
     title: 'Title Information',
     icon: 'document',
     time: 15,

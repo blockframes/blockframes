@@ -31,8 +31,15 @@
 ​<form *ngIf="formItem">
   <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
   </ng-template>
-  <button *ngIf="form.controls.length" (click)="cancel()" mat-button>Cancel</button>
-  <button [disabled]="formItem.invalid" type="submit" (click)="save()" color="primary" mat-button>Submit</button>
+  <div fxLayout="row" fxLayoutAlign="space-between start">
+    <button mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
+      <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+    </button>
+    <button mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+      <mat-icon svgIcon="floppy"></mat-icon>
+      <span>Submit</span>
+    </button>
+  </div>
 </form>
 
 <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">

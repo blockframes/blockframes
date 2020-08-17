@@ -2,9 +2,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-// Blockframes
-import { contentType } from '@blockframes/movie/+state/movie.firestore';
-
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
 

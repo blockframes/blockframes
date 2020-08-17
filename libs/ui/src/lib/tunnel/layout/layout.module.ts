@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
@@ -41,6 +42,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatListModule,
     MatSnackBarModule,
     MatDialogModule,
+    MatDividerModule
   ]
 })
 export class TunnelLayoutModule { }
