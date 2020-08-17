@@ -4,12 +4,7 @@ import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
-import type express from 'express';
-import {
-  endMaintenance,
-  META_COLLECTION_NAME,
-  startMaintenance,
-} from '@blockframes/firebase-utils';
+import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from '@blockframes/firebase-utils';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
@@ -83,7 +78,7 @@ const backupedCollections = async (firestore: Firestore): Promise<CollectionRefe
 const clearedCollection = async (firestore: Firestore): Promise<CollectionReference[]> => {
   // NOTE: this is legacy code, once upon a time we'd skip the backup of the _restore / _META collection
   // we disabled that, and this function might be useless now.
-  return (await firestore.listCollections()).filter((x) => x.id !== META_COLLECTION_NAME);
+  return (await firestore.listCollections()).filter(x => x.id !== META_COLLECTION_NAME);
 };
 
 export const freeze = async (req: any, resp: any) => {
@@ -100,7 +95,7 @@ export const freeze = async (req: any, resp: any) => {
 
   // retrieve all the collections at the root.
   const collections: CollectionReference[] = await backupedCollections(db);
-  collections.forEach((x) => processingQueue.push(x.path));
+  collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
     // Note: we could speed up the code by processing multiple collections at once,
@@ -127,7 +122,7 @@ export const freeze = async (req: any, resp: any) => {
 
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.ref.listCollections();
-      subCollections.forEach((x) => processingQueue.push(x.path));
+      subCollections.forEach(x => processingQueue.push(x.path));
     });
 
     // Wait for this backup to complete
@@ -135,7 +130,7 @@ export const freeze = async (req: any, resp: any) => {
   }
 
   console.info('Done, closing our stream');
-  await new Promise((resolve) => {
+  await new Promise(resolve => {
     stream.end(resolve);
   });
 
@@ -152,7 +147,7 @@ const clear = async () => {
 
   // retrieve all the collections at the root.
   const collections: CollectionReference[] = await clearedCollection(db);
-  collections.forEach((x) => processingQueue.push(x.path));
+  collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
     const currentPath: string = processingQueue.pop();
@@ -160,10 +155,10 @@ const clear = async () => {
 
     // keep all docs subcollection to be deleted to,
     // delete every doc content.
-    const promises = docs.map(async (doc) => {
+    const promises = docs.map(async doc => {
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.listCollections();
-      subCollections.forEach((x) => processingQueue.push(x.path));
+      subCollections.forEach(x => processingQueue.push(x.path));
 
       // Delete the document
       return doc.delete();
@@ -197,7 +192,7 @@ function reEncodeObject(x: any): any {
     } else {
       // else: recursive descent
       const r: any = {};
-      keys.forEach((k) => {
+      keys.forEach(k => {
         r[k] = reEncodeObject(x[k]);
       });
       return r;
@@ -207,7 +202,7 @@ function reEncodeObject(x: any): any {
   }
 }
 
-export const restore = async (req: express.Request, resp: express.Response) => {
+export const restore = async (req: any, resp: any) => {
   // We get the backup file before clearing the db, just in case.
   const bucket = await getBackupBucket();
   const files: GFile[] = (await bucket.getFiles())[0];
@@ -230,12 +225,12 @@ export const restore = async (req: express.Request, resp: express.Response) => {
   const stream = lastFile.createReadStream();
   const lineReader = readline.createInterface({
     input: stream,
-    terminal: false,
+    terminal: false
   });
 
   const promises: Promise<any>[] = [];
 
-  const readerDone = new Promise((resolve) => {
+  const readerDone = new Promise(resolve => {
     lineReader.on('close', resolve);
   });
 
@@ -248,7 +243,7 @@ export const restore = async (req: express.Request, resp: express.Response) => {
   // callback somehow to make sure the X previous promises have been completed
   // before adding more. This will protect us from memory overflow (similar
   // to the note in the backup code).
-  lineReader.on('line', (line) => {
+  lineReader.on('line', line => {
     const stored: StoredDocument = JSON.parse(line);
     promises.push(db.doc(stored.docPath).set(reEncodeObject(stored.content)));
   });
