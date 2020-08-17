@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { UnitBox, unitBox } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts, UnitBox } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 
 function toUnit(unit: UnitBox) {
@@ -20,7 +20,7 @@ type Unit = ReturnType<typeof toUnit>;
 })
 export class BoxOfficeComponent implements OnInit {
   @Input() form;
-  unitBox = unitBox;
+  unitBox = staticConsts.unitBox;
   units$: Observable<Unit[]>;
 
   constructor() { }

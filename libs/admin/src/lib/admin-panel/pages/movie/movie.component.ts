@@ -5,7 +5,7 @@ import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin
 import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { app } from '@blockframes/utils/apps';
@@ -21,8 +21,8 @@ export class MovieComponent implements OnInit {
   public movie: Movie;
   public movieForm: MovieAdminForm;
   public movieAppAccessForm: MovieAppAccessAdminForm;
-  public storeType = storeType;
-  public storeStatus = storeStatus;
+  public storeType = staticConsts.storeType;
+  public storeStatus = staticConsts.storeStatus;
   public staticModels = staticModels;
   public rows: any[] = [];
   public app = app;
