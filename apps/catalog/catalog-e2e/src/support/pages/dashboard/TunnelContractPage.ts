@@ -160,7 +160,6 @@ export default class TunnelContractPage {
   // Save
   public clickSave() {
     cy.get('[test-id=save]').click();
-    cy.wait(1000);
   }
 
   public clickNext() {

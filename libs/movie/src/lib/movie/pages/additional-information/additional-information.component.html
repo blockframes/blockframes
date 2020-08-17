@@ -3,80 +3,74 @@
   <ng-container tunnel-form>
     <section id="release">
       <h3>Release</h3>
-      <article *ngFor="let control of originalRelease.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
-            <mat-label>Country</mat-label>
-          </chips-autocomplete>
+      <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-          <static-select [control]="control.get('media')" scope="MEDIAS" fxFlex>
-            <mat-label>Release Media</mat-label>
-          </static-select>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <chips-autocomplete test-id="release-country" [form]="form.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
+                <mat-label>Country</mat-label>
+              </chips-autocomplete>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Release Date</mat-label>
-          <input matInput [formControl]="control.get('date')" [matDatepicker]="datePicker" placeholder="YYYY/MM/DD">
-          <mat-datepicker-toggle matSuffix [for]="datePicker">
-            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
-          </mat-datepicker-toggle>
-          <mat-datepicker #datePicker></mat-datepicker>
-        </mat-form-field>
+              <static-select test-id="release-media" type="model" [control]="form.get('media')" scope="MEDIAS" fxFlex>
+                <mat-label>Release Media</mat-label>
+              </static-select>
+            </div>
 
+            <mat-form-field appearance="outline">
+              <mat-label>Release Date</mat-label>
+              <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker" placeholder="YYYY/MM/DD">
+              <mat-datepicker-toggle matSuffix [for]="datePicker">
+                <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+              </mat-datepicker-toggle>
+              <mat-datepicker #datePicker></mat-datepicker>
+            </mat-form-field>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="originalRelease.removeAt(i)" aria-label="Remove a Release">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span>Delete a Release</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="originalRelease.add()" aria-label="Add a Release">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span>Add a Release</span>
-      </footer>
+          </article>
+        </ng-template>
+      </bf-form-table>
+
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="box-office" *ngIf="units$ | async as units">
       <h3>Box Office</h3>
-      <article *ngFor="let control of boxOffice.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <form-country [form]="control.get('territory')"></form-country>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Metrics</mat-label>
-            <mat-select [formControl]="control.get('unit')">
-              <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
-                {{ unit.value }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+      <bf-form-table [columns]="boxOfficeColumns" [form]="boxOffice" buttonText="Add a Box Office">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-        <mat-form-field appearance="outline">
-          <mat-label>Figures</mat-label>
-          <input test-id="earnings" matInput type="number" [formControl]="control.get('value')" min="0" placeholder="Figures">
-          <mat-error *ngIf="control.get('value').hasError('min')">
-            Only positive values are accepted.
-          </mat-error>
-          <mat-error *ngIf="control.get('value').hasError('required')">
-            Please enter box office figures.
-          </mat-error>
-          <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}&nbsp;</span>
-          <span *ngIf="units[i] !== '$'" matSuffix>&nbsp;{{ units[i] }}</span>
-        </mat-form-field>
-      </article>
+            <div fxLayout fxLayoutGap="24px">
+              <form-country test-id="boxoffice-territory" [form]="form.get('territory')"></form-country>
 
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="boxOffice.add()" aria-label="Add a Box Office">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span>Add a Box Office</span>
-      </footer>
+              <mat-form-field appearance="outline">
+                <mat-label>Metrics</mat-label>
+                <mat-select test-id="boxoffice-unit" formControlName="unit">
+                  <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
+                    {{ unit.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Figures</mat-label>
+              <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0" placeholder="Figures">
+              <mat-error *ngIf="form.get('value').hasError('min')">
+                Only positive values are accepted.
+              </mat-error>
+              <mat-error *ngIf="form.get('value').hasError('required')">
+                Please enter box office figures.
+              </mat-error>
+              {{ form.get('value').controls }}
+              <span *ngIf="units[form.get('value')] === '$'" matPrefix>{{ units[form.get('value')] }}&nbsp;</span>
+              <span *ngIf="units[form.get('value')] !== '$'" matSuffix>&nbsp;{{ units[form.get('value')] }}</span>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <section id="rating">

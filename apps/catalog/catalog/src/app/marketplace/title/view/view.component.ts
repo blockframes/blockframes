@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { contentType } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -103,7 +103,7 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
     const { runningTime, genres, originalLanguages } = movie;
     const contentTypeRegistered = movie.contentType;
     return [
-      getKeyIfExists(contentType, contentTypeRegistered) ? contentType[contentTypeRegistered] : '',
+      getKeyIfExists(staticConsts.contentType, contentTypeRegistered) ? staticConsts.contentType[contentTypeRegistered] : '',
       typeof runningTime.time === 'number' ? `${runningTime.time} min` : '',
       genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
       originalLanguages.map(language => language).join(', ')

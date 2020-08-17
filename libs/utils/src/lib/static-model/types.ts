@@ -1,4 +1,7 @@
 import models from './staticModels';
+import constants from './staticConsts';
+
+// TYPE FOR MODELS
 
 export const GENRES_SLUG = models['GENRES'].map(key => key.slug);
 export type GenresSlug = typeof GENRES_SLUG[number];
@@ -72,3 +75,29 @@ export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
 
 export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
 export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];
+
+
+// TYPE FOR CONSTANTS
+
+export type ContentType = keyof typeof constants.contentType;
+
+export type StoreType = keyof typeof constants.storeType;
+
+export type PremiereType = keyof typeof constants.premiereType;
+
+export type UnitBox = keyof typeof constants.unitBox;
+export type UnitBoxValue = typeof constants.unitBox[UnitBox];
+
+export type StoreStatus = keyof typeof constants.storeStatus;
+
+export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
+
+export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+
+export type ContractStatus = keyof typeof constants.contractStatus;
+export type ContractType = keyof typeof constants.contractType;
+
+export type CartStatus = keyof typeof constants.cartStatus;
+export type OrgActivity = keyof typeof constants.orgActivity | '';
+export type OrganizationStatus = keyof typeof constants.organizationStatus;

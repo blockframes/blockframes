@@ -4,9 +4,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { SSF } from 'xlsx';
 import { createContractPartyDetail, createContractTitleDetail, createContract } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
@@ -170,7 +171,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           // CONTRACT TYPE
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
-            const key = getKeyIfExists(contractType, spreadSheetRow[SpreadSheetContract.contractType]);
+            const key = getKeyIfExists(staticConsts.contractType, spreadSheetRow[SpreadSheetContract.contractType]);
             if (key) {
               contract.type = key;
             } else {
@@ -195,7 +196,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
         // CONTRACT STATUS
         if (spreadSheetRow[SpreadSheetContract.status]) {
-          const key = getKeyIfExists(contractStatus, spreadSheetRow[SpreadSheetContract.status]);
+          const key = getKeyIfExists(staticConsts.contractStatus, spreadSheetRow[SpreadSheetContract.status]);
           if (key) {
             contract.lastVersion.status = key;
           } else {

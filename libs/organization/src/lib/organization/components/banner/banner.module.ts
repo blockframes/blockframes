@@ -11,6 +11,7 @@ import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
+import { FilterByModule } from '@blockframes/utils/pipes/filter-by.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -31,6 +32,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
     MatRippleModule,
     OrgMoviesModule,
+    FilterByModule,
 
     // Material
     MatIconModule

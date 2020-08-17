@@ -12,7 +12,7 @@ import { MovieService } from '@blockframes/movie/+state';
 
 // RxJs
 import { Observable, combineLatest, of } from 'rxjs';
-import { map, debounceTime, switchMap, pluck, startWith } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged } from 'rxjs/operators';
 
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
@@ -42,7 +42,7 @@ export class ListComponent implements OnInit {
     this.filterForm.appAccess.add('catalog');
     this.movieSearchResults$ = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges
+      this.filterForm.valueChanges.pipe(distinctUntilChanged())
     ]).pipe(
       debounceTime(300),
       switchMap(() => this.filterForm.search()),
