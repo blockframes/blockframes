@@ -8,18 +8,16 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { generateFixturesFile } from './anon-firestore';
-import { startMaintenance, endMaintenance } from 'apps/backend-functions/src/maintenance';
+import { generateFixturesFile } from './user-fixture';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
 
 export async function prepareForTesting() {
   console.info('Restoring backup...');
-  await restore(appUrl.content, true);
+  await restore(appUrl.content);
   console.info('Backup restored!');
 
-  await startMaintenance();
   console.info('Generating fixtures file...');
   await generateFixturesFile();
   console.info('fixtures file done!');
@@ -27,7 +25,6 @@ export async function prepareForTesting() {
   console.info('Syncing users...');
   await syncUsers();
   console.info('Users synced!');
-  await endMaintenance();
 
   console.info('Preparing the database...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!

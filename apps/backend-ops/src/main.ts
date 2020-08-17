@@ -4,7 +4,7 @@ import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { generateFixturesFile } from './anon-firestore';
+import { generateFixturesFile } from './user-fixture';
 import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks } from './users';
 import { syncStorage } from './syncStorage';
 

@@ -2,8 +2,6 @@ import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { initializeAdminApp, initializeTestApp, loadFirestoreRules } from '@firebase/testing';
 
-export { firestoreClear, firestoreExport, firestoreImport } from 'node-firestore-import-export';
-
 /** Gets an emulated Firestore db object that can circumvent security rules. Must be provided same projectId */
 export function getEmulatedAdminFirestore({ projectId, databaseName }) {
   return initializeAdminApp({ projectId, databaseName }).firestore();

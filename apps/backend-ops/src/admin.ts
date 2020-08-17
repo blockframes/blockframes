@@ -32,7 +32,7 @@ export function loadAdminServices(): AdminServices {
       ...firebase,
       credential: admin.credential.cert(
         resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
-      )
+      ),
     });
   }
 
@@ -40,7 +40,7 @@ export function loadAdminServices(): AdminServices {
     auth: admin.auth(),
     db: admin.firestore(),
     firebaseConfig: firebase,
-    storage: admin.storage()
+    storage: admin.storage(),
   };
 }
 
@@ -55,16 +55,13 @@ function getBackupURL(appURL: string): string {
 /**
  * Trigger a firestore database restore operation for the given project
  */
-export async function restore(appURL: string, anonymize?: boolean) {
+export async function restore(appURL: string) {
   if (process.env['ADMIN_PASSWORD'] === undefined) {
     throw new Error('no ADMIN_PASSWORD in your env, we need this to trigger backups / restores');
   }
 
   const url = getRestoreURL(appURL);
-  const form = {
-    anonymize,
-    password: process.env['ADMIN_PASSWORD']
-  };
+  const form = { password: process.env['ADMIN_PASSWORD'] };
 
   // promisified request
   return new Promise((resolve, reject) => {
@@ -92,7 +89,7 @@ export async function backup(appURL: string) {
 
   const url = getBackupURL(appURL);
   const form = {
-    password: process.env['ADMIN_PASSWORD']
+    password: process.env['ADMIN_PASSWORD'],
   };
 
   // promisified request

@@ -45,7 +45,6 @@
     "handlebars": "^4.5.3",
     "jwplatform": "0.0.5",
     "line-reader": "^0.4.0",
-    "faker": "4.1.0",
     "lodash": "^4.17.11",
     "node-gyp": "^4.0.0",
     "npm": "^6.9.0",
