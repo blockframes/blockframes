@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -26,9 +27,14 @@ export class ListComponent implements OnInit {
 
   public filterForm = new MovieSearchForm();
 
-  constructor(private movieService: MovieService, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private movieService: MovieService,
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
+  ) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('All titles / Library / Films');
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
