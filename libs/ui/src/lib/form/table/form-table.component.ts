@@ -89,7 +89,6 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.formItem = this.form.last();
     }
-    this.formItem.valueChanges.subscribe(x => console.log(this.formItem))
   }
 
   ngAfterViewInit() {

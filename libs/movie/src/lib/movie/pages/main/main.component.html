@@ -72,13 +72,6 @@
       <h3>General Information</h3>
       <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <!-- If Movie is released, don't show  TODO #3450-->
-        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
-          <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')"
-            label="Estimated/Confirmed" fxFlex>
-          </static-select>
-        </ng-container>
-
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
           <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
@@ -88,10 +81,13 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select test-id="release-status" scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
-          <mat-label>Estimated/Confirmed *</mat-label>
-          <mat-error>Please specify if the release date is estimated or confirmed.</mat-error>
-        </static-select>
+        <!-- If Movie is released, don't show  TODO #3450-->
+        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+          <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
+            <mat-label>Estimated/Confirmed</mat-label>
+          </static-select>
+        </ng-container>
+
       </article>
 
       <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES"
@@ -109,9 +105,11 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select test-id="screening-status" scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
-          <mat-label>To be determined/Estimated/Confirmed</mat-label>
-        </static-select>
+        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.get('runningTime').get('status')" fxFlex>
+            <mat-label>To be determined/Estimated/Confirmed</mat-label>
+          </static-select>
+        </ng-container>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
