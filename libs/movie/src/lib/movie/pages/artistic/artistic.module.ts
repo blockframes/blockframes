@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
+import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
 import { MovieFormArtisticComponent } from './artistic.component';
 
@@ -28,6 +29,8 @@ import { MovieFormArtisticComponent } from './artistic.component';
     TunnelPageModule,
     StaticSelectModule,
     ChipsAutocompleteModule,
+    FlexLayoutModule,
+    FormTableModule,
     FlexLayoutModule,
 
     // Material

@@ -110,7 +110,7 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select scope="SCREENING_STATUS" [control]="form.get('runningTime').get('status')" fxFlex>
+        <static-select scope="SCREENING_STATUS" [control]="form.runningTime.get('status')" fxFlex>
           <mat-label>To be determined/Estimated/Confirmed</mat-label>
         </static-select>
 
