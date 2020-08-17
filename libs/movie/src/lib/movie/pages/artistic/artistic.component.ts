@@ -33,11 +33,11 @@ export class MovieFormArtisticComponent {
   constructor(private shell: MovieFormShellComponent) {}
 
   get crew() {
-    return this.form.get('crew');
+    return this.form.crew;
   }
 
   get cast() {
-    return this.form.get('cast');
+    return this.form.cast;
   }
 
 }
