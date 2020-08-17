@@ -94,3 +94,7 @@ export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
 export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
 
 export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+
+export type ContractStatus = keyof typeof constants.contractStatus;
+export type ContractType = keyof typeof constants.contractType;
+

@@ -6,11 +6,12 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { PublicContract, createContractPartyDetail, Contract, ContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
-import { contractStatus, contractType, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
@@ -31,8 +32,8 @@ export class ContractComponent implements OnInit {
   public contract$: Observable<Contract>;
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
-  public contractStatus = contractStatus;
-  public contractType = contractType;
+  public contractStatus = staticConsts.contractStatus;
+  public contractType = staticConsts.contractType;
   public publicContract$: Observable<PublicContract>;
 
   // Tables
