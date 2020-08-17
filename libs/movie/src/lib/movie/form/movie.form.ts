@@ -402,7 +402,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
     role: new FormControl(role),
-    filmography: FormList.factory(filmography, el => new FilmographyForm(el)),
+    filmography: new FormArray([new FilmographyForm(filmography[0]), new FilmographyForm(filmography[1]), new FilmographyForm(filmography[2])]),
     description: new FormControl(description),
     status: new FormControl(status),
   }

@@ -3,92 +3,79 @@
   <ng-container tunnel-form>
     <section id="festival">
       <h3>Festival & Awards</h3>
-      <article *ngFor="let control of prizes.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('name')" required />
-          </mat-form-field>
+      <bf-form-table [columns]="prizesColumns" [form]="prizes" buttonText="Add a Festival">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Awards/Selections</mat-label>
-            <input test-id="prize" matInput [formControl]="control.get('prize')" required />
-            <mat-error *ngIf="control.get('prize').hasError('maxlength')">
-              Awards and selections should not exceed 200 characters.
-            </mat-error>
-          </mat-form-field>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Name</mat-label>
+                <input test-id="prize-name" matInput formControlName="name" required />
+              </mat-form-field>
 
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Year</mat-label>
-            <input matInput [formControl]="control.get('year')" required type="number" placeholder="YYYY"/>
-            <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
-            <mat-error *ngIf="control.hasError('required')">
-              Year is required.
-            </mat-error>
-          </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Awards/Selections</mat-label>
+                <input test-id="prize" matInput formControlName="prize" required />
+                <mat-error *ngIf="form.get('prize').hasError('maxlength')">
+                  Awards and selections should not exceed 200 characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
 
-          <static-select scope="PREMIERE_TYPE" type="model" [control]="control.get('premiere')" fxFlex>
-            <mat-label>Status</mat-label>
-          </static-select>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <input matInput test-id="prize-year" formControlName="year" required type="number" placeholder="YYYY"/>
+                <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
+                <mat-error *ngIf="form.hasError('required')">
+                  Year is required.
+                </mat-error>
+              </mat-form-field>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="prizes.removeAt(i)" aria-label="Remove a Festival">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Remove a Festival</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="prizes.add()" aria-label="Add a Festival">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add a Festival</span>
-      </footer>
+              <static-select test-id="premiere-type" scope="PREMIERE_TYPE" type="model" [control]="form.get('premiere')" fxFlex>
+                <mat-label>Status</mat-label>
+              </static-select>
+            </div>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="reviews">
       <h3>Film Reviews</h3>
-      <article *ngFor="let control of reviews.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Film's Critic's Name</mat-label>
-            <input test-id="critic-name" matInput [formControl]="control.get('criticName')" required />
-          </mat-form-field>
+      <bf-form-table [columns]="reviewsColumns" [form]="reviews" buttonText="Add a Film Review">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Journal Name</mat-label>
-            <input test-id="journal-name" matInput [formControl]="control.get('journalName')" required />
-          </mat-form-field>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Film's Critic's Name</mat-label>
+                <input test-id="critic-name" matInput formControlName="criticName" required />
+              </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Quote</mat-label>
-          <input test-id="quote" matInput [formControl]="control.get('criticQuote')" required />
-        </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Journal Name</mat-label>
+                <input test-id="journal-name" matInput formControlName="journalName" required />
+              </mat-form-field>
+            </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Revue Link</mat-label>
-          <input test-id="link" matInput [formControl]="control.get('revueLink')" required />
-        </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Quote</mat-label>
+              <input test-id="quote" matInput formControlName="criticQuote" required />
+            </mat-form-field>
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="reviews.removeAt(i)" aria-label="Remove a Review">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Remove a Review</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="reviews.add()" aria-label="Add a Review">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add a Review</span>
-      </footer>
+            <mat-form-field appearance="outline">
+              <mat-label>Revue Link</mat-label>
+              <input test-id="link" matInput formControlName="revueLink" required />
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+
     </section>
 
   </ng-container>

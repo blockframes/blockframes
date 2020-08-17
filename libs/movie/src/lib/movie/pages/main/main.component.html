@@ -21,7 +21,7 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select scope="contentType" type="constant" [control]="form.get('contentType')" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')" fxFlex>
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="contentType.hasError('required')">
             Please specify your project's content type.
@@ -74,14 +74,14 @@
       <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
-          <input matInput [formControl]="form.get('release').get('year')" required type="number" placeholder="YYYY" />
+          <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
           <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.
           </mat-error>
         </mat-form-field>
 
-        <static-select scope="RELEASE_STATUS" type="model" [control]="form.get('release').get('status')" fxFlex>
+        <static-select test-id="release-status" scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
           <mat-label>Estimated/Confirmed *</mat-label>
           <mat-error>Please specify if the release date is estimated or confirmed.</mat-error>
         </static-select>
@@ -106,13 +106,13 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select scope="SCREENING_STATUS" type="model" [control]="form.get('runningTime').get('status')" fxFlex>
+        <static-select test-id="screening-status" scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
           <mat-label>To be determined/Estimated/Confirmed</mat-label>
         </static-select>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="form.get('runningTime').get('time')"
+          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
             name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error *ngIf="runningTime.hasError('min')">

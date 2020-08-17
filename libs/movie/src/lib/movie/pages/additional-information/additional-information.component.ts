@@ -27,6 +27,26 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   certifications = staticModels.CERTIFICATIONS.filter(cert =>
     (cert.slug !== 'awarded-film' && cert.slug !== 'a-list-cast'));
 
+  public releaseColumns = {
+    country: "Country",
+    media: 'Release Media Name',
+    date: 'Date',
+  }
+
+  public boxOfficeColumns = {
+    territory: "Country",
+    unit: 'Metrics',
+  }
+
+  public ratingColumns = {
+    value: "Rating",
+    country: 'Country',
+  }
+
+  public qualificationsColumns = {
+    certifications: "Qualifications",
+  }
+
   constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
