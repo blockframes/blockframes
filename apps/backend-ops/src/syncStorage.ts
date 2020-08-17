@@ -3,7 +3,7 @@ import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/f
 import { getDocAndPath } from 'apps/backend-functions/src/media';
 import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { has, get } from 'object-path';
-import { startMaintenance, endMaintenance, isInMaintenance } from 'apps/backend-functions/src/maintenance';
+import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -15,15 +15,15 @@ enum mediaFieldType {
 
 // reference to the location of all hosted medias in the db
 const mediaReferences = [
-  { 
+  {
     collection: 'users',
     fields: [
       { field: 'watermark', type: mediaFieldType.single },
       { field: 'avatar', type: mediaFieldType.single },
     ]
   },
-  { 
-    collection: 'orgs', 
+  {
+    collection: 'orgs',
     fields: [
       { field: 'logo', type: mediaFieldType.single }
     ]
@@ -62,7 +62,7 @@ export async function syncStorage() {
     for (const doc of docs) {
       const docId = isPublicUser(doc) ? doc.uid : doc.id;
       const docRef = db.collection(ref.collection).doc(docId);
-      
+
       for (const field of ref.fields) {
         let data;
 
@@ -112,7 +112,7 @@ export async function syncStorage() {
       const currentMediaValue = get(docData, fieldToUpdate);
       if (!!currentMediaValue) {
         throw new Error(`Duplicate File: reference is already set by another file. Applies to file ${file.name}`);
-      } 
+      }
 
       // link the firestore
       // ! this will not work with array in the path

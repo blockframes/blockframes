@@ -5,7 +5,7 @@ const PATH = '/c/organization/home';
 
 export default class OrganizationHomePage {
   constructor() {
-    cy.get('organization-home');
+    cy.get('organization-home', {timeout: 10000});
   }
 
   public assertMoveToOrgHomepage() {

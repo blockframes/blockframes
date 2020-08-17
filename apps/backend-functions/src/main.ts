@@ -26,7 +26,7 @@ import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
 import { linkFile, unlinkFile } from './media';
 import { onEventDelete } from './event';
-import { skipInMaintenance } from './maintenance';
+import { skipInMaintenance } from '@blockframes/firebase-utils';
 
 
 //--------------------------------

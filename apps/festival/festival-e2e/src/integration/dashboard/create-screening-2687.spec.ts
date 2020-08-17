@@ -16,7 +16,7 @@ import {
   EventPage,
   EventEditPage
 } from '../../support/pages/dashboard/index';
-
+import { LandingPage } from '../../support/pages/landing';
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW, TOMORROW, PRIVATE_EVENTNAME_1, PRIVATE_EVENTNAME_2, PRIVATE_EVENTNAME_3, USER_1, USER_2, ORG_NAME, PUBLIC_EVENTNAME } from '../../fixtures/data';
@@ -27,8 +27,10 @@ const MOVIE_TITLE = MOVIES[3].title.international;
 
 describe('User create a screening', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest();
+    clearDataAndPrepareTest('/');
     tomorrow = new Date(NOW);
+    const p1 = new LandingPage();
+    p1.clickSignup();      
   });
 
   it('User creates a private screening, that taking place tomorrow', () => {
