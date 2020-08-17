@@ -43,6 +43,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   @Input() columns: Record<string, string> = {};
   @Input() form: FormList<T>;
   @Input() buttonText = 'Add';
+  @Input() saveButtonText = 'Save'
 
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;

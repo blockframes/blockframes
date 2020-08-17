@@ -33,6 +33,7 @@ export class FormListComponent<T> implements OnInit {
 
   @Input() form: FormList<T>;
   @Input() buttonText = 'Add';
+  @Input() saveButtonText = 'Save'
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;

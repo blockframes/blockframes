@@ -21,7 +21,6 @@ export class MovieFormMainComponent {
     status: 'Status',
     category: 'Category',
     description: 'Description',
-    filmTitle: 'Film Title',
     filmography: 'Filmography'
   }
 

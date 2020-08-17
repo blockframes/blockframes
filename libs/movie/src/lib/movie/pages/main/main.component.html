@@ -130,8 +130,13 @@
 
     <section id="directors">
       <h3>Directors</h3>
-      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
+      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director"
+        saveButtonText="Save Director">
+        <ng-template colRef="filmography" let-dir>
+          {{ dir.filmography[0].title }} - {{ dir.filmography[0].year }},
+          {{ dir.filmography[1].title }} - {{ dir.filmography[1].year }},
+          {{ dir.filmography[2].title }} - {{ dir.filmography[2].year }}
+        </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">
 
@@ -154,27 +159,36 @@
 
               <!-- If Movie is released, don't show  TODO #3450-->
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
-                <mat-form-field appearance="outline" fxFlex>
-                  <mat-label>Director Status</mat-label>
-                  <input matInput formControlName="status" />
-                </mat-form-field>
+                <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
+                  required>
+                  <mat-label>Directors Status</mat-label>
+                </static-select>
               </ng-container>
 
-              <div fxLayout="column" fxLayoutAlign="start center">
+              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex
+                required>
+                <mat-label>Directors Category</mat-label>
+              </static-select>
+            </div>
 
-                <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
-                  <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
-                    <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Director's Filmography</mat-label>
-                      <input matInput formControlName="title">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Director's Filmography</mat-label>
-                      <input matInput formControlName="year">
-                    </mat-form-field>
-                  </div>
-                </ng-container>
-              </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Directors Description</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+            <div fxLayout="column" fxLayoutAlign="start center">
+
+              <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
+                <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Film Title</mat-label>
+                    <input matInput formControlName="title">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Release Year</mat-label>
+                    <input matInput formControlName="year" type="number">
+                  </mat-form-field>
+                </div>
+              </ng-container>
             </div>
           </article>
         </ng-template>
