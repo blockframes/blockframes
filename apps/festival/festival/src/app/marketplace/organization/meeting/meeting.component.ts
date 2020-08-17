@@ -5,7 +5,7 @@ import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { DynamicTitleService } from '../../../../../../../../libs/utils/src/lib/dynamic-title/dynamic-title.service';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-meeting',

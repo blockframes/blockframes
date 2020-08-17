@@ -34,7 +34,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('All titles / Library / Films');
+    this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
