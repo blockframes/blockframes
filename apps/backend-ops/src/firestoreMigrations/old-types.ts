@@ -1,5 +1,6 @@
 import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
+import { firestore } from "firebase-admin";
 
 export interface OldPromotionalElement {
   label: string,
@@ -111,3 +112,35 @@ export function createOldImgRef(ref: Partial<OldImgRef> | string = {}): OldImgRe
   };
 }
 
+export interface OldExternalMedia {
+  url: string;
+}
+export interface OldHostedMedia extends OldExternalMedia{
+  ref: string;
+}
+
+export function createOldHostedMedia(media?: Partial<OldHostedMedia>) {
+  return {
+    ref: media?.ref ?? '',
+    url: media?.url ?? '',
+  };
+}
+
+export interface OldNewPromotionalElement {
+  label: string,
+  size?: ResourceSizesSlug,
+  ratio?: ResourceRatioSlug,
+  media: OldHostedMedia,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
+}
+
+export function createOldNewPromotionalElement(
+  promotionalElement: Partial<OldNewPromotionalElement> = {}
+): OldNewPromotionalElement {
+  return {
+    label: '',
+    ...promotionalElement,
+    media: createOldHostedMedia(promotionalElement.media),
+  };
+}

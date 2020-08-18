@@ -7,7 +7,6 @@ import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { EmailData } from '@sendgrid/helpers/classes/email-address';
@@ -24,9 +23,9 @@ export function getCollection<T>(path: string): Promise<T[]> {
 
 export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
-    id: org.id || '',
+    id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: createHostedMedia(org.logo)
+    logo: org.logo ?? '',
   }
 }
 
@@ -34,10 +33,10 @@ export function createPublicUserDocument(user: any = {}) {
   return {
     uid: user.uid,
     email: user.email,
-    avatar: createHostedMedia(user.avatar),
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    orgId: user.orgId || ''
+    avatar: user.avatar ?? '',
+    firstName: user.firstName ?? '',
+    lastName: user.lastName ?? '',
+    orgId: user.orgId ?? ''
   }
 }
 

@@ -94,11 +94,11 @@
         <ng-container *ngIf="movie.stakeholders || movie.producers.length > 0">
           <h5>Company Credits</h5>
           <ng-container *ngIf="movie.stakeholders as stakeholders">
-            <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Production Companies</strong>
-              <span> {{ getStakeholder(movie, 'executiveProducer') }}</span></li>
-            <li *ngIf="stakeholders.coProducer.length > 0"><strong i18n>Co-Producer{stakeholders.coProducer.length,
+            <li *ngIf="stakeholders.productionCompany.length > 0"><strong i18n>Production Companies</strong>
+              <span> {{ getStakeholder(movie, 'productionCompany') }}</span></li>
+            <li *ngIf="stakeholders.coProductionCompany.length > 0"><strong i18n>Co-Producer{stakeholders.coProductionCompany.length,
                 plural,=1 {} other {s}}</strong>
-              <span> {{ getStakeholder(movie, 'coProducer') }}</span></li>
+              <span> {{ getStakeholder(movie, 'coProductionCompany') }}</span></li>
           </ng-container>
           <ng-container *ngIf="movie.producers.length > 0">
             <li><strong i18n>Producer{movie.producers.length, plural,=1 {} other {s}}</strong>

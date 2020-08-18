@@ -43,11 +43,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit {
       this.snackBar.open('It seems that one or more fields have an error. Please check your movie form and try again.', 'close', { duration: 5000 });
       return;
     }
-    const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form, movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
 
-    await this.service.update(movie.id, documentToUpdate);
+    const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
+
+    await this.service.update(movie.id, movie);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
     this.form.markAsPristine();

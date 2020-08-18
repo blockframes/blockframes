@@ -1,10 +1,9 @@
 import { db, functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
-import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 
 /**
- * 
+ *
  * @param filePath the storage path of the file
  */
 export async function getDocAndPath(filePath: string | undefined) {
@@ -69,15 +68,9 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
     throw new Error('Upload Error : File does not exists in the storage');
   }
 
-  const [ signedUrl ] = await file.getSignedUrl({
-    action: 'read',
-    expires: '01-01-3000',
-    version: 'v2'
-  });
-
   // link the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+  return doc.update({[fieldToUpdate]: filePath });
 }
 
 /**
@@ -97,12 +90,12 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
   const { doc, docData, fieldToUpdate } = await getDocAndPath(data.name);
 
   // if firestore wasn't link to this file, we should not unlink it
-  const media: HostedMedia = get(docData, fieldToUpdate);
-  if (data.name !== media.ref) {
+  const ref: string = get(docData, fieldToUpdate);
+  if (data.name !== ref) {
     return;
   }
 
   // unlink the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: '', url: '' } });
+  return doc.update({[fieldToUpdate]: '' });
 }

@@ -4,8 +4,8 @@
   </mat-card-header>
   <mat-card-content fxLayout="column" fxLayoutAlign="center center">
     <ng-container *ngIf="form else noMedia">
-        <img [src]="form.url.value" [alt]="form.ref.value" />
-        <a [href]="form.url.value" target="_blank">{{ form.ref.value }}</a>
+        <img [src]="form.ref.value" [alt]="form.ref.value" />
+        <a [href]="form.ref.value" target="_blank">{{ form.ref.value }}</a>
     </ng-container>
     <ng-template #noMedia>
       No image ref found.

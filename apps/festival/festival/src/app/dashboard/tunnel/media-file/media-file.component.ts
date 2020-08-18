@@ -14,8 +14,8 @@ export class MediaFileComponent {
   constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
 
   public movie = this.movieQuery.getActive();
-  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck.media/`;
-  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario.media/`;
+  public presentationPath = `movies/${this.movie.id}/promotionalElements.presentation_deck/`;
+  public scenarioPath = `movies/${this.movie.id}/promotionalElements.scenario/`;
 
   get promotionalElements() {
     return this.form.get('promotionalElements');
