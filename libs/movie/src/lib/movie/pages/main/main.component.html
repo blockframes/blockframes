@@ -82,7 +82,7 @@
           </mat-error>
         </mat-form-field>
 
-        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
           <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
             <mat-label>Estimated/Confirmed</mat-label>
           </static-select>
@@ -105,7 +105,7 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
           <static-select scope="SCREENING_STATUS" type="model" [control]="form.get('runningTime').get('status')" fxFlex>
             <mat-label>To be determined/Estimated/Confirmed</mat-label>
           </static-select>
@@ -156,7 +156,7 @@
 
             <div fxLayout fxLayoutGap="24px">
 
-              <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
+              <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
                 <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
                   required>
                   <mat-label>Directors Status</mat-label>
