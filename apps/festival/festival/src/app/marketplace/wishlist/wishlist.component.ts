@@ -8,6 +8,7 @@ import { CartService } from '@blockframes/cart/+state/cart.service';
 import { map, filter, tap } from 'rxjs/operators';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Subscription } from 'rxjs';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 
 @Component({
@@ -39,16 +40,22 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
     this.sub = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === 'pending')),
-      tap(wishlist => this.hasWishlist = !!wishlist?.movieIds.length),
-      filter(wishlist => !!wishlist?.movies?.length)
+      tap(wishlist => {
+        this.hasWishlist = !!wishlist?.movieIds.length;
+        this.hasWishlist ?
+          this.dynTitle.setPageTitle('Wishlist') :
+          this.dynTitle.setPageTitle('Wishlist', 'Empty');
+      }),
+      filter(wishlist => !!wishlist?.movies?.length),
     ).subscribe(wishlist => {
-      this.dataSource = new MatTableDataSource(wishlist.movies)
+      this.dataSource = new MatTableDataSource(wishlist.movies);
       this.cdr.markForCheck();
     });
   }

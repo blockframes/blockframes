@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
-import { map, switchMap, shareReplay } from 'rxjs/operators';
+import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -28,7 +30,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.status === 'accepted')),
+      map(movies => movies.filter(movie => movie.main?.storeConfig.status === 'accepted')),
+      tap(movies => {
+        !!movies.length ?
+          this.dynTitle.setPageTitle('Dashboard') :
+          this.dynTitle.setPageTitle('Dashboard', 'Empty');
+      }),
       shareReplay(1)
     )
 

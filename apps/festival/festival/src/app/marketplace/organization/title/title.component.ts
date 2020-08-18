@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ViewComponent } from '../view/view.component';
 import { MovieService, MovieStore, MovieQuery } from '@blockframes/movie/+state';
 import { scaleIn } from '@blockframes/utils/animations/fade';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-marketplace-organization-title',
@@ -22,10 +23,12 @@ export class TitleComponent implements OnInit, OnDestroy {
     private service: MovieService,
     private query: MovieQuery,
     private store: MovieStore,
-    private parent: ViewComponent
+    private parent: ViewComponent,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Sales Agent', 'Line-up');
     this.sub = this.parent.org$.pipe(
       map(org => org.movieIds),
       tap(_ => this.store.reset()),

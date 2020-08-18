@@ -12,6 +12,7 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-event-edit',
@@ -38,16 +39,18 @@ export class EditComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
   ) {}
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Add an event', 'Screening info');
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
     this.invitations$ = eventId$.pipe(
       switchMap((eventId) => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', eventId)))
     );
-      
+
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.getValue(org.movieIds))
