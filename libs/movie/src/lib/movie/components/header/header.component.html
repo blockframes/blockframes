@@ -1,5 +1,5 @@
 <header
-  class="overlay dark-contrast-theme"
+  class="dark-contrast-theme"
   fxLayout="column"
   fxLayoutGap="20px"
   *ngIf="movieView"
@@ -7,23 +7,25 @@
   bgAsset="empty_banner.webp"
   bgTheme="dark"
   >
-  <a mat-icon-button (click)="goBack()">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-  <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
-    <!-- Poster -->
-    <img fxHide.lt-md [ref]="movieView.poster.media" asset="empty_poster.webp" alt="Movie Poster" class="poster">
-    <!-- Descriptions -->
-    <div fxLayout="column" fxLayoutAlign="space-between start">
-        <div class="movie-details">
-            <h4>{{ movieView.directors | displayName }}</h4>
-            <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
-            <h2>{{ movieView.title.original }}</h2>
-            <movie-title-features [movie]="movie"></movie-title-features>
-        </div>
-        <ng-content select="movie-header-preferences"></ng-content>
-        <ng-content select="movie-header-cta"></ng-content>
-        <ng-content select="movie-header-actions"></ng-content>
+  <section class="overlay">
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
+      <!-- Poster -->
+      <img fxHide.lt-md [ref]="movieView.poster.media" asset="empty_poster.webp" alt="Movie Poster" class="poster">
+      <!-- Descriptions -->
+      <div fxLayout="column" fxLayoutAlign="space-between start">
+          <div class="movie-details">
+              <h4>{{ movieView.directors | displayName }}</h4>
+              <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
+              <h2>{{ movieView.title.original }}</h2>
+              <movie-title-features [movie]="movie"></movie-title-features>
+          </div>
+          <ng-content select="movie-header-preferences"></ng-content>
+          <ng-content select="movie-header-cta"></ng-content>
+          <ng-content select="movie-header-actions"></ng-content>
+      </div>
     </div>
-  </div>
+  </section>
 </header>
