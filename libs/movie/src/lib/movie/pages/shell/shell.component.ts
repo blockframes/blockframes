@@ -44,9 +44,13 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   ngAfterViewInit() {
     this.sub = this.route.fragment.subscribe((fragment: string) => {
-      if (fragment && this.doc.getElementById(fragment) != null) {
-        this.doc.getElementById(fragment).scrollIntoView({ behavior: 'smooth',  block: 'center', inline: 'start'});
-      }
+      this.doc.getElementById(fragment)?.scrollIntoView(
+        {
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'start',
+        }
+      );
     });
   }
 
