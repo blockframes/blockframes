@@ -73,9 +73,9 @@ export async function syncStorage() {
             break;
           case mediaFieldType.record:
             // record of media
+            data = {};
             const record = get(doc, field.field);
             for (const key in record) {
-              data = {};
               data[key] = '';
             }
             break;
@@ -83,9 +83,13 @@ export async function syncStorage() {
             throw new Error('Unknown field type for media reference');
         }
 
-        // ! this will not work with array in the path
-        const promise = docRef.update({[field.field]: data});
-        unlinkPromises.push(promise);
+        try {
+          // ! this will not work with array in the path
+          const promise = docRef.update({[field.field]: data});
+          unlinkPromises.push(promise);
+        } catch (error) {
+          console.log(`Error with document ${docId}:`, error.message);
+        }
       }
     }
 

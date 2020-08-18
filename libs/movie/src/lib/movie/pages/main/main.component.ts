@@ -45,11 +45,11 @@ export class MovieFormMainComponent {
   }
 
   get banner() {
-    return this.form.get('banner').get('media');
+    return this.form.get('banner');
   }
 
   get poster() {
-    return this.form.get('poster').get('media');
+    return this.form.get('poster');
   }
 
   get runningTime() {

@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { CommonModule } from '@angular/common';
 
 @Pipe({
@@ -8,12 +7,12 @@ import { CommonModule } from '@angular/common';
   pure: true
 })
 export class MovieImagePipe implements PipeTransform {
-  transform(movie: Movie, size: 'poster' | 'banner' | 'avatar' ): HostedMedia {
+  transform(movie: Movie, size: 'poster' | 'banner' | 'avatar' ) {
     switch (size) {
       case 'poster':
-        return movie.poster?.media;
+        return movie.poster;
       case 'banner':
-        return movie.banner?.media;
+        return movie.banner;
     }
   }
 }

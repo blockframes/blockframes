@@ -4,7 +4,7 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <ng-container *ngIf="getPoster(movie) as poster">
+       <ng-container *ngIf="movie.poster as poster">
         <img
           class="movie-poster"
           [ref]="poster"

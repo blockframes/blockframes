@@ -18,7 +18,7 @@
           <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/title">See more</a>
         </aside>
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
-          <bf-slide *ngFor="let movie of section.movies;" [image]="movie.banner.media"
+          <bf-slide *ngFor="let movie of section.movies;" [image]="movie.banner"
             overlayColor="medium">
             <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>

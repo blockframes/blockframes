@@ -8,7 +8,6 @@ import {
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 export {
   WishlistStatus,
@@ -47,9 +46,9 @@ export function createOrganization(
 /** Convert an organization object into a public organization */
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {
-    id: org.id || '',
+    id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: createHostedMedia(org.logo)
+    logo: org.logo ?? '',
   }
 }
 

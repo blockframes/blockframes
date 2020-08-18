@@ -4,8 +4,6 @@ import {
   BoxOffice,
   Prize,
   MoviePromotionalElements,
-  PromotionalHostedMedia,
-  PromotionalExternalMedia,
   MovieReview,
   MovieOriginalRelease,
   MovieRating,
@@ -22,22 +20,21 @@ import {
   createRunningTime,
   createMovieStakeholders,
   createMoviePromotional,
-  createPromotionalExternalMedia,
-  createPromotionalHostedMedia,
   createMovieLanguageSpecification,
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { HostedMediaForm, ExternalMediaForm } from '@blockframes/media/form/media.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { FormValue } from '@blockframes/utils/form';
-import { createCredit, Stakeholder, createStakeholder, Filmography, createFilmography, Director } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
@@ -88,7 +85,7 @@ function createMovieControls(movie: Partial<Movie>) {
     documents: new MovieLegalDocumentsForm(entity.documents),
 
     // Root data
-    banner: new MoviePromotionalHostedMediaForm(entity.banner),
+    banner: new HostedMediaForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
     certifications: new FormControl(entity.certifications),
@@ -110,7 +107,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
-    poster: new MoviePromotionalHostedMediaForm(entity.poster),
+    poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
@@ -613,69 +610,30 @@ function createAppAccessFormControl(appAccess?: Partial<Movie['storeConfig']['ap
 type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 
 // ------------------------------
-//   Promotional External Media
-// ------------------------------
-
-function createPromotionalExternalMediaControl(promotionalExternalMedia?: Partial<PromotionalExternalMedia>) {
-  const { label, media } = createPromotionalExternalMedia(promotionalExternalMedia);
-  return {
-    label: new FormControl(label),
-    media: new ExternalMediaForm(media),
-  }
-}
-
-export type PromotionalExternalMediaControl = ReturnType<typeof createPromotionalExternalMediaControl>;
-
-export class MoviePromotionalExternalMediaForm extends FormEntity<PromotionalExternalMediaControl> {
-  constructor(promotionalExternalMedia?: Partial<PromotionalExternalMedia>) {
-    super(createPromotionalExternalMediaControl(promotionalExternalMedia));
-  }
-}
-
-// ------------------------------
-//   Promotional Hosted Media
-// ------------------------------
-
-function createPromotionalHostedMediaControl(promotionalHostedMedia?: Partial<PromotionalHostedMedia>) {
-  const { label, media } = createPromotionalHostedMedia(promotionalHostedMedia);
-  return {
-    label: new FormControl(label),
-    media: new HostedMediaForm(media),
-  }
-}
-export type PromotionalHostedMediaControl = ReturnType<typeof createPromotionalHostedMediaControl>;
-
-export class MoviePromotionalHostedMediaForm extends FormEntity<PromotionalHostedMediaControl> {
-  constructor(promotionalHostedMedia?: Partial<PromotionalHostedMedia>) {
-    super(createPromotionalHostedMediaControl(promotionalHostedMedia));
-  }
-}
-
-// ------------------------------
 //   Every Promotional Elements
 // ------------------------------
 
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
 
-  const stillPhotoControls: Record<string, MoviePromotionalHostedMediaForm> = {};
+  const stillPhotoControls: Record<string, HostedMediaForm> = {};
   for (const key in entity.still_photo) {
-    stillPhotoControls[key] = new MoviePromotionalHostedMediaForm(entity.still_photo[key]);
+    stillPhotoControls[key] = new HostedMediaForm(entity.still_photo[key]);
   }
 
   return {
     // Images
-    still_photo: new MediaFormList<Record<string, MoviePromotionalHostedMediaForm>>(stillPhotoControls),
+    still_photo: new MediaFormList<Record<string, HostedMediaForm>>(stillPhotoControls),
 
     // Hosted Media
-    presentation_deck: new MoviePromotionalHostedMediaForm(entity.presentation_deck),
-    scenario: new MoviePromotionalHostedMediaForm(entity.scenario),
+    presentation_deck: new HostedMediaForm(entity.presentation_deck),
+    scenario: new HostedMediaForm(entity.scenario),
 
     // External Media
-    promo_reel_link: new MoviePromotionalExternalMediaForm(entity.promo_reel_link),
-    screener_link: new MoviePromotionalExternalMediaForm(entity.screener_link),
-    trailer_link: new MoviePromotionalExternalMediaForm(entity.trailer_link),
-    teaser_link: new MoviePromotionalExternalMediaForm(entity.teaser_link),
+    promo_reel_link: new FormControl(entity.promo_reel_link),
+    screener_link: new FormControl(entity.screener_link),
+    trailer_link: new FormControl(entity.trailer_link),
+    teaser_link: new FormControl(entity.teaser_link),
   }
 }
 

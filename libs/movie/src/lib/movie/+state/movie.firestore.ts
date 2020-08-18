@@ -20,7 +20,6 @@ import {
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
@@ -44,7 +43,7 @@ interface MovieRaw<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
-  banner?: PromotionalHostedMedia;
+  banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
   certifications?: CertificationsSlug[],
@@ -69,7 +68,7 @@ interface MovieRaw<D> {
   originalLanguages: LanguagesSlug[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
   originCountries: TerritoriesSlug[], //! required
-  poster?: PromotionalHostedMedia;
+  poster?: string;
   prizes?: Prize[],
   producers?: Producer[],
   productionStatus?: MovieStatusSlug,
@@ -105,13 +104,13 @@ export interface PublicMovie {
 ////////////////////
 
 export interface MoviePromotionalElements {
-  presentation_deck: PromotionalHostedMedia,
-  promo_reel_link: PromotionalExternalMedia,
-  scenario: PromotionalHostedMedia,
-  screener_link: PromotionalExternalMedia,
-  still_photo: Record<string, PromotionalHostedMedia>,
-  teaser_link: PromotionalExternalMedia,
-  trailer_link: PromotionalExternalMedia,
+  presentation_deck: string,
+  promo_reel_link: string,
+  scenario: string,
+  screener_link: string,
+  still_photo: Record<string, string>,
+  teaser_link: string,
+  trailer_link: string,
 }
 
 ////////////////////
@@ -130,20 +129,8 @@ export interface Prize {
   name: string,
   year: number,
   prize?: string,
-  logo?: HostedMedia,
+  logo?: string,
   premiere?: PremiereType,
-}
-
-export interface PromotionalElement {
-  label: string;
-}
-
-export interface PromotionalExternalMedia extends PromotionalElement {
-  media: ExternalMedia,
-}
-
-export interface PromotionalHostedMedia extends PromotionalElement {
-  media: HostedMedia,
 }
 
 export interface Title {
