@@ -5,7 +5,7 @@ export const USERS: Partial<User>[] = [
   {
     password: 'blockframes',
     uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
-    email: 'david.ewing@gillespie-lawrence.fake.cascade8.com'
+    email: 'bdelorme+users-840@cascade8.com'
   },
   {
     password: 'blockframes',

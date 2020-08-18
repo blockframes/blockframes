@@ -32,8 +32,8 @@ const TRIGGERING_EVENT = 'First theatrical release';
 
 describe('Add Title Suite', () => {
   beforeEach(() => {
-    //cy.visit('c/o/marketplace/home');
-    /*
+    cy.visit('c/o/marketplace/home');
+    
     clearDataAndPrepareTest('/');
     const p1: LandingPage = new LandingPage();
     const p2: AuthLoginPage = p1.clickLogin();
@@ -43,11 +43,12 @@ describe('Add Title Suite', () => {
     p2.fillSignin(LOGIN_CREDENTIALS);
     p2.clickSignIn();    
     cy.wait(1000);
-    */
+    
   });
   
   it('Add a new title', () => {
-    //cy.visit('c/o/dashboard/home')
+    cy.visit('c/o/dashboard/home')
+    cy.wait(1000)
     // On Festival Home, click add Title
     //const dashboardHome = new FestivalDashboardHomePage();
     //const movieTunnelStart: MovieTunnelStartPage = dashboardHome.clickAddTitle();
@@ -56,7 +57,7 @@ describe('Add Title Suite', () => {
     //cy.get('.mat-flat-button > .mat-button-wrapper').contains('Add one title').click();
     //movieTunnelStart.clickBegin()
 
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/coZk5XooQ8u94yprMTaF/main');
+    cy.visit('c/o/dashboard/tunnel/movie/coZk5XooQ8u94yprMTaF/main');
     const movieMainPage = new MovieMainPage();
     movieMainPage.fillInternationalTitle('test');
 
