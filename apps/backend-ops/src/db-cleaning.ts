@@ -9,10 +9,15 @@ import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
+
+// @TODO #3066 once "final" media structure is ready, remplace by const EMPTY_MEDIA = ''. 
+//Also update in unit test scripts
+const EMPTY_MEDIA = createHostedMedia(); 
 
 /** Reusable data cleaning script that can be updated along with data model */
 
@@ -102,13 +107,13 @@ export function cleanNotifications(
 async function cleanOneNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
-    notification.organization.logo = d.logo || '';
+    notification.organization.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (notification.user) {
     const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
-    notification.user.avatar = d.avatar || '';
-    notification.user.watermark = d.watermark || '';
+    notification.user.avatar = d.avatar || EMPTY_MEDIA;
+    notification.user.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(notification);
@@ -134,24 +139,24 @@ async function cleanOneInvitation(doc: any, invitation: any) { // @TODO (#3175 #
   // todo #3066 make a test like for notifications
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
-    invitation.fromOrg.logo = d.logo || '';
+    invitation.fromOrg.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (invitation.toOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
-    invitation.toOrg.logo = d.logo || '';
+    invitation.toOrg.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
-    invitation.fromUser.avatar = d.avatar || '';
-    invitation.fromUser.watermark = d.watermark || '';
+    invitation.fromUser.avatar = d.avatar || EMPTY_MEDIA;
+    invitation.fromUser.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    invitation.toUser.avatar = d.avatar || '';
-    invitation.toUser.watermark = d.watermark || '';
+    invitation.toUser.avatar = d.avatar || EMPTY_MEDIA;
+    invitation.toUser.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(invitation);
