@@ -57,7 +57,8 @@
     "prerender:festival": "ng build festival --prod && ng run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
     "db:download-prod": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/get-prod-backup.ts",
     "db:anonymize": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/anonymize-db.ts",
-    "db:upload-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/upload-db.ts"
+    "db:upload-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/upload-db.ts",
+    "db:fetch-from-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/fetch-db-from-ci.ts"
   },
   "private": true,
   "dependencies": {
