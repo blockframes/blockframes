@@ -19,7 +19,15 @@ export class TitleViewComponent implements OnInit {
     {
       path: 'details',
       label: 'Film Details'
-    }
+    },
+    {
+      path: 'activity',
+      label: 'Analytics'
+    },
+    {
+      path: 'upload',
+      label: 'Upload Movie'
+    },
   ];
 
   constructor(private movieQuery: MovieQuery) {}

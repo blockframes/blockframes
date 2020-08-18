@@ -36,7 +36,11 @@ const routes = [{
     {
       path: 'details',
       loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
-    }
+    },
+    {
+      path: 'upload',
+      loadChildren: () => import('../upload/upload.module').then(m => m.TitleUploadModule)
+    },
   ]
 }];
 

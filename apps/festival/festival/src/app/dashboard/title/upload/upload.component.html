@@ -1,0 +1,9 @@
+<h2>Upload Movie</h2>
+<section>
+  <file-upload
+    [form]="form"
+    [storagePath]="storagePath"
+    [types]="['video/avi', 'video/mpeg', 'video/ogg', 'video/webm']"
+  ></file-upload>
+  <button mat-raised-button color="primary" [disabled]="uploadDisabled$ | async">Upload</button>
+</section>
