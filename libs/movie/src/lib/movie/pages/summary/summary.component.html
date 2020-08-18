@@ -46,7 +46,7 @@
         <ul>
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Film Page Banner Image </strong>
-            <ng-container *ngIf="(form.banner.get('media').value | isEmptyImgRef) else banner">
+            <ng-container *ngIf="(form.banner.value.url | isEmptyImgRef) else banner">
               <a [routerLink]="getPath('main')" reference="images" class="missing-control">
                 Missing
               </a>
@@ -59,7 +59,7 @@
           </li>
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Poster Image </strong>
-            <ng-container *ngIf="(form.poster.get('media').value | isEmptyImgRef) else poster">
+            <ng-container *ngIf="(form.poster.value.url | isEmptyImgRef) else poster">
               <a [routerLink]="getPath('main')" reference="images" class="missing-control">
                 Missing
               </a>
