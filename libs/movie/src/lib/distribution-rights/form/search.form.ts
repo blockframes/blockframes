@@ -10,9 +10,7 @@ import {
   MEDIAS_SLUG,
   TerritoriesSlug,
   TERRITORIES_SLUG,
-  MovieStatusLabel,
-  MovieStatusSlug,
-  MOVIE_STATUS_SLUG
+  ProductionStatus,
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -31,7 +29,7 @@ import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 export interface CatalogSearch {
   releaseYear: DateRange;
   genres: GenresSlug[];
-  productionStatus: MovieStatusLabel[];
+  productionStatus: string[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
@@ -211,18 +209,18 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     this.updateValueAndValidity();
   }
 
-  addStatus(status: MovieStatusSlug) {
-    if (!MOVIE_STATUS_SLUG.includes(status)) {
+  addStatus(status: ProductionStatus) {
+    if (!Object.keys(staticConsts.productionStatus).includes(status)) {
       throw new Error(
-        `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
+        `Production status ${status} is not part of the defined status, here is the complete list currently available: ${Object.keys(staticConsts.productionStatus)}`
       );
     } else {
       this.productionStatus.setValue([...this.productionStatus.value, status]);
     }
   }
 
-  removeStatus(status: MovieStatusSlug) {
-    if (MOVIE_STATUS_SLUG.includes(status)) {
+  removeStatus(status: ProductionStatus) {
+    if (Object.keys(staticConsts.productionStatus).includes(status)) {
       const newControls = this.get('productionStatus').value.filter(
         statusToRemove => statusToRemove !== status
       );

@@ -11,7 +11,7 @@
         <h4>
           {{ movie.contentType }}
           <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | translateSlug: 'MOVIE_STATUS' }}
+          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
           <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|</ng-container>
           {{ movie.totalRunTime | duration: 'ms' }}
         </h4>

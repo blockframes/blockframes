@@ -64,7 +64,7 @@
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="filterForm.productionStatus">
-      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
+      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="productionStatus" type="constant"></static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Budget" [form]="filterForm.minBudget">

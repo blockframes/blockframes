@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
-import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { staticConsts } from '@blockframes/utils/static-model';
@@ -23,7 +22,7 @@ export class MovieComponent implements OnInit {
   public movieAppAccessForm: MovieAppAccessAdminForm;
   public storeType = staticConsts.storeType;
   public storeStatus = staticConsts.storeStatus;
-  public staticModels = staticModels;
+  public staticConsts = staticConsts;
   public rows: any[] = [];
   public app = app;
 

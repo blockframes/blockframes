@@ -24,7 +24,7 @@
     <!-- Production Status -->
     <ng-container matColumnDef="productionStatus">
       <th mat-header-cell *matHeaderCellDef>Production status</th>
-      <td mat-cell *matCellDef="let element">{{ element.productionStatus | translateSlug: 'MOVIE_STATUS' }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.productionStatus | toLabel: 'productionStatus' | async }}</td>
     </ng-container>
 
     <!-- Origin Country -->

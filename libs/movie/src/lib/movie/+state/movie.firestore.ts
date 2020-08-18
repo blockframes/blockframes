@@ -1,5 +1,4 @@
 import {
-  MovieStatusSlug,
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
@@ -15,7 +14,8 @@ import {
   StoreType,
   StoreStatus,
   PremiereType,
-  UnitBox
+  UnitBox,
+  ProductionStatus
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
@@ -71,7 +71,7 @@ interface MovieRaw<D> {
   poster?: string;
   prizes?: Prize[],
   producers?: Producer[],
-  productionStatus?: MovieStatusSlug,
+  productionStatus?: ProductionStatus,
   rating?: MovieRating[],
   release: MovieRelease, //! required
   review?: MovieReview[],

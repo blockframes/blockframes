@@ -35,8 +35,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Production Status</mat-label>
             <mat-select formControlName="productionStatus" required>
-              <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
-                {{ status.label }}
+              <mat-option *ngFor="let status of staticConsts.productionStatus | keyvalue" [value]="status.key">
+                {{ status.value }}
               </mat-option>
             </mat-select>
           </mat-form-field>

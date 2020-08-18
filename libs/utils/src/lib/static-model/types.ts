@@ -15,11 +15,6 @@ export type CastRolesSlug = typeof CAST_ROLES_SLUG[number];
 export const CREW_ROLES_SLUG = models['CREW_ROLES'].map(key => key.slug);
 export type CrewRolesSlug = typeof CREW_ROLES_SLUG[number];
 
-export const MOVIE_STATUS_LABEL = models['MOVIE_STATUS'].map(key => key.label);
-export const MOVIE_STATUS_SLUG = models['MOVIE_STATUS'].map(key => key.slug);
-export type MovieStatusLabel = typeof MOVIE_STATUS_LABEL[number];
-export type MovieStatusSlug = typeof MOVIE_STATUS_SLUG[number];
-
 export const LANGUAGES_LABEL = models['LANGUAGES'].map(key => key.label);
 export const LANGUAGES_SLUG = models['LANGUAGES'].map(key => key.slug);
 export type LanguagesLabel = typeof LANGUAGES_LABEL[number];
@@ -89,6 +84,8 @@ export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];
 
 export type StoreStatus = keyof typeof constants.storeStatus;
+
+export type ProductionStatus = keyof typeof constants.productionStatus;
 
 export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
 export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
