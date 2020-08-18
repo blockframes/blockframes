@@ -67,9 +67,9 @@ export async function upgrade() {
   console.info('DB data clean and fresh!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
-   console.info('Cleaning unused storage data...');
-   await cleanStorage( storage );
-   console.info('Storage data clean and fresh!');
+  // console.info('Cleaning unused storage data...');
+  // await cleanStorage(storage);
+  // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
