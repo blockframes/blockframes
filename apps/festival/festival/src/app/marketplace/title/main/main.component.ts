@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { premiereType, MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
+import { MovieStakeholders } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { formatNumber } from '@angular/common';
 
 @Component({
@@ -22,7 +23,7 @@ export class MainComponent {
   public getPrize(prize) {
     const festivalYear = prize.year ? `${prize.year}` : ''
     const festivalInfo = `${prize.name}  ${festivalYear}`;
-    const premiere = `${premiereType[prize.premiere]} Premiere`;
+    const premiere = `${staticConsts.premiereType[prize.premiere]} Premiere`;
     return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }
 

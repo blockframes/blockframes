@@ -17,11 +17,12 @@ import {
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
 import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
+import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -254,15 +255,15 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   checkStoreType(type: StoreType) {
     // check if media is already checked by the user
-    if (!this.get('storeType').value.includes(storeType)) {
-      this.get('storeType').setValue([...this.get('storeType').value, storeType]);
-    } else if ( this.get('storeType').value.includes(storeType)) {
+    if (!this.get('storeType').value.includes(staticConsts.storeType)) {
+      this.get('storeType').setValue([...this.get('storeType').value, staticConsts.storeType]);
+    } else if ( this.get('storeType').value.includes(staticConsts.storeType)) {
         const types = this.get('storeType').value.filter(
           (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
         );
         this.get('storeType').setValue(types);
     } else {
-      throw new Error(`Store Type ${storeType[type]} doesn't exist`);
+      throw new Error(`Store Type ${staticConsts.storeType[type]} doesn't exist`);
     }
   }
 

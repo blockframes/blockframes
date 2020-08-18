@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { distributionRightStatus } from '@blockframes/distribution-rights/+state/distribution-right.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { RightAdminForm } from '../../forms/right-admin.form';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -20,7 +20,7 @@ export class DistributionRightComponent implements OnInit {
   public movieId = '';
   public right: DistributionRight;
   public rightForm: RightAdminForm;
-  public distributionRightStatus = distributionRightStatus;
+  public distributionRightStatus = staticConsts.distributionRightStatus;
   public contract: Contract;
 
   constructor(

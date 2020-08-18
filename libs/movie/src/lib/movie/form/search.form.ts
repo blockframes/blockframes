@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus } from '../+state/movie.firestore';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 

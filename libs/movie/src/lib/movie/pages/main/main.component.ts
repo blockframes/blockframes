@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
-import { contentType } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'movie-form-main',
@@ -11,7 +10,6 @@ import { contentType } from '@blockframes/movie/+state/movie.firestore';
 })
 export class MovieFormMainComponent {
   form = this.shell.form;
-  public contentType = contentType;
   public movieId = this.route.snapshot.params.movieId;
 
   public displayedColumns = {
@@ -38,8 +36,8 @@ export class MovieFormMainComponent {
     return this.title.get('original');
   }
 
-  get contentTypeCtrl() {
-    return this.form.get('contentType')
+  get contentType() {
+    return this.form.get('contentType');
   }
 
   get internalRef() {

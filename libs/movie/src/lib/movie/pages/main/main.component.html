@@ -21,17 +21,13 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <mat-form-field appearance="outline" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')" fxFlex>
           <mat-label>Content Type</mat-label>
-          <mat-select test-id="content-type" [formControl]="contentTypeCtrl" required>
-            <mat-option *ngFor="let type of contentType | keyvalue" [value]="type.key">
-              {{ type.value }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="contentTypeCtrl.hasError('required')">
+          <mat-error *ngIf="contentType.hasError('required')">
             Please specify your project's content type.
           </mat-error>
-        </mat-form-field>
+        </static-select>
+
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Reference</mat-label>
           <input test-id="reference" matInput type="text" placeholder="Reference"
@@ -85,7 +81,7 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select scope="RELEASE_STATUS" [control]="form.release.get('status')" fxFlex>
+        <static-select test-id="release-status" scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
           <mat-label>Estimated/Confirmed *</mat-label>
           <mat-error>Please specify if the release date is estimated or confirmed.</mat-error>
         </static-select>
@@ -110,7 +106,7 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select scope="SCREENING_STATUS" [control]="form.get('runningTime').get('status')" fxFlex>
+        <static-select test-id="screening-status" scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
           <mat-label>To be determined/Estimated/Confirmed</mat-label>
         </static-select>
 

@@ -3,114 +3,117 @@
   <ng-container tunnel-form>
     <section id="cast-member">
       <h3>Cast Member</h3>
-      <article *ngFor="let control of cast.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>First Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required placeholder="eg: Cast Member’s First Name" />
-          </mat-form-field>
+      <bf-form-table [columns]="castColumns" [form]="cast" buttonText="Add Cast Member">
+        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Last Name</mat-label>
-            <input test-id="last-name" matInput [formControl]="control.get('lastName')" required />
-          </mat-form-field>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>First Name</mat-label>
+                <input test-id="cast-first-name" matInput formControlName="firstName" required placeholder="eg: Cast Member’s First Name" />
+              </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Status</mat-label>
-          <mat-select matInput [formControl]="control.get('status')">
-            <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
-              {{ status.label }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Last Name</mat-label>
+                <input test-id="cast-last-name" matInput formControlName="lastName" required />
+              </mat-form-field>
+            </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput [formControl]="control.get('description')"></textarea>
-          <mat-hint>Additional information about the cast member.</mat-hint>
-        </mat-form-field>
+            <div fxLayout fxLayoutGap="24px">
+              <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
+                <mat-label>Status</mat-label>
+                <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
+              </static-select>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Filmography</mat-label>
-          <textarea matInput [formControl]="control.get('filmography')"></textarea>
-        </mat-form-field>
+              <div fxLayout="column" fxLayoutAlign="start center">
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="cast.removeAt(i)" aria-label="Remove a Cast Member">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Remove a Cast Member</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="cast.add()" aria-label="Add a Cast Member">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add a Cast Member</span>
-      </footer>
+                <ng-container *ngFor="let cast of form.get('filmography').controls">
+                  <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Film Title</mat-label>
+                      <input matInput formControlName="title">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Release Year</mat-label>
+                      <input matInput formControlName="year">
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+              <mat-hint>Additional information about the cast member.</mat-hint>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
     <mat-divider></mat-divider>
 
     <section id="crew-member">
       <h3>Crew Member</h3>
-      <article *ngFor="let control of crew.controls; let i = index; let last = last">
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>First Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('firstName')" required placeholder="eg: Crew Member’s First Name" />
-          </mat-form-field>
+      <bf-form-table [columns]="crewColumns" [form]="crew" buttonText="Add Crew Member">
+        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Last Name</mat-label>
-            <input test-id="first-name" matInput [formControl]="control.get('lastName')" required />
-          </mat-form-field>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>First Name</mat-label>
+                <input test-id="crew-first-name" matInput formControlName="firstName" required placeholder="eg: Crew Member’s First Name" />
+              </mat-form-field>
 
-        <div fxLayout fxLayoutGap="24px">
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Status</mat-label>
-            <mat-select matInput [formControl]="control.get('status')">
-              <mat-option *ngFor="let status of memberStatus" [value]="status.slug">
-                {{ status.label }}
-              </mat-option>
-            </mat-select>
-            <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
-          </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Last Name</mat-label>
+                <input test-id="crew-last-name" matInput formControlName="lastName" required />
+              </mat-form-field>
+            </div>
 
-          <static-select [control]="control.get('role')" scope="CREW_ROLES" fxFlex>
-            <mat-label>Role</mat-label>
-            <mat-hint align="start">
-              Please specify crew member's role in your project (director of photography, score composer, writer...)
-            </mat-hint>
-          </static-select>
-        </div>
+            <div fxLayout fxLayoutGap="24px">
+              <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
+                <mat-label>Status</mat-label>
+                <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
+              </static-select>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Description</mat-label>
-          <textarea matInput [formControl]="control.get('description')"></textarea>
-          <mat-hint>Additional information about the crew member.</mat-hint>
-        </mat-form-field>
+              <static-select test-id="crew-role" type="model" [control]="form.get('role')" scope="CREW_ROLES" fxFlex>
+                <mat-label>Role</mat-label>
+                <mat-hint align="start">
+                  Please specify crew member's role in your project (director of photography, score composer, writer...)
+                </mat-hint>
+              </static-select>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Filmography</mat-label>
-          <textarea matInput [formControl]="control.get('filmography')"></textarea>
-        </mat-form-field>
+              <div fxLayout="column" fxLayoutAlign="start center">
 
-        <footer fxLayout="column" fxLayoutAlign="center center">
-          <button mat-mini-fab color="warn" (click)="crew.removeAt(i)" aria-label="Remove a Crew Member">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
-          <span class="mat-caption">Remove a Crew Member</span>
-        </footer>
-      </article>
-      <footer fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="crew.add()" aria-label="Add a Crew Member">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
-        <span class="mat-caption">Add a Crew Member</span>
-      </footer>
+                <ng-container *ngFor="let crew of form.get('filmography').controls">
+                  <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Crew's Filmography</mat-label>
+                      <input matInput formControlName="title">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Crew's Filmography</mat-label>
+                      <input matInput formControlName="year">
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput test-id="crew-description" formControlName="description"></textarea>
+              <mat-hint>Additional information about the cast member.</mat-hint>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
   </ng-container>

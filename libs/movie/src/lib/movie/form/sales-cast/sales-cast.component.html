@@ -1,6 +1,6 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
   <form-display-name [form]="control"></form-display-name>
-  <static-select [control]="control.get('role')" [scope]="role">
+  <static-select [control]="control.get('role')" type="model" scope="role">
     <mat-label>Role</mat-label>
   </static-select>
   <!-- Add / Delete -->

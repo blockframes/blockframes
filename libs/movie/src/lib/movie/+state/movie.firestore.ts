@@ -11,6 +11,11 @@ import {
   FormatQualitySlug,
   FormatSlug,
   GenresSlug,
+  ContentType,
+  StoreType,
+  StoreStatus,
+  PremiereType,
+  UnitBox
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
@@ -113,68 +118,6 @@ export interface MoviePromotionalElements {
 ////////////////////
 
 type Timestamp = firestore.Timestamp;
-
-export const contentType = {
-  feature_film: 'Feature Film',
-  short: 'Short',
-  serie: 'Serie',
-  season: 'Season',
-  volume: 'Volume',
-  episode: 'Episode',
-  collection: 'Collection',
-  tv_film: 'TV Film',
-  flow: 'Flow'
-} as const;
-
-export type ContentType = keyof typeof contentType;
-export type ContentTypeValue = typeof contentType[ContentType];
-
-export const storeType = {
-  library: 'Library',
-  line_up: 'Line-Up',
-} as const;
-
-export type StoreType = keyof typeof storeType;
-export type StoreTypeValue = typeof storeType[StoreType];
-
-export const premiereType = {
-  international: 'International',
-  world: 'World',
-  market: 'Market',
-  national: 'National',
-} as const;
-
-export type PremiereType = keyof typeof premiereType;
-export type PremiereTypeValue = typeof premiereType[PremiereType];
-
-export const unitBox = {
-  boxoffice_dollar: 'Box Office in $',
-  boxoffice_euro: 'Box Office in €',
-  admissions: 'Admissions',
-} as const;
-
-export type UnitBox = keyof typeof unitBox;
-export type UnitBoxValue = typeof unitBox[UnitBox];
-
-export const storeStatus = {
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  draft: 'Draft',
-  refused: 'Refused',
-} as const;
-
-export type StoreStatus = keyof typeof storeStatus;
-export type StoreStatusValue = typeof storeStatus[StoreStatus];
-
-export const movieLanguageTypes = {
-  original: 'Original',
-  dubbed: 'Dubbed',
-  subtitle: 'Subtitle',
-  caption: 'Caption',
-} as const;
-
-export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
-export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
 
 export interface StoreConfig {
   status: StoreStatus,

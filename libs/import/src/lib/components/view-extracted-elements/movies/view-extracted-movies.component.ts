@@ -17,15 +17,10 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import {
   PremiereType,
-  storeType,
-  contentType,
-  storeStatus,
-  unitBox,
-  movieLanguageTypes,
   MovieLanguageTypesValue,
   UnitBoxValue,
-  premiereType
-} from '@blockframes/movie/+state/movie.firestore';
+  staticConsts,
+} from '@blockframes/utils/static-model';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -150,7 +145,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // WORK TYPE
         if (spreadSheetRow[SpreadSheetMovie.contentType]) {
-          const key = getKeyIfExists(contentType, spreadSheetRow[SpreadSheetMovie.contentType]);
+          const key = getKeyIfExists(staticConsts.contentType, spreadSheetRow[SpreadSheetMovie.contentType]);
           if (key) {
             movie.contentType = key;
           } else {
@@ -506,7 +501,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                     prize.premiere = 'international';
                     break;
                   default:
-                    prize.premiere = getKeyIfExists(premiereType, prizeParts[3] as PremiereType);
+                    prize.premiere = getKeyIfExists(staticConsts.premiereType, prizeParts[3] as PremiereType);
                     break;
                 }
 
@@ -564,7 +559,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             const parseErrors = [];
             if (language) {
               versionParts.map(v => v.trim()).forEach((v: MovieLanguageTypesValue) => {
-                const key = getKeyIfExists(movieLanguageTypes, v);
+                const key = getKeyIfExists(staticConsts.movieLanguageTypes, v);
                 if (key) {
                   populateMovieLanguageSpecification(movie.languages, language, key, true);
                 } else {
@@ -715,7 +710,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
           spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
-            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as UnitBoxValue);
+            const unit = getKeyIfExists(staticConsts.unitBox, boxOfficeParts[0] as UnitBoxValue);
             if (unit) {
               movie.boxOffice.push(createBoxOffice(
                 {
@@ -743,7 +738,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as UnitBoxValue);
+              const unit = getKeyIfExists(staticConsts.unitBox, boxOfficeParts[1] as UnitBoxValue);
               if (unit) {
                 movie.boxOffice.push(createBoxOffice(
                   {
@@ -899,7 +894,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
           // STORE TYPE
           if (spreadSheetRow[SpreadSheetMovie.storeType]) {
-            const key = getKeyIfExists(storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
+            const key = getKeyIfExists(staticConsts.storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
             if (key) {
               movie.storeConfig.storeType = key;
             } else {
@@ -917,14 +912,14 @@ export class ViewExtractedMoviesComponent implements OnInit {
               type: 'warning',
               field: 'movie.storeConfig.storeType',
               name: 'Movie store type',
-              reason: `Store type not found, assumed "${storeType.line_up}"`,
+              reason: `Store type not found, assumed "${staticConsts.storeType.line_up}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
 
           // MOVIE STATUS
           if (spreadSheetRow[SpreadSheetMovie.movieStatus]) {
-            const key = getKeyIfExists(storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
+            const key = getKeyIfExists(staticConsts.storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
             if (key) {
               movie.storeConfig.status = key;
             } else {
@@ -942,7 +937,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               type: 'warning',
               field: 'movie.storeConfig.status',
               name: 'Movie store status',
-              reason: `Store status not found, assumed "${storeStatus.draft}"`,
+              reason: `Store status not found, assumed "${staticConsts.storeStatus.draft}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }

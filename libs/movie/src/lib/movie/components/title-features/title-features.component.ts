@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { getISO3166TerritoryFromSlug } from '@blockframes/utils/static-model/territories-ISO-3166';
-import { contentType } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 interface TitleFeature {
   view: string,
@@ -17,7 +17,7 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
   const statusLabel = getLabelBySlug('MOVIE_STATUS', productionStatus);
   const features = [
-    contentType[movie.contentType],
+    staticConsts.contentType[movie.contentType],
     convertedRunTime,
     convertedGenres,
     convertedOriginalLanguages,

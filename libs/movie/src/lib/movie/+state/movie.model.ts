@@ -14,7 +14,6 @@ import {
   MovieReview,
   MovieOriginalRelease,
   Prize,
-  MovieLanguageTypes,
   BoxOffice,
   MovieRelease,
   MovieRunningTime,
@@ -24,7 +23,7 @@ import { Contract, getValidatedContracts } from '@blockframes/contract/contract/
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { createPrice } from '@blockframes/utils/common-interfaces';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { LanguagesSlug, MovieLanguageTypes } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 
 // Export for other files

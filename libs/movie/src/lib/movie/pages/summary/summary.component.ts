@@ -8,6 +8,7 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
+import { DirectorForm, CreditForm, MoviePrizeForm, MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -31,9 +32,19 @@ export class MovieFormSummaryComponent {
     private routerQuery: RouterQuery
   ) { }
 
-  public getPath(segment: string) {
+  public get genres() {
+    return [this.form.get('genres'), ...this.form.get('customGenres').controls];
+  }
+
+  get title() {
+    return this.form.get('title');
+  }
+
+  public getPath(segment: string, section?: string) {
     const { movieId } = this.route.snapshot.params;
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+    return section
+          ? `/c/o/dashboard/tunnel/movie/${movieId}/${segment}#${section}`
+          : `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
   public async submit() {
