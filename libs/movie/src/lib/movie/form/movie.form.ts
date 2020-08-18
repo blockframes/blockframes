@@ -109,7 +109,7 @@ function createMovieControls(movie: Partial<Movie>) {
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
-    productionStatus: new FormStaticValue(entity.productionStatus, 'MOVIE_STATUS'),
+    productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     release: new ReleaseYearForm(entity.release),
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
