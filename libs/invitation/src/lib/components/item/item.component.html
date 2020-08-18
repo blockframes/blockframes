@@ -5,30 +5,30 @@
     alt="Organization logo">
   <div matLine>
     <ng-container [ngSwitch]="invitation.type">
-      <div *ngSwitchCase="'attendEvent'">
+      <span *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf=" invitation | eventFromInvitation | async as event">
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="invitation.mode === 'invitation'; else request">
-            <span>{{ invitation.fromOrg | orgName }} invited you to </span>
+            {{ invitation.fromOrg | orgName }} invited you to 
             <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{event | eventRange }}</span>
+            {{event | eventRange }}
           </ng-container>
           <!-- Request to attendEvent -->
           <ng-template #request>
-            <span>{{ invitation.fromUser | displayName }} would like to attend event </span>
+            {{ invitation.fromUser | displayName }} would like to attend event 
             <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{ event | eventRange }}</span>
+            {{ event | eventRange }}
           </ng-template>
         </ng-container>
-      </div>
-      <div *ngSwitchCase="'joinOrganization'">
+      </span>
+      <span *ngSwitchCase="'joinOrganization'">
         <ng-container *ngIf="invitation.mode === 'invitation'; else request">
           {{ invitation.fromOrg | orgName }} invited you to join the organization.
         </ng-container>
         <ng-template #request>
           {{ invitation.fromUser | displayName }} wants to join your organization.
         </ng-template>
-      </div>
+      </span>
     </ng-container>
   </div>
   <span matLine>
@@ -36,7 +36,7 @@
       {{ invitation.date | date: 'medium' }}
     </small>
   </span>
-  <invitation-action [invitation]="invitation | eventLink"></invitation-action>
+  <invitation-action [invitation]="invitation"></invitation-action>
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert">
     </mat-icon>
