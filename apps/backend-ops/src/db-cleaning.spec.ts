@@ -1,4 +1,4 @@
-import { initFunctionsTestMock } from '@blockframes/testing/firebase/functions';
+import { initFunctionsTestMock, getTestingProjectId } from '@blockframes/testing/firebase/functions';
 import { runChunks } from './tools';
 import {
   cleanMovies,
@@ -19,6 +19,7 @@ import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import { clearFirestoreData } from '@firebase/testing';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
@@ -601,7 +602,7 @@ describe('DB cleaning script', () => {
     expect(orgs.docs.length).toEqual(1);
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
-    
+
     await cleanInvitations(invitationsBefore, documentIds, []);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
@@ -706,19 +707,5 @@ function populate(collection: string, set: any[]) {
 }
 
 async function resetDb() {
-
-  // @todo #3066 check how to clean with firebase
-  // afterEach(() => clearFirestoreData({projectId: 'test'}))
-
-  const collections = ['movies', 'orgs', 'permissions', 'docsIndex', 'notifications', 'events', 'users', 'invitations'];
-  const promises = [];
-  for (const collection of collections) {
-    promises.push(db.collection(collection).get());
-  }
-
-  let docs = [];
-  const result = await Promise.all(promises);
-  result.forEach(res => { docs = docs.concat(res.docs) });
-
-  return runChunks(docs, d => d.ref.delete(), 50, false);
+  await clearFirestoreData({ projectId: getTestingProjectId() });
 }

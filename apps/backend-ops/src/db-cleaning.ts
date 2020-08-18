@@ -1,4 +1,4 @@
-import { AdminServices, Auth, Firestore } from './admin';
+import { Auth, Firestore, QueryDocumentSnapshot } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
@@ -92,8 +92,8 @@ export function cleanNotifications(
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  return runChunks(notifications.docs, async (doc) => {
-    const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
+  return runChunks(notifications.docs, async (doc: QueryDocumentSnapshot) => {
+    const notification = doc.data() as NotificationDocument;
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
@@ -103,7 +103,7 @@ export function cleanNotifications(
   });
 }
 
-async function cleanOneNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: NotificationDocument) {
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
     notification.organization.logo = d.logo || EMPTY_MEDIA;
@@ -123,8 +123,8 @@ export function cleanInvitations(
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  return runChunks(invitations.docs, async (doc) => {
-    const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
+  return runChunks(invitations.docs, async (doc: QueryDocumentSnapshot) => {
+    const invitation = doc.data() as InvitationDocument;
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
@@ -134,7 +134,7 @@ export function cleanInvitations(
   });
 }
 
-async function cleanOneInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || EMPTY_MEDIA;
@@ -270,7 +270,7 @@ export function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
+    const movie = movieDoc.data() as any;
 
     if (movie.distributionRights) {
       delete movie.distributionRights;
