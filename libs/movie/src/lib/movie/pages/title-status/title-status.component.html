@@ -16,23 +16,23 @@
         fxLayoutGap="16px">
 
         <mat-card>
-          <img (click)="form.get('productionStatus').setValue('development')" asset="development.svg" />
+          <img (click)="form.productionStatus.setValue('development')" asset="development.svg" />
           <mat-radio-button value="development" color="primary">In development</mat-radio-button>
         </mat-card>
         <mat-card>
-          <img (click)="form.get('productionStatus').setValue('shooting')" asset="production.svg" />
+          <img (click)="form.productionStatus.setValue('shooting')" asset="production.svg" />
           <mat-radio-button value="shooting" color="primary">In Production</mat-radio-button>
         </mat-card>
         <mat-card>
-          <img (click)="form.get('productionStatus').setValue('post-production')" asset="post_production.svg" />
+          <img (click)="form.productionStatus.setValue('post-production')" asset="post_production.svg" />
           <mat-radio-button value="post-production" color="primary">In Post-Production</mat-radio-button>
         </mat-card>
         <mat-card>
-          <img (click)="form.get('productionStatus').setValue('finished')" asset="completed.svg" />
+          <img (click)="form.productionStatus.setValue('finished')" asset="completed.svg" />
           <mat-radio-button value="finished" color="primary">Completed</mat-radio-button>
         </mat-card>
         <mat-card>
-          <img (click)="form.get('productionStatus').setValue('released')" asset="released.svg" />
+          <img (click)="form.productionStatus.setValue('released')" asset="released.svg" />
           <mat-radio-button #radio value="released" color="primary">Released</mat-radio-button>
         </mat-card>
 

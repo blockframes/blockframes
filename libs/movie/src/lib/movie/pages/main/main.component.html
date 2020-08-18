@@ -21,7 +21,8 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')"
+          fxFlex>
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="contentType.hasError('required')">
             Please specify your project's content type.
@@ -81,7 +82,6 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- If Movie is released, don't show  TODO #3450-->
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
           <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
             <mat-label>Estimated/Confirmed</mat-label>
@@ -113,8 +113,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
-            name="runningTime" />
+          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error *ngIf="runningTime.hasError('min')">
             Only positive values are accepted.
@@ -157,7 +156,6 @@
 
             <div fxLayout fxLayoutGap="24px">
 
-              <!-- If Movie is released, don't show  TODO #3450-->
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post-production']">
                 <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
                   required>
