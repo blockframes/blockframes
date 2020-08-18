@@ -1,12 +1,12 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { db } from './internals/firebase';
+import { db, getStorageBucketName } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
-import { upsertWatermark } from './internals/watermark';
+import { upsertWatermark } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
@@ -101,7 +101,7 @@ export const onUserCreate = async (user: UserRecord) => {
 
   return Promise.all([
     storeSearchableUser(userData),
-    upsertWatermark(userData),
+    upsertWatermark(userData, getStorageBucketName()),
   ]);
 };
 
@@ -138,7 +138,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.lastName !== after.lastName ||
     before.email !== after.email
   ) {
-    promises.push(upsertWatermark(after));
+    promises.push(upsertWatermark(after, getStorageBucketName()));
   }
 
   return Promise.all(promises);

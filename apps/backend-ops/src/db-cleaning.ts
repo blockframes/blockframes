@@ -1,23 +1,28 @@
-import { AdminServices, Auth, Firestore } from './admin';
+import { Auth, Firestore, QueryDocumentSnapshot } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
+import { removeUnexpectedUsers } from './users';
+import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
-import { UserConfig } from './assets/users.fixture';
-import { removeUnexpectedUsers } from './users';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import admin from 'firebase-admin';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 
+// @TODO #3066 once "final" media structure is ready, remplace by const EMPTY_MEDIA = ''. 
+// Also update in unit test scripts
+const EMPTY_MEDIA = createHostedMedia();
+
 /** Reusable data cleaning script that can be updated along with data model */
 
-export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const {db, auth} = adminServices;
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
   await startMaintenance();
   // Getting all collections we need to check
   const [
@@ -74,9 +79,9 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
   console.log('Cleaned movies');
   await cleanDocsIndex(docsIndex, existingIds);
   console.log('Cleaned docsIndex');
-  await cleanNotifications(adminServices, notifications, existingIds);
+  await cleanNotifications(notifications, existingIds);
   console.log('Cleaned notifications');
-  await cleanInvitations(adminServices, invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
   console.log('Cleaned invitations');
 
   await endMaintenance();
@@ -84,78 +89,72 @@ export async function cleanDeprecatedData(adminServices: AdminServices) {
 }
 
 export function cleanNotifications(
-  adminServices: AdminServices,
   notifications: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[]
 ) {
-  const {db} = adminServices;
-  return runChunks(notifications.docs, async (doc) => {
-    const notification = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
+  return runChunks(notifications.docs, async (doc: QueryDocumentSnapshot) => {
+    const notification = doc.data() as NotificationDocument;
     const outdatedNotification = !isNotificationValid(notification, existingIds);
     if (outdatedNotification) {
       await doc.ref.delete();
     } else {
-      await _cleanNotification(db, doc, notification);
+      await cleanOneNotification(doc, notification);
     }
   });
-
 }
 
-async function _cleanNotification(db: Firestore, doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
+async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: NotificationDocument) {
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
-    notification.organization.logo = d.logo || '';
+    notification.organization.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (notification.user) {
     const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
-    notification.user.avatar = d.avatar || '';
-    notification.user.watermark = d.watermark || '';
+    notification.user.avatar = d.avatar || EMPTY_MEDIA;
+    notification.user.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(notification);
 }
 
-function cleanInvitations(
-  adminServices: AdminServices,
+export function cleanInvitations(
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
   events: EventDocument<EventMeta>[],
 ) {
-  const {db} = adminServices;
-  return runChunks(invitations.docs, async (doc) => {
-    const invitation = doc.data() as any; // @TODO (#3175 #3066) w8 "final" doc structure
+  return runChunks(invitations.docs, async (doc: QueryDocumentSnapshot) => {
+    const invitation = doc.data() as InvitationDocument;
     const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
-      await _cleanInvitation(db, doc, invitation);
+      await cleanOneInvitation(doc, invitation);
     }
   });
 }
 
-async function _cleanInvitation(db: Firestore, doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
-
+async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
-    invitation.fromOrg.logo = d.logo || '';
+    invitation.fromOrg.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (invitation.toOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
-    invitation.toOrg.logo = d.logo || '';
+    invitation.toOrg.logo = d.logo || EMPTY_MEDIA;
   }
 
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
-    invitation.fromUser.avatar = d.avatar || '';
-    invitation.fromUser.watermark = d.watermark || '';
+    invitation.fromUser.avatar = d.avatar || EMPTY_MEDIA;
+    invitation.fromUser.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    invitation.toUser.avatar = d.avatar || '';
-    invitation.toUser.watermark = d.watermark || '';
+    invitation.toUser.avatar = d.avatar || EMPTY_MEDIA;
+    invitation.toUser.watermark = d.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(invitation);
@@ -169,7 +168,7 @@ export async function cleanUsers(
 ) {
 
   // Check if auth users have their record on DB
-  // await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth); @TODO #3066 uncomment
+  await removeUnexpectedUsers(users.docs.map(u => u.data() as UserConfig), auth);
 
   return runChunks(users.docs, async (userDoc) => {
     const user = userDoc.data() as any;
@@ -184,7 +183,7 @@ export async function cleanUsers(
         const invalidOrganization = !existingOrganizationIds.includes(user.orgId);
         let update = false;
 
-        if (invalidOrganization) { // @todo #3066 create a test for this
+        if (invalidOrganization) {
           delete user.orgId;
           update = true;
         }
@@ -215,8 +214,10 @@ export async function cleanUsers(
         await orgDoc.ref.update({ userIds });
         const permDoc = await db.doc(`permissions/${user.orgId}`).get();
         const permission = permDoc.data() as PermissionsDocument;
-        delete permission.roles[user.uid];
-        await permDoc.ref.update({ roles: permission.roles });
+        if (!!permission) {
+          delete permission.roles[user.uid];
+          await permDoc.ref.update({ roles: permission.roles });
+        }
         await userDoc.ref.delete();
         console.log(`Deleted ${user.uid} and cleaned org and permissions ${user.orgId}.`);
       }
@@ -269,9 +270,9 @@ export function cleanMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 ) {
   return runChunks(movies.docs, async (movieDoc) => {
-    const movie = movieDoc.data() as any; // @TODO (#3175 #3066) W8 final doc structure
+    const movie = movieDoc.data() as any;
 
-    if (movie.distributionRights) { // @todo #3066 create a test for this
+    if (movie.distributionRights) {
       delete movie.distributionRights;
       await movieDoc.ref.set(movie);
     }
@@ -301,7 +302,6 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
   if (!existingIds.includes(notification.toUserId)) return false;
 
   // Cleaning notifications more than n days
-  // @TODO (#3066) mock notifications with date > n days ||  date < n days and test deletion
   const notificationTimestamp = notification.date.toMillis();
   if (notificationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
     return false;
@@ -350,7 +350,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
     case 'attendEvent':
 
       if (existingIds.includes(invitation.docId)) {
-        const event = events.find(e => e.id = invitation.docId);
+        const event = events.find(e => e.id === invitation.docId);
         const eventEndTimestamp = event.end.toMillis();
 
         // Cleaning finished events
@@ -368,8 +368,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
           existingIds.includes(invitation.docId))
       );
     case 'joinOrganization':
-      // Cleaning not pending invitations more than n days
-      // @TODO (#3066) mock invitations not pending || pending and with date > n days ||  date < n days and test deletion
+      // Cleaning not pending invitations older than n days
       const invitationTimestamp = invitation.date.toMillis();
       if (invitation.status !== 'pending' && invitationTimestamp < currentTimestamp - (dayInMillis * numberOfDaysToKeepNotifications)) {
         return false;

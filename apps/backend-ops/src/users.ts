@@ -8,10 +8,11 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep, runChunks } from './tools';
 import readline from 'readline';
-import { upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
+import { upsertWatermark } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
-
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 /**
  * @param auth  Firestore Admin Auth object
  * @param userConfig
@@ -162,7 +163,7 @@ export async function generateWatermarks() {
   const users = await db.collection('users').get();
 
   await runChunks(users.docs, async (user) => {
-    const file = await upsertWatermark(user.data());
+    const file = await upsertWatermark(user.data(), storageBucket);
     // We are in maintenance mode, trigger are stopped
     // so we update manually the user document
     if (dbVersion < 31) {

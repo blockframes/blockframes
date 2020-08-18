@@ -71,7 +71,7 @@ export const MIGRATIONS = {
   28: v0028,
   29: v0029,
   30: v0030,
-  // 31: v0031,
+  // 31: v0031, @TODO uncomment after feature/movie-form merge
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));
