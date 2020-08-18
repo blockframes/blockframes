@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Scope } from '@blockframes/utils/static-model/staticModels';
-import { Label } from '@blockframes/utils/pipes';
 
 @Component({
   selector: '[control] missing-control',
@@ -12,7 +11,7 @@ import { Label } from '@blockframes/utils/pipes';
 export class MissingControlComponent implements OnInit {
   @Input() control: FormControl;
   @Input() scope: Scope;
-  @Input() type: Label;
+  @Input() type: string;
   @Input() link: string;
   @Input() isLast = true;
 

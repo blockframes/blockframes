@@ -4,7 +4,7 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
   <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
     <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
-      <div *ngIf="movie.poster.media as poster">
+      <div *ngIf="movie.poster as poster">
         <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster">
       </div>
       <div class="movie-info">

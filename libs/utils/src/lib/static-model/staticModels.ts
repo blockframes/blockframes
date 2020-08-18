@@ -232,24 +232,6 @@ const models = {
       'label': 'Confirmed'
     }
   ] as const,
-  'MOVIE_STATUS': [
-    {
-      'slug': 'financing',
-      'label': 'Pre-production'
-    },
-    {
-      'slug': 'shooting',
-      'label': 'In Production'
-    },
-    {
-      'slug': 'post-production',
-      'label': 'Post-production'
-    },
-    {
-      'slug': 'finished',
-      'label': 'Completed'
-    }
-  ] as const,
   'PREMIERE_TYPE': [
     {
       'slug': 'world',

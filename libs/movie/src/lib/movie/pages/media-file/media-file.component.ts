@@ -15,16 +15,12 @@ export class MovieFormMediaFileComponent {
 
   public movie = this.movieQuery.getActive();
 
-  public presentationPath = `movies/${this.movie.id}/promotional.presentation_deck.media/`;
+  public presentationPath = `movies/${this.movie.id}/promotional.presentation_deck/`;
 
-  public scenarioPath = `movies/${this.movie.id}/promotional.scenario.media/`;
+  public scenarioPath = `movies/${this.movie.id}/promotional.scenario/`;
 
   get promotional() {
     return this.form.get('promotional');
   }
 
-  // get the ImgRef generated from firestorage and update url of media for each path
-  importPDF(imgRef, path: 'scenario' | 'presentation_deck') {
-    this.form.get('promotional').get(path).get('media').patchValue(imgRef);
-  }
 }

@@ -3,7 +3,6 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -108,15 +107,6 @@ export class MovieService extends CollectionService<MovieState> {
     // we don't want to keep orgId in our Movie object
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
-
-    // transform { media: string } into { media: ImgRef }
-    if (!!movie.promotional) {
-      movie.promotional.forEach(el => {
-        if (typeof el.media === typeof 'string') {
-          el.media = createHostedMedia(el.media);
-        }
-      });
-    }
 
     return this.update(id, cleanModel(movie));
   }

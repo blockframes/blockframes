@@ -8,8 +8,8 @@ import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 interface TitleView {
   id: string; // movieId
@@ -33,7 +33,8 @@ function createTitleView(
   movie: Movie,
   analytics: MovieAnalytics[]
 ): TitleView {
-  const statusLabel = movie.productionStatus ? getCodeIfExists('MOVIE_STATUS', movie.productionStatus) : '';
+  const statusLabel = movie.productionStatus ? staticConsts['productionStatus'][movie.productionStatus] : '';
+
   return {
     id: movie.id,
     title: movie.title.international,

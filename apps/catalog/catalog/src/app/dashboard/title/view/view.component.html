@@ -4,14 +4,14 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <ng-container *ngIf="getPoster(movie) as poster">
+       <ng-container *ngIf="movie.poster as poster">
         <img class="movie-poster" [ref]="poster" asset="empty_poster.webp"  alt="movie poster">
       </ng-container>
       <div class="movie-info">
         <h4>
           {{ movie.contentType }}
           <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | translateSlug: 'MOVIE_STATUS' }}
+          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
           <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|</ng-container>
           {{ movie.totalRunTime | duration: 'ms' }}
         </h4>

@@ -4,8 +4,6 @@ import {
   Movie,
   MovieService,
   createDocumentMeta,
-  createPromotionalHostedMedia,
-  createPromotionalExternalMedia,
   createMoviePromotional,
   createMovieRating,
   createMovieReview,
@@ -592,11 +590,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Screener link',
-            media: spreadSheetRow[SpreadSheetMovie.screenerLink],
-          });
-          movie.promotional.screener_link = promotionalElement;
+          movie.promotional.screener_link = spreadSheetRow[SpreadSheetMovie.screenerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -609,12 +603,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PROMO REEL LINK
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Promo reel link',
-            media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
-          });
-
-          movie.promotional.promo_reel_link = promotionalElement;
+          movie.promotional.promo_reel_link = spreadSheetRow[SpreadSheetMovie.promoReelLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -627,12 +616,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // TRAILER LINK
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Trailer link',
-            media: spreadSheetRow[SpreadSheetMovie.trailerLink],
-          });
-
-          movie.promotional.trailer_link = promotionalElement;
+          movie.promotional.trailer_link = spreadSheetRow[SpreadSheetMovie.trailerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -645,12 +629,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PITCH TEASER LINK
         if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Pitch teaser link',
-            media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
-          });
-
-          movie.promotional.teaser_link = promotionalElement;
+          movie.promotional.teaser_link = spreadSheetRow[SpreadSheetMovie.pitchTeaserLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -663,12 +642,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Scenario link',
-            media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
-          });
           // TODO issue#3091
-          movie.promotional.scenario = promotionalElement;
+          movie.promotional.scenario = spreadSheetRow[SpreadSheetMovie.scenarioLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -681,7 +656,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
+          const movieStatus = staticConsts['productionStatus'][spreadSheetRow[SpreadSheetMovie.productionStatus]];
           if (movieStatus) {
             movie.productionStatus = movieStatus;
           } else {
@@ -694,7 +669,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             });
           }
         } else {
-          movie.productionStatus = getCodeIfExists('MOVIE_STATUS', 'finished');
+          movie.productionStatus = "finished";
           importErrors.errors.push({
             type: 'warning',
             field: 'movie.productionStatus',
@@ -834,12 +809,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRESENTATION DECK
         if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Presentation deck',
-            media: spreadSheetRow[SpreadSheetMovie.presentationDeck],
-          });
           // TODO issue#3091
-          movie.promotional.presentation_deck = promotionalElement;
+          movie.promotional.presentation_deck = spreadSheetRow[SpreadSheetMovie.presentationDeck];
         } else {
           importErrors.errors.push({
             type: 'warning',

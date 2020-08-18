@@ -19,7 +19,7 @@
               Event for : {{ movie.title.international }} ({{ movie.internalRef }})
             </mat-card-title>
             <ng-container
-              *ngIf="movie.poster && movie.poster.media as poster;">
+              *ngIf="movie.poster as poster;">
               <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
             </ng-container>
           </mat-card-header>

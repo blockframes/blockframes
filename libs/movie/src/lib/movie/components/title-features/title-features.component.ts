@@ -10,12 +10,12 @@ interface TitleFeature {
 }
 
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
-  const { genres, runningTime, originalLanguages, originCountries, productionStatus } = movie;
+  const { genres, runningTime, originalLanguages, originCountries } = movie;
   const convertedGenres = genres.map(genre => getLabelBySlug('GENRES', genre));
   const convertedRunTime = typeof runningTime.time === "string" ? runningTime.time : `${runningTime.time}min`;
   const convertedOriginalLanguages = originalLanguages.map(language => getLabelBySlug('LANGUAGES', language));
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
-  const statusLabel = getLabelBySlug('MOVIE_STATUS', productionStatus);
+  const statusLabel = staticConsts.productionStatus[movie.productionStatus];
   const features = [
     staticConsts.contentType[movie.contentType],
     convertedRunTime,

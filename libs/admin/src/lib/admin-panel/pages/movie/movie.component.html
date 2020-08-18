@@ -35,8 +35,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Production Status</mat-label>
             <mat-select formControlName="productionStatus" required>
-              <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
-                {{ status.label }}
+              <mat-option *ngFor="let status of staticConsts.productionStatus | keyvalue" [value]="status.key">
+                {{ status.value }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -92,10 +92,10 @@
   <mat-card *ngIf="movie">
     <h2>Promotional Elements :</h2>
 
-    <admin-image-sizes *ngIf="movie.banner.media" title="Movie banner" [form]="movie.banner.media">
+    <admin-image-sizes *ngIf="movie.banner" title="Movie banner" [form]="movie.banner">
       <h3>Movie Banner</h3>
     </admin-image-sizes>
-    <admin-image-sizes *ngIf="movie.poster.media" title="Movie poster" [form]="movie.poster.media">
+    <admin-image-sizes *ngIf="movie.poster" title="Movie poster" [form]="movie.poster">
       <h3>Movie poster</h3>
     </admin-image-sizes>
   </mat-card>

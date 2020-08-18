@@ -50,10 +50,6 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  public getPoster(movie: Movie) {
-    return movie.poster.media;
-  }
-
   public getDirectors(movie: Movie) {
     return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }

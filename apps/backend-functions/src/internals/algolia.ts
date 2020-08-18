@@ -134,9 +134,9 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
     const userRecord: AlgoliaRecordUser = {
       objectID: user.uid,
       email: user.email,
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      avatar: user.avatar?.url || '',
+      firstName: user.firstName ?? '',
+      lastName: user.lastName ?? '',
+      avatar: user.avatar ?? '',
     };
 
     return indexBuilder(algolia.indexNameUsers, adminKey).saveObject(userRecord);

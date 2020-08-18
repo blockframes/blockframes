@@ -127,7 +127,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.url !== after.avatar?.url
+    before.avatar !== after.avatar
   ) {
     promises.push(storeSearchableUser(after));
   }

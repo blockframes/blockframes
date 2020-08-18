@@ -52,8 +52,8 @@
               </a>
             </ng-container>
             <ng-template #banner>
-              <a [href]="form.banner.get('media').value.url" target="_blank">
-                {{ form.banner.get('media').value | fileName }}
+              <a [href]="form.banner.value.url" target="_blank">
+                {{ form.banner.value | fileName }}
               </a>
             </ng-template>
           </li>
@@ -65,8 +65,8 @@
               </a>
             </ng-container>
             <ng-template #poster>
-              <a [href]="form.poster.get('media').value.url" target="_blank">
-                {{ form.poster.get('media').value | fileName }}
+              <a [href]="form.poster.value.url" target="_blank">
+                {{ form.poster.value | fileName }}
               </a>
             </ng-template>
           </li>
