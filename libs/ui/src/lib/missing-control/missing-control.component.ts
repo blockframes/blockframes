@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Scope } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
-  selector: '[control] [link] missing-control',
+  selector: '[control] missing-control',
   templateUrl: './missing-control.component.html',
   styleUrls: ['./missing-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

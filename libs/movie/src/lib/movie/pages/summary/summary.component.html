@@ -13,20 +13,20 @@
       <article>
         <h5>
           Reference
-          <a mat-icon-button [routerLink]="getPath('main', 'reference')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" fragment="reference"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <strong>International Title </strong>
-            <missing-control [control]="title.get('international')" [link]="getPath('main', 'reference')"></missing-control>
+            <missing-control [control]="title.get('international')"></missing-control>
           </li>
           <li>
             <strong>Original Title </strong>
-            <missing-control [control]="title.get('original')" [link]="getPath('main', 'reference')"></missing-control>
+            <missing-control [control]="title.get('original')"></missing-control>
           </li>
           <li>
             <strong>Content Type </strong>
-            <missing-control [control]="form.get('contentType')" [link]="getPath('main', 'reference')">
+            <missing-control [control]="form.get('contentType')">
               <ng-template #content>
                 {{ form.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
               </ng-template>
@@ -34,20 +34,20 @@
           </li>
           <li>
             <strong>Title Reference </strong>
-            <missing-control [control]="form.get('internalRef')" [link]="getPath('main', 'reference')"></missing-control>
+            <missing-control [control]="form.get('internalRef')"></missing-control>
           </li>
         </ul>
       </article>
       <article>
         <h5>
           Images
-          <a mat-icon-button [routerLink]="getPath('main', 'images')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" reference="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Film Page Banner Image </strong>
-            <ng-container *ngIf="(form.banner.value | isEmptyImgRef) else banner">
-              <a [routerLink]="getPath('main', 'images')" class="missing-control">
+            <ng-container *ngIf="(form.banner.value.url | isEmptyImgRef) else banner">
+              <a [routerLink]="getPath('main')" reference="images" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -59,8 +59,8 @@
           </li>
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Poster Image </strong>
-            <ng-container *ngIf="(form.poster.value | isEmptyImgRef) else poster">
-              <a [routerLink]="getPath('main', 'images')" class="missing-control">
+            <ng-container *ngIf="(form.poster.value.url | isEmptyImgRef) else poster">
+              <a [routerLink]="getPath('main')" reference="images" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -75,30 +75,30 @@
       <article>
         <h5>
           General Information
-          <a mat-icon-button [routerLink]="getPath('main', 'general-information')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" reference="general-information"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <strong>Release Date </strong>
-            <missing-control [control]="form.release.get('year')" [link]="getPath('main', 'general-information')"></missing-control>
+            <missing-control [control]="form.release.get('year')"></missing-control>
           </li>
           <li>
             <strong>Countries of origin </strong>
             <ng-container *ngFor="let country of form.originCountries.controls; let isLast = last">
-              <missing-control [control]="country" scope="TERRITORIES" [link]="getPath('main', 'general-information')" [isLast]="isLast"></missing-control>
+              <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
             </ng-container>
           </li>
           <li>
             <strong>Original Language </strong>
             <ng-container *ngFor="let language of form.originalLanguages.controls; let isLast = last">
-              <missing-control [control]="language" scope="LANGUAGES" [link]="getPath('main', 'general-information')" [isLast]="isLast"></missing-control>
+              <missing-control [control]="language" scope="LANGUAGES" [isLast]="isLast"></missing-control>
             </ng-container>
           </li>
           <li>
             <strong>Genres </strong>
             <ng-container *ngFor="let genre of genres; let isLast = last">
               <ng-container *ngIf="!isLast else last">
-                <missing-control [control]="genre" scope="GENRES" [link]="getPath('main', 'general-information')" [isLast]="isLast"></missing-control>
+                <missing-control [control]="genre" scope="GENRES" [isLast]="isLast"></missing-control>
               </ng-container>
               <ng-template #last>
                 {{ genre.value }}
@@ -107,7 +107,7 @@
           </li>
           <li>
             <strong>Running Time </strong>
-            <missing-control [control]="form.runningTime" [link]="getPath('main', 'general-information')">
+            <missing-control [control]="form.runningTime">
               <ng-template #content>{{ form.runningTime.get('time').value | duration }}</ng-template>
             </missing-control>
           </li>
@@ -116,25 +116,25 @@
       <article>
         <h5>
           Directors
-          <a mat-icon-button [routerLink]="getPath('main', 'directors')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" fragment="directors"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let director of form.directors.controls">
             <li>
               <strong>Director Name </strong>
               <ng-container *ngIf="director.valid else display">
-                <a [routerLink]="getPath('main', 'directors')" class="mandatory-control">
+                <a [routerLink]="getPath('main')" fragment="directors" class="mandatory-control">
                   Mandatory
                 </a>
               </ng-container>
               <ng-template #display>
-                <missing-control [control]="director.get('firstName')" [link]="getPath('main', 'directors')" isLast=false></missing-control>
-                <missing-control [control]="director.get('lastName')" [link]="getPath('main', 'directors')"></missing-control>
+                <missing-control [control]="director.get('firstName')" isLast=false></missing-control>
+                <missing-control [control]="director.get('lastName')"></missing-control>
               </ng-template>
             </li>
             <li>
               <strong>Director's Filmography </strong>
-              <missing-control [control]="director.get('filmography')" [link]="getPath('main', 'directors')"></missing-control>
+              <missing-control [control]="director.get('filmography')"></missing-control>
             </li>
           </ng-container>
         </ul>
@@ -150,46 +150,46 @@
       <article>
         <h5>
           Logline
-          <a mat-icon-button [routerLink]="getPath('synopsis', 'logline')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('synopsis')" fragment="logline"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
-            <missing-control [control]="form.get('logline')" [link]="getPath('synopsis', 'logline')"></missing-control>
+            <missing-control [control]="form.get('logline')"></missing-control>
           </li>
         </ul>
       </article>
       <article>
         <h5>
           Synopsis
-          <a mat-icon-button [routerLink]="getPath('synopsis', 'synopsis')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('synopsis')" fragment="synopsis"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
-            <missing-control [control]="form.get('synopsis')" [link]="getPath('synopsis', 'synopsis')"></missing-control>
+            <missing-control [control]="form.get('synopsis')"></missing-control>
           </li>
         </ul>
       </article>
       <article>
         <h5>
           Key Assets
-          <a mat-icon-button [routerLink]="getPath('synopsis', 'key-assets')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('synopsis')" fragment="key-assets"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
-            <missing-control [control]="form.get('keyAssets')" [link]="getPath('synopsis', 'key-assets')"></missing-control>
+            <missing-control [control]="form.get('keyAssets')"></missing-control>
           </li>
         </ul>
       </article>
       <article>
         <h5>
           Keywords
-          <a mat-icon-button [routerLink]="getPath('synopsis', 'keywords')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('synopsis')" fragment="keywords"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <mat-chip-list fxLayout="row" fxLayoutGap="5px">
               <ng-container *ngIf="!form.get('keywords').value.length else display">
-                <a [routerLink]="getPath('synopsis', 'keywords')" class="missing-control">
+                <a [routerLink]="getPath('synopsis')" fragment="keywords" class="missing-control">
                   Missing
                 </a>
               </ng-container>
@@ -215,11 +215,11 @@
       <article>
         <h5>
           Production Companies
-          <a mat-icon-button [routerLink]="getPath('production', 'company')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('production')" fragment="company"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let producer of form.stakeholders.get('productionCompany').controls; let isLast = last">
-            <missing-control [control]="producer.get('displayName')" [link]="getPath('production', 'company')"></missing-control>
+            <missing-control [control]="producer.get('displayName')"></missing-control>
             <ng-container *ngIf="producer.get('countries').value.length">
               <span> (</span>
               <span *ngIf="producer.get('countries').value.length">
@@ -234,11 +234,11 @@
 
       <article>
         <h5>Co-production Companies
-          <a mat-icon-button [routerLink]="getPath('production', 'co-company')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('production')" fragment="co-company"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let coProducer of form.stakeholders.get('coProductionCompany').controls; let isLast = last">
-            <missing-control [control]="coProducer.get('displayName')" [link]="getPath('production', 'co-company')"></missing-control>
+            <missing-control [control]="coProducer.get('displayName')"></missing-control>
             <ng-container *ngIf="coProducer.get('countries').value.length">
               <span> (</span>
               <span  *ngIf="coProducer.get('countries').value.length">
@@ -254,7 +254,7 @@
       <article>
         <h5>
           Producers
-          <a mat-icon-button [routerLink]="getPath('production', 'producers')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('production')" fragment="producers"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li *ngFor="let producer of form.producers.controls; let isLast = last">
@@ -264,11 +264,11 @@
               </a>
             </ng-container>
             <ng-template #displayProducer>
-              <missing-control [control]="producer.get('firstName')" [link]="getPath('production', 'producers')"></missing-control>
+              <missing-control [control]="producer.get('firstName')"></missing-control>
               <span>&nbsp;</span>
-              <missing-control [control]="producer.get('lastName')" [link]="getPath('production', 'producers')"></missing-control>
+              <missing-control [control]="producer.get('lastName')"></missing-control>
               <span *ngIf="producer.get('role').value"> (</span>
-              <missing-control [control]="producer.get('role')" [link]="getPath('production', 'producers')" scope="PRODUCER_ROLES" class="control-role"></missing-control>
+              <missing-control [control]="producer.get('role')" scope="PRODUCER_ROLES" class="control-role"></missing-control>
               <span *ngIf="producer.get('role').value">)</span>
               <span>{{ isLast ? '' : ', '}}</span>
             </ng-template>
@@ -279,11 +279,11 @@
       <article>
         <h5>
           Distributors
-          <a mat-icon-button [routerLink]="getPath('production', 'distributors')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('production')" fragment="distributors"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li *ngFor="let distributor of form.stakeholders.get('distributor').controls; let isLast = last">
-            <missing-control [control]="distributor.get('displayName')" [link]="getPath('production', 'distributors')"></missing-control>
+            <missing-control [control]="distributor.get('displayName')"></missing-control>
             <ng-container *ngIf="distributor.get('countries').value.length">
               <span> (</span>
               <span  *ngIf="distributor.get('countries').value.length">
@@ -299,11 +299,11 @@
       <article>
         <h5>
           International Sales
-          <a mat-icon-button [routerLink]="getPath('production', 'sales')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('production')" fragment="sales"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let saleAgent of form.stakeholders.get('salesAgent').controls; let isLast = last">
-            <missing-control [control]="saleAgent.get('displayName')" [link]="getPath('production', 'sales')"></missing-control>
+            <missing-control [control]="saleAgent.get('displayName')"></missing-control>
             <ng-container *ngIf="saleAgent.get('countries').value.length">
               <span> (</span>
               <span *ngFor="let country of saleAgent.get('countries').value; let last = last">
@@ -326,20 +326,20 @@
       <article>
         <h5>
           Cast Members
-          <a mat-icon-button [routerLink]="getPath('artistic', 'cast-member')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('artistic')" fragment="cast-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <li *ngFor="let artist of form.cast.controls; let isLast = last">
           <ng-container *ngIf="!artist.get('firstName').value || !artist.get('lastName').value else displayArtist">
-            <a [routerLink]="getPath('artistic', 'cast-member')" class="missing-control">
+            <a [routerLink]="getPath('artistic')" fragment="cast-member" class="missing-control">
               Missing
             </a>
           </ng-container>
           <ng-template #displayArtist>
-            <missing-control [control]="artist.get('firstName')" [link]="getPath('artistic', 'cast-member')"></missing-control>
+            <missing-control [control]="artist.get('firstName')"></missing-control>
             <span>&nbsp;</span>
-            <missing-control [control]="artist.get('lastName')" [link]="getPath('artistic', 'cast-member')"></missing-control>
+            <missing-control [control]="artist.get('lastName')"></missing-control>
             <span>&nbsp;</span>
-            <missing-control [control]="artist.get('filmography')" [link]="getPath('artistic', 'cast-member')"></missing-control>
+            <missing-control [control]="artist.get('filmography')"></missing-control>
           </ng-template>
         </li>
       </article>
@@ -347,21 +347,21 @@
       <article>
         <h5>
           Crew Members
-          <a mat-icon-button [routerLink]="getPath('artistic', 'crew-member')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('artistic')" fragment="crew-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <li *ngFor="let crew of form.crew.controls; let isLast = last">
           <ng-container *ngIf="!crew.get('firstName').value || !crew.get('lastName').value else displayCrew">
-            <a [routerLink]="getPath('artistic', 'crew-member')" class="missing-control">
+            <a [routerLink]="getPath('artistic')" fragment="crew-member"class="missing-control">
               Missing
             </a>
           </ng-container>
           <ng-template #displayCrew>
-            <missing-control [control]="crew.get('firstName')" [link]="getPath('artistic', 'crew-member')"></missing-control>
+            <missing-control [control]="crew.get('firstName')"></missing-control>
             <span>&nbsp;</span>
-            <missing-control [control]="crew.get('lastName')" [link]="getPath('artistic', 'crew-member')"></missing-control>
+            <missing-control [control]="crew.get('lastName')"></missing-control>
             <span>&nbsp;</span>
             <strong>({{ crew.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
-            <missing-control [control]="crew.get('filmography')" [link]="getPath('artistic', 'crew-member')"></missing-control>
+            <missing-control [control]="crew.get('filmography')"></missing-control>
           </ng-template>
         </li>
       </article>
@@ -376,28 +376,28 @@
       <article>
         <h5>
           Festivals
-          <a mat-icon-button [routerLink]="getPath('reviews', 'festival')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('reviews')" fragment="festival"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let festivalPrize of form.prizes.controls">
             <li>
               <strong>Festivals </strong>
               <ng-container *ngIf="festivalPrize.valid else display">
-                <a [routerLink]="getPath('reviews', 'festival')" class="missing-control">
+                <a [routerLink]="getPath('reviews')" fragment="festival" class="missing-control">
                   Missing
                 </a>
               </ng-container>
               <ng-template #display>
-                <missing-control [control]="festivalPrize.get('name')" [link]="getPath('reviews', 'festival')">
+                <missing-control [control]="festivalPrize.get('name')">
                   <ng-template #content>{{ festivalPrize.get('name').value }}, </ng-template>
                 </missing-control>
-                <missing-control [control]="festivalPrize.get('prize')" [link]="getPath('reviews', 'festival')">
+                <missing-control [control]="festivalPrize.get('prize')">
                   <ng-template #content>{{ festivalPrize.get('prize').value }}, </ng-template>
                 </missing-control>
-                <missing-control [control]="festivalPrize.get('year')" [link]="getPath('reviews', 'festival')">
+                <missing-control [control]="festivalPrize.get('year')">
                   <ng-template #content>{{ festivalPrize.get('year').value }}, </ng-template>
                 </missing-control>
-                <missing-control [control]="festivalPrize.get('premiere')" [link]="getPath('reviews', 'festival')">
+                <missing-control [control]="festivalPrize.get('premiere')">
                   <ng-template let-premieres>
                     <ng-container *ngFor="let premiere of premieres; let isLast=last">
                       <span *ngIf="premiere">{{premiere | titlecase}} Premiere{{isLast? '' : ', '}}</span>
@@ -412,14 +412,14 @@
       <article>
         <h5>
           Film Reviews
-          <a mat-icon-button [routerLink]="getPath('reviews', 'reviews')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('reviews')" fragment="reviews"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let reviewControl of form.review.controls">
             <li>
               <strong>Festivals </strong>
               <ng-container *ngIf="reviewControl.valid else display">
-                <a [routerLink]="getPath('reviews', 'reviews')" class="missing-control">
+                <a [routerLink]="getPath('reviews')" fragment="reviews" class="missing-control">
                   Missing
                 </a>
               </ng-container>
@@ -441,12 +441,12 @@
       <article>
         <h5>
           Release
-          <a mat-icon-button [routerLink]="getPath('additional-information', 'release')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="release"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li *ngFor="let release of form.originalRelease.controls; let isLast = last">
             <ng-container *ngIf="!release.value else displayRelease">
-              <a [routerLink]="getPath('additional-information', 'release')" class="missing-control">
+              <a [routerLink]="getPath('additional-information')" fragment="release" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -464,7 +464,7 @@
       <article>
         <h5>
           Box Office
-          <a mat-icon-button [routerLink]="getPath('additional-information', 'box-office')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="box-office"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <ng-container *ngFor="let boxOffice of form.boxOffice.controls">
@@ -476,7 +476,7 @@
               <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
                 <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
               </ng-container>
-              <missing-control [control]="boxOffice.get('value')" [link]="getPath('additional-information', 'box-office')">
+              <missing-control [control]="boxOffice.get('value')">
                 <ng-template let-value>{{ value | number }}</ng-template>
               </missing-control>
               <span>&nbsp;</span>
@@ -495,12 +495,12 @@
       <article>
         <h5>
           Rating
-          <a mat-icon-button [routerLink]="getPath('additional-information', 'rating')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="rating"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li *ngFor="let rating of form.rating.controls; let isLast = last">
             <ng-container *ngIf="!rating.get('value').value else displayRating">
-              <a [routerLink]="getPath('additional-information', 'rating')" class="missing-control">
+              <a [routerLink]="getPath('additional-information')" fragment="rating" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -516,12 +516,12 @@
       <article>
         <h5>
           Qualifications
-          <a mat-icon-button [routerLink]="getPath('additional-information', 'qualifications')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="qualifications"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <ng-container *ngIf="!form.qualifications.value.length else displayQuotas">
-              <a [routerLink]="getPath('additional-information', 'qualifications')" class="missing-control">
+              <a [routerLink]="getPath('additional-information')" fragment="qualifications" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -541,25 +541,25 @@
       <article>
         <h5>
           Technical Information
-          <a mat-icon-button [routerLink]="getPath('technical-info', 'technical-info')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('technical-info')" fragment="technical-info"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <strong>Shooting Format </strong>
-            <missing-control [control]="form.get('format')" scope="MOVIE_FORMAT" [link]="getPath('technical-info', 'technical-info')"></missing-control>
+            <missing-control [control]="form.get('format')" scope="MOVIE_FORMAT"></missing-control>
           </li>
           <li>
             <strong>Format Quality </strong>
-            <missing-control [control]="form.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY" [link]="getPath('technical-info', 'technical-info')">
+            <missing-control [control]="form.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY">
             </missing-control>
           </li>
           <li>
             <strong>Color </strong>
-            <missing-control [control]="form.get('color')" scope="COLORS" [link]="getPath('technical-info', 'technical-info')"></missing-control>
+            <missing-control [control]="form.get('color')" scope="COLORS"></missing-control>
           </li>
           <li>
             <strong>Sound Format </strong>
-            <missing-control [control]="form.get('soundFormat')" scope="SOUND_FORMAT" [link]="getPath('technical-info', 'technical-info')"></missing-control>
+            <missing-control [control]="form.get('soundFormat')" scope="SOUND_FORMAT"></missing-control>
           </li>
         </ul>
       </article>
