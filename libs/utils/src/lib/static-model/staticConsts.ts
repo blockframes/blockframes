@@ -94,7 +94,7 @@ const constants = {
   productionStatus: {
     financing: 'In development',
     shooting: 'In Production',
-    postProduction: 'In Post-production',
+    'post-production': 'In Post-production',
     finished: 'Completed',
     released: 'Released'
   },
