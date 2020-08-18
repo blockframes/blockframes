@@ -9,11 +9,15 @@ const tunnelRoutes: Routes = [
     component: MovieTunnelComponent,
     canDeactivate: [TunnelGuard],
     children: [
-      // Page 1
       {
         path: '',
-        redirectTo: 'main',
+        redirectTo: 'title-status',
         pathMatch: 'full'
+      },
+      // Page 1
+      {
+        path: 'title-status',
+        loadChildren: () => import('@blockframes/movie/pages/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
       // Page 2
       {
@@ -60,7 +64,7 @@ const tunnelRoutes: Routes = [
       {
         path: 'images',
         loadChildren: () => import('@blockframes/movie/pages/media-image/media-image.module').then(m => m.MediaImageModule)
-      // Page 11
+        // Page 11
       },
       {
         path: 'files&links',
@@ -83,4 +87,4 @@ const tunnelRoutes: Routes = [
   imports: [RouterModule.forChild(tunnelRoutes)],
   exports: [RouterModule]
 })
-export class MovieTunnelRoutingModule {}
+export class MovieTunnelRoutingModule { }

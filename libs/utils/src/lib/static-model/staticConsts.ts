@@ -121,10 +121,10 @@ const constants = {
   // ORGANISATION  //
   // ------------- //
   cartStatus: {
-    pending : 'Pending',
+    pending: 'Pending',
     submitted: 'Submitted',
-    accepted : 'Accepted',
-    paid : 'Paid'
+    accepted: 'Accepted',
+    paid: 'Paid'
   },
   orgActivity: {
     production: 'Production',

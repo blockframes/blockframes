@@ -8,7 +8,7 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>International title</mat-label>
           <input test-id="international-title" matInput type="text" placeholder="International title"
-            [formControl]="international" required/>
+            [formControl]="international" required />
           <mat-error *ngIf="international.hasError('required')">
             Please specify your project's international title.
           </mat-error>
@@ -16,12 +16,13 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Original title</mat-label>
-          <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original"/>
+          <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
         </mat-form-field>
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')"
+          fxFlex>
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="contentType.hasError('required')">
             Please specify your project's content type.
@@ -30,8 +31,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Reference</mat-label>
-          <input test-id="reference" matInput type="text" placeholder="Reference"
-            [formControl]="internalRef" />
+          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="internalRef" />
           <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
           <mat-error *ngIf="internalRef.hasError('maxlength')">
             30 characters maximum.
@@ -71,7 +71,8 @@
 
     <section id="general-information">
       <h3>General Information</h3>
-      <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
+      <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
           <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
@@ -81,24 +82,22 @@
           </mat-error>
         </mat-form-field>
 
-        <static-select test-id="release-status" scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
-          <mat-label>Estimated/Confirmed *</mat-label>
-          <mat-error>Please specify if the release date is estimated or confirmed.</mat-error>
-        </static-select>
+        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+          <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
+            <mat-label>Estimated/Confirmed</mat-label>
+          </static-select>
+        </ng-container>
+
       </article>
 
-      <chips-autocomplete
-      [form]="form.get('originCountries')"
-      model="TERRITORIES"
-      placeholder="Enter Country/ies of Origin">
+      <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES"
+        placeholder="Enter Country/ies of Origin">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
       </chips-autocomplete>
 
-      <chips-autocomplete
-      [form]="form.get('originalLanguages')"
-      model="LANGUAGES"
-      placeholder="Enter Original Language(s)">
+      <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"
+        placeholder="Enter Original Language(s)">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
       </chips-autocomplete>
@@ -106,14 +105,15 @@
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-        <static-select test-id="screening-status" scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
-          <mat-label>To be determined/Estimated/Confirmed</mat-label>
-        </static-select>
+        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.get('runningTime').get('status')" fxFlex>
+            <mat-label>To be determined/Estimated/Confirmed</mat-label>
+          </static-select>
+        </ng-container>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
-            name="runningTime" />
+          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error *ngIf="runningTime.hasError('min')">
             Only positive values are accepted.
@@ -129,45 +129,64 @@
 
     <section id="directors">
       <h3>Directors</h3>
-      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
-        <ng-template formView let-form>
-          <article [formGroup]="form">
+      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director"
+        saveButtonText="Save Director">
+        <ng-template colRef="filmography" let-dir>
+          {{ dir.filmography[0].title }} - {{ dir.filmography[0].year }},
+          {{ dir.filmography[1].title }} - {{ dir.filmography[1].year }},
+          {{ dir.filmography[2].title }} - {{ dir.filmography[2].year }}
+        </ng-template>
+        <ng-template formView let-directorForm>
+          <article [formGroup]="directorForm">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
                 <input test-id="first-name" matInput formControlName="firstName" required />
-                <mat-error *ngIf="form.get('firstName').hasError('required')">Please specify Director's First Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('firstName').hasError('required')">Please specify Director's First
+                  Name.</mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Last Name</mat-label>
                 <input test-id="last-name" matInput formControlName="lastName" required />
-                <mat-error *ngIf="form.get('lastName').hasError('required')">Please specify Director's Last Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('lastName').hasError('required')">Please specify Director's Last
+                  Name.</mat-error>
               </mat-form-field>
             </div>
 
             <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Director Status</mat-label>
-                <input matInput formControlName="status" />
-              </mat-form-field>
 
-              <div fxLayout="column" fxLayoutAlign="start center">
+              <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+                <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
+                  required>
+                  <mat-label>Directors Status</mat-label>
+                </static-select>
+              </ng-container>
 
-                <ng-container *ngFor="let filmography of form.get('filmography').controls">
-                  <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
-                    <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Director's Filmography</mat-label>
-                      <input matInput formControlName="title">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline" fxFlex>
-                      <mat-label>Director's Filmography</mat-label>
-                      <input matInput formControlName="year">
-                    </mat-form-field>
-                  </div>
-                </ng-container>
-              </div>
+              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex
+                required>
+                <mat-label>Directors Category</mat-label>
+              </static-select>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Directors Description</mat-label>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+            <div fxLayout="column" fxLayoutAlign="start center">
+
+              <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
+                <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Film Title</mat-label>
+                    <input matInput formControlName="title">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Release Year</mat-label>
+                    <input matInput formControlName="year" type="number">
+                  </mat-form-field>
+                </div>
+              </ng-container>
             </div>
           </article>
         </ng-template>

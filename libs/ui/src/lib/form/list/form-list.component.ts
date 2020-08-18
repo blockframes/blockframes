@@ -32,7 +32,8 @@ export class ItemRefDirective { }
 export class FormListComponent<T> implements OnInit {
 
   @Input() form: FormList<T>;
-  @Input() buttonText: string = 'Add';
+  @Input() buttonText = 'Add';
+  @Input() saveButtonText = 'Save'
 
   @ContentChild(ItemRefDirective, { read: TemplateRef }) itemRef: ItemRefDirective;
   @ContentChild(FormViewDirective, { read: TemplateRef }) formView: FormViewDirective;
@@ -40,6 +41,7 @@ export class FormListComponent<T> implements OnInit {
   list$: Observable<any[]>;
   formItem: FormEntity<EntityControl<T>, T>;
   activeIndex: number;
+  activeValue: T
 
   constructor(private cdr: ChangeDetectorRef) { }
 
@@ -51,6 +53,8 @@ export class FormListComponent<T> implements OnInit {
     /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
     if (this.isFormEmpty) {
       this.add();
+    } else {
+      this.formItem = this.form.last();
     }
   }
 
@@ -63,34 +67,43 @@ export class FormListComponent<T> implements OnInit {
     this.formItem = this.form.createControl({});
   }
 
-  /* If there is no control in the form it adds a default one for the user to work on. */
-  addControl() {
-    if (this.isFormEmpty) {
-      this.form.push(this.formItem)
+  save() {
+    if (this.formItem.valid) {
+      /* If active index is below 0 we want to push the formItem otherwise we are stuck where the table is not shown
+      and also no form */
+      if (typeof this.activeIndex === 'number' && !this.isFormEmpty) {
+        delete this.activeIndex;
+      } else {
+        this.form.push(this.formItem);
+      }
+      delete this.formItem;
+      this.cdr.markForCheck();
     }
-    const control = this.form.createControl({})
-    this.form.push(control)
-    this.formItem = control;
-    this.activeIndex = this.form.length - 1
-    this.cdr.markForCheck()
   }
 
-  // Edit existing form
   edit(index: number) {
     this.activeIndex = index
     this.formItem = this.form.at(index);
+    this.activeValue = this.formItem.value;
     this.cdr.markForCheck();
   }
 
-  // Remove one line in the form
+  cancel() {
+    if (typeof this.activeIndex === 'number') {
+      this.form.at(this.activeIndex).setValue(this.activeValue);
+      delete this.activeIndex;
+      delete this.activeValue;
+    }
+    delete this.formItem;
+  }
+
   remove(index: number) {
-    this.form.removeAt(index);
-    if (this.activeIndex === index) {
-      this.activeIndex = index - 1 < 0 ? 0 : index - 1;
-      this.formItem = this.form.at(this.activeIndex)
-      if (this.isFormEmpty) {
-        this.add()
-      }
+    this.form.removeAt(this.activeIndex);
+    if (this.activeIndex > index) {
+      this.activeIndex--;
+    }
+    if (this.isFormEmpty) {
+      this.add();
     }
   }
 }
