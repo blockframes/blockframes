@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 
 // env
 import { centralOrgID } from '@env';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface CarouselSection {
   title: string;
@@ -36,9 +37,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private organizationService: OrganizationService) { }
+    private organizationService: OrganizationService,
+    private dynTitle: DynamicTitleService,
+  ) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
