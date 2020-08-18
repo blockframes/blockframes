@@ -1,9 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { premiereType } from '@blockframes/movie/+state/movie.firestore';
 import { formatNumber } from '@angular/common';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-main',
@@ -11,9 +12,18 @@ import { formatNumber } from '@angular/common';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MainComponent {
+export class MainComponent implements OnInit {
+
   public movie$ = this.movieQuery.selectActive();
-  constructor(private movieQuery: MovieQuery) { }
+
+  constructor(
+    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService,
+  ) { }
+
+  ngOnInit() {
+    this.dynTitle.setPageTitle('Film Page', 'Main Info');
+  }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
     return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets);

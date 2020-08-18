@@ -5,6 +5,7 @@ import { ViewComponent } from '../view/view.component';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { fade, fadeList } from '@blockframes/utils/animations/fade';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-marketplace-organization-member',
@@ -24,10 +25,12 @@ export class MemberComponent implements OnInit, OnDestroy {
   constructor(
     private parent: ViewComponent,
     private service: UserService,
-    private query: UserQuery
+    private query: UserQuery,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Sales Agent', 'Contact');
     this.sub = this.org$.pipe(
       map(org => org.userIds),
       switchMap(userIds => this.service.syncManyDocs(userIds))

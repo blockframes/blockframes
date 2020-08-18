@@ -6,7 +6,7 @@
 </ng-template>
 
 <!-- we use class="dark-contrast-theme" to override theme style of the header because it always has a "dark" background image -->
-<header id="nav" class="dark-contrast-theme">
+<header id="nav" class="dark-contrast-theme" bgAsset="banner_header_page.webp">
   <a mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </a>
@@ -35,7 +35,7 @@
   </section>
 </header>
 <!-- FILTER SIDE CARD -->
-<div fxLayout fxLayoutAlign="space-between center" class="filter dark-contrast-theme">
+<div fxLayout fxLayoutAlign="space-between center" class="filter dark-contrast-theme"  bgAsset="banner_header_page.webp">
   <ng-content></ng-content>
 </div>
 
