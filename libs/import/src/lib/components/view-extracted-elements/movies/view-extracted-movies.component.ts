@@ -681,7 +681,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
+          const movieStatus = staticConsts['productionStatus'][spreadSheetRow[SpreadSheetMovie.productionStatus]];
           if (movieStatus) {
             movie.productionStatus = movieStatus;
           } else {
@@ -694,7 +694,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             });
           }
         } else {
-          movie.productionStatus = getCodeIfExists('MOVIE_STATUS', 'finished');
+          movie.productionStatus = "finished";
           importErrors.errors.push({
             type: 'warning',
             field: 'movie.productionStatus',

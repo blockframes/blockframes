@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { staticModels } from '@blockframes/utils/static-model';
+import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: '[form][model] static-check-boxes',
+  selector: '[form][model][type] static-check-boxes',
   templateUrl: './check-boxes.component.html',
   styleUrls: ['./check-boxes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,11 +21,12 @@ export class StaticCheckBoxesComponent implements OnInit {
 
 
   /**
-   * The static model to display
+   * The static model or constant to display
    * @example
-   * <chips-autocomplete model="TERRITORIES" ...
+   * <static-check-boxes model="TERRITORIES" ...
    */
   @Input() model: string;
+  @Input() type: 'constant' | 'model' = 'model';
 
   // The form to connect to
   @Input() form: FormList<string>;
@@ -36,7 +37,11 @@ export class StaticCheckBoxesComponent implements OnInit {
   public items: SlugAndLabel[];
 
   ngOnInit() {
-    this.items = staticModels[this.model];
+    if(this.type === 'constant') {
+      this.items = staticConsts[this.model];
+    } else {
+      this.items = staticModels[this.model];
+    }
   }
 
   public handleChange({checked, source}: MatCheckboxChange) {

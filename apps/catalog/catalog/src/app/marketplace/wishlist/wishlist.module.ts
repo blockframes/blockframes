@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DurationModule }from '@blockframes/utils/pipes/duration.pipe'
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +32,7 @@ import { WishlistComponent } from './wishlist.component';
     TranslateSlugModule,
     ImageReferenceModule,
     DurationModule,
+    ToLabelModule,
 
     // Material
     MatButtonModule,

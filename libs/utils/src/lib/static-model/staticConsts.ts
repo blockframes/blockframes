@@ -91,6 +91,13 @@ const constants = {
     market: 'Market',
     national: 'National',
   },
+  productionStatus: {
+    financing: 'In development',
+    shooting: 'In Production',
+    postProduction: 'In Post-production',
+    finished: 'Completed',
+    released: 'Released'
+  },
   unitBox: {
     boxoffice_dollar: 'Box Office in $',
     boxoffice_euro: 'Box Office in €',
