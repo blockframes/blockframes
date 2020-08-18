@@ -10,6 +10,7 @@ import { TitleStatusComponent } from './title-status.component';
 
 // Blockframes
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +23,7 @@ import { MatRadioModule } from '@angular/material/radio';
     RouterModule.forChild([{path: '', component: TitleStatusComponent}]),
     TunnelPageModule,
     FlexLayoutModule,
+    ImageReferenceModule,
 
     // Material
     MatRadioModule,

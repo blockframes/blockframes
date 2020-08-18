@@ -92,7 +92,7 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres),
-    directors: FormList.factory(entity.directors, el =>  new DirectorForm(el)),
+    directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
@@ -102,7 +102,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
+    logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
