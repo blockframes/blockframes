@@ -5,7 +5,7 @@
     alt="Organization logo">
   <div matLine>
     <ng-container [ngSwitch]="invitation.type">
-      <span *ngSwitchCase="'attendEvent'">
+      <ng-container *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf=" invitation | eventFromInvitation | async as event">
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="invitation.mode === 'invitation'; else request">
@@ -20,15 +20,15 @@
             {{ event | eventRange }}
           </ng-template>
         </ng-container>
-      </span>
-      <span *ngSwitchCase="'joinOrganization'">
+      </ng-container>
+      <ng-container *ngSwitchCase="'joinOrganization'">
         <ng-container *ngIf="invitation.mode === 'invitation'; else request">
           {{ invitation.fromOrg | orgName }} invited you to join the organization.
         </ng-container>
         <ng-template #request>
           {{ invitation.fromUser | displayName }} wants to join your organization.
         </ng-template>
-      </span>
+      </ng-container>
     </ng-container>
   </div>
   <span matLine>
@@ -45,13 +45,13 @@
 <mat-menu #menu="matMenu">
   <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">Go to event</a>
   <ng-container [ngSwitch]="invitation.status">
-    <div *ngSwitchCase="'pending'">
+    <ng-container *ngSwitchCase="'pending'">
       <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
         Accept invitation
       </span>
       <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
         Decline invitation
       </span>
-    </div>
+    </ng-container>
   </ng-container>
 </mat-menu>
