@@ -3,7 +3,7 @@ import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO #3066 remove this call to backend-functions
+import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
 import { upsertWatermark } from '@blockframes/firebase-utils';
 import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
 import { runChunks } from '../tools';
