@@ -1,15 +1,14 @@
-import { loadAdminServices } from './admin';
 import { File as GFile } from '@google-cloud/storage';
 import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
 import { getDocument } from '@blockframes/firebase-utils';
 import { runChunks } from './tools';
 import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
+import { storage } from 'firebase-admin';
 export const { storageBucket } = firebase;
 
-export async function cleanStorage() {
+export async function cleanStorage(storage: storage.Storage) {
   await startMaintenance();
-  const { storage } = loadAdminServices();
   const bucket = storage.bucket(storageBucket);
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
@@ -23,6 +22,8 @@ export async function cleanStorage() {
   const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
   console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "watermark" directory.`);
   await endMaintenance();
+
+  return true;
 }
 
 /**

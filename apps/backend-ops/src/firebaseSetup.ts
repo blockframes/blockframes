@@ -25,14 +25,14 @@ export async function prepareForTesting() {
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Database ready for testing!');
 
+  const { db, auth, storage } = loadAdminServices();
   console.info('Cleaning unused db data...');
-  const { db, auth } = loadAdminServices();
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused storage data...');
-  // await cleanStorage();
+  // await cleanStorage(storage);
   // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
@@ -61,15 +61,15 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
+  const { db, auth, storage } = loadAdminServices();
   console.info('Cleaning unused db data...');
-  const { db, auth } = loadAdminServices();
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused storage data...');
-  // await cleanStorage();
-  // console.info('Storage data clean and fresh!');
+   console.info('Cleaning unused storage data...');
+   await cleanStorage( storage );
+   console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
