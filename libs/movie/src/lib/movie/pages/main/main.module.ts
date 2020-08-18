@@ -31,8 +31,6 @@ import { MovieFormMainComponent } from './main.component';
 // Pipe
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
-import { FormListModule } from '@blockframes/ui/form/list/form-list.module'
-
 @NgModule({
   declarations: [MovieFormMainComponent],
   imports: [
@@ -51,7 +49,6 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module'
     StaticSelectModule,
     FormTableModule,
     HasStatusModule,
-    FormListModule,
 
     // Material
     MatDividerModule,
