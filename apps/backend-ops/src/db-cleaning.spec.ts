@@ -9,7 +9,8 @@ import {
   dayInMillis,
   numberOfDaysToKeepNotifications,
   cleanUsers,
-  cleanInvitations
+  cleanInvitations,
+  cleanDeprecatedData
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
@@ -21,7 +22,6 @@ import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
-
 
 describe('DB cleaning script', () => {
   beforeAll(async () => {
@@ -35,6 +35,12 @@ describe('DB cleaning script', () => {
   afterEach(async () => {
     // After each test, db is reseted
     await resetDb();
+  });
+
+  it('should return true when cleanDeprecatedData is called', async () => {
+    const adminAuth = new AdminAuthMocked() as any;
+    const output = await cleanDeprecatedData(db, adminAuth);
+    expect(output).toBeTruthy();
   });
 
   it('should remove incorrect attributes from users', async () => {
@@ -541,6 +547,68 @@ describe('DB cleaning script', () => {
     expect(invitationsAfter.docs.length).toEqual(2);
   });
 
+  it('should update invitations with related documents data', async () => {
+    const currentTimestamp = new Date().getTime() / 1000;
+
+    const testInvitations = [
+      {
+        id: 'invit-A',
+        status: 'pending',
+        date: { _seconds: currentTimestamp },
+        type: 'joinOrganization',
+        fromOrg: { id: 'org-A' },
+        toUser: { uid: 'A' },
+      },
+      {
+        id: 'invit-B',
+        status: 'accepted',
+        date: { _seconds: currentTimestamp },
+        type: 'joinOrganization',
+        toOrg: { id: 'org-A' },
+        fromUser: { uid: 'A' },
+      },
+      {
+        id: 'invit-C',
+        status: 'accepted',
+        date: { _seconds: currentTimestamp },
+        type: 'joinOrganization',
+        toOrg: { id: 'org-A' },
+        fromUser: { uid: 'B' },
+      }
+    ];
+
+    const testUsers = [
+      { uid: 'A', email: 'A@fake.com', watermark: createHostedMedia({ url: 'A.svg' }), avatar: createHostedMedia({ url: 'A.png' }) },
+      { uid: 'B', email: 'B@fake.com', watermark: createHostedMedia({ url: 'B.svg' }), avatar: createHostedMedia({ url: 'B.png' }) }
+    ];
+
+    const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: createHostedMedia({ url: 'org-A.svg' }) }];
+
+    // Load our test set
+    await populate('invitations', testInvitations);
+    await populate('users', testUsers);
+    await populate('orgs', testOrgs);
+
+    const [invitationsBefore, users, orgs] = await Promise.all([
+      getCollectionRef('invitations'),
+      getCollectionRef('users'),
+      getCollectionRef('orgs')
+    ]);
+
+    // Check if data have been correctly added
+    expect(invitationsBefore.docs.length).toEqual(3);
+    expect(users.docs.length).toEqual(2);
+    expect(orgs.docs.length).toEqual(1);
+
+    const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
+    
+    await cleanInvitations(invitationsBefore, documentIds, []);
+    const invitationsAfter: Snapshot = await getCollectionRef('invitations');
+
+    const cleanOutput = invitationsAfter.docs.map(d => isInvitationClean(d));
+    expect(every(cleanOutput)).toEqual(true);
+  });
+
 });
 
 function isMovieClean(d: any) {
@@ -580,6 +648,27 @@ function isNotificationClean(doc: any) {
 
   const notificationTimestamp = d.date.toMillis();
   if (notificationTimestamp < new Date().getTime() - (dayInMillis * numberOfDaysToKeepNotifications)) {
+    return false;
+  }
+
+  return true;
+}
+
+function isInvitationClean(doc: any) {
+  const d = doc.data();
+  if (d.fromOrg?.id && (!d.fromOrg.logo)) {
+    return false;
+  }
+
+  if (d.toOrg?.id && (!d.toOrg.logo)) {
+    return false;
+  }
+
+  if (d.fromUser?.uid && (!d.fromUser.avatar || !d.fromUser.watermark)) {
+    return false;
+  }
+
+  if (d.toUser?.uid && (!d.toUser.avatar || !d.toUser.watermark)) {
     return false;
   }
 

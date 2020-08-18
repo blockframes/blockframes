@@ -10,19 +10,19 @@ import { UserConfig } from './assets/users.fixture';
 import { runChunks } from './tools';
 import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
+import admin from 'firebase-admin';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
 
 // @TODO #3066 once "final" media structure is ready, remplace by const EMPTY_MEDIA = ''. 
-//Also update in unit test scripts
-const EMPTY_MEDIA = createHostedMedia(); 
+// Also update in unit test scripts
+const EMPTY_MEDIA = createHostedMedia();
 
 /** Reusable data cleaning script that can be updated along with data model */
 
-export async function cleanDeprecatedData(adminServices: AdminServices) {
-  const { db, auth } = adminServices;
+export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth: admin.auth.Auth) {
   await startMaintenance();
   // Getting all collections we need to check
   const [
@@ -101,7 +101,6 @@ export function cleanNotifications(
       await cleanOneNotification(doc, notification);
     }
   });
-
 }
 
 async function cleanOneNotification(doc: any, notification: any) { // @TODO (#3175 #3066) w8 "final" doc structure
@@ -136,7 +135,6 @@ export function cleanInvitations(
 }
 
 async function cleanOneInvitation(doc: any, invitation: any) { // @TODO (#3175 #3066) w8 "final" doc structure
-  // todo #3066 make a test like for notifications
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
     invitation.fromOrg.logo = d.logo || EMPTY_MEDIA;
