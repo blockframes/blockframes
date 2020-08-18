@@ -40,11 +40,9 @@ export class MovieFormSummaryComponent {
     return this.form.get('title');
   }
 
-  public getPath(segment: string, section?: string) {
+  public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
-    return section
-          ? `/c/o/dashboard/tunnel/movie/${movieId}/${segment}#${section}`
-          : `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
   public async submit() {

@@ -4,7 +4,7 @@ import { Scope } from '@blockframes/utils/static-model/staticModels';
 import { Label } from '@blockframes/utils/pipes';
 
 @Component({
-  selector: '[control] [link] missing-control',
+  selector: '[control] missing-control',
   templateUrl: './missing-control.component.html',
   styleUrls: ['./missing-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
