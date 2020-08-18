@@ -1,6 +1,9 @@
+// Angular
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
+
+// Component
+import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-form-main',
@@ -18,7 +21,6 @@ export class MovieFormMainComponent {
     status: 'Status',
     category: 'Category',
     description: 'Description',
-    filmTitle: 'Film Title',
     filmography: 'Filmography'
   }
 

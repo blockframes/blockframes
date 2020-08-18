@@ -40,7 +40,6 @@ import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 
-
 // LEGAL DOCUMENTS
 
 function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
@@ -103,7 +102,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
-    logline:  new FormControl(entity.logline, [Validators.maxLength(350)]),
+    logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
@@ -168,6 +167,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('producers');
   }
 
+  get productionStatus() {
+    return this.get('productionStatus')
+  }
+
   get crew() {
     return this.get('crew');
   }
@@ -222,13 +225,6 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get synopsis() {
     return this.get('synopsis');
-  }
-
-  // DIRECTORS
-  public addDirector(credit?: Partial<Credit>): void {
-    const entity = createCredit(credit);
-    const creditControl = new DirectorForm(entity);
-    this.directors.push(creditControl);
   }
 
   public removeDirector(i: number): void {

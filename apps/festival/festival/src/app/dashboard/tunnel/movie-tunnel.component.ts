@@ -12,54 +12,64 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
-const steps: TunnelStep[] = [{
-  title: 'Title Information',
-  icon: 'document',
-  time: 15,
-  routes: [{
-    path: 'main',
-    label: 'Main Information'
+const steps: TunnelStep[] = [
+  {
+    title: 'First Step',
+    icon: 'home',
+    routes: [{path: 'title-status', label: 'First Step'}],
+  },
+  {
+    title: 'Title Information',
+    icon: 'document',
+    time: 15,
+    routes: [{
+      path: 'main',
+      label: 'Main Information'
+    }, {
+      path: 'synopsis',
+      label: 'Storyline Elements'
+    }, {
+      path: 'production',
+      label: 'Production Information'
+    }, {
+      path: 'artistic',
+      label: 'Artistic Team'
+    }, {
+      path: 'reviews',
+      label: 'Selection & Reviews'
+    }, {
+      path: 'additional-information',
+      label: 'Additional Information'
+    }, {
+      path: 'credits',
+      label: 'Credits'
+    }, {
+      path: 'budget',
+      label: 'Budget, Quotas, Critics',
+    }]
   }, {
-    path: 'synopsis',
-    label: 'Storyline Elements'
+    title: 'Media',
+    icon: 'import',
+    time: 10,
+    routes: [{
+      path: 'technical-info',
+      label: 'Technical Information'
+    }, {
+      path: 'images',
+      label: 'Promotional Images'
+    }, {
+      path: 'files&links',
+      label: 'Files & Links'
+    }]
   }, {
-    path: 'production',
-    label: 'Production Information'
-  }, {
-    path: 'artistic',
-    label: 'Artistic Team'
-  }, {
-    path: 'reviews',
-    label: 'Selection & Reviews'
-  }, {
-    path: 'additional-information',
-    label: 'Additional Information'
-  }, {
-    path: 'technical-info',
-    label: 'Technical Information'
-  }]
-}, {
-  title: 'Media',
-  icon: 'import',
-  time: 10,
-  routes: [{
-    path: 'technical-info',
-    label: 'Technical Information'
-  }, {
-    path: 'images',
-    label: 'Promotional Images'
-  }, {
-    path: 'files&links',
-    label: 'Files & Links'
-  }]
-}, {
-  title: 'Summary',
-  icon: 'document',
-  routes: [{
-    path: 'summary',
-    label: 'Summary & Submission'
-  }]
-}];
+    title: 'Summary',
+    icon: 'document',
+    routes: [{
+      path: 'summary',
+      label: 'Summary & Submission'
+    }]
+  }];
+
 
 @Component({
   selector: 'festival-movie-tunnel',
@@ -94,7 +104,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    if(this.form.invalid) {
+    if (this.form.invalid) {
       this.snackBar.open('It seems that one or more fields have an error. Please check your movie form and try again.', 'close', { duration: 5000 });
       return;
     }
