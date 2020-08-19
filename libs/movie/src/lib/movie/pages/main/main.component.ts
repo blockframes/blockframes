@@ -1,9 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'movie-form-main',
@@ -11,9 +12,10 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMainComponent {
+export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
+  public sub: Subscription;
 
   public displayedColumns = {
     firstName: 'First Name',
@@ -25,6 +27,23 @@ export class MovieFormMainComponent {
   }
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.sub = this.form.valueChanges.subscribe(() => {
+      console.log(this.form.valid);
+      if (!this.form.valid) {
+        this.focusOut();
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  focusOut() {
+    return this.form.get('runningTime').get('time').setErrors({required: true});
+  }
 
   get title() {
     return this.form.get('title');
@@ -55,7 +74,7 @@ export class MovieFormMainComponent {
   }
 
   get runningTime() {
-    return this.form.get('runningTime').get('time');
+    return this.form.get('runningTime');
   }
 
   get directors() {
