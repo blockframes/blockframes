@@ -30,9 +30,7 @@ export function loadAdminServices(): AdminServices {
   if (!admin.apps.length) {
     admin.initializeApp({
       ...firebase,
-      credential: admin.credential.cert(
-        resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
-      ),
+      credential: admin.credential.applicationDefault(),
     });
   }
 

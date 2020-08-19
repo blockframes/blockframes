@@ -1,28 +1,26 @@
-import { resolve } from 'path';
+import { join } from 'path';
 import { writeFileSync } from 'fs';
 import { updateUSERS } from './users';
 import { loadAdminServices } from './admin';
+const { db } = loadAdminServices();
 
-const { db, auth } = loadAdminServices();
-
+const dest = join(process.cwd(), 'tools', 'users.fixture.json');
 /**
  * This function reads users from Firestore and generates users fixtures file for repo
  * @param db firestore instance
  */
-export async function generateFixturesFile() {
+export async function generateUserFixtures() {
   const usersQuerySnapshot = await db.collection('users').get();
-  const users = usersQuerySnapshot.docs.map((snapshot) => {
-    const user = snapshot.data();
-    user.id = snapshot.id;
-    return user;
-  });
-  const fileOutput = users.map((user) => ({
-    email: user.email,
-    uid: user.uid,
-    password: 'blockframes',
-  }));
+  const fileOutput = usersQuerySnapshot.docs
+    .map((snapshot) => ({ ...snapshot.data(), uid: snapshot.id } as any))
+    .map((user) => ({ email: user.email, uid: user.uid, password: 'blockframes' }));
 
-  writeFileSync(resolve(process.cwd(), 'tools/users.fixture.json'), JSON.stringify(fileOutput));
+  writeFileSync(dest, JSON.stringify(fileOutput));
+  console.log('User fixtures updated!');
+  console.log('Fixtures file: ', dest);
   updateUSERS(fileOutput);
-  // console.log(fileOutput);
 }
+
+// export async function getUserFixtures(): USERS[] {
+
+// }

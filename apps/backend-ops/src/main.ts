@@ -4,15 +4,15 @@ import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { generateFixturesFile } from './user-fixture';
+import { generateUserFixtures } from './user-fixture';
 import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks } from './users';
 import { syncStorage } from './syncStorage';
 
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
 
-if (cmd === 'generateFixturesFile') {
-  exitable(generateFixturesFile)();
+if (cmd === 'generateUserFixtures') {
+  exitable(generateUserFixtures)();
 } else if (cmd === 'prepareForTesting') {
   exitable(prepareForTesting)();
 } else if (cmd === 'upgrade') {

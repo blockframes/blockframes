@@ -8,7 +8,7 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { generateFixturesFile } from './user-fixture';
+import { generateUserFixtures } from './user-fixture';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
@@ -19,7 +19,7 @@ export async function prepareForTesting() {
   console.info('Backup restored!');
 
   console.info('Generating fixtures file...');
-  await generateFixturesFile();
+  await generateUserFixtures();
   console.info('fixtures file done!');
 
   console.info('Syncing users...');
