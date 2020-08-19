@@ -57,7 +57,7 @@ const steps: TunnelStep[] = [
     }]
   }, {
     title: 'Summary',
-    icon: 'document',
+    icon: 'send',
     routes: [{
       path: 'summary',
       label: 'Summary & Submission'
@@ -129,5 +129,4 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
       switchMap(shouldSave => shouldSave ? this.save() : of(false))
     );
   }
-
 }
