@@ -40,12 +40,6 @@ const steps: TunnelStep[] = [
     }, {
       path: 'additional-information',
       label: 'Additional Information'
-    }, {
-      path: 'credits',
-      label: 'Credits'
-    }, {
-      path: 'budget',
-      label: 'Budget, Quotas, Critics',
     }]
   }, {
     title: 'Media',
