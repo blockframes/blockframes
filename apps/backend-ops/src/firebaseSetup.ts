@@ -11,6 +11,8 @@ import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
   console.info('Syncing users...');
@@ -32,7 +34,7 @@ export async function prepareForTesting() {
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
   // console.info('Cleaning unused storage data...');
-  // await cleanStorage(storage);
+  // await cleanStorage(storage.bucket(storageBucket));
   // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
@@ -67,8 +69,8 @@ export async function upgrade() {
   console.info('DB data clean and fresh!');
 
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused storage data...');
-  // await cleanStorage(storage);
+   console.info('Cleaning unused storage data...');
+   await cleanStorage(storage.bucket(storageBucket));
   // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');

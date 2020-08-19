@@ -23,6 +23,7 @@ import { clearFirestoreData } from '@firebase/testing';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 let db: FirebaseFirestore.Firestore;
+let adminAuth;
 
 describe('DB cleaning script', () => {
   beforeAll(async () => {
@@ -30,23 +31,21 @@ describe('DB cleaning script', () => {
     const adminServices = loadAdminServices();
     db = adminServices.db;
     // To be sure that tests are not polluted
-    await resetDb();
+    await clearFirestoreData({ projectId: getTestingProjectId() });
+    adminAuth = new AdminAuthMocked() as any;
   });
 
   afterEach(async () => {
     // After each test, db is reseted
-    await resetDb();
+    await clearFirestoreData({ projectId: getTestingProjectId() });
   });
 
   it('should return true when cleanDeprecatedData is called', async () => {
-    const adminAuth = new AdminAuthMocked() as any;
     const output = await cleanDeprecatedData(db, adminAuth);
     expect(output).toBeTruthy();
   });
 
   it('should remove incorrect attributes from users', async () => {
-    const adminAuth = new AdminAuthMocked() as any;
-
     // User with good org but with "name" and "surname"
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com', name: 'john', surname: 'doe', firstName: 'john', lastName: 'doe', orgId: 'org-A' };
 
@@ -79,8 +78,6 @@ describe('DB cleaning script', () => {
   });
 
   it('should remove unexpected users from auth', async () => {
-    const adminAuth = new AdminAuthMocked() as any;
-
     const users = [
       { uid: 'A', email: 'A@fake.com' },
       { uid: 'B', email: 'B@fake.com' },
@@ -122,7 +119,6 @@ describe('DB cleaning script', () => {
   });
 
   it('should smoothly delete users that are not in auth', async () => {
-    const adminAuth = new AdminAuthMocked() as any;
 
     // User with no orgId
     const testUser1 = { uid: 'A', email: 'johndoe@fake.com' };
@@ -148,7 +144,6 @@ describe('DB cleaning script', () => {
   });
 
   it('should update org and permissions documents when deleting user with org', async () => {
-    const adminAuth = new AdminAuthMocked() as any;
 
     const testUser = { uid: 'A', email: 'johndoe@fake.com', orgId: 'orgA' };
     const anotherOrgMember = 'B';
@@ -704,8 +699,4 @@ function populate(collection: string, set: any[]) {
     if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
     await docRef.set(d);
   }, 50, false)
-}
-
-async function resetDb() {
-  await clearFirestoreData({ projectId: getTestingProjectId() });
 }
