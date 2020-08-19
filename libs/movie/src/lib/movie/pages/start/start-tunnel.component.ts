@@ -1,22 +1,12 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService } from '@blockframes/movie/+state';
+// Angular
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TunnelService } from '@blockframes/ui/tunnel';
 
-const cardContents = [
-  {
-    title: 'Title Information',
-    img: 'title_infos.webp'
-  },
-  {
-    title: 'Media',
-    img: 'media.webp'
-  },
-  {
-    title: 'Legal Information',
-    img: 'legal_informartion.webp'
-  },
-];
+// Blockframes
+import { MovieService } from '@blockframes/movie/+state';
+
+// RxJs
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'movie-form-start-tunnel',
@@ -24,31 +14,19 @@ const cardContents = [
   styleUrls: ['./start-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class MovieFormStartTunnelComponent {
 
-export class MovieFormStartTunnelComponent implements OnInit {
-  public cardContents = cardContents;
-  public loading: boolean;
-  public routeBeforeTunnel: string;
+  public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(
-    private movieService: MovieService,
-    private tunnelService: TunnelService,
-    private router: Router,
-    private route: ActivatedRoute,
-  ) { }
+  constructor(private movieService: MovieService, private router: Router, private route: ActivatedRoute) { }
 
-  ngOnInit() {
-    this.routeBeforeTunnel = this.tunnelService.previousUrl || '../../';
-  }
-
-  async begin() {
-    this.loading = true;
+  async navigateToTunnel() {
+    this.loadingTunnel.next(true);
     try {
       const { id } = await this.movieService.create();
-      this.loading = false;
-      this.router.navigate([id], { relativeTo: this.route });
+      this.router.navigate(['../../tunnel/movie/', id], { relativeTo: this.route });
     } catch (err) {
-      this.loading = false;
+      this.loadingTunnel.next(false);
       console.error(err);
     }
   }

@@ -8,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -33,7 +32,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     MatIconModule,
     MatTooltipModule,
     MatCardModule,
-    MatProgressSpinnerModule,
+
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])
   ]
