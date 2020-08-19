@@ -7,8 +7,7 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers } from './users';
 import { UserConfig } from './assets/users.fixture';
-import { runChunks } from './tools';
-import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { getDocument, startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import admin from 'firebase-admin';
 
