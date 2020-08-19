@@ -1,78 +1,29 @@
-@import '~@angular/flex-layout/mq';
-
 :host {
   display: flex;
-  flex-direction: column;
-  height: 100%;
-}
 
-mat-toolbar mat-spinner {
-  height: 80%;
-}
-
-mat-sidenav-content {
-  padding: 48px;
-}
-
-header {
-  margin-bottom: 56px;
-}
-
-mat-sidenav-container {
-  flex: 1;
-
-  mat-card {
-    text-align: center;
-    width: calc(50% - 20px);
-  }
-
-  @include layout-bp(xs) {
-    mat-card {
-      margin: 10px;
-      text-align: center;
-      white-space: nowrap;
-      width: calc(100% - 20px);
-    }
-  }
-
-  img {
-    width: 170px;
-    margin-bottom: 10px;
-  }
-}
-
-mat-sidenav {
-  padding: 16px;
-}
-
-section, div {
   width: 100%;
 }
 
-.flex-container {
-  display: flex;
-  justify-content: flex-start;
-  position: relative;
-  width: 100%;
+section {
+  padding: 72px 0 0 48px;
 }
 
-.item-center {
-  flex: 0 1 auto;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+img {
+  min-width: 50%;
 }
 
-.item-right {
-  flex: 0 1 auto;
-  margin-left: auto;
+a,
+span {
+  width: fit-content;
+  align-self: center;
 }
 
-h5 {
-  margin: 15px 0 0 0;
-  text-transform: uppercase;
+mat-spinner{
+  align-self: center;
 }
 
-button {
-  margin-top: 10px;
+@media only screen and (max-width: 600px) {
+  :host {
+    flex-wrap: wrap-reverse;
+  }
 }
