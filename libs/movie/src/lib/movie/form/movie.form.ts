@@ -97,15 +97,15 @@ function createMovieControls(movie: Partial<Movie>) {
     estimatedBudget: new FormControl(entity.estimatedBudget),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.minLength(1)]),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.minLength(1)]),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.minLength(1)]),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
@@ -333,7 +333,7 @@ function createBoxOfficeFormControl(boxOffice?: Partial<BoxOffice>) {
   return {
     unit: new FormValue(unit),
     territory: new FormControl(territory, Validators.required),
-    value: new FormControl(value, [Validators.min(0), Validators.required])
+    value: new FormControl(value, [Validators.min(1), Validators.required])
   }
 }
 
@@ -549,7 +549,7 @@ export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
   const { time, status } = createRunningTime(runningTime);
   return {
-    time: new FormControl(time, [Validators.min(0)]),
+    time: new FormControl(time, [Validators.min(1)]),
     status: new FormControl(status),
   }
 }

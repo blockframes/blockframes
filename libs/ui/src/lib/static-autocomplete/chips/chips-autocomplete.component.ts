@@ -2,7 +2,6 @@ import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import {
   Component,
   OnInit,
-  OnDestroy,
   ViewChild,
   ElementRef,
   Input,
@@ -14,7 +13,7 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
@@ -25,7 +24,7 @@ import { staticModels } from '@blockframes/utils/static-model';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
+export class ChipsAutocompleteComponent implements OnInit {
 
   /**
    * The static model to display
@@ -51,7 +50,6 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   public filteredItems$: Observable<any[]>;
   public values$: Observable<any[]>;
 
-  private sub: Subscription;
   private items: SlugAndLabel[];
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
@@ -71,12 +69,6 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
       map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
 
-    this.sub = this.form.statusChanges.subscribe(status => this.chipList.errorState = status === 'INVALID')
-
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   /** Filter the items */
@@ -113,5 +105,9 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   public remove(i: number) {
     this.form.removeAt(i);
     this.removed.emit(i);
+  }
+
+  public focusOut() {
+    this.chipList.errorState = !this.form.valid;
   }
 }

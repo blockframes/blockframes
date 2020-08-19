@@ -111,14 +111,11 @@
           </static-select>
         </ng-container>
 
-        <mat-form-field appearance="outline" fxFlex>
+        <mat-form-field appearance="outline" fxFlex (focusout)="focusOut()">
           <mat-label>Running Time</mat-label>
           <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
           <mat-hint>In minutes</mat-hint>
-          <mat-error *ngIf="runningTime.hasError('min')">
-            Only positive values are accepted.
-          </mat-error>
-          <mat-error *ngIf="runningTime.hasError('required')">
+          <mat-error>
             Please specify your project's runtime.
           </mat-error>
         </mat-form-field>

@@ -58,7 +58,7 @@
               <mat-label>Figures</mat-label>
               <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0" placeholder="Figures">
               <mat-error *ngIf="form.get('value').hasError('min')">
-                Only positive values are accepted.
+                Please enter box office figures.
               </mat-error>
               <mat-error *ngIf="form.get('value').hasError('required')">
                 Please enter box office figures.
