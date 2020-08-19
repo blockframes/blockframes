@@ -15,13 +15,6 @@ import { getDocument } from '@blockframes/firebase-utils';
 
 export { getDocument };
 
-export function getCollection<T>(path: string): Promise<T[]> {
-  return db
-    .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data() as T));
-}
-
 export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
     id: org.id || '',

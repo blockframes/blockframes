@@ -1,6 +1,8 @@
 import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
-import { upsertWatermark } from '../../../backend-functions/src/internals/watermark';
+import { upsertWatermark } from '@blockframes/firebase-utils';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 /**
  * Creating a watermark image for each user and store it into storage /watermark/<UID>.svg
@@ -15,7 +17,7 @@ export async function upgrade(db: Firestore) {
       if (!!userData) {
         // create watermark file & update user's firestore doc
         try {
-          await upsertWatermark(userData);
+          await upsertWatermark(userData, storageBucket);
         } catch (e) {
           console.error(e);
         }

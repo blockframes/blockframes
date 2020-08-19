@@ -1,11 +1,11 @@
 import { Firestore, Storage } from '../admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
 import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { File as GFile } from '@google-cloud/storage';
-import { getDocument } from 'apps/backend-functions/src/data/internals';
 import { runChunks } from '../tools';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, getDocument } from '@blockframes/firebase-utils';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 const EMPTY_REF = '';
 
@@ -46,7 +46,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
   console.log('// [STORAGE] Processing movies');
   console.log('//////////////');
 
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
 
@@ -255,7 +255,7 @@ const changeResourceDirectory = async (
   const { url, ref } = media;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const fileName = url.split('%2F').pop().split('?').shift();

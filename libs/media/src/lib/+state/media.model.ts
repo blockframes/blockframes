@@ -85,7 +85,8 @@ function isMedia(obj: any) {
     typeof obj === 'object' &&
     !!obj &&
     'ref' in obj &&
-    'url' in obj
+    'url' in obj &&
+    !('media' in obj) // TODO: Can be removed after feature/movie-form has been merged into develop
   );
 }
 

@@ -1,10 +1,11 @@
 import { Firestore, Storage } from '../admin';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { OldImgRef, OldPublicUser, OldPublicOrganization } from './old-types';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -158,7 +159,7 @@ const updateImgRef = async (
 
   // ### copy it to a new location
   const newPath = `${destinationFolder}/original/${newFileName}`;
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const from = bucket.file(ref);

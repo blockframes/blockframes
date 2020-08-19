@@ -7,7 +7,7 @@ import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
-import { restore } from './admin';
+import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
@@ -25,11 +25,15 @@ export async function prepareForTesting() {
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Database ready for testing!');
 
+  console.info('Cleaning unused db data...');
+  const { db, auth } = loadAdminServices();
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
+
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
+  // console.info('Cleaning unused storage data...');
   // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -57,11 +61,15 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
+  console.info('Cleaning unused db data...');
+  const { db, auth } = loadAdminServices();
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
+
   // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
+  // console.info('Cleaning unused storage data...');
   // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  // console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
