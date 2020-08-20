@@ -19,7 +19,6 @@ export class MovieFormMediaFilesComponent {
 
   public getPath(filePath: 'presentation_deck' | 'scenario' | 'moodboard') {
     const { movieId } = this.route.snapshot.params;
-    console.log('path', `movies/${movieId}/promotional.${filePath}`);
     return `movies/${movieId}/promotional.${filePath}`;
   }
 
