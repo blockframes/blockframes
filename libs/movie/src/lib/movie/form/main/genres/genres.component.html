@@ -20,24 +20,3 @@
     </mat-error>
   </mat-form-field>
 </article>
-
-<!--  Custom Genre -->
-<ng-container *ngIf="hasOtherGenre$ | async">
-  <p>Please specify the other genres</p>
-  <ng-container *ngFor="let control of customGenreForm.controls; let i = index; let last = last">
-    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
-      <mat-form-field appearance="outline">
-        <mat-label>Other Genre</mat-label>
-        <input matInput [formControl]="control" type="text" />
-      </mat-form-field>
-      <!-- Add / Delete -->
-      <button *ngIf="!last" mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" matTooltip="Remove a Custom Genre" aria-label="Remove a Custom Genre">
-        <mat-icon svgIcon="trash"></mat-icon>
-      </button>
-      <button *ngIf="last" mat-mini-fab color="primary" (click)="customGenreForm.add()" matTooltip="Add a Custom Genre" aria-label="Add a Custom Genre">
-        <mat-icon svgIcon="add"></mat-icon>
-      </button>
-    </article>
-  </ng-container>
-</ng-container>
-

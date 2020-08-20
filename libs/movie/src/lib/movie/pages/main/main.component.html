@@ -13,7 +13,8 @@
             Please specify your project's international title.
           </mat-error>
           <mat-hint>
-            This reference is for you only, to help you find your content more easily. 30 characters maximum.          </mat-hint>
+            This reference is for you only, to help you find your content more easily. 30 characters maximum.
+          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
@@ -114,14 +115,41 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
+      <chips-autocomplete [form]="form.get('genres')" model="GENRES"
+        placeholder="Enter Genre(s)">
+        <mat-label>Genre(s) *</mat-label>
+        <mat-error>Please specify your project's genre(s).</mat-error>
+        <mat-hint>
+          Use commas or press Enter key to separate genres.
+        </mat-hint>
+      </chips-autocomplete>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Other Genre(s)</mat-label>
+        <mat-chip-list #chipList>
+          <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
+            <mat-chip removable="true" (removed)="removeCustomGenre(i)">
+              <span>{{ value }}</span>
+              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+            </mat-chip>
+          </ng-container>
+        </mat-chip-list>
+        <input matInput
+        [formControl]="customGenre"
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addCustomGenre($event)"
+        placeholder="Please specify"
+        />
+        <mat-hint>Use commas or press Enter key to separate genres.</mat-hint>
+      </mat-form-field>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
           <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
             <mat-label>To be determined/Estimated/Confirmed</mat-label>
             <mat-hint>
-
+              Please specify if the running time is estimated, confirmed or to be determined.
             </mat-hint>
           </static-select>
         </ng-container>

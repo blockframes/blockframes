@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 // Blockframes Movie
 import { MovieFormGenresModule } from '@blockframes/movie/form/main/genres/genres.module';
@@ -57,6 +59,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
     MatSelectModule,
     MatIconModule,
     MatButtonModule,
+    MatChipsModule,
 
     // Routes
     RouterModule.forChild([{ path: '', component: MovieFormMainComponent }])
