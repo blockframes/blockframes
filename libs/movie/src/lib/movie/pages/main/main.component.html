@@ -12,11 +12,14 @@
           <mat-error *ngIf="international.hasError('required')">
             Please specify your project's international title.
           </mat-error>
+          <mat-hint>
+            This reference is for you only, to help you find your content more easily. 30 characters maximum.          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Original title</mat-label>
           <input test-id="original-title" matInput type="text" placeholder="Original title" [formControl]="original" />
+          <mat-hint>If different from International Title</mat-hint>
         </mat-form-field>
       </article>
 
@@ -85,6 +88,9 @@
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
           <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" fxFlex>
             <mat-label>Estimated/Confirmed</mat-label>
+            <mat-hint>
+              Please specify if the release date is estimated or confirmed.
+            </mat-hint>
           </static-select>
         </ng-container>
 
@@ -94,20 +100,29 @@
         placeholder="Enter Country/ies of Origin">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
+        <mat-hint>
+          Use commas or press Enter key to separate countries.
+        </mat-hint>
       </chips-autocomplete>
 
       <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"
         placeholder="Enter Original Language(s)">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
+        <mat-hint>
+          Use commas or press Enter key to separate languages.
+        </mat-hint>
       </chips-autocomplete>
 
       <movie-form-genre [form]="form.get('genres')" [customGenreForm]="form.get('customGenres')"></movie-form-genre>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
-          <static-select scope="SCREENING_STATUS" type="model" [control]="form.get('runningTime').get('status')" fxFlex>
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" fxFlex>
             <mat-label>To be determined/Estimated/Confirmed</mat-label>
+            <mat-hint>
+
+            </mat-hint>
           </static-select>
         </ng-container>
 
@@ -140,14 +155,16 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
                 <input test-id="first-name" matInput formControlName="firstName" required />
-                <mat-error *ngIf="directorForm.get('firstName').hasError('required')">Please specify Director's First
-                  Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('firstName').hasError('required')">
+                  Please specify Director's First Name.
+                </mat-error>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Last Name</mat-label>
                 <input test-id="last-name" matInput formControlName="lastName" required />
-                <mat-error *ngIf="directorForm.get('lastName').hasError('required')">Please specify Director's Last
-                  Name.</mat-error>
+                <mat-error *ngIf="directorForm.get('lastName').hasError('required')">
+                  Please specify Director's Last Name.
+                </mat-error>
               </mat-form-field>
             </div>
 
@@ -157,18 +174,27 @@
                 <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
                   required>
                   <mat-label>Directors Status</mat-label>
+                  <mat-hint>
+                    Please specify if the director is confirmed for this project or not.
+                  </mat-hint>
                 </static-select>
               </ng-container>
 
               <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex
                 required>
                 <mat-label>Directors Category</mat-label>
+                <mat-hint>
+                  Please select the applying category reflecting the director's experience.
+                </mat-hint>
               </static-select>
             </div>
 
             <mat-form-field appearance="outline">
               <mat-label>Directors Description</mat-label>
               <textarea matInput formControlName="description"></textarea>
+              <mat-hint>
+                Director's biography, remarkable elements...
+              </mat-hint>
             </mat-form-field>
             <div fxLayout="column" fxLayoutAlign="start center">
 

@@ -51,6 +51,7 @@
                     {{ unit.value }}
                   </mat-option>
                 </mat-select>
+                <mat-hint>Please select applying metrics.</mat-hint>
               </mat-form-field>
             </div>
 
@@ -83,7 +84,9 @@
             <mat-hint>Please specify your title's rating, if existing.</mat-hint>
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex></chips-autocomplete>
+          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
+            <mat-hint>Please specify country applying rating system.</mat-hint>
+          </chips-autocomplete>
         </div>
       </article>
     </section>

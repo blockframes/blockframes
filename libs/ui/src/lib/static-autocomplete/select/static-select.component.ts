@@ -15,6 +15,7 @@ export class StaticSelectComponent implements OnInit {
   @Input() type: 'constant' | 'model';
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
+  @Input() placeholder: string;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
