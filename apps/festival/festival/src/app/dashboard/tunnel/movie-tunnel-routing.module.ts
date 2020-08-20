@@ -67,8 +67,8 @@ const tunnelRoutes: Routes = [
         // Page 11
       },
       {
-        path: 'files&links',
-        loadChildren: () => import('@blockframes/movie/pages/media-file/media-file.module').then(m => m.MediaFileModule)
+        path: 'media-files',
+        loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
       },
       {
         path: 'summary',
