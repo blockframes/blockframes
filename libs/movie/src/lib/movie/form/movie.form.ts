@@ -103,6 +103,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
+    isOriginalLanguageAvailable: new FormControl(entity.isOriginalLanguageAvailable),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
@@ -757,22 +758,11 @@ export class MovieVersionInfoForm extends FormEntity<any> {
   ) {
     super(createLanguageControl(versionInfo));
   }
-
-  addLanguage(language: LanguagesSlug, value?: Partial<MovieLanguageSpecification>) {
-    const spec = createMovieLanguageSpecification(value);
-    this.setControl(language, new VersionSpecificationForm(spec));
-  }
-
-  removeLanguage(language: LanguagesSlug) {
-    this.removeControl(language);
-    this.updateValueAndValidity();
-  }
 }
 
 export class VersionSpecificationForm extends FormEntity<any> {
   constructor(versionSpecifictaion: MovieLanguageSpecification) {
     super({
-      original: new FormControl(versionSpecifictaion.original),
       dubbed: new FormControl(versionSpecifictaion.dubbed),
       subtitle: new FormControl(versionSpecifictaion.subtitle),
       caption: new FormControl(versionSpecifictaion.caption)
