@@ -4,7 +4,7 @@
       <div fxLayout="row" fxLayoutAlign="start start">
         <mat-icon [svgIcon]="step.icon"></mat-icon>
         <a [routerLink]="step.routes[0].path" routerLinkActive="active">
-          {{step.title}}
+          {{ step.title }}
         </a>
       </div>
     </mat-nav-list>
@@ -14,7 +14,7 @@
         <mat-expansion-panel>
           <mat-expansion-panel-header>
             <mat-panel-title>
-              <mat-icon [svgIcon]="step.icon" bf-color="primary"></mat-icon>
+              <mat-icon [svgIcon]="step.icon"></mat-icon>
               <span>{{ step.title }}</span>
             </mat-panel-title>
           </mat-expansion-panel-header>
