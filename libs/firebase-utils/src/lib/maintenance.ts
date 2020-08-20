@@ -27,7 +27,7 @@ export async function endMaintenance() {
   });
 }
 
-export async function isInMaintenance() {
+export async function isInMaintenance(security = EIGHT_MINUTES_IN_MS) {
   const ref = maintenanceRef();
   const doc = await ref.get();
 
@@ -43,7 +43,7 @@ export async function isInMaintenance() {
     // Wait 30s before allowing any operation on the db.
     // this prevents triggering firebase events.
     // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-    return endedAt.toMillis() + EIGHT_MINUTES_IN_MS > now.toMillis();
+    return endedAt.toMillis() + security > now.toMillis();
   }
 
   if (startedAt) {
