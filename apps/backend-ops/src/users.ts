@@ -3,7 +3,6 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { UserConfig, USERS } from './assets/users.fixture';
 import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep, runChunks } from './tools';
@@ -13,6 +12,17 @@ import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/
 import { loadDBVersion } from './migrations';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+
+export interface UserConfig {
+  uid: string;
+  email: string;
+  password: string;
+
+  [key: string]: any;
+}
+
+export const USER_FIXTURES_PASSWORD = 'blockframes';
+
 /**
  * @param auth  Firestore Admin Auth object
  * @param userConfig
@@ -36,7 +46,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map(user => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
 }
 
@@ -72,9 +82,26 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   return;
 }
 
-export async function syncUsers(): Promise<any> {
+interface JsonlDbRecord {
+  docPath: string;
+  content: { [key: string]: any };
+}
+
+function readUsersFromDb(db: JsonlDbRecord[]): UserConfig[] {
+  return db
+    .filter((doc) => doc.docPath.includes('users/'))
+    .filter((userDoc) => 'email' in userDoc.content)
+    .map((userDoc) => ({
+      uid: userDoc.content?.uid,
+      email: userDoc.content?.email,
+      password: USER_FIXTURES_PASSWORD,
+    }));
+}
+
+export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
   const { auth } = loadAdminServices();
-  const expectedUsers = USERS;
+
+  const expectedUsers = readUsersFromDb(db);
   await removeUnexpectedUsers(expectedUsers, auth);
   await createAllUsers(expectedUsers, auth);
 }
@@ -89,7 +116,7 @@ export async function printUsers(): Promise<any> {
     const users = result.users;
     pageToken = result.pageToken;
 
-    users.forEach(u => {
+    users.forEach((u) => {
       console.log(JSON.stringify(u.toJSON()));
     });
   } while (pageToken);
@@ -106,7 +133,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false
+    terminal: false,
   });
 
   // We push all the users from stdin to this array.
@@ -117,7 +144,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
   return new Promise((resolve, reject) => {
     // read the lines sent from stdin and parse them as JSON.
     // on error, toggle the `failed' flag and ignore all lines, we're going to exit.
-    rl.on('line', line => {
+    rl.on('line', (line) => {
       if (failed || line === '') {
         return;
       }
@@ -146,7 +173,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 export async function createUsers(): Promise<any> {
   const { auth } = loadAdminServices();
   const users = await readUsersFromSTDIN();
-  const usersWithPassword = users.map(user => ({ ...user, password: 'password' }));
+  const usersWithPassword = users.map((user) => ({ ...user, password: 'password' }));
   return createAllUsers(usersWithPassword, auth);
 }
 
@@ -155,7 +182,7 @@ export async function generateWatermarks() {
   const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
-  if (!await isInMaintenance()) {
+  if (!(await isInMaintenance())) {
     startedMaintenance = true;
     await startMaintenance();
   }
@@ -167,16 +194,18 @@ export async function generateWatermarks() {
     // We are in maintenance mode, trigger are stopped
     // so we update manually the user document
     if (dbVersion < 31) {
-      const [signedUrl] = await file.getSignedUrl({ action: 'read', expires: '01-01-3000', version: 'v2' });
+      const [signedUrl] = await file.getSignedUrl({
+        action: 'read',
+        expires: '01-01-3000',
+        version: 'v2',
+      });
       const watermark = { ref: file.name, url: signedUrl };
       await user.ref.update({ watermark });
     } else {
       await user.ref.update({ watermark: file.name });
     }
-
   });
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();
-
 }
