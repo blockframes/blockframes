@@ -1,6 +1,6 @@
 <h1>Line-up</h1>
 <section fxLayout="row wrap" fxLayoutGap="24px grid">
-  <ng-container *ngFor="let movie of movies$ | async">
-    <movie-card [movie]="movie" [link]="['../../../title', movie.id]" size="poster"></movie-card>
+  <ng-container *ngFor="let title of titles$ | async">
+    <movie-card [movie]="title" [link]="['../../../title', title.id]" size="poster"></movie-card>
   </ng-container>
 </section>
