@@ -16,6 +16,7 @@ const steps: TunnelStep[] = [
   {
     title: 'First Step',
     icon: 'home',
+    time: 2,
     routes: [{path: 'title-status', label: 'First Step'}],
   },
   {
@@ -62,6 +63,7 @@ const steps: TunnelStep[] = [
   }, {
     title: 'Summary',
     icon: 'send',
+    time: 3,
     routes: [{
       path: 'summary',
       label: 'Summary & Submission'

@@ -1,19 +1,21 @@
 <tunnel-page>
+  <h4 title>Title Information</h4>
   <h1 subtitle>Production Information</h1>
   <ng-container tunnel-form>
+    <h3>Production</h3>
     <section id="company">
-      <h3>Production Company</h3>
+      <h6 class="mat-caption">Production Company</h6>
 
-      <bf-form-table [columns]="producerColumns" [form]="productionCompany" buttonText="Add Production Company">
+      <bf-form-table [columns]="productionColumns" [form]="productionCompany" buttonText="Add Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
-
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Production Company Name</mat-label>
-              <input test-id="production-company-name" matInput formControlName="displayName" placeholder="Production Company Name" />
+              <mat-error>Please specify Production Company Name.</mat-error>
+              <input test-id="production-company-name" matInput formControlName="displayName" placeholder="Production Company Name" required />
             </mat-form-field>
 
-            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country." fxFlex>
+            <chips-autocomplete [form]="form.get('countries')" model="TERRITORIES" placeholder="Type and select Country." required fxFlex>
               <mat-label>Production Country</mat-label>
               <mat-error>Please specify Production Country.</mat-error>
             </chips-autocomplete>
@@ -26,7 +28,7 @@
     <mat-divider></mat-divider>
 
     <section id="co-company">
-      <h3>Co-Production Company</h3>
+      <h6 class="mat-caption">Co-Production Company</h6>
       <bf-form-table [columns]="coProductionColumns" [form]="coProductionCompany" buttonText="Add Co-Production Company">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
@@ -49,8 +51,8 @@
     <mat-divider></mat-divider>
 
     <section id="producers">
-      <h3>Producer(s)</h3>
-      <bf-form-table [columns]="producerColumns" [form]="producers" buttonText="Add Producer">
+      <h6 class="mat-caption">Producer(s)</h6>
+      <bf-form-table [columns]="producerColumns" [form]="form.producers" buttonText="Add Producer">
         <ng-template formView let-form>
           <article [formGroup]="form">
 
@@ -61,7 +63,7 @@
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Producer's Lastname</mat-label>
+                <mat-label>Producer's Last Name</mat-label>
                 <input test-id="producer-last-name" matInput formControlName="lastName" placeholder="Producer's Last Name" />
               </mat-form-field>
             </div>
@@ -78,12 +80,12 @@
 
     <mat-divider></mat-divider>
 
+    <h3>Distributor(s)</h3>
     <section id="distributors">
-      <h3>Distributor(s)</h3>
 
       <bf-form-table [columns]="distributorColumns" [form]="distributors" buttonText="Add Distribution Company">
         <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout fxLayoutGap="24px">
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Company Name</mat-label>
@@ -102,8 +104,9 @@
 
     <mat-divider></mat-divider>
 
+    <h3>International Sales</h3>
     <section id="sales">
-      <h3>International Sales</h3>
+
       <bf-form-table [columns]="salesColumns" [form]="internationalSales" buttonText="Add Sales Company">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout fxLayoutGap="24px">
