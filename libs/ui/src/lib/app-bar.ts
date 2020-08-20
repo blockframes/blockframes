@@ -5,7 +5,6 @@ import { trigger, style, transition, animate, query } from '@angular/animations'
 import { Easing } from '@blockframes/utils/animations/animation-easing';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { delay } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'app-bar',
@@ -79,11 +78,11 @@ export class AppContainerDirective {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     ref: ElementRef,
-    private zone: NgZone
+    zone: NgZone
   ) {
     this.container = ref.nativeElement;
 
-    this.zone.runOutsideAngular(() => {
+    zone.runOutsideAngular(() => {
       const heightSize = 80;
       const options = {
         root: this.container,
@@ -99,9 +98,9 @@ export class AppContainerDirective {
         const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= heightSize;
         const isEnteringTop = !this.appBar.isApp && entry.isIntersecting;
         if (isLeavingTop) {
-          this.zone.run(() => this.appBar.isApp = false);
+          zone.run(() => this.appBar.isApp = false);
         } else if (isEnteringTop) {
-          this.zone.run(() => this.appBar.isApp = true);
+          zone.run(() => this.appBar.isApp = true);
         }
       }, options);
     });
