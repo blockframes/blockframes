@@ -8,6 +8,10 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 // eslint-disable-next-line @typescript-eslint/no-namespace
+
+import Users from '../../../../../tools/fixtures/users.json'
+
+
 declare namespace Cypress {
   interface Chainable<Subject> {
     login(email: string, password: string): void;
@@ -18,6 +22,22 @@ declare namespace Cypress {
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
 });
+
+Cypress.Commands.add('getFixture', (type: string, key: string, value: any) => {
+  console.log('Getting Fixture', type );
+  const data = [Users];
+  let ret;
+
+  switch (type) {
+  case 'user':
+    ret = data[0];
+    break;
+  }
+
+  return ret[0];
+});
+
+
 //
 // -- This is a child command --
 // Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options) => { ... })
