@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
-import { startWith, map, switchMap } from 'rxjs/operators';
+import { startWith, map, switchMap, filter } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -77,6 +77,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
+      filter(movies => !!movies && movies.length >= 1),
+      map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival))
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
