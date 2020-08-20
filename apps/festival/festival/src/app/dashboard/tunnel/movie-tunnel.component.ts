@@ -40,20 +40,24 @@ const steps: TunnelStep[] = [
     }, {
       path: 'additional-information',
       label: 'Additional Information'
+    },
+    {
+      path: 'technical-info',
+      label: 'Technical Information'
     }]
   }, {
-    title: 'Media',
+    title: 'Promotional Elements',
     icon: 'import',
     time: 10,
     routes: [{
-      path: 'technical-info',
-      label: 'Technical Information'
+      path: 'media-files',
+      label: 'Files'
     }, {
-      path: 'images',
-      label: 'Promotional Images'
+      path: 'media-images',
+      label: 'Images'
     }, {
-      path: 'files&links',
-      label: 'Files & Links'
+      path: 'media-videos',
+      label: 'Videos'
     }]
   }, {
     title: 'Summary',
