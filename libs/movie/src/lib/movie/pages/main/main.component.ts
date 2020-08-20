@@ -29,20 +29,16 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.sub = this.form.valueChanges.subscribe(() => {
-      console.log(this.form.valid);
-      if (!this.form.valid) {
-        this.focusOut();
+
+    this.sub = this.form.runningTime.get('status').valueChanges.subscribe(value => {
+      if (value === "confirmed") {
+        return this.form.get('runningTime').get('time').setErrors({required: true});
       }
     })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  focusOut() {
-    return this.form.get('runningTime').get('time').setErrors({required: true});
   }
 
   get title() {
