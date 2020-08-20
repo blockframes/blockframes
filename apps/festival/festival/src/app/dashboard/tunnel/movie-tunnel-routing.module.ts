@@ -51,6 +51,11 @@ const tunnelRoutes: Routes = [
       },
       // Page 8
       {
+        path: 'available-material',
+        loadChildren: () => import('@blockframes/movie/pages/available-material/available-material.module').then(m => m.MovieFormAvailableMaterialModule)
+      },
+      // Page 8
+      {
         path: 'budget',
         loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
       },
