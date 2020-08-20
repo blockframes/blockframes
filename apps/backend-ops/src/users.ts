@@ -46,7 +46,13 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
+  // ! Ensure there are no duplicates!
+  const ps = users
+    .filter((user) => {
+      const dupe = users.filter((compareUser) => compareUser.email === user.email);
+      return dupe.length === 1;
+    })
+    .map((user) => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
 }
 
@@ -74,15 +80,15 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
     // This is "good enough", but do not reproduce in frontend / backend code.
     for (const user of usersToRemove) {
       console.log('removing user:', user.email, user.uid);
-      await auth.deleteUser(user.uid);
-      await sleep(100);
     }
+    await auth.deleteUsers(usersToRemove.map((user) => user.uid));
+    await sleep(100);
   } while (pageToken);
 
   return;
 }
 
-interface JsonlDbRecord {
+export interface JsonlDbRecord {
   docPath: string;
   content: { [key: string]: any };
 }
