@@ -106,6 +106,9 @@ export function createMoviePromotional(
 
   const elements: MoviePromotionalElements = {
     ...params,
+    clip_link: params.clip_link ?? '',
+    moodboard: params.moodboard ?? '',
+    notes: params.notes ?? '',
     still_photo: newStills,
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',

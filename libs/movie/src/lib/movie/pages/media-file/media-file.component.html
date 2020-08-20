@@ -36,6 +36,23 @@
         </file-upload>
         </mat-card-content>
       </mat-card>
+      <!-- Scenario -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Moodboard / Artistic Deck</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload
+          test-id="moodboard"
+          [form]="form.promotional.get('moodboard')"
+          [storagePath]="moodboardPath"
+          accept="['.pdf']"
+          [types]="['application/pdf']">
+          <h3 type>Moodboard</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+        </mat-card-content>
+      </mat-card>
     <!-- File Links -->
     <mat-card>
       <mat-card-header>

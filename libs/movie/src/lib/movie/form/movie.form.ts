@@ -624,8 +624,11 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     // Hosted Media
     presentation_deck: new HostedMediaForm(entity.presentation_deck),
     scenario: new HostedMediaForm(entity.scenario),
+    moodboard: new HostedMediaForm(entity.moodboard),
+    notes: new HostedMediaForm(entity.notes),
 
     // External Media
+    clip_link: new FormControl(entity.clip_link),
     promo_reel_link: new FormControl(entity.promo_reel_link),
     screener_link: new FormControl(entity.screener_link),
     trailer_link: new FormControl(entity.trailer_link),

@@ -104,6 +104,9 @@ export interface PublicMovie {
 ////////////////////
 
 export interface MoviePromotionalElements {
+  clip_link: string,
+  moodboard: string,
+  notes: string,
   presentation_deck: string,
   promo_reel_link: string,
   scenario: string,

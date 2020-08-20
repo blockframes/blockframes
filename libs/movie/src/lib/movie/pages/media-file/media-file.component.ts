@@ -19,6 +19,8 @@ export class MovieFormMediaFileComponent {
 
   public scenarioPath = `movies/${this.movie.id}/promotional.scenario/`;
 
+  public moodboardPath = `movies/${this.movie.id}/promotional.moodboard/`;
+
   get promotional() {
     return this.form.get('promotional');
   }
