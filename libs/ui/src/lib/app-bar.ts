@@ -3,7 +3,6 @@ import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { trigger, style, transition, animate, query } from '@angular/animations';
 import { Easing } from '@blockframes/utils/animations/animation-easing';
-import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -72,53 +71,73 @@ export class AppBarComponent {
 
 @Directive({ selector: '[appContainer] '})
 export class AppContainerDirective {
+  private observer: IntersectionObserver;
   container: HTMLElement;
   @Input('appContainer') appBar: AppBarComponent;
   @Output() toggle = new EventEmitter();
-  constructor(ref: ElementRef) {
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    ref: ElementRef,
+    zone: NgZone
+  ) {
     this.container = ref.nativeElement;
+
+    zone.runOutsideAngular(() => {
+      const heightSize = 80;
+      const options = {
+        root: this.container,
+        rootMargin: `-${heightSize}px 0px 0px 0px`,
+        threshold: 0
+      }
+      this.observer = new IntersectionObserver(([entry]) => {
+        // First entry artifact (not sure what happens)
+        const {x, y, width, height} = entry.rootBounds;
+        if (x === 0 && y === 0 && width === 0 && height === 0) {
+          return;
+        }
+        const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= heightSize;
+        const isEnteringTop = !this.appBar.isApp && entry.isIntersecting;
+        if (isLeavingTop) {
+          zone.run(() => this.appBar.isApp = false);
+        } else if (isEnteringTop) {
+          zone.run(() => this.appBar.isApp = true);
+        }
+      }, options);
+    });
+  }
+
+  observe(targetId: string) {
+    // Adding a delay is not optimal but couldn't find the source of the issue.
+    // Without the delay, the entry.rootBounds in the observer has value 0 - eventhough the element does exist.
+    // Running inside Angular or removing animations didn't solve the issue.
+    setTimeout(() => {
+      const el = this.document.getElementById(targetId);
+      this.observer.observe(el);
+    }, 800); // 800 gives most consistent result (for me) plus UX is minimally impacted
+  }
+
+  unobserve(targetId: string) {
+    if (this.observer) {
+      const el = this.document.getElementById(targetId);
+      this.observer.unobserve(el);
+    }
   }
 }
 
 
 @Directive({ selector: '[pageBar]' })
 export class PageBarDirective implements AfterViewInit, OnDestroy {
-  private observer: IntersectionObserver;
-  public isVisible$: Observable<boolean>;
   @Input() targetId: string;
   constructor(
-    @Inject(DOCUMENT) private document: Document,
     private appContainer: AppContainerDirective,
     private template: TemplateRef<any>,
-    private zone: NgZone,
   ) {}
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
     this.appContainer.appBar.attach(this.template)
+
     if (this.targetId) {
-      this.zone.runOutsideAngular(() => {
-        const heightSize = 80;
-        const options = {
-          root: this.appContainer.container,
-          rootMargin: `-${heightSize}px 0px 0px 0px`,
-          threshold: 0
-        }
-        this.observer = new IntersectionObserver(([entry]) => {
-          // First entry artifact (not sure what happens)
-          const {x, y, width, height} = entry.rootBounds;
-          if (x === 0 && y === 0 && width === 0 && height === 0) {
-            return;
-          }
-          const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= heightSize;
-          const isEnteringTop = !this.appContainer.appBar.isApp && entry.isIntersecting;
-          if (isLeavingTop) {
-            this.zone.run(() => this.appContainer.appBar.isApp = false);
-          } else if (isEnteringTop) {
-            this.zone.run(() => this.appContainer.appBar.isApp = true);
-          }
-        }, options);
-        this.observer.observe(this.targetEl);
-      })
+        this.appContainer.observe(this.targetId);
     } else {
       this.appContainer.appBar.isApp = false;
     }
@@ -127,15 +146,11 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.appContainer.appBar.detach();
-    if (this.targetId && this.observer) {
-      this.observer.unobserve(this.targetEl);
+    if (this.targetId) {
+      this.appContainer.unobserve(this.targetId);
     }
   }
 
-  // Use getElementById because target is sybling & cannot cast input into an ElementRef
-  get targetEl() {
-    return this.document.getElementById(this.targetId);
-  }
 }
 
 @Component({
