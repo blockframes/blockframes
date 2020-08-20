@@ -51,7 +51,7 @@ export async function cleanMovieDir(bucket) {
   return { deleted, total: files.length };
 }
 
-async function cleanMoviesDir(bucket) {
+export async function cleanMoviesDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
   let deleted = 0;
 
@@ -78,7 +78,7 @@ async function cleanMoviesDir(bucket) {
  * files that belongs to deleted orgs on DB.
  * @param bucket 
  */
-async function cleanOrgsDir(bucket) {
+export async function cleanOrgsDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
   let deleted = 0;
 
@@ -99,7 +99,7 @@ async function cleanOrgsDir(bucket) {
   return { deleted, total: files.length };
 }
 
-async function cleanUsersDir(bucket) {
+export async function cleanUsersDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
   let deleted = 0;
 
@@ -125,7 +125,7 @@ async function cleanUsersDir(bucket) {
  * watermarks are in users/${userId}/${userId}.svg
  * @param bucket 
  */
-async function cleanWatermarkDir(bucket) {
+export async function cleanWatermarkDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
   let deleted = 0;
 

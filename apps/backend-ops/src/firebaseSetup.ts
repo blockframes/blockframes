@@ -32,10 +32,9 @@ export async function prepareForTesting() {
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
 
-  // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused storage data...');
-  // await cleanStorage(storage.bucket(storageBucket));
-  // console.info('Storage data clean and fresh!');
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -68,10 +67,9 @@ export async function upgrade() {
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
 
-  // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused storage data...');
-  // await cleanStorage(storage.bucket(storageBucket));
-  // console.info('Storage data clean and fresh!');
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
