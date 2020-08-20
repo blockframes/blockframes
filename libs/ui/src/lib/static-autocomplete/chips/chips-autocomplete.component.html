@@ -1,6 +1,7 @@
 <mat-form-field appearance="outline" (focusout)="focusOut()">
   <mat-label>
     <ng-content select="mat-label"></ng-content>
+    {{ _required ? ' *' : '' }}
   </mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
@@ -11,7 +12,7 @@
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
-      (matChipInputTokenEnd)="add($event)" />
+      (matChipInputTokenEnd)="add($event)"/>
   </mat-chip-list>
   <mat-hint>
     <ng-content select="mat-hint"></ng-content>

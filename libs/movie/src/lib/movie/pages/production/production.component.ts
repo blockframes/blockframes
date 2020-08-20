@@ -39,27 +39,19 @@ export class MovieFormProductionComponent {
   constructor(private shell: MovieFormShellComponent) { }
 
   get internationalSales() {
-    return this.stakeholders.get('salesAgent');
+    return this.form.stakeholders.get('salesAgent');
   }
 
   get distributors() {
-    return this.stakeholders.get('distributor');
+    return this.form.stakeholders.get('distributor');
   }
 
   get coProductionCompany() {
-    return this.stakeholders.get('coProductionCompany');
+    return this.form.stakeholders.get('coProductionCompany');
   }
 
   get productionCompany() {
-    return this.stakeholders.get('productionCompany');
-  }
-
-  get producers() {
-    return this.form.get('producers');
-  }
-
-  get stakeholders() {
-    return this.form.get('stakeholders');
+    return this.form.stakeholders.get('productionCompany');
   }
 
 }
