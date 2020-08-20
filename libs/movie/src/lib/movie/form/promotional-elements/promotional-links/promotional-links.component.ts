@@ -13,9 +13,6 @@ const links = [
   },{
     label: 'Pitch Teaser Link',
     key: 'teaser_link'
-  },{
-    label: 'Clip Link',
-    key: 'clip_link'
   }
 ]
 @Component({
