@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
 import { staticModels } from '@blockframes/utils/static-model';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
   selector: '[form][model]chips-autocomplete',
@@ -36,6 +37,10 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
+  @Input()
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+  }
 
   // The parent form to connect to
   @Input() form: FormList<string>;
@@ -51,6 +56,8 @@ export class ChipsAutocompleteComponent implements OnInit {
   public values$: Observable<any[]>;
 
   private items: SlugAndLabel[];
+
+  public _required: boolean;
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
