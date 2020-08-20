@@ -1,5 +1,3 @@
-import 'tsconfig-paths/register';
-
 import { join } from 'path';
 import { firebase, backupBucket } from 'env/env';
 import { backupBucket as backupBucketCI, firebase as firebaseCI } from 'env/env.ci';
