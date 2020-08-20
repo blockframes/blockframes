@@ -1,6 +1,7 @@
 import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
   selector: '[scope][type][control] static-select',
@@ -16,7 +17,13 @@ export class StaticSelectComponent implements OnInit {
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
+  @Input()
+  set required(value: boolean) {
+    this._required = coerceBooleanProperty(value);
+  }
   @ContentChild(TemplateRef) template: TemplateRef<any>;
+
+  public _required: boolean;
 
   ngOnInit() {
     if(this.type === 'constant') {
