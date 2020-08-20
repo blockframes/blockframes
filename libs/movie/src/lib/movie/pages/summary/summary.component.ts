@@ -8,7 +8,6 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
-import { DirectorForm, CreditForm, MoviePrizeForm, MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
