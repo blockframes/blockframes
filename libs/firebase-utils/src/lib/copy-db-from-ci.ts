@@ -1,3 +1,5 @@
+import 'tsconfig-paths/register';
+
 import { join } from 'path';
 import { firebase, backupBucket } from 'env/env';
 import { backupBucket as backupBucketCI, firebase as firebaseCI } from 'env/env.ci';
@@ -14,13 +16,14 @@ export async function copyDbFromCi() {
     throw new Error('Key "FIREBASE_CI_SERVICE_ACCOUNT" does not exist in .env');
   }
 
-  let cert: string | admin.ServiceAccount;
+  type Cert = string | admin.ServiceAccount;
+  let cert: Cert;
   try {
     // If service account is a stringified json object
-    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT);
+    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
   } catch (err) {
     // If service account is a path
-    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT;
+    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
   }
 
   const ci = admin.initializeApp(
@@ -36,7 +39,7 @@ export async function copyDbFromCi() {
     {
       storageBucket: backupBucket,
       projectId: firebase.projectId,
-      credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+      credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as Cert),
     },
     'local-env'
   );
@@ -51,20 +54,22 @@ export async function copyDbFromCi() {
           Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
       )
       .pop();
-    console.log('Latest backup:', last.metadata.timeCreated);
-    console.log('File name: ', last.name);
+    console.log('Latest backup:', last?.metadata?.timeCreated);
+    console.log('File name: ', last?.name);
     console.log('File metadata is: ');
-    console.dir(last.metadata);
-    console.log('Bucket name: ', last.bucket.name);
+    console.dir(last?.metadata);
+    console.log('Bucket name: ', last?.bucket?.name);
 
     // Ensure parent folder exist
     if (!existsSync(folder)) {
       mkdirSync(folder);
     }
 
+    if (!last?.name) throw Error();
+
     // Dowload lastest backup
     const destination = join(folder, last.name);
-    await last.download({ destination });
+    await last?.download({ destination });
     console.log('Backup has been saved to:', destination);
 
     const storage = app.storage();
@@ -74,7 +79,7 @@ export async function copyDbFromCi() {
     console.log('File uploaded as', result[0].name);
   } catch (err) {
     if ('errors' in err) {
-      err.errors.forEach((error) => console.error('ERROR:', error.message));
+      err.errors.forEach((error: { message: any }) => console.error('ERROR:', error.message));
     } else {
       console.log(err);
     }
