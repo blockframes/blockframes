@@ -15,6 +15,7 @@ import Users from '../../../../../tools/fixtures/users.json'
 declare namespace Cypress {
   interface Chainable<Subject> {
     login(email: string, password: string): void;
+    getFixture(type: string, key: string, value: any): any;
   }
 }
 //
