@@ -32,11 +32,14 @@ export async function copyDbFromCi() {
     'CI-app'
   );
 
-  const app = admin.initializeApp({
-    storageBucket: backupBucket,
-    projectId: firebase.projectId,
-    credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
-  });
+  const app = admin.initializeApp(
+    {
+      storageBucket: backupBucket,
+      projectId: firebase.projectId,
+      credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+    },
+    'local-env'
+  );
 
   try {
     // Get latest backup DB
