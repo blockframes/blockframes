@@ -34,7 +34,7 @@ Cypress.Commands.add('getFixture', (type: string, key: string, value: any) => {
     ret = data[0];
     break;
   }
-
+  console.log(ret[0]);
   return ret[0];
 });
 
