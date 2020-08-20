@@ -7,7 +7,7 @@ import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 // RxJs
-import { map, switchMap, shareReplay } from 'rxjs/operators';
+import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 
 @Component({
@@ -34,7 +34,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
-      map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted')),
+      filter(movies => !!movies && movies.length >= 1),
+      map(movies => movies.filter(movie => !!movie)),
+      map(movies => movies.filter(movie => movie.storeConfig?.status === 'accepted')),
       shareReplay(1)
     )
 
