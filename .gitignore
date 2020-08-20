@@ -61,5 +61,9 @@ env/env.hugo.ts
 tools/credentials/*
 secrets.sh
 
+# High entropy secret
+tools/data.jsonl
+tools/fixtures/*
+
 # cache
 .cache
