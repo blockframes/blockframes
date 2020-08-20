@@ -1,14 +1,15 @@
-movie-header {
-  display: block;
+header {
+  background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover;
 
-  header {
-    padding: 50px 24px;
+  .overlay {
+    padding: 24px 24px 48px 24px;
+    background-image: linear-gradient(to right, black, transparent);
 
-    .movie-info {
-
+    .movie-info{      
       .poster {
-        height: 450px;
+        height: 400px;
       }
 
       .movie-details {
@@ -26,17 +27,12 @@ movie-header {
       cursor: pointer;
     }
   }
+}
 
-  .information {
-    height: 100%;
-  }
+.information {
+  height: 100%;
+}
 
-  .overlay {
-    width: 100%;
-    background: linear-gradient(to right, black, transparent);
-  }
-
-  .movie-header-actions {
-    display: flex;
-  }
+.movie-header-actions {
+  display: flex;
 }
