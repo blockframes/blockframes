@@ -9,5 +9,6 @@
     "etherscan",
     "infura",
     "nodesmith"
-  ]
+  ],
+  "editor.formatOnSave": false
 }

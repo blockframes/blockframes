@@ -11,6 +11,7 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Name</mat-label>
                 <input test-id="prize-name" matInput formControlName="name" required />
+                <mat-hint>If you can't find the festival you're looking for, select “Other” and specify. </mat-hint>
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
@@ -19,6 +20,7 @@
                 <mat-error *ngIf="form.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
+                <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
               </mat-form-field>
             </div>
 
@@ -34,6 +36,7 @@
 
               <static-select test-id="premiere-type" scope="PREMIERE_TYPE" type="model" [control]="form.get('premiere')" fxFlex>
                 <mat-label>Status</mat-label>
+                <mat-hint>Select applying premiere if any.</mat-hint>
               </static-select>
             </div>
 
