@@ -1,5 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
 import { TunnelLayoutComponent } from '../layout.component';
+import { TunnelStep } from '../../tunnel.model';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'tunnel-nav',
@@ -12,4 +15,16 @@ export class TunnelNavComponent {
   public steps$ = this.layout.steps$;
 
   constructor(private layout: TunnelLayoutComponent) { }
+}
+
+@Pipe({name: 'stepActive'})
+export class StepActivePipe implements PipeTransform {
+  constructor(private route: RouterQuery) {}
+
+  transform(step: TunnelStep) {
+    return this.route.select(state => state.state.url).pipe(
+      map(url => url.split('/').pop()),
+      map(suffix => step.routes.some(route => route.path === suffix)),
+    );
+  }
 }
