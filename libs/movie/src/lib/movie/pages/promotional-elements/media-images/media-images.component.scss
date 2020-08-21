@@ -1,0 +1,29 @@
+section {
+  margin: 24px 0;
+
+  h5 {
+    margin-bottom: 24px;
+  }
+
+  .still {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 15px;
+  }
+
+  article {
+    margin: 24px 0;
+  }
+
+  footer {
+    mat-divider {
+      width: 100%;
+      border-top-color: var(--primary);
+      border-top-width: 2px;
+      margin-right: 16px;
+    }
+    span {
+      white-space: nowrap;
+    }
+  }
+}
