@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-
+/// <reference path="../../support/index.d.ts" />
 
 describe('User create a screening', () => {
   beforeEach(() => {
@@ -10,6 +10,8 @@ describe('User create a screening', () => {
     const u = cy.getFixture('user');
     cy.log(u);
     console.log(u);
+
+    expect(true).to.be.true;
   })
 
 });

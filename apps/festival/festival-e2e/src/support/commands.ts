@@ -15,7 +15,7 @@ import Users from '../../../../../tools/fixtures/users.json'
 declare namespace Cypress {
   interface Chainable<Subject> {
     login(email: string, password: string): void;
-    getFixture(type: string, key: string, value: any): any;
+    getFixture(type: string, key?: string, value?: any): any;
   }
 }
 //
@@ -24,7 +24,7 @@ Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
 });
 
-Cypress.Commands.add('getFixture', (type: string, key: string, value: any) => {
+Cypress.Commands.add('getFixture', (type: string, key?: string, value?: any) => {
   console.log('Getting Fixture', type );
   const data = [Users];
   let ret;
