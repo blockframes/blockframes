@@ -13,9 +13,7 @@ export class MovieFormMediaImagesComponent {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
 
-  public displayedColumns = {
-    stillPhoto: 'Photo',
-  }
+
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
@@ -25,6 +23,15 @@ export class MovieFormMediaImagesComponent {
 
   get promotional() {
     return this.form.get('promotional');
+  }
+
+  addStill() {
+    this.stillPhoto
+      .push(new HostedMediaForm());
+  }
+
+  trackByFn(index: number) {
+    return index;
   }
 
 }
