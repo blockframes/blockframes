@@ -5,14 +5,15 @@
     <h3>Cast Member</h3>
     <section id="cast-member">
       <bf-form-table [columns]="castColumns" [form]="cast" buttonText="Add Cast Member">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
-        <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+        <ng-template colRef="filmography" let-film>{{ film.filmography[0] | json }}</ng-template>
+        <ng-template formView let-castFrom>
+          <article [formGroup]="castFrom" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
-                <input test-id="cast-first-name" matInput formControlName="firstName" placeholder="eg: Cast Member’s First Name" />
+                <input test-id="cast-first-name" matInput formControlName="firstName"
+                  placeholder="eg: Cast Member’s First Name" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
@@ -21,10 +22,30 @@
               </mat-form-field>
             </div>
 
-            <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
-              <mat-label>Status</mat-label>
-              <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
-            </static-select>
+            <div fxLayout fxLayoutGap="24px">
+              <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="castFrom.get('status')"
+                fxFlex *ngIf="form | hasStatus: ['financing', 'shooting']">
+                <mat-label>Status</mat-label>
+                <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.
+                </mat-hint>
+              </static-select>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="start center">
+
+              <ng-container *ngFor="let cast of castFrom.get('filmography').controls">
+                <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Film Title</mat-label>
+                    <input matInput formControlName="title">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Release Year</mat-label>
+                    <input matInput formControlName="year">
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
 
             <mat-form-field appearance="outline">
               <mat-label>Description</mat-label>
@@ -60,13 +81,14 @@
 
       <bf-form-table [columns]="crewColumns" [form]="crew" buttonText="Add Crew Member">
         <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
-        <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+        <ng-template formView let-crewForm>
+          <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>First Name</mat-label>
-                <input test-id="crew-first-name" matInput formControlName="firstName" placeholder="eg: Crew Member’s First Name" />
+                <input test-id="crew-first-name" matInput formControlName="firstName"
+                  placeholder="eg: Crew Member’s First Name" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
@@ -75,18 +97,36 @@
               </mat-form-field>
             </div>
 
-            <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="crew-role" type="model" [control]="form.get('role')" scope="CREW_ROLES" fxFlex>
+            <div fxLayout fxLayoutGap="24px">
+              <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="crewForm.get('status')"
+                fxFlex *ngIf="form | hasStatus: ['financing', 'shooting']">
+                <mat-label>Status</mat-label>
+                <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
+                </mat-hint>
+              </static-select>
+
+              <static-select test-id="crew-role" type="model" [control]="crewForm.get('role')" scope="CREW_ROLES" fxFlex>
                 <mat-label>Role</mat-label>
                 <mat-hint align="start">
                   Please specify crew member's role in your project (director of photography, score composer, writer...)
                 </mat-hint>
               </static-select>
 
-              <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="form.get('status')" fxFlex>
-                <mat-label>Status</mat-label>
-                <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.</mat-hint>
-              </static-select>
+              <div fxLayout="column" fxLayoutAlign="start center">
+
+                <ng-container *ngFor="let crew of crewForm.get('filmography').controls">
+                  <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Crew's Filmography</mat-label>
+                      <input matInput formControlName="title">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" fxFlex>
+                      <mat-label>Crew's Filmography</mat-label>
+                      <input matInput formControlName="year">
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+              </div>
             </div>
 
 

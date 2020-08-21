@@ -1,34 +1,37 @@
 <tunnel-page>
   <h1 subtitle>Additional Information</h1>
   <ng-container tunnel-form>
+    <ng-container *ngIf="form | hasStatus: ['released']">
     <section id="release">
-      <h3>Release</h3>
-      <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
-        <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+        <h3>Release</h3>
+        <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
+          <ng-template formView let-form>
+            <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
 
-            <div fxLayout fxLayoutGap="24px">
-              <chips-autocomplete test-id="release-country" [form]="form.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
-                <mat-label>Country</mat-label>
-              </chips-autocomplete>
+              <div fxLayout fxLayoutGap="24px">
+                <chips-autocomplete test-id="release-country" [form]="form.get('country')" model="TERRITORIES"
+                  placeholder="Type and Select a Country" fxFlex>
+                  <mat-label>Country</mat-label>
+                </chips-autocomplete>
 
-              <static-select test-id="release-media" type="model" [control]="form.get('media')" scope="MEDIAS" fxFlex>
-                <mat-label>Release Media</mat-label>
-              </static-select>
-            </div>
+                <static-select test-id="release-media" type="model" [control]="form.get('media')" scope="MEDIAS" fxFlex>
+                  <mat-label>Release Media</mat-label>
+                </static-select>
+              </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Release Date</mat-label>
-              <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker" placeholder="YYYY/MM/DD">
-              <mat-datepicker-toggle matSuffix [for]="datePicker">
-                <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #datePicker></mat-datepicker>
-            </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Release Date</mat-label>
+                <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker"
+                  placeholder="YYYY/MM/DD">
+                <mat-datepicker-toggle matSuffix [for]="datePicker">
+                  <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+              </mat-form-field>
 
-          </article>
-        </ng-template>
-      </bf-form-table>
+            </article>
+          </ng-template>
+        </bf-form-table>
 
     </section>
 
@@ -57,7 +60,8 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Figures</mat-label>
-              <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0" placeholder="Figures">
+              <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0"
+                placeholder="Figures">
               <mat-error *ngIf="form.get('value').hasError('min')">
                 Please enter box office figures.
               </mat-error>
@@ -84,24 +88,27 @@
             <mat-hint>Please specify your title's rating, if existing.</mat-hint>
           </mat-form-field>
 
-          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
+          <chips-autocomplete [form]="control.get('country')" model="TERRITORIES"
+            placeholder="Type and Select a Country" fxFlex>
             <mat-hint>Please specify country applying rating system.</mat-hint>
           </chips-autocomplete>
         </div>
       </article>
     </section>
+  </ng-container>
 
-    <section id="qualifications">
-      <h3>Qualifications</h3>
-      <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications" aria-label="Certifications">
-        <ng-container *ngFor="let certification of certifications">
-          <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint" [matTooltipDisabled]="!certification?.hint">
-            {{ certification.label }}
-          </mat-button-toggle>
-        </ng-container>
-      </mat-button-toggle-group>
-      <p>Select all that apply</p>
-    </section >
+  <section id="qualifications">
+    <h3>Qualifications</h3>
+    <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications" aria-label="Certifications">
+      <ng-container *ngFor="let certification of certifications">
+        <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"
+          [matTooltipDisabled]="!certification?.hint">
+          {{ certification.label }}
+        </mat-button-toggle>
+      </ng-container>
+    </mat-button-toggle-group>
+    <p>Select all that apply</p>
+  </section>
 
 
   </ng-container>

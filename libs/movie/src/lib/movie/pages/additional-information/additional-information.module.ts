@@ -26,6 +26,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
+import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 import { MovieFormAdditionalInformationComponent } from './additional-information.component';
 
@@ -48,6 +49,7 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     FlexLayoutModule,
     FormCountryModule,
     FormTableModule,
+    HasStatusModule,
 
     // Material
     MatFormFieldModule,
