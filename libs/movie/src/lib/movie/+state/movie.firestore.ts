@@ -61,7 +61,7 @@ interface MovieRaw<D> {
   // TODO we also need to consider how to differentiate full movies from trailer
   hostedVideo?: string;
   internalRef?: string,
-  isOriginalLanguageAvailable: boolean;
+  isOriginalVersionAvailable: boolean;
   keyAssets?: string,
   keywords?: string[],
   languages?: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;

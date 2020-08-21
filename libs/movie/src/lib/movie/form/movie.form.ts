@@ -103,7 +103,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
-    isOriginalLanguageAvailable: new FormControl(entity.isOriginalLanguageAvailable),
+    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
