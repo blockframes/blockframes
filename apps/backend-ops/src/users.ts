@@ -6,9 +6,9 @@
 import { UserConfig, USERS } from './assets/users.fixture';
 import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
-import { sleep, runChunks } from './tools';
+import { sleep } from './tools';
 import readline from 'readline';
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 import { firebase } from '@env';
