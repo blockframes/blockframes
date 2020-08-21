@@ -4,7 +4,7 @@
     <mat-nav-list *ngIf="step.routes.length === 1; else multipleLinks">
       <a mat-list-item [routerLink]="step.routes[0].path" routerLinkActive="active">
         <mat-icon [svgIcon]="step.icon"></mat-icon>
-        <span>{{ step.title }}</span>
+        <span class="mat-expansion-panel-header-title">{{ step.title }}</span>
       </a>
     </mat-nav-list>
     <mat-divider *ngIf="!isLast"></mat-divider>
@@ -16,9 +16,9 @@
             <span>{{ step.title }}</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-nav-list dense>
+        <mat-nav-list>
           <ng-container *ngFor="let route of step.routes">
-            <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
+            <a mat-list-item [routerLink]="route.path" routerLinkActive="active" class="vertical-aligned">
               {{ route.label }}
             </a>
           </ng-container>

@@ -1,8 +1,11 @@
-mat-nav-list {
-  padding: 8px 16px;
-
-}
-
 .mat-expansion-panel-header-title {
   font-size: 14px;
+}
+
+mat-list-item-content {
+  padding: 0;
+}
+
+mat-nav-list a.mat-list-item.vertical-aligned {
+  padding: 0 0 0 20px;
 }
