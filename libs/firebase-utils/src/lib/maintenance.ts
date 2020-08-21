@@ -27,7 +27,12 @@ export async function endMaintenance() {
   });
 }
 
-export async function isInMaintenance() {
+/**
+ * 
+ * @param delay 8 min by default. This delay is a security to
+ * be sure that every process is stopped before continuing
+ */
+export async function isInMaintenance(delay = EIGHT_MINUTES_IN_MS) {
   const ref = maintenanceRef();
   const doc = await ref.get();
 
@@ -40,10 +45,7 @@ export async function isInMaintenance() {
   const now = admin.firestore.Timestamp.now();
 
   if (endedAt) {
-    // Wait 30s before allowing any operation on the db.
-    // this prevents triggering firebase events.
-    // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-    return endedAt.toMillis() + EIGHT_MINUTES_IN_MS > now.toMillis();
+    return endedAt.toMillis() + delay > now.toMillis();
   }
 
   if (startedAt) {

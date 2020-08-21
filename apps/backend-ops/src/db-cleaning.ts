@@ -6,8 +6,7 @@ import { OrganizationDocument, PublicOrganization } from '@blockframes/organizat
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
-import { runChunks } from './tools';
-import { getDocument, startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { getDocument, startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import admin from 'firebase-admin';
 
@@ -105,13 +104,13 @@ export function cleanNotifications(
 async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: NotificationDocument) {
   if (notification.organization) {
     const d = await getDocument<PublicOrganization>(`orgs/${notification.organization.id}`);
-    notification.organization.logo = d.logo || EMPTY_MEDIA;
+    notification.organization.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (notification.user) {
     const d = await getDocument<PublicUser>(`users/${notification.user.uid}`);
-    notification.user.avatar = d.avatar || EMPTY_MEDIA;
-    notification.user.watermark = d.watermark || EMPTY_MEDIA;
+    notification.user.avatar = d?.avatar || EMPTY_MEDIA;
+    notification.user.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(notification);
@@ -136,24 +135,24 @@ export function cleanInvitations(
 async function cleanOneInvitation(doc: QueryDocumentSnapshot, invitation: InvitationDocument) {
   if (invitation.fromOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.fromOrg.id}`);
-    invitation.fromOrg.logo = d.logo || EMPTY_MEDIA;
+    invitation.fromOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.toOrg?.id) {
     const d = await getDocument<PublicOrganization>(`orgs/${invitation.toOrg.id}`);
-    invitation.toOrg.logo = d.logo || EMPTY_MEDIA;
+    invitation.toOrg.logo = d?.logo || EMPTY_MEDIA;
   }
 
   if (invitation.fromUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.fromUser.uid}`);
-    invitation.fromUser.avatar = d.avatar || EMPTY_MEDIA;
-    invitation.fromUser.watermark = d.watermark || EMPTY_MEDIA;
+    invitation.fromUser.avatar = d?.avatar || EMPTY_MEDIA;
+    invitation.fromUser.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   if (invitation.toUser?.uid) {
     const d = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
-    invitation.toUser.avatar = d.avatar || EMPTY_MEDIA;
-    invitation.toUser.watermark = d.watermark || EMPTY_MEDIA;
+    invitation.toUser.avatar = d?.avatar || EMPTY_MEDIA;
+    invitation.toUser.watermark = d?.watermark || EMPTY_MEDIA;
   }
 
   await doc.ref.update(invitation);
