@@ -18,9 +18,10 @@ export const { storageBucket } = firebase;
 export async function prepareForTesting() {
   console.log('Fetching DB from blockframes-ci and uploading to local env...');
   const dbBackupPath = await copyDbFromCi();
-  console.log('DB copied to local bucket!');
 
   if (dbBackupPath !== null) {
+    console.log('DB copied to local bucket!');
+
     console.info(`Syncing users from : ${dbBackupPath} ...`);
     await syncUsers(readJsonlFile(dbBackupPath));
     console.info('Users synced!');
@@ -55,6 +56,8 @@ export async function prepareForTesting() {
     // console.info('Syncing firestore with storage');
     // await syncStorage();
     // console.info('Firestore is now synced with storage!');
+  } else {
+    console.log('There was an error while downloading DB from blockframes-ci bucket...');
   }
 
   process.exit(0);
