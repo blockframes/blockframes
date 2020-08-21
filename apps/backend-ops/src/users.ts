@@ -101,11 +101,13 @@ function readUsersFromDb(db: JsonlDbRecord[]): UserConfig[] {
 }
 
 export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
+  await startMaintenance();
   const { auth } = loadAdminServices();
 
   const expectedUsers = readUsersFromDb(db);
   await removeUnexpectedUsers(expectedUsers, auth);
   await createAllUsers(expectedUsers, auth);
+  await endMaintenance();
 }
 
 export async function printUsers(): Promise<any> {
@@ -184,7 +186,7 @@ export async function generateWatermarks() {
   const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
-  if (!(await isInMaintenance())) {
+  if (!(await isInMaintenance(0))) {
     startedMaintenance = true;
     await startMaintenance();
   }
