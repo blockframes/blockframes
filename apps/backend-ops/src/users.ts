@@ -105,11 +105,13 @@ function readUsersFromDb(db: JsonlDbRecord[]): UserConfig[] {
 }
 
 export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
+  await startMaintenance();
   const { auth } = loadAdminServices();
 
   const expectedUsers = readUsersFromDb(db);
   await removeUnexpectedUsers(expectedUsers, auth);
   await createAllUsers(expectedUsers, auth);
+  await endMaintenance();
 }
 
 export async function printUsers(): Promise<any> {
