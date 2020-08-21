@@ -1,0 +1,50 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Available Materials</h1>
+  <section tunnel-form fxLayout="column" fxLayoutGap="32px">
+
+    <h3>Original Version</h3>
+    <div fxLayout="column" fxLayoutGap="16px">
+      <mat-slide-toggle [formControl]="form.get('isOriginalVersionAvailable')" color="primary">Original Version
+        Authorized</mat-slide-toggle>
+      <span class="mat-caption">Please specify if original version is available or not.</span>
+    </div>
+
+    <h3>Add Versions</h3>
+
+    <!-- Form -->
+
+    <article [formGroup]="form.languages" fxLayout="column" fxLayoutGap="32px">
+      <ng-container *ngFor="let language of form.languages.controls | keyvalue">
+        <h5>{{ language.key | titlecase }}</h5>
+        <div [formGroupName]="language.key" fxLayout="row" fxLayoutGap="8px">
+          <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
+          <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
+          <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
+          <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+        </div>
+      </ng-container>
+    </article>
+
+    <!-- Buttons -->
+
+    <footer *ngIf="!showButtons">
+      <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()" [disabled]="!languageCtrl.value">
+          <mat-icon svgIcon="floppy"></mat-icon>
+          <span>Save Language</span>
+        </button>
+      </div>
+    </footer>
+    <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
+      <mat-divider></mat-divider>
+      <span>Add Language</span>
+      <button mat-mini-fab color="primary" (click)="showForm()">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+    </footer>
+  </section>
+</tunnel-page>
