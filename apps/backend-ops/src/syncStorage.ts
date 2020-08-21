@@ -17,15 +17,15 @@ enum mediaFieldType {
 
 // reference to the location of all hosted medias in the db
 const mediaReferences = [
-  { 
+  {
     collection: 'users',
     fields: [
       { field: 'watermark', type: mediaFieldType.hostedMedia },
       { field: 'avatar', type: mediaFieldType.hostedMedia },
     ]
   },
-  { 
-    collection: 'orgs', 
+  {
+    collection: 'orgs',
     fields: [
       { field: 'logo', type: mediaFieldType.hostedMedia }
     ]
@@ -48,7 +48,7 @@ const mediaReferences = [
 export async function syncStorage() {
 
   let startedMaintenance = false;
-  if (!await isInMaintenance()) {
+  if (!await isInMaintenance(0)) {
     startedMaintenance = true;
     await startMaintenance();
   }
@@ -64,7 +64,7 @@ export async function syncStorage() {
     for (const doc of docs) {
       const docId = isPublicUser(doc) ? doc.uid : doc.id;
       const docRef = db.collection(ref.collection).doc(docId);
-      
+
       for (const field of ref.fields) {
         let data = {};
 
@@ -86,7 +86,7 @@ export async function syncStorage() {
         }
 
         // ! this will not work with array in the path
-        const promise = docRef.update({[field.field]: data});
+        const promise = docRef.update({ [field.field]: data });
         unlinkPromises.push(promise);
       }
     }
@@ -114,9 +114,9 @@ export async function syncStorage() {
       const currentMediaValue = get(docData, fieldToUpdate);
       if (!!currentMediaValue.ref) {
         throw new Error(`Duplicate File: reference is already set by another file. Applies to file ${file.name}`);
-      } 
+      }
 
-      const [ signedUrl ] = await file.getSignedUrl({
+      const [signedUrl] = await file.getSignedUrl({
         action: 'read',
         expires: '01-01-3000',
         version: 'v2'
@@ -124,7 +124,7 @@ export async function syncStorage() {
 
       // link the firestore
       // ! this will not work with array in the path
-      await doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+      await doc.update({ [fieldToUpdate]: { ref: filePath, url: signedUrl } });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
     }

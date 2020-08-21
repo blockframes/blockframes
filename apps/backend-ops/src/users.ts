@@ -188,7 +188,7 @@ export async function generateWatermarks() {
   const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
-  if (!(await isInMaintenance())) {
+  if (!(await isInMaintenance(0))) {
     startedMaintenance = true;
     await startMaintenance();
   }
