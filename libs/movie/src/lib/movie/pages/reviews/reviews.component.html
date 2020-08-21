@@ -10,13 +10,13 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Name</mat-label>
-                <input test-id="prize-name" matInput formControlName="name" required />
+                <input test-id="prize-name" matInput formControlName="name" />
                 <mat-hint>If you can't find the festival you're looking for, select “Other” and specify. </mat-hint>
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
-                <input test-id="prize" matInput formControlName="prize" required />
+                <input test-id="prize" matInput formControlName="prize" />
                 <mat-error *ngIf="form.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
@@ -27,7 +27,7 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
-                <input matInput test-id="prize-year" formControlName="year" required type="number" placeholder="YYYY"/>
+                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY"/>
                 <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
                 <mat-error *ngIf="form.hasError('required')">
                   Year is required.
@@ -56,23 +56,23 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Film's Critic's Name</mat-label>
-                <input test-id="critic-name" matInput formControlName="criticName" required />
+                <input test-id="critic-name" matInput formControlName="criticName" />
               </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Journal Name</mat-label>
-                <input test-id="journal-name" matInput formControlName="journalName" required />
+                <input test-id="journal-name" matInput formControlName="journalName" />
               </mat-form-field>
             </div>
 
             <mat-form-field appearance="outline">
               <mat-label>Quote</mat-label>
-              <input test-id="quote" matInput formControlName="criticQuote" required />
+              <input test-id="quote" matInput formControlName="criticQuote" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Revue Link</mat-label>
-              <input test-id="link" matInput formControlName="revueLink" required />
+              <input test-id="link" matInput formControlName="revueLink" />
             </mat-form-field>
 
           </article>
