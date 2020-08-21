@@ -82,5 +82,6 @@ export async function copyDbFromCi() {
     } else {
       console.log(err);
     }
+    return null;
   }
 }
