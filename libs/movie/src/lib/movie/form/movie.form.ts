@@ -103,6 +103,7 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
+    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
@@ -225,6 +226,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get synopsis() {
     return this.get('synopsis');
+  }
+
+  get languages() {
+    return this.get('languages');
   }
 
   public removeDirector(i: number): void {
@@ -772,7 +777,6 @@ export class MovieVersionInfoForm extends FormEntity<any> {
 export class VersionSpecificationForm extends FormEntity<any> {
   constructor(versionSpecifictaion: MovieLanguageSpecification) {
     super({
-      original: new FormControl(versionSpecifictaion.original),
       dubbed: new FormControl(versionSpecifictaion.dubbed),
       subtitle: new FormControl(versionSpecifictaion.subtitle),
       caption: new FormControl(versionSpecifictaion.caption)
