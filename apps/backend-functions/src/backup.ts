@@ -244,7 +244,9 @@ export const restore = async (req: any, resp: any) => {
 
   await runChunks(lines, async (line: any) => {
     const stored: StoredDocument = JSON.parse(line);
-    await db.doc(stored.docPath).set(reEncodeObject(stored.content));
+    if (stored.docPath !== '_META/_MAINTENANCE') {
+      await db.doc(stored.docPath).set(reEncodeObject(stored.content));
+    }
   }, 500, false);
 
   await endMaintenance();
