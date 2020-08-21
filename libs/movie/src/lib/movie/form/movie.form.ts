@@ -762,6 +762,16 @@ export class MovieVersionInfoForm extends FormEntity<any> {
   ) {
     super(createLanguageControl(versionInfo));
   }
+
+  addLanguage(language: LanguagesSlug, value?: Partial<MovieLanguageSpecification>) {
+    const spec = createMovieLanguageSpecification(value);
+    this.setControl(language, new VersionSpecificationForm(spec));
+  }
+
+  removeLanguage(language: LanguagesSlug) {
+    this.removeControl(language);
+    this.updateValueAndValidity();
+  }
 }
 
 export class VersionSpecificationForm extends FormEntity<any> {
