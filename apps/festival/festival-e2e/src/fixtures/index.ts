@@ -4,6 +4,10 @@
 // All fixtures should support the Query Inteface
 // ***********************************************************
 
-export { QueryInferface } from './queryinterface';
+import { QueryInferface } from './queryinterface';
+import User from './user'
 
-export { User } from './user';
+export {
+  User,
+  QueryInferface
+};

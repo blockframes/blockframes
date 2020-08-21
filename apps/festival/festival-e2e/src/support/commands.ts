@@ -9,33 +9,25 @@
 // ***********************************************
 // eslint-disable-next-line @typescript-eslint/no-namespace
 
-
-
+import { User, QueryInferface } from '../fixtures';
 
 declare namespace Cypress {
   interface Chainable<Subject> {
     login(email: string, password: string): void;
-    getFixture(type: string, key?: string, value?: any): any;
+    getUser(query: QueryInferface): any;
   }
 }
+
+const userFixture = new User();
+
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
   console.log('Custom command example: Login', email, password);
 });
 
-Cypress.Commands.add('getFixture', (type: string, key?: string, value?: any) => {
-  console.log('Getting Fixture', type );
-  const data = [Users];
-  let ret;
-
-  switch (type) {
-  case 'user':
-    ret = data[0];
-    break;
-  }
-  console.log(ret[0]);
-  return ret[0];
+Cypress.Commands.add('getUser', (query: QueryInferface) => {
+  return userFixture.get(query);
 });
 
 

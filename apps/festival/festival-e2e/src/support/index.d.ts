@@ -10,6 +10,8 @@
 //
 // /// <reference path="../support/index.d.ts" />
 
+//import QueryInferface from '../fixtures/queryinterface';
+
 declare namespace Cypress {
   interface Chainable {
     /**
@@ -25,6 +27,6 @@ declare namespace Cypress {
 
     login(email: string, password: string): void;
     
-    getFixture(type: string, key?: string, value?: any): any;    
+    getUser(query: any): any;    
   }
 }
