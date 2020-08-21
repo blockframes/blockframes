@@ -52,6 +52,7 @@ export async function copyDbFromCi() {
           Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
       )
       .pop();
+
     //const metadata = last?.metadata;
     const fname = `anonymized-db.jsonl`; // ${metadata.bucket}-${metadata.generation}
     console.log('Latest backup:', last?.metadata?.timeCreated);
@@ -71,6 +72,7 @@ export async function copyDbFromCi() {
     // Download latest backup
     const destination = join(folder, fname);
     console.log(`Downloading latest backup to : ${destination}`);
+
     let downloadError = false;
     await last?.download({ destination }).catch(e => {
       downloadError = true;
@@ -83,6 +85,7 @@ export async function copyDbFromCi() {
     }
 
     console.log('Backup have been saved to:', destination);
+
 
     const storage = app.storage();
     const myBucket = storage.bucket(backupBucket);
