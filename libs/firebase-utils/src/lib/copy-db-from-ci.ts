@@ -65,12 +65,17 @@ export async function copyDbFromCi() {
       console.log('Dest folder created');
     }
 
-    if (!last?.name) throw Error();
+    if (!last?.name) throw Error('Missing file name');
 
     // Download latest backup
     const destination = join(folder, last.name);
     console.log(`Downloading latest backup to : ${destination}`);
-    await last?.download({ destination });
+    const downloadResponse = await last.download({ destination }).catch(e => {
+      console.log(e);
+      console.log('An error happened while downloading file.');
+    });
+
+    console.log(downloadResponse);
     console.log('Backup has been saved to:', destination);
 
     const storage = app.storage();

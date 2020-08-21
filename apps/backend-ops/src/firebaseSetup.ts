@@ -21,7 +21,7 @@ export async function prepareForTesting() {
   const dbBackupPath = await copyDbFromCi();
   console.log('DB copied to local bucket!');
 
-  console.info('Syncing users...');
+  console.info(`Syncing users from : ${dbBackupPath} ...`);
   await syncUsers(readJsonlFile(dbBackupPath));
   console.info('Users synced!');
 
