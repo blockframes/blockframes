@@ -1,23 +1,28 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+
 // Blockframes
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// RxJs
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 const steps: TunnelStep[] = [
   {
     title: 'First Step',
     icon: 'home',
     time: 2,
-    routes: [{path: 'title-status', label: 'First Step'}],
+    routes: [{ path: 'title-status', label: 'First Step' }],
   },
   {
     title: 'Title Information',
@@ -41,21 +46,20 @@ const steps: TunnelStep[] = [
     }, {
       path: 'additional-information',
       label: 'Additional Information'
-    },
-    {
+    }, {
       path: 'technical-info',
       label: 'Technical Information'
+    }, {
+      path: 'available-material',
+      label: 'Available Material'
     }]
   }, {
     title: 'Promotional Elements',
     icon: 'import',
     time: 10,
     routes: [{
-      path: 'media-files',
-      label: 'Files'
-    }, {
-      path: 'media-images',
-      label: 'Images'
+      path: 'images',
+      label: 'Promotional Images'
     }, {
       path: 'media-videos',
       label: 'Videos'
