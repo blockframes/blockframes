@@ -21,9 +21,11 @@ import { LandingPage } from '../../support/pages/landing';
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW, TOMORROW, PRIVATE_EVENTNAME_1, PRIVATE_EVENTNAME_2, PRIVATE_EVENTNAME_3, USER_1, USER_2, ORG_NAME, PUBLIC_EVENTNAME } from '../../fixtures/data';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { User, QueryInferface } from '../../fixtures';
 
 let tomorrow = TOMORROW;
 const MOVIE_TITLE = MOVIES[3].title.international;
+const userFixture = new User(); 
 
 describe('User create a screening', () => {
   beforeEach(() => {
@@ -33,8 +35,9 @@ describe('User create a screening', () => {
     p1.clickSignup();      
   });
 
-  it('User creates a private screening, that taking place tomorrow', () => {
-    signIn(USER_1);
+  it.only('User creates a private screening, that taking place tomorrow', () => {
+    const userMano = userFixture.get({exist: false, index: 0 })[0];
+    signIn(userMano);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
