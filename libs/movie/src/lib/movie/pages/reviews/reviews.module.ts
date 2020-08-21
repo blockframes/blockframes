@@ -10,6 +10,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -38,6 +40,8 @@ import { MovieFormReviewscComponent } from './reviews.component';
     MatInputModule,
     MatSelectModule,
     MatDividerModule,
+    MatButtonToggleModule,
+    MatTooltipModule,
 
     // Routes
     RouterModule.forChild([{ path: '', component: MovieFormReviewscComponent }]),
