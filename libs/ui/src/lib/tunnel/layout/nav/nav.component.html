@@ -1,32 +1,29 @@
 <ng-container *ngIf="steps$ | async as steps">
   <ng-container *ngFor="let step of steps; let isLast = last">
-    <mat-nav-list class="mat-expansion-panel-header-title" *ngIf="step.routes.length === 1; else multipleLinks">
-      <div fxLayout="row" fxLayoutAlign="start start">
+    <!-- if step has only one route, use a mat list -->
+    <mat-nav-list *ngIf="step.routes.length === 1; else multipleLinks">
+      <a mat-list-item [routerLink]="step.routes[0].path" routerLinkActive="active">
         <mat-icon [svgIcon]="step.icon"></mat-icon>
-        <a [routerLink]="step.routes[0].path" routerLinkActive="active">
-          {{ step.title }}
-        </a>
-      </div>
+        <span class="mat-expansion-panel-header-title">{{ step.title }}</span>
+      </a>
     </mat-nav-list>
     <mat-divider *ngIf="!isLast"></mat-divider>
     <ng-template #multipleLinks>
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon [svgIcon]="step.icon"></mat-icon>
-              <span>{{ step.title }}</span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list dense>
-            <ng-container *ngFor="let route of step.routes">
-              <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
-                {{ route.label }}
-              </a>
-            </ng-container>
-          </mat-nav-list>
-        </mat-expansion-panel>
-      </mat-accordion>
+      <mat-expansion-panel [expanded]="step | stepActive | async">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon [svgIcon]="step.icon"></mat-icon>
+            <span>{{ step.title }}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <ng-container *ngFor="let route of step.routes">
+            <a mat-list-item [routerLink]="route.path" routerLinkActive="active" class="vertical-aligned">
+              {{ route.label }}
+            </a>
+          </ng-container>
+        </mat-nav-list>
+      </mat-expansion-panel>
     </ng-template>
   </ng-container>
 </ng-container>

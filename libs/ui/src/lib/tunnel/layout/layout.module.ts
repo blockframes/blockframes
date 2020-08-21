@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TunnelLayoutComponent } from './layout.component';
-import { TunnelNavComponent } from './nav/nav.component';
+import { TunnelNavComponent, StepActivePipe } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
 import { TunnelConfirmComponent } from './confirm/confirm.component';
 import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
@@ -24,7 +24,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
+  declarations: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent, StepActivePipe],
   exports: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
   imports: [
     CommonModule,
