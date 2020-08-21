@@ -21,6 +21,9 @@ export class TunnelNavComponent {
 export class StepActivePipe implements PipeTransform {
   constructor(private route: RouterQuery) {}
 
+  /**
+   *  This pipe is used to open and keep open the good expansion panel when we are on a page inside the expansion panel.
+   */
   transform(step: TunnelStep) {
     return this.route.select(state => state.state.url).pipe(
       map(url => url.split('/').pop()),
