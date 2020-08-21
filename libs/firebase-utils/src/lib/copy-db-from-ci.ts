@@ -52,8 +52,10 @@ export async function copyDbFromCi() {
           Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
       )
       .pop();
+    const metadata = last?.metadata;
+    const fname = `${metadata.bucket}-${metadata.generation}.jsonl`;
     console.log('Latest backup:', last?.metadata?.timeCreated);
-    console.log('File name: ', last?.name);
+    console.log('File name: ', fname);
     console.log('File metadata is: ');
     console.dir(last?.metadata);
     console.log('Bucket name: ', last?.bucket?.name);
@@ -65,10 +67,8 @@ export async function copyDbFromCi() {
       console.log('Dest folder created');
     }
 
-    if (!last?.name) throw Error('Missing file name');
-
     // Download latest backup
-    const destination = join(folder, last.name);
+    const destination = join(folder, fname);
     console.log(`Downloading latest backup to : ${destination}`);
     const downloadResponse = await last.download({ destination }).catch(e => {
       console.log(e);
