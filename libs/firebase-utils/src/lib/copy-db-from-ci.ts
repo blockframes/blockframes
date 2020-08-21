@@ -55,6 +55,7 @@ export async function copyDbFromCi() {
     const metadata = last?.metadata;
     const fname = `${metadata.bucket}-${metadata.generation}.jsonl`;
     console.log('Latest backup:', last?.metadata?.timeCreated);
+    console.log('Remote name:', last?.name);
     console.log('File name: ', fname);
     console.log('File metadata is: ');
     console.dir(last?.metadata);
@@ -70,12 +71,8 @@ export async function copyDbFromCi() {
     // Download latest backup
     const destination = join(folder, fname);
     console.log(`Downloading latest backup to : ${destination}`);
-    const downloadResponse = await last.download({ destination }).catch(e => {
-      console.log(e);
-      console.log('An error happened while downloading file.');
-    });
+    await last.download({ destination });
 
-    console.log(downloadResponse);
     console.log('Backup has been saved to:', destination);
 
     const storage = app.storage();
