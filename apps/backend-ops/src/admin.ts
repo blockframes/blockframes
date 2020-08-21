@@ -6,6 +6,8 @@
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import request from 'request';
+import { isInMaintenance } from '@blockframes/firebase-utils';
+import { sleep } from './tools';
 
 export type Auth = admin.auth.Auth;
 export type Firestore = admin.firestore.Firestore;
@@ -24,7 +26,7 @@ export interface AdminServices {
 }
 
 export function loadAdminServices(): AdminServices {
-  if (!admin.apps.length) {  
+  if (!admin.apps.length) {
     admin.initializeApp({
       ...firebase,
       credential: admin.credential.applicationDefault(),
@@ -57,11 +59,33 @@ export async function restore(appURL: string) {
 
   // promisified request
   return new Promise((resolve, reject) => {
-    request.post({ url, form }, (error, response) => {
+    request.post({ url, form }, async (error, response) => {
       if (error) {
         reject(error);
       } else if (response.statusCode < 200 || response.statusCode > 299) {
-        reject(`invalid status code on restore: ${response.statusCode}. Check your firebase functions logs (admin function)`)
+        /**
+         * @dev this is a hack to handle unattended responses from 
+         * express server (502). The nginx proxy on google sides seems to hang
+         * up after a few seconds. To be sure that the restore is ended,
+         * we wait for 500 seconds.
+         */
+        if (response.statusCode === 502) {
+          const attempts = 10;
+          for (let i = 0; i < attempts; i++) {
+            const maintenance = await isInMaintenance(120 * 1000); // 2 minutes delay
+            if (!maintenance) {
+              console.log('Process ended!');
+              resolve(response);
+              continue;
+            } else {
+              console.log('Waiting for the process to end ...');
+              await sleep(1000 * 50);
+            }
+          }
+          reject('restore was still running after 10 attempts.');
+        } else {
+          reject(`invalid status code on restore: ${response.statusCode}. Check your firebase functions logs (admin function)`);
+        }
       } else {
         resolve(response);
       }

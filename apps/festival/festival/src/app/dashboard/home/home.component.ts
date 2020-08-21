@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public hasAcceptedMovies$: Observable<boolean>;
   public hasMovies$: Observable<boolean>;
 
   constructor(
@@ -28,19 +29,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
-    const titles$ = this.orgQuery.selectActive().pipe(
+    const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
+      shareReplay(1)
+    );
+
+    this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
+      map(movies => movies.some(movie => movie.main?.storeConfig.status === 'accepted'))
+    );
+
+    this.hasMovies$ = allMoviesFromOrg$.pipe(
+      map(movies => !!movies.length)
+    );
+
+    const titles$ = allMoviesFromOrg$.pipe(
       map(movies => movies.filter(movie => movie.main?.storeConfig.status === 'accepted')),
       tap(movies => {
         !!movies.length ?
           this.dynTitle.setPageTitle('Dashboard') :
           this.dynTitle.setPageTitle('Dashboard', 'Empty');
       }),
-      shareReplay(1)
-    )
-
-    this.hasMovies$ = titles$.pipe(
-      map(titles => !!titles.length)
     );
 
     this.sub = titles$.pipe(
