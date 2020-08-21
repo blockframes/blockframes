@@ -9,7 +9,7 @@
 // ***********************************************
 // eslint-disable-next-line @typescript-eslint/no-namespace
 
-import Users from '../../../../../tools/fixtures/users.json'
+
 
 
 declare namespace Cypress {
