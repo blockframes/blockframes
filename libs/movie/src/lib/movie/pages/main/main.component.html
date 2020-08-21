@@ -149,7 +149,7 @@
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
-        <mat-form-field appearance="outline" fxFlex (focusout)="focusOut()">
+        <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
           <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
           <mat-hint>In minutes</mat-hint>

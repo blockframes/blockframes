@@ -41,19 +41,17 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.valuesCustomGenres$ = this.customGenres.valueChanges.pipe(startWith(this.customGenres.value));
 
-    this.sub = this.form.valueChanges.subscribe(() => {
-      if (!this.form.valid) {
-        this.focusOut();
+    this.sub = this.form.runningTime.valueChanges.subscribe(runningTime => {
+      const status = runningTime.status;
+      const time = runningTime.time;
+      if (status === "confirmed" && !time) {
+        return this.form.get('runningTime').get('time').setErrors({required: true});
       }
-    })
+    });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  focusOut() {
-    return this.form.get('runningTime').get('time').setErrors({required: true});
   }
 
   public addCustomGenre(event: MatChipInputEvent): void {
