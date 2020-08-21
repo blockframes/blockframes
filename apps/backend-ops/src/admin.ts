@@ -67,19 +67,19 @@ export async function restore(appURL: string) {
          * @dev this is a hack to handle unattended responses from 
          * express server (502). The nginx proxy on google sides seems to hang
          * up after a few seconds. To be sure that the restore is ended,
-         * we wait for 300 seconds.
+         * we wait for 500 seconds.
          */
         if (response.statusCode === 502) {
           const attempts = 10;
           for (let i = 0; i < attempts; i++) {
-            const maintenance = await isInMaintenance(0);
+            const maintenance = await isInMaintenance(120 * 1000); // 2 minutes delay
             if (!maintenance) {
               console.log('Process ended!');
               resolve(response);
               continue;
             } else {
               console.log('Waiting for the process to end ...');
-              await sleep(1000 * 30);
+              await sleep(1000 * 50);
             }
           }
           reject('restore was still running after 10 attempts.');
