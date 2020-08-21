@@ -71,14 +71,14 @@ export async function copyDbFromCi() {
     // Download latest backup
     const destination = join(folder, fname);
     console.log(`Downloading latest backup to : ${destination}`);
-    await last.download({ destination });
+    await last?.download({ destination });
 
     console.log('Backup has been saved to:', destination);
 
     const storage = app.storage();
     const myBucket = storage.bucket(backupBucket);
 
-    const result = await myBucket.upload(destination, { destination: last.name });
+    const result = await myBucket.upload(destination, { destination: last?.name });
     console.log('File uploaded as', result[0].name);
     return destination;
   } catch (err) {
