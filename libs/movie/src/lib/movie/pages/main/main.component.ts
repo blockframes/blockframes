@@ -4,7 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+
+import { MatChipInputEvent } from '@angular/material/chips';
+import { startWith } from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'movie-form-main',
@@ -16,6 +22,10 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
   public sub: Subscription;
+  valuesCustomGenres$: Observable<string[]>;
+  customGenre = new FormControl();
+
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   public displayedColumns = {
     firstName: 'First Name',
@@ -29,16 +39,30 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.valuesCustomGenres$ = this.customGenres.valueChanges.pipe(startWith(this.customGenres.value));
+
     this.sub = this.form.runningTime.valueChanges.subscribe(runningTime => {
       const status = runningTime.status;
       const time = runningTime.time;
       if (status === "confirmed" && !time) {
-        return this.form.get('runningTime').get('time').setErrors({required: true})}
-    })
+        return this.form.get('runningTime').get('time').setErrors({required: true});
+      }
+    });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  public addCustomGenre(event: MatChipInputEvent): void {
+    const { value = '' } = event;
+
+    this.customGenres.add(value)
+    this.customGenre.reset();
+  }
+
+  public removeCustomGenre(i: number): void {
+    this.customGenres.removeAt(i);
   }
 
   get title() {
@@ -67,6 +91,10 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
 
   get poster() {
     return this.form.get('poster');
+  }
+
+  get customGenres() {
+    return this.form.get('customGenres');
   }
 
   get runningTime() {
