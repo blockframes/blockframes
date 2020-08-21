@@ -445,7 +445,7 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 function createFilmographyFormControl(filmography?: Partial<Filmography>) {
   const { year, title } = createFilmography(filmography);
   return {
-    year: new FormControl(year, [yearValidators]),
+    year: new FormControl(year, [yearValidators()]),
     title: new FormControl(title)
   }
 }

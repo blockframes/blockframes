@@ -3,8 +3,9 @@
   <h1 subtitle>Main Information</h1>
   <ng-container tunnel-form>
 
+    <h3>Reference</h3>
     <section id="reference">
-      <h3>Reference</h3>
+
       <article fxLayout fxLayoutAlign="start start" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>International title</mat-label>
@@ -47,8 +48,9 @@
 
     <mat-divider></mat-divider>
 
+    <h3>Images</h3>
     <section id="images">
-      <h3>Images</h3>
+
       <article>
         <h5>Poster Image</h5>
         <p>
@@ -76,8 +78,9 @@
 
     <mat-divider></mat-divider>
 
+    <h3>General Information</h3>
     <section id="general-information">
-      <h3>General Information</h3>
+
       <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
 
         <mat-form-field appearance="outline" fxFlex>
@@ -172,8 +175,9 @@
 
     <mat-divider></mat-divider>
 
+    <h3>Directors</h3>
     <section id="directors">
-      <h3>Directors</h3>
+
       <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director"
         saveButtonText="Save Director">
         <ng-template colRef="filmography" let-dir>
@@ -229,8 +233,8 @@
                 Director's biography, remarkable elements...
               </mat-hint>
             </mat-form-field>
-            <div fxLayout="column" fxLayoutAlign="start center">
-
+            <div fxLayout="column" fxLayoutAlign="start">
+              <h6 class="mat-caption">Filmography</h6>
               <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
                 <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>

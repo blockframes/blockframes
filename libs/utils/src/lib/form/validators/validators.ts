@@ -13,7 +13,21 @@ import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels
 
 export const urlValidators = Validators.pattern('^(?:http(s)?:\/\/)([a-zA-Z0-9]+\.[^\s]{2,})+$');
 
-export const yearValidators = Validators.pattern('^[1-2][0-9]{3}$');
+export function yearValidators(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (control.dirty) {
+      if (typeof control.value === 'string') {
+        return /^[1-2][0-9]{3}$/.test(control.value) ? null : { invalidYear: true };
+      } else if (typeof control.value === 'number') {
+        return control.value > 1900 ? null : { invalidYear: true };
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+}
 
 /** Require password and password confirm inputs to be the same */
 export function confirmPasswords(

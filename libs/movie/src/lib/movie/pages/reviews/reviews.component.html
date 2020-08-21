@@ -1,8 +1,9 @@
 <tunnel-page>
+  <h4 title>Title Information</h4>
   <h1 subtitle>Selection & Reviews</h1>
   <ng-container tunnel-form>
+    <h3>Festival & Awards</h3>
     <section id="festival">
-      <h3>Festival & Awards</h3>
       <bf-form-table [columns]="prizesColumns" [form]="prizes" buttonText="Add a Festival">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
@@ -34,11 +35,17 @@
                 </mat-error>
               </mat-form-field>
 
-              <static-select test-id="premiere-type" scope="PREMIERE_TYPE" type="model" [control]="form.get('premiere')" fxFlex>
-                <mat-label>Status</mat-label>
-                <mat-hint>Select applying premiere if any.</mat-hint>
-              </static-select>
             </div>
+
+            <h6 class="mat-caption">Premiere</h6>
+            <mat-button-toggle-group [formControl]="form.get('premiere')" name="Premiere" aria-label="Premiere">
+              <ng-container *ngFor="let premiere of premieres">
+                <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint" [matTooltipDisabled]="!premiere?.hint">
+                  {{ premiere.label }}
+                </mat-button-toggle>
+              </ng-container>
+            </mat-button-toggle-group>
+            <p class="mat-caption">Select premiere that apply</p>
 
           </article>
         </ng-template>
@@ -47,8 +54,9 @@
 
     <mat-divider></mat-divider>
 
+    <h3>Film Reviews</h3>
     <section id="reviews">
-      <h3>Film Reviews</h3>
+
       <bf-form-table [columns]="reviewsColumns" [form]="reviews" buttonText="Add a Film Review">
         <ng-template formView let-form>
           <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
@@ -66,13 +74,13 @@
             </div>
 
             <mat-form-field appearance="outline">
-              <mat-label>Quote</mat-label>
-              <input test-id="quote" matInput formControlName="criticQuote" />
+              <mat-label>Revue Link</mat-label>
+              <input test-id="link" matInput formControlName="revueLink" required />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Revue Link</mat-label>
-              <input test-id="link" matInput formControlName="revueLink" />
+              <mat-label>Quote</mat-label>
+              <textarea test-id="quote" matInput formControlName="criticQuote" required></textarea>
             </mat-form-field>
 
           </article>
