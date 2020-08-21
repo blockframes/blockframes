@@ -7,7 +7,7 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep } from './tools';
 import readline from 'readline';
-import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
+import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 import { firebase } from '@env';
@@ -46,6 +46,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
+  // TODO: #3514
   // ! Ensure there are no duplicates!
   const ps = users
     .filter((user) => {
@@ -86,11 +87,6 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   } while (pageToken);
 
   return;
-}
-
-export interface JsonlDbRecord {
-  docPath: string;
-  content: { [key: string]: any };
 }
 
 function readUsersFromDb(db: JsonlDbRecord[]): UserConfig[] {
