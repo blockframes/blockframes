@@ -70,7 +70,7 @@ export async function restore(appURL: string) {
          * we wait for 300 seconds.
          */
         if (response.statusCode === 502) {
-          let attempts = 10;
+          const attempts = 10;
           for (let i = 0; i < attempts; i++) {
             const maintenance = await isInMaintenance(0);
             if (!maintenance) {
