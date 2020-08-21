@@ -56,7 +56,6 @@ export class FormListComponent<T> implements OnInit {
     } else {
       this.formItem = this.form.last();
     }
-    console.log(this.formItem)
   }
 
   get isFormEmpty() {

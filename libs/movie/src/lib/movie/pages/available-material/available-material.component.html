@@ -8,17 +8,41 @@
         Authorized</mat-slide-toggle>
       <span class="caption">Please specify if original version is available or not.</span>
     </div>
+
     <h3>Add Versions</h3>
-    <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
-<!--     <div  [formGroup]="form.get('languages')" fxLayout="row" fxLayoutGap="20px">
-      <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
-      <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
-      <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
-    </div>  -->
-    <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
+
+    <!-- Form -->
+
+    <article [formGroup]="form.languages">
+      <ng-container *ngFor="let language of form.languages.controls | keyvalue">
+        <h4>{{ language.key | titlecase }}</h4>
+        <div [formGroupName]="language.key" fxLayout="row" fxLayoutGap="20px">
+          <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
+          <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
+          <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
+        </div>
+        <button (click)="log(language)">LOG</button>
+      </ng-container>
+    </article>
+
+    <!-- Buttons -->
+
+    <article *ngIf="!showLineButton">
+      <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <button mat-stroked-button *ngIf="formIsEmpty" (click)="cancel()">
+          <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
+        </button>
+        <button mat-stroked-button [disabled]="!languageCtrl.value" (click)="addLanguage()">
+          <mat-icon svgIcon="floppy"></mat-icon>
+          <span>Save Language</span>
+        </button>
+      </div>
+    </article>
+    <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showLineButton">
       <mat-divider></mat-divider>
       <span>Add Language</span>
-      <button mat-mini-fab color="primary" (click)="addLanguage()">
+      <button mat-mini-fab color="primary" (click)="showForm()">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
     </footer>
