@@ -13,6 +13,8 @@ export default class User {
   constructor() {
     this.newUsers = [];
     this.newUsers.push({
+      firstName: 'Mano',
+      lastName: 'Bangera',
       email: 'mano@blockframes.com',
       password: 'blockframes'
     });
