@@ -71,7 +71,7 @@ export async function restore(appURL: string) {
          */
         if (response.statusCode === 502) {
           let attempts = 10;
-          while (attempts > 0) {
+          for (let i = 0; i < attempts; i++) {
             const maintenance = await isInMaintenance(0);
             if (!maintenance) {
               console.log('Process ended!');
@@ -81,7 +81,6 @@ export async function restore(appURL: string) {
               console.log('Waiting for the process to end ...');
               await sleep(1000 * 30);
             }
-            attempts--;
           }
           reject('restore was still running after 10 attempts.');
         } else {

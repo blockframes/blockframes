@@ -142,7 +142,7 @@ const clear = async () => {
   const processingQueue = new Queue();
 
   // Note: this code is heavily inspired by the backup function,
-  // TODO: implement a generalized way to go through all docs & collections
+  // @TODO (#3512) & implement a generalized way to go through all docs & collections
   // and use it in both functions.
 
   // retrieve all the collections at the root.
