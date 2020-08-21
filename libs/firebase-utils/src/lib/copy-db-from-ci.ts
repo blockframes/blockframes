@@ -75,11 +75,13 @@ export async function copyDbFromCi() {
 
     const result = await myBucket.upload(destination, { destination: last.name });
     console.log('File uploaded as', result[0].name);
+    return destination;
   } catch (err) {
     if ('errors' in err) {
       err.errors.forEach((error: { message: any }) => console.error('ERROR:', error.message));
     } else {
       console.log(err);
     }
+    return null;
   }
 }

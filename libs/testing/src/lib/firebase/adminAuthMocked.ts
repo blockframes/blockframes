@@ -20,9 +20,9 @@ export class AdminAuthMocked {
     });
   }
 
-  deleteUser(uid: string) {
+  deleteUsers(uids: string[]) {
     return new Promise((resolve) => {
-      this.users = this.users.filter(u => u.uid !== uid);
+      this.users = this.users.filter(u => !uids.includes(u.uid));
       resolve();
     });
   }

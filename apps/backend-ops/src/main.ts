@@ -1,3 +1,7 @@
+import 'tsconfig-paths/register';
+import { config } from 'dotenv';
+config(); // * Must be run here!
+
 import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
@@ -16,8 +20,6 @@ if (cmd === 'prepareForTesting') {
   exitable(restoreShortcut)();
 } else if (cmd === 'migrate') {
   exitable(migrate)();
-} else if (cmd === 'syncUsers') {
-  exitable(syncUsers)();
 } else if (cmd === 'printUsers') {
   exitable(printUsers)();
 } else if (cmd === 'clearUsers') {

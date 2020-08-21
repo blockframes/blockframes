@@ -11,12 +11,18 @@ import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
+import { copyDbFromCi, readJsonlFile } from '@blockframes/firebase-utils';
+import { readFileSync } from 'fs';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
+  console.log('Fetching DB from blockframes-ci and uploading to local env...');
+  const dbBackupPath = await copyDbFromCi();
+  console.log('DB copied to local bucket!');
+
   console.info('Syncing users...');
-  await syncUsers();
+  await syncUsers(readJsonlFile(dbBackupPath));
   console.info('Users synced!');
 
   console.info('Restoring backup...');
@@ -46,9 +52,9 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  console.info('Syncing firestore with storage');
-  await syncStorage();
-  console.info('Firestore is now synced with storage!');
+  // console.info('Syncing firestore with storage');
+  // await syncStorage();
+  // console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }
@@ -83,4 +89,3 @@ export async function upgrade() {
 
   process.exit(0);
 }
-
