@@ -10,8 +10,11 @@ import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
+import { auth as authTesting } from '@blockframes/testing/firebase';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+
+const { USER_FIXTURES_PASSWORD } = authTesting;
 
 export interface UserConfig {
   uid: string;
@@ -20,8 +23,6 @@ export interface UserConfig {
 
   [key: string]: any;
 }
-
-export const USER_FIXTURES_PASSWORD = 'blockframes';
 
 /**
  * @param auth  Firestore Admin Auth object

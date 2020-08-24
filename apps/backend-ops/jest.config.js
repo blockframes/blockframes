@@ -3,4 +3,5 @@ module.exports = {
   preset: '../../jest.config.js',
   coverageDirectory: '../../coverage/apps/backend-ops',
   globals: { 'ts-jest': { tsConfig: '<rootDir>/tsconfig.spec.json' } },
+  testEnvironment: 'node',
 };
