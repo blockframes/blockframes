@@ -12,8 +12,6 @@ export class MovieFormMediaVideosComponent {
 
   constructor(
     private shell: MovieFormShellComponent,
-  ) {
-    this.form.valueChanges.subscribe(a => console.log(a));
-  }
+  ) { }
 
 }

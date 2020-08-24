@@ -7,24 +7,27 @@
       <section id="release">
 
         <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
-          <ng-template formView let-form>
-            <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+          <ng-template formView let-originalReleaseForm>
+            <article [formGroup]="originalReleaseForm" fxLayout="column" fxLayoutGap="24px">
 
-              <div fxLayout fxLayoutGap="24px">
-                <chips-autocomplete test-id="release-country" [form]="form.get('country')" model="TERRITORIES" placeholder="Type and Select a Country" fxFlex>
-                  <mat-label>Country</mat-label>
-                </chips-autocomplete>
+              <div fxLayout="row" fxLayoutGap="24px">
+                <form-country test-id="release-country" [form]="originalReleaseForm.get('country')" fxFlex></form-country>
 
-                <mat-form-field appearance="outline">
-                  <mat-label>Release Date</mat-label>
-                  <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker"
-                    placeholder="YYYY/MM/DD">
-                  <mat-datepicker-toggle matSuffix [for]="datePicker">
-                    <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
-                  </mat-datepicker-toggle>
-                  <mat-datepicker #datePicker></mat-datepicker>
-                </mat-form-field>
+                <static-select test-id="release-media" type="model" [control]="originalReleaseForm.get('media')" scope="MEDIAS" fxFlex>
+                  <mat-label>Release Media</mat-label>
+                </static-select>
               </div>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Release Date</mat-label>
+                <input matInput test-id="release-date" formControlName="date" [matDatepicker]="datePicker"
+                  placeholder="YYYY/MM/DD">
+                <mat-datepicker-toggle matSuffix [for]="datePicker">
+                  <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+              </mat-form-field>
+
             </article>
           </ng-template>
         </bf-form-table>
@@ -34,18 +37,20 @@
       <mat-divider></mat-divider>
 
       <h3>Budget Range</h3>
-      <section id="budget-range"></section>
+      <section id="budget-range">
+        
+      </section>
       <mat-divider></mat-divider>
 
       <h3>Box Office</h3>
       <section id="box-office" *ngIf="units$ | async as units">
 
         <bf-form-table [columns]="boxOfficeColumns" [form]="boxOffice" buttonText="Add a Box Office">
-          <ng-template formView let-form>
-            <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+          <ng-template formView let-boxOfficeForm>
+            <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout fxLayoutGap="24px">
-                <form-country test-id="boxoffice-territory" [form]="form.get('territory')"></form-country>
+                <form-country test-id="boxoffice-territory" [form]="boxOfficeForm.get('territory')"></form-country>
 
                 <mat-form-field appearance="outline">
                   <mat-label>Metrics</mat-label>
@@ -62,15 +67,15 @@
                 <mat-label>Figures</mat-label>
                 <input test-id="boxoffice-earnings" matInput type="number" formControlName="value" min="0"
                   placeholder="Figures">
-                <mat-error *ngIf="form.get('value').hasError('min')">
+                <mat-error *ngIf="boxOfficeForm.get('value').hasError('min')">
                   Please enter box office figures.
                 </mat-error>
-                <mat-error *ngIf="form.get('value').hasError('required')">
+                <mat-error *ngIf="boxOfficeForm.get('value').hasError('required')">
                   Please enter box office figures.
                 </mat-error>
-                {{ form.get('value').controls }}
-                <span *ngIf="units[form.get('value')] === '$'" matPrefix>{{ units[form.get('value')] }}&nbsp;</span>
-                <span *ngIf="units[form.get('value')] !== '$'" matSuffix>&nbsp;{{ units[form.get('value')] }}</span>
+                {{ boxOfficeForm.get('value').controls }}
+                <span *ngIf="units[boxOfficeForm.get('value')] === '$'" matPrefix>{{ units[boxOfficeForm.get('value')] }}&nbsp;</span>
+                <span *ngIf="units[boxOfficeForm.get('value')] !== '$'" matSuffix>&nbsp;{{ units[boxOfficeForm.get('value')] }}</span>
               </mat-form-field>
 
             </article>
@@ -99,7 +104,7 @@
       </section>
 
       <mat-divider></mat-divider>
-      
+
     </ng-container>
 
     <h3>Qualifications</h3>
