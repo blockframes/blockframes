@@ -19,6 +19,7 @@
 
 <!-- @TODO (#2891) -->
 <ng-template #noMovie>
+
   <!-- @TODO (#3337) Create specific component !-->
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no title yet.</h1>
@@ -32,11 +33,10 @@
         <img asset="add_title.webp" alt="Add title image">
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
-      <mat-card fxLayout="column" >
+      <mat-card fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">
         <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>
   </section>
 </ng-template>
-
