@@ -80,6 +80,10 @@ const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
+        path: 'media-videos',
+        loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
+      },
+      {
         path: 'summary',
         loadChildren: () => import('@blockframes/movie/pages/summary/summary.module').then(m => m.TunnelSummaryModule)
       },
