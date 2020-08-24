@@ -61,13 +61,18 @@ function getSteps(status: FormControl, app?: string): TunnelStep[] {
     title: 'Promotional Elements',
     icon: 'import',
     time: 10,
-    routes: [{
-      path: 'images',
-      label: 'Promotional Images'
-    }, {
-      path: 'media-videos',
-      label: 'Videos'
-    }]
+    routes: [
+      {
+        path: 'media-files',
+        label: 'Files'
+      }, {
+        path: 'media-images',
+        label: 'Images'
+      }, {
+        path: 'media-videos',
+        label: 'Videos'
+      }
+    ]
   }, {
     title: 'Summary',
     icon: 'send',

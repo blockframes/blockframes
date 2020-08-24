@@ -1,0 +1,44 @@
+<tunnel-page>
+  <h4 title>Promotional Elements</h4>
+  <h1 subtitle>Videos</h1>
+  <ng-container tunnel-form>
+
+    <h3>Videos</h3>
+    <section id="videos" fxLayout="column">
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Teaser Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('teaser_link')" name="teaserLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Trailer Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('trailer_link')" name="trailerLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Promo Reel</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('promo_reel_link')" name="promoReelLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Screener</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('screener_link')" name="screenerLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+    </section>
+
+  </ng-container>
+</tunnel-page>
