@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 /// <reference path="../../support/index.d.ts" />
 
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { clearDataAndPrepareTest, signIn } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
 import { LandingPage } from '../../support/pages/landing';
@@ -11,9 +11,9 @@ describe('User create a screening', () => {
   const userFixture = new User(); 
   beforeEach(() => {
     clearDataAndPrepareTest();
-    cy.visit('/');    
-    const p1 = new LandingPage();
-    p1.clickSignup();    
+    //cy.visit('/');    
+    //const p1 = new LandingPage();
+    //p1.clickSignup();    
   });
 
   it('Test', () => {
@@ -33,5 +33,18 @@ describe('User create a screening', () => {
     const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
     p2.assertMoveToOrgHomepage();
   });  
+
+  it.only('Sign-in existing User', () => {
+    //const p1 = new AuthLoginPage();
+    let usrJacqueline = userFixture.get({exist: true, 
+        key: "email", value: "jacqueline@fake.com" })[0];
+    usrJacqueline.password = 'blockframes';
+    signIn(usrJacqueline);
+    // p1.clickTermsAndCondition();
+    // p1.clickPrivacyPolicy();
+    // const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
+    // p2.assertMoveToOrgHomepage();
+  });  
+
 
 });
