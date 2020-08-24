@@ -17,64 +17,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-const steps: TunnelStep[] = [
-  {
-    title: 'First Step',
-    icon: 'home',
-    time: 2,
-    routes: [{ path: 'title-status', label: 'First Step' }],
-  },
-  {
-    title: 'Title Information',
-    icon: 'document',
-    time: 15,
-    routes: [{
-      path: 'main',
-      label: 'Main Information'
-    }, {
-      path: 'synopsis',
-      label: 'Storyline Elements'
-    }, {
-      path: 'production',
-      label: 'Production Information'
-    }, {
-      path: 'artistic',
-      label: 'Artistic Team'
-    }, {
-      path: 'reviews',
-      label: 'Selection & Reviews'
-    }, {
-      path: 'additional-information',
-      label: 'Additional Information'
-    }, {
-      path: 'technical-info',
-      label: 'Technical Information'
-    }, {
-      path: 'available-material',
-      label: 'Available Material'
-    }]
-  }, {
-    title: 'Promotional Elements',
-    icon: 'import',
-    time: 10,
-    routes: [{
-      path: 'images',
-      label: 'Promotional Images'
-    }, {
-      path: 'media-videos',
-      label: 'Videos'
-    }]
-  }, {
-    title: 'Summary',
-    icon: 'send',
-    time: 3,
-    routes: [{
-      path: 'summary',
-      label: 'Summary & Submission'
-    }]
-  }];
-
-
 @Component({
   selector: 'festival-movie-tunnel',
   templateUrl: './movie-tunnel.component.html',
@@ -82,8 +24,6 @@ const steps: TunnelStep[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieTunnelComponent implements TunnelRoot, OnInit {
-  steps = steps;
-
 
   //////////////////////////////////////
   // EVERYTHING BELOW WILL BE REMOVED //

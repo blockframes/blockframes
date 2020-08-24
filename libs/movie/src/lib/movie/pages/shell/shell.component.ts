@@ -1,5 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, Input, Inject, AfterViewInit, OnDestroy } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
+
 // Blockframes
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
@@ -13,10 +17,70 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { mergeDeep } from '@blockframes/utils/helpers';
 
 // RxJs
-import { switchMap } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
+import { switchMap, map } from 'rxjs/operators';
+import { of, Subscription, combineLatest } from 'rxjs';
+
+// Akita
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+function getSteps(status: FormControl, app?: string): TunnelStep[] {
+  return [{
+    title: 'First Step',
+    icon: 'home',
+    time: 2,
+    routes: [{ path: 'title-status', label: 'First Step' }],
+  },
+  {
+    title: 'Title Information',
+    icon: 'document',
+    time: 15,
+    routes: [{
+      path: 'main',
+      label: 'Main Information'
+    }, {
+      path: 'synopsis',
+      label: 'Storyline Elements'
+    }, {
+      path: 'production',
+      label: 'Production Information'
+    }, {
+      path: 'artistic',
+      label: 'Artistic Team'
+    }, {
+      path: 'reviews',
+      label: 'Selection & Reviews'
+    }, {
+      path: 'additional-information',
+      label: 'Additional Information'
+    }, {
+      path: 'technical-info',
+      label: 'Technical Information'
+    }, {
+      path: 'available-material',
+      label: 'Available Material',
+      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
+    }]
+  }, {
+    title: 'Promotional Elements',
+    icon: 'import',
+    time: 10,
+    routes: [{
+      path: 'images',
+      label: 'Promotional Images'
+    }, {
+      path: 'media-videos',
+      label: 'Videos'
+    }]
+  }, {
+    title: 'Summary',
+    icon: 'send',
+    time: 3,
+    routes: [{
+      path: 'summary',
+      label: 'Summary & Submission'
+    }]
+  }]
+}
 
 @Component({
   selector: 'movie-form-shell',
@@ -27,7 +91,7 @@ import { DOCUMENT } from '@angular/common';
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
   // Have to be initialized in the constructor as children page use it in the constructor too
   @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps: TunnelStep;
+  @Input() steps;
 
   public exitRoute: string;
   private sub: Subscription;
@@ -40,10 +104,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
+    this.steps = getSteps(this.form.get('productionStatus'));
   }
 
   ngAfterViewInit() {
