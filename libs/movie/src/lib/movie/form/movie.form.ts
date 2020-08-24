@@ -8,6 +8,7 @@ import {
   MovieOriginalRelease,
   MovieRating,
   MovieLanguageSpecification,
+  OtherLink,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -21,6 +22,7 @@ import {
   createMovieStakeholders,
   createMoviePromotional,
   createMovieLanguageSpecification,
+  createOtherLink,
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -614,6 +616,22 @@ type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 //   Every Promotional Elements
 // ------------------------------
 
+export class OtherLinkForm extends FormEntity<OtherLinkControl> {
+  constructor(otherLink?: Partial<OtherLink>) {
+    super(createOtherLinkFormControl(otherLink));
+  }
+}
+
+function createOtherLinkFormControl(otherLink?: Partial<OtherLink>) {
+  const { name, url } = createOtherLink(otherLink);
+  return {
+    name: new FormControl(name, [Validators.required]),
+    url: new FormControl(url, [Validators.required]),
+  }
+}
+
+type OtherLinkControl = ReturnType<typeof createOtherLinkFormControl>;
+
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
 
@@ -638,6 +656,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     screener_link: new FormControl(entity.screener_link),
     trailer_link: new FormControl(entity.trailer_link),
     teaser_link: new FormControl(entity.teaser_link),
+    other_links: FormList.factory<OtherLink>(entity.other_links, el => new OtherLinkForm(el)),
   }
 }
 
