@@ -19,7 +19,7 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { FestivalPrizeCardModule }from '@blockframes/movie/components/festival-prize-card/festival-prize-card.module'
+
 @NgModule({
   declarations: [HomeComponent],
   imports: [
@@ -27,7 +27,6 @@ import { FestivalPrizeCardModule }from '@blockframes/movie/components/festival-p
     FlexLayoutModule,
     MovieAnalyticsChartModule,
     ImageReferenceModule,
-    FestivalPrizeCardModule,
     // Material
     MatButtonModule,
     MatIconModule,
