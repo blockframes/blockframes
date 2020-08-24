@@ -19,7 +19,7 @@ export class MovieFormMediaFilesComponent {
 
   public getPath(filePath: 'presentation_deck' | 'scenario' | 'moodboard') {
     const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.${filePath}`;
+    return `movies/${movieId}/promotional.${filePath}/`;
   }
 
 }
