@@ -18,7 +18,8 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <ng-container *ngFor="let route of step.routes">
-            <a mat-list-item [routerLink]="route.path" routerLinkActive="active" class="vertical-aligned">
+            <a mat-list-item [routerLink]="route.path" routerLinkActive="active" class="vertical-aligned"
+              *ngIf="!(route?.shouldDisplay | async)">
               {{ route.label }}
             </a>
           </ng-container>
