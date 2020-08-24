@@ -145,7 +145,7 @@ async function onRequestFromUserToJoinOrgAccept({
   await addUserToOrg(fromUser.uid, toOrg.id);
   const urlToUse = await getAppUrl(toOrg.id);
   const from = await getFromEmail(toOrg.id);
-  const template = userJoinedAnOrganization(fromUser.email, urlToUse);
+  const template = userJoinedAnOrganization(fromUser.email, urlToUse, toOrg.denomination.full, fromUser.firstName!);
   await sendMailFromTemplate(template, from);
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
