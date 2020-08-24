@@ -18,10 +18,11 @@ h5 {
   text-transform: uppercase;
 }
 
-h3, p.mat-body-2 {
-  margin: 0;
-}
-
-p.mat-caption {
-  margin-bottom: 8px;
+drop-cropper {
+  h3, p.mat-body-2 {
+    margin-bottom: 4px;
+  }
+  p.mat-caption {
+    margin-bottom: 8px;
+  }
 }
