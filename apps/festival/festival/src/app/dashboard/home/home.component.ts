@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { MovieService, MovieQuery, createPrize } from '@blockframes/movie/+state';
-import { map, switchMap, shareReplay } from 'rxjs/operators';
+import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { map, switchMap, shareReplay, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public hasMovies$: Observable<boolean>;
-  prize = createPrize({name: 'Berlinale', year: 2019})
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
