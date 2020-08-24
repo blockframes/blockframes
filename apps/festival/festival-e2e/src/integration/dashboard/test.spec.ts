@@ -18,6 +18,7 @@ describe('User create a screening', () => {
   });
 
   it('Fill all the fields appropriately', () => {
+    cy.task('getUsers', null, { log: true, timeout: 9000 }).then(console.log); // ! Continue from here
     const p1 = new AuthLoginPage();
     p1.fillSignup(newUser.pop() as User);
     p1.clickTermsAndCondition();
