@@ -8,7 +8,8 @@
 // You can read more here:
 // https://on.cypress.io/plugins-guide
 // ***********************************************************
-
+import 'tsconfig-paths/register';
+import { getCypressTasks } from '@blockframes/testing/cypress';
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 export default (async (on, config) => {
@@ -19,22 +20,14 @@ export default (async (on, config) => {
 
   console.log('Node version:', process.version);
   console.log('Config: ', config);
-  // // A plugin example. Can modify printed configs.
+  // A plugin example. Can modify printed configs.
   // on('before:browser:launch', (arg1, arg2) => {
   //   console.log('Plugin Arg1', arg1);
   //   console.log('Plugin Arg2', arg2);
   // });
 
   // tslint:disable-next-line: no-unused-expression
-  // on('task', cypress.getCypressTasks(config));
+  on('task', getCypressTasks(config));
 
   // * Returning config here (or promise) changes config.
 }) as Cypress.PluginConfig;
-// cypress/plugins/index.ts
-
-// /// <reference types="cypress" />
-
-// /**
-//  * @type {Cypress.PluginConfig}
-//  */
-// module.exports = (on, config) => {};
