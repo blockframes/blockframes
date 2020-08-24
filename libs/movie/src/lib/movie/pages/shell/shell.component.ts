@@ -17,11 +17,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { mergeDeep } from '@blockframes/utils/helpers';
 
 // RxJs
-import { switchMap } from 'rxjs/operators';
-import { of, Subscription, combineLatest, scheduled } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { of, Subscription, combineLatest } from 'rxjs';
 
-const tunnelSteps: TunnelStep[] = [
-  {
+// Akita
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+function getSteps(status: FormControl, app?: string): TunnelStep[] {
+  return [{
     title: 'First Step',
     icon: 'home',
     time: 2,
@@ -54,7 +57,8 @@ const tunnelSteps: TunnelStep[] = [
       label: 'Technical Information'
     }, {
       path: 'available-material',
-      label: 'Available Material'
+      label: 'Available Material',
+      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
     }]
   }, {
     title: 'Promotional Elements',
@@ -75,13 +79,8 @@ const tunnelSteps: TunnelStep[] = [
       path: 'summary',
       label: 'Summary & Submission'
     }]
-  }];
-
-/* function getSteps(status: FormControl, app: string) {
-  return [{
-    shouldDisplay: combineLatest([scheduled(app !== '', status.valueChanges.pipe(...)]).pipe(([byApp, byStatus]) => byApp && byStatus);
   }]
-} */
+}
 
 @Component({
   selector: 'movie-form-shell',
@@ -92,7 +91,7 @@ const tunnelSteps: TunnelStep[] = [
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
   // Have to be initialized in the constructor as children page use it in the constructor too
   @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps = tunnelSteps;
+  @Input() steps;
 
   public exitRoute: string;
   private sub: Subscription;
@@ -105,11 +104,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-    
+    this.steps = getSteps(this.form.get('productionStatus'));
   }
 
   ngAfterViewInit() {
