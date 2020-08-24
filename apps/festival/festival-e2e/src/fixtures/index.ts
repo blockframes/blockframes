@@ -5,9 +5,5 @@
 // ***********************************************************
 
 import { QueryInferface } from './queryinterface';
-import User from './user'
 
-export {
-  User,
-  QueryInferface
-};
+export { QueryInferface };

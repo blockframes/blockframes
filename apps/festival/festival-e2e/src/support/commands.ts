@@ -9,7 +9,7 @@
 // ***********************************************
 // eslint-disable-next-line @typescript-eslint/no-namespace
 
-import { User, QueryInferface } from '../fixtures';
+import { QueryInferface } from '../fixtures';
 
 declare namespace Cypress {
   interface Chainable<Subject> {
@@ -18,8 +18,6 @@ declare namespace Cypress {
   }
 }
 
-const userFixture = new User();
-
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (email, password) => {
@@ -27,9 +25,9 @@ Cypress.Commands.add('login', (email, password) => {
 });
 
 Cypress.Commands.add('getUser', (query: QueryInferface) => {
-  return userFixture.get(query);
+  // return userFixture.get(query);
+  return null;
 });
-
 
 //
 // -- This is a child command --

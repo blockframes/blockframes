@@ -936,6 +936,38 @@
       "sourceRoot": "apps/festival/festival-e2e/src",
       "projectType": "application",
       "architect": {
+        "serve": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/festival/festival-e2e/cypress.json",
+            "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200",
+            "devServerTarget": "festival:serve",
+            "watch": true,
+            "headless": false,
+            "exit": false,
+            "record": false,
+            "env": {
+              "ENVIRONMENT": {
+                "name": "dev",
+                "local": false
+              },
+              "NG_NOTE": "REMOTE_DEBUGGING_PORT does not work when set from angular.json. nx workspace parses .env due to run-commands config, which works."
+            }
+          },
+          "configurations": {
+            "dev": {},
+            "production": {
+              "devServerTarget": "festival:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "festival:serve"
+            },
+            "staging": {
+              "devServerTarget": "festival:serve"
+            }
+          }
+        },
         "e2e": {
           "builder": "@nrwl/cypress:cypress",
           "options": {
