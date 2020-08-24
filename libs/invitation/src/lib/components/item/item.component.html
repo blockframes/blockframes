@@ -10,7 +10,7 @@
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="invitation.mode === 'invitation'; else request">
             {{ invitation.fromOrg | orgName }} invited you to 
-            <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
+            <a [routerLink]="['/c/o/marketplace/event', invitation.docId]" id="link">{{ event.title }}</a>.
             {{event | eventRange }}
           </ng-container>
           <!-- Request to attendEvent -->
@@ -43,7 +43,7 @@
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">Go to event</a>
+  <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">More details</a>
   <ng-container [ngSwitch]="invitation.status">
     <ng-container *ngSwitchCase="'pending'">
       <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">

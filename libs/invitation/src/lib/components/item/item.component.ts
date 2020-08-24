@@ -14,7 +14,15 @@ export class ItemComponent {
   constructor(private invitationService: InvitationService) { }
 
   get eventLink() {
-    return `../event/${this.invitation.docId}`;
+    if (this.invitation.type === 'attendEvent') {
+      if (this.invitation.mode === 'request') {
+        return `../event/${this.invitation.docId}/edit`;
+      } else {
+        return `/c/o/marketplace/event/${this.invitation.docId}`;
+      }
+    } else if (this.invitation.type === 'joinOrganization') {
+      return `/c/o/organization/${this.invitation.fromOrg.id}/view/members`;  
+    }
   }
 
   handleInvitation(invitation: Invitation, action: 'acceptInvitation' | 'declineInvitation') {
