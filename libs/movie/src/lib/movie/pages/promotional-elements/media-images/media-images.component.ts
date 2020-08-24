@@ -13,8 +13,6 @@ export class MovieFormMediaImagesComponent {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
 
-
-
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
   get stillPhoto() {
