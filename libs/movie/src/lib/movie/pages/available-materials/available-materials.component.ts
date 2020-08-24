@@ -15,12 +15,12 @@ import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'movie-form-available-material',
-  templateUrl: 'available-material.component.html',
-  styleUrls: ['./available-material.component.scss'],
+  selector: 'movie-form-available-materials',
+  templateUrl: 'available-materials.component.html',
+  styleUrls: ['./available-materials.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormAvailableMaterialComponent implements OnInit, OnDestroy {
+export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
   public form = this.shell.form;
 

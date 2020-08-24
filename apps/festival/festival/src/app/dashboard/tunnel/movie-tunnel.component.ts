@@ -4,7 +4,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
+import { TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
