@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes  Utils
 import { BUDGET_LIST } from './budget.form';
-import { MovieForm } from '../movie.form';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'movie-form-budget',
@@ -12,7 +12,7 @@ import { MovieForm } from '../movie.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormBudgetComponent {
-  @Input() form: MovieForm;
+  @Input() form: FormControl;
   @Input() placeholder?: String;
 
   optionsBudget = BUDGET_LIST;
