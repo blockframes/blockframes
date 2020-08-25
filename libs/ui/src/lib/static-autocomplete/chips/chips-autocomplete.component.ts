@@ -9,7 +9,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -37,7 +37,7 @@ export class ChipsAutocompleteComponent implements OnInit {
    * @example
    * <chips-autocomplete model="TERRITORIES" ...
    */
-  @Input() model: string;
+  @Input() model: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
@@ -59,12 +59,11 @@ export class ChipsAutocompleteComponent implements OnInit {
   private items: SlugAndLabel[];
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
-    this.items = staticModels[this.model];
+    this.items = staticModels[this.model] as any;
 
     if (this.placeholder === '') {
       this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
@@ -74,7 +73,6 @@ export class ChipsAutocompleteComponent implements OnInit {
       startWith(''),
       map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
-
   }
 
   /** Filter the items */
@@ -86,15 +84,10 @@ export class ChipsAutocompleteComponent implements OnInit {
     });
   }
 
-  public getLabel(value: string) {
-    const item = this.items.find(i => i.slug === value);
-    return item ? item.label : '';
-  }
-
   /** Add a chip based on key code */
   public add({ value }: MatChipInputEvent) {
     value.trim();
-    const slugByLabel = getCodeIfExists(this.model as Scope, value)
+    const slugByLabel = getCodeIfExists(this.model, value)
     if (value && slugByLabel) {
       this.form.add(slugByLabel);
       this.added.emit(value);
@@ -104,7 +97,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   }
 
   /** Select based on the option */
-  public selected({ option }: MatAutocompleteSelectedEvent): void {
+  public selected({ option }: MatAutocompleteSelectedEvent) {
     this.added.emit(option.viewValue);
     this.form.add(option.value);
     this.inputEl.nativeElement.value = '';

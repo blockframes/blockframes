@@ -6,13 +6,13 @@
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
-        {{ getLabel(value) }}
+        {{ value | translateSlug: model }}
         <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
-      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
-      (matChipInputTokenEnd)="add($event)"/>
+      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
   <mat-hint>
     <ng-content select="mat-hint"></ng-content>

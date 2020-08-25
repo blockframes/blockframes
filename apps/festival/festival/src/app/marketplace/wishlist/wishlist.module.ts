@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
