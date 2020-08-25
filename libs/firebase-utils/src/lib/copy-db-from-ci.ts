@@ -53,8 +53,8 @@ export async function copyDbFromCi() {
       )
       .pop();
 
-    //const metadata = last?.metadata;
-    const fname = `anonymized-db.jsonl`; // ${metadata.bucket}-${metadata.generation}
+    const metadata = last?.metadata;
+    const fname = `${metadata.bucket}-${metadata.generation}.jsonl`;
     console.log('Latest backup:', last?.metadata?.timeCreated);
     console.log('Remote name:', last?.name);
     console.log('File name: ', fname);
