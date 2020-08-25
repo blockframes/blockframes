@@ -28,12 +28,12 @@ import {
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
+import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { yearValidators, urlValidators, valueIsInModelValidator } from '@blockframes/utils/form/validators/validators';
+import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
 import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
