@@ -90,7 +90,7 @@ export class AppContainerDirective {
         threshold: 0
       }
 
-      if (!('IntersectionObserver' in window)) await import('intersection-observer');
+      if (!('IntersectionObserver' in window)) await import('intersection-observer'); // IntersectionObserver doesnt work in Safari older than 12.2
       this.observer = new IntersectionObserver(([entry]) => {
         // First entry artifact (not sure what happens)
         const {x, y, width, height} = entry.rootBounds;
