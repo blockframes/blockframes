@@ -322,7 +322,7 @@ jobs:
       - run: gcloud auth activate-service-account --key-file=creds.json
       - run: gcloud --quiet config set project ${ENV}
       - run: gcloud info
-      - run: gsutil cp -r -m gs://blockframes.appspot.com "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
+      - run: gsutil -m cp -r gs://blockframes.appspot.com "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
