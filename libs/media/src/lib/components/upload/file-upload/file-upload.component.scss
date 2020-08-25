@@ -55,4 +55,14 @@ button.mat-button {
 
 a {
   color: var(--primary);
+  cursor: pointer;
+}
+
+img.file-uploaded {
+  width: 48px;
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin: 0;
 }

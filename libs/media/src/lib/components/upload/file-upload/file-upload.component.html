@@ -32,13 +32,13 @@
 
   <!-- File -->
   <section *ngSwitchCase="'file'">
-    <p class="mat-caption">{{ form.fileName.value }}</p>
-    <button mat-mini-fab color="primary">
-      <mat-icon (click)="fileExplorer.click()" svgIcon="document" matTooltip="Change file"></mat-icon>
-    </button>
-    <button mat-mini-fab color="warn">
-      <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete"></mat-icon>
-    </button>
+    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
+    <h3>{{ form.fileName.value }}</h3>
+    <span class="mat-body-2">{{ size$ | async }}</span>
+    <ng-content select="[format]"></ng-content>
+    <p class="mat-caption">Drag and drop a file here or
+      <a (click)="fileExplorer.click()">browse</a>
+    </p>
   </section>
 
 </ng-container>
