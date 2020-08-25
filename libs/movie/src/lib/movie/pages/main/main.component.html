@@ -179,8 +179,11 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
-        <ng-template colRef="filmography" let-dir>
-          <ng-container *ngFor="let film of dir.filmography; let isLast = last">
+        <ng-template colRef="status" let-director>{{ director.status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="category" let-director>{{ director.category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        </ng-template>
+        <ng-template colRef="filmography" let-director>
+          <ng-container *ngFor="let film of director.filmography; let isLast = last">
             <ng-container *ngIf="film.title">
               {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
             </ng-container>

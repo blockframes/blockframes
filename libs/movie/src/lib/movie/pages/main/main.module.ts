@@ -1,3 +1,4 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,10 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
-
-
-// Blockframes Movie
-import { MovieFormGenresModule } from '@blockframes/movie/form/main/genres/genres.module';
 
 // Blockframes Media
 import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
@@ -32,6 +29,7 @@ import { MovieFormMainComponent } from './main.component';
 
 // Pipe
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { TranslateSlugModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -40,9 +38,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
     ReactiveFormsModule,
     FlexLayoutModule,
 
-    // Movie Form Modules
-    MovieFormGenresModule,
-
+    // Movie Form ModulesSTATUS
     // Other Modules
     TunnelPageModule,
     ChipsAutocompleteModule,
@@ -51,6 +47,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
     StaticSelectModule,
     FormTableModule,
     HasStatusModule,
+    TranslateSlugModule,
 
     // Material
     MatDividerModule,

@@ -22,4 +22,4 @@ export class TranslateSlugPipe implements PipeTransform {
   imports: [CommonModule],
   exports: [TranslateSlugPipe]
 })
-export class TranslateSlugModule {}
+export class TranslateSlugModule { }
