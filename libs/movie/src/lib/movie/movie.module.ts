@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firebase } from '@env';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 
 // Angular Fire
 import { AngularFirestoreModule } from '@angular/fire/firestore';
