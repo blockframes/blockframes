@@ -6,10 +6,12 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieFormMediaVideosComponent } from './media-videos.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [MovieFormMediaVideosComponent],
@@ -18,10 +20,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
     TunnelPageModule,
     FlexLayoutModule,
+    FormTableModule,
 
     // Material
     MatFormFieldModule,
     MatInputModule,
+    MatDividerModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: MovieFormMediaVideosComponent }])

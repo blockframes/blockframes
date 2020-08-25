@@ -8,6 +8,7 @@ import {
   MovieOriginalRelease,
   MovieRating,
   MovieLanguageSpecification,
+  OtherLink,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -21,6 +22,7 @@ import {
   createMovieStakeholders,
   createMoviePromotional,
   createMovieLanguageSpecification,
+  createOtherLink,
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -91,7 +93,7 @@ function createMovieControls(movie: Partial<Movie>) {
     color: new FormControl(entity.color),
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
-    customGenres: FormList.factory(entity.customGenres),
+    customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
@@ -614,6 +616,22 @@ type AppAccessControl = ReturnType<typeof createAppAccessFormControl>;
 //   Every Promotional Elements
 // ------------------------------
 
+export class OtherLinkForm extends FormEntity<OtherLinkControl> {
+  constructor(otherLink?: Partial<OtherLink>) {
+    super(createOtherLinkFormControl(otherLink));
+  }
+}
+
+function createOtherLinkFormControl(otherLink?: Partial<OtherLink>) {
+  const { name, url } = createOtherLink(otherLink);
+  return {
+    name: new FormControl(name, [Validators.required]),
+    url: new FormControl(url, [Validators.required]),
+  }
+}
+
+type OtherLinkControl = ReturnType<typeof createOtherLinkFormControl>;
+
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
 
@@ -638,6 +656,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     screener_link: new FormControl(entity.screener_link),
     trailer_link: new FormControl(entity.trailer_link),
     teaser_link: new FormControl(entity.teaser_link),
+    other_links: FormList.factory<OtherLink>(entity.other_links, el => new OtherLinkForm(el)),
   }
 }
 

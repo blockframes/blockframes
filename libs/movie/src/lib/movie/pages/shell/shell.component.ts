@@ -135,10 +135,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   // Should save movie
   public async save() {
-    if (this.form.invalid) {
-      this.snackBar.open('It seems that one or more fields have an error. Please check your movie form and try again.', 'close', { duration: 5000 });
-      return;
-    }
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
 

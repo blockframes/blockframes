@@ -38,6 +38,41 @@
         </mat-error>
       </mat-form-field>
 
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Clip Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('clip_link')" name="clipLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+
+      <h6 class="mat-caption">Other links</h6>
+
+      <bf-form-table [columns]="otherLinksColumns" [form]="form.promotional.get('other_links')" buttonText="Add another Link" saveButtonText="Save Link">
+        <ng-template formView let-otherLinkForm>
+          <article [formGroup]="otherLinkForm" fxLayout="row" fxLayoutGap="24px">
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Link Name</mat-label>
+              <input matInput type="text" formControlName="name" name="otherLinkName" required/>
+              <mat-hint>
+                Give a name to your video.
+              </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Link Url</mat-label>
+              <input matInput type="url" formControlName="url" name="otherLinkUrl" placeholder="https://example.com" required />
+              <mat-error>
+                Please enter a valid url.
+              </mat-error>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
     </section>
 
   </ng-container>

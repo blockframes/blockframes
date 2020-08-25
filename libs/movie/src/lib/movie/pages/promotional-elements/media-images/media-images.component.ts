@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
@@ -9,13 +9,21 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
   styleUrls: ['./media-images.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaImagesComponent {
+export class MovieFormMediaImagesComponent implements OnInit {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
 
 
+  constructor(
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+  ) { }
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
+  ngOnInit() {
+    if (Object.keys(this.stillPhoto.value).length === 0) {
+      this.addStill();
+    }
+  }
 
   get stillPhoto() {
     return this.promotional.get('still_photo');
