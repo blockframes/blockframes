@@ -389,7 +389,7 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
   const { name, year, prize, logo, premiere } = createPrize(entity);
   return {
     name: new FormControl(name),
-    year: new FormControl(year, [yearValidators]),
+    year: new FormControl(year, [yearValidators()]),
     prize: new FormControl(prize, [Validators.maxLength(200)]),
     premiere: new FormControl(premiere),
   }
@@ -556,7 +556,7 @@ export class ReleaseYearForm extends FormEntity<ReleaseYearFormControl> {
 function createReleaseYearFormControl(release?: Partial<Movie['release']>) {
   const { year, status } = createReleaseYear(release);
   return {
-    year: new FormControl(year, [yearValidators, Validators.required]),
+    year: new FormControl(year, [yearValidators(), Validators.required]),
     status: new FormControl(status, [Validators.required]),
   }
 }
