@@ -7,10 +7,13 @@ import { differenceBy } from 'lodash';
 import { Auth, loadAdminServices, UserRecord } from './admin';
 import { sleep } from './tools';
 import readline from 'readline';
-import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
+import { upsertWatermark, runChunks, JsonlDbRecord , getCollection} from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 import { firebase } from '@env';
+import { User } from '@blockframes/user/types';
+import { promises as fsPromises } from 'fs';
+import { join } from 'path';
 export const { storageBucket } = firebase;
 
 export interface UserConfig {
@@ -22,6 +25,26 @@ export interface UserConfig {
 }
 
 export const USER_FIXTURES_PASSWORD = 'blockframes';
+
+/**
+ * This function will generate `tools/users.fixture.json` from users currently in Firestore
+ */
+export async function generateUserFixtures() {
+  console.log('Generating user fixtures file from Firestore...')
+
+  console.time('Fetching users from Firestore')
+  const users = await getCollection<User>('users');
+  console.timeEnd('Fetching users from Firestore')
+
+  const output = users.map(user => ({
+    email: user.email,
+    uid: user.uid,
+    password: USER_FIXTURES_PASSWORD,
+  }));
+  const dest = join(process.cwd(), 'tools', 'users.fixture.json');
+  await fsPromises.writeFile(dest, JSON.stringify(output));
+  console.log('Fixture saved:', dest)
+}
 
 /**
  * @param auth  Firestore Admin Auth object
