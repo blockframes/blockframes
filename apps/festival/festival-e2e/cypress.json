@@ -9,6 +9,7 @@
   "videosFolder": "../../../dist/cypress/apps/festival/festival-e2e/videos",
   "screenshotsFolder": "../../../dist/cypress/apps/festival/festival-e2e/screenshots",
   "chromeWebSecurity": false,
+  "nodeVersion": "system",
   "defaultCommandTimeout": 10000,
   "reporter": "junit",
   "reporterOptions": {

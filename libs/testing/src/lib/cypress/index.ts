@@ -2,15 +2,18 @@ import * as tasks from './tasks';
 import type * as foo from 'cypress';
 import { firebase as firebaseTest } from '@env';
 import * as admin from 'firebase-admin';
+import { config } from 'dotenv';
+config();
 
 export let db: FirebaseFirestore.Firestore;
 export let auth: admin.auth.Auth;
 export let sentinel: typeof admin.firestore.FieldValue;
 
 function setupRemoteEnv() {
+  const SAK = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
   const app = admin.initializeApp({
     // ! Mano - error might be here
-    credential: admin.credential.applicationDefault(),
+    credential: admin.credential.cert(SAK),
     projectId: firebaseTest.projectId,
   });
   auth = app.auth();
