@@ -17,3 +17,4 @@ echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
 gcloud auth activate-service-account --key-file=creds.json
 gcloud --quiet config set project ${ENV}
 gcloud info
+gsutil -m cp -r gs://blockframes.appspot.com "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"

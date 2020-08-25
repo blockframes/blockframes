@@ -399,5 +399,12 @@ workflows:
           requires:
             - build-and-test-all
   copy-storage-from-prod-weekly:
+    triggers:
+      - schedule:
+          cron: '0 0 * * 0'
+          filters:
+            branches:
+              only:
+                - develop
     jobs:
       - copy-storage-from-prod
