@@ -254,6 +254,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('title');
   }
 
+  get estimatedBudget() {
+    return this.get('estimatedBudget');
+  }
+
   public removeDirector(i: number): void {
     this.directors.removeAt(i);
   }
