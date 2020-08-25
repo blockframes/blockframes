@@ -18,10 +18,7 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 
 // RxJs
 import { switchMap, map } from 'rxjs/operators';
-import { of, Subscription, combineLatest } from 'rxjs';
-
-// Akita
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { of, Subscription } from 'rxjs';
 
 function getSteps(status: FormControl, app?: string): TunnelStep[] {
   return [{
@@ -56,8 +53,8 @@ function getSteps(status: FormControl, app?: string): TunnelStep[] {
       path: 'technical-info',
       label: 'Technical Information'
     }, {
-      path: 'available-material',
-      label: 'Available Material',
+      path: 'available-materials',
+      label: 'Available Materials',
       shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
     }]
   }, {
@@ -96,7 +93,7 @@ function getSteps(status: FormControl, app?: string): TunnelStep[] {
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
   // Have to be initialized in the constructor as children page use it in the constructor too
   @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps;
+  @Input() steps: TunnelStep[];
 
   public exitRoute: string;
   private sub: Subscription;
@@ -109,7 +106,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute,
-    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {

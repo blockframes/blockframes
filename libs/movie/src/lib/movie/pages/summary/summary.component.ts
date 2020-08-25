@@ -19,7 +19,7 @@ export class MovieFormSummaryComponent {
   form = this.shell.form;
   isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
-  )
+    )
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -35,8 +35,28 @@ export class MovieFormSummaryComponent {
     return [this.form.get('genres'), ...this.form.get('customGenres').controls];
   }
 
+  get stillPhoto() {
+    return this.form.promotional.get('still_photo');
+  }
+
   get title() {
     return this.form.get('title');
+  }
+
+  get photoHasNoValue() {
+    try {
+      const stillPhotos: Record<string, string> = this.stillPhoto.value;
+      const keys = Object.keys(stillPhotos);
+
+      // if there is no still photos
+      return keys.length === 0 ?
+        true :
+        // or if at least one still photo as an empty url
+        keys.some(key => !stillPhotos[key]);
+    } catch (error) {
+      console.warn(error);
+      return true;
+    }
   }
 
   public getPath(segment: string) {

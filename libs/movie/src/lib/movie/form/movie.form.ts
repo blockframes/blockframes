@@ -198,6 +198,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('genres');
   }
 
+  get isOriginalVersionAvailable() {
+    return this.get('isOriginalVersionAvailable');
+  }
+
   get originalRelease() {
     return this.get('originalRelease');
   }
