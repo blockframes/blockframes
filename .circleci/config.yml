@@ -318,7 +318,6 @@ jobs:
       - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
-      - checkout_project
       - run: chmod u+x -R ./.circleci && . ./.circleci/sync-prod-storage-to-ci.sh
 workflows:
   version: 2.1
