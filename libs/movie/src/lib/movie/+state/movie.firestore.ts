@@ -115,6 +115,7 @@ export interface MoviePromotionalElements {
   still_photo: Record<string, string>,
   teaser_link: string,
   trailer_link: string,
+  other_links: OtherLink[];
 }
 
 ////////////////////
@@ -241,4 +242,9 @@ export interface MovieAnalytics {
     current: MovieEventAnalytics[],
     past: MovieEventAnalytics[]
   }
+}
+
+export interface OtherLink {
+  name: string;
+  url: string;
 }

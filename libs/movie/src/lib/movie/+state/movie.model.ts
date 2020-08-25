@@ -17,6 +17,7 @@ import {
   BoxOffice,
   MovieRelease,
   MovieRunningTime,
+  OtherLink,
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -117,6 +118,7 @@ export function createMoviePromotional(
     screener_link: params.screener_link ?? '',
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
+    other_links: params.other_links ?? [],
   };
 
   return elements;
@@ -298,5 +300,12 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
+  }
+}
+
+export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
+  return {
+    name: otherLink.name ?? '',
+    url: otherLink.url ?? '',
   }
 }
