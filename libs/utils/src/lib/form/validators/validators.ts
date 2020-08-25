@@ -7,7 +7,6 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 
@@ -151,14 +150,3 @@ export function isSlugArrayValidator(scope: Scope): ValidatorFn {
     return control.value.every(value => isInSlug(scope, value)) ? null : { invalidValue: true }
   };
 }
-
-/**
- * @description Error state matcher which is just like in the docs from angular material.
- * Basic usage for invalid, dirty and touched checks.
- */
-export class ControlErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null): boolean {
-    return !!(control && control.invalid && control.touched);
-  }
-}
-
