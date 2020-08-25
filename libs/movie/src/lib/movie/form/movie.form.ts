@@ -238,6 +238,22 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('languages');
   }
 
+  get internalRef() {
+    return this.get('internalRef');
+  }
+
+  get customGenres() {
+    return this.get('customGenres');
+  }
+
+  get contentType() {
+    return this.get('contentType');
+  }
+
+  get title() {
+    return this.get('title');
+  }
+
   public removeDirector(i: number): void {
     this.directors.removeAt(i);
   }
