@@ -82,13 +82,15 @@ export class AppContainerDirective {
   ) {
     this.container = ref.nativeElement;
 
-    zone.runOutsideAngular(() => {
+    zone.runOutsideAngular(async () => {
       const heightSize = 80;
       const options = {
         root: this.container,
         rootMargin: `-${heightSize}px 0px 0px 0px`,
         threshold: 0
       }
+
+      if (!('IntersectionObserver' in window)) await import('intersection-observer');
       this.observer = new IntersectionObserver(([entry]) => {
         // First entry artifact (not sure what happens)
         const {x, y, width, height} = entry.rootBounds;
