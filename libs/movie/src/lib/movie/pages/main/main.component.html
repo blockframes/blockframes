@@ -27,19 +27,18 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.get('contentType')"
-          fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex>
           <mat-label>Content Type</mat-label>
-          <mat-error *ngIf="contentType.hasError('required')">
+          <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project's content type.
           </mat-error>
         </static-select>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Title Reference</mat-label>
-          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="internalRef" />
+          <input test-id="reference" matInput type="text" placeholder="Reference" [formControl]="form.internalRef" />
           <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
-          <mat-error *ngIf="internalRef.hasError('maxlength')">
+          <mat-error *ngIf="form.internalRef.hasError('maxlength')">
             30 characters maximum.
           </mat-error>
         </mat-form-field>
@@ -56,7 +55,7 @@
         <p class="mat-body-2">
           The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.
         </p>
-        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="poster">
+        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
           <p class="mat-body-2" dimensions>Size: 300 x 700 px</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -68,7 +67,7 @@
         <p class="mat-body-2">
           The banner image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.
         </p>
-        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="banner">
+        <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 type>Film Banner Image</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -86,7 +85,8 @@
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
           <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
-          <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
+          <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
+          </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
             Please specify your project's release year.
           </mat-error>
@@ -121,8 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" model="GENRES"
-        placeholder="Enter Genre(s)">
+      <chips-autocomplete [form]="form.get('genres')" model="GENRES" placeholder="Enter Genre(s)">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -140,13 +139,9 @@
             </mat-chip>
           </ng-container>
         </mat-chip-list>
-        <input matInput
-        [formControl]="customGenre"
-        [matChipInputFor]="chipList"
-        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-        (matChipInputTokenEnd)="addCustomGenre($event)"
-        placeholder="Please specify"
-        />
+        <input matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCustomGenre($event)"
+          placeholder="Please specify" />
         <mat-hint>Use commas or press Enter key to separate genres.</mat-hint>
       </mat-form-field>
 
@@ -178,12 +173,14 @@
     <h3>Directors</h3>
     <section id="directors">
 
-      <bf-form-table [columns]="displayedColumns" [form]="directors" buttonText="Add new Director"
+      <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
         <ng-template colRef="filmography" let-dir>
-          {{ dir.filmography[0].title }} - {{ dir.filmography[0].year }},
-          {{ dir.filmography[1].title }} - {{ dir.filmography[1].year }},
-          {{ dir.filmography[2].title }} - {{ dir.filmography[2].year }}
+          <ng-container *ngFor="let film of dir.filmography; let isLast = last">
+            <ng-container *ngIf="film.title">
+              {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
+            </ng-container>
+          </ng-container>
         </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">

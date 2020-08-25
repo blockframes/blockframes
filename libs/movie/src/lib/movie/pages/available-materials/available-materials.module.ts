@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 
 // Components
-import { MovieFormAvailableMaterialComponent } from './available-material.component';
+import { MovieFormAvailableMaterialsComponent } from './available-materials.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 // Material
@@ -28,7 +28,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     InputAutocompleteModule,
 
-    RouterModule.forChild([{ path: '', component: MovieFormAvailableMaterialComponent }]),
+    RouterModule.forChild([{ path: '', component: MovieFormAvailableMaterialsComponent }]),
 
     // Material
     MatCheckboxModule,
@@ -37,8 +37,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatIconModule,
     MatDividerModule
-    
+
   ],
-  declarations: [MovieFormAvailableMaterialComponent],
+  declarations: [MovieFormAvailableMaterialsComponent],
 })
-export class MovieFormAvailableMaterialModule { }
+export class MovieFormAvailableMaterialsModule { }

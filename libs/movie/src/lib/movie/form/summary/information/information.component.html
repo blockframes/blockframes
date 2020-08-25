@@ -20,7 +20,7 @@
   <li>
     <strong>Running Time </strong>
     <missing-control [control]="movie.get('runningTime')" [link]="link">
-      <ng-template #content>{{ movie.get('runningTime').get('time').value | duration }}</ng-template>
+      <ng-template #content>{{ movie.runningTime.get('time').value | duration }}</ng-template>
     </missing-control>
   </li>
 </ul>

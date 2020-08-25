@@ -432,6 +432,8 @@
       </article>
     </section>
 
+    <mat-divider></mat-divider>
+
     <!-- ADDITIONAL INFORMATION -->
 
     <section id="additional-information">
@@ -535,12 +537,15 @@
       </article>
     </section>
 
+    <mat-divider></mat-divider>
+
     <!-- TECHNICAL INFORMATION -->
 
     <section id="technical-information">
+      <h3>Technical Information</h3>
       <article>
         <h5>
-          Technical Information
+          Format
           <a mat-icon-button [routerLink]="getPath('technical-info')" fragment="technical-info"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
@@ -564,6 +569,175 @@
         </ul>
       </article>
     </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- AVAILABLE MATERIALS -->
+
+    <section id="available-materials">
+      <h3>Available Materials</h3>
+      <article>
+        <h5>Original Version
+          <a mat-icon-button [routerLink]="getPath('available-materials')" fragment="original-version"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <ng-container *ngIf="!form.isOriginalVersionAvailable.value else originalVersionAvailable">
+              Not Available
+            </ng-container>
+            <ng-template #originalVersionAvailable>
+              Available
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h5>
+          Available Versions
+          <a mat-icon-button [routerLink]="getPath('available-materials')" fragment="available-versions"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last">
+            <ng-container *ngIf="!language.key else displayLanguages">
+              Missing
+            </ng-container>
+            <ng-template #displayLanguages>
+              <span>{{ language.value | translateSlug: 'LANGUAGES' }}</span>
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- PROMOTIONAL ELEMENTS -->
+
+    <section id="promotional-elements">
+      <h3>Promotional Elements</h3>
+      <article>
+        <h5>
+          Files
+          <a mat-icon-button [routerLink]="getPath('promotional-elements')" fragment="files"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Presentation Deck </strong>
+            <ng-container *ngIf="(form.promotional.get('presentation_deck').value.ref | isEmptyImgRef) else presentationDeck">
+              <a [routerLink]="getPath('promotional-elements')" fragment="files" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #presentationDeck>
+              {{ form.promotional.get('presentation_deck').value.fileName }}
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Scenario </strong>
+            <ng-container *ngIf="(form.promotional.get('scenario').value.ref | isEmptyImgRef) else scenario">
+              <a [routerLink]="getPath('promotional-elements')" fragment="files" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #scenario>
+              {{ form.promotional.get('scenario').value.fileName }}
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Presentation Deck </strong>
+            <ng-container *ngIf="(form.promotional.get('moodboard').value.ref | isEmptyImgRef) else moodboard">
+              <a [routerLink]="getPath('promotional-elements')" fragment="files" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #moodboard>
+              {{ form.promotional.get('moodboard').value.fileName }}
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h5>
+          Images
+          <a mat-icon-button [routerLink]="getPath('promotional-elements')" fragment="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <ng-container *ngIf="photoHasNoValue else displayImages">
+              <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image </strong>
+              <a [routerLink]="getPath('promotional-elements')" fragment="images" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #displayImages>
+              <ng-container *ngFor="let image of stillPhoto.controls | keyvalue; let i = index; let isLast = last">
+                <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image {{ i }} </strong>
+                <a [href]="image.value" target="_blank">
+                  {{ image.value.ref.value | fileName }} {{ isLast ? '' : '| '}}
+                </a>
+              </ng-container>
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h5>
+          Videos
+          <a mat-icon-button [routerLink]="getPath('promotional-elements')" fragment="videos"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+        </h5>
+        <ul>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Teaser Link </strong>
+            <ng-container *ngIf="!form.promotional.get('teaser_link').value else teaserLink">
+              <a [routerLink]="getPath('promotional-elements')" fragment="videos" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #teaserLink>
+              {{ form.promotional.get('teaser_link').value }}
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Trailer Link </strong>
+            <ng-container *ngIf="!form.promotional.get('trailer_link').value else trailerLink">
+              <a [routerLink]="getPath('promotional-elements')" fragment="videos" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #trailerLink>
+              {{ form.promotional.get('trailer_link').value }}
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Promo Link </strong>
+            <ng-container *ngIf="!form.promotional.get('promo_reel_link').value else promoLink">
+              <a [routerLink]="getPath('promotional-elements')" fragment="videos" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #promoLink>
+              {{ form.promotional.get('promo_reel_link').value }}
+            </ng-template>
+          </li>
+          <li>
+            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Screener Link </strong>
+            <ng-container *ngIf="!form.promotional.get('screener_link').value else screenerLink">
+              <a [routerLink]="getPath('promotional-elements')" fragment="files" class="missing-control">
+                Missing
+              </a>
+            </ng-container>
+            <ng-template #screenerLink>
+              {{ form.promotional.get('screener_link').value }}
+            </ng-template>
+          </li>
+        </ul>
+      </article>
+
+    </section >
 
     <!-- Submit -->
     <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
