@@ -4,7 +4,7 @@ import { MovieDisplayListModule } from '@blockframes/movie/components/display-li
 
 // Pipes
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
-import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
+import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.pipe";
 
 
 // Material
