@@ -310,6 +310,15 @@ jobs:
       - run: npm run db:download-prod
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
+  copy-storage-from-prod:
+    executor: blockframes-ci
+    environment:
+      - ENV: ci
+      - NODE_OPTIONS: "--max_old_space_size=7168"
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: chmod u+x -R ./.circleci && . ./.circleci/sync-prod-storage-to-ci.sh
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
@@ -385,3 +394,6 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
+  copy-storage-from-prod-weekly:
+    jobs:
+      - copy-storage-from-prod
