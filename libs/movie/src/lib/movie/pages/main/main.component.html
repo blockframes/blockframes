@@ -129,6 +129,7 @@
         <mat-hint>
           Use commas or press Enter key to separate genres.
         </mat-hint>
+        <mat-error *ngIf="form.hasError('invalidValue', 'genres')">Lol wrong genre bruh</mat-error>
       </chips-autocomplete>
 
       <mat-form-field appearance="outline">

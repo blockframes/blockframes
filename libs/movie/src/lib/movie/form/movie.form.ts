@@ -33,7 +33,7 @@ import { createLegalDocument } from '@blockframes/contract/contract/+state/contr
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
+import { yearValidators, urlValidators, valueIsInModelValidator } from '@blockframes/utils/form/validators/validators';
 import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';

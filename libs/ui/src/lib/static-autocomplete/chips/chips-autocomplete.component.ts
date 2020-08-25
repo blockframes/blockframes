@@ -1,4 +1,4 @@
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
+// Angular
 import {
   Component,
   OnInit,
@@ -13,11 +13,16 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { FormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
+// RxJs
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { FormList } from '@blockframes/utils/form';
+
+// blockframes
 import { staticModels } from '@blockframes/utils/static-model';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
+import { boolean } from '@blockframes/utils/decorators/decorators';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: '[form][model]chips-autocomplete',
@@ -37,11 +42,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
-  @Input()
-  set required(value: boolean) {
-    this._required = coerceBooleanProperty(value);
-  }
-
+  @Input() @boolean required: boolean;
   // The parent form to connect to
   @Input() form: FormList<string>;
 
@@ -56,8 +57,6 @@ export class ChipsAutocompleteComponent implements OnInit {
   public values$: Observable<any[]>;
 
   private items: SlugAndLabel[];
-
-  public _required: boolean;
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
@@ -92,11 +91,15 @@ export class ChipsAutocompleteComponent implements OnInit {
     return item ? item.label : '';
   }
 
-  /** Add a chip based on the input */
-  public add({ input, value }: MatChipInputEvent) {
-    if (this.matAutocomplete.isOpen) return;
-    if ((value || '').trim()) this.form.add(value);
-    if (input) input.value = '';
+  /** Add a chip based on key code */
+  public add({ value }: MatChipInputEvent) {
+    value.trim();
+    const slugByLabel = getCodeIfExists(this.model as Scope, value)
+    if (value && slugByLabel) {
+      this.form.add(slugByLabel);
+      this.added.emit(value);
+    }
+    this.inputEl.nativeElement.value = ''
     this.ctrl.setValue(null);
   }
 

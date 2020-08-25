@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline" (focusout)="focusOut()">
   <mat-label>
     <ng-content select="mat-label"></ng-content>
-    {{ _required ? ' *' : '' }}
+    {{ required ? ' *' : '' }}
   </mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
