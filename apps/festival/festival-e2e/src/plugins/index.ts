@@ -10,6 +10,7 @@
 // ***********************************************************
 import 'tsconfig-paths/register';
 import { getCypressTasks } from '@blockframes/testing/cypress';
+import { preprocessTypescript } from '@nrwl/cypress/plugins/preprocessor';
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 export default (async (on, config) => {
@@ -17,6 +18,7 @@ export default (async (on, config) => {
   // `config` is the resolved Cypress config
 
   // Preprocess Typescript file using Nx helper
+  on('file:preprocessor', preprocessTypescript(config));
 
   console.log('Node version:', process.version);
   console.log('Config: ', config);

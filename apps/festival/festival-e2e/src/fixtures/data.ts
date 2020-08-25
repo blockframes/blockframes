@@ -1,5 +1,6 @@
 import { User } from '@blockframes/e2e/utils/type';
-import { USERS } from '@blockframes/e2e/utils/users';
+// import { USERS } from 'libs/e2e/src/utils/users';
+// import { USERS } from 'libs/e2e/src/lib/utils';
 
 export const NOW = new Date();
 export let TOMORROW = new Date(NOW);
@@ -13,11 +14,11 @@ export const PUBLIC_EVENTNAME = 'Public Event';
 export const PARTICIPANT_1_NAME = 'Bryant John';
 export const PARTICIPANT_2_NAME = 'Gregory Sarah';
 
-// wendy.baker@curtis-klein-and-romero.fake.cascade8.com
-export const USER_1: Partial<User> = USERS[45];
-// john.bryant@love-and-sons.fake.cascade8.com
-export const USER_2: Partial<User> = USERS[4];
-// sarah.gregory@turner-gray.fake.cascade8.com
-export const USER_3: Partial<User> = USERS[32];
-// pamela.cooper@gillespie-lawrence.fake.cascade8.com
-export const USER_4: Partial<User> = USERS[1];
+// // wendy.baker@curtis-klein-and-romero.fake.cascade8.com
+// export const USER_1: Partial<User> = USERS[45];
+// // john.bryant@love-and-sons.fake.cascade8.com
+// export const USER_2: Partial<User> = USERS[4];
+// // sarah.gregory@turner-gray.fake.cascade8.com
+// export const USER_3: Partial<User> = USERS[32];
+// // pamela.cooper@gillespie-lawrence.fake.cascade8.com
+// export const USER_4: Partial<User> = USERS[1];

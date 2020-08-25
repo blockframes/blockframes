@@ -10,6 +10,6 @@ export function log(message: any) {
   return message;
 }
 
-export function getTestUsers() {
-  return getUsers(db);
+export function getTestUsers(limit?: number) {
+  return getUsers(db, limit);
 }
