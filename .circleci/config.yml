@@ -314,11 +314,14 @@ jobs:
     docker:
       - image: google/cloud-sdk
     environment:
-      - ENV: ci
+      - ENV: blockframes-ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
-      - run: chmod u+x -R ./.circleci && . ./.circleci/sync-prod-storage-to-ci.sh
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run: gcloud auth activate-service-account --key-file=creds.json
+      - run: gcloud --quiet config set project ${ENV}
+      - run: gcloud info
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
