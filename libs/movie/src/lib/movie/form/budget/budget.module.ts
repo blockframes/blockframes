@@ -1,13 +1,9 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MovieFormBudgetComponent } from './budget.component';
-
-// Blockframes
-import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
 
 // Material
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -17,8 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    QueryListFindModule,
     FormsModule,
     ReactiveFormsModule,
 
