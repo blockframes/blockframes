@@ -64,6 +64,15 @@
         fill: mat-color($warn, default-contrast);
       }
     }
+    // Used only in the upload component, remove it when the component will be reworked
+    &.mat-divider {
+      background-color: mat-color($foreground, divider);
+      svg g,
+      svg polygon,
+      svg path {
+        fill: mat-color($primary, default-contrast);
+      }
+    }
   }
 
   .mat-button,

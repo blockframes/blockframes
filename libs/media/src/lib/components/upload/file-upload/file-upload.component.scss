@@ -10,6 +10,7 @@ img.picture-hover {
 
 section {
   height: 100%;
+  width: 100%;
   padding: 24px;
   display: flex;
   align-items: center;
@@ -19,6 +20,9 @@ section {
   border-radius: 5px;
   font-size: 1.5rem;
   transition: border 0.2s ease-in-out;
+  div {
+    flex: 1;
+  }
 }
 
 .upload-button-container {
@@ -53,7 +57,7 @@ button.mat-button {
   margin-top: 24px;
 }
 
-a {
+a, .primary-text {
   color: var(--primary);
   cursor: pointer;
 }

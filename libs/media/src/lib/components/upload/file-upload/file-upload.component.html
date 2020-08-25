@@ -23,11 +23,11 @@
 
   <!-- Ready -->
   <section *ngSwitchCase="'ready'">
-    <h3>Your file is ready, it will be uploaded when you click on "Save".</h3>
-    <p class="mat-caption">{{ form.fileName.value }}</p>
-    <button mat-mini-fab color="warn">
-      <mat-icon (click)="reset(fileExplorer)" svgIcon="cross" matTooltip="Cancel"></mat-icon>
-    </button>
+    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
+    <h3>{{ form.fileName.value }}</h3>
+    <span class="mat-body-2 primary-text">Click on SAVE to launch the upload</span>
+    <span class="mat-caption">Continue to fill the form during the upload</span>
+    <span class="mat-caption" (click)="delete()">Delete</span>
   </section>
 
   <!-- File -->
@@ -35,10 +35,9 @@
     <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
     <h3>{{ form.fileName.value }}</h3>
     <span class="mat-body-2">{{ size$ | async }}</span>
-    <ng-content select="[format]"></ng-content>
-    <p class="mat-caption">Drag and drop a file here or
-      <a (click)="fileExplorer.click()">browse</a>
-    </p>
+    <button mat-mini-fab color="divider">
+      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
+    </button>
   </section>
 
 </ng-container>
