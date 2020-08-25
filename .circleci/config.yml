@@ -311,7 +311,8 @@ jobs:
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
   copy-storage-from-prod:
-    executor: blockframes-ci
+    docker:
+      - image: google/cloud-sdk
     environment:
       - ENV: ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
