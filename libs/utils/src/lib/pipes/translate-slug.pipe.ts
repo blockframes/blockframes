@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug, Scope } from '../static-model/staticModels';
 import { CommonModule } from '@angular/common';
 
 @Pipe({
