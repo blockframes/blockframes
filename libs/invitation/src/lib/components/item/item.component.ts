@@ -21,7 +21,8 @@ export class ItemComponent {
         return `/c/o/marketplace/event/${this.invitation.docId}`;
       }
     } else if (this.invitation.type === 'joinOrganization') {
-      return `/c/o/organization/${this.invitation.fromOrg.id}/view/members`;  
+      const orgId = this.invitation.fromOrg ? this.invitation.fromOrg.id : this.invitation.toOrg.id;
+      return `/c/o/organization/${orgId}/view/members`;  
     }
   }
 
