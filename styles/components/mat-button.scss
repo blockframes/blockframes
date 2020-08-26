@@ -89,7 +89,7 @@
 
   .mat-stroked-button:not([disabled]) {
     border-radius: 26px;
-    border-color: mat-color($foreground, text);
+    border-color: mat-color($foreground, divider);
     &.mat-primary {
       border-color: mat-color($primary);
     }

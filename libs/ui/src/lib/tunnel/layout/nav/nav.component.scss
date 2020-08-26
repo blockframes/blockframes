@@ -2,15 +2,12 @@
   font-size: 14px;
 }
 
-mat-list-item-content {
-  padding: 0;
+.mat-nav-list a.mat-list-item.vertical-aligned {
+  padding: 0 0 0 30px;
 }
 
-mat-nav-list a.mat-list-item.vertical-aligned {
-  padding: 0 0 0 20px;
-}
-
-mat-expansion-panel-header {
+.mat-expansion-panel .mat-expansion-panel-header {
+  padding: 0 12px;
   mat-panel-title {
     mat-icon.margin-override {
       margin-right: 8px;

@@ -423,8 +423,8 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role, status, description, filmography } = createCredit(credit);
   return {
-    firstName: new FormControl(firstName),
-    lastName: new FormControl(lastName),
+    firstName: new FormControl(firstName, [Validators.required]),
+    lastName: new FormControl(lastName, [Validators.required]),
     role: new FormControl(role),
     filmography: new FormArray([new FilmographyForm(filmography[0]), new FilmographyForm(filmography[1]), new FilmographyForm(filmography[2])]),
     description: new FormControl(description),

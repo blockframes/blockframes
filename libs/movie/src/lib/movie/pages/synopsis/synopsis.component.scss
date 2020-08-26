@@ -4,7 +4,7 @@
 
 mat-form-field {
   width: 100%;
-
+  margin-left: 16px;
 }
 
 h3 {
@@ -12,7 +12,10 @@ h3 {
 }
 
 mat-divider {
-  border-top-width: 2px;
   margin-top: 36px;
   margin-bottom: 36px;
+}
+
+h4 {
+  text-transform: uppercase;
 }

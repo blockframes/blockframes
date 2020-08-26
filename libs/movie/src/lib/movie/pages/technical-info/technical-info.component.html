@@ -1,4 +1,5 @@
 <tunnel-page>
+  <h4 title>Title Information</h4>
   <h1 title>Technical Information</h1>
   <ng-container tunnel-form>
     <div fxLayout="column" fxLayoutGap="32px">
@@ -11,8 +12,8 @@
         </static-select>
       </div>
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select type="model" [control]="color" scope="COLORS" label="Color / Black & White" placeholder="Select Color/ B&W">
-          <mat-label>Color / Black & White</mat-label>
+        <static-select type="model" [control]="color" scope="COLORS" placeholder="Select Color/ B&W">
+          <mat-label>Color / B&W</mat-label>
         </static-select>
         <static-select type="model" [control]="soundFormat" scope="SOUND_FORMAT" placeholder="Select Sound Format">
           <mat-label>Sound Format</mat-label>

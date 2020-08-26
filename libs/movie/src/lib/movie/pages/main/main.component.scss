@@ -2,6 +2,10 @@
   display: block;
 }
 
+h4 {
+  text-transform: uppercase;
+}
+
 h3 {
   margin-bottom: 24px;
 }
@@ -17,7 +21,6 @@ section {
 }
 
 mat-divider {
-  border-top-width: 2px;
   margin-top: 36px;
   margin-bottom: 36px;
 }
