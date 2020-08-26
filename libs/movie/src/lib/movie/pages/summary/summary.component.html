@@ -333,12 +333,12 @@
           <a mat-icon-button [routerLink]="getPath('artistic')" fragment="cast-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <li *ngFor="let cast of form.cast.controls">
-          <ng-container *ngIf="!cast.get('firstName').value || !cast.get('lastName').value else displayCrew">
+          <ng-container *ngIf="!cast.get('firstName').value || !cast.get('lastName').value else displayCast">
             <a [routerLink]="getPath('artistic')" fragment="crew-member"class="missing-control">
               Missing
             </a>
           </ng-container>
-          <ng-template #displayCrew>
+          <ng-template #displayCast>
             <strong>{{ cast.get('firstName').value }}</strong>
             <span>&nbsp;</span>
             <strong>{{ cast.get('lastName').value }}</strong>
