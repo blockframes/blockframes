@@ -438,6 +438,10 @@ export class CreditForm extends FormEntity<CreditFormControl> {
   constructor(credit?: Partial<Credit>) {
     super(createCreditFormControl(credit));
   }
+
+  get filmography() {
+    return this.get('filmography');
+  }
 }
 
 // ------------------------------
@@ -447,6 +451,10 @@ export class CreditForm extends FormEntity<CreditFormControl> {
 export class DirectorForm extends FormEntity<DirectorFormControl> {
   constructor(director?: Partial<Director>) {
     super(createDirectorFormControl(director))
+  }
+
+  get filmography() {
+    return this.get('filmography');
   }
 }
 
