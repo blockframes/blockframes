@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 export class MovieFormBudgetComponent {
   @Input() form: FormControl;
   @Input() placeholder?: String;
+  @Input() appearance = 'outline'
 
   optionsBudget = BUDGET_LIST;
 }

@@ -7,13 +7,17 @@
       <section id="release">
 
         <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
-          <ng-template formView let-originalReleaseForm>
-            <article [formGroup]="originalReleaseForm" fxLayout="column" fxLayoutGap="24px">
+          <ng-template colRef="country" let-release>{{ release.country | translateSlug: 'TERRITORIES' }}</ng-template>
+          <ng-template colRef="media" let-release>{{ release.media | translateSlug: 'MEDIAS' }}</ng-template>
+          <ng-template colRef="date" let-release>{{ release.date | date: 'shortDate' }}</ng-template>
+          <ng-template formView let-releaseForm>
+            <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout="row" fxLayoutGap="24px">
-                <form-country test-id="release-country" [form]="originalReleaseForm.get('country')" fxFlex></form-country>
+                <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
 
-                <static-select test-id="release-media" type="model" [control]="originalReleaseForm.get('media')" scope="MEDIAS" fxFlex>
+                <static-select test-id="release-media" type="model" [control]="releaseForm.get('media')" scope="MEDIAS"
+                  fxFlex>
                   <mat-label>Release Media</mat-label>
                 </static-select>
               </div>
@@ -46,6 +50,9 @@
       <section id="box-office" *ngIf="units$ | async as units">
 
         <bf-form-table [columns]="boxOfficeColumns" [form]="boxOffice" buttonText="Add a Box Office">
+          <ng-template colRef="country" let-boxOffice>{{ boxOffice.country | translateSlug: 'TERRITORIES' }}
+          </ng-template>
+          <ng-template colRef="unit" let-boxOffice>{{ boxOffice.unit | toLabel: 'unitBox' | async }}</ng-template>
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -74,8 +81,10 @@
                   Please enter box office figures.
                 </mat-error>
                 {{ boxOfficeForm.get('value').controls }}
-                <span *ngIf="units[boxOfficeForm.get('value')] === '$'" matPrefix>{{ units[boxOfficeForm.get('value')] }}&nbsp;</span>
-                <span *ngIf="units[boxOfficeForm.get('value')] !== '$'" matSuffix>&nbsp;{{ units[boxOfficeForm.get('value')] }}</span>
+                <span *ngIf="units[boxOfficeForm.get('value')] === '$'"
+                  matPrefix>{{ units[boxOfficeForm.get('value')] }}&nbsp;</span>
+                <span *ngIf="units[boxOfficeForm.get('value')] !== '$'"
+                  matSuffix>&nbsp;{{ units[boxOfficeForm.get('value')] }}</span>
               </mat-form-field>
 
             </article>
@@ -111,15 +120,17 @@
 
     <h3>Qualifications</h3>
     <section id="qualifications">
-      <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications" aria-label="Certifications">
+      <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications"
+        aria-label="Certifications">
         <ng-container *ngFor="let certification of certifications">
-          <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint" [matTooltipDisabled]="!certification?.hint">
+          <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"
+            [matTooltipDisabled]="!certification?.hint">
             {{ certification.label }}
           </mat-button-toggle>
         </ng-container>
       </mat-button-toggle-group>
       <p>Select all that apply</p>
-    </section >
+    </section>
 
 
   </ng-container>
