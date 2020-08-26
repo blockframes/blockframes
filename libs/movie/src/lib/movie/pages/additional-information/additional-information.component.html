@@ -87,20 +87,22 @@
 
       <h3>Rating</h3>
       <section id="rating">
-        <article *ngFor="let control of rating.controls; let i = index; let last = last">
-          <div fxLayout fxLayoutGap="24px">
-            <mat-form-field appearance="outline" fxFlex>
-              <mat-label>Rating</mat-label>
-              <input matInput [formControl]="rating.get('value')" />
-              <mat-hint>Please specify your title's rating, if existing.</mat-hint>
-            </mat-form-field>
+        <bf-form-table [columns]="ratingColumns" [form]="rating" buttonText="Add a Rating">
+          <ng-template colRef="country" let-rating>
+            {{ rating.country | translateSlug: 'TERRITORIES'}}
+          </ng-template>
+          <ng-template formView let-ratingForm>
+            <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Rating</mat-label>
+                <input matInput formControlName="value" />
+                <mat-hint>Please specify your title's rating, if existing.</mat-hint>
+              </mat-form-field>
 
-            <chips-autocomplete [form]="control.get('country')" model="TERRITORIES"
-              placeholder="Type and Select a Country" fxFlex>
-              <mat-hint>Please specify country applying rating system.</mat-hint>
-            </chips-autocomplete>
-          </div>
-        </article>
+              <form-country test-id="rating-country" [form]="ratingForm.get('country')"></form-country>
+            </div>
+          </ng-template>
+        </bf-form-table>
       </section>
 
       <mat-divider></mat-divider>
