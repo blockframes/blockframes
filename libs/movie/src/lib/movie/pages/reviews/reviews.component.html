@@ -5,8 +5,9 @@
     <h3>Festival & Awards</h3>
     <section id="festival">
       <bf-form-table [columns]="prizesColumns" [form]="prizes" buttonText="Add a Festival">
-        <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+        <ng-template colRef="premiere" let-prizes>{{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+        <ng-template formView let-prizesForm>
+          <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
@@ -18,7 +19,7 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
                 <input test-id="prize" matInput formControlName="prize" />
-                <mat-error *ngIf="form.get('prize').hasError('maxlength')">
+                <mat-error *ngIf="prizesForm.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
                 <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
@@ -28,9 +29,9 @@
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
-                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY"/>
+                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
                 <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
-                <mat-error *ngIf="form.hasError('required')">
+                <mat-error *ngIf="prizesForm.hasError('required')">
                   Year is required.
                 </mat-error>
               </mat-form-field>
@@ -38,14 +39,17 @@
             </div>
 
             <h6 class="mat-caption">Premiere</h6>
-            <mat-button-toggle-group [formControl]="form.get('premiere')" name="Premiere" aria-label="Premiere">
-              <ng-container *ngFor="let premiere of premieres">
-                <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint" [matTooltipDisabled]="!premiere?.hint">
-                  {{ premiere.label }}
-                </mat-button-toggle>
-              </ng-container>
-            </mat-button-toggle-group>
-            <p class="mat-caption">Select premiere that apply</p>
+            <div>
+              <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
+                <ng-container *ngFor="let premiere of premieres">
+                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
+                    [matTooltipDisabled]="!premiere?.hint">
+                    {{ premiere.label }}
+                  </mat-button-toggle>
+                </ng-container>
+              </mat-button-toggle-group>
+            </div>
+            <span class="mat-caption">Select premiere that apply</span>
 
           </article>
         </ng-template>
