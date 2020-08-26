@@ -12,7 +12,7 @@
       <mat-expansion-panel [expanded]="step | stepActive | async">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-icon [svgIcon]="step.icon"></mat-icon>
+            <mat-icon class="margin-override" [svgIcon]="step.icon"></mat-icon>
             <span>{{ step.title }}</span>
           </mat-panel-title>
         </mat-expansion-panel-header>

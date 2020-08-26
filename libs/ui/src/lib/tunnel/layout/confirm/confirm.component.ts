@@ -11,6 +11,6 @@ export class TunnelConfirmComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TunnelConfirmComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { title: string, subtitle: string },
+    @Inject(MAT_DIALOG_DATA) public data: { title: string, subtitle: string, accept: string, cancel: string },
   ) { }
 }
