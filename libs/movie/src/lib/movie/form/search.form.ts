@@ -142,7 +142,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.storeConfig.value.map(config => `storeConfig:${config}`),
         this.appAccess.value.map(access => `appAccess:${access}`)
       ],
-      filters: `budget >= ${this.minBudget.value}`,
+      filters: `budget >= ${this.minBudget.value || 0}`,
     });
   }
 }
