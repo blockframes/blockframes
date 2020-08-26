@@ -52,7 +52,8 @@ export class WishlistComponent implements OnInit, OnDestroy {
       map(org => org.wishlist.find(wish => wish.status === 'pending')),
       switchMap(org => this.movieService.valueChanges(org.movieIds))
     ).subscribe(allMovies => {
-      const movies = allMovies.filter(movie => !!movie); // valueChanges returns all documents even if they don't exist - created issue for this on akita-ng-fire https://github.com/dappsnation/akita-ng-fire/issues/138
+      // valueChanges returns all documents even if they don't exist - created issue for this on akita-ng-fire https://github.com/dappsnation/akita-ng-fire/issues/138
+      const movies = allMovies.filter(movie => !!movie);
       this.hasWishlist = !!movies.length;
       this.hasWishlist ?
         this.dynTitle.setPageTitle('Wishlist') :
