@@ -30,6 +30,7 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 import { MovieFormAdditionalInformationComponent } from './additional-information.component';
+import { TranslateSlugModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [MovieFormAdditionalInformationComponent],
@@ -52,6 +53,7 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     FormCountryModule,
     FormTableModule,
     HasStatusModule,
+    TranslateSlugModule,
 
     // Material
     MatFormFieldModule,

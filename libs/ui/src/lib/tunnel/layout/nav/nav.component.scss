@@ -9,3 +9,11 @@ mat-list-item-content {
 mat-nav-list a.mat-list-item.vertical-aligned {
   padding: 0 0 0 20px;
 }
+
+mat-expansion-panel-header {
+  mat-panel-title {
+    mat-icon.margin-override {
+      margin-right: 8px;
+    }
+  }
+}
