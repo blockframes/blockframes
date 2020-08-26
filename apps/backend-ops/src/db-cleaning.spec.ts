@@ -445,7 +445,7 @@ describe('DB cleaning script', () => {
         id: 'invit-D',
         type: 'attendEvent',
         docId: 'event-B',
-        toOrg: { id: 'org-A' }, 
+        toOrg: { id: 'org-A' },
         fromUser: { uid: 'B' }, // B doest not exists, should be removed
       }
     ];
@@ -453,7 +453,7 @@ describe('DB cleaning script', () => {
     const testEvents = [
       {
         id: 'event-B',
-        // Outdated by 30 seconds, but should be kept
+        // Outdated by 30 seconds, but should be kept since we keep old invitations to make some stats
         end: { _seconds: currentTimestamp - 30 },
       }
     ];
@@ -485,10 +485,11 @@ describe('DB cleaning script', () => {
       .concat(orgs.docs.map(d => d.id));
 
 
-    await cleanInvitations(invitationsBefore, documentIds, events.docs.map(event => event.data() as any));
+    await cleanInvitations(invitationsBefore, documentIds);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     expect(invitationsAfter.docs.length).toEqual(1);
+    expect(invitationsAfter.docs[0].id).toEqual('invit-B');
   });
 
   it('should delete not pending joinOrganization invitations older than n days', async () => {
@@ -544,7 +545,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
 
-    await cleanInvitations(invitationsBefore, documentIds, []);
+    await cleanInvitations(invitationsBefore, documentIds);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     expect(invitationsAfter.docs.length).toEqual(2);
@@ -605,7 +606,7 @@ describe('DB cleaning script', () => {
 
     const documentIds = users.docs.map(d => d.id).concat(orgs.docs.map(d => d.id));
 
-    await cleanInvitations(invitationsBefore, documentIds, []);
+    await cleanInvitations(invitationsBefore, documentIds);
     const invitationsAfter: Snapshot = await getCollectionRef('invitations');
 
     const cleanOutput = invitationsAfter.docs.map(d => isInvitationClean(d));
