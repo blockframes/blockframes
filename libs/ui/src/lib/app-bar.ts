@@ -82,13 +82,17 @@ export class AppContainerDirective {
   ) {
     this.container = ref.nativeElement;
 
-    zone.runOutsideAngular(() => {
+    zone.runOutsideAngular(async () => {
       const heightSize = 80;
       const options = {
         root: this.container,
         rootMargin: `-${heightSize}px 0px 0px 0px`,
         threshold: 0
       }
+
+      // IntersectionObserver isn't supported on Safari older than version 12.2
+      if (!('IntersectionObserver' in window)) await import('intersection-observer');
+
       this.observer = new IntersectionObserver(([entry]) => {
         // First entry artifact (not sure what happens)
         const {x, y, width, height} = entry.rootBounds;

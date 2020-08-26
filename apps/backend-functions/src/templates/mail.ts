@@ -93,9 +93,11 @@ export function organizationAppAccessChanged(admin: PublicUser, appLabel: string
 }
 
 /** Send email to a user to inform him that he joined an org */
-export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market): EmailTemplateRequest {
+export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
-    pageURL: `${url}/c/o`
+    pageURL: `${url}/c/o`,
+    userFirstName,
+    orgName
   };
   return { to: userEmail, templateId: templateIds.request.joinOrganization.accepted, data };
 }
