@@ -21,7 +21,24 @@ mat-divider {
   margin-bottom: 36px;
 }
 
-
 button.submit {
   margin: auto;
 }
+
+.warning {
+  margin-bottom: 36px;
+  font-size: 18px;
+
+  & span {
+    display: block;
+  }
+
+  .missing-fields {
+    color: #f6a92c
+  }
+
+  .mandatory-fields {
+    color: #ff3f33;
+  }
+}
+

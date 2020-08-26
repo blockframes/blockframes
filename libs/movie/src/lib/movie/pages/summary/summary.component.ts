@@ -17,6 +17,8 @@ import { map } from 'rxjs/operators';
 })
 export class MovieFormSummaryComponent {
   form = this.shell.form;
+  missingFields: string[] = [];
+  invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
     map(status => status === 'accepted' || status === 'submitted')
     )
@@ -29,7 +31,10 @@ export class MovieFormSummaryComponent {
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery
-  ) { }
+  ) {
+    this.findInvalidControlsRecursive(this.form);
+    this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form))
+  }
 
   public get genres() {
     return [this.form.get('genres'), ...this.form.get('customGenres').controls];
@@ -85,13 +90,17 @@ export class MovieFormSummaryComponent {
   }
 
   /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray): string[] {
-    const invalidControls: string[] = [];
+  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray) {
+    this.invalidFields = [];
+    this.missingFields = [];
     const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
-          invalidControls.push(field);
+          this.invalidFields.push(field);
+        }
+        if (!control.value) {
+          this.missingFields.push(field);
         }
         if (control instanceof FormGroup) {
           recursiveFunc(control);
@@ -101,6 +110,5 @@ export class MovieFormSummaryComponent {
       });
     }
     recursiveFunc(formToInvestigate);
-    return invalidControls;
   }
 }
