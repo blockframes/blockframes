@@ -3,7 +3,8 @@
 //
 // All fixtures should support the Query Inteface
 // ***********************************************************
-//import Users from '../../../../../tools/fixtures/users.json'
+import Users from '../../../../../tools/fixtures/users.json'
+import NewUsers from './new-users.json';
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { QueryInferface } from "./queryinterface";
 
@@ -12,18 +13,12 @@ export default class User {
 
   constructor() {
     this.newUsers = [];
-    this.newUsers.push({
-      firstName: 'Mano',
-      lastName: 'Bangera',
-      email: 'mano@blockframes.com',
-      password: 'blockframes'
-    });
+    this.newUsers.push();
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {
-    let Users = null;
     let userSet: Partial<UserType>[]  = (query.exist) ? 
-                                        Users : this.newUsers;
+                                        Users : NewUsers;
 
     if (query.index && query.index != -1) {
       return [userSet[query.index]];

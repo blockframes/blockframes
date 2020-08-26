@@ -6,27 +6,28 @@ import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 import { OrganizationHomePage } from '@blockframes/e2e/pages/organization';
 import { LandingPage } from '../../support/pages/landing';
 
-import { User } from '@blockframes/e2e/utils/type';
-//@George : this gives error -- when launching tests.
-import { USERS } from '@blockframes/e2e/utils/users';
-
-//But this works..!!
-import ExUsers from './users.fixture.json';
-//import newUser from '../../fixtures/new-user.json';
+//import { User } from '@blockframes/e2e/utils/type';
+//import { USERS } from '@blockframes/e2e/utils/users';
+//import ExUsers from './users.fixture.json';
+import { User, QueryInferface } from '../../fixtures';
 
 describe('User create a screening', () => {
-  let userex = USERS[0];
 
   beforeEach(() => {
     //clearDataAndPrepareTest();
     //cy.visit('/');    
     //const p1 = new LandingPage();
     //p1.clickSignup();
-    cy.log(userex.email);
   });
 
   it('test', () => {
-    console.log(userex);
+    const userFixture = new User()
+    let user = userFixture.get({exist: true, key: 'email', value: 'julie@fake.com'});
+    cy.log(user[0].email);
+    console.log(user);
+    user = userFixture.get({exist: false, index: 0});
+    cy.log(user[0].email);
+    console.log(user);
   })
 
   /*
