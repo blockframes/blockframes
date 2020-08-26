@@ -51,10 +51,9 @@
     <section id="images">
 
       <article>
-        <h5>Poster Image</h5>
-        <p>
-          The poster image will be used as the main image to represent your film on the marketplace, and, more
-          generally, for all film components requiring vertical formats on the marketplace.
+        <h6>Poster Image</h6>
+        <p class="mat-body-2">
+          The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
@@ -64,10 +63,9 @@
       </article>
 
       <article>
-        <h5>Film Page Banner Image</h5>
-        <p>
-          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
-          for all film components requiring horizontal formats on the marketplace.
+        <h6>Film Banner</h6>
+        <p class="mat-body-2">
+          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 type>Film Banner Image</h3>
@@ -159,8 +157,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
-          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
-            placeholder="To be determined/Estimated/Confirmed" required fxFlex>
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" placeholder="To be determined/Estimated/Confirmed" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
@@ -211,8 +208,7 @@
             <div fxLayout fxLayoutGap="24px">
 
               <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
-                <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex
-                  required>
+                <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex>
                   <mat-label>Director's Directors Status</mat-label>
                   <mat-hint>
                     Please specify if the director is confirmed for this project or not.
@@ -220,8 +216,7 @@
                 </static-select>
               </ng-container>
 
-              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex
-                required>
+              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex>
                 <mat-label>Director's Directors Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.
@@ -237,7 +232,6 @@
               </mat-hint>
             </mat-form-field>
             <div fxLayout="column" fxLayoutAlign="start">
-              <h6 class="mat-caption">Filmography</h6>
               <ng-container *ngFor="let filmography of directorForm.get('filmography').controls">
                 <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
