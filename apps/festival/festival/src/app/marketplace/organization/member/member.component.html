@@ -4,7 +4,7 @@
   <h2>Company Information</h2>
   <article>
     <h5>Address</h5>
-    <p>{{ org | orgAddress }}</p>
+    <p>{{ org | orgAddress | titlecase }}</p>
   </article>
   <article *ngIf="org.addresses.main.phoneNumber">
     <h5>Phone Number</h5>
