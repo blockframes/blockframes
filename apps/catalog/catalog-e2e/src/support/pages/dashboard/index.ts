@@ -14,6 +14,7 @@ import TunnelContractPage from "./TunnelContractPage";
 import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
 import TitlesDetailsPage from "./TitlesDetailsPage";
 import TitlesActivityPage from "./TitlesActivityPage";
+import TunnelPromotionalImagesPage from "./TunnelPromotionalImagesPage";
 
 export {
   StartTunnelPage,
@@ -31,5 +32,6 @@ export {
   TunnelContractPage,
   TunnelContractSummaryPage,
   TitlesDetailsPage,
-  TitlesActivityPage
+  TitlesActivityPage,
+  TunnelPromotionalImagesPage
 };

@@ -7,13 +7,13 @@
  */
 import * as functions from 'firebase-functions';
 
-import { algolia as algoliaClient } from '@env';
+import { algolia as algoliaClient, dev } from '@env';
 export {
   factoryContract,
   backupBucket,
   relayer,
-  appUrlMarket,
-  appUrlContent,
+  appUrl,
+  sentryEnv,
   sentryDsn,
   bigQueryAnalyticsTable,
   centralOrgID,
@@ -41,7 +41,9 @@ export const algolia = {
   adminKey: mockConfigIfNeeded('algolia', 'api_key')
 };
 
-export const adminEmail = mockConfigIfNeeded('admin', 'email');
+
+
+export const adminEmail = dev ? mockConfigIfNeeded('admin', 'password'): 'developers@cascade8.com';
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');

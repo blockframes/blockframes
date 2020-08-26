@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LandingComponent } from './landing.component';
 import { LandingModule } from '@blockframes/landing/landing.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';

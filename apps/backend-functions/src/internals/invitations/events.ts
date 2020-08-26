@@ -8,7 +8,7 @@ import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../te
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 import { EmailRecipient } from "@blockframes/utils/emails";
-import { getAppName, getSendgridFrom, App, sendgridUrl } from "@blockframes/utils/apps";
+import { getAppName, getSendgridFrom, App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 
 
@@ -83,7 +83,7 @@ async function onInvitationToAnEventCreate({
     const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const senderName = orgName(org);
     const link = getEventLink(org);
-    const urlToUse = sendgridUrl[appKey];
+    const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
     const from = getSendgridFrom(appKey);
 
@@ -103,7 +103,7 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     const link = getEventLink(org);
-    const urlToUse = sendgridUrl[appKey];
+    const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
     const from = getSendgridFrom(appKey);
 

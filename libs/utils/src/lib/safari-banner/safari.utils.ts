@@ -10,8 +10,7 @@ export function isSafari() {
         return p.toString() === "[object SafariRemoteNotification]";
       }
     )(
-      !window['safari'] ||
       // @ts-ignore
-      (typeof safari !== 'undefined' && safari.pushNotification)
+      !window['safari'] || (typeof safari !== 'undefined' && safari.pushNotification)
     );
 }

@@ -18,15 +18,16 @@ import { OrganizationComponent } from './organization.component';
 // Modules
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationDisplayModule } from '@blockframes/organization/components/organization-display/organization-display.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 import { OrganizationFormAddressModule } from '@blockframes/organization/forms/organization-form-address/organization-form-address.module';
 import { OrganizationFormDescriptionModule } from '@blockframes/organization/forms/organization-form-description/organization-form-description.module';
 import { MemberRepertoryModule } from '@blockframes/organization/components/member-repertory/member-repertory.module';
 import { MemberPendingModule } from '@blockframes/organization/components/member-pending/member-pending.module';
 import { MemberRequestModule } from '@blockframes/organization/components/member-request/member-request.module';
 import { MemberAddModule } from '@blockframes/organization/components/member-add/member-add.module';
-import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { GoToModule } from '../../components/go-to/go-to.module';
 
 @NgModule({
   imports: [
@@ -52,7 +53,8 @@ import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.
     MemberPendingModule,
     MemberRequestModule,
     MemberAddModule,
-    ImageSizesModule,
+    OrgNameModule,
+    GoToModule,
   ],
   declarations: [
     OrganizationComponent,

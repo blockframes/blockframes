@@ -1,187 +1,191 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
-<section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
-  <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
-    <h4>{{ org.denomination.full }} <ng-container *ngIf="org.denomination.public">({{ org.denomination.public }})</ng-container></h4>
-    <organization-display [organization]="org"></organization-display>
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
+  <section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
+    <article fxLayout="column" fxLayoutAlign="space-between start" class="main-article">
 
-    <admin-image-sizes [imgRef]="org.logo">
-      <h3>Image sizes</h3>
-    </admin-image-sizes>
-  </article>
-  <article *ngIf="orgForm" fxLayout="column" class="main-article">
-    <form [formGroup]="orgForm" fxLayout="column">
-
-       <!-- Contact Information -->
-      <mat-card>
+      <organization-display [organization]="org">
         <mat-card-header>
-          <mat-card-title>Contact Information</mat-card-title>
+          <mat-card-title>{{ org | orgName:'long' }} </mat-card-title>
         </mat-card-header>
-        <mat-card-content fxLayout="column">
-          <article formGroupName="denomination">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Company Name</mat-label>
-              <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
+      </organization-display>
+
+    </article>
+    <article *ngIf="orgForm" fxLayout="column" class="main-article">
+      <form [formGroup]="orgForm" fxLayout="column">
+
+        <!-- Contact Information -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Contact Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayout="column">
+            <article formGroupName="denomination">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Company Name</mat-label>
+                <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
+                <mat-error *ngIf="orgForm.get('denomination').hasError('required')">Company name is required</mat-error>
+                <mat-error *ngIf="orgForm.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Company Public Name</mat-label>
+                <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
+              </mat-form-field>
+            </article>
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Email Address</mat-label>
+              <input
+                matInput
+                placeholder="Contact Email Address"
+                aria-label="Contact Email Address"
+                type="email"
+                formControlName="email"
+              />
+              <mat-error *ngIf="orgForm.get('email').hasError('email')">Email not valid</mat-error>
             </mat-form-field>
-            <mat-error *ngIf="orgForm.get('denomination').hasError('required')">Company name is required</mat-error>
-            <mat-error *ngIf="orgForm.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Company Public Name</mat-label>
-              <input test-id="public-name" matInput placeholder="Company Public Name" formControlName="public" type="text"/>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Company Logo -->
+        <mat-card class="company-logo">
+          <mat-card-header>
+            <mat-card-title>Company Logo</mat-card-title>
+            <mat-card-subtitle>Upload company Logo</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <drop-cropper ratio="square" [storagePath]="storagePath" [form]="orgForm.get('logo')">
+              <h3 type>Logo</h3>
+              <p class="mat-body-2">Recommended : 512 x 512 px</p>
+              <p class="mat-caption">Accepted Formats : jpg, png</p>
+            </drop-cropper>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Legal Entity -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Company Description</mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayout="column">
+            <organization-form-description [activity]="orgForm.get('activity')" [fiscalNumber]="orgForm.get('fiscalNumber')" ></organization-form-description>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Headquarters Address -->
+        <mat-card class="company-address">
+          <mat-card-content>
+            <organization-form-address [form]="orgForm.get('addresses').get('main')"></organization-form-address>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Admin settings -->
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Admin settings</mat-card-title>
+          </mat-card-header>
+          <mat-card-content fxLayout="column">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Org Status</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option *ngFor="let status of organizationStatus | keyvalue" [value]="status.key">
+                  {{ status.value }}
+                </mat-option>
+              </mat-select>
             </mat-form-field>
-          </article>
-          <mat-form-field appearance="outline">
-            <mat-label>Contact Email Address</mat-label>
-            <input
-              matInput
-              placeholder="Contact Email Address"
-              aria-label="Contact Email Address"
-              type="email"
-              formControlName="email"
-            />
-            <mat-error *ngIf="orgForm.get('email').hasError('email')">Email not valid</mat-error>
-          </mat-form-field>
-        </mat-card-content>
-      </mat-card>
+            <h2>Application Access</h2>
 
-      <!-- Company Logo -->
-      <mat-card class="company-logo">
-        <mat-card-header>
-          <mat-card-title>Company Logo</mat-card-title>
-          <mat-card-subtitle>Upload company Logo</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <drop-cropper ratio="square" [storagePath]="storagePath" [form]="orgForm.get('logo')">
-            <h3 type>Logo</h3>
-            <p class="mat-body-2">Recommended : 512 x 512 px</p>
-            <p class="mat-caption">Accepted Formats : jpg, png</p>
-          </drop-cropper>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Legal Entity -->
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Company Description</mat-card-title>
-        </mat-card-header>
-        <mat-card-content fxLayout="column">
-          <organization-form-description [activity]="orgForm.get('activity')" [fiscalNumber]="orgForm.get('fiscalNumber')" ></organization-form-description>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Headquarters Address -->
-      <mat-card class="company-address">
-        <mat-card-content>
-          <organization-form-address [form]="orgForm.get('addresses').get('main')"></organization-form-address>
-        </mat-card-content>
-      </mat-card>
-
-      <!-- Admin settings -->
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Admin settings</mat-card-title>
-        </mat-card-header>
-        <mat-card-content fxLayout="column">
-
-          <mat-form-field appearance="outline">
-            <mat-label>Org Status</mat-label>
-            <mat-select formControlName="status" required>
-              <mat-option *ngFor="let status of organizationStatus | keyvalue" [value]="status.key">
-                {{ status.value }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <h2>Application Access</h2>
-
-          <div *ngFor="let a of app">
-            <div [formGroup]="orgForm.appAccess.get(a)">
-              <strong>{{ a | titlecase }}</strong>
-              <mat-checkbox formControlName="dashboard" color="primary">
-                Dashboard
-              </mat-checkbox>
-              <mat-checkbox formControlName="marketplace" color="primary">
-                Marketplace
-              </mat-checkbox>
+            <div *ngFor="let a of app">
+              <div [formGroup]="orgForm.appAccess.get(a)">
+                <strong>{{ a | titlecase }}</strong>
+                <mat-checkbox formControlName="dashboard" color="primary">
+                  Dashboard
+                </mat-checkbox>
+                <mat-checkbox formControlName="marketplace" color="primary">
+                  Marketplace
+                </mat-checkbox>
+              </div>
             </div>
-          </div>
 
-          <mat-checkbox [formControl]="notifyCheckbox">
-            Notify admin(s) of app access changes ?
-          </mat-checkbox>
+            <mat-checkbox [formControl]="notifyCheckbox">
+              Notify admin(s) of app access changes ?
+            </mat-checkbox>
 
-          <mat-card-actions align="end">
-            <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-          </mat-card-actions>
-        </mat-card-content>
-      </mat-card>
-    </form>
-  </article>
-</section>
-<hr />
-<section  fxLayout="row" fxLayoutAlign="space-around start">
-  <article fxLayout="column" fxLayoutAlign="space-between start">
-    <member-repertory
-      [members]="members"
-      [isSuperAdmin]="true"
-      [showFilter]="true"
-      [memberColumns]="memberColumns"
-      [memberColumnsIndex]="memberColumnsIndex"
-      (memberRemoved)="removeMember($event)"
-      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-      (updatedToAdmin)="updateRole($event, 'admin')"
-      (updatedToMember)="updateRole($event, 'member')">
-    </member-repertory>
-  </article>
-  
-  <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-    <article fxLayout="column" fxLayoutAlign="space-between start">
-      <member-pending *ngIf="invitationsMember.length > 0"
-        [invitations]="invitationsMember"
-        (declined)="deleteInvitation($event)"
-        [isAdmin]="true">
-      </member-pending>
+            <mat-card-actions align="end">
+              <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+            </mat-card-actions>
+          </mat-card-content>
+        </mat-card>
+      </form>
     </article>
-  </ng-container>
-  
-  <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+  </section>
+  <hr />
+  <section  fxLayout="row" fxLayoutAlign="space-around start">
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <member-request *ngIf="invitations.length > 0"
-        (declined)="declineInvitation($event)"
-        (accepted)="acceptInvitation($event)"
-        [invitations]="invitations"
-        [isAdmin]="true">
-      </member-request>
+      <member-repertory
+        [members]="members"
+        [isSuperAdmin]="true"
+        [showFilter]="true"
+        [memberColumns]="memberColumns"
+        [memberColumnsIndex]="memberColumnsIndex"
+        (memberRemoved)="removeMember($event)"
+        (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+        (updatedToAdmin)="updateRole($event, 'admin')"
+        (updatedToMember)="updateRole($event, 'member')">
+      </member-repertory>
     </article>
-  </ng-container>
-  <article fxLayout="column" fxLayoutAlign="space-between start">
-    <member-add [orgId]="orgId"></member-add>
-  </article>
-</section>
-<hr />
-<section  fxLayout="row" fxLayoutAlign="space-around start">
-  <article fxLayout="column" fxLayoutAlign="space-between start">
-    <h2>Movies</h2>
-    <bf-table-filter
-      [source]="movies"
-      [columns]="versionColumnsMovies"
-      [initialColumns]="initialColumnsMovies"
-      [filterPredicate]="filterPredicateMovies"
-      showFilter
-      showLoader
-      showPaginator>
-      <ng-template colRef="promotionalElements.poster" let-posters>
-        <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-          <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
-        </ng-container>
-        <ng-template #noposter>
-          --
+
+    <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+      <article fxLayout="column" fxLayoutAlign="space-between start">
+        <member-pending *ngIf="invitationsMember.length > 0"
+          [invitations]="invitationsMember"
+          (declined)="deleteInvitation($event)"
+          [isAdmin]="true">
+        </member-pending>
+      </article>
+    </ng-container>
+
+    <ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+      <article fxLayout="column" fxLayoutAlign="space-between start">
+        <member-request *ngIf="invitations.length > 0"
+          (declined)="declineInvitation($event)"
+          (accepted)="acceptInvitation($event)"
+          [invitations]="invitations"
+          [isAdmin]="true">
+        </member-request>
+      </article>
+    </ng-container>
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <member-add [org]="org"></member-add>
+    </article>
+  </section>
+  <hr />
+  <section  fxLayout="row" fxLayoutAlign="space-around start">
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Movies</h2>
+      <bf-table-filter
+        [source]="movies"
+        [columns]="versionColumnsMovies"
+        [initialColumns]="initialColumnsMovies"
+        [filterPredicate]="filterPredicateMovies"
+        showFilter
+        showLoader
+        showPaginator>
+        <ng-template colRef="main.poster" let-posters>
+          <ng-container *ngIf="posters && posters.media as poster; else noposter">
+            <img class="poster" [ref]="poster" asset="empty_poster.webp">
+          </ng-container>
+          <ng-template #noposter>
+            --
+          </ng-template>
         </ng-template>
-      </ng-template>
-      <ng-template colRef="id" let-id>
-        <a target="_blank" [routerLink]="getMoviePath(id)" routerLinkActive="active"> {{ id }}</a>
-      </ng-template>
-      <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </ng-template>
-    </bf-table-filter>
-  </article>
-</section>
+        <ng-template colRef="id" let-id>
+          <span>{{ id }} </span>
+          <admin-go-to type="title" [id]="id"></admin-go-to>
+        </ng-template>
+        <ng-template colRef="edit" let-edit>
+          <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+        </ng-template>
+      </bf-table-filter>
+    </article>
+  </section>
+</main>

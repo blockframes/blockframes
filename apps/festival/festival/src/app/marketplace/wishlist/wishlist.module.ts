@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 // Material
@@ -29,7 +29,7 @@ import { WishlistComponent } from './wishlist.component';
     FlexLayoutModule,
     // Blockframes
     TranslateSlugModule,
-    ImgModule,
+    ImageReferenceModule,
     DurationModule,
     // Material
     MatButtonModule,

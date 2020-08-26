@@ -1,29 +1,27 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Invoice list</h1>
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Invoice list</h1>
 
-<bf-table-filter 
-  [source]="rows" 
-  [columns]="versionColumns" 
-  [initialColumns]="initialColumns" 
-  [filterPredicate]="filterPredicate"
-  showFilter
-  showLoader
-  showPaginator>
-  <ng-template colRef="collected" let-collected>
-    {{ collected.amount | currency: getCurrencyCode(collected.currency) }}
-  </ng-template>
-  <ng-template colRef="legalDocumentId" let-id>
-    <a target="_blank" [routerLink]="getLegalDocument(id)" routerLinkActive="active"> {{ id }}</a>
-  </ng-template>
-  <ng-template colRef="buyerId" let-id>
-    <a target="_blank" [routerLink]="getOrgPath(id)" routerLinkActive="active"> {{ id }}</a>
-  </ng-template>
-  <ng-template colRef="emittedDate" let-emittedDate>
-    {{ emittedDate | date: 'short' }}
-  </ng-template>
-  <ng-template colRef="contractLink" let-contractLink>
-    <a [routerLink]="contractLink.link">{{ contractLink.id }}</a>
-  </ng-template>
-  <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-  </ng-template>
-</bf-table-filter>
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    <ng-template colRef="collected" let-collected>
+      {{ collected.amount | currency: getCurrencyCode(collected.currency) }}
+    </ng-template>
+    <ng-template colRef="legalDocumentId" let-id>
+      <a target="_blank" [routerLink]="getLegalDocument(id)" routerLinkActive="active"> {{ id }}</a>
+    </ng-template>
+    <ng-template colRef="buyerId" let-id>
+      <a target="_blank" [routerLink]="['/c/o/admin/panel/organization', id]" routerLinkActive="active"> {{ id }}</a>
+    </ng-template>
+    <ng-template colRef="emittedDate" let-emittedDate>
+      {{ emittedDate | date: 'short' }}
+    </ng-template>
+    <ng-template colRef="contractLink" let-contractLink>
+      <a [routerLink]="contractLink.link">{{ contractLink.id }}</a>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link">
+        <mat-icon svgIcon="pencil"></mat-icon>
+      </a>
+    </ng-template>
+  </bf-table-filter>
+</main>

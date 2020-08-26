@@ -47,6 +47,10 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async initPlayer(watermarkUrl: string) {
+    if (!watermarkUrl) {
+      console.error('We cannot load video without watermark.');
+      return;
+    }
     const { id } = this.eventQuery.getActive();
 
     const callDeploy = this.functions.httpsCallable('privateVideo');
@@ -75,7 +79,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    const watermarkUrl = this.authQuery.user.watermark.urls?.original;
+    const watermarkUrl = this.authQuery.user.watermark.url;
     await this.loadScript();
     this.initPlayer(watermarkUrl);
   }

@@ -1,0 +1,24 @@
+<mat-list>
+  <ng-container *ngFor="let timeFrame of timeFrames; let first=first; let last=last">
+    <!-- For a time frame -->
+    <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
+
+      <p class="mat-body-2" *ngIf="invitationList.length">
+        {{ timeFrame | labelByDate }}
+      </p>
+      <mat-divider *ngIf="invitationList.length"></mat-divider>
+
+      <!-- Display all invitations -->
+      <ng-container *ngFor="let invitation of invitationList | slice:pageConfig.from:pageConfig.to">
+        <ng-template [ngTemplateOutlet]="itemTemplate || default" [ngTemplateOutletContext]="{ $implicit: invitation }">
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  <mat-paginator [length]="invitations.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+    (page)="setPage($event)"></mat-paginator>
+</mat-list>
+
+<ng-template #default let-invitation>
+  <invitation-item [invitation]="invitation"></invitation-item>
+</ng-template>

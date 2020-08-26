@@ -30,6 +30,6 @@ export default class WishlistPage extends NavbarPage {
 
   public removeMovieFromWishlist(movieName: string) {
     cy.get('catalog-wishlist').contains('tr', movieName).find('button[test-id=remove]').click();
-    cy.wait(2000);
+    cy.wait(5000);
   }
 }

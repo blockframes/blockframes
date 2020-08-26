@@ -96,14 +96,26 @@ export const fade = trigger('fade', [
 ]);
 
 export const fadeList = (selector: string) => trigger('fadeList', [
+  transition(':increment', [
+    query(`${selector}:enter`, [
+      style({  opacity: 0, transform: 'scale(0.95)' }),
+      stagger(30, [animate(`0.3s ${Easing.easeOutcubic}`, style({opacity: '1', transform: 'scale(1)'}))])
+    ], { optional: true }),
+  ]),
+  transition(':decrement', [
+    query(`${selector}:leave`, [
+      style({  opacity: 1, transform: 'scale(1)' }),
+      stagger(-30, [animate(`0.3s ${Easing.easeOutcubic}`, style({opacity: 0, transform: 'scale(0.95)'}))])
+    ], { optional: true }),
+  ]),
   transition(':enter', [
     query(selector, [
       style({  opacity: 0, transform: 'scale(0.95)' }),
-      stagger(-30, [animate(`1s ${Easing.easeOutcubic}`, style({opacity: '1', transform: 'scale(1)'}))])
+      stagger(30, [animate(`0.3s ${Easing.easeOutcubic}`, style({opacity: '1', transform: 'scale(1)'}))])
     ], { optional: true }),
- ]),
+  ]),
   transition(':leave', [
     style({opacity: '1', transform: 'scale(1)'}),
     animate(`0.3s ${Easing.easeIncubic}`, style({opacity: '0', transform: 'scale(0.95)'})
- )])
+  )])
 ]);

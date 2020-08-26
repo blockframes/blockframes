@@ -3,8 +3,8 @@
   <h1 subtitle>Promotional Images</h1>
   <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
   <ng-container tunnel-form>
-    <!-- TODO#1625 cropzone doesn't match with source image on large screen -->
-    <!-- Banner -->
+
+    <!-- BANNER -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>Banner Image</mat-card-title>
@@ -12,65 +12,67 @@
       </mat-card-header>
       <mat-card-content>
         <drop-cropper
-          [storagePath]="bannerPath"
+          [storagePath]="movieId | ref: 'movie' : 'banner'"
           ratio="banner"
-          [form]="banner.get('media')">
+          [form]="form.main.banner.get('media')">
           <h3 type>Banner Image*</h3>
           <p class="mat-body-2" dimensions>Ratio : 16:9</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-      </drop-cropper>
+        </drop-cropper>
       </mat-card-content>
     </mat-card>
-    <!-- Poster -->
+
+
+    <!-- POSTERs -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>Poster</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let control of poster.controls">
-          <drop-cropper
-            [storagePath]="posterPath"
-            ratio="poster"
-            [form]="control.get('media')">
-            <h3 type>Poster</h3>
-            <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
-            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
-          </drop-cropper>
-        </ng-container>
+        <drop-cropper
+          [storagePath]="movieId | ref: 'movie' : 'poster'"
+          ratio="poster"
+          [form]="form.main.poster.get('media')">
+          <h3 type>Poster*</h3>
+          <p class="mat-body-2" dimensions>Dimensions : 120 x 160 px</p>
+          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
+        </drop-cropper>
       </mat-card-content>
     </mat-card>
-    <!-- Still Photos -->
+
+
+    <!-- STILL PHOTOs -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>Stills</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
-          <span class="still mat-body-2">Still # {{i + 1}}</span>
+
+        <ng-container *ngFor="let stillForm of form.promotionalElements.get('still_photo').controls | keyvalue; let i = index; trackBy: trackByFn">
+
+          <span class="still mat-body-2">Still # {{ i }}</span>
+
           <drop-cropper
-            [storagePath]="stillPath"
+            [storagePath]="movieId | ref: 'movie' : 'still' : stillForm.key"
             ratio="still"
-            [form]="control.get('media')">
+            [form]="stillForm.value.get('media')">
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
           </drop-cropper>
-          <!-- Add / Delete -->
-          <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-mini-fab color="warn" (click)="stillPhoto.removeAt(i)" aria-label="Remove a director form">
-              <mat-icon svgIcon="trash"></mat-icon>
-            </button>
-            <span>Delete Still</span>
-          </footer>
-          <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Remove a director form">
-              <mat-icon svgIcon="add"></mat-icon>
-            </button>
-            <span>Add Still</span>
-          </footer>
+
           <mat-divider [inset]="true"></mat-divider>
+
         </ng-container>
-        </mat-card-content>
-      </mat-card>
+
+        <footer fxLayout="column" fxLayoutAlign="center center">
+          <button mat-mini-fab color="primary" (click)="addStill()" aria-label="Add a director form">
+            <mat-icon svgIcon="add"></mat-icon>
+          </button>
+          <span>Add a still photo</span>
+        </footer>
+
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </tunnel-page>

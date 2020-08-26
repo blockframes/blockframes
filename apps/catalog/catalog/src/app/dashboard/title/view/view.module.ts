@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
@@ -42,7 +42,7 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     TranslateSlugModule,
     DurationModule,
     // Material

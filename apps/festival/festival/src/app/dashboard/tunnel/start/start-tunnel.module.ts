@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Materials
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-    ImgModule,
+    ImageReferenceModule,
     
     // Material
     MatCardModule,

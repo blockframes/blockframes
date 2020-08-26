@@ -1,39 +1,37 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
 
-<bf-table-filter 
-  [source]="rows" 
-  [columns]="versionColumns" 
-  [initialColumns]="initialColumns" 
-  [filterPredicate]="filterPredicate"
-  showFilter
-  showLoader
-  showPaginator>
-  <ng-template colRef="lastVersion.scope" let-terms>
-    <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
-  </ng-template>
-  <ng-template colRef="lastVersion.status" let-status>
-    {{ status | toLabel: 'contractStatus' | async }}
-  </ng-template>
-  <ng-template colRef="type" let-type>
-    {{ type | toLabel: 'contractType' | async }}
-  </ng-template>
-  <ng-template colRef="partyIds" let-partyIds>
-    <ul *ngIf="partyIds.length else noParties">
-      <li *ngFor="let partyId of partyIds">{{ partyId }}</li>
-    </ul>
-    <ng-template #noParties>
-      --
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    <ng-template colRef="lastVersion.scope" let-terms>
+      <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
     </ng-template>
-  </ng-template>
-  <ng-template colRef="titleIds" let-titleIds>
-    <ul *ngIf="titleIds.length else noTitles">
-      <li *ngFor="let titleId of titleIds">{{ titleId }}</li>
-    </ul>
-    <ng-template #noTitles>
-      --
+    <ng-template colRef="lastVersion.status" let-status>
+      {{ status | toLabel: 'contractStatus' | async }}
     </ng-template>
-  </ng-template>
-  <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-  </ng-template>
-</bf-table-filter>
+    <ng-template colRef="type" let-type>
+      {{ type | toLabel: 'contractType' | async }}
+    </ng-template>
+    <ng-template colRef="partyIds" let-partyIds>
+      <ul *ngIf="partyIds.length else noParties">
+        <li *ngFor="let partyId of partyIds">{{ partyId }}</li>
+      </ul>
+      <ng-template #noParties>
+        --
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="titleIds" let-titleIds>
+      <ul *ngIf="titleIds.length else noTitles">
+        <li *ngFor="let titleId of titleIds">{{ titleId }}</li>
+      </ul>
+      <ng-template #noTitles>
+        --
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link">
+        <mat-icon svgIcon="pencil"></mat-icon>
+      </a>
+    </ng-template>
+  </bf-table-filter>
+</main>

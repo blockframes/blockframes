@@ -12,7 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 
 // Modules
-import { ImageReferenceModule } from '../media';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 
 @NgModule({

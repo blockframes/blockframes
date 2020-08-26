@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -20,7 +21,7 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
@@ -51,6 +52,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     FlexLayoutModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
+    OverlayModule,
 
     // Intercom
     intercomId ? IntercomAppModule : [],
@@ -85,7 +87,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       scrollPositionRestoration: 'enabled'
     })
   ],
-  providers: [ScreenTrackingService, UserTrackingService],
+  providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

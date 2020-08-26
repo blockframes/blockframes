@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getValue } from '@blockframes/utils/helpers';
+import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-movies',
@@ -14,9 +15,9 @@ export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'main.internalRef': 'Internal Ref',
-    'promotionalElements.poster': 'Poster',
+    'main.poster': 'Poster',
     'main.title.original': 'Original title',
-    'main.productionYear': 'Production year',
+    'org': 'Organization',
     'main.storeConfig.status': 'Status',
     'main.storeConfig.storeType': 'Store type',
     'distributionRightsInfo': 'Distribution rights',
@@ -26,10 +27,10 @@ export class MoviesComponent implements OnInit {
 
   public initialColumns: string[] = [
     'id',
-    'promotionalElements.poster',
+    'main.poster',
     'main.internalRef',
     'main.title.original',
-    'main.productionYear',
+    'org',
     'main.storeConfig.status',
     'main.storeConfig.storeType',
     'distributionRightsInfo',
@@ -37,10 +38,13 @@ export class MoviesComponent implements OnInit {
     'edit',
   ];
   public rows: any[] = [];
+  public orgs: Record<string, Organization> = {};
+
   constructor(
     private movieService: MovieService,
     private distributionRightService: DistributionRightService,
     private contractService: ContractService,
+    private orgService: OrganizationService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -72,6 +76,8 @@ export class MoviesComponent implements OnInit {
         link: `/c/o/admin/panel/movie/${m.id}`,
       }
 
+      row.org = await this.getOrg(m.id);
+
       return row;
     })
 
@@ -86,7 +92,6 @@ export class MoviesComponent implements OnInit {
       'id',
       'main.internalRef',
       'main.title.original',
-      'main.productionYear',
       'main.storeConfig.status',
       'main.storeConfig.storeType',
     ];
@@ -94,8 +99,27 @@ export class MoviesComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getPath(movieId: string, segment: string = 'main') {
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+  public exportTable() {
+    const exportedRows = this.rows.map(m => ({
+      'movie id': m.id,
+      'title': m.main.title.international,
+      'internal ref': m.main.internalRef ? m.main.internalRef : '--',
+      'org': m.org ? orgName(m.org) : '--',
+      'orgId': m.org ? m.org.id : '--',
+      'status': m.main.storeConfig.status,
+      'storeType': m.main.storeConfig.storeType,
+      'distributionRightsInfo': m.distributionRightsInfo.count,
+      'contractsInfo': m.contractsInfo.count,
+    }))
+    downloadCsvFromJson(exportedRows, 'movies-list');
   }
 
+  private async getOrg(id: string): Promise<Organization> {
+    if (!this.orgs[id]) {
+      const orgs = await this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', id));
+      this.orgs[id] = orgs.pop();
+    }
+
+    return this.orgs[id];
+  }
 }

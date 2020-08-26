@@ -1,7 +1,10 @@
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
-import { LayoutModule } from './layout/layout.module';
+import { MarketplaceComponent } from './marketplace.component';
+import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Guards
 import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
@@ -9,16 +12,21 @@ import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+
+// Material
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes: Routes = [{
   path: '',
-  component: LayoutComponent,
+  component: MarketplaceComponent,
   children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
       path: 'home',
-      loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+      loadChildren: () => import('./home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
       path: 'about',
@@ -38,37 +46,24 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
       data: { animation: 'invitations' }
-    },
-    {
-      path: 'search',
-      loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
       path: 'selection',
       canActivate: [CatalogCartGuard],
       canDeactivate: [CatalogCartGuard],
-      loadChildren: () => import('./movie/selection/selection.module').then(m => m.SelectionModule)
+      loadChildren: () => import('./title/selection/selection.module').then(m => m.SelectionModule)
     },
     {
       path: 'wishlist',
-      children: [
-        {
-          path: '',
-          redirectTo: 'view',
-          pathMatch: 'full'
-        },
-        {
-          path: 'view',
-          loadChildren: () => import('./movie/wishlist/wishlist.module').then(m => m.WishlistModule)
-        }
-      ]
+      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule),
+      data: { animation: 'wishlist' }
     },
     {
       path: 'deals',
@@ -85,17 +80,17 @@ const routes: Routes = [{
       }]
     },
     {
-      path: ':movieId',
-      canActivate: [MovieActiveGuard],
-      canDeactivate: [MovieActiveGuard],
-      children: [
-        { path: '', redirectTo: 'view', pathMatch: 'full' },
-        {
-          path: 'view',
-          loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
-        }
-      ],
-      data: { redirect: '/c/o/marketplace/home' }
+      path: 'title',
+      children: [{
+        path: '',
+        loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule)
+      }, {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
+        loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
+        data: { redirect: '/c/o/marketplace/home' }
+      }]
     },
     {
       path: 'tunnel',
@@ -113,6 +108,16 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [LayoutModule, RouterModule.forChild(routes)]
+  declarations: [MarketplaceComponent],
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+    MarketplaceLayoutModule,
+    MatBadgeModule,
+    RouterModule.forChild(routes)
+  ]
 })
 export class MarketplaceModule { }

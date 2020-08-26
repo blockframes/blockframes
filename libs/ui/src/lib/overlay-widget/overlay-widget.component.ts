@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef, Output, EventEmitter } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -54,9 +54,10 @@ const fade = trigger('fade', [
 })
 export class OverlayWidgetComponent implements OnDestroy {
   @ViewChild('ref') public ref: TemplateRef<any>;
+  @Output() openedChanged = new EventEmitter<boolean>();
   private overlayRef: OverlayRef;
   private widgetPortal: TemplatePortal;
-  private opened = false;
+  private isOpen = false;
 
   constructor(
     private overlay : Overlay,
@@ -72,10 +73,10 @@ export class OverlayWidgetComponent implements OnDestroy {
   }
 
   open(connectedTo: ElementRef, tooltip?: boolean) {
-    if (this.opened) {
+    if (this.isOpen) {
       return;
     }
-    this.opened = true;
+    this.isOpen = true;
     if (!this.overlayRef) {
       const positionStrategy = this.overlay
       .position()
@@ -97,12 +98,14 @@ export class OverlayWidgetComponent implements OnDestroy {
       this.overlayRef.backdropClick().subscribe(() => this.close());
     }
     this.overlayRef.attach(this.widgetPortal);
+    this.openedChanged.emit(true);
   }
 
   close() {
-    if (this.overlayRef && this.opened) {
-      this.opened = false;
+    if (this.overlayRef && this.isOpen) {
+      this.isOpen = false;
       this.overlayRef.detach();
+      this.openedChanged.emit(false);
     }
   }
 }

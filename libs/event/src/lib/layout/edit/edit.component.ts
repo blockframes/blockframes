@@ -25,14 +25,19 @@ export class EventEditComponent {
     private router: Router,
     private route: ActivatedRoute,
   ) { }
-  
+
   get meta() {
     return this.form.get('meta');
   }
 
   save() {
     if (this.form.valid && this.form.dirty) {
-      this.service.update(this.form.value);
+      const value = this.form.value;
+      if (this.form.value.allDay) {
+        value.start.setHours(0,0,0);
+        value.end.setHours(23,59,59);
+      }
+      this.service.update(value);
       this.form.markAsPristine();
     }
   }

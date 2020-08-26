@@ -10,25 +10,7 @@ a {
   height: 100%;
   width: 100%;
 }
-.screening-large {
-  background-position: top;
-  background-size: cover;
-  height: 100%;
 
-  article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    padding: 8px;
-    background-color: rgb(black, 0.6);
-
-    h6 {
-      max-width: 100%;
-      white-space: normal;
-      text-align: center;
-    }
-  }
+.mat-badge {
+  position: static;
 }

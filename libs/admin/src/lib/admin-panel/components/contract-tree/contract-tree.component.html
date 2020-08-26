@@ -13,9 +13,7 @@
       <li>
         <div class="mat-tree-node">
           <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.id">
-            <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
+            <mat-icon [svgIcon]="treeControl.isExpanded(node) ? 'chevron_bottom' : 'chevron_right'"></mat-icon>
           </button>
           <ng-template *ngTemplateOutlet="treeNode; context: {$implicit: node}"></ng-template>
         </div>
@@ -30,16 +28,11 @@
 <ng-template #treeNode let-node>
   <ng-container *ngIf="node.id === contract.id else displaywithLink">
     <strong>{{ node.id }} ({{ node.contract.type }})</strong>
-    <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(node.contract)">
-      <mat-icon svgIcon="eye"></mat-icon>
-    </button>
+    <admin-go-to type="contract" [id]="node.contract.id" [festival]="false" [suffix]="node.contract.type" ></admin-go-to>
   </ng-container>
   <ng-template #displaywithLink>
-    <a [routerLink]="getContractPath(node.id)" routerLinkActive="active"> {{ node.id }}
-      ({{ node.contract.type }})</a>
-    <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(node.contract)">
-      <mat-icon svgIcon="eye"></mat-icon>
-    </button>
+    <a [routerLink]="['/c/o/admin/panel/contract', node.id]" routerLinkActive="active"> {{ node.id }} ({{ node.contract.type }})</a>
+    <admin-go-to type="contract" [id]="node.contract.id" [festival]="false" [suffix]="node.contract.type" ></admin-go-to>
   </ng-template>
 </ng-template>
 

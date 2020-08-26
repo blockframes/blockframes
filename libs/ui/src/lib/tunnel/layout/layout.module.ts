@@ -7,6 +7,7 @@ import { TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent } from './nav/nav.component';
 import { TunnelStepStatComponent } from './step-stat/step-stat.component';
 import { TunnelConfirmComponent } from './confirm/confirm.component';
+import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
 
 import { TunnelExitModule } from '../exit/exit.module';
 
@@ -30,6 +31,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     RouterModule,
     FlexLayoutModule,
     TunnelExitModule,
+    UploadWidgetModule,
     // Material
     MatToolbarModule,
     MatIconModule,

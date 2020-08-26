@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 
 
@@ -16,11 +16,11 @@ interface Denomination {
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
-  logo: ImgRef;
+  logo: HostedMedia;
 }
 
 /** Document model of an Organization */
-interface OrganizationBase<D> extends PublicOrganization{
+interface OrganizationBase<D> extends PublicOrganization {
   activity: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
@@ -52,6 +52,7 @@ export const orgActivity = {
   filmCommission: 'Film Commission',
   financialInstitution: 'Financial Institution',
   press: 'Press',
+  inflight: 'Inflight',
 } as const;
 
 type OrgActivity = keyof typeof orgActivity | '';
@@ -123,7 +124,7 @@ export function createOrganizationBase(
     ...params,
     addresses: createAddressSet(params.addresses),
     denomination: createDenomination(params.denomination),
-    logo: createImgRef(params.logo),
+    logo: createHostedMedia(params.logo),
     appAccess: createOrgAppAccess(params.appAccess),
   };
 }
@@ -145,14 +146,14 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   }
 }
 
-export function orgName(org: PublicOrganization){
-  return org.denomination.public || org.denomination.full
+export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'public') {
+  return org.denomination[type] || org.denomination.full;
 }
 
 /**
  * This check if org have access to a specific module in at least one app
- * @param org 
+ * @param org
  */
-export function canAccessModule(module: Module, org: OrganizationDocument) {
+export function canAccessModule(module: Module, org: OrganizationBase<any>) {
   return app.some(a => org.appAccess[a]?.[module])
 }

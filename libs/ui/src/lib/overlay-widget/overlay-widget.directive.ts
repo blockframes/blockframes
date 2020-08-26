@@ -2,7 +2,7 @@ import { Directive, Input, HostListener, ElementRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
 
 // OVERLAY TRIGGERED ON CLICK
-@Directive({ selector: "button[widgetTarget]" })
+@Directive({ selector: "button[widgetTarget], mat-chip[widgetTarget]" })
 export class OverlayWidgetButtonDirective {
 
   @Input() widgetTarget: OverlayWidgetComponent;

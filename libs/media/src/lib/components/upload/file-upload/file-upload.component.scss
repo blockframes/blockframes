@@ -1,0 +1,62 @@
+:host {
+  height: 100%;
+  width: 100%;
+}
+
+img.picture-hover {
+  height: 142px;
+  opacity: 0.3;
+}
+
+section {
+  height: 100%;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: solid 1px var(--foreground-divider);
+  border-radius: 5px;
+  font-size: 1.5rem;
+  transition: border 0.2s ease-in-out;
+}
+
+.upload-button-container {
+  button.mat-icon-button {
+    width: 48px;
+    height: 55px;
+    margin-bottom: 8px;
+    img {
+      width: 100%;
+    }
+  }
+}
+
+p.mat-caption a {
+  color: var(--primary);
+}
+
+input {
+  display: none;
+}
+
+.progress {
+  width: 80%;
+  text-align: center;
+}
+
+mat-progress-bar {
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin-bottom: 24px;
+}
+
+button.mat-button {
+  margin-top: 24px;
+}
+
+a.mat-body-2 {
+  color: var(--primary);
+}

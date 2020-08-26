@@ -12,6 +12,7 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
     // Material
     MatFormFieldModule,
     MatSelectModule,
+    MatBadgeModule,
     // Router
     RouterModule.forChild([{ path: '', component: EventCalendarComponent }])
   ]

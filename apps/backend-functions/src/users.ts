@@ -1,14 +1,14 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { db } from './internals/firebase';
+import { db, getStorageBucketName } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
-import { upsertWatermark } from './internals/watermark';
+import { upsertWatermark } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
-import { getSendgridFrom, sendgridUrl, App } from '@blockframes/utils/apps';
+import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 
@@ -101,7 +101,7 @@ export const onUserCreate = async (user: UserRecord) => {
 
   return Promise.all([
     storeSearchableUser(userData),
-    upsertWatermark(userData),
+    upsertWatermark(userData, getStorageBucketName()),
   ]);
 };
 
@@ -127,7 +127,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.urls.original !== after.avatar?.urls.original
+    before.avatar?.url !== after.avatar?.url
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -138,7 +138,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.lastName !== after.lastName ||
     before.email !== after.email
   ) {
-    promises.push(upsertWatermark(after));
+    promises.push(upsertWatermark(after, getStorageBucketName()));
   }
 
   return Promise.all(promises);
@@ -181,8 +181,8 @@ export const sendUserMail = async (data: any, context: CallableContext): Promise
 /**
  * Create an user.
  * Used in admin panel by blockframes admins only
- * @param data 
- * @param context 
+ * @param data
+ * @param context
  */
 export const createUser = async (data: { email: string, orgName: string, app: App }, context: CallableContext): Promise<PublicUser> => {
   const { email, orgName, app } = data;
@@ -197,7 +197,7 @@ export const createUser = async (data: { email: string, orgName: string, app: Ap
 
   const newUser = await createUserFromEmail(email);
 
-  const urlToUse = sendgridUrl[app];
+  const urlToUse = applicationUrl[app];
   const from = getSendgridFrom(app);
 
   const templateId = templateIds.user.credentials.joinOrganization[app];

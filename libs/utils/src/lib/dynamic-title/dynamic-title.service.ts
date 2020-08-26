@@ -38,6 +38,17 @@ const pages = {
       const suffix = showAppName ? `- ${_appName}` : '';
       return `${titleName} - ${section} ${suffix}`;
     }
+  },
+  crm: {
+    app: appName.crm,
+    section: (section: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
+      return `${section} ${suffix}`;
+    },
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
+      return `${titleName} - ${section} ${suffix}`;
+    }
   }
 }
 @Injectable({

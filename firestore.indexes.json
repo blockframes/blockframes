@@ -3,17 +3,25 @@
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
     "fields": [
-      { "fieldPath": "ownerId", "order": "ASCENDING" },
       { "fieldPath": "type", "order": "ASCENDING" },
-      { "fieldPath": "meta.titleId", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
-  },{
+  },
+  {
     "collectionGroup": "events",
     "queryScope": "COLLECTION",
     "fields": [
+      { "fieldPath": "ownerId", "order": "ASCENDING" },
       { "fieldPath": "type", "order": "ASCENDING" },
+      { "fieldPath": "end", "order": "ASCENDING" }
+    ]
+  },
+  {
+    "collectionGroup": "events",
+    "queryScope": "COLLECTION",
+    "fields": [
       { "fieldPath": "meta.titleId", "order": "ASCENDING" },
+      { "fieldPath": "type", "order": "ASCENDING" },
       { "fieldPath": "end", "order": "ASCENDING" }
     ]
   }],

@@ -3,6 +3,7 @@ import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, shareReplay } from 'rxjs/operators';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'event-view',
@@ -26,6 +27,7 @@ export class EventViewComponent implements OnInit {
   constructor(
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -34,7 +36,11 @@ export class EventViewComponent implements OnInit {
       shareReplay(1)
     );
   }
-  
+
+  goBack() {
+    this.location.back();
+  }
+
   /**
    * Creates a request to attend event.
    * If event is public (event.isPrivate === false), it will be automatically setted to 'accepted'

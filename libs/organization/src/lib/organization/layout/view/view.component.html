@@ -12,38 +12,40 @@
       </div>
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
-          <span>{{ org.denomination.full }}</span>
+          <span>{{ org | orgName }}</span>
           <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
         </div>
-        <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       </div>
     </div>
   </ng-template>
 
-  <header fxLayout="row" fxLayoutAlign="start start" @fade class="dark-contrast-theme">
-    <a mat-icon-button routerLink="..">
+  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" @fade class="dark-contrast-theme">
+    <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
-    <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
-    <article fxLayout="column" fxLayoutAlign="start start">
-      <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
-      <span class="mat-display-2">{{ org.denomination.full }}</span>
-      <h2>
-        <span>{{ org.addresses.main.street | titlecase }}</span>
-        <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-        <span>{{ org.addresses.main.zipCode | titlecase }}</span>
-        <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-        <span>{{ org.addresses.main.city | titlecase }}</span>
-        <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
-        <span>{{ org.addresses.main.country | translateSlug: 'TERRITORIES' }}</span>
-      </h2>
-      <p class="mat-body-2">{{ org.description }}</p>
-      <ng-container *ngIf="org.email">
-        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email + '?subject=Meeting%20request%20via%20Archipel%20Market'">
-          <span>Ask for a meeting</span>
-        </a>
-      </ng-container>
-    </article>
+    <div class="org-info" fxLayout="row" fxLayoutGap="20px">
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
+      <article fxLayout="column" fxLayoutAlign="start start">
+        <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
+        <span class="mat-display-2">{{ org | orgName }}</span>
+        <h2>
+          <span>{{ org.addresses.main.street | titlecase }}</span>
+          <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
+          <span>{{ org.addresses.main.zipCode | titlecase }}</span>
+          <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
+          <span>{{ org.addresses.main.city | titlecase }}</span>
+          <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
+          <span>{{ org.addresses.main.country | translateSlug: 'TERRITORIES' }}</span>
+        </h2>
+        <p class="mat-body-2">{{ org.description }}</p>
+        <ng-container *ngIf="org.email">
+          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email + '?subject=Meeting%20request%20via%20Archipel%20Market'">
+            <span>Ask for a meeting</span>
+          </a>
+        </ng-container>
+      </article>
+    </div>
   </header>
   <nav id="nav" mat-tab-nav-bar @fade>
     <a mat-tab-link

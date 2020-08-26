@@ -20,7 +20,7 @@
         <missing-control [control]="festivalPrize.get('premiere')" [link]="link">
           <ng-template let-premieres>
             <ng-container *ngFor="let premiere of premieres; let isLast=last">
-              {{premiere | titlecase}}{{isLast? '' : ', '}}
+              <span *ngIf="premiere">{{premiere | titlecase}} Premiere{{isLast? '' : ', '}}</span>
             </ng-container>
           </ng-template>
         </missing-control>

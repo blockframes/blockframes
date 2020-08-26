@@ -62,7 +62,7 @@ export class ContractComponent implements OnInit {
   public versionColumnsTableTitles = {
     'id': 'Movie Id',
     'movie.main.internalRef': 'Internal Ref',
-    'movie.promotionalElements.poster': 'Poster',
+    'movie.main.poster': 'Poster',
     'movie.main.title.original': 'Original title',
     'movie.main.productionYear': 'Production year',
     'price': 'Price',
@@ -76,7 +76,7 @@ export class ContractComponent implements OnInit {
   public initialColumnsTableTitles: string[] = [
     'id',
     'movie.main.internalRef',
-    'movie.promotionalElements.poster',
+    'movie.main.poster',
     'movie.main.title.original',
     'movie.main.productionYear',
     'price',
@@ -92,7 +92,7 @@ export class ContractComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'movie.main.internalRef',
-      'movie.promotionalElements.poster',
+      'movie.main.poster',
       'movie.main.title.original',
       'movie.main.productionYear',
       'price',
@@ -305,14 +305,6 @@ export class ContractComponent implements OnInit {
   /** Utils function to get currency code for currency pipe. */
   public getCurrencyCode(currency: MovieCurrenciesSlug) {
     return getCodeBySlug('MOVIE_CURRENCIES', currency);
-  }
-
-  public getRightPath(rightId: string, movieId: string) {
-    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
-  }
-
-  public getContractTunnelPath(contract: Contract) {
-    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
   }
 
   /**

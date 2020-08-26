@@ -1,10 +1,11 @@
 <ng-container *ngIf="organization; else: loading">
   <mat-card [ngClass]="{ 'mat-card-opened': opened }" fxLayout="column" fxLayoutAlign="center">
+    <ng-content></ng-content>
     <mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column" [fxLayout.lt-lg]="layout">
       <!-- using organizationInformations to update display as user type in the form -->
-      <bf-img mat-card-avatar [ref]="org.logo" asset="empty_organization.webp" alt="Organization logo"></bf-img>
+      <img mat-card-avatar [ref]="org.logo" asset="empty_organization.webp" alt="Organization logo">
       <article class="information" fxLayout="column" fxLayoutAlign="start start">
-        <h4>{{ organization.name }}</h4>
+        <h4>{{ organization | orgName }}</h4>
         <h3>Main address</h3>
         <ul *ngIf="org.addresses.main as main">
           <li><b class="bf-dark-text">Street</b> {{ main.street }}</li>

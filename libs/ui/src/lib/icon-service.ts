@@ -71,6 +71,7 @@ export const icons = [
     url: 'assets/icons/chevron_right.svg'
   },
   { name: 'chevron_top', url: 'assets/icons/chevron_top.svg' },
+  { name: 'check_circle', url: 'assets/icons/check_circle.svg' },
   { name: 'CHF', url: 'assets/icons/CHF.svg' },
   { name: 'clear_all', url: 'assets/icons/clear_all.svg' },
   { name: 'close', url: 'assets/icons/close.svg' },
@@ -78,6 +79,7 @@ export const icons = [
   { name: 'copy', url: 'assets/icons/copy.svg' },
   { name: 'create_movie', url: 'assets/icons/create_movie.svg' },
   { name: 'cross', url: 'assets/icons/cross.svg' },
+  { name: 'cross_circle', url: 'assets/icons/cross_circle.svg' },
   { name: 'CNY', url: 'assets/icons/CNY.svg' },
   { name: 'dark_mode', url: 'assets/icons/dark_mode.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
@@ -135,6 +137,10 @@ export const icons = [
     url: 'assets/icons/logo_archipel_content_fill.svg'
   },
   {
+    name: 'logo_archipel_market_fill',
+    url: 'assets/icons/logo_archipel_market_fill.svg'
+  },
+  {
     name: 'logo_blockframes',
     url: 'assets/icons/logo_blockframes.svg'
   },
@@ -188,10 +194,12 @@ export const icons = [
   { name: 'pdf', url: 'assets/icons/PDF.webp' },
   { name: 'padlock', url: 'assets/icons/padlock.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' },
+  { name: 'pause_circle', url: 'assets/icons/pause_circle.svg' },
   { name: 'pencil', url: 'assets/icons/pencil.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },
   { name: 'picture', url: 'assets/icons/picture.svg' },
   { name: 'play', url: 'assets/icons/play.svg' },
+  { name: 'play_circle', url: 'assets/icons/play_circle.svg' },
   { name: 'profile', url: 'assets/icons/profile.svg' },
   {
     name: 'radio_box_blank',
@@ -203,6 +211,7 @@ export const icons = [
   },
   { name: 'read', url: 'assets/icons/read.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
+  { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg'},
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
   { name: 'review', url: 'assets/icons/review.svg' },
@@ -255,6 +264,7 @@ export const icons = [
   { name: 'wallet', url: 'assets/icons/wallet.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
   { name: 'wrench', url: 'assets/icons/wrench.svg' },
+  { name: 'marketplace', url: 'assets/icons/marketplace.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];

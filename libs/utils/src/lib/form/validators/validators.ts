@@ -11,7 +11,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 
-export const urlValidators = Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
+export const urlValidators = Validators.pattern('^(?:http(s)?:\/\/)([a-zA-Z0-9]+\.[^\s]{2,})+$');
 
 export const yearValidators = Validators.pattern('^[1-2][0-9]{3}$');
 

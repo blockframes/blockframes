@@ -6,10 +6,14 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { staticModels } from '@blockframes/utils/static-model';
+import { isArray } from 'lodash';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[form][model] static-check-boxes',
@@ -17,8 +21,7 @@ import { staticModels } from '@blockframes/utils/static-model';
   styleUrls: ['./check-boxes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticCheckBoxesComponent implements OnInit {
-
+export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
 
   /**
    * The static model to display
@@ -35,18 +38,37 @@ export class StaticCheckBoxesComponent implements OnInit {
 
   public items: SlugAndLabel[];
 
+  private sub: Subscription;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngOnInit() {
-    this.items = staticModels[this.model];
+    this.items = staticModels[this.model]
+
+    /** Unchecks checkmarks when value is updated directly on FormList */
+    this.sub = this.form.valueChanges.subscribe(res => {
+      if (isArray(res) && res.length === 0) {
+        this.items.map(item => item.value = false);
+        this.cdr.markForCheck();
+        this.form.markAsPristine();
+      } else {
+        this.form.markAsDirty();
+      }
+    })
   }
 
   public handleChange({checked, source}: MatCheckboxChange) {
     if (checked) {
-      this.form.add(source.value);
-      this.added.emit(source.value);
+      this.form.add(source.name);
+      this.added.emit(source.name);
     } else {
-      const index = this.form.controls.findIndex(control => control.value === source.value);
+      const index = this.form.controls.findIndex(control => control.value === source.name);
       this.form.removeAt(index);
       this.removed.emit(index);
     }
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

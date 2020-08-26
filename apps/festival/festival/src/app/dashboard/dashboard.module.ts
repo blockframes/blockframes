@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core';
+﻿import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
@@ -36,11 +36,11 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
     },
     {
       path: 'import', // Import bulk of movies
@@ -63,19 +63,23 @@ const routes: Routes = [{
     },
     {
       path: 'event',
-      children: [{
-        path: '',
-        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
-      }, {
-        path: ':eventId',
-        children: [{
+      children: [
+        {
           path: '',
-          loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+          loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
-          path: 'edit',
-          loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
-        }]
-      }]
+          path: ':eventId',
+          children: [
+            {
+            path: '',
+            loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+            }, {
+              path: 'edit',
+              loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+            },
+          ],
+        },
+      ],
     },
     {
       path: 'contact',
@@ -118,7 +122,7 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     DashboardLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     OrgNameModule,
     ToLabelModule,
     OrgAccessModule,

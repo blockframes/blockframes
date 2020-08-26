@@ -6,7 +6,7 @@ import { Person } from '../common-interfaces';
 })
 export class DisplayNamePipe implements PipeTransform {
   transform(value: Person | Person[]): string {
-    const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
+    const capitalize = (str: string) => str?.toUpperCase();
     if (Array.isArray(value)) {
       return value.map(person => {
         const firstName = capitalize(person.firstName);

@@ -1,6 +1,11 @@
-<section fxLayout="column">
+<main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
-
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    </button>
+  </article>
   <bf-table-filter
     [source]="rows"
     [columns]="versionColumns"
@@ -10,16 +15,14 @@
     showLoader
     [pageSize]="100"
     showPaginator>
-    <ng-template colRef="promotionalElements.poster" let-posters>
-      <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-        <bg-img class="poster" [ref]="poster" asset="empty_poster.webp"></bg-img>
+    <ng-template colRef="main.poster" let-posters>
+      <ng-container *ngIf="posters && posters.media as poster;">
+        <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
-      <ng-template #noposter>
-        --
-      </ng-template>
     </ng-template>
     <ng-template colRef="id" let-id>
-      <a target="_blank" [routerLink]="getPath(id)" routerLinkActive="active"> {{ id }}</a>
+      <span>{{ id }} </span>
+      <admin-go-to type="title" [id]="id"></admin-go-to>
     </ng-template>
     <ng-template colRef="distributionRights" let-distributionRights>
       {{ distributionRights.length }}
@@ -49,7 +52,13 @@
     <ng-template colRef="main.storeConfig.storeType" let-storeType>
       {{ storeType | toLabel: 'storeType' | async }}
     </ng-template>
+    <ng-template colRef="org" let-org>
+      <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
+        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
+      </a>
+      <ng-template #noOrg>--</ng-template>
+    </ng-template>
   </bf-table-filter>
-</section>
+</main>
 
 

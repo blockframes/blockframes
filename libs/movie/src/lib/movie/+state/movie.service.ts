@@ -3,17 +3,17 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { createImgRef } from '@blockframes/utils/media/media.firestore';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest, of } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { MediaService } from '@blockframes/media/+state/media.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -26,6 +26,7 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private userService: UserService,
     private orgService: OrganizationService,
+    private mediaService: MediaService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -49,20 +50,6 @@ export class MovieService extends CollectionService<MovieState> {
       movie.id = await this.add(cleanModel(movie), { write: tx });
     });
     return movie;
-  }
-
-  // @TODO (#2987): Update image on save instead of merging then on save
-  save(movie: Movie) {
-    return this.runTransaction(async write => {
-      const ref = this.getRef(movie.id);
-      const snap = await write.get(ref);
-      const movieDoc = createMovie(snap.data());
-      // Update the images reference with the latest value from firestore
-      for (const key of ['banner', 'poster', 'still_photo']) {
-        movie.promotionalElements[key] = movieDoc.promotionalElements[key];
-      }
-      return this.update(movie, { write });
-    });
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {
@@ -128,7 +115,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
       movie.promotionalElements.promotionalElements.forEach(el => {
         if (typeof el.media === typeof 'string') {
-          el.media = createImgRef(el.media);
+          el.media = createHostedMedia(el.media);
         }
       });
     }
@@ -162,23 +149,4 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-  /**
-   * @dev ADMIN method
-   * Https callable function to set privateConfig for a movie.
-   */
-  public async setMoviePrivateConfig(movieId: string, privateConfig: PrivateConfig): Promise<any> {
-    const f = this.functions.httpsCallable('setDocumentPrivateConfig');
-    return f({ docId: movieId, config: privateConfig }).toPromise();
-  }
-
-  /**
-   * @dev ADMIN method
-   * Https callable function to get privateConfig for a movie.
-   * @param movieId
-   * @param keys the keys to retreive
-   */
-  public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig> {
-    const f = this.functions.httpsCallable('getDocumentPrivateConfig');
-    return f({ docId: movieId, keys }).toPromise();
-  }
 }

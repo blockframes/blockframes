@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/algolia';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
 
 const Separators = {
@@ -25,11 +25,13 @@ function splitValue(value: string, keycodes: number[]) {
   styleUrls: ['./algolia-chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlgoliaChipsAutocompleteComponent implements OnInit {
+export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   public indexName: string;
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
+  public values$: Observable<any[]>;
+  private sub: Subscription;
 
   // INPUT ----------------------------
 
@@ -78,6 +80,11 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
+    this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
+    this.sub = this.form.valueChanges.pipe(
+      map(res => !!res.length),
+      distinctUntilChanged()
+    ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
     // In case of facet search we know the result object will store the matched facets in the `value` field
     if (!!this.facet?.trim()) {
       this.displayWithPath = 'value';
@@ -96,6 +103,10 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(text => (!!this.facet?.trim()) ? facetSearch(text) : regularSearch(text)),
     );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   add(value: any) {

@@ -9,7 +9,7 @@ import { EventViewModule as EventViewLayoutModule } from '@blockframes/event/lay
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
@@ -24,7 +24,7 @@ import { MatButtonModule} from '@angular/material/button';
     EventRangeModule,
     MovieHeaderModule,
     GuestListModule,
-    ImgModule,
+    ImageReferenceModule,
     OrgNameModule,
     OrgChipModule,
     DisplayNameModule,

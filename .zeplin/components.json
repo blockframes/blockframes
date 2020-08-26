@@ -101,6 +101,42 @@
                     "Bf Footer"
                 ]
             }
+        },
+        {
+            "path": "libs/ui/src/lib/upload/widget/widget.component.ts",
+            "zeplinNames": [
+                "Component/Popup/Upload-items"
+            ],
+            "storybook": {
+                "kind": "Bf Upload Widget",
+                "storybook": [
+                    "Bf Upload Widget"
+                ]
+            }
+        },
+        {
+            "path": "libs/organization/src/lib/organization/components/card-minimal/card-minimal.component.ts",
+            "zeplinNames": [
+                "component/card/featured_seller_card"
+            ],
+            "storybook": {
+                "kind": "Organization Minimal Card",
+                "storybook": [
+                    "Organization Minimal Card"
+                ]
+            }
+        },
+        {
+            "path": "libs/organization/src/lib/organization/components/banner/banner.stories.ts",
+            "zeplinNames": [
+                "component/encart/sellers"
+            ],
+            "storybook": {
+                "kind": "Featured Sales Agent Banner",
+                "storybook": [
+                    "Featured Sales Agent Banner"
+                ]
+            }
         }
     ],
     "github": {

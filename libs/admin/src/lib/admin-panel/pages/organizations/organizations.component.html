@@ -1,44 +1,51 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organizations</h1>
-<section fxLayout="row" fxLayoutAlign="space-around start">
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organizations</h1>
+
   <article fxLayout="column" fxLayoutAlign="center center">
     <div fxLayout fxLayoutGap="16px">
-      <button mat-flat-button color="primary" routerLink="/c/o/dashboard/import">
-        <span>Import orgs</span><mat-icon svgIcon="arrow_downward"></mat-icon>
-      </button>
+      <a mat-flat-button color="primary" [href]="'festival' | goToApp:'dashboard':'import'">
+        <span>Import orgs</span>
+        <mat-icon svgIcon="arrow_downward"></mat-icon>
+      </a>
       <button [disabled]="!orgListLoaded" mat-flat-button color="primary" (click)="exportTable()">
-        <span>Export to CSV</span><mat-icon svgIcon="arrow_upward"></mat-icon>
+        <span>Export to CSV</span>
+        <mat-icon svgIcon="arrow_upward"></mat-icon>
       </button>
     </div>
-
-    <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="100"
-      [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
-      <ng-template colRef="logo" let-logo>
-        <ng-container *ngIf="logo; else nologo">
-          <bf-img class="logo" [ref]="logo" asset="empty_poster.webp"></bf-img>
-        </ng-container>
-        <ng-template #nologo>
-          --
-        </ng-template>
-      </ng-template>
-      <ng-template colRef="edit" let-edit>
-        <a mat-icon-button [routerLink]="edit.link">
-          <mat-icon svgIcon="pencil"></mat-icon>
-        </a>
-      </ng-template>
-      <ng-template colRef="denomination.full" let-denominationFull>
-        {{ denominationFull }}
-      </ng-template>
-      <ng-template colRef="denomination.public" let-denominationPublic>
-        {{ denominationPublic }}
-      </ng-template>
-      <ng-template colRef="appAccess" let-appAccess>
-        <ul>
-          <ng-container *ngFor="let access of appAccess | keyvalue">
-            <li>{{ access.key }}-dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
-            <li>{{ access.key }}-marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
-          </ng-container>
-        </ul>
-      </ng-template>
-    </bf-table-filter>
   </article>
-</section>
+
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="100"
+    [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
+    <ng-template colRef="logo" let-logo>
+      <ng-container *ngIf="logo; else nologo">
+        <img class="logo" [ref]="logo" asset="empty_poster.webp">
+      </ng-container>
+      <ng-template #nologo>
+        --
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a mat-icon-button [routerLink]="edit.link">
+        <mat-icon svgIcon="pencil"></mat-icon>
+      </a>
+    </ng-template>
+    <ng-template colRef="denomination.full" let-denominationFull>
+      {{ denominationFull }}
+    </ng-template>
+    <ng-template colRef="denomination.public" let-denominationPublic>
+      {{ denominationPublic }}
+    </ng-template>
+    <ng-template colRef="addresses.main.country" let-country>
+      {{ country ? country : '--' }}
+    </ng-template>
+    <ng-template colRef="appAccess" let-appAccess>
+      <ul>
+        <ng-container *ngFor="let access of appAccess | keyvalue">
+          <li>{{ access.key }}-dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
+          <li>{{ access.key }}-marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
+        </ng-container>
+      </ul>
+    </ng-template>
+  </bf-table-filter>
+
+</main>

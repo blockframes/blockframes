@@ -11,9 +11,7 @@ import * as invitations from './invitation';
 import {
   onDocumentCreate,
   onDocumentDelete,
-  onDocumentUpdate,
   onDocumentWrite,
-  onOrganizationDocumentUpdate
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
@@ -23,20 +21,20 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
-import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { onFileUploadEvent, onFileDeletion } from './internals/image';
+import { linkFile, unlinkFile } from './media';
 import { onEventDelete } from './event';
+import { skipInMaintenance } from '@blockframes/firebase-utils';
 
 
 //--------------------------------
 //    Configuration             //
 //--------------------------------
 
-/** 
- * Runtime options for heavy functions 
+/**
+ * Runtime options for heavy functions
  * @dev linked to #2531 (Changing functions REGION)
  */
 const heavyConfig = {
@@ -66,10 +64,11 @@ export const onUserCreateDocument = onDocumentCreate(
   users.onUserCreateDocument
 );
 
-export const onUserUpdate = onDocumentUpdate(
-  '/users/{userID}',
-  users.onUserUpdate
-);
+export const onUserUpdate = functions
+  .runWith(heavyConfig) // user update can potentially trigger images processing
+  .firestore.document('/users/{userID}')
+  .onUpdate(skipInMaintenance(users.onUserUpdate));
+
 
 export const onUserDelete = onDocumentDelete(
   '/users/{userID}',
@@ -126,7 +125,7 @@ export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
 
 /** Trigger: when a permission document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
-  'permissions/{orgID}/documentPermissions/{docId}',
+  'permissions/{orgID}/documentPermissions/{docID}',
   onDocumentPermissionCreate
 );
 
@@ -177,10 +176,10 @@ export const onMovieCreateEvent = onDocumentCreate(
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent = onDocumentUpdate(
-  'movies/{movieId}',
-  onMovieUpdate
-)
+export const onMovieUpdateEvent =  functions
+  .runWith(heavyConfig) // movie update can potentially trigger images processing
+  .firestore.document('movies/{movieId}')
+  .onUpdate(skipInMaintenance(onMovieUpdate));
 
 /**
  * Trigger: when a movie is deleted
@@ -201,13 +200,6 @@ export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
   onContractWrite
 );
-
-//---------------------------------
-//  Private documents Management //
-//---------------------------------
-
-export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
-export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
 
 //--------------------------------
 //       Apps Management        //
@@ -239,10 +231,10 @@ export const onOrganizationCreateEvent = onDocumentCreate(
 );
 
 /** Trigger: when an organization is updated. */
-export const onOrganizationUpdateEvent = onOrganizationDocumentUpdate( // using `onOrganizationDocumentUpdate` instead of `onDocument` for an increase timout of 540s
-  'orgs/{orgID}',
-  onOrganizationUpdate
-);
+export const onOrganizationUpdateEvent = functions
+  .runWith(heavyConfig) // org update can potentially trigger images processing
+  .firestore.document('orgs/{orgID}')
+  .onUpdate(skipInMaintenance(logErrors(onOrganizationUpdate)));
 
 /** Trigger: when an organization is removed. */
 export const onOrganizationDeleteEvent = onDocumentDelete(
@@ -271,11 +263,11 @@ export const relayerSend = functions.https
 //         File upload          //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. Immediately exit function if contentType is not an image. */
-export const onFileUpload = functions.runWith(heavyConfig).storage.object().onFinalize(data => onFileUploadEvent(data))
+/** Trigger: on every file uploaded to the storage. */
+export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
 //--------------------------------
 //         File delete          //
 //--------------------------------
 
-export const onFileDelete = functions.storage.object().onDelete(data => onFileDeletion(data))
+export const onFileDelete = functions.storage.object().onDelete(skipInMaintenance(unlinkFile));

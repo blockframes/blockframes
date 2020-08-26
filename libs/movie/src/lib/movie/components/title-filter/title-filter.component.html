@@ -1,18 +1,22 @@
-
-<mat-card-content>
-  <h6>Filters</h6>
-  <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
-  <mat-divider inset ></mat-divider>
+<section>
   <ng-container *ngFor="let filter of filters">
-    <ng-container *ngIf="filter.section; else isFilter">
-      <h5 *ngIf="!!filter.label">{{filter.label}}</h5>
-      <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
-    </ng-container>
-    <ng-template #isFilter>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>{{filter.label}}</mat-expansion-panel-header>
-        <ng-template matExpansionPanelContent [ngTemplateOutlet]="filter?.template"></ng-template>
-      </mat-expansion-panel>
-    </ng-template>
+    <button mat-stroked-button [widgetTarget]="filterWidget" [color]="filter.color$ | async">
+      {{filter.label}}
+    </button>
+    <overlay-widget #filterWidget (openedChanged)="filter.active = $event">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ filter.label }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions fxLayout fxLayoutAlign="end center">
+          <button mat-button (click)="filter.form.reset()">Clear</button>
+          <button mat-flat-button color="primary" (click)="filterWidget.close()">Save</button>
+        </mat-card-actions>
+      </mat-card>
+    </overlay-widget>
   </ng-container>
-</mat-card-content>
+</section>

@@ -13,13 +13,17 @@ export const persistenceSettings = {
 // Analytics
 // =========
 
+export const sentryEnv = 'demo-1';
 export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/1540126';
 
 // Firebase
 // ========
 
-export const appUrlContent = 'https://demo1.archipelcontent.com';
-export const appUrlMarket = 'https://demo1.archipelmarket.com';
+export const appUrl = {
+  content: 'https://demo1.archipelcontent.com',
+  market: 'https://demo1.archipelmarket.com',
+  crm: 'https://demo1.crm.blockframes.io',
+}
 
 export const firebase = {
   apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",

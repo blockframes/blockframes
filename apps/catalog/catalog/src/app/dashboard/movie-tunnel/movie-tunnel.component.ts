@@ -9,6 +9,8 @@ import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { mergeDeep } from '@blockframes/utils/helpers';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -78,17 +80,28 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private mediaService: MediaService,
   ) { }
 
   async ngOnInit() {
-    this.exitRoute = `../../../titles/${this.query.getActiveId()}`;
+    this.exitRoute = `../../../title/${this.query.getActiveId()}`;
   }
 
   // Should save movie
   public async save() {
+    if(this.form.invalid) {
+      this.snackBar.open('It seems that one or more fields have an error. Please check your movie form and try again.', 'close', { duration: 5000 });
+      return;
+    }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
-    await this.service.save(movie);
+
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form, movie);
+
+    await this.service.update(movie.id, documentToUpdate);
+
+    await this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
@@ -109,4 +122,5 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
       switchMap(shouldSave => shouldSave ? this.save() : of(false))
     );
   }
+
 }

@@ -36,24 +36,33 @@
     <p>Once you have filled it out, please upload it below.</p>
     <a [routerLink]="['./']" (click)="openIntercom()"><strong>Need help ?</strong></a>
   </section>
+
   <section fxLayout="column" fxLayoutAlign="center center">
+
     <ng-container *ngIf="sheets.length; else fileUpload">
       <span><mat-icon svgIcon="attachment"></mat-icon> File uploaded, click on "Start import" to continue!</span>
     </ng-container>
+
     <ng-template #fileUpload>
       <file-upload accept="['.xls', '.xlsx', '.ods', '.csv']" [types]="[
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/vnd.oasis.opendocument.spreadsheet',
-        'text/csv']" (uploaded)="importSpreadsheet($event)">
+        'text/csv']"
+        [storagePath]=""
+        [form]="excelForm"
+      >
         <h3 type>Upload files</h3>
         <p class="mat-caption" format>Accepted Formats : xls, xlsx</p>
       </file-upload>
+
     </ng-template>
   </section>
 
   <section fxLayout="column" fxLayoutAlign="center center">
-    <bf-img asset="Upload_380.png"></bf-img>
+
+    <img asset="Upload_380.webp">
+
     <!-- TODO #1387 -->
     <section fxLayout="row" fxLayoutAlign="end center">
       <ng-container *ngIf="sheets.length">
@@ -61,8 +70,12 @@
           <mat-icon svgIcon="trash"></mat-icon>
         </button>
       </ng-container>
+
       <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">Start import
-        <mat-icon svgIcon="arrow_downward"></mat-icon></button>
+        <mat-icon svgIcon="arrow_downward"></mat-icon>
+      </button>
+
     </section>
+
   </section>
 </article>

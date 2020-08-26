@@ -1,4 +1,4 @@
-import { ImgRef, createImgRef } from "../media/media.model";
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
@@ -34,13 +34,13 @@ interface IdentityRaw {
 export interface Person extends IdentityRaw {
   firstName?: string,
   lastName?: string,
-  avatar?: ImgRef,
+  avatar?: HostedMedia,
 }
 
 export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
-  logo?: ImgRef;
+  logo?: HostedMedia;
   countries?: TerritoriesSlug[],
 }
 
@@ -95,7 +95,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
     orgId: '',
     countries: [],
     ...params,
-    logo: createImgRef(params.logo),
+    logo: createHostedMedia(params.logo),
   }
 }
 
@@ -114,7 +114,7 @@ export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
     lastName: '',
     role: '',
     shortBiography: '',
-    avatar: createImgRef(),
+    avatar: createHostedMedia(),
     ...params
   } as T;
 }

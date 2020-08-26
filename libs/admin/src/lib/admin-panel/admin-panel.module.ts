@@ -15,18 +15,22 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Modules
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
-import { ImageSizesModule } from '@blockframes/ui/media/image-sizes/image-sizes.module';
+import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
+import { OverviewModule } from './pages/overview/overview.module';
+import { InvitationsModule } from './pages/invitations/invitations.module';
+import { EventModule } from './pages/event/event.module';
+import { GoToModule } from './components/go-to/go-to.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -47,6 +51,7 @@ import { EventsComponent } from './pages/events/events.component';
 import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
+import { InvitationsComponent } from './pages/invitations/invitations.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -67,6 +72,7 @@ export const panelRoutes: Routes = [
   { path: 'user/:userId', component: UserComponent },
   { path: 'events', component: EventsComponent },
   { path: 'event/:eventId', component: EventComponent },
+  { path: 'invitations', component: InvitationsComponent },
   { path: 'mails', component: MailsComponent },
   { path: 'dev-area', component: DevAreaComponent }
 ];
@@ -86,10 +92,11 @@ export const panelRoutes: Routes = [
     MatCheckboxModule,
     FlexLayoutModule,
     TableFilterModule,
-    ImgModule,
+    ImageReferenceModule,
     AlgoliaAutocompleteModule,
     ContractTreeModule,
     EditTitleModule,
+    EventModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     TermDateModule,
@@ -97,10 +104,12 @@ export const panelRoutes: Routes = [
     TranslateSlugModule,
     OrgNameModule,
     MemberPermissionsModule,
-    ImageSizesModule,
+    MovieHeaderModule,
+    OverviewModule,
+    InvitationsModule,
+    GoToModule,
   ],
   declarations: [
-    OverviewComponent,
     MoviesComponent,
     DistributionRightsComponent,
     DistributionRightComponent,
@@ -114,7 +123,6 @@ export const panelRoutes: Routes = [
     UsersComponent,
     UserComponent,
     EventsComponent,
-    EventComponent,
     MailsComponent,
     DevAreaComponent,
   ]

@@ -9,7 +9,7 @@ import { ViewComponent } from './view.component';
 
 // Custom Modules
 import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
@@ -34,6 +34,10 @@ const routes = [
       {
         path: 'main',
         loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+      },
+      {
+        path: 'screenings',
+        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
       }
     ]
   }

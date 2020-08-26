@@ -3,6 +3,9 @@ mat-card {
   mat-card-content {
     width: 100%;
     text-align: center;
+    mat-divider {
+      margin: 32px 0;
+    }
   }
 }
 
@@ -14,4 +17,12 @@ mat-card {
 
 footer {
 margin-left: 50px;
+}
+
+h3, p.mat-body-2 {
+  margin: 0;
+}
+
+p.mat-caption {
+  margin-bottom: 8px;
 }

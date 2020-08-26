@@ -13,10 +13,9 @@ import {
 
 // Blockframes
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
-
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,7 @@ import { ImgModule } from '@blockframes/ui/media/img/img.module';
     DisplayNameModule,
     ImageReferenceModule,
     MovieTitleFeaturesModule,
-    ImgModule
+    MatIconModule
   ],
   exports: [
     HeaderComponent,

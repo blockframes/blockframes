@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ImgRef } from "@blockframes/utils/media/media.firestore";
+import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -20,8 +20,4 @@ export class ChainOfTitlesComponent {
     return this.form.get('documents').get('chainOfTitles');
   }
 
-  // get the ImgRef generated from firestorage and update url of media for each path
-  importPDF(imgRef: ImgRef, i: number) {
-    this.chainOfTitles.at(i).get('media').patchValue(imgRef);
-  }
 }

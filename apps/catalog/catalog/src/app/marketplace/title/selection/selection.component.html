@@ -1,0 +1,58 @@
+<ng-container *ngIf="titles$ | async as titles">
+  <ng-container *ngIf="titles.length else noTitles">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
+      <h1 i18n *ngIf="count$ | async as count">{{count}} title{count, plural, =0 {} =1 {} other {s}} in the cart</h1>
+      <a mat-button color="primary" routerLink="../deals">
+        <mat-icon svgIcon="wallet"></mat-icon>
+        <span>Consult your Current Offers and Deals</span>
+      </a>
+    </header>
+
+    <!-- Movies documents here are filled with the distribution deals from the cart -->
+    <article *ngFor="let title of titles">
+      <movie-banner [movie]="selectMovie(title.movieId) | async">
+        <movie-banner-actions fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="16px">
+          <wishlist-button [movieId]="title.movieId" (added)="removeTitle($event)"></wishlist-button>
+          <button mat-button color="warn" (click)="removeTitle(title.movieId)">
+            <mat-icon svgIcon="trash"></mat-icon>
+            <span>Remove Title</span>
+          </button>
+          <a mat-button color="primary" [routerLink]="['../title', title.movieId, 'avails']">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Add Exploitation Rights</span>
+          </a>
+        </movie-banner-actions>
+      </movie-banner>
+
+      <ng-container *ngIf="title.rights.length">
+        <h3>Exploitation Rights</h3>
+        <mat-card>
+          <mat-card-content>
+            <catalog-right-list [rights]="title.rights"></catalog-right-list>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+    </article>
+
+    <footer fxLayout="column" fxLayoutAlign="center center">
+      <button mat-flat-button color="accent" (click)="create()">Create an Offer</button>
+      <p class="mat-body-2">
+        Pay attention, if you create an offer, you’ll <b>find your current offer</b> on your “<b>Offers & Deals</b>”
+        page
+      </p>
+      <a mat-button color="primary" routerLink="../title">Continue Browsing the Library</a>
+    </footer>
+  </ng-container>
+</ng-container>
+
+<ng-template #noTitles>
+  <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="40px">
+    <h1>You have no title in your selection.</h1>
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+      <a mat-flat-button color="accent" routerLink="../title">Continue browsing the Library</a>
+      <span>Or</span>
+      <a mat-stroked-button color="primary" routerLink="../deals">Consult your current Offers and Deals</a>
+    </div>
+    <p>Do you need help ? <button mat-button (click)="openIntercom()">Chat with us</button></p>
+  </article>
+</ng-template>

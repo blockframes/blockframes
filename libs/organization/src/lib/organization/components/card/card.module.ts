@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OrganizationCardComponent } from './card.component';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { OrgAddressModule } from '../../pipes/org-address.pipe';
 import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
+import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe';
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { MatRippleModule } from '@angular/material/core';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    ImgModule,
+    ImageReferenceModule,
     ToLabelModule,
     OrgNameModule,
     OrgAddressModule,
@@ -31,6 +32,7 @@ import { MatRippleModule } from '@angular/material/core';
     MatTabsModule,
     MatIconModule,
     MatRippleModule,
+    OrgMoviesModule,
   ]
 })
 export class OrganizationCardModule { }

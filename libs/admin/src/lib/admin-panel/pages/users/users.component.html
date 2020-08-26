@@ -1,36 +1,43 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Users</h1>
-<section fxLayout="row" fxLayoutAlign="space-around start">
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Users</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
     <button [disabled]="!userListLoaded" mat-flat-button color="primary" (click)="exportTable()">
-      <span>Export to CSV</span><mat-icon svgIcon="arrow_upward"></mat-icon>
+      <span>Export to CSV</span>
+      <mat-icon svgIcon="arrow_upward"></mat-icon>
     </button>
-    <bf-table-filter 
-      [source]="rows" 
-      [columns]="versionColumns" 
-      [initialColumns]="initialColumns" 
-      [filterPredicate]="filterPredicate"
-      showFilter
-      [pageSize]="100"
-      showLoader
-      showPaginator>
-      <ng-template colRef="avatar" let-avatar>
-        <bf-img class="avatar" [ref]="avatar" asset="empty_poster.webp"></bf-img>
-      </ng-template>
-      <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </ng-template>
-      <ng-template colRef="org" let-org>
-        <a [routerLink]="org.link">{{ org.id }}</a>
-      </ng-template>
-      <ng-template colRef="position" let-position>
-        {{ position ? position : '--' }}
-      </ng-template>
-      <ng-template colRef="firstConnexion" let-firstConnexion>
-        {{ firstConnexion | date }}
-      </ng-template>
-      <ng-template colRef="lastConnexion" let-lastConnexion>
-        {{ lastConnexion | date }}
-      </ng-template>
-    </bf-table-filter>
   </article>
-</section>
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
+    [filterPredicate]="filterPredicate" showFilter [pageSize]="100" showLoader showPaginator>
+    <ng-template colRef="avatar" let-avatar>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link">
+        <mat-icon svgIcon="pencil"></mat-icon>
+      </a>
+    </ng-template>
+    <ng-template colRef="org" let-org>
+      <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
+        <span>{{ org | orgName:'long'}} </span><mat-icon svgIcon="eye"></mat-icon>
+      </a>
+      <ng-template #noOrg>--</ng-template>
+    </ng-template>
+    <ng-template colRef="orgCountry" let-orgCountry>
+      <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
+      <ng-template #noOrgCountry>--</ng-template>
+    </ng-template>
+    <ng-template colRef="position" let-position>
+      {{ position ? position : '--' }}
+    </ng-template>
+    <ng-template colRef="firstConnexion" let-firstConnexion>
+      {{ firstConnexion | date }}
+    </ng-template>
+    <ng-template colRef="lastConnexion" let-lastConnexion>
+      {{ lastConnexion | date }}
+    </ng-template>
+    <ng-template colRef="org.addresses.main.country" let-country>
+      {{ country ? country : '--' }}
+    </ng-template>
+  </bf-table-filter>
+
+</main>

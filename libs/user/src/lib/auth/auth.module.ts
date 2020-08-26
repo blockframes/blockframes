@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -25,7 +25,6 @@ import { MatCardModule } from '@angular/material/card';
 // Component
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
@@ -38,8 +37,7 @@ import { IdentityGuard } from './guard/identity.guard';
 import { NoAuthGuard } from './guard/no-auth.guard';
 
 export const AuthRoutes: Routes = [
-  { path: '', redirectTo: 'welcome', pathMatch: 'full' }, // @TODO (#2825) remove if not used
-  { path: 'welcome', component: WelcomeViewComponent },
+  { path: '', redirectTo: 'connexion', pathMatch: 'full' }, // @TODO (#2825) remove if not used
   {
     path: 'connexion',
     canActivate: [NoAuthGuard],
@@ -88,7 +86,6 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [
-    WelcomeViewComponent,
     IdentityComponent,
     EmailVerificationComponent,
     PasswordResetComponent

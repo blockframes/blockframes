@@ -1,5 +1,5 @@
 
-import { App, getSendgridFrom, sendgridUrl } from '@blockframes/utils/apps';
+import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
@@ -8,6 +8,7 @@ import { userInvite, userFirstConnexion } from '../templates/mail';
 import { auth } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';
+import { orgName } from '@blockframes/organization/+state/organization.firestore';
 
 interface UserProposal {
   uid: string;
@@ -23,7 +24,7 @@ const generatePassword = () =>
 /**
  * Get user by email & create one if there is no user for this email
  */
-export const getOrInviteUserByMail = async (email: string, orgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
+export const getOrInviteUserByMail = async (email: string, fromOrgId: string, invitationType: InvitationType, app: App = 'catalog'): Promise<UserProposal | PublicUser> => {
 
   try {
     const { uid } = await auth.getUserByEmail(email);
@@ -33,12 +34,12 @@ export const getOrInviteUserByMail = async (email: string, orgId: string, invita
     const newUser = await createUserFromEmail(email);
 
     // User does not exists, send him an email.
-    const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-    const urlToUse = sendgridUrl[app];
+    const fromOrg = await getDocument<OrganizationDocument>(`orgs/${fromOrgId}`);
+    const urlToUse = applicationUrl[app];
     const from = getSendgridFrom(app);
 
     const templateId = templateIds.user.credentials[invitationType][app];
-    const template = userInvite(email, newUser.password, org.denomination.full, urlToUse, templateId);
+    const template = userInvite(email, newUser.password, orgName(fromOrg), urlToUse, templateId);
     await sendMailFromTemplate(template, from);
     return newUser.user;
   }

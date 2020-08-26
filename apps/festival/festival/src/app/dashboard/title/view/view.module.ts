@@ -5,10 +5,10 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
@@ -46,7 +46,7 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     // Blockframes
-    ImgModule,
+    ImageReferenceModule,
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,

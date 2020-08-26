@@ -86,12 +86,4 @@ export class DistributionRightsComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getMoviePath(movieId: string) {
-    return `/c/o/dashboard/tunnel/movie/${movieId}`;
-  }
-
-  public getRightPath(rightId: string, movieId: string) {
-    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
-  }
-
 }

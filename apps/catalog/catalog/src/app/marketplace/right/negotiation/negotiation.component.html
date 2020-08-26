@@ -65,7 +65,7 @@
           <mat-divider></mat-divider>
           <ng-template matExpansionPanelContent>
             <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-              <bf-img [ref]="movie.promotionalElements.poster[0].media" asset="empty_poster.webp" alt="Movie poster" ></bf-img>
+              <img [ref]="movie.main.poster.media" asset="empty_poster.webp" alt="Movie poster" >
               <div>
                 <p>
                   {{ getDirectors(movie) }}

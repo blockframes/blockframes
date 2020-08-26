@@ -88,14 +88,6 @@ export class ContractTreeComponent implements OnInit {
     }
   }
 
-  public getContractPath(contractId: string) {
-    return `/c/o/admin/panel/contract/${contractId}`;
-  }
-
-  public getContractTunnelPath(contract: Contract) {
-    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
-  }
-
   /**
    * Retreive contracts that are directly child of parentId
    * If parentId not specified, we start from the root (highest) level contract

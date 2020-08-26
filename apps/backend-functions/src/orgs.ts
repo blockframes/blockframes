@@ -206,7 +206,7 @@ export const accessToAppChanged = async (
   const appKey = await getOrgAppKey(orgId);
   const appName = getAppName(appKey)
   const appUrl = await getAppUrl(orgId);
-  
+
   await Promise.all(admins.map(admin => {
     const template = organizationAppAccessChanged(admin, appName.label, appUrl);
     return sendMailFromTemplate(template, from)

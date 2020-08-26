@@ -63,14 +63,8 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   async onSignout() {
     localStorage.clear();
-    /**
-     * the databases function seems to be not typed
-     * in typescript node.
-     */
-    const dbKeys = await (window.indexedDB as any).databases();
-    for (const key of dbKeys) {
-      indexedDB.deleteDatabase(key.name);
-    }
+    sessionStorage.clear();
+    window.location.reload();
   }
 
   /**
@@ -107,9 +101,9 @@ export class AuthService extends FireAuthService<AuthState> {
   /**
    * Call a backend function to create a new user
    * Reserved to blockframes admins only
-   * @param email 
-   * @param orgName 
-   * @param app 
+   * @param email
+   * @param orgName
+   * @param app
    */
   public async createUser(email: string, orgName: string, app: App = getCurrentApp(this.routerQuery)): Promise<PublicUser> {
     const f = this.functions.httpsCallable('createUser');

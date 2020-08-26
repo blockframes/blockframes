@@ -9,6 +9,10 @@ export default class EventEditPage {
     cy.get('event-edit input[test-id=event-title]').clear().type(title);
   }
 
+  checkAllDay() {
+    cy.get('event-edit mat-checkbox[test-id=all-day]').find('input').check({ force: true });
+  }
+
   selectDate(date: Date) {
     // Start Date
     cy.get('mat-form-field[test-id=event-start]').click();

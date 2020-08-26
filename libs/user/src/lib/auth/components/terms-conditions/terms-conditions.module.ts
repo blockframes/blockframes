@@ -11,6 +11,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [TermsConditionsComponent],
@@ -19,6 +20,7 @@ import { AppPipeModule } from '@blockframes/utils/pipes/app.pipe';
     MatCardModule,
     FlexLayoutModule,
     AppPipeModule,
+    MatIconModule,
   ],
   exports: [TermsConditionsComponent]
 })

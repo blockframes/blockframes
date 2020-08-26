@@ -1,5 +1,12 @@
 <title-list [titles]="movieSearchResults$ | async">
 
+  <!-- App Bar Search -->
+  <ng-template titleAppBarSearch>
+    <form class="app-bar" [formGroup]="filterForm">
+      <input type="text" formControlName="query" [value]="filterForm.query">
+    </form>
+  </ng-template>
+
   <!-- SORT -->
   <ng-template titleSort>
 
@@ -22,7 +29,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query">
+        <input matInput type="text" formControlName="query" [value]="filterForm.query.valueChanges | async">
       </mat-form-field>
     </form>
 
@@ -33,9 +40,7 @@
   <title-filter>
 
     <!-- TODO issue#2576 -->
-    <ng-template filter label="TITLE METADATA" section></ng-template>
-
-    <ng-template filter label="Sales Agents">
+    <ng-template filter label="Sales Agents" [form]="filterForm.sellers">
       <algolia-chips-autocomplete
         index="org"
         displayWithPath="name"
@@ -46,28 +51,31 @@
       ></algolia-chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Genres">
+    <ng-template filter label="Genres" [form]="filterForm.genres">
       <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Country of Origin">
+    <ng-template filter label="Country of Origin" [form]="filterForm.originCountries" >
       <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" model="TERRITORIES"></chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Language & Version">
+    <ng-template filter label="Language & Version" [form]="filterForm.languages">
       <title-language-filter [languagesFilterForm]="filterForm.languages"></title-language-filter>
     </ng-template>
 
-    <ng-template filter label="Production Status">
+    <ng-template filter label="Production Status" [form]="filterForm.productionStatus">
       <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
     </ng-template>
 
-    <ng-template filter label="Minimum Budget">
+    <ng-template filter label="Budget" [form]="filterForm.minBudget">
       <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
     </ng-template>
 
   </title-filter>
 
+  <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
+    <mat-icon svgIcon="refresh_filters"></mat-icon>
+  </button>
 
   <!-- TITLE CARD -->
   <ng-template titleCard let-title>

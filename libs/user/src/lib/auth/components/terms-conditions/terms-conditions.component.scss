@@ -2,7 +2,14 @@
 
 header {
   padding: 100px 0;
-  text-align: center;
+  margin: 0 auto;
+  width: 60%;
+  h1 {
+    text-align: center;
+  }
+  mat-icon {
+    cursor: pointer;
+  }
 }
 
 mat-card {
@@ -16,6 +23,9 @@ mat-card {
 }
 
 @include layout-bp(lt-lg) {
+  header {
+    width: 80%;
+  }
   mat-card {
     width: 80%;
     margin-top: 50px;
@@ -23,6 +33,9 @@ mat-card {
 }
 
 @include layout-bp(xs) {
+  header {
+    width: 100%;
+  }
   mat-card {
     width: 100%;
     margin-top: 30px;

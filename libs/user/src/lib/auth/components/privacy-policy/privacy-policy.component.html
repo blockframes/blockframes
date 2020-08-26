@@ -1,5 +1,8 @@
 <ng-container *ngIf="'festival' | app; else catalog">
   <header>
+    <div class="go-back" (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </div>
     <h1>DATA PRIVACY POLICY</h1>
   </header>
 
@@ -349,6 +352,9 @@
 </ng-container>
 <ng-template #catalog>
   <header>
+    <a mat-icon-button (click)="goBack()">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
     <h1>DATA PRIVACY POLICY</h1>
   </header>
   <section fxLayout="row" fxLayoutAlign="center">
@@ -586,7 +592,7 @@
           <p>
             We do our best to keep your Personal Data safe.  We use safe protocols for communication and transferring
             data (such as HTTPS). We use anonymizing and pseudonymizing where suitable. We monitor our systems for
-            possible vulnerabilities and attacks. 
+            possible vulnerabilities and attacks.
             Even though we try our best we cannot guarantee the security of information. However, we promise to notify
             suitable authorities of data breaches. We will also notify you if there is a threat to your rights or
             interests. We will do everything we reasonably can to prevent security breaches and to assist authorities

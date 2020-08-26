@@ -4,7 +4,7 @@ import { Organization, createOrganization } from '@blockframes/organization/+sta
 import { ModuleAccessAdminForm } from './module-access-admin.form';
 import { app } from '@blockframes/utils/apps';
 import { OrganizationDenominationForm, OrganizationAddressesForm } from '@blockframes/organization/forms/organization.form';
-import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 function createOrgAdminControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
@@ -18,7 +18,7 @@ function createOrgAdminControls(entity: Partial<Organization>) {
     email: new FormControl(org.email, Validators.email),
     fiscalNumber: new FormControl(org.fiscalNumber),
     activity: new FormControl(org.activity),
-    logo: new ImgRefForm(org.logo),
+    logo: new HostedMediaForm(org.logo),
     appAccess,
     status: new FormControl(org.status),
   };

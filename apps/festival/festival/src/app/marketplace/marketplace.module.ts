@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 
@@ -17,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
-
 const routes: Routes = [{
   path: '',
   component: MarketplaceComponent,
@@ -30,12 +29,12 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
       data: { animation: 'invitations' }
     },
     {

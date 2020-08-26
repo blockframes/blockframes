@@ -1,26 +1,15 @@
-<!-- TODO fix pageBar conflicting with another pageBar in catalog -->
-<!-- <ng-template pageBar targetId="nav">
-  <header fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10px">
-    <div fxFlex>
-      <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
-    </div>
-    <div fxLayout="row" fxLayoutAlign="start center" class="sort">
-      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
-        <ng-container *ngIf="!listView">
-          <mat-icon matPrefix svgIcon="list"></mat-icon>
-        </ng-container>
-        <ng-container *ngIf="listView">
-          <mat-icon matPrefix svgIcon="grid"></mat-icon>
-        </ng-container>
-      </button>
-      <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
-    </div>
+<ng-template pageBar targetId="nav">
+  <header class="pageBar" fxLayout fxLayoutAlign="start center">
+    <app-menu></app-menu>
+    <ng-template [ngTemplateOutlet]="appBarTitleSearchTemplate"></ng-template>
   </header>
-</ng-template> -->
-
+</ng-template>
 
 <!-- we use class="dark-contrast-theme" to override theme style of the header because it always has a "dark" background image -->
-<header id="nav" class="dark-contrast-theme">
+<header id="nav" class="dark-contrast-theme" bgAsset="banner_header_page.webp">
+  <a mat-icon-button (click)="goBack()">
+    <mat-icon svgIcon="arrow_back"></mat-icon>
+  </a>
   <h1 class="mat-display-2">On the market today</h1>
   <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="32px">
 
@@ -45,60 +34,56 @@
     </span>
   </section>
 </header>
-
 <!-- FILTER SIDE CARD -->
-<section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
-  fxLayoutAlign.lt-md="center center" class="filters">
-  <aside fxLayout="column" class="filter">
-    <mat-card>
+<div fxLayout fxLayoutAlign="space-between center" class="filter dark-contrast-theme"  bgAsset="banner_header_page.webp">
+  <ng-content></ng-content>
+</div>
 
-      <ng-content></ng-content>
 
-    </mat-card>
-  </aside>
-
-  <!-- List || card of result -->
-  <article>
-    <ng-container *ngIf="titles; else loading">
-      <ng-container *ngIf="titles.length else empty">
-        <div fxLayout="row" fxLayoutAlign="end start">
-          <span i18n *ngIf="titles.length as count" class="mat-body-2">
-            There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}} available.
-          </span>
-        </div>
-      </ng-container>
-        <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
-          <ng-container *ngIf="!listView; else displayList">
-            <ng-container *ngFor="let title of titles">
-
-              <!-- INSERT CARD -->
-              <ng-template
-                [ngTemplateOutlet]="titleCardTemplate"
-                [ngTemplateOutletContext]="{$implicit: title}"
-              ></ng-template>
-
-            </ng-container>
-          </ng-container>
-          <ng-template #displayList>
-            <ng-container *ngFor="let title of titles">
-
-              <!-- INSERT LIST ITEM -->
-              <ng-template
-                [ngTemplateOutlet]="titleListItemTemplate"
-                [ngTemplateOutletContext]="{$implicit: title}"
-              ></ng-template>
-
-            </ng-container>
-          </ng-template>
-        </div>
-    </ng-container>
-    <ng-template #loading>
-      <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
-    </ng-template>
-    <ng-template #empty>
+<!-- MOVIES -->
+<section>
+  <ng-container *ngIf="titles; else loading">
+    <ng-container *ngIf="titles.length else empty">
       <div fxLayout="row" fxLayoutAlign="end start">
-        <h6>There is no corresponding title.</h6>
+        <span i18n *ngIf="titles.length as count" class="mat-body-2">
+          There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}}
+          available.
+        </span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!listView; else displayList">
+      <div grid [@fadeList]="titles.length">
+        <ng-container *ngFor="let title of titles; trackBy:trackById">
+          <div class="card" [col]="3">
+            <!-- INSERT CARD -->
+            <ng-template [ngTemplateOutlet]="titleCardTemplate" [ngTemplateOutletContext]="{$implicit: title}">
+            </ng-template>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #displayList>
+      <div>
+        <ng-container *ngFor="let title of titles">
+
+          <!-- INSERT LIST ITEM -->
+          <ng-template [ngTemplateOutlet]="titleListItemTemplate" [ngTemplateOutletContext]="{$implicit: title}">
+          </ng-template>
+
+        </ng-container>
       </div>
     </ng-template>
-  </article>
+  </ng-container>
+  <ng-template #loading>
+    <div fxLayout fxLayoutAlign="center center">
+      <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+    </div>
+  </ng-template>
+  <ng-template #empty>
+    <div fxLayout="column" fxLayoutAlign="start center">
+      <h6>There is no corresponding title.</h6>
+      <img asset="no_titles.webp" alt="No titles">
+    </div>
+  </ng-template>
+
 </section>

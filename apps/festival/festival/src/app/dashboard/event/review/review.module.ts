@@ -6,7 +6,7 @@ import { EventReviewComponent } from './review.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     LayoutEventReviewModule,
-    ImgModule,
+    ImageReferenceModule,
     TableFilterModule,
     FlexLayoutModule,
     MatCardModule,

@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NegotiationComponent } from './negotiation.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';
@@ -23,7 +23,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     CommonModule,
     FlexLayoutModule,
     TableFilterModule,
-    ImgModule,
+    ImageReferenceModule,
     TranslateSlugModule,
     RightListModule,
     VersionTableModule,

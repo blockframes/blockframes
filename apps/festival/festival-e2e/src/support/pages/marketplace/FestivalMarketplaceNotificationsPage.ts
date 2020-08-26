@@ -1,6 +1,6 @@
 export default class FestivalMarketplaceNotificationsPage {
   constructor() {
-    cy.get('festival-marketplace-notification')
+    cy.get('notification-view')
   }
 
   verifyNotification(message: string, accepted: boolean) {

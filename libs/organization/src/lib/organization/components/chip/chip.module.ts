@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ChipComponent } from './chip.component';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { MatRippleModule } from '@angular/material/core';
 
@@ -13,7 +13,7 @@ import { MatRippleModule } from '@angular/material/core';
   imports: [
     CommonModule,
     RouterModule,
-    ImgModule,
+    ImageReferenceModule,
     OrgNameModule,
     MatRippleModule
   ]

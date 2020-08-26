@@ -1,13 +1,15 @@
-<section>
+<main>
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
+
+  <mat-card *ngIf="movie">
+    <movie-header *ngIf="movie" [movie]="movie"></movie-header>
+  </mat-card>
 
   <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
     <mat-card>
       <h2>
-        {{ movie.main.title.international }} ({{ movie.main.internalRef }})
-        <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
-          <mat-icon svgIcon="eye"></mat-icon>
-        </button>
+        {{ movie.main.title.international }} ({{ movie.main.internalRef || 'missing internal ref' }})
+        <admin-go-to type="title" [id]="movieId"></admin-go-to>
       </h2>
 
       <h4>({{ movie.main.title.original }})</h4>
@@ -77,13 +79,13 @@
         showLoader
         showPaginator>
         <ng-template colRef="contractId" let-contractId>
-          <a [routerLink]="getContractPath(contractId)" routerLinkActive="active"> {{ contractId }}</a>
+          <a [routerLink]="['/c/o/admin/panel/contract', contractId]" routerLinkActive="active"> {{ contractId }}</a>
         </ng-template>
         <ng-template colRef="terms" let-terms>
           <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
         </ng-template>
         <ng-template colRef="rightLink" let-rightLink>
-          <a [routerLink]="getRightPath(rightLink.id, rightLink.movieId)"><mat-icon svgIcon="pencil"></mat-icon></a>
+          <a [routerLink]="['/c/o/admin/panel/right',rightLink.id, 'm', rightLink.movieId]"><mat-icon svgIcon="pencil"></mat-icon></a>
         </ng-template>
         <ng-template colRef="status" let-status>
           {{ status | toLabel: 'distributionRightStatus' | async }}
@@ -91,33 +93,4 @@
       </bf-table-filter>
     </mat-card>
   </article>
-  <mat-card *ngIf="movie">
-    <h2>Promotional Elements :</h2>
-
-    <admin-image-sizes *ngIf="movie.promotionalElements.banner.media" title="Movie banner" [imgRef]="movie.promotionalElements.banner.media">
-      <h3>Movie Banner</h3>
-    </admin-image-sizes>
-    <ng-container *ngFor="let poster of movie.promotionalElements.poster; let i = index; let last = last">
-      <admin-image-sizes [imgRef]="poster.media">
-        <h3>Movie poster n°{{ i + 1 }}</h3>
-      </admin-image-sizes>
-    </ng-container>
-  </mat-card>
-  
-  <mat-card *ngIf="movie">
-    <h2>Movie private config :</h2>
-
-    <ng-container *ngIf="privateConfigForm">
-      <form [formGroup]="privateConfigForm" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Something private</mat-label>
-          <input matInput type="text" placeholder="Something private" formControlName="url" />
-        </mat-form-field>
-        <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
-        </mat-card-actions>
-      </form>
-    </ng-container>
-  </mat-card>
-
-</section>
+</main>

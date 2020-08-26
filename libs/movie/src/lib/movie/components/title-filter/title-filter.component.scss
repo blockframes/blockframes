@@ -1,11 +1,22 @@
-h6 {
-  margin-bottom: 4px;
+::-webkit-scrollbar {
+  background-color: var(--primary);
+  height: 5px;
 }
 
-h5 {
-  margin-top: 16px;
+:host {
+  width: 100%;
 }
 
-.mat-expansion-panel .mat-expansion-panel-header {
-  padding: 0;
+section {
+  overflow: auto;
+  white-space: nowrap;
+  padding-bottom: 24px;
+}
+
+button {
+  margin-right: 16px;
+}
+
+mat-card {
+  min-width: 400px;
 }

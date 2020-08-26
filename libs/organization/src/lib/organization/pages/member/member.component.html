@@ -22,5 +22,5 @@
       [isAdmin]="isAdmin$ | async">
     </member-pending>
   </ng-container>
-  <member-add *ngIf="(isAdmin$ | async)" [orgId]="orgId"> </member-add>
+  <member-add *ngIf="(isAdmin$ | async)" [org]="org"> </member-add>
 </div>

@@ -47,7 +47,7 @@
                 <li><strong>Festivals </strong></li>
                 <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
                 <li *ngFor="let prize of prizes">
-                  <bf-img *ngIf="prize.logo.urls?.original" [imgRef]="prize.logo"></bf-img>
+                  <img *ngIf="prize.logo.url" [ref]="prize.logo" asset="empty_poster.webp">
                 </li>
               </ng-container>
             </ul>

@@ -37,7 +37,7 @@ export class OrganizationComponent implements OnInit {
   public versionColumnsMovies = {
     'id': 'Id',
     'main.internalRef': 'Internal Ref',
-    'promotionalElements.poster': 'Poster',
+    'main.poster': 'Poster',
     'main.title.original': 'Original title',
     'main.productionYear': 'Production year',
     'main.storeConfig.status': 'Status',
@@ -47,7 +47,7 @@ export class OrganizationComponent implements OnInit {
 
   public initialColumnsMovies: string[] = [
     'id',
-    'promotionalElements.poster',
+    'main.poster',
     'main.internalRef',
     'main.title.original',
     'main.productionYear',
@@ -159,11 +159,6 @@ export class OrganizationComponent implements OnInit {
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
-  }
-
-
-  public getMoviePath(movieId: string, segment: string = 'main') {
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
   public async uniqueOrgName() {

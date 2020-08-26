@@ -13,9 +13,9 @@
             we always have to decide how we will handle that -->
             <mat-label>Company Name</mat-label>
             <input test-id="name" matInput placeholder="Company Name" formControlName="full" type="text" (blur)="uniqueOrgName()" required/>
+            <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
+            <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">This company already exists.</mat-error>
           </mat-form-field>
-          <mat-error *ngIf="form.get('denomination').hasError('required')">Company name is required</mat-error>
-          <mat-error *ngIf="form.get('denomination').get('full').hasError('notUnique')">The name is already taken</mat-error>
         </article>
         <mat-form-field appearance="outline">
           <mat-label>Contact Email Address</mat-label>
@@ -38,7 +38,7 @@
         <mat-card-subtitle class="mat-caption">Upload your Logo</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content fxLayout="column">
-        <drop-cropper ratio="square" [storagePath]="storagePath" [form]="form.get('logo')">
+        <drop-cropper ratio="square" [storagePath]="orgId | ref: 'organization' : 'logo'" [form]="form.logo">
           <h3 type>Logo</h3>
           <p class="mat-body-2" dimensions>Recommended : 512 x 512 px</p>
           <p class="mat-caption" format>Accepted Formats : jpg, png</p>

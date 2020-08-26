@@ -4,8 +4,7 @@ import { TestEmailForm } from '../../forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
-import { getCurrentApp, getSendgridFrom, sendgridEmailsFrom } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
@@ -23,16 +22,13 @@ export class MailsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery,
     private authQuery: AuthQuery,
   ) {
   }
 
   ngOnInit() {
     this.form = new TestEmailForm();
-    const currentApp = getCurrentApp(this.routerQuery);
-    const defaultEmailFrom = getSendgridFrom(currentApp);
-    this.form.get('from').setValue(defaultEmailFrom);
+    this.form.get('from').setValue(sendgridEmailsFrom.default);
     this.form.get('to').setValue(this.authQuery.user.email);
   }
 

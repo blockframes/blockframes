@@ -1,0 +1,34 @@
+<layout-marketplace>
+  <aside>
+    <mat-nav-list>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+        <span mat-line>Home</span>
+      </a>
+      <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
+        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+        <span mat-line>Library</span>
+      </a>
+      <a mat-list-item routerLink="selection" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="basket"></mat-icon>
+        <span mat-line>My Selection</span>
+      </a>
+      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="heart_fill"></mat-icon>
+        <span mat-line>Wishlist</span>
+      </a>
+      <a mat-list-item routerLink="deals" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="wallet"></mat-icon>
+        <span mat-line>Offers & Deals</span>
+      </a>
+    </mat-nav-list>
+  </aside>
+​
+  <header fxFlex fxLayout fxLayoutAlign="end center" class="marketplace-header">
+    <a mat-icon-button routerLink="selection">
+      <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
+        matBadgeColor="accent" matBadgeSize="small">
+      </mat-icon>
+    </a>
+  </header>
+</layout-marketplace>

@@ -1,3 +1,5 @@
+import TunnelPromotionalImagesPage from "./TunnelPromotionalImagesPage";
+
 export default class TunnelTechnicalInfoPage {
   constructor() {
     cy.get('catalog-tunnel-technical-info', { timeout: 5000 });
@@ -49,7 +51,7 @@ export default class TunnelTechnicalInfoPage {
   // Available Versions
 
   public selectLanguage(partialLanguage: string, language: string) {
-    cy.get('catalog-tunnel-technical-info movie-form-version-info input').type(partialLanguage);
+    cy.get('catalog-tunnel-technical-info movie-form-version-info form-language input').type(partialLanguage);
     cy.get('mat-option').contains(language).click();
   }
 
@@ -67,5 +69,6 @@ export default class TunnelTechnicalInfoPage {
 
   public clickNext() {
     cy.get('[test-id=next]').click();
+    return new TunnelPromotionalImagesPage();
   }
 }

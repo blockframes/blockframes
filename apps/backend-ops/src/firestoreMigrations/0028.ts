@@ -1,21 +1,18 @@
 import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { ImgRef, createImgRef } from '@blockframes/utils/media/media.firestore';
+import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
 import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash';
+import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
+import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
-const EMPTY_REF: ImgRef = {
+const EMPTY_REF: OldImgRef = {
   ref: '',
   urls: { original: '' }
 };
-
-const rowsConcurrency = 10;
 
 /**
  * Migrate old ImgRef objects to new one.
@@ -69,7 +66,7 @@ async function updateUsers(
   storage: Storage
 ) {
   return runChunks(users.docs, async (doc) => {
-    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as PublicUser, storage);
+    const updatedUser = await updateUserAvatarAndWaterMark(doc.data() as OldPublicUser, storage);
     await doc.ref.set(updatedUser);
   });
 }
@@ -79,9 +76,9 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
-      notification.organization.logo = createImgRef();
+      notification.organization.logo = createHostedMedia();
     } else if (notification.user) {
-      notification.user.avatar = createImgRef();
+      notification.user.avatar = createHostedMedia();
     }
     await doc.ref.update(notification);
   });
@@ -92,16 +89,16 @@ async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<Fi
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createImgRef();
+      invitation.fromOrg.logo = createHostedMedia();
     }
     if (invitation.toOrg) {
-      invitation.toOrg.logo = createImgRef();
+      invitation.toOrg.logo = createHostedMedia();
     }
     if (invitation.fromUser) {
-      invitation.fromUser.avatar = createImgRef();
+      invitation.fromUser.avatar = createHostedMedia();
     }
     if (invitation.toUser) {
-      invitation.toUser.avatar = createImgRef();
+      invitation.toUser.avatar = createHostedMedia();
     }
     await doc.ref.update(invitation);
 
@@ -113,7 +110,7 @@ async function updateOrganizations(
   storage: Storage
 ) {
   return runChunks(organizations.docs, async (doc) => {
-    const updatedOrg = await updateOrgLogo(doc.data() as PublicOrganization, storage);
+    const updatedOrg = await updateOrgLogo(doc.data() as OldPublicOrganization, storage);
     await doc.ref.set(updatedOrg);
   });
 }
@@ -173,12 +170,11 @@ const updateMovieField = async <T extends Credit | PromotionalElement>(
   return value;
 }
 
-const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) => {
+const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storage) => {
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    const watermark = await _upsertWatermark(user);
-    user.watermark = watermark;
+    await upsertWatermark(user as any, storageBucket); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }
@@ -186,17 +182,17 @@ const updateUserAvatarAndWaterMark = async (user: PublicUser, storage: Storage) 
   return user;
 };
 
-const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
+const updateOrgLogo = async (org: OldPublicOrganization, storage: Storage) => {
   const newImageRef = await updateImgRef(org, 'logo', storage);
   org.logo = newImageRef;
   return org;
 };
 
 const updateImgRef = async (
-  element: PublicUser | PublicOrganization | Credit | PromotionalElement,
+  element: OldPublicUser | OldPublicOrganization | Credit | PromotionalElement,
   key: 'logo' | 'avatar' | 'media' | 'watermark',
   storage: Storage
-): Promise<ImgRef> => {
+): Promise<OldImgRef> => {
 
   // get the current ref
   const media = element[key]; // get old ImgRef format
@@ -208,10 +204,10 @@ const updateImgRef = async (
   }
 
   // ### get the old file
-  const { ref } = media as ImgRef;
+  const { ref } = media as OldImgRef;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const from = bucket.file(ref);
@@ -241,15 +237,5 @@ const updateImgRef = async (
   } catch (e) {
     console.log('Empty ref');
     return EMPTY_REF;
-  }
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
   }
 }

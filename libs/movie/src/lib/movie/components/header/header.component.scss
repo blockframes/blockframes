@@ -1,35 +1,38 @@
-movie-header {
-  display: block;
+header {
+  background-repeat: no-repeat;
+  background-position: center center;
   background-size: cover;
 
-  header {
-    padding: 50px 24px;
-
-    .poster {
-      height: 450px;
-    }
-    
-    .movie-details {
-      h4 {
-        text-transform: uppercase;
-        margin: 0;
-      }
-      h2 {
-        margin-bottom: 8px;
-      }
-    }
-  }
-
-  .information {
-    height: 100%;
-  }
-
   .overlay {
-    width: 100%;
-    background: linear-gradient(to right, black, transparent);
-  }
+    padding: 24px 24px 48px 24px;
+    background-image: linear-gradient(to right, black, transparent);
 
-  .movie-header-actions {
-    display: flex;
+    .movie-info{      
+      .poster {
+        height: 400px;
+      }
+
+      .movie-details {
+        h4 {
+          text-transform: uppercase;
+          margin: 0;
+        }
+        h2 {
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    mat-icon {
+      cursor: pointer;
+    }
   }
+}
+
+.information {
+  height: 100%;
+}
+
+.movie-header-actions {
+  display: flex;
 }

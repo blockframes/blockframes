@@ -1,0 +1,57 @@
+<mat-list-item>
+  <img matListAvatar *ngIf="invitation.fromUser" asset="profil_user.webp" [ref]="invitation.fromUser.avatar"
+    alt="Profile picture">
+  <img matListAvatar *ngIf="invitation.fromOrg" asset="profil_user.webp" [ref]="invitation.fromOrg.logo"
+    alt="Organization logo">
+  <div matLine>
+    <ng-container [ngSwitch]="invitation.type">
+      <ng-container *ngSwitchCase="'attendEvent'">
+        <ng-container *ngIf=" invitation | eventFromInvitation | async as event">
+          <!-- Invited to attendEvent -->
+          <ng-container *ngIf="invitation.mode === 'invitation'; else request">
+            {{ invitation.fromOrg | orgName }} invited you to 
+            <a [routerLink]="['/c/o/marketplace/event', invitation.docId]" id="link">{{ event.title }}</a>.
+            {{event | eventRange }}
+          </ng-container>
+          <!-- Request to attendEvent -->
+          <ng-template #request>
+            {{ invitation.fromUser | displayName }} would like to attend event 
+            <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
+            {{ event | eventRange }}
+          </ng-template>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="'joinOrganization'">
+        <ng-container *ngIf="invitation.mode === 'invitation'; else request">
+          {{ invitation.fromOrg | orgName }} invited you to join the organization.
+        </ng-container>
+        <ng-template #request>
+          {{ invitation.fromUser | displayName }} wants to join your organization.
+        </ng-template>
+      </ng-container>
+    </ng-container>
+  </div>
+  <span matLine>
+    <small class="mat-caption">
+      {{ invitation.date | date: 'medium' }}
+    </small>
+  </span>
+  <invitation-action [invitation]="invitation"></invitation-action>
+  <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
+    <mat-icon svgIcon="more_vert">
+    </mat-icon>
+  </button>
+</mat-list-item>
+<mat-menu #menu="matMenu">
+  <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">More details</a>
+  <ng-container [ngSwitch]="invitation.status">
+    <ng-container *ngSwitchCase="'pending'">
+      <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
+        Accept invitation
+      </span>
+      <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
+        Decline invitation
+      </span>
+    </ng-container>
+  </ng-container>
+</mat-menu>

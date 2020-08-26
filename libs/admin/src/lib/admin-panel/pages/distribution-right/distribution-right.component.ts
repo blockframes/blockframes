@@ -65,19 +65,4 @@ export class DistributionRightComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  public getMoviePath(movieId: string) {
-    return `/c/o/admin/panel/movie/${movieId}`;
-  }
-
-  public getMovieTunnelPath(movieId: string) {
-    return `/c/o/dashboard/tunnel/movie/${movieId}`;
-  }
-
-  public getContractTunnelPath(contract: Contract) {
-    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
-  }
-
-  public getContractPath(contractId: string) {
-    return `/c/o/admin/panel/contract/${contractId}`;
-  }
 }

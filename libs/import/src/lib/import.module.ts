@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -12,13 +13,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 // Libraries
-import { UploadModule } from '@blockframes/ui/upload';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { ViewExtractedElementsModule } from './components/view-extracted-elements/view-extracted-elements.module';
 
 // Components
 import { ImportContainerComponent } from './pages/import-container/import-container.component';
 import { ImportSpreadsheetComponent } from './components/import-spreadsheet/import-spreadsheet.component';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Guards
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
@@ -43,6 +44,7 @@ const routes: Routes = [
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     RouterModule.forChild(routes),
 
     // Material
@@ -54,7 +56,7 @@ const routes: Routes = [
     // Librairies
     UploadModule,
     ViewExtractedElementsModule,
-    ImgModule
+    ImageReferenceModule
   ]
 })
 export class ImportModule { }

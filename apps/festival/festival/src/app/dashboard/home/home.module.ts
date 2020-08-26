@@ -18,7 +18,7 @@ import { HomeComponent } from './home.component';
 
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -26,7 +26,7 @@ import { ImgModule } from '@blockframes/ui/media/img/img.module';
     CommonModule,
     FlexLayoutModule,
     MovieAnalyticsChartModule,
-    ImgModule,
+    ImageReferenceModule,
     // Material
     MatButtonModule,
     MatIconModule,

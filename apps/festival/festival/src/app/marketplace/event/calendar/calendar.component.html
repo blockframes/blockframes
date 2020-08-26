@@ -15,18 +15,18 @@
 </ng-template>
 
 <cal-week [viewDate]="viewDate" [events]="events$ | async">
-    
+
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
     <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
-      <event-card [event]="event" size="small"></event-card>
+      <event-card [event]="event" size="small" matBadge="!" matBadgeColor="accent" [matBadgeHidden]="isHidden(event)"></event-card>
     </a>
   </ng-template>
 
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
     <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
-      <event-card [event]="event" size="large"></event-card>
+      <event-card [event]="event" size="large" matBadge="!" matBadgeColor="accent" [matBadgeHidden]="isHidden(event)"></event-card>
     </a>
   </ng-template>
 

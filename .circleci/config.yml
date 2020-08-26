@@ -14,7 +14,7 @@ references:
   start_firestore_emulator: &start_firestore_emulator
     run:
       name: start firestore emulator in background
-      command: npm run firebase:emulator
+      command: . ./.circleci/run-firebase-emulator.sh
       background: true
   production_only: &production_only
     filters:
@@ -191,7 +191,7 @@ jobs:
           npx firebase use staging &&
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
-          npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
           npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
@@ -233,7 +233,7 @@ jobs:
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -261,7 +261,7 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -290,7 +290,7 @@ jobs:
             npx firebase use demo1 &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -300,8 +300,28 @@ jobs:
             npx firebase deploy --only firestore:rules
           when: always
       - slack/status
+  push-anon-db-to-ci:
+    executor: blockframes-ci
+    environment:
+      - ENV: production
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+    steps:
+      - checkout_project
+      - run: npm run db:download-prod
+      - run: npm run db:anonymize
+      - run: npm run db:upload-ci
 workflows:
   version: 2.1
+  push-anon-db-to-ci-weekly:
+    triggers:
+      - schedule:
+          cron: '0 0 * * 0'
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - push-anon-db-to-ci
   build-and-test:
     jobs:
       # build only the PR

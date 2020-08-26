@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ProfileFormComponent } from './profile.component';
+
+import { ReferencePathModule } from '@blockframes/media/directives/media/reference-path.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -19,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
     FlexLayoutModule,
     CropperModule,
     ReactiveFormsModule,
+    ReferencePathModule,
     // Material
     MatCardModule,
     MatFormFieldModule,

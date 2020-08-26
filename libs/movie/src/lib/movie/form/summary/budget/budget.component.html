@@ -12,10 +12,21 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li fxLayout="row" fxFlexAlign="start center">
-      <strong>Box Office &nbsp;</strong>
-      <mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value" id="currency-icon"></mat-icon>
+      <strong>Box Office&nbsp;</strong>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
+        <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
+      </ng-container>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
+        <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
+      </ng-container>
       <missing-control [control]="boxOffice.get('value')" [link]="link">
+        <ng-template let-value>{{ value | number }}</ng-template>
       </missing-control>
+      <span>&nbsp;</span>
+      <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
+        <span>admissions</span>
+        <span>&nbsp;</span>
+      </ng-container>
       <ng-container *ngIf="boxOffice.get('territory').value">
         <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
       </ng-container>
@@ -52,6 +63,7 @@
       <ng-template #display>
         <missing-control [control]="review.get('journalName')" [link]="link"></missing-control>
         "<missing-control [control]="review.get('criticQuote')" [link]="link"></missing-control>"
+        (<missing-control [control]="review.get('revueLink')" [link]="link"></missing-control>)
       </ng-template>
     </li>
   </ng-container>

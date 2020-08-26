@@ -46,8 +46,7 @@ export class FilterByDatePipe implements PipeTransform {
   /**
    * Get only the sublist
    * @param value A list to order by date
-   * @param from The date to start (today => 0, yesterday => 1)
-   * @param to The date to stop (today => 0, yesterday => 1)
+   * @param timeFrame 
    * @param key The key where to find the date value
    */
   transform(value: any[], timeFrame: TimeFrame, key: string = 'date') {

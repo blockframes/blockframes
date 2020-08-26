@@ -10,6 +10,8 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'auth-profile-view',
@@ -30,7 +32,8 @@ export class ProfileViewComponent implements OnInit {
     private tunnelService: TunnelService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private mediaService: MediaService
   ) {
     this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.lastName}
@@ -41,29 +44,32 @@ export class ProfileViewComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
-    this.profileForm = new ProfileForm(this.authQuery.user)
+    this.profileForm = new ProfileForm(this.authQuery.user);
     this.organization$ = this.organizationQuery.selectActive();
     this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
 
-  public update() {
+  public async update() {
     try {
       // update profile
       if (this.profileForm.invalid) {
-        throw new Error('Your profile informations are not valid.')
+        throw new Error('Your profile information are not valid.')
       } else {
         const uid = this.authQuery.userId;
-        const user = this.profileForm.value;
-        delete user.avatar; // @TODO (##2987)
-        this.authService.update({ uid, ...user });
+
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm);
+
+        await this.authService.update({ uid, ...documentToUpdate });
+        this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }
       // update password
       if (this.passwordForm.dirty) {
-        if (this.passwordForm.invalid) throw new Error('Your informations for change your password are not valid.');
+        if (this.passwordForm.invalid) throw new Error('Your information to change your password are not valid.');
         const { current, next } = this.passwordForm.value;
         this.authService.updatePassword(current, next);
-        this.snackBar.open('Password changed successfully.', 'close', { duration: 2000 });
+        this.snackBar.open('Password changed.', 'close', { duration: 2000 });
       }
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { EventListModule } from '@blockframes/event/components/list/list.module';
 import { ScreeningItemModule } from '@blockframes/event/components/screening-item/screening-item.module';
 import { EventEmptyModule } from '@blockframes/event/components/empty/empty.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [ListComponent],
@@ -13,6 +14,7 @@ import { EventEmptyModule } from '@blockframes/event/components/empty/empty.modu
     EventListModule,
     EventEmptyModule,
     ScreeningItemModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

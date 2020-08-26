@@ -10,9 +10,9 @@ import { ListComponent } from './list.component';
 
 // Blocfkrames
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ListComponent],
@@ -30,13 +31,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TableFilterModule,
     ToLabelModule,
     DisplayNameModule,
-    ImgModule,
+    ImageReferenceModule,
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     // Router
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]

@@ -6,6 +6,10 @@ mat-card {
   min-width: 300px;
   .mat-card-content {
     padding-left: 20px;
+
+    h5 {
+      margin-top: 16px;
+    }
   }
   a {
     margin-bottom: 10px;
@@ -19,7 +23,7 @@ li {
     opacity: 0.5;
     font-weight: normal;
   }
-  bf-img {
+  img {
     max-height: 50px;
   }
 }

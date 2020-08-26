@@ -9,7 +9,7 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ImageReferenceModule } from '@blockframes/ui/media';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [EventViewComponent],

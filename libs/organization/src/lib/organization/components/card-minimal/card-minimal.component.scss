@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+a {
+  padding: 24px 16px 16px;
+  margin-bottom: 16px;
+
+  img {
+    width: 100%;
+    border-radius: 50%;
+  }
+}
+
+h5 {
+  margin: 0;
+}

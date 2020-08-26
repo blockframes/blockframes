@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '@blockframes/ui/media';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
 import { AppBarModule } from '@blockframes/ui/app-bar';

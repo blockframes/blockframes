@@ -29,7 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 

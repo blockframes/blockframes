@@ -1,7 +1,7 @@
 article {
   width: 50%;
   margin: 20px auto;
-  bf-img {
+  img {
     width: 220px;
   }
 
@@ -20,4 +20,8 @@ article {
 file-upload {
   height: 300px;
   margin-bottom: 20px;
+}
+
+p.mat-caption {
+  margin-bottom: 8px;
 }

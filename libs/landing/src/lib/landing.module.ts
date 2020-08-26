@@ -10,7 +10,7 @@ import { LandingToolbarComponent } from './toolbar/toolbar.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { RoleModule } from './learn-more/role.pipe';
 import { RouterModule } from '@angular/router';
 
@@ -68,4 +68,4 @@ import { MatListModule } from '@angular/material/list';
     LandingToolbarComponent
   ]
 })
-export class LandingModule {}
+export class LandingModule { }

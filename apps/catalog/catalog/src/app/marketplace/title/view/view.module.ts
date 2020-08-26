@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
-import { ImgModule } from '@blockframes/ui/media/img/img.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Material
@@ -46,7 +46,7 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     // Custom Modules
-    ImgModule,
+    ImageReferenceModule,
     WishlistButtonModule,
     // Material
     MatCardModule,

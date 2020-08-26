@@ -1,30 +1,41 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
-<ng-container *ngIf="event$ | async as event">
-  <h2>
-    {{ event.title }}
-    <button mat-icon-button color="accent" [routerLink]="getCalendarPath()">
-      <mat-icon svgIcon="eye"></mat-icon>
-    </button>
-  </h2>
-  <h3 *ngIf="eventOwner">Owner : {{ eventOwner }}</h3>
-  <ul>
-    <li><strong>Type :</strong> {{ event.type }}</li>
-    <li><strong>From :</strong> {{ event.start.toDate() | date: 'medium'}}</li>
-    <li><strong>To :</strong> {{ event.end.toDate() | date: 'medium'}}</li>
-  </ul>
+<main fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
+  <article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="event">
 
-  <ng-container *ngIf="movie else spinner">
-    <h2>
-      Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
-      <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movie.id)">
-        <mat-icon svgIcon="eye"></mat-icon>
-      </button>
-      <button mat-icon-button color="accent" [routerLink]="getMovieAdminPath(movie.id)">
-        <mat-icon svgIcon="pencil"></mat-icon>
-      </button>
-    </h2>
-  </ng-container>
-  <ng-template #spinner>
-    <mat-spinner diameter="30"></mat-spinner>
-  </ng-template>
-</ng-container>
+    <admin-event-info [event]="event"></admin-event-info>
+    <section>
+      <h2>Invite people</h2>
+      <mat-card>
+        <mat-card-content fxLayout="column">
+          <invitation-form-user [docId]="eventId"></invitation-form-user>
+        </mat-card-content>
+      </mat-card>
+
+      <article *ngIf="event.type === 'screening' && movie">
+        <h2>Screening information</h2>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+            </mat-card-title>
+            <ng-container
+              *ngIf="movie.main.poster && movie.main.poster.media as poster;">
+              <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
+            </ng-container>
+          </mat-card-header>
+
+          <mat-card-content fxLayout="column">
+            <article>
+              <span>Standard view/edit </span>
+              <admin-go-to type="title" [id]="movie.id"></admin-go-to>
+            </article>
+            <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
+              <span>Admin edit </span>
+              <mat-icon svgIcon="pencil"></mat-icon>
+            </a>
+          </mat-card-content>
+        </mat-card>
+      </article>
+    </section>
+  </article>
+</main>

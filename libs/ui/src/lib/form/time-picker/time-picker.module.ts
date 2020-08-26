@@ -4,7 +4,7 @@ import { TimePickerComponent } from './time-picker.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -15,6 +15,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatAutocompleteModule,
+    MatIconModule,
   ]
 })
 export class TimePickerModule { }

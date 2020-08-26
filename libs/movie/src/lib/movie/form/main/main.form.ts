@@ -6,6 +6,7 @@ import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { yearValidators } from '@blockframes/utils/form/validators/validators';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
+import { MoviePromotionalHostedMediaForm } from '../promotional-elements/promotional-elements.form';
 
 // CREDIT
 
@@ -157,6 +158,8 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     workType: new FormControl(entity.workType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
+    banner: new MoviePromotionalHostedMediaForm(entity.banner),
+    poster: new MoviePromotionalHostedMediaForm(entity.poster),
   }
 }
 
@@ -201,6 +204,14 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
 
   get shortSynopsis() {
     return this.get('shortSynopsis');
+  }
+
+  get banner() {
+    return this.get('banner');
+  }
+
+  get poster() {
+    return this.get('poster');
   }
 
   public addDirector(credit?: Partial<Credit>): void {

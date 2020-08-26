@@ -5,8 +5,9 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
+import { UploadWidgetModule } from '@blockframes/media/components/upload/widget/upload-widget.module';
 
 import { DashboardComponent } from './dashboard.component';
 
@@ -45,6 +46,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     ScrollingModule,
     AppLogoModule,
     FooterModule,
+    UploadWidgetModule,
+
     // Material
     MatButtonModule,
     MatDividerModule,

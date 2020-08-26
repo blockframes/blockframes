@@ -39,18 +39,28 @@ testem.log
 Thumbs.db
 
 # Firebase
-.firebase/*
+.firebase/
 firebase-debug.log
 firestore-debug.log
 .runtimeconfig.json
 /functions
 ui-debug.log
+**/dist/
+**/coverage/
+.tern-port
+.eslintcache
+database-debug.log
 
-# ENV
-env/env.ts
-env/env.hugo.ts
 # To remove when Angular fix the bug
 env/__ngcc_entry_points__.json
 
-# Secrets
+# Secrets & Environment
+.env
+env/env.ts
+env/env.hugo.ts
+tools/credentials/*
+tools/users.fixture.json
 secrets.sh
+
+# cache
+.cache

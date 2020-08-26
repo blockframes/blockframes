@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState, RoleState } from 'akita-ng-fire';
-import { createImgRef } from '@blockframes/utils/media/media.firestore';
+import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { User } from '@blockframes/user/+state/user.firestore';
 
 export { User } from '@blockframes/user/+state/user.firestore';
@@ -19,8 +19,8 @@ export interface AuthState extends FireAuthState<User>, RoleState<Roles> {
 export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
-    avatar: createImgRef(user.avatar),
-    watermark: createImgRef(user.watermark),
+    avatar: createHostedMedia(user.avatar),
+    watermark: createHostedMedia(user.watermark),
   } as User;
 }
 

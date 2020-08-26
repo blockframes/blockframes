@@ -1,4 +1,5 @@
 export const production = false;
+export const dev = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
 // TODO issue#1146 AFM CODE
@@ -12,13 +13,26 @@ export const persistenceSettings = {
 // Analytics
 // =========
 
+export const sentryEnv = undefined;
 export const sentryDsn = undefined;
 
 // Firebase
 // ========
 
-export const appUrlContent = 'https://blockframes-ci.web.app';
-export const appUrlMarket = appUrlContent;
+export const appUrl = {
+  content: 'https://blockframes-ci.web.app',
+  market: 'http://blockframes-ci-festival.web.app',
+  crm: 'https://blockframes-ci-crm.web.app',
+}
+
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: { 
+    host: 'localhost:8080', 
+    ssl: false 
+  }
+};
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
@@ -160,3 +174,4 @@ export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+

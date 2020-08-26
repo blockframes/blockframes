@@ -7,6 +7,7 @@
     "francois": "blockframes-francois",
     "bruce": "blockframes-bruce",
     "hugo": "blockframes-hugo",
+    "george": "blockframes-george",
     "yohann": "blockframes-yohann",
     "vincent": "blockframes-vincent",
     "pl": "blockframes-pl-2",
@@ -17,10 +18,12 @@
     "demo5": "blockframes-demo-5",
     "ci": "blockframes-ci",
     "max": "blockframes-max",
+    "mano": "blockframes-mano",
     "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
     "dajung": "blockframes-dajung",
-    "remco": "blockframes-remco"
+    "remco": "blockframes-remco",
+    "sebastian": "blockframes-sebastian"
   },
   "targets": {
     "blockframes": {
@@ -36,6 +39,9 @@
         ],
         "festival": [
           "blockframes-festival"
+        ],
+        "crm": [
+          "blockframes-crm"
         ]
       }
     },
@@ -49,6 +55,9 @@
         ],
         "festival": [
           "blockframes-ci-festival"
+        ],
+        "crm": [
+          "blockframes-ci-crm"
         ]
       }
     },
@@ -66,6 +75,9 @@
         ],
         "festival": [
           "staging-blockframes-festival"
+        ],
+        "crm": [
+          "staging-blockframes-crm"
         ]
       }
     },
@@ -81,13 +93,21 @@
         "catalog": [
           "blockframes-francois"
         ],
-        "festival": ["blockframes-francois"]
+        "festival": [
+          "blockframes-francois"
+        ]
       }
     },
     "blockframes-bruce": {
       "hosting": {
         "catalog": [
-          "blockframes-bruce"
+          "catalog-blockframes-bruce"
+        ],
+        "festival": [
+          "festival-blockframes-bruce"
+        ],
+        "crm": [
+          "crm-blockframes-bruce"
         ]
       }
     },
@@ -129,6 +149,9 @@
         ],
         "festival": [
           "festival-demo1-blockframes"
+        ],
+        "crm": [
+          "crm-demo1-blockframes"
         ]
       }
     },
@@ -164,6 +187,9 @@
       "hosting": {
         "catalog": [
           "blockframes-max"
+        ],
+        "festival": [
+          "blockframes-festival-max"
         ]
       }
     },
@@ -195,6 +221,42 @@
         ],
         "festival": [
           "blockframes-remco"
+        ]
+      }
+    },
+    "blockframes-sebastian": {
+      "hosting": {
+        "catalog": [
+          "blockframes-sebastian"
+        ],
+        "festival": [
+          "blockframes-sebastian"
+        ]
+      }
+    },
+    "blockframes-george": {
+      "hosting": {
+        "storybook": [
+          "blockframes-george-storybook"
+        ],
+        "catalog": [
+          "blockframes-george"
+        ],
+        "festival": [
+          "blockframes-george-festival"
+        ]
+      }
+    },
+    "blockframes-mano": {
+      "hosting": {
+        "catalog": [
+          "blockframes-mano"
+        ],
+        "storybook": [
+          "blockframes-mano-storybook"
+        ],
+        "festival": [
+          "blockframes-mano-festival"
         ]
       }
     }

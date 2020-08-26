@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../../../../styles/style.scss";
+
+.light-theme {
+  @include angular-material-theme($bf-light-theme);
+  @include bf-material-theme($bf-light-theme);
+  // every components inside of dashboard-navbar should be always in the dark theme
+  #dashboard-navbar {
+    background-color: mat-color($bf-dark-background, app-bar);
+    @include angular-material-theme($bf-dark-theme);
+    @include bf-material-theme($bf-dark-theme);
+  }
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: light;
+}
+
+.dark-theme {
+  @include angular-material-theme($bf-dark-theme);
+  @include bf-material-theme($bf-dark-theme);
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: dark;
+}
+
+.dark-contrast-theme {
+  @include angular-material-theme($bf-dark-contrast-theme);
+  @include bf-material-theme($bf-dark-contrast-theme);
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: dark;
+}

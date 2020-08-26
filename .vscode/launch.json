@@ -5,9 +5,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "name": "Launch Edge",
             "request": "launch",
+            "type": "pwa-msedge",
+            "runtimeExecutable": "beta",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "/./*": "${webRoot}/*",
+                "/src/*": "${webRoot}/*",
+                "/*": "*",
+                "/./~/*": "${webRoot}/node_modules/*"
+            }
+        },
+        {
             "name": "Launch Chrome against localhost",
+            "request": "launch",
+            "type": "chrome",
             "url": "http://localhost:4200",
             "webRoot": "${workspaceFolder}"
         }

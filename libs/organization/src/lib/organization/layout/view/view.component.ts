@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
 import { Organization } from '@blockframes/organization/+state';
 import { fade } from '@blockframes/utils/animations/fade';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'org-view',
@@ -14,6 +15,10 @@ export class ViewComponent {
   @Input() navLinks;
   @Input() org: Organization;
 
-  constructor() { }
+  constructor(private location: Location) { }
+
+  goBack() {
+    this.location.back();
+  }
 
 }

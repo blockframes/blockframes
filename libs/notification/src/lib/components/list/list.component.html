@@ -1,0 +1,27 @@
+<mat-list>
+  <ng-container *ngFor="let timeFrame of timeFrames">
+    <!-- For a time frame -->
+    <ng-container *ngIf="(notifications | filterByDate: timeFrame) as notificationList">
+
+      <h2 *ngIf="notificationList.length">
+        {{ timeFrame | labelByDate }}
+      </h2>
+      <mat-divider *ngIf="notifications.length"></mat-divider>
+
+      <!-- Display all notifications -->
+      <ng-container *ngFor="let notification of notificationList">
+        <ng-template
+          [ngTemplateOutlet]="itemTemplate || default"
+          [ngTemplateOutletContext]="{ $implicit: notification }">
+        </ng-template>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+  <mat-paginator [length]="notifications.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+  (page)="setPage($event)"></mat-paginator>
+</mat-list>
+
+<ng-template #default let-notification>
+  <notification-item [notification]="notification"></notification-item>
+</ng-template>

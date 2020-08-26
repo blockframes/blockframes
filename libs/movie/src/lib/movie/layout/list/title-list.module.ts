@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 import {
   TitleListComponent,
@@ -13,6 +14,7 @@ import {
   TitleListItemDirective,
   TitleSortDirective,
   TitleSearchDirective,
+  TitleAppBarSearchDirective,
 } from './title-list.component'
 
 // Material
@@ -44,6 +46,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleListItemDirective,
     TitleSortDirective,
     TitleSearchDirective,
+    TitleAppBarSearchDirective,
   ],
   exports: [
     TitleListComponent,
@@ -51,6 +54,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleListItemDirective,
     TitleSortDirective,
     TitleSearchDirective,
+    TitleAppBarSearchDirective,
   ],
   imports: [
     CommonModule,
@@ -61,6 +65,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     DisplayNameModule,
     TranslateSlugModule,
     AppBarModule,
+    MatLayoutModule,
 
     // Material
     MatIconModule,

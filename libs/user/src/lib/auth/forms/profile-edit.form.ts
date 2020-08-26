@@ -1,15 +1,15 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { createImgRef, ImgRef } from '@blockframes/utils/media/media.firestore';
+import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 export interface Profile {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   position: string;
-  avatar: ImgRef;
+  avatar: HostedMedia;
   email: string;
 }
 
@@ -21,7 +21,7 @@ export function createProfile(params: Partial<User> = {}): Profile {
     position: '',
     email: '',
     ...params,
-    avatar: createImgRef(params.avatar),
+    avatar: createHostedMedia(params.avatar),
   };
 }
 
@@ -32,8 +32,8 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new ImgRefForm(profile.avatar),
-    email: new FormControl(profile.email)
+    avatar: new HostedMediaForm(profile.avatar),
+    email: new FormControl({ value: profile.email, disabled: true })
   };
 }
 
@@ -43,4 +43,6 @@ export class ProfileForm extends FormEntity<ProfileControl, User> {
   constructor(profile?: Profile) {
     super(createProfileControls(profile));
   }
+
+  get avatar() { return this.get('avatar'); }
 }

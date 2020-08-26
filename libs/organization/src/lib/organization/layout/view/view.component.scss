@@ -6,7 +6,7 @@
 
 .page-bar {
   width: 100%;
-  bf-img {
+  img {
     height: 40px;
     width: 40px;
     border-radius: 50%;
@@ -21,26 +21,31 @@ header {
   background-image: url('/assets/images/profil_banner.webp');
   background-size: cover;
   padding: 48px;
-  bf-img {
-    min-height: 170px;
-    min-width: 170px;
-    max-height: 300px;
-    max-width: 300px;
-    border-radius: 50%;
+  .org-info {
+    img {
+      min-height: 170px;
+      min-width: 170px;
+      max-height: 300px;
+      max-width: 300px;
+      border-radius: 50%;
+    }
+    article {
+      max-width: 50%;
+      margin-left: 24px;
+      h4 {
+        margin-bottom: 0;
+        text-transform: uppercase;
+      }
+      h2 {
+        margin-bottom: 8px;
+      }
+      p {
+        margin-bottom: 24px;
+      }
+    }
   }
-  article {
-    max-width: 50%;
-    margin-left: 24px;
-    h4 {
-      margin-bottom: 0;
-      text-transform: uppercase;
-    }
-    h2 {
-      margin-bottom: 8px;
-    }
-    p {
-      margin-bottom: 24px;
-    }
+  mat-icon {
+    cursor: pointer;
   }
 }
 

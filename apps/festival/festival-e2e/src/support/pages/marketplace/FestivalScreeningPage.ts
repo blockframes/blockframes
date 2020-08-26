@@ -1,4 +1,5 @@
 import FestivalMarketplaceCalendarPage from "./FestivalMarketplaceCalendarPage";
+import FestivalMarketplaceEventPage from "./FestivalMarketplaceEventPage";
 
 const PRIVATE = 'Private Screening';
 const PUBLIC = 'Public Screening';
@@ -31,5 +32,15 @@ export default class FestivalScreeningPage {
   selectCalendar() {
     cy.get('layout-marketplace a').contains(CALENDAR_LABEL).click();
     return new FestivalMarketplaceCalendarPage();
+  }
+
+  clickPrivateEvent() {
+    cy.get('festival-screening event-screening-item h3').first().click();
+    return new FestivalMarketplaceEventPage();
+  }
+
+  clickSpecificEvent(eventName: string) {
+    cy.get('festival-screening event-screening-item h3').contains(eventName).click();
+    return new FestivalMarketplaceEventPage();
   }
 }

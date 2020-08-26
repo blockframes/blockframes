@@ -1,0 +1,6 @@
+@mixin mat-bf-datepicker-theme($theme) {
+
+  .mat-datepicker-content .mat-calendar {
+    min-height: 380px;
+  }
+}
