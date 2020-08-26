@@ -101,7 +101,7 @@
             </ng-template>
           </li>
           <li>
-            <strong>Original Language</strong>
+            <strong>Original Languag{ form.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}}</strong>
             <ng-container *ngIf="!form.originalLanguages.controls.length else showListOfLanguages">
               <a [routerLink]="getPath('main')" fragment="general-information" class="missing-control">
                 <span>Missing</span>
