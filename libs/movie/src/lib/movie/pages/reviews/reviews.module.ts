@@ -18,6 +18,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes';
 
 import { MovieFormReviewscComponent } from './reviews.component';
 
@@ -33,6 +34,7 @@ import { MovieFormReviewscComponent } from './reviews.component';
     ChipsAutocompleteModule,
     FlexLayoutModule,
     FormTableModule,
+    TranslateSlugModule,
 
     // Material
     MatFormFieldModule,

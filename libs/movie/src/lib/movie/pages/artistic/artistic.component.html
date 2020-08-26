@@ -7,7 +7,14 @@
     <section id="cast-member">
 
       <bf-form-table [columns]="castColumns" [form]="cast" buttonText="Add Cast Member">
-        <ng-template colRef="filmography" let-dir>{{  dir.filmography[0] | json }}</ng-template>
+        <ng-template colRef="status" let-cast>{{ cast.status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="filmography" let-cast>
+          <ng-container *ngFor="let film of cast.filmography; let isLast = last">
+            <ng-container *ngIf="film.title">
+              {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
+            </ng-container>
+          </ng-container>
+        </ng-template>
         <ng-template formView let-castForm>
           <article [formGroup]="castForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -63,7 +70,15 @@
     <section id="crew-member">
 
       <bf-form-table [columns]="crewColumns" [form]="crew" buttonText="Add Crew Member">
-        <ng-template colRef="filmography" let-dir>{{ dir.filmography[0] | json }}</ng-template>
+        <ng-template colRef="status" let-crew>{{ crew.status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="role" let-crew>{{ crew.role | translateSlug: 'CREW_ROLES' }}</ng-template>
+        <ng-template colRef="filmography" let-crew>
+          <ng-container *ngFor="let film of crew.filmography; let isLast = last">
+            <ng-container *ngIf="film.title">
+              {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
+            </ng-container>
+          </ng-container>
+        </ng-template>
         <ng-template formView let-crewForm>
           <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">
 

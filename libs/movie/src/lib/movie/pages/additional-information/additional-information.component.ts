@@ -36,6 +36,7 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   public boxOfficeColumns = {
     territory: "Country",
     unit: 'Metrics',
+    value: 'Figures'
   }
 
   public ratingColumns = {
