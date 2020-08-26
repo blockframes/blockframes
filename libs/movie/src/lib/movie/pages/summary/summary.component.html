@@ -134,7 +134,11 @@
             </li>
             <li>
               <strong>Director's Filmography </strong>
-              <missing-control [control]="director.get('filmography')"></missing-control>
+              <ng-container *ngFor="let film of director.filmography.controls; let isLast = last">
+                <span *ngIf="film.get('title').value">
+                  {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
+                </span>
+              </ng-container>
             </li>
           </ng-container>
         </ul>
@@ -328,18 +332,23 @@
           Cast Members
           <a mat-icon-button [routerLink]="getPath('artistic')" fragment="cast-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
-        <li *ngFor="let artist of form.cast.controls; let isLast = last">
-          <ng-container *ngIf="!artist.get('firstName').value || !artist.get('lastName').value else displayArtist">
-            <a [routerLink]="getPath('artistic')" fragment="cast-member" class="missing-control">
+        <li *ngFor="let cast of form.cast.controls">
+          <ng-container *ngIf="!cast.get('firstName').value || !cast.get('lastName').value else displayCast">
+            <a [routerLink]="getPath('artistic')" fragment="crew-member"class="missing-control">
               Missing
             </a>
           </ng-container>
-          <ng-template #displayArtist>
-            <missing-control [control]="artist.get('firstName')"></missing-control>
+          <ng-template #displayCast>
+            <strong>{{ cast.get('firstName').value }}</strong>
             <span>&nbsp;</span>
-            <missing-control [control]="artist.get('lastName')"></missing-control>
+            <strong>{{ cast.get('lastName').value }}</strong>
             <span>&nbsp;</span>
-            <missing-control [control]="artist.get('filmography')"></missing-control>
+            <strong>({{ cast.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
+            <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
+              <span *ngIf="film.get('title').value">
+                {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
+              </span>
+            </ng-container>
           </ng-template>
         </li>
       </article>
@@ -349,19 +358,23 @@
           Crew Members
           <a mat-icon-button [routerLink]="getPath('artistic')" fragment="crew-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
-        <li *ngFor="let crew of form.crew.controls; let isLast = last">
+        <li *ngFor="let crew of form.crew.controls">
           <ng-container *ngIf="!crew.get('firstName').value || !crew.get('lastName').value else displayCrew">
             <a [routerLink]="getPath('artistic')" fragment="crew-member"class="missing-control">
               Missing
             </a>
           </ng-container>
           <ng-template #displayCrew>
-            <missing-control [control]="crew.get('firstName')"></missing-control>
+            <strong>{{ crew.get('firstName').value }}</strong>
             <span>&nbsp;</span>
-            <missing-control [control]="crew.get('lastName')"></missing-control>
+            <strong>{{ crew.get('lastName').value }}</strong>
             <span>&nbsp;</span>
             <strong>({{ crew.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
-            <missing-control [control]="crew.get('filmography')"></missing-control>
+            <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
+              <span *ngIf="film.get('title').value">
+                {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
+              </span>
+            </ng-container>
           </ng-template>
         </li>
       </article>
