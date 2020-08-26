@@ -123,6 +123,7 @@
     "fs-extra": "^8.1.0",
     "generate-password": "^1.4.2",
     "handlebars": "^4.5.3",
+    "intersection-observer": "^0.11.0",
     "jwplatform": "0.0.5",
     "leaflet": "^1.6.0",
     "line-reader": "^0.4.0",

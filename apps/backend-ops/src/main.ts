@@ -1,8 +1,12 @@
+import 'tsconfig-paths/register';
+import { config } from 'dotenv';
+config(); // * Must be run here!
+
 import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks } from './users';
+import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks, generateUserFixtures } from './users';
 import { syncStorage } from './syncStorage';
 
 const args = process.argv.slice(2);
@@ -10,14 +14,14 @@ const [cmd, ...rest] = args;
 
 if (cmd === 'prepareForTesting') {
   exitable(prepareForTesting)();
+} else if (cmd === 'generateUserFixtures') {
+  exitable(generateUserFixtures)();
 } else if (cmd === 'upgrade') {
   exitable(upgrade)();
 } else if (cmd === 'restore') {
   exitable(restoreShortcut)();
 } else if (cmd === 'migrate') {
   exitable(migrate)();
-} else if (cmd === 'syncUsers') {
-  exitable(syncUsers)();
 } else if (cmd === 'printUsers') {
   exitable(printUsers)();
 } else if (cmd === 'clearUsers') {
