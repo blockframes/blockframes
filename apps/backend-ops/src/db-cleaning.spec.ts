@@ -14,8 +14,7 @@ import {
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
 import { loadAdminServices } from './admin';
-import { removeUnexpectedUsers } from './users';
-import { UserConfig } from './assets/users.fixture';
+import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { clearFirestoreData } from '@firebase/testing';
