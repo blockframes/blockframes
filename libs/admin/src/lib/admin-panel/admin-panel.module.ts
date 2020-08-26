@@ -26,7 +26,7 @@ import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { MemberPermissionsModule } from '@blockframes/organization/components/member-permissions/member-permissions.module';
-import { ImageSizesModule } from '@blockframes/media/components/image-sizes/image-sizes.module';
+import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OverviewModule } from './pages/overview/overview.module';
 import { InvitationsModule } from './pages/invitations/invitations.module';
 import { EventModule } from './pages/event/event.module';
@@ -104,7 +104,7 @@ export const panelRoutes: Routes = [
     TranslateSlugModule,
     OrgNameModule,
     MemberPermissionsModule,
-    ImageSizesModule,
+    MovieHeaderModule,
     OverviewModule,
     InvitationsModule,
     GoToModule,

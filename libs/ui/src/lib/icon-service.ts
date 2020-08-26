@@ -211,6 +211,7 @@ export const icons = [
   },
   { name: 'read', url: 'assets/icons/read.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
+  { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg'},
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
   { name: 'review', url: 'assets/icons/review.svg' },

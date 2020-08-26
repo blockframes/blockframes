@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-
+import { runChunks } from '@blockframes/firebase-utils';
 import { resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase } from '@env';
@@ -44,4 +44,18 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
 export function getTestingProjectId() {
   // projectId cannot have '.' in the string; need whole numbers
   return 'test' + testIndex;
+}
+
+////////////
+// DB TOOLS
+////////////
+
+export function populate(collection: string, set: any[]) {
+  const db = admin.firestore();
+  return runChunks(set, async (d) => {
+    const docRef = db.collection(collection).doc(d.id || d.uid);
+    if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
+    if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
+    await docRef.set(d);
+  }, 50, false)
 }

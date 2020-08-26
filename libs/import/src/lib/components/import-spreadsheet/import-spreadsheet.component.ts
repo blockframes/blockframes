@@ -80,6 +80,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       sheetRange = 'A10:AD100';
     }
     this.sheets = importSpreadsheet(bytes, sheetRange);
+    this.cdRef.markForCheck();
   }
 
   next(): void {

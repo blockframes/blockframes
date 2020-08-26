@@ -40,7 +40,7 @@ export class FileUploadComponent implements OnInit {
   // TODO: issue#875, use DragEvent type
   onDrop($event: any) {
     $event.preventDefault();
-    this.state = 'ready';
+    this.selected($event.dataTransfer.files);
   }
 
   @HostListener('dragover', ['$event'])
