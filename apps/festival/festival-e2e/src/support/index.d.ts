@@ -1,4 +1,4 @@
-// load the global Cypress types
+﻿// load the global Cypress types
 /// <reference types="cypress" />
 // load the 3rd party command definition for cy.waitUntil()
 /// <reference types="cypress-wait-until" />
@@ -26,7 +26,6 @@ declare namespace Cypress {
     asyncAdd(a: number, b: number): Chainable<number>
 
     login(email: string, password: string): void;
-    
-    getUser(query: any): any;    
+   
   }
 }

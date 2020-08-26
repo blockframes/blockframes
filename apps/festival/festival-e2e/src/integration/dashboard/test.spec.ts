@@ -8,19 +8,26 @@ import { LandingPage } from '../../support/pages/landing';
 
 import { User } from '@blockframes/e2e/utils/type';
 //@George : this gives error -- when launching tests.
-//import { USERS } from '@blockframes/e2e/utils/users';
+import { USERS } from '@blockframes/e2e/utils/users';
 
 //But this works..!!
 import ExUsers from './users.fixture.json';
 //import newUser from '../../fixtures/new-user.json';
 
 describe('User create a screening', () => {
+  let userex = USERS[0];
+
   beforeEach(() => {
-    clearDataAndPrepareTest();
+    //clearDataAndPrepareTest();
     //cy.visit('/');    
     //const p1 = new LandingPage();
-    //p1.clickSignup();    
+    //p1.clickSignup();
+    cy.log(userex.email);
   });
+
+  it('test', () => {
+    console.log(userex);
+  })
 
   /*
   it('Fill all the fields appropriately', () => {
@@ -31,7 +38,7 @@ describe('User create a screening', () => {
     const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
     p2.assertMoveToOrgHomepage();
   });
-  */
+
 
   it.only('Sign-in existing User', () => {
     //const p1 = new AuthLoginPage();
@@ -46,5 +53,7 @@ describe('User create a screening', () => {
     // const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
     // p2.assertMoveToOrgHomepage();
   });  
+
+    */
 
 });
