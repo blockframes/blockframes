@@ -13,10 +13,16 @@
   <table mat-table [dataSource]="dataSource" matSort>
 
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
-    <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columns[column] }} </th>
+    <ng-container *ngFor="let column of columns | keyvalue" [matColumnDef]="column.key">
+      <th mat-header-cell *matHeaderCellDef> {{ column.value }} </th>
       <td mat-cell *matCellDef="let row">
-        <ng-template [ngTemplateOutlet]="getTemplate(column) || text" [ngTemplateOutletContext]="{ $implicit: getValue(row, column) }"></ng-template>
+        <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
+          <ng-template [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row[column.key] }">
+          </ng-template>
+        </ng-container>
+        <ng-template #default>
+          {{ row[column.key] }}
+        </ng-template>
       </td>
     </ng-container>
 

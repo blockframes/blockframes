@@ -18,7 +18,6 @@
         (rowClick)="goToTitle($event)">
         <ng-template colRef="director" let-director>{{ director | displayName }}</ng-template>
         <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
         <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' | async  }}</ng-template>
       </bf-table-filter>

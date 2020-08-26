@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieForm } from '../../movie.form';
+import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[form] movie-summary-image',
@@ -19,14 +20,14 @@ export class MovieSummaryImageComponent implements OnInit {
 
   get photoHasNoValue() {
     try {
-      const stillPhotos: Record<string, string> = this.form.promotional.get('still_photo').value;
+      const stillPhotos: Record<string, HostedMediaFormValue> = this.form.promotional.get('still_photo').value;
       const keys = Object.keys(stillPhotos);
 
       // if there is no still photos
       return keys.length === 0 ?
         true :
         // or if at least one still photo as an empty url
-        keys.some(key => !stillPhotos[key]);
+        keys.some(key => !stillPhotos[key].ref);
 
     } catch (error) {
       console.warn(error);
