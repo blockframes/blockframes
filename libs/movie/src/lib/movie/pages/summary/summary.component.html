@@ -46,13 +46,13 @@
       <article>
         <h5>
           Images
-          <a mat-icon-button [routerLink]="getPath('main')" reference="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" fragment="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Film Page Banner Image </strong>
             <ng-container *ngIf="(form.banner.value.url | isEmptyImgRef) else banner">
-              <a [routerLink]="getPath('main')" reference="images" class="missing-control">
+              <a [routerLink]="getPath('main')" fragment="images" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -65,7 +65,7 @@
           <li>
             <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Poster Image </strong>
             <ng-container *ngIf="(form.poster.value.url | isEmptyImgRef) else poster">
-              <a [routerLink]="getPath('main')" reference="images" class="missing-control">
+              <a [routerLink]="getPath('main')" fragment="images" class="missing-control">
                 Missing
               </a>
             </ng-container>
@@ -80,7 +80,7 @@
       <article>
         <h5>
           General Information
-          <a mat-icon-button [routerLink]="getPath('main')" reference="general-information"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('main')" fragment="general-information"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h5>
         <ul>
           <li>
@@ -90,40 +90,46 @@
           <li>
             <strong>Countr{ form.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
             <ng-container *ngIf="!form.originCountries.controls.length else showListOfCountries">
-              <a [routerLink]="getPath('main')" reference="general-information" class="missing-control">
+              <a [routerLink]="getPath('main')" fragment="general-information" class="missing-control">
                 <span>Missing</span>
               </a>
             </ng-container>
-            <ng-container *ngFor="let country of form.originCountries.controls; let isLast = last" #showListOfCountries>
-              <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
-            </ng-container>
+            <ng-template #showListOfCountries>
+              <ng-container *ngFor="let country of form.originCountries.controls; let isLast = last">
+                <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
+              </ng-container>
+            </ng-template>
           </li>
           <li>
             <strong>Original Language</strong>
             <ng-container *ngIf="!form.originalLanguages.controls.length else showListOfLanguages">
-              <a [routerLink]="getPath('main')" reference="general-information" class="missing-control">
+              <a [routerLink]="getPath('main')" fragment="general-information" class="missing-control">
                 <span>Missing</span>
               </a>
             </ng-container>
-            <ng-container *ngFor="let language of form.originalLanguages.controls; let isLast = last" #showListOfLanguages>
-              <missing-control [control]="language" scope="LANGUAGES" [isLast]="isLast"></missing-control>
-            </ng-container>
+            <ng-template #showListOfLanguages>
+              <ng-container *ngFor="let language of form.originalLanguages.controls; let isLast = last">
+                <missing-control [control]="language" scope="LANGUAGES" [isLast]="isLast"></missing-control>
+              </ng-container>
+            </ng-template>
           </li>
           <li>
             <strong>Genre{ form.genres.controls.length, plural, =0 {} =1 {} other {s}} </strong>
             <ng-container *ngIf="!form.genres.controls.length else showListOfGenres">
-              <a [routerLink]="getPath('main')" reference="general-information" class="missing-control">
+              <a [routerLink]="getPath('main')" fragment="general-information" class="missing-control">
                 <span>Missing</span>
               </a>
             </ng-container>
-            <ng-container *ngFor="let genre of genres; let isLast = last" #showListOfGenres>
-              <ng-container *ngIf="!isLast else last">
-                <missing-control [control]="genre" scope="GENRES" [isLast]="isLast"></missing-control>
+            <ng-template #showListOfGenres>
+              <ng-container *ngFor="let genre of genres; let isLast = last">
+                <ng-container *ngIf="!isLast else last">
+                  <missing-control [control]="genre" scope="GENRES" [isLast]="isLast"></missing-control>
+                </ng-container>
+                <ng-template #last>
+                  {{ genre.value }}
+                </ng-template>
               </ng-container>
-              <ng-template #last>
-                {{ genre.value }}
-              </ng-template>
-            </ng-container>
+            </ng-template>
           </li>
           <li>
             <strong>Running Time </strong>
@@ -140,12 +146,12 @@
         </h5>
         <ul>
           <ng-container *ngIf="!form.directors.controls.length else showDirectors">
-            <a [routerLink]="getPath('main')" reference="directors" class="missing-control">
+            <a [routerLink]="getPath('main')" fragment="directors" class="missing-control">
               <span>Missing</span>
             </a>
           </ng-container>
-          <ng-container *ngFor="let director of form.directors.controls" #showDirectors>
-            <li>
+          <ng-template #showDirectors>
+            <li *ngFor="let director of form.directors.controls">
               <strong>Director Name </strong>
               <ng-container *ngIf="director.valid else display">
                 <a [routerLink]="getPath('main')" fragment="directors" class="mandatory-control">
@@ -156,8 +162,6 @@
                 <missing-control [control]="director.get('firstName')" isLast=false></missing-control>
                 <missing-control [control]="director.get('lastName')"></missing-control>
               </ng-template>
-            </li>
-            <li>
               <strong>Director's Filmography </strong>
               <ng-container *ngFor="let film of director.filmography.controls; let isLast = last">
                 <span *ngIf="film.get('title').value">
@@ -165,7 +169,8 @@
                 </span>
               </ng-container>
             </li>
-          </ng-container>
+          </ng-template>
+
         </ul>
       </article>
     </section>
@@ -248,21 +253,23 @@
         </h5>
         <ul>
           <ng-container *ngIf="!form.stakeholders.get('productionCompany').controls.length else showProductionCompanies">
-            <a [routerLink]="getPath('production')" reference="company" class="missing-control">
+            <a [routerLink]="getPath('production')" fragment="company" class="missing-control">
               <span>Missing</span>
             </a>
           </ng-container>
-          <ng-container *ngFor="let producer of form.stakeholders.get('productionCompany').controls; let isLast = last" #showProductionCompanies>
-            <missing-control [control]="producer.get('displayName')"></missing-control>
-            <ng-container *ngIf="producer.get('countries').value.length">
-              <span> (</span>
-              <span *ngIf="producer.get('countries').value.length">
-                ({{ producer.get('countries').value | translateSlug: 'TERRITORIES' }})
-              </span >
-              <span>)</span>
-            </ng-container>
-            <span>{{ isLast ? '' : ', '}}</span>
-          </ng-container>
+          <ng-template #showProductionCompanies>
+            <li *ngFor="let producer of form.stakeholders.get('productionCompany').controls; let isLast = last">
+              <missing-control [control]="producer.get('displayName')"></missing-control>
+              <ng-container *ngIf="producer.get('countries').value.length">
+                <span> (</span>
+                <span *ngIf="producer.get('countries').value.length">
+                  ({{ producer.get('countries').value | translateSlug: 'TERRITORIES' }})
+                </span >
+                <span>)</span>
+              </ng-container>
+              <span>{{ isLast ? '' : ', '}}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -272,21 +279,23 @@
         </h5>
         <ul>
           <ng-container *ngIf="!form.stakeholders.get('coProductionCompany').controls.length else showCoProductionCompanies">
-            <a [routerLink]="getPath('production')" reference="co-company" class="missing-control">
+            <a [routerLink]="getPath('production')" fragment="co-company" class="missing-control">
               <span>Missing</span>
             </a>
           </ng-container>
-          <ng-container *ngFor="let coProducer of form.stakeholders.get('coProductionCompany').controls; let isLast = last" #showCoProductionCompanies>
-            <missing-control [control]="coProducer.get('displayName')"></missing-control>
-            <ng-container *ngIf="coProducer.get('countries').value.length">
-              <span> (</span>
-              <span  *ngIf="coProducer.get('countries').value.length">
-                ({{ coProducer.get('countries').value | translateSlug: 'TERRITORIES' }})
-              </span>
-              <span>)</span>
-            </ng-container>
-            <span>{{ isLast ? '' : ', '}}</span>
-          </ng-container>
+          <ng-template #showCoProductionCompanies>
+            <li *ngFor="let coProducer of form.stakeholders.get('coProductionCompany').controls; let isLast = last">
+              <missing-control [control]="coProducer.get('displayName')"></missing-control>
+              <ng-container *ngIf="coProducer.get('countries').value.length">
+                <span> (</span>
+                <span  *ngIf="coProducer.get('countries').value.length">
+                  ({{ coProducer.get('countries').value | translateSlug: 'TERRITORIES' }})
+                </span>
+                <span>)</span>
+              </ng-container>
+              <span>{{ isLast ? '' : ', '}}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -301,15 +310,17 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let producer of form.producers.controls; let isLast = last" #displayProducer>
-            <missing-control [control]="producer.get('firstName')"></missing-control>
-            <span>&nbsp;</span>
-            <missing-control [control]="producer.get('lastName')"></missing-control>
-            <span *ngIf="producer.get('role').value"> (</span>
-            <missing-control [control]="producer.get('role')" scope="PRODUCER_ROLES" class="control-role"></missing-control>
-            <span *ngIf="producer.get('role').value">)</span>
-            <span>{{ isLast ? '' : ', '}}</span>
-          </li>
+          <ng-template #displayProducer>
+            <li *ngFor="let producer of form.producers.controls; let isLast = last">
+              <missing-control [control]="producer.get('firstName')"></missing-control>
+              <span>&nbsp;</span>
+              <missing-control [control]="producer.get('lastName')"></missing-control>
+              <span *ngIf="producer.get('role').value"> (</span>
+              <missing-control [control]="producer.get('role')" scope="PRODUCER_ROLES" class="control-role"></missing-control>
+              <span *ngIf="producer.get('role').value">)</span>
+              <span>{{ isLast ? '' : ', '}}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -324,17 +335,19 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let distributor of form.stakeholders.get('distributor').controls; let isLast = last" #displayDistributors>
-            <missing-control [control]="distributor.get('displayName')"></missing-control>
-            <ng-container *ngIf="distributor.get('countries').value.length">
-              <span> (</span>
-              <span  *ngIf="distributor.get('countries').value.length">
-                ({{ distributor.get('countries').value | translateSlug: 'TERRITORIES' }})
-              </span>
-              <span>)</span>
-            </ng-container>
-            <span>{{ isLast ? '' : ', '}}</span>
-          </li>
+          <ng-template #displayDistributors>
+            <li *ngFor="let distributor of form.stakeholders.get('distributor').controls; let isLast = last">
+              <missing-control [control]="distributor.get('firstName')"></missing-control>
+              <ng-container *ngIf="distributor.get('countries').value.length">
+                <span> (</span>
+                <span  *ngIf="distributor.get('countries').value.length">
+                  ({{ distributor.get('countries').value | translateSlug: 'TERRITORIES' }})
+                </span>
+                <span>)</span>
+              </ng-container>
+              <span>{{ isLast ? '' : ', '}}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -349,17 +362,19 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let saleAgent of form.stakeholders.get('salesAgent').controls; let isLast = last" #displayInternationalSales>
-            <missing-control [control]="saleAgent.get('displayName')"></missing-control>
-            <ng-container *ngIf="saleAgent.get('countries').value.length">
-              <span> (</span>
-              <span *ngFor="let country of saleAgent.get('countries').value; let last = last">
-                <span>{{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}</span>
-              </span>
-              <span>)</span>
-            </ng-container>
-            <span>{{ isLast ? '' : ', '}}</span>
-          </li>
+          <ng-template #displayInternationalSales>
+            <li *ngFor="let saleAgent of form.stakeholders.get('salesAgent').controls; let isLast = last">
+              <span>{{ saleAgent.get('displayName').value }}</span>
+              <ng-container *ngIf="saleAgent.get('countries').value.length">
+                <span> (</span>
+                <span *ngFor="let country of saleAgent.get('countries').value; let last = last">
+                  <span>{{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}</span>
+                </span>
+                <span>)</span>
+              </ng-container>
+              <span>{{ isLast ? '' : ', '}}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
     </section>
@@ -381,18 +396,20 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let cast of form.cast.controls" #displayCast>
-            <strong>{{ cast.get('firstName').value }}</strong>
-            <span>&nbsp;</span>
-            <strong>{{ cast.get('lastName').value }}</strong>
-            <span>&nbsp;</span>
-            <strong>({{ cast.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
-            <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
-              <span *ngIf="film.get('title').value">
-                {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
-              </span>
-            </ng-container>
-          </li>
+          <ng-template #displayCast>
+            <li *ngFor="let cast of form.cast.controls">
+              <strong>{{ cast.get('firstName').value }}</strong>
+              <span>&nbsp;</span>
+              <strong>{{ cast.get('lastName').value }}</strong>
+              <span>&nbsp;</span>
+              <strong>({{ cast.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
+              <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
+                <span *ngIf="film.get('title').value">
+                  {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
+                </span>
+              </ng-container>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -407,18 +424,20 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let crew of form.crew.controls" #displayCrew>
-            <strong>{{ crew.get('firstName').value }}</strong>
-            <span>&nbsp;</span>
-            <strong>{{ crew.get('lastName').value }}</strong>
-            <span>&nbsp;</span>
-            <strong>({{ crew.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
-            <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
-              <span *ngIf="film.get('title').value">
-                {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
-              </span>
-            </ng-container>
-          </li>
+          <ng-template #displayCrew>
+            <li *ngFor="let crew of form.crew.controls">
+              <strong>{{ crew.get('firstName').value }}</strong>
+              <span>&nbsp;</span>
+              <strong>{{ crew.get('lastName').value }}</strong>
+              <span>&nbsp;</span>
+              <strong>({{ crew.get('role').value | translateSlug: 'CREW_ROLES' }})&nbsp;</strong>
+              <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
+                <span *ngIf="film.get('title').value">
+                  {{ film.get('title').value }}({{ film.get('year').value }})&nbsp;
+                </span>
+              </ng-container>
+            </li>
+          </ng-template>
         </ul>
       </article>
     </section>
@@ -440,14 +459,9 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let festivalPrize of form.prizes.controls" #displayFestivals>
-            <strong>Festivals </strong>
-            <ng-container *ngIf="festivalPrize.valid else display">
-              <a [routerLink]="getPath('reviews')" fragment="festival" class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #display>
+          <ng-template #displayFestivals>
+            <li *ngFor="let festivalPrize of form.prizes.controls">
+              <strong>Festivals </strong>
               <missing-control [control]="festivalPrize.get('name')">
                 <ng-template #content>{{ festivalPrize.get('name').value }}, </ng-template>
               </missing-control>
@@ -464,8 +478,8 @@
                   </ng-container>
                 </ng-template>
               </missing-control>
-            </ng-template>
-          </li>
+            </li>
+          </ng-template>
         </ul>
       </article>
       <article>
@@ -479,17 +493,19 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let reviewControl of form.review.controls" #displayReviews>
-            <strong>Festivals </strong>
-            <ng-container *ngIf="reviewControl.valid else display">
-              <a [routerLink]="getPath('reviews')" fragment="reviews" class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #display *ngIf="reviewControl.value as review">
-              <span>{{ review.criticName }}, {{ review.journalName }}, {{ review.criticQuote }}, {{ review.revueLink }}</span>
-            </ng-template>
-          </li>
+          <ng-template #displayReviews>
+            <li *ngFor="let reviewControl of form.review.controls">
+              <strong>Festivals </strong>
+              <ng-container *ngIf="reviewControl.valid else display">
+                <a [routerLink]="getPath('reviews')" fragment="reviews" class="missing-control">
+                  Missing
+                </a>
+              </ng-container>
+              <ng-template #display *ngIf="reviewControl.value as review">
+                <span>{{ review.criticName }}, {{ review.journalName }}, {{ review.criticQuote }}, {{ review.revueLink }}</span>
+              </ng-template>
+            </li>
+          </ng-template>
         </ul>
       </article>
     </section>
@@ -513,20 +529,22 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let release of form.originalRelease.controls; let isLast = last" #displayRelease>
-            <ng-container *ngIf="!release.value else displayRelease">
-              <a [routerLink]="getPath('additional-information')" fragment="release" class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #displayRelease>
-              <span>{{ release.get('country').value | translateSlug: 'TERRITORIES' }}</span>
-              <span>&nbsp;</span>
-              <span>{{ release.get('media').value | translateSlug: 'MEDIAS' }}</span>
-              <span>&nbsp;</span>
-              <span>{{ release.get('date').value }}</span>
-            </ng-template>
-          </li>
+          <ng-template #displayRelease>
+            <li *ngFor="let release of form.originalRelease.controls; let isLast = last">
+              <ng-container *ngIf="!release.value else displayRelease">
+                <a [routerLink]="getPath('additional-information')" fragment="release" class="missing-control">
+                  Missing
+                </a>
+              </ng-container>
+              <ng-template #displayRelease>
+                <span>{{ release.get('country').value | translateSlug: 'TERRITORIES' }}</span>
+                <span>&nbsp;</span>
+                <span>{{ release.get('media').value | translateSlug: 'MEDIAS' }}</span>
+                <span>&nbsp;</span>
+                <span>{{ release.get('date').value }}</span>
+              </ng-template>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -541,26 +559,28 @@
               Missing
             </a>
           </ng-container>
-          <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of form.boxOffice.controls" #displayBoxOffice>
-            <strong>Box Office&nbsp;</strong>
-            <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
-              <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
-            </ng-container>
-            <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
-              <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
-            </ng-container>
-            <missing-control [control]="boxOffice.get('value')">
-              <ng-template let-value>{{ value | number }}</ng-template>
-            </missing-control>
-            <span>&nbsp;</span>
-            <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
-              <span>admissions</span>
+          <ng-template #displayBoxOffice>
+            <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of form.boxOffice.controls">
+              <strong>Box Office&nbsp;</strong>
+              <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
+                <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
+              </ng-container>
+              <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
+                <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
+              </ng-container>
+              <missing-control [control]="boxOffice.get('value')">
+                <ng-template let-value>{{ value | number }}</ng-template>
+              </missing-control>
               <span>&nbsp;</span>
-            </ng-container>
-            <ng-container *ngIf="boxOffice.get('territory').value">
-              <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
-            </ng-container>
-          </li>
+              <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
+                <span>admissions</span>
+                <span>&nbsp;</span>
+              </ng-container>
+              <ng-container *ngIf="boxOffice.get('territory').value">
+                <span>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}</span>
+              </ng-container>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -575,11 +595,13 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let rating of form.rating.controls; let isLast = last" #displayRating>
-            <span>{{ rating.get('value').value }}</span>
-            <span>&nbsp;</span>
-            <span>{{ rating.get('country').value | translateSlug: 'TERRITORIES' }}</span>
-          </li>
+          <ng-template #displayRating>
+            <li *ngFor="let rating of form.rating.controls; let isLast = last">
+              <span>{{ rating.get('value').value }}</span>
+              <span>&nbsp;</span>
+              <span>{{ rating.get('country').value | translateSlug: 'TERRITORIES' }}</span>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -594,9 +616,11 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let value of form.qualifications.value; let isLast = last" #displayQualifications>
-            {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
-          </li>
+          <ng-template #displayQualifications>
+            <li *ngFor="let value of form.qualifications.value; let isLast = last">
+              {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+            </li>
+          </ng-template>
         </ul>
       </article>
     </section>
@@ -663,18 +687,15 @@
         </h5>
         <ul>
           <ng-container *ngIf="objectHasNoValue(form.languages) else displayAvailableLanguages">
-            <a [routerLink]="getPath('additional-information')" fragment="qualifications"class="missing-control">
+            <a [routerLink]="getPath('additional-information')" fragment="available-versions"class="missing-control">
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last" #displayAvailableLanguages>
-            <ng-container *ngIf="!language.key else displayLanguages">
-              Missing
-            </ng-container>
-            <ng-template #displayLanguages>
+          <ng-template #displayAvailableLanguages>
+            <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last">
               <span>{{ language.value | translateSlug: 'LANGUAGES' }}</span>
-            </ng-template>
-          </li>
+            </li>
+          </ng-template>
         </ul>
       </article>
 
@@ -739,12 +760,14 @@
               Missing
             </a>
           </ng-container>
-          <li *ngFor="let image of stillPhoto.controls | keyvalue; let i = index; let isLast = last" #displayImages>
-            <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image {{ i }} </strong>
-            <a [href]="image.value" target="_blank">
-              {{ image.value.ref.value | fileName }} {{ isLast ? '' : '| '}}
-            </a>
-          </li>
+          <ng-template #displayImages>
+            <li *ngFor="let image of stillPhoto.controls | keyvalue; let i = index; let isLast = last">
+              <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image {{ i }} </strong>
+              <a [href]="image.value" target="_blank">
+                {{ image.value.ref.value | fileName }} {{ isLast ? '' : '| '}}
+              </a>
+            </li>
+          </ng-template>
         </ul>
       </article>
 

@@ -61,7 +61,7 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
-  public objectHasNoValue(valueAsRecord: Record<string, string>) {
+  public objectHasNoValue(valueAsRecord: Record<any, any>) {
     try {
       const objectToCheck = valueAsRecord.value;
       const keys = Object.keys(objectToCheck);
