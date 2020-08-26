@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { TunnelService } from '../tunnel.service';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TunnelConfirmComponent } from '../layout/confirm/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'tunnel-exit',
@@ -16,10 +16,7 @@ export class ExitComponent implements OnInit {
 
   @Input() exitRedirect: string;
 
-  private _askForConfirmation: boolean;
-  @Input() set askForConfirmation(value: boolean) {
-    this._askForConfirmation = coerceBooleanProperty(value);
-  }
+  @Input() @boolean askForConfirmation;
 
   constructor(
     private service: TunnelService,
@@ -33,7 +30,7 @@ export class ExitComponent implements OnInit {
   }
 
   async redirect() {
-    if (!!this._askForConfirmation) {
+    if (!!this.askForConfirmation) {
       const dialogRef = this.dialog.open(TunnelConfirmComponent, {
         width: '80%',
         data: {

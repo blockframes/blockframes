@@ -88,6 +88,9 @@
       <h3>Rating</h3>
       <section id="rating">
         <bf-form-table [columns]="ratingColumns" [form]="rating" buttonText="Add a Rating">
+          <ng-template colRef="country" let-rating>
+            {{ rating.country | translateSlug: 'TERRITORIES'}}
+          </ng-template>
           <ng-template formView let-ratingForm>
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
               <mat-form-field appearance="outline" fxFlex>
