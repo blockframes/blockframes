@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public hasAcceptedMovies$: Observable<boolean>;
   public hasMovies$: Observable<boolean>;
-
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
