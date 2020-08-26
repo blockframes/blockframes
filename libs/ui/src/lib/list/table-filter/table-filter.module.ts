@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterComponent } from './table-filter.component';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
+import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -29,6 +30,8 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     FlexLayoutModule,
     ColRefModule,
+    QueryListFindModule,
+
     // Material
     MatButtonModule,
     MatIconModule,

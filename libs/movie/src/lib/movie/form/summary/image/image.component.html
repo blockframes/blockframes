@@ -1,26 +1,26 @@
 <ul>
   <li>
     <strong>Banner </strong>
-    <ng-container *ngIf="(form.banner.value | isEmptyImgRef) else banner">
+    <ng-container *ngIf="(form.banner.ref.value | isEmptyImgRef) else banner">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #banner>
-      <a [href]="form.banner.value" target="_blank">
+      <a [routerLink]="link">
         {{ form.banner.ref.value | fileName }}
       </a>
     </ng-template>
   </li>
   <li>
     <strong>Poster </strong>
-    <ng-container *ngIf="(form.poster.value | isEmptyImgRef)  else poster">
+    <ng-container *ngIf="(form.poster.ref.value | isEmptyImgRef)  else poster">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #poster>
-      <a [href]="form.poster.value" target="_blank">
+      <a [routerLink]="link">
         {{ form.poster.ref.value | fileName }}
       </a>
     </ng-template>
@@ -33,9 +33,9 @@
       </a>
     </ng-container>
     <ng-template #photos>
-      <ng-container *ngFor="let photo of form.promotional.get('still_photo').controls; let isLast = last">
-        <a [href]="photo.value" target="_blank">
-          {{ photo.ref.value | fileName }} {{ isLast ? '' : '| '}}
+      <ng-container *ngFor="let photo of form.promotional.get('still_photo').value | keyvalue; let isLast = last">
+        <a [routerLink]="link" >
+          {{ photo.value.ref | fileName }} {{ isLast ? '' : '| '}}
         </a>
       </ng-container>
     </ng-template>
