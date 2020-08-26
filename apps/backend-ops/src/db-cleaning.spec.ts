@@ -417,13 +417,13 @@ describe('DB cleaning script', () => {
     expect(every(cleanOutput)).toEqual(true);
   });
 
-  it('should delete outdated invitations to an event', async () => {
+  it('should delete invitations to a deleted event and keep outdated but valids events', async () => {
     const currentTimestamp = new Date().getTime() / 1000;
     const testInvitations = [
       {
         id: 'invit-A',
         type: 'attendEvent',
-        docId: 'event-A',
+        docId: 'event-C', // event-C does not exists, should be removed
         fromOrg: { id: 'org-A' },
         toUser: { uid: 'A' },
       },
@@ -433,19 +433,28 @@ describe('DB cleaning script', () => {
         docId: 'event-B',
         toOrg: { id: 'org-A' },
         fromUser: { uid: 'A' },
+      },
+      {
+        id: 'invit-C',
+        type: 'attendEvent',
+        docId: 'event-B',
+        toOrg: { id: 'org-B' }, // org-B doest not exists, should be removed
+        fromUser: { uid: 'A' },
+      },
+      {
+        id: 'invit-D',
+        type: 'attendEvent',
+        docId: 'event-B',
+        toOrg: { id: 'org-A' }, 
+        fromUser: { uid: 'B' }, // B doest not exists, should be removed
       }
     ];
 
     const testEvents = [
       {
-        id: 'event-A',
-        // Outdated by 30 seconds
-        end: { _seconds: currentTimestamp - 30 },
-      },
-      {
         id: 'event-B',
-        // Not outdated
-        end: { _seconds: currentTimestamp },
+        // Outdated by 30 seconds, but should be kept
+        end: { _seconds: currentTimestamp - 30 },
       }
     ];
 
@@ -466,8 +475,8 @@ describe('DB cleaning script', () => {
     ]);
 
     // Check if data have been correctly added
-    expect(invitationsBefore.docs.length).toEqual(2);
-    expect(events.docs.length).toEqual(2);
+    expect(invitationsBefore.docs.length).toEqual(4);
+    expect(events.docs.length).toEqual(1);
     expect(users.docs.length).toEqual(1);
     expect(orgs.docs.length).toEqual(1);
 

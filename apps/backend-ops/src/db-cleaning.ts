@@ -349,10 +349,7 @@ function isInvitationValid(invitation: InvitationDocument, existingIds: string[]
 
       if (existingIds.includes(invitation.docId)) {
         const event = events.find(e => e.id === invitation.docId);
-        const eventEndTimestamp = event.end.toMillis();
-
-        // Cleaning finished events
-        if (eventEndTimestamp < currentTimestamp) {
+        if(event === undefined){
           return false;
         }
       }
