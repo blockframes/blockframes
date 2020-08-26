@@ -1,0 +1,91 @@
+import { join } from 'path';
+import { firebase, backupBucket } from 'env/env';
+import { backupBucket as backupBucketCI, firebase as firebaseCI } from 'env/env.ci';
+import { firebase as firebaseProd } from 'env/env.prod';
+import * as admin from 'firebase-admin';
+import { config } from 'dotenv';
+import { existsSync, mkdirSync } from 'fs';
+import { execSync } from 'child_process';
+
+const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
+
+export async function restoreStorageFromCi() {
+  config();
+
+  if (
+    firebase.storageBucket === 'blockframes.appspot.com' ||
+    firebase.storageBucket === firebaseProd.storageBucket
+  )
+    throw Error('ABORT: YOU ARE TRYING TO RUN SCRIPT AGAINST PROD - THIS WILL DELETE STORAGE!!');
+
+  if (!('FIREBASE_CI_SERVICE_ACCOUNT' in process.env)) {
+    throw new Error('Key "FIREBASE_CI_SERVICE_ACCOUNT" does not exist in .env');
+  }
+
+  type Cert = string | admin.ServiceAccount;
+  let cert: Cert;
+  try {
+    // If service account is a stringified json object
+    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
+  } catch (err) {
+    // If service account is a path
+    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
+  }
+
+  const ci = admin.initializeApp(
+    {
+      storageBucket: CI_STORAGE_BACKUP,
+      projectId: firebaseCI.projectId,
+      credential: admin.credential.cert(cert),
+    },
+    'CI-app'
+  );
+
+  // const app = admin.initializeApp(
+  //   {
+  //     projectId: firebase.projectId,
+  //     credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as Cert),
+  //   },
+  //   'local-env'
+  // );
+
+  try {
+    const ciStorage = ci.storage();
+    const [files, nextQuery, apiResponse] = await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
+      autoPaginate: false,
+      delimiter: '/',
+    });
+    const folders = apiResponse.prefixes as string[];
+    const latestFolder = folders
+      .map((folderName) => {
+        let [day, month, year] = folderName.split('-').slice(-3);
+        year = year.substr(0, 4);
+        return {
+          folderName,
+          date: new Date(`${month}-${day}-${year}`),
+        };
+      })
+      .sort((a, b) => Number(a.date) - Number(b.date))
+      .pop();
+    const { folderName } = latestFolder;
+    console.log('Latest backup:', folderName);
+
+    console.log('Clearing storage bucket:', firebase.storageBucket);
+    try {
+      process.stdout.write(execSync(`gsutil -m rm -r "gs://${firebase.storageBucket}/*"`));
+    } catch (e) {}
+
+    const cmd = `gsutil -m cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
+    console.log('Running command:', cmd);
+    try {
+      process.stdout.write(execSync(cmd));
+    } catch (e) {}
+  } catch (err) {
+    if ('errors' in err) {
+      err.errors.forEach((error: { message: any }) => console.error('ERROR:', error.message));
+    } else {
+      console.log(err);
+    }
+    return null;
+  }
+}
