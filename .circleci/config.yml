@@ -315,7 +315,7 @@ jobs:
       - image: google/cloud-sdk
     environment:
       - ENV: blockframes-ci
-      - NODE_OPTIONS: "--max_old_space_size=7168"
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
@@ -399,12 +399,5 @@ workflows:
           requires:
             - build-and-test-all
   copy-storage-from-prod-weekly:
-    triggers:
-      - schedule:
-          cron: '0 0 * * 0'
-          filters:
-            branches:
-              only:
-                - develop
     jobs:
       - copy-storage-from-prod
