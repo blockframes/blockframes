@@ -21,7 +21,16 @@ mat-divider {
   margin-bottom: 36px;
 }
 
-
 button.submit {
   margin: auto;
 }
+
+.mat-body {
+  margin-bottom: 36px;
+
+  & span {
+    display: block;
+  }
+
+}
+
