@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,6 +8,7 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'movie-form-summary',
@@ -15,8 +16,9 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormSummaryComponent {
+export class MovieFormSummaryComponent implements OnInit, OnDestroy {
   form = this.shell.form;
+  subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
   isPublished$ = this.query.selectActive(movie => movie.storeConfig.status).pipe(
@@ -32,8 +34,14 @@ export class MovieFormSummaryComponent {
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery
   ) {
+  }
+
+  ngOnInit(): void {
     this.findInvalidControlsRecursive(this.form);
-    this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form))
+    this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   public get genres() {

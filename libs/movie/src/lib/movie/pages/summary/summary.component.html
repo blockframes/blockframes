@@ -6,9 +6,9 @@
       Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
     </p>
 
-    <div *ngIf="missingFields.length || invalidFields.length" class="warning">
-      <span *ngIf="missingFields.length" class="missing-fields">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-fields">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+    <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
+      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
+      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
     </div>
 
     <!-- MAIN INFORMATION -->
