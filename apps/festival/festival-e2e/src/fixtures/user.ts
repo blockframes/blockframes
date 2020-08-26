@@ -3,7 +3,7 @@
 //
 // All fixtures should support the Query Inteface
 // ***********************************************************
-import Users from '../../../../../tools/fixtures/users.json'
+//import Users from '../../../../../tools/fixtures/users.json'
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { QueryInferface } from "./queryinterface";
 
@@ -21,6 +21,7 @@ export default class User {
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {
+    let Users = null;
     let userSet: Partial<UserType>[]  = (query.exist) ? 
                                         Users : this.newUsers;
 
