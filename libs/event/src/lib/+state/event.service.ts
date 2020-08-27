@@ -32,8 +32,8 @@ const eventQueries = {
   screening: (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
-    movie: ({ meta }: ScreeningEvent) =>  {
-      return meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
+    movie: ({ meta }: ScreeningEvent) => {
+      return meta?.titleId ? { path: `movies/${meta.titleId}` } : undefined
     },
     org: (e: ScreeningEvent) => ({ path: `orgs/${e.ownerId}` }),
   }),
@@ -45,7 +45,6 @@ const eventQueries = {
     org: ({ ownerId }: MeetingEvent) => ({ path: `orgs/${ownerId}` }),
   })
 }
-
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
@@ -126,5 +125,14 @@ export class EventService extends CollectionService<EventState> {
   public getEventAnalytics(eventIds: string[]): Observable<EventsAnalytics[]> {
     const f = this.functions.httpsCallable('getEventAnalytics');
     return f({ eventIds });
+  }
+
+  public filterScreeningsByMovieId(movieId: string) {
+    return this.queryByType(['screening']).pipe(map(screenings => screenings.filter(screening => {
+      /* We only want upcoming screenings */
+      if (screening.start.getTime() > new Date().getTime()) {
+        return screening.movie?.id === movieId;
+      }
+    })))
   }
 }

@@ -1,11 +1,17 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Component
 import { ViewComponent, MovieHeader } from './view.component';
+
+// Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { ScreeningModule } from '@blockframes/movie/components/screening/screening.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -27,6 +33,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     DisplayNameModule,
     TranslateSlugModule,
     AppBarModule,
+    ScreeningModule,
+
     // Material
     MatTabsModule,
     MatIconModule,
