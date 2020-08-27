@@ -38,13 +38,7 @@ export class ScreeningComponent {
     private eventService: EventService,
     private invitationService: InvitationService,
     private organizationService: OrganizationService,
-    private cdr: ChangeDetectorRef) {
-    /*     this.eventService.add({
-          allDay: false, draggable: false, end: new Date(new Date().getTime() + 500000000), start: new Date(new Date().getTime() + 400000000),
-          movie: this.query.getActive(), id: Math.random().toString(), title: 'second', org: this.org.getActive(), type: 'screening',
-          meta: { titleId: this.query.getActive().id, }, ownerId: this.org.getActive().id
-        }) */
-  }
+    private cdr: ChangeDetectorRef) { }
 
   askForInvitation(events: Event[]) {
     const eventId = this.sessionCtrl.value === 'first' ? events[0].id : events[1].id;
