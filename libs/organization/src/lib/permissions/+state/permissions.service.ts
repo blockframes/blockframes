@@ -6,6 +6,7 @@ import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire'
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { UserService } from '@blockframes/user/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   constructor(
     private query: PermissionsQuery,
     private organizationQuery: OrganizationQuery,
+    private userService: UserService,
     store: PermissionsStore
   ) {
     super(store);
@@ -80,7 +82,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   /** Update role of a member of the organization */
   private async _updateMemberRole(uid: string, role: UserRole) {
-    const orgId = this.query.getActiveId();
+    const orgId = (await this.userService.getValue(uid)).orgId
     const permissions = await this.getValue(orgId);
     permissions.roles[uid] = role;
     return this.update(orgId, { roles: permissions.roles });
