@@ -17,6 +17,7 @@ import {
   EventEditPage
 } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
+import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW, TOMORROW, PRIVATE_EVENTNAME_1, PRIVATE_EVENTNAME_2, PRIVATE_EVENTNAME_3, USER_1, USER_2, ORG_NAME, PUBLIC_EVENTNAME } from '../../fixtures/data';
@@ -36,14 +37,21 @@ describe('User create a screening', () => {
   });
 
   it.only('User creates a private screening, that taking place tomorrow', () => {
-    const userMano = userFixture.get({exist: false, index: 0 })[0];
-    signIn(userMano);
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
-    const p3: EventEditPage = p2.createDetailedEvent(NOW);
-    p3.addEventTitle(PRIVATE_EVENTNAME_1);
-    p3.selectMovie(MOVIE_TITLE);
-    p3.saveEvent();
+    const userMarket = userFixture.get({exist: true, index: 0 })[0];
+    signIn(userMarket, true);
+    cy.url().then(afterLoginURL => {
+      cy.log(afterLoginURL);
+      if (afterLoginURL.includes('auth/identity')) {
+        const pIdentity = new AuthIdentityPage();
+        pIdentity.confirm(userMarket);
+      }
+      const p1 = new FestivalDashboardHomePage();
+      const p2: EventPage = p1.goToCalendar();
+      const p3: EventEditPage = p2.createDetailedEvent(NOW);
+      p3.addEventTitle(PRIVATE_EVENTNAME_1);
+      p3.selectMovie(MOVIE_TITLE);
+      p3.saveEvent();      
+    });    
   });
 
   it('User creates a public screening, that taking place tomorrow', () => {

@@ -1,7 +1,7 @@
 // ***********************************************************
 // Primary import for all fixtures
 //
-// All fixtures should support the Query Inteface
+// All fixtures should support the Query Interface
 // ***********************************************************
 import Users from '../../../../../tools/fixtures/users.json'
 import NewUsers from './new-users.json';
@@ -12,8 +12,7 @@ export default class User {
   newUsers: Partial<UserType>[];
 
   constructor() {
-    this.newUsers = [];
-    this.newUsers.push();
+
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {

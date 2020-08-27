@@ -4,11 +4,11 @@ import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplace
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard-home', { timeout: 30000 })
+    cy.get('festival-marketplace-home', { timeout: 30000 })
   }
 
   goToCalendar() {
-    cy.get('festival-dashboard-home').get('a[test-id=calendar]').click();
+    cy.get('festival-marketplace-home').get('a[test-id=calendar]').click();
     return new EventPage();
   }
 

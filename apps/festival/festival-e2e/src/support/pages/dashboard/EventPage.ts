@@ -3,7 +3,7 @@ import { getTomorrowDay } from '@blockframes/e2e/utils/functions';
 
 export default class EventPage {
   constructor() {
-    cy.get('festival-event-list');
+    cy.get('festival-event-calendar');
   }
   createDetailedEvent(date: Date) {
     const day = getTomorrowDay(date);

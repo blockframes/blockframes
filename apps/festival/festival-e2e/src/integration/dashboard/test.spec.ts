@@ -5,10 +5,6 @@ import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/function
 import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 import { OrganizationHomePage } from '@blockframes/e2e/pages/organization';
 import { LandingPage } from '../../support/pages/landing';
-
-//import { User } from '@blockframes/e2e/utils/type';
-//import { USERS } from '@blockframes/e2e/utils/users';
-//import ExUsers from './users.fixture.json';
 import { User, QueryInferface } from '../../fixtures';
 
 describe('User create a screening', () => {
