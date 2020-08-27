@@ -107,7 +107,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private mediaService: MediaService,
     private snackbar: MatSnackBar,
     private route: ActivatedRoute,
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
@@ -115,8 +115,9 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   ngAfterViewInit() {
-    this.sub = this.route.fragment.subscribe((fragment: string) => {
-      this.doc.getElementById(fragment)?.scrollIntoView(
+    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
+      const el: HTMLElement = await this.checkIfElementIsReady(fragment);
+      el?.scrollIntoView(
         {
           behavior: 'smooth',
           block: 'center',
@@ -128,6 +129,19 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  private checkIfElementIsReady(id: string) {
+    return new Promise<HTMLElement>((resolve, _) => {
+      const el = this.doc.getElementById(id);
+      if (el) {
+        resolve(el);
+      }
+      new MutationObserver((_, observer) => {
+        resolve(this.doc.getElementById(id));
+        observer.disconnect;
+      }).observe(this.doc.documentElement, {childList: true, subtree: true});
+    })
   }
 
   // Should save movie

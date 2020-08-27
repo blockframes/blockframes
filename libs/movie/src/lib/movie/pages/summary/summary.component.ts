@@ -56,25 +56,20 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
     return this.form.get('title');
   }
 
-  get photoHasNoValue() {
-    try {
-      const stillPhotos: Record<string, string> = this.stillPhoto.value;
-      const keys = Object.keys(stillPhotos);
+  public getPath(segment: string) {
+    const { movieId } = this.route.snapshot.params;
+    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
+  }
 
-      // if there is no still photos
-      return keys.length === 0 ?
-        true :
-        // or if at least one still photo as an empty url
-        keys.some(key => !stillPhotos[key]);
+  public objectHasNoValue(valueAsRecord: Record<any, any>) {
+    try {
+      const objectToCheck = valueAsRecord.value;
+      const keys = Object.keys(objectToCheck);
+      return keys.length === 0 ? true : keys.some(key => !objectToCheck[key]);
     } catch (error) {
       console.warn(error);
       return true;
     }
-  }
-
-  public getPath(segment: string) {
-    const { movieId } = this.route.snapshot.params;
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
   public async submit() {
