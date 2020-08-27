@@ -46,6 +46,7 @@ export async function restoreStorageFromCi() {
       delimiter: '/',
     });
     const folders = apiResponse.prefixes as string[];
+    // ! There is no such thing as a folder - these are GCS prefixes: https://googleapis.dev/nodejs/storage/latest/Bucket.html#getFiles
     const latestFolder = folders
       .map((folderName) => {
         let [day, month, year] = folderName.split('-').slice(-3);
@@ -66,7 +67,9 @@ export async function restoreStorageFromCi() {
     } catch (e) {
       console.error(e);
     }
-    console.log("Copying storage bucket from blockframe-ci to your local project's storage bucket...");
+    console.log(
+      "Copying storage bucket from blockframe-ci to your local project's storage bucket..."
+    );
     const cmd = `gsutil -m cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
     console.log('Running command:', cmd);
     try {
