@@ -12,6 +12,8 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ScreeningModule } from '@blockframes/movie/components/screening/screening.module';
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
+import { SliderModule } from '@blockframes/ui/slider/slider.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -24,7 +26,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 @NgModule({
   declarations: [ViewComponent, MovieHeader],
   exports: [ViewComponent, MovieHeader],
-  
+
   imports: [
     CommonModule,
     RouterModule,
@@ -34,6 +36,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     TranslateSlugModule,
     AppBarModule,
     ScreeningModule,
+    MovieCardModule,
+    SliderModule,
 
     // Material
     MatTabsModule,

@@ -43,7 +43,6 @@ export class ScreeningComponent {
   askForInvitation(events: Event[]) {
     const eventId = this.sessionCtrl.value === 'first' ? events[0].id : events[1].id;
     this.org.pipe(take(1)).subscribe(org => {
-      console.log(org)
       this.invitationService.request('org', org[0].id).from('user').to('attendEvent', eventId)
       this.invitationWasSent = true;
       this.cdr.markForCheck();
