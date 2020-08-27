@@ -14,7 +14,7 @@ import { createPermissions, UserRole } from '../../permissions/+state/permission
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
-import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
 import { network, baseEnsDomain } from '@env';
 
@@ -28,7 +28,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
-    private permissionsQuery: PermissionsQuery,
     private permissionsService: PermissionsService,
   ) {
     super(store);
