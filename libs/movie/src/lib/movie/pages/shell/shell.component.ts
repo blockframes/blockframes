@@ -105,6 +105,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private mediaService: MediaService,
+    private snackbar: MatSnackBar,
     private route: ActivatedRoute,
   ) { }
 
@@ -132,16 +133,18 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   // Should save movie
   public async save() {
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    if (this.form.valid) {
+      const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+      const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
+      await this.service.update(movie.id, movie);
+      this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+      this.form.markAsPristine();
+      await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
+      return true;
+    } else {
+      this.snackbar.open('Please complete the mandatory fields before trying to save.', 'close', { duration: 2000 });
+    }
 
-    const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-
-    await this.service.update(movie.id, movie);
-    this.mediaService.uploadOrDeleteMedia(mediasToUpload);
-
-    this.form.markAsPristine();
-    await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
-    return true;
   }
 
   confirmExit() {
