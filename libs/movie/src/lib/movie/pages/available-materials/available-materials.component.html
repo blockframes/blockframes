@@ -4,26 +4,30 @@
   <section tunnel-form fxLayout="column" fxLayoutGap="32px">
 
     <h3>Original Version</h3>
-    <div fxLayout="column" fxLayoutGap="16px">
+    <article fxLayout="column" fxLayoutGap="16px">
       <mat-slide-toggle [formControl]="form.get('isOriginalVersionAvailable')" color="primary">Original Version
         Authorized</mat-slide-toggle>
       <span class="mat-caption">Please specify if original version is available or not.</span>
-    </div>
+      </article>
 
     <h3>Add Versions</h3>
 
     <!-- Form -->
 
-    <article [formGroup]="form.languages" fxLayout="column" fxLayoutGap="32px">
+    <article [formGroup]="form.languages" fxLayout="column" fxLayoutGap="24px">
       <ng-container *ngFor="let language of form.languages.controls | keyvalue">
-        <h5>{{ language.key | titlecase }}</h5>
-        <div [formGroupName]="language.key" fxLayout="row" fxLayoutGap="8px">
-          <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
-          <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
-          <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
-          <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
-            <mat-icon svgIcon="trash"></mat-icon>
-          </button>
+        <div fxLayout="column" fxLayoutGap="8px">
+          <h5>{{ language.key | titlecase }}</h5>
+          <div [formGroupName]="language.key" fxLayout="row">
+            <div fxLayout="row" fxLayoutGap="16px">
+              <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
+              <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
+              <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
+            </div>
+            <button mat-mini-fab (click)="deleteLanguage(language.key)" class="delete-button" color="warn">
+              <mat-icon svgIcon="trash"></mat-icon>
+            </button>
+          </div>
         </div>
       </ng-container>
     </article>
@@ -41,7 +45,7 @@
     </footer>
     <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
       <mat-divider></mat-divider>
-      <span>Add Language</span>
+      <span class="mat-caption text-primary">Add a Version</span>
       <button mat-mini-fab color="primary" (click)="showForm()">
         <mat-icon svgIcon="add"></mat-icon>
       </button>

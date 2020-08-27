@@ -39,6 +39,7 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.findInvalidControlsRecursive(this.form);
     this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
+    console.log(this.form)
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

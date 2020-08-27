@@ -58,7 +58,7 @@
     <section id="producers">
       <h6 class="mat-caption">Producer(s)</h6>
       <bf-form-table [columns]="producerColumns" [form]="form.producers" buttonText="Add Producer">
-        <ng-template colRef="role" let-producer>{{ producer.role | translateSlug: 'STAKEHOLDER_ROLES' }}</ng-template>
+        <ng-template colRef="role" let-producer>{{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
         <ng-template formView let-producerForm>
           <article [formGroup]="producerForm">
 
@@ -76,7 +76,7 @@
               </mat-form-field>
             </div>
 
-            <static-select type="model" [control]="producerForm.get('role')" scope="STAKEHOLDER_ROLES">
+            <static-select type="model" [control]="producerForm.get('role')" scope="PRODUCER_ROLES">
               <mat-label>Role</mat-label>
               <mat-hint>Please specify producer's role: executive, associate...</mat-hint>
             </static-select>

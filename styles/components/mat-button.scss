@@ -124,6 +124,12 @@
   auth-widget button[mat-icon-button] img {
     border: 1px solid mat-color($foreground, divider);
   }
+
+  // Override the padding of the button wrapper to get icon vertical aligned in the mini fab button
+  // For example, see available materials page.
+  tunnel-page section article button[mat-mini-fab] .mat-button-wrapper {
+    padding: 0;
+  }
 }
 
 // TYPOGRAPHY
