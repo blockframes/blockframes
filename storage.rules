@@ -19,45 +19,64 @@ service firebase.storage {
 
       match /avatar/{avatarId=**} { // @TODO (#3188) remove "=**" once migration 31 is done to allow only avatar/foo.png
       	allow read: if request.auth.uid == userId; // A read access is needed on the profile form
-        allow create, update: if request.auth.uid == userId && isValidImage();
+        allow create, update: if request.auth.uid == userId && isValidIncomingImage();
         allow delete: if request.auth.uid == userId;
       }
       
       match /watermark/{watermarkId} {
-        allow read, write: if false;
+        allow read, write: if false; // @TODO (#3188) make sure that imgix is used during screenings
       }
 
     }
     
     match /orgs/{orgId} {
+      
       match /logo/{logoId=**} { // @TODO (#3188) remove "=**" once migration 31 is done to allow only logo/foo.png
       	allow read: if request.auth != null; // A read access is needed on the org form
-        allow create, update: if request.auth != null && isValidImage();
+        allow create, update: if request.auth != null && isValidIncomingImage();
         allow delete: if request.auth != null;
       }
     }
 
+    // @TODO (#3188) Rules for movies are incomplete since we cannot link request.auth.uid 
+    // with the documents we want to access (we only have movieId and cannot access DB here)
     match /movies/{movieId} {
-      match /{allFilesInCurrentMovieDir=**} {
+
+      match /banner/{media=**} { // @TODO (#3188) remove "=**" once migration 31 is done to prevent deep file upload
       	allow read: if request.auth != null; // A read access is needed on the movie form
-        allow create, update: if request.auth != null && isValidMedia();
+        allow create, update: if request.auth != null && isValidIncomingImage();
+        allow delete: if request.auth != null;
+      }
+
+      match /poster/{media=**} { // @TODO (#3188) remove "=**" once migration 31 is done to prevent deep file upload
+      	allow read: if request.auth != null; // A read access is needed on the movie form
+        allow create, update: if request.auth != null && isValidIncomingImage();
+        allow delete: if request.auth != null;
+      }
+
+      match /promotional.presentation_deck/{media=**} { // @TODO (#3188) remove "=**" once migration 31 is done to prevent deep file upload
+      	allow read: if request.auth != null; // @TODO (#3576)
+        allow create, update: if request.auth != null && isValidIncomingPdf();
+        allow delete: if request.auth != null;
+      }
+
+      match /promotional.scenario/{media=**} { // @TODO (#3188) remove "=**" once migration 31 is done to prevent deep file upload
+      	allow read: if request.auth != null; // @TODO (#3576)
+        allow create, update: if request.auth != null && isValidIncomingPdf();
         allow delete: if request.auth != null;
       }
     }
 
-    function isValidImage() {
+    function isValidIncomingImage() {
     	// Only allow uploads of any image file that's less than 5MB
       return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
     }
     
-    function isValidPdf() {
+    function isValidIncomingPdf() {
     	// Only allow uploads of any image file that's less than 50MB
       return request.resource.contentType.matches('application/pdf') && request.resource.size < 50 * 1024 * 1024;
     }
     
-    function isValidMedia() {
-      return isValidImage() || isValidPdf();
-    }
   }
 }
 
