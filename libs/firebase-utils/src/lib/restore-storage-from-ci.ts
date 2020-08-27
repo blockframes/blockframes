@@ -41,6 +41,7 @@ export async function restoreStorageFromCi() {
 
   try {
     const ciStorage = ci.storage();
+    // @ts-ignore
     const [files, nextQuery, apiResponse] = await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
       autoPaginate: false,
       delimiter: '/',
