@@ -49,12 +49,11 @@ export async function restoreStorageFromCi() {
     const folders = apiResponse.prefixes as string[];
     // ! There is no such thing as a folder - these are GCS prefixes: https://googleapis.dev/nodejs/storage/latest/Bucket.html#getFiles
     const latestFolder = folders
-      .map((folderName) => {
-        let [day, month, year] = folderName.split('-').slice(-3);
-        year = year.substr(0, 4);
+      .map((prefix) => {
+        const [day, month, year] = prefix.split('-').slice(-3);
         return {
-          folderName,
-          date: new Date(`${month}-${day}-${year}`),
+          folderName: prefix,
+          date: new Date(`${month}-${day}-${year.substr(0, 4)}`),
         };
       })
       .sort((a, b) => Number(a.date) - Number(b.date))
