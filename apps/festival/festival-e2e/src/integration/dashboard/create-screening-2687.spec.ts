@@ -37,7 +37,8 @@ describe('User create a screening', () => {
   });
 
   it.only('User creates a private screening, that taking place tomorrow', () => {
-    const userMarket = userFixture.get({exist: true, index: 0 })[0];
+    const userMarket = userFixture.get({exist: true, 
+      key: 'email', value: 'vchoukroun@fake.com' })[0];
     signIn(userMarket, true);
     cy.url().then(afterLoginURL => {
       cy.log(afterLoginURL);
