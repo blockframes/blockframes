@@ -1,0 +1,46 @@
+@import '~@angular/flex-layout/mq';
+
+header, section {
+  padding: 0 24px;
+}
+
+header {
+  background: linear-gradient(to bottom, var(--background-disabled-button), var(--background));
+  margin-bottom: 24px;
+  article, div {
+    padding-top: 16px;
+  }
+}
+
+header h4 {
+  text-transform: uppercase;
+}
+
+.movie-poster {
+  width: 168px;
+  height: 220px;
+  margin-right: 16px;
+  border-radius: 5px;
+}
+
+.movie-info {
+  h6 {
+    margin-bottom: 24px;
+  }
+  * {
+    margin: 0;
+  }
+}
+
+@include layout-bp(lt-md) {
+  header {
+    height: auto;
+    article {
+      height: auto;
+    }
+  }
+
+  .movie-info {
+    margin: 20px 0px;
+  }
+}

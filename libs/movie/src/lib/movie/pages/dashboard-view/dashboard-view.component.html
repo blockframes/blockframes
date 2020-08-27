@@ -1,0 +1,56 @@
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movie$ | async) as movie;">
+  <header fxLayout="column" fxLayoutAlign="start start">
+    <div>
+      Titles > {{movie.title.international}}
+    </div>
+    <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
+      <img
+        class="movie-poster"
+        [ref]="movie.poster"
+        asset="empty_poster.webp"
+        alt="movie poster"
+      >
+      <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
+        <h4>
+          {{ movie.contentType | toLabel: 'contentType' | async }}
+          <ng-container *ngIf="movie.contentType && movie.productionStatus">|
+          </ng-container>
+          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
+          <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|
+          {{ movie.totalRunTime }} min
+          </ng-container>
+        </h4>
+        <h1>{{ movie.title.international }}</h1>
+        <h6>{{ movie.title.original }}</h6>
+        <p>{{ getDirectors(movie) }}</p>
+        <span>
+          <ng-container *ngFor="let country of movie.originCountries">
+            {{ country | translateSlug: 'TERRITORIES'}} /
+          </ng-container>
+          <ng-container *ngIf="movie.releaseYear">
+            {{ movie.releaseYear }}
+          </ng-container>
+        </span>
+      </div>
+    </article>
+  </header>
+  <section *ngIf="(form$ | async) as form;">
+    <mat-tab-group>
+      <mat-tab label="Main Information">
+        <!-- TODO MAIN SUMMARY HERE AND SAME THING FOR ALL THE TABS BELLOW -->
+      </mat-tab>
+      <mat-tab label="Storyline Elements"></mat-tab>
+      <mat-tab label="Production Information"></mat-tab>
+      <mat-tab label="Artistic Team"></mat-tab>
+      <mat-tab label="Selection Review"></mat-tab>
+      <mat-tab label="Additional Information"></mat-tab>
+      <mat-tab label="Technical Information"></mat-tab>
+      <mat-tab label="Files"></mat-tab>
+      <mat-tab label="Images"></mat-tab>
+      <mat-tab label="Videos"></mat-tab>
+    </mat-tab-group>
+  </section>
+</ng-container>
