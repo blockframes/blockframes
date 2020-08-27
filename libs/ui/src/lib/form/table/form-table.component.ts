@@ -84,12 +84,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
       this.cdr.markForCheck();
     });
 
-    /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
-    if (this.isFormEmpty) {
-      this.add();
-    } else {
-      this.formItem = this.form.last();
-    }
+    this.add();
   }
 
   ngAfterViewInit() {
