@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PermissionsQuery } from './permissions.query';
-import { UserRole, createDocPermissions } from './permissions.firestore';
+import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
@@ -55,9 +55,9 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Ensures that there is always at least one super Admin in the organization. */
-  public hasLastSuperAdmin(uid: string, role: UserRole) {
-    if (role !== 'superAdmin' && this.query.isUserSuperAdmin(uid)) {
-      const superAdminNumber = this.query.superAdminCount;
+  public hasLastSuperAdmin(permissions: PermissionsDocument, uid: string, role: UserRole) {
+    if (role !== 'superAdmin' && permissions.roles[uid] === 'superAdmin') {
+      const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
       return superAdminNumber > 1 ? true : false;
     } else {
       return true;
@@ -66,25 +66,21 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   /** Update user role. */
   public async updateMemberRole(uid: string, role: UserRole): Promise<string> {
-    if (this.query.hasAlreadyThisRole(uid, role)) {
+    const orgId = (await this.userService.getValue(uid)).orgId;
+    const permissions = await this.getValue(orgId);
+    if (permissions.roles[uid] === role) {
       return 'This user already has this role.';
     }
     try {
-      if (!this.hasLastSuperAdmin(uid, role)) {
+      if (!this.hasLastSuperAdmin(permissions, uid, role)) {
         throw new Error('There must be at least one Super Admin in the organization.');
       }
-      await this._updateMemberRole(uid, role);
+      /** Update role of a member of the organization */
+      permissions.roles[uid] = role;
+      await this.update(orgId, { roles: permissions.roles });
       return 'Role updated';
     } catch (error) {
       return error.message;
     }
-  }
-
-  /** Update role of a member of the organization */
-  private async _updateMemberRole(uid: string, role: UserRole) {
-    const orgId = (await this.userService.getValue(uid)).orgId
-    const permissions = await this.getValue(orgId);
-    permissions.roles[uid] = role;
-    return this.update(orgId, { roles: permissions.roles });
   }
 }

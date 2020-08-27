@@ -46,7 +46,4 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
     return this.getActive().roles[userId] === 'superAdmin';
   }
 
-  public hasAlreadyThisRole(userId: string, role: UserRole): boolean {
-    return this.getActive().roles[userId] === role;
-  }
 }
