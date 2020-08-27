@@ -17,7 +17,6 @@ import { UserService, OrganizationMember, createOrganizationMember, PublicUser }
 import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
 import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
 import { network, baseEnsDomain } from '@env';
-import { QueryFn } from '@angular/fire/firestore/interfaces';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
