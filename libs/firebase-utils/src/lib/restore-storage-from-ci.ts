@@ -58,6 +58,7 @@ export async function restoreStorageFromCi() {
       })
       .sort((a, b) => Number(a.date) - Number(b.date))
       .pop();
+    if (!latestFolder) throw Error('Unable to find latest backup folder');
     const { folderName } = latestFolder;
     console.log('Latest backup:', folderName);
 
@@ -83,6 +84,5 @@ export async function restoreStorageFromCi() {
     } else {
       console.log(err);
     }
-    return null;
   }
 }
