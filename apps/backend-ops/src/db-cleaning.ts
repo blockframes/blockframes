@@ -79,7 +79,7 @@ export async function cleanDeprecatedData(db: FirebaseFirestore.Firestore, auth:
   console.log('Cleaned docsIndex');
   await cleanNotifications(notifications, existingIds);
   console.log('Cleaned notifications');
-  await cleanInvitations(invitations, existingIds, events.docs.map(event => event.data() as EventDocument<EventMeta>));
+  await cleanInvitations(invitations, existingIds);
   console.log('Cleaned invitations');
 
   await endMaintenance();
@@ -119,11 +119,10 @@ async function cleanOneNotification(doc: QueryDocumentSnapshot, notification: No
 export function cleanInvitations(
   invitations: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   existingIds: string[],
-  events: EventDocument<EventMeta>[],
 ) {
   return runChunks(invitations.docs, async (doc: QueryDocumentSnapshot) => {
     const invitation = doc.data() as InvitationDocument;
-    const outdatedInvitation = !isInvitationValid(invitation, existingIds, events);
+    const outdatedInvitation = !isInvitationValid(invitation, existingIds);
     if (outdatedInvitation) {
       await doc.ref.delete();
     } else {
@@ -340,22 +339,11 @@ function isNotificationValid(notification: NotificationDocument, existingIds: st
  * Check each type of invitation and return false if a referenced document doesn't exist
  * @param invitation the invitation to check
  * @param existingIds the ids to compare with invitation fields
- * @param events the existing event documents
  */
-function isInvitationValid(invitation: InvitationDocument, existingIds: string[], events: EventDocument<EventMeta>[]): boolean {
+function isInvitationValid(invitation: InvitationDocument, existingIds: string[]): boolean {
 
   switch (invitation.type) {
     case 'attendEvent':
-
-      if (existingIds.includes(invitation.docId)) {
-        const event = events.find(e => e.id === invitation.docId);
-        const eventEndTimestamp = event.end.toMillis();
-
-        // Cleaning finished events
-        if (eventEndTimestamp < currentTimestamp) {
-          return false;
-        }
-      }
 
       return (
         (existingIds.includes(invitation.fromOrg?.id) &&
