@@ -191,7 +191,8 @@ jobs:
           npx firebase use staging &&
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
-          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+          npx firebase deploy --only firestore --force && 
           npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
@@ -233,7 +234,8 @@ jobs:
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -261,7 +263,8 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -290,7 +293,8 @@ jobs:
             npx firebase use demo1 &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
