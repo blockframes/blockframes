@@ -1,10 +1,8 @@
-import { join } from 'path';
-import { firebase, backupBucket } from 'env/env';
-import { backupBucket as backupBucketCI, firebase as firebaseCI } from 'env/env.ci';
+import { firebase } from 'env/env';
+import { firebase as firebaseCI } from 'env/env.ci';
 import { firebase as firebaseProd } from 'env/env.prod';
 import * as admin from 'firebase-admin';
 import { config } from 'dotenv';
-import { existsSync, mkdirSync } from 'fs';
 import { execSync } from 'child_process';
 
 const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
@@ -41,14 +39,6 @@ export async function restoreStorageFromCi() {
     'CI-app'
   );
 
-  // const app = admin.initializeApp(
-  //   {
-  //     projectId: firebase.projectId,
-  //     credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as Cert),
-  //   },
-  //   'local-env'
-  // );
-
   try {
     const ciStorage = ci.storage();
     const [files, nextQuery, apiResponse] = await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
@@ -70,16 +60,20 @@ export async function restoreStorageFromCi() {
     const { folderName } = latestFolder;
     console.log('Latest backup:', folderName);
 
-    console.log('Clearing storage bucket:', firebase.storageBucket);
+    console.log('Clearing your storage bucket:', firebase.storageBucket);
     try {
       process.stdout.write(execSync(`gsutil -m rm -r "gs://${firebase.storageBucket}/*"`));
-    } catch (e) {}
-
+    } catch (e) {
+      console.error(e);
+    }
+    console.log("Copying storage bucket from blockframe-ci to your local project's storage bucket...");
     const cmd = `gsutil -m cp -r gs://${CI_STORAGE_BACKUP}/${folderName}* gs://${firebase.storageBucket}`;
     console.log('Running command:', cmd);
     try {
       process.stdout.write(execSync(cmd));
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   } catch (err) {
     if ('errors' in err) {
       err.errors.forEach((error: { message: any }) => console.error('ERROR:', error.message));
