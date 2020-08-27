@@ -179,7 +179,7 @@ export class OrganizationComponent implements OnInit {
 
   public async removeMember(uid: string) {
     try {
-      this.organizationService.removeMember(uid);
+      await this.organizationService.removeMember(uid);
       this.members = await this.getMembers();
       this.cdRef.markForCheck();
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });
