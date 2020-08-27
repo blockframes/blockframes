@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PermissionsQuery } from './permissions.query';
 import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
@@ -14,7 +13,6 @@ import { UserService } from '@blockframes/user/+state';
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
   constructor(
-    private query: PermissionsQuery,
     private organizationQuery: OrganizationQuery,
     private userService: UserService,
     store: PermissionsStore

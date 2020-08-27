@@ -5,7 +5,6 @@ import { Permissions } from './permissions.model';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserRole } from './permissions.firestore';
 
 @Injectable({
   providedIn: 'root'
