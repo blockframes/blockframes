@@ -45,10 +45,6 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get stillPhoto() {
-    return this.form.promotional.get('still_photo');
-  }
-
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
@@ -94,16 +90,5 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
-  }
-
-  public objectHasNoValue(valueAsRecord: Record<any, any>) {
-    try {
-      const objectToCheck = valueAsRecord.value;
-      const keys = Object.keys(objectToCheck);
-      return keys.length === 0 ? true : keys.some(key => !objectToCheck[key]);
-    } catch (error) {
-      console.warn(error);
-      return true;
-    }
   }
 }

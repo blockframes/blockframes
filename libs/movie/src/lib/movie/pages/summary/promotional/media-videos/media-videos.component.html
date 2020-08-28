@@ -1,0 +1,50 @@
+<h6>
+  Videos
+  <a mat-icon-button [routerLink]="link" fragment="videos"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+</h6>
+<ul>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Teaser Link </strong>
+    <ng-container *ngIf="!form.promotional.get('teaser_link').value else teaserLink">
+      <a [routerLink]="link" fragment="videos" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #teaserLink>
+      {{ form.promotional.get('teaser_link').value }}
+    </ng-template>
+  </li>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Trailer Link </strong>
+    <ng-container *ngIf="!form.promotional.get('trailer_link').value else trailerLink">
+      <a [routerLink]="link" fragment="videos" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #trailerLink>
+      {{ form.promotional.get('trailer_link').value }}
+    </ng-template>
+  </li>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Promo Link </strong>
+    <ng-container *ngIf="!form.promotional.get('promo_reel_link').value else promoLink">
+      <a [routerLink]="link" fragment="videos" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #promoLink>
+      {{ form.promotional.get('promo_reel_link').value }}
+    </ng-template>
+  </li>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Screener Link </strong>
+    <ng-container *ngIf="!form.promotional.get('screener_link').value else screenerLink">
+      <a [routerLink]="link" fragment="files" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #screenerLink>
+      {{ form.promotional.get('screener_link').value }}
+    </ng-template>
+  </li>
+</ul>

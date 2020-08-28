@@ -34,7 +34,9 @@ import { SummaryReviewComponent } from './review/review.component';
 import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
 import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
 import { SummaryAvailableMaterialsComponent } from './available-materials/available-materials.component';
-import { MediaFilesComponent } from './promotional/media-files/media-files.component';
+import { SummaryMediaFilesComponent } from './promotional/media-files/media-files.component';
+import { SummaryMediaImagesComponent } from './promotional/media-images/media-images.component';
+import { SummaryMediaVideosComponent } from './promotional/media-videos/media-videos.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { MediaFilesComponent } from './promotional/media-files/media-files.compo
     SummaryAdditionalInformationComponent,
     SummaryTechnicalInfoComponent,
     SummaryAvailableMaterialsComponent,
-    MediaFilesComponent
+    SummaryMediaFilesComponent,
+    SummaryMediaImagesComponent,
+    SummaryMediaVideosComponent
   ],
   imports: [
     CommonModule,
