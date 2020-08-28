@@ -1,0 +1,124 @@
+<article>
+  <h6>
+    Production Compan{ form.stakeholders.get('productionCompany').controls.length, plural, =0 {y} =1 {y} other {ies}}
+    <a mat-icon-button [routerLink]="link" fragment="company"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.stakeholders.get('productionCompany').controls.length else showProductionCompanies">
+      <a [routerLink]="link" fragment="company" class="missing-control">
+        <span>Missing</span>
+      </a>
+    </ng-container>
+    <ng-template #showProductionCompanies>
+      <li *ngFor="let producer of form.stakeholders.get('productionCompany').controls; let isLast = last">
+        <ng-container *ngIf="producer.get('countries').value.length">
+          <strong *ngIf="producer.get('countries').value.length">
+            <missing-control [control]="producer.get('countries')" [link]="link" fragment="company" scope="TERRITORIES"></missing-control>
+          </strong>
+        </ng-container>
+        <span>&nbsp;</span>
+        <missing-control [control]="producer.get('displayName')"></missing-control>
+        <span>{{ isLast ? '' : ', '}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<article>
+  <h6>Co-production Compan{ form.stakeholders.get('coProductionCompany').controls.length, plural, =0 {y} =1 {y} other {ies}}
+    <a mat-icon-button [routerLink]="link" fragment="co-company"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.stakeholders.get('coProductionCompany').controls.length else showCoProductionCompanies">
+      <a [routerLink]="link" fragment="co-company" class="missing-control">
+        <span>Missing</span>
+      </a>
+    </ng-container>
+    <ng-template #showCoProductionCompanies>
+      <li *ngFor="let coProducer of form.stakeholders.get('coProductionCompany').controls; let isLast = last">
+        <ng-container *ngIf="coProducer.get('countries').value.length">
+          <strong  *ngIf="coProducer.get('countries').value.length">
+            <missing-control [control]="coProducer.get('countries')" [link]="link" fragment="co-company" scope="TERRITORIES"></missing-control>
+          </strong>
+        </ng-container>
+        <span>&nbsp;</span>
+        <missing-control [control]="coProducer.get('displayName')"></missing-control>
+        <span>{{ isLast ? '' : ', '}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<article>
+  <h6>
+    Producer{ form.producers.controls.length, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="producers"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.producers.controls.length else displayProducer">
+      <a [routerLink]="link" fragment="producers" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayProducer>
+      <li *ngFor="let producer of form.producers.controls; let isLast = last">
+        <strong>
+          <missing-control [control]="producer.get('role')" [link]="link" scope="PRODUCER_ROLES"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <missing-control [control]="producer.get('firstName')"></missing-control>
+        <span>&nbsp;</span>
+        <missing-control [control]="producer.get('lastName')"></missing-control>
+        <span>{{ isLast ? '' : ', '}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<article>
+  <h6>
+    Distributor{ form.stakeholders.get('distributor').controls.length, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="distributors"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.stakeholders.get('distributor').controls.length else displayDistributors">
+      <a [routerLink]="link" fragment="producers" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayDistributors>
+      <li *ngFor="let distributor of form.stakeholders.get('distributor').controls; let isLast = last">
+        <strong>
+          <missing-control [control]="distributor.get('countries')" scope="TERRITORIES" [link]="link"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <missing-control [control]="distributor.get('displayName')"></missing-control>
+        <span>{{ isLast ? '' : ', '}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<article>
+  <h6>
+    International Sales
+    <a mat-icon-button [routerLink]="link" fragment="sales"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.stakeholders.get('salesAgent').controls.length else displayInternationalSales">
+      <a [routerLink]="link" fragment="sales" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayInternationalSales>
+      <li *ngFor="let saleAgent of form.stakeholders.get('salesAgent').controls; let isLast = last">
+        <strong>
+          <missing-control [control]="saleAgent.get('countries')" scope="TERRITORIES" [link]="link"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <span>{{ saleAgent.get('displayName').value }}</span>
+        <span>{{ isLast ? '' : ', '}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</article>

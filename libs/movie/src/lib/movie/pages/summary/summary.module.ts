@@ -26,10 +26,17 @@ import { EmptyImagePipeModule } from '@blockframes/media/directives/image-refere
 import { MatDividerModule } from '@angular/material/divider';
 
 // Summary Components
-import { MainComponent } from './main/main.component';
+import { SummaryMainComponent } from './main/main.component';
+import { SummaryStorylineComponent } from './storyline/storyline.component';
+import { SummaryProductionComponent } from './production/production.component';
 
 @NgModule({
-  declarations: [MovieFormSummaryComponent, MainComponent],
+  declarations: [
+    MovieFormSummaryComponent,
+    SummaryMainComponent,
+    SummaryStorylineComponent,
+    SummaryProductionComponent
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
