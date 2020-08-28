@@ -30,13 +30,42 @@ const userFixture = new User();
 
 describe('User create a screening', () => {
   beforeEach(() => {
-    clearDataAndPrepareTest('/');
-    tomorrow = new Date(NOW);
-    const p1 = new LandingPage();
-    p1.clickSignup();      
+    // clearDataAndPrepareTest('/');
+    // tomorrow = new Date(NOW);
+    // const p1 = new LandingPage();
+    // p1.clickSignup();      
   });
 
-  it.only('User creates a private screening, that taking place tomorrow', () => {
+  it.only('side-menu', () => {
+    // cy.visit('/');
+    // const p1 = new LandingPage();
+    // p1.clickSignup();   
+    // const userMarket = userFixture.get({exist: true, 
+    //   key: 'email', value: 'concierge+otherangle@fake.com' })[0];
+    // signIn(userMarket, true);    
+    cy.visit('/');
+    cy.wait(1000);
+    //cy.get('button[test-id=menu]').click();
+    // cy.get('a[test-id="calendar"]').then(el => {
+    //   cy.log(el.text());
+    //   console.log(el);
+    // })
+
+    const marketPage = new FestivalDashboardHomePage();
+    const eventPage: EventPage = marketPage.goToCalendar();
+    eventPage.createEvent(PRIVATE_EVENTNAME_1, NOW, 'VIRTUAL CANNES PRESENTATION');    
+
+    //Create a public screening, today
+    eventPage.createEvent(PUBLIC_EVENTNAME, NOW, 'VIRTUAL CANNES PRESENTATION', true);
+
+    //Create a private screening, tomorrow
+    eventPage.createEvent(PRIVATE_EVENTNAME_2, tomorrow, 'VIRTUAL CANNES PRESENTATION');
+
+    //Create a public screening, tomorrow
+    eventPage.createEvent(PRIVATE_EVENTNAME_3, tomorrow, 'VIRTUAL CANNES PRESENTATION');
+  })  
+
+  it('User creates a private screening, that taking place tomorrow', () => {
     const userMarket = userFixture.get({exist: true, 
       key: 'email', value: 'vchoukroun@fake.com' })[0];
     signIn(userMarket, true);
@@ -86,8 +115,15 @@ describe('User create a screening', () => {
     p3.saveEvent();
   });
 
-  it('Verify the screening page and created screenings', () => {
-    signIn(USER_2);
+  it.only('Verify the screening page and created screenings', () => {
+    cy.visit('/');
+    const px = new LandingPage();
+    px.clickSignup();   
+    const userMarket = userFixture.get({exist: true, 
+      key: 'email', value: 'vchoukroun@fake.com@fake.com' })[0];
+    signIn(userMarket, true);    
+    cy.visit('/');
+    //signIn(USER_2);
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
