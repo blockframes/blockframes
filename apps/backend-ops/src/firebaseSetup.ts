@@ -11,11 +11,20 @@ import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
-import { copyDbFromCi, readJsonlFile } from '@blockframes/firebase-utils';
+import { copyDbFromCi, readJsonlFile, checkEnv } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
+  const msg =
+    'You do not have your service accounts correctly configured. Please see: https://www.notion.so/cascade8/Preparing-your-Environment-e3c184db24d447c496c3241d4f16bc94';
+  checkEnv(
+    [
+      ['GOOGLE_APPLICATION_CREDENTIALS', msg],
+      ['FIREBASE_CI_SERVICE_ACCOUNT', msg],
+    ],
+    { throwError: true }
+  );
   console.log('Fetching DB from blockframes-ci and uploading to local env...');
   const dbBackupPath = await copyDbFromCi();
 
