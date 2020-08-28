@@ -9,7 +9,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -106,9 +105,5 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
-  }
-
-  public reviewHasNoValue(review: MovieReviewForm) {
-    return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }

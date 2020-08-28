@@ -30,6 +30,7 @@ import { SummaryMainComponent } from './main/main.component';
 import { SummarySynopsisComponent } from './synopsis/synopsis.component';
 import { SummaryProductionComponent } from './production/production.component';
 import { SummaryArtisticComponent } from './artistic/artistic.component';
+import { SummaryReviewComponent } from './review/review.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { SummaryArtisticComponent } from './artistic/artistic.component';
     SummaryMainComponent,
     SummarySynopsisComponent,
     SummaryProductionComponent,
-    SummaryArtisticComponent
+    SummaryArtisticComponent,
+    SummaryReviewComponent
   ],
   imports: [
     CommonModule,
