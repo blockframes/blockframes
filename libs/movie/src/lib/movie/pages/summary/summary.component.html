@@ -163,6 +163,7 @@
                 <span>&nbsp;</span>
                 <missing-control [control]="director.get('lastName')"></missing-control>
               </ng-template>
+              <br>
               <strong>Director's Filmography </strong>
               <ng-container *ngFor="let film of director.filmography.controls; let isLast = last">
                 <span *ngIf="film.get('title').value">
@@ -262,11 +263,9 @@
             <li *ngFor="let producer of form.stakeholders.get('productionCompany').controls; let isLast = last">
               <missing-control [control]="producer.get('displayName')"></missing-control>
               <ng-container *ngIf="producer.get('countries').value.length">
-                <span> (</span>
                 <span *ngIf="producer.get('countries').value.length">
                   ({{ producer.get('countries').value | translateSlug: 'TERRITORIES' }})
                 </span >
-                <span>)</span>
               </ng-container>
               <span>{{ isLast ? '' : ', '}}</span>
             </li>
@@ -336,7 +335,7 @@
           </ng-container>
           <ng-template #displayDistributors>
             <li *ngFor="let distributor of form.stakeholders.get('distributor').controls; let isLast = last">
-              <missing-control [control]="distributor.get('firstName')"></missing-control>
+              <missing-control [control]="distributor.get('displayName')"></missing-control>
               <ng-container *ngIf="distributor.get('countries').value.length">
                 <span  *ngIf="distributor.get('countries').value.length">
                   ({{ distributor.get('countries').value | translateSlug: 'TERRITORIES' }})
@@ -491,14 +490,15 @@
           </ng-container>
           <ng-template #displayReviews>
             <li *ngFor="let reviewControl of form.review.controls">
-              <strong>Festivals </strong>
-              <ng-container *ngIf="reviewControl.valid else display">
+              {{ reviewControl.control }}
+              <ng-container *ngIf="!reviewControl.valid else reviewDetails">
                 <a [routerLink]="getPath('reviews')" fragment="reviews" class="missing-control">
                   Missing
                 </a>
               </ng-container>
-              <ng-template #display *ngIf="reviewControl.value as review">
-                <span>{{ review.criticName }}, {{ review.journalName }}, {{ review.criticQuote }}, {{ review.revueLink }}</span>
+              <ng-template #reviewDetails *ngIf="reviewControl.value as review">
+                <strong>{{ review.journalName }} </strong>
+                <span>{{ review.criticName }}, {{ review.criticQuote }}, {{ review.revueLink }}</span>
               </ng-template>
             </li>
           </ng-template>
@@ -689,7 +689,9 @@
           </ng-container>
           <ng-template #displayAvailableLanguages>
             <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last">
-              <span>{{ language.value | translateSlug: 'LANGUAGES' }}</span>
+              <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
+              <span>{{ language.value.value | versionPipe }}</span>
+              <span>{{ isLast ? '' : '| ' }}</span>
             </li>
           </ng-template>
         </ul>
@@ -748,19 +750,19 @@
       <article>
         <h6>
           Images
-          <a mat-icon-button [routerLink]="getPath('promotional-elements')" fragment="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+          <a mat-icon-button [routerLink]="getPath('media-images')"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
         </h6>
         <ul>
           <ng-container *ngIf="objectHasNoValue(stillPhoto) else displayImages">
-            <a [routerLink]="getPath('promotional-information')" fragment="images"class="missing-control">
+            <a [routerLink]="getPath('media-images')" class="missing-control">
               Missing
             </a>
           </ng-container>
           <ng-template #displayImages>
             <li *ngFor="let image of stillPhoto.controls | keyvalue; let i = index; let isLast = last">
-              <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image {{ i }} </strong>
-              <a [href]="image.value" target="_blank">
-                {{ image.value.ref.value | fileName }} {{ isLast ? '' : '| '}}
+              <mat-icon svgIcon="eye" color="primary"></mat-icon><strong>Image {{ i+1 }} </strong>
+              <a [href]="getPath('media-images')">
+                {{ image.value.oldRef.value | fileName }}
               </a>
             </li>
           </ng-template>
