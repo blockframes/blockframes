@@ -13,15 +13,14 @@ import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ScreeningModule } from '@blockframes/movie/components/screening/screening.module';
 import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
-import { SliderModule } from '@blockframes/ui/slider/slider.module';
+import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
-
 
 @NgModule({
   declarations: [ViewComponent, MovieHeader],
@@ -37,7 +36,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     AppBarModule,
     ScreeningModule,
     MovieCardModule,
-    SliderModule,
+    CarouselModule,
+    MatLayoutModule,
 
     // Material
     MatTabsModule,

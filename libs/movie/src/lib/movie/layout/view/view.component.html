@@ -20,7 +20,6 @@
 </nav>
 <router-outlet></router-outlet>
 <movie-screening></movie-screening>
-<bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
-  <bf-slide *ngFor="let movie of movie$ | async" [image]="movie.banner" overlayColor="medium">
-  </bf-slide>
-</bf-slider>
+<bf-carousel flex>
+  <img carouselItem [col]="3">
+</bf-carousel>
