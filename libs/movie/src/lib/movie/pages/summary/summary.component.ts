@@ -9,6 +9,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -39,8 +40,8 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.findInvalidControlsRecursive(this.form);
     this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
-    console.log(this.form)
   }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -88,7 +89,6 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
       })
     } else {
       // Log the invalid forms
-      /* console.error(this.findInvalidControlsRecursive(this.form)) */
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
   }
@@ -114,5 +114,9 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
+  }
+
+  public reviewHasNoValue(review: MovieReviewForm) {
+    return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }

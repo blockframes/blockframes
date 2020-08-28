@@ -19,6 +19,7 @@ import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
+import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
@@ -40,6 +41,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     DurationModule,
     TranslateSlugModule,
+    HasStatusModule,
 
     // Materials
     MatChipsModule,
