@@ -32,6 +32,7 @@ import { SummaryProductionComponent } from './production/production.component';
 import { SummaryArtisticComponent } from './artistic/artistic.component';
 import { SummaryReviewComponent } from './review/review.component';
 import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
+import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { SummaryAdditionalInformationComponent } from './additional-information/
     SummaryProductionComponent,
     SummaryArtisticComponent,
     SummaryReviewComponent,
-    SummaryAdditionalInformationComponent
+    SummaryAdditionalInformationComponent,
+    SummaryTechnicalInfoComponent
   ],
   imports: [
     CommonModule,

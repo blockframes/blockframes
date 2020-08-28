@@ -84,30 +84,9 @@
     <section id="technical-information">
       <h3>Technical Information</h3>
       <article>
-        <h6>
-          Format
-          <a mat-icon-button [routerLink]="getPath('technical-info')" fragment="technical-info"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-        </h6>
-        <ul>
-          <li>
-            <strong>Shooting Format </strong>
-            <missing-control [control]="form.get('format')" scope="MOVIE_FORMAT"></missing-control>
-          </li>
-          <li>
-            <strong>Format Quality </strong>
-            <missing-control [control]="form.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY">
-            </missing-control>
-          </li>
-          <li>
-            <strong>Color </strong>
-            <missing-control [control]="form.get('color')" scope="COLORS"></missing-control>
-          </li>
-          <li>
-            <strong>Sound Format </strong>
-            <missing-control [control]="form.get('soundFormat')" scope="SOUND_FORMAT"></missing-control>
-          </li>
-        </ul>
+        <movie-summary-technical-info movie="form" [link]="getPath('technical-info')"></movie-summary-technical-info>
       </article>
+
     </section>
 
     <mat-divider></mat-divider>
