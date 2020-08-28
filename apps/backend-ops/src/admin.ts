@@ -8,6 +8,7 @@ import { firebase } from '@env';
 import request from 'request';
 import { isInMaintenance } from '@blockframes/firebase-utils';
 import { sleep } from './tools';
+import { firebase as firebaseCI } from 'env/env.ci';
 
 export type Auth = admin.auth.Auth;
 export type Firestore = admin.firestore.Firestore;
@@ -23,17 +24,44 @@ export interface AdminServices {
   db: Firestore;
   storage: Storage;
   firebaseConfig: { projectId: string };
+  ci: admin.app.App
 }
 
+let app: admin.app.App;
+let ci: admin.app.App;
+
 export function loadAdminServices(): AdminServices {
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      ...firebase,
-      credential: admin.credential.applicationDefault(),
-    });
+  if (!('FIREBASE_CI_SERVICE_ACCOUNT' in process.env)) {
+    throw new Error('Key "FIREBASE_CI_SERVICE_ACCOUNT" does not exist in .env');
   }
 
-  return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase, storage: admin.storage() };
+  type Cert = string | admin.ServiceAccount;
+  let cert: Cert;
+  try {
+    // If service account is a stringified json object
+    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
+  } catch (err) {
+    // If service account is a path
+    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
+  }
+
+  if (!app) {
+    app = admin.initializeApp({
+      ...firebase,
+      credential: admin.credential.applicationDefault(),
+    }, 'local');
+  }
+  if (!ci) {
+    ci = admin.initializeApp(
+      {
+        projectId: firebaseCI.projectId,
+        credential: admin.credential.cert(cert),
+      },
+      'CI-app'
+    );
+  }
+
+  return {ci,  auth: app.auth(), db: app.firestore(), firebaseConfig: firebase, storage: app.storage() };
 }
 
 function getRestoreURL(appURL: string): string {

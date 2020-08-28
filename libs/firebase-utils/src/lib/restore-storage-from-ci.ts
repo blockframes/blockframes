@@ -2,45 +2,19 @@ import { firebase } from 'env/env';
 import { firebase as firebaseCI } from 'env/env.ci';
 import { firebase as firebaseProd } from 'env/env.prod';
 import * as admin from 'firebase-admin';
-import { config } from 'dotenv';
 import { execSync } from 'child_process';
 
 const CI_STORAGE_BACKUP = 'blockframes-ci-storage-backup';
 
-export async function restoreStorageFromCi() {
-  config();
-
+export async function restoreStorageFromCi(ciApp: admin.app.App) {
   if (
     firebase.storageBucket === 'blockframes.appspot.com' ||
     firebase.storageBucket === firebaseProd.storageBucket
   )
     throw Error('ABORT: YOU ARE TRYING TO RUN SCRIPT AGAINST PROD - THIS WILL DELETE STORAGE!!');
 
-  if (!('FIREBASE_CI_SERVICE_ACCOUNT' in process.env)) {
-    throw new Error('Key "FIREBASE_CI_SERVICE_ACCOUNT" does not exist in .env');
-  }
-
-  type Cert = string | admin.ServiceAccount;
-  let cert: Cert;
   try {
-    // If service account is a stringified json object
-    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
-  } catch (err) {
-    // If service account is a path
-    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
-  }
-
-  const ci = admin.initializeApp(
-    {
-      storageBucket: CI_STORAGE_BACKUP,
-      projectId: firebaseCI.projectId,
-      credential: admin.credential.cert(cert),
-    },
-    'CI-app'
-  );
-
-  try {
-    const ciStorage = ci.storage();
+    const ciStorage = ciApp.storage();
     // @ts-ignore
     const [files, nextQuery, apiResponse] = await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
       autoPaginate: false,
