@@ -46,16 +46,8 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  public get genres() {
-    return [this.form.get('genres'), ...this.form.get('customGenres').controls];
-  }
-
   get stillPhoto() {
     return this.form.promotional.get('still_photo');
-  }
-
-  get title() {
-    return this.form.get('title');
   }
 
   public getPath(segment: string) {
