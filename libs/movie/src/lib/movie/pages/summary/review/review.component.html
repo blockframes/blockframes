@@ -54,9 +54,11 @@
             <missing-control [control]="review.get('journalName')" [link]="link" fragment="reviews"></missing-control>
           </strong>
           <span>&nbsp;</span>
-          <span class="text-primary">
-            <missing-control [control]="review.get('revueLink')" [link]="link" fragment="reviews"></missing-control>
-          </span>
+          <missing-control [control]="review.get('revueLink')" fragment="reviews">
+            <ng-template>
+              <a [href]="review.get('revueLink').value" class="text-primary" target="_blank">{{ review.get('revueLink').value }}</a>
+            </ng-template>
+          </missing-control>
           "<missing-control [control]="review.get('criticQuote')" [link]="link" fragment="reviews"></missing-control>"
         </ng-template>
       </li>

@@ -15,7 +15,7 @@
     <section id="main-information">
       <h3>Main Information</h3>
       <article>
-        <movie-summary-main movie="form" link="getPath('main')"></movie-summary-main>
+        <movie-summary-main movie="form" [link]="getPath('main')"></movie-summary-main>
       </article>
     </section>
 
@@ -26,7 +26,7 @@
     <section id="storyline-elements">
       <h3>Storyline Elements</h3>
       <article>
-        <movie-summary-synopsis movie="form" link="getPath('synopsis')"></movie-summary-synopsis>
+        <movie-summary-synopsis movie="form" [link]="getPath('synopsis')"></movie-summary-synopsis>
       </article>
     </section>
 
@@ -37,7 +37,7 @@
     <section id="production-information">
       <h3>Production Information</h3>
       <article>
-        <movie-summary-production movie="form" link="getPath('production')"></movie-summary-production>
+        <movie-summary-production movie="form" [link]="getPath('production')"></movie-summary-production>
       </article>
     </section>
 
@@ -48,7 +48,7 @@
     <section id="artistic-team">
       <h3>Artistic Team</h3>
       <article>
-        <movie-summary-artistic movie="form" link="getPath('artistic')"></movie-summary-artistic>
+        <movie-summary-artistic movie="form" [link]="getPath('artistic')"></movie-summary-artistic>
       </article>
 
     </section>
@@ -60,7 +60,7 @@
     <section id="reviews">
       <h3>Selections and Reviews</h3>
       <article>
-        <movie-summary-review movie="form" link="getPath('reviews')"></movie-summary-review>
+        <movie-summary-review movie="form" [link]="getPath('reviews')"></movie-summary-review>
       </article>
     </section>
 
@@ -72,120 +72,8 @@
       <h3>
         Additional Information
       </h3>
-      <ng-container *ngIf="form | hasStatus: ['released']">
-        <article>
-          <h6>
-            Release
-            <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="release"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-          </h6>
-          <ul>
-            <ng-container *ngIf="!form.originalRelease.controls.length else displayRelease">
-              <a [routerLink]="getPath('additional-information')" fragment="release"class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #displayRelease>
-              <li *ngFor="let release of form.originalRelease.controls; let isLast = last">
-                <ng-container *ngIf="!release.value else displayRelease">
-                  <a [routerLink]="getPath('additional-information')" fragment="release" class="missing-control">
-                    Missing
-                  </a>
-                </ng-container>
-                <ng-template #displayRelease>
-                  <div>
-                    <strong><missing-control [control]="release.get('country')" [link]="getPath('additional-information')" fragment="release" scope="TERRITORIES"></missing-control></strong>
-                    <span>&nbsp;</span>
-                    <missing-control [control]="release.get('media')" [link]="getPath('additional-information')" fragment="release" scope="MEDIAS"></missing-control>
-                    <span>&nbsp; on&nbsp;</span>
-                    <missing-control [control]="release.get('date')" [link]="getPath('additional-information')" fragment="release">
-                      <ng-template>
-                        {{ release.get('date').value | date: 'dd/MM/yyyy' }}
-                      </ng-template>
-                    </missing-control>
-                  </div>
-                </ng-template>
-              </li>
-            </ng-template>
-          </ul>
-        </article>
-
-        <article>
-          <h6>
-            Box Office
-            <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="box-office"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-          </h6>
-          <ul>
-            <ng-container *ngIf="!form.boxOffice.controls.length else displayBoxOffice">
-              <a [routerLink]="getPath('additional-information')" fragment="box-office"class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #displayBoxOffice>
-              <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of form.boxOffice.controls">
-                <ng-container *ngIf="boxOffice.get('territory').value">
-                  <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}&nbsp;</strong>
-                </ng-container>
-                <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
-                  <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
-                </ng-container>
-                <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
-                  <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
-                </ng-container>
-                <missing-control [control]="boxOffice.get('value')">
-                  <ng-template let-value>{{ value | number }}</ng-template>
-                </missing-control>
-                <span>&nbsp;</span>
-                <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
-                  <span>admissions</span>
-                  <span>&nbsp;</span>
-                </ng-container>
-
-              </li>
-            </ng-template>
-          </ul>
-        </article>
-
-        <article>
-          <h6>
-            Rating
-            <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="rating"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-          </h6>
-          <ul>
-            <ng-container *ngIf="!form.boxOffice.controls.length else displayRating">
-              <a [routerLink]="getPath('additional-information')" fragment="rating"class="missing-control">
-                Missing
-              </a>
-            </ng-container>
-            <ng-template #displayRating>
-              <li *ngFor="let rating of form.rating.controls; let isLast = last">
-                <strong>
-                  <missing-control [control]="rating.get('value')" [link]="getPath('additional-information')" fragment="rating"></missing-control>
-                </strong>
-                <span>&nbsp;</span>
-                <missing-control [control]="rating.get('country')" [link]="getPath('additional-information')" fragment="rating" scope="TERRITORIES"></missing-control>
-              </li>
-            </ng-template>
-          </ul>
-        </article>
-      </ng-container>
-
       <article>
-        <h6>
-          Qualification{ form.qualifications.value.length, plural, =0 {} =1 {} other {s}}
-          <a mat-icon-button [routerLink]="getPath('additional-information')" fragment="qualifications"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-        </h6>
-        <ul>
-          <ng-container *ngIf="!form.qualifications.value.length else displayQualifications">
-            <a [routerLink]="getPath('additional-information')" fragment="qualifications"class="missing-control">
-              Missing
-            </a>
-          </ng-container>
-          <ng-template #displayQualifications>
-            <li *ngFor="let value of form.qualifications.value; let isLast = last">
-              {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
-            </li>
-          </ng-template>
-        </ul>
+        <movie-summary-additional-information movie="form" [link]="getPath('additional-information')"></movie-summary-additional-information>
       </article>
     </section>
 
