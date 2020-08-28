@@ -17,6 +17,7 @@ export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
   const { db, auth, storage, ci } = loadAdminServices();
+  console.log('Fetching DB from blockframes-ci and uploading to local env...');
   const dbBackupPath = await copyDbFromCi(storage, ci);
   if (!dbBackupPath)
     throw Error('There was an error while downloading DB from blockframes-ci bucket...');
