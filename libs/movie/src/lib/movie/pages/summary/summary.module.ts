@@ -29,13 +29,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { SummaryMainComponent } from './main/main.component';
 import { SummarySynopsisComponent } from './synopsis/synopsis.component';
 import { SummaryProductionComponent } from './production/production.component';
+import { SummaryArtisticComponent } from './artistic/artistic.component';
 
 @NgModule({
   declarations: [
     MovieFormSummaryComponent,
     SummaryMainComponent,
     SummarySynopsisComponent,
-    SummaryProductionComponent
+    SummaryProductionComponent,
+    SummaryArtisticComponent
   ],
   imports: [
     CommonModule,

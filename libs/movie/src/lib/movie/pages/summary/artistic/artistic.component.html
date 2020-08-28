@@ -1,0 +1,63 @@
+<!-- CAST -->
+<article>
+  <h6>
+    Cast Members
+    <a mat-icon-button [routerLink]="link" fragment="cast-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.cast.controls.length else displayCast">
+      <a [routerLink]="link" fragment="cast-member"class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayCast>
+      <li *ngFor="let cast of form.cast.controls">
+        <strong>
+          <missing-control [control]="cast.get('firstName')" [link]="link" fragment="cast-member"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <strong>
+          <missing-control [control]="cast.get('lastName')" [link]="link" fragment="cast-member"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
+          <span *ngIf="film.get('title').value">
+            <missing-control [control]="film.get('title')" [link]="link" fragment="cast-member"></missing-control>&nbsp;
+          </span>
+        </ng-container>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<!-- CREW -->
+<article>
+  <h6>
+    Crew Members
+    <a mat-icon-button [routerLink]="link" fragment="crew-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!form.crew.controls.length else displayCrew">
+      <a [routerLink]="link" fragment="crew-member"class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayCrew>
+      <li *ngFor="let crew of form.crew.controls">
+        <strong>
+          <missing-control [control]="crew.get('firstName')" [link]="link" fragment="crew-member"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <strong>
+          <missing-control [control]="crew.get('lastName')" [link]="link" fragment="crew-member"></missing-control>
+        </strong>
+        <span>&nbsp;</span>
+        <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
+          <span *ngIf="film.get('title').value">
+            <missing-control [control]="film.get('title')" [link]="link" fragment="crew-member"></missing-control>&nbsp;
+          </span>
+        </ng-container>
+      </li>
+    </ng-template>
+  </ul>
+</article>
