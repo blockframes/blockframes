@@ -18,7 +18,7 @@ export function readJsonlFile(dbBackupPath: string) {
  * of the required environment variable, and `msg` is the message or link you want to
  * show if the preceding variable is missing.
  */
-export function checkEnv(vars: [string, string][], { throwError }) {
+export function checkEnv(vars: [string, string][], { throwError }: { throwError: boolean }) {
   const results = vars.map(([varName, msg]) => {
     return {
       varName,
