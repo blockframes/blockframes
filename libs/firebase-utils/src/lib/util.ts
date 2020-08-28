@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs';
+import requiredVars from 'tools/mandatory-env-vars.json';
 
 export interface JsonlDbRecord {
   docPath: string;
@@ -12,25 +13,11 @@ export function readJsonlFile(dbBackupPath: string) {
     .filter((str) => !!str) // remove last line
     .map((str) => JSON.parse(str) as JsonlDbRecord);
 }
-/**
- *
- * @param vars This is an array of tuples `[varName, msg]` - the `varName` is the name
- * of the required environment variable, and `msg` is the message or link you want to
- * show if the preceding variable is missing.
- */
-export function checkEnv(vars: [string, string][], { throwError }: { throwError: boolean }) {
-  const results = vars.map(([varName, msg]) => {
-    return {
-      varName,
-      msg,
-      exists: process.env?.[varName],
-    };
-  });
-  results.forEach(({ varName, msg, exists }) => {
-    if (exists) return;
-    let output = `A required environment variable is missing.\nName: "${varName}"\n`;
-    output += `More info: ${msg}\n\n`;
-    console.warn(output);
-  });
-  if (throwError && results.filter((res) => !res.exists).length) throw Error();
+
+export function warnMissingVars(): void | never {
+  const warn = (key: string, msg: string) => {
+    console.warn(`Please ensure the following variable is set in .env : ${key}`);
+    console.warn(`More info: ${msg}\n`);
+  };
+  requiredVars.map(({ key, msg }: { key: string; msg: string }) => process.env?.[key] ?? warn(key, msg));
 }
