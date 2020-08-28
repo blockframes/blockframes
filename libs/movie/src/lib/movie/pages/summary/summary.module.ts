@@ -18,6 +18,8 @@ import { MissingControlModule } from '@blockframes/ui/missing-control/missing-co
 import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
+import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
@@ -34,10 +36,12 @@ import { MatDividerModule } from '@angular/material/divider';
     MissingControlModule,
     ToLabelModule,
     EmptyImagePipeModule,
+    VersionPipeModule,
     FileNameModule,
     FlexLayoutModule,
     DurationModule,
     TranslateSlugModule,
+    HasStatusModule,
 
     // Materials
     MatChipsModule,

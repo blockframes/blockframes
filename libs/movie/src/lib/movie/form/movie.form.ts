@@ -102,7 +102,7 @@ function createMovieControls(movie: Partial<Movie>) {
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
-    keywords: FormList.factory(entity.keywords),
+    keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
     isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
@@ -423,8 +423,8 @@ export function createPrize(prize: Partial<Prize> = {}): Prize {
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role, status, description, filmography } = createCredit(credit);
   return {
-    firstName: new FormControl(firstName),
-    lastName: new FormControl(lastName),
+    firstName: new FormControl(firstName, [Validators.required]),
+    lastName: new FormControl(lastName, [Validators.required]),
     role: new FormControl(role),
     filmography: new FormArray([new FilmographyForm(filmography[0]), new FilmographyForm(filmography[1]), new FilmographyForm(filmography[2])]),
     description: new FormControl(description),

@@ -120,16 +120,18 @@
 
     <h3>Qualifications</h3>
     <section id="qualifications">
-      <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications"
-        aria-label="Certifications">
-        <ng-container *ngFor="let certification of certifications">
-          <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"
-            [matTooltipDisabled]="!certification?.hint">
-            {{ certification.label }}
-          </mat-button-toggle>
-        </ng-container>
-      </mat-button-toggle-group>
-      <p>Select all that apply</p>
+      <article>
+        <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications"
+          aria-label="Certifications">
+          <ng-container *ngFor="let certification of certifications">
+            <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"
+              [matTooltipDisabled]="!certification?.hint">
+              {{ certification.label }}
+            </mat-button-toggle>
+          </ng-container>
+        </mat-button-toggle-group>
+      </article>
+      <span class="mat-caption">Select all that apply</span>
     </section>
 
 

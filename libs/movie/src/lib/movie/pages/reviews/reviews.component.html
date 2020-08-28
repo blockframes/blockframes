@@ -13,9 +13,12 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Name</mat-label>
                 <input test-id="prize-name" matInput formControlName="name" />
-                <mat-hint>If you can't find the festival you're looking for, select “Other” and specify. </mat-hint>
+                <!-- Uncomment that when we implement a static for festivals -->
+                <!-- <mat-hint>If you can't find the festival you're looking for, select “Other” and specify. </mat-hint> -->
               </mat-form-field>
+            </div>
 
+            <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
                 <input test-id="prize" matInput formControlName="prize" />
@@ -24,9 +27,7 @@
                 </mat-error>
                 <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
               </mat-form-field>
-            </div>
 
-            <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
@@ -78,13 +79,13 @@
             </div>
 
             <mat-form-field appearance="outline">
-              <mat-label>Revue Link</mat-label>
-              <input test-id="link" matInput formControlName="revueLink" required />
+              <mat-label>Article Link</mat-label>
+              <input test-id="link" matInput formControlName="revueLink" />
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Quote</mat-label>
-              <textarea test-id="quote" matInput formControlName="criticQuote" required></textarea>
+              <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
             </mat-form-field>
 
           </article>

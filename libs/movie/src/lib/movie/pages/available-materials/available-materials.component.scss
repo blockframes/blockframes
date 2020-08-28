@@ -9,3 +9,21 @@ footer {
     white-space: nowrap;
   }
 }
+
+article {
+  margin-left: 16px;
+}
+
+h4, h5 {
+  text-transform: uppercase;
+}
+
+button[mat-mini-fab].delete-button {
+  height: 24px;
+  width: 24px;
+  margin-left: 24px;
+  mat-icon {
+    height: 18px;
+    width: auto;
+  }
+}
