@@ -21,5 +21,5 @@
 <router-outlet></router-outlet>
 <movie-screening></movie-screening>
 <bf-carousel flex>
-  <img carouselItem [col]="3">
+  <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" carouselItem [col]="3" [src]="img.value">
 </bf-carousel>
