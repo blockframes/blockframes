@@ -36,24 +36,8 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
-  /**
-   * Takes a contract, create relative permissions for each party of
-   * the contract, then add them to documentPermissions subcollection.
-   * @param contract
-   * @param write
-   */
-  public addContractPermissions(contract: Contract) {
-    this.db.firestore.runTransaction(async tx => {
-      contract.partyIds.forEach(partyId => {
-        const contractPermissions = createDocPermissions({ id: contract.id });
-        const contractPermissionsRef = this.db.doc(`permissions/${partyId}/documentPermissions/${contractPermissions.id}`).ref;
-        tx.set(contractPermissionsRef, contractPermissions)
-      })
-    })
-  }
-
   /** Ensures that there is always at least one super Admin in the organization. */
-  public hasLastSuperAdmin(uid: string, role: UserRole) {
+  private hasLastSuperAdmin(uid: string, role: UserRole) {
     if (role !== 'superAdmin' && this.query.isUserSuperAdmin(uid)) {
       const superAdminNumber = this.query.superAdminCount;
       return superAdminNumber > 1 ? true : false;
