@@ -3,11 +3,11 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MovieFormShellComponent } from '../../shell/shell.component';
 
 @Component({
-  selector: '[movie][link] movie-summary-storyline',
-  templateUrl: './storyline.component.html',
-  styleUrls: ['./storyline.component.scss']
+  selector: '[movie][link] movie-summary-synopsis',
+  templateUrl: './synopsis.component.html',
+  styleUrls: ['./synopsis.component.scss']
 })
-export class SummaryStorylineComponent {
+export class SummarySynopsisComponent {
 
   form = this.shell.form;
   @Input() movie: MovieForm;
