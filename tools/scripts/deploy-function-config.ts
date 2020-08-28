@@ -1,7 +1,7 @@
-import * as requiredVars from './mandatory-env-vars.json';
 import * as firebaseTools from 'firebase-tools';
 import * as dotenv from 'dotenv';
-import { loadSecretsFile } from './secrets-lib';
+import { loadSecretsFile } from './lib';
+import { warnMissingVars } from '@blockframes/firebase-utils';
 
 const dotenvResult = dotenv.config();
 
@@ -44,12 +44,4 @@ function getKeyValFormat(): string[] {
   output.push(`admin.password=${process.env?.ADMIN_PASSWORD}`);
   output.push(`admin.email=${process.env?.CASCADE8_ADMIN}`);
   return output;
-}
-
-function warnMissingVars(): void | never {
-  function throwMissingVar(name: string) {
-    throw new Error(`Please ensure the following variable is set in env: ${name}`);
-  }
-  const requiredVarsArray = requiredVars.required;
-  requiredVarsArray.map(key => process.env?.[key] ?? throwMissingVar(key));
 }

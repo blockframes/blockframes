@@ -1,5 +1,5 @@
 // TODO: remove secrets.sh from gitignore in next release, maybe remove from postinstall
-import { loadSecretsFile } from './secrets-lib';
+import { loadSecretsFile } from './lib';
 import { existsSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 

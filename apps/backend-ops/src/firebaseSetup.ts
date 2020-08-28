@@ -11,16 +11,16 @@ import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
-import { copyDbFromCi, readJsonlFile, restoreStorageFromCi} from '@blockframes/firebase-utils';
+import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
+  warnMissingVars()
   const { db, auth, storage, ci } = loadAdminServices();
   console.log('Fetching DB from blockframes-ci and uploading to local env...');
   const dbBackupPath = await copyDbFromCi(storage, ci);
-  if (!dbBackupPath)
-    throw Error('There was an error while downloading DB from blockframes-ci bucket...');
+  if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
   console.log('DB copied to local bucket!');
 
   console.info(`Syncing users from : ${dbBackupPath} ...`);
