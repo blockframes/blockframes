@@ -5,7 +5,6 @@ import { Permissions } from './permissions.model';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserRole } from './permissions.firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -46,7 +45,4 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
     return this.getActive().roles[userId] === 'superAdmin';
   }
 
-  public hasAlreadyThisRole(userId: string, role: UserRole): boolean {
-    return this.getActive().roles[userId] === role;
-  }
 }
