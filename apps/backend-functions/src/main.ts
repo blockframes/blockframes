@@ -24,7 +24,7 @@ import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { linkFile, unlinkFile } from './media';
+import { linkFile, unlinkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
@@ -128,6 +128,9 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
   'permissions/{orgID}/documentPermissions/{docID}',
   onDocumentPermissionCreate
 );
+
+/** Trigger: when an user ask for a private media. */
+export const getMediaToken = functions.https.onCall(logErrors(_getMediaToken));
 
 //--------------------------------
 //    Invitations Management    //

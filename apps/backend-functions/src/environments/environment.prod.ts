@@ -34,3 +34,5 @@ export const adminPassword = functions.config().admin.password;
 
 export const jwplayerSecret = functions.config().jwplayer.secret;
 export const jwplayerKey = functions.config().jwplayer.key;
+
+export const imgixToken = functions.config().imgix.token;

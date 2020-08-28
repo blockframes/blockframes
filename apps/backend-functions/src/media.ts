@@ -2,6 +2,10 @@ import { db, functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
 import { HostedMedia } from '@blockframes/media/+state/media.firestore';
+import { createHash } from 'crypto';
+import { CallableContext } from 'firebase-functions/lib/providers/https';
+import { imgixToken } from './environments/environment';
+import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 
 /**
  * 
@@ -15,7 +19,7 @@ export async function getDocAndPath(filePath: string | undefined) {
 
   const filePathElements = filePath.split('/');
 
-  if ( filePathElements.length < 4 ) {
+  if (filePathElements.length < 4) {
     throw new Error(`Upload Error : File Path ${filePath}
     is malformed, it should at least contain 2 slash
     Example: 'collection/id/field/fileName'`);
@@ -64,12 +68,12 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
   const bucket = admin.storage().bucket(data.bucket);
   const file = bucket.file(filePath);
 
-  const [ exists ] = await file.exists();
+  const [exists] = await file.exists();
   if (!exists) {
     throw new Error('Upload Error : File does not exists in the storage');
   }
 
-  const [ signedUrl ] = await file.getSignedUrl({
+  const [signedUrl] = await file.getSignedUrl({
     action: 'read',
     expires: '01-01-3000',
     version: 'v2'
@@ -77,7 +81,7 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
 
   // link the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: filePath, url: signedUrl } });
+  return doc.update({ [fieldToUpdate]: { ref: filePath, url: signedUrl } });
 }
 
 /**
@@ -104,5 +108,32 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
   // unlink the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: { ref: '', url: '' } });
+  return doc.update({ [fieldToUpdate]: { ref: '', url: '' } });
+}
+
+/**
+ * Generates an Imgix token for a given protected resource
+ * Protected resources are in the "protected" dir of the bucket.
+ * An Imgix source must be configured to that directory and marked as private
+ * 
+ * @param data 
+ * @param context 
+ * @see https://github.com/imgix/imgix-blueprint#securing-urls
+ * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a // @TODO #3188 add how to create a private source
+ */
+export const getMediaToken = (data: { ref: string, parameters: ImageParameters }, context: CallableContext): string => {
+  const params = formatParameters(data.parameters);
+  let toSign = `${imgixToken}${data.ref}`;
+
+  if (!!params) {
+    toSign = `${toSign}?${params}`;
+  }
+
+  const md5 = createHash('md5');
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+
+  // @TODO #3188 make other tests against DB here to validate user request to media
+
+  return md5.update(toSign).digest('hex');
 }
