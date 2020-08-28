@@ -25,8 +25,11 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 
+// Summary Components
+import { MainComponent } from './main/main.component';
+
 @NgModule({
-  declarations: [MovieFormSummaryComponent],
+  declarations: [MovieFormSummaryComponent, MainComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
