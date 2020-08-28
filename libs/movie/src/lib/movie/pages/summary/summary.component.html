@@ -96,41 +96,8 @@
     <section id="available-materials">
       <h3>Available Materials</h3>
       <article>
-        <h6>Original Version
-          <a mat-icon-button [routerLink]="getPath('available-materials')" fragment="original-version"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-        </h6>
-        <ul>
-          <li>
-            <ng-container *ngIf="!form.isOriginalVersionAvailable.value else originalVersionAvailable">
-              Not Available
-            </ng-container>
-            <ng-template #originalVersionAvailable>
-              Available
-            </ng-template>
-          </li>
-        </ul>
+        <movie-summary-available-materials movie="form" [link]="getPath('available-materials')"></movie-summary-available-materials>
       </article>
-
-      <article>
-        <h6>
-          Available Version{ form.languages.controls.length, plural, =1 {} other {s}}
-          <a mat-icon-button [routerLink]="getPath('available-materials')" fragment="available-versions"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
-        </h6>
-        <ul>
-          <ng-container *ngIf="objectHasNoValue(form.languages) else displayAvailableLanguages">
-            <a [routerLink]="getPath('additional-information')" fragment="available-versions"class="missing-control">
-              Missing
-            </a>
-          </ng-container>
-          <ng-template #displayAvailableLanguages>
-            <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last">
-              <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
-              <span>{{ language.value.value | versionPipe }}</span>
-            </li>
-          </ng-template>
-        </ul>
-      </article>
-
     </section>
 
     <mat-divider></mat-divider>

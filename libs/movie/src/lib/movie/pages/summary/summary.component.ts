@@ -54,17 +54,6 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 
-  public objectHasNoValue(valueAsRecord: Record<any, any>) {
-    try {
-      const objectToCheck = valueAsRecord.value;
-      const keys = Object.keys(objectToCheck);
-      return keys.length === 0 ? true : keys.some(key => !objectToCheck[key]);
-    } catch (error) {
-      console.warn(error);
-      return true;
-    }
-  }
-
   public async submit() {
     if (this.form.valid) {
       const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
@@ -105,5 +94,16 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
+  }
+
+  public objectHasNoValue(valueAsRecord: Record<any, any>) {
+    try {
+      const objectToCheck = valueAsRecord.value;
+      const keys = Object.keys(objectToCheck);
+      return keys.length === 0 ? true : keys.some(key => !objectToCheck[key]);
+    } catch (error) {
+      console.warn(error);
+      return true;
+    }
   }
 }

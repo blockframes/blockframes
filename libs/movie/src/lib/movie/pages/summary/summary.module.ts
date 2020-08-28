@@ -33,6 +33,8 @@ import { SummaryArtisticComponent } from './artistic/artistic.component';
 import { SummaryReviewComponent } from './review/review.component';
 import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
 import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
+import { SummaryAvailableMaterialsComponent } from './available-materials/available-materials.component';
+import { MediaFilesComponent } from './promotional/media-files/media-files.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.c
     SummaryArtisticComponent,
     SummaryReviewComponent,
     SummaryAdditionalInformationComponent,
-    SummaryTechnicalInfoComponent
+    SummaryTechnicalInfoComponent,
+    SummaryAvailableMaterialsComponent,
+    MediaFilesComponent
   ],
   imports: [
     CommonModule,
