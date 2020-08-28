@@ -11,7 +11,9 @@
       </a>
     </ng-container>
     <ng-template #teaserLink>
-      {{ form.promotional.get('teaser_link').value }}
+      <a [href]="form.promotional.get('teaser_link').value" target="_blank">
+        {{ form.promotional.get('teaser_link').value }}
+      </a>
     </ng-template>
   </li>
   <li>
@@ -22,7 +24,9 @@
       </a>
     </ng-container>
     <ng-template #trailerLink>
-      {{ form.promotional.get('trailer_link').value }}
+      <a [href]="form.promotional.get('trailer_link').value" target="_blank">
+        {{ form.promotional.get('trailer_link').value }}
+      </a>
     </ng-template>
   </li>
   <li>
@@ -33,7 +37,9 @@
       </a>
     </ng-container>
     <ng-template #promoLink>
-      {{ form.promotional.get('promo_reel_link').value }}
+      <a [href]="form.promotional.get('promo_reel_link').value" target="_blank">
+        {{ form.promotional.get('promo_reel_link').value }}
+      </a>
     </ng-template>
   </li>
   <li>
@@ -44,7 +50,9 @@
       </a>
     </ng-container>
     <ng-template #screenerLink>
-      {{ form.promotional.get('screener_link').value }}
+      <a [href]="form.promotional.get('screener_link').value" target="_blank">
+        {{ form.promotional.get('screener_link').value }}
+      </a>
     </ng-template>
   </li>
 </ul>
