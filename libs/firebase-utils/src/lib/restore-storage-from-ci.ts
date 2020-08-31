@@ -1,5 +1,4 @@
 import { firebase } from 'env/env';
-import { firebase as firebaseCI } from 'env/env.ci';
 import { firebase as firebaseProd } from 'env/env.prod';
 import * as admin from 'firebase-admin';
 import { execSync } from 'child_process';
