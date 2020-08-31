@@ -3,7 +3,8 @@ import FestivalScreeningPage from "./FestivalScreeningPage";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    cy.get('festival-event-view');
+    cy.get('festival-event-view', {timeout: 10000});
+    cy.wait(3000);
   }
 
   assertScreeningExist(movieTitle: string) {

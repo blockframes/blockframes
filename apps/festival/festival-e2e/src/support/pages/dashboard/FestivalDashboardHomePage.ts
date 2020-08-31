@@ -8,6 +8,10 @@ export default class FestivalDashboardHomePage {
     cy.get('festival-dashboard-home', { timeout: 30000 })
   }
 
+  goToMarket() {
+    cy.get('a[href="/c/o/marketplace/home"]').click();
+  }
+
   goToCalendar() {
     cy.get('festival-dashboard-home').get('a[test-id=calendar]').click();
     return new EventPage();

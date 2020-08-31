@@ -6,7 +6,8 @@ export default class FestivalMarketplaceCalendarPage {
   }
 
   clickOnEvent(movieTitle: string) {
-    cy.get('festival-event-calendar event-card h5[test-id=movie-title]').contains(movieTitle).click();
+    cy.get('festival-event-calendar event-card h5[test-id=movie-title]')
+      .contains(movieTitle).click();
     return new FestivalMarketplaceEventPage();
   }
 }

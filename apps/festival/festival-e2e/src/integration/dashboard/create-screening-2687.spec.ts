@@ -22,11 +22,17 @@ import { AuthIdentityPage } from "@blockframes/e2e/pages/auth";
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW, TOMORROW, PRIVATE_EVENTNAME_1, PRIVATE_EVENTNAME_2, PRIVATE_EVENTNAME_3, USER_1, USER_2, ORG_NAME, PUBLIC_EVENTNAME } from '../../fixtures/data';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { EVENTS } from '@blockframes/e2e/utils/screenings';
+import { User as UserType } from '@blockframes/e2e/utils/type';
 import { User, QueryInferface } from '../../fixtures';
 
 let tomorrow = TOMORROW;
+let users: Partial<UserType>[];
 const MOVIE_TITLE = MOVIES[3].title.international;
-const userFixture = new User(); 
+const userFixture = new User();
+users = [ 
+  (userFixture.get({key:'email', value: EVENTS[0].by.email})[0])
+];
 
 describe('User create a screening', () => {
   beforeEach(() => {
@@ -36,7 +42,7 @@ describe('User create a screening', () => {
     // p1.clickSignup();      
   });
 
-  it.only('side-menu', () => {
+  it('side-menu', () => {
     // cy.visit('/');
     // const p1 = new LandingPage();
     // p1.clickSignup();   
@@ -115,40 +121,57 @@ describe('User create a screening', () => {
     p3.saveEvent();
   });
 
-  it.only('Verify the screening page and created screenings', () => {
-    cy.visit('/');
-    const px = new LandingPage();
-    px.clickSignup();   
-    const userMarket = userFixture.get({exist: true, 
-      key: 'email', value: 'vchoukroun@fake.com@fake.com' })[0];
-    signIn(userMarket, true);    
+  it('test', () => {
+    const userFixture = new User()
+    let user = userFixture.get({exist: true, key: 'email', value: 'julie@fake.com'});
+    cy.log(user[0].email);
+    console.log(user);
+    user = userFixture.get({exist: false, index: 0});
+    cy.log(user[0].email);
+    console.log(user);
+  })  
+
+  it('Verify the screening page and created screenings', () => {
+    // clearDataAndPrepareTest('/');
+    // const px = new LandingPage();
+    // px.clickSignup();   
+    // const userMarket = userFixture.get({exist: true, 
+    //   key: 'email', value: 'vchoukroun@fake.com' });
+    // signIn(userMarket[0]);    
     cy.visit('/');
     //signIn(USER_2);
+
+    // cy.log(userMarket[0].email);
+    (new FestivalDashboardHomePage).goToMarket();
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(ORG_NAME);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_1);
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_2);
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_3);
-    p4.assertScreeningsExists(PUBLIC_EVENTNAME);
+    // p4.assertScreeningsExists([PRIVATE_EVENTNAME_1, PUBLIC_EVENTNAME]);
+    p4.assertScreeningsExists([PUBLIC_EVENTNAME]);
+    //p4.assertScreeningsExists(PRIVATE_EVENTNAME_2);
+    //p4.assertScreeningsExists(PRIVATE_EVENTNAME_3);
+    //p4.assertScreeningsExists(PUBLIC_EVENTNAME);
+
     // TODO: #2689 verify the eventName in each event view page
-    const p5: FestivalMarketplaceEventPage = p4.clickSpecificEvent(PUBLIC_EVENTNAME);
-    p5.assertEventNameExist(PUBLIC_EVENTNAME);
-    const p6: FestivalScreeningPage = p5.clickBackToEventList();
+    // const p5: FestivalMarketplaceEventPage = p4.clickSpecificEvent(PUBLIC_EVENTNAME);
+    // p5.assertEventNameExist(PUBLIC_EVENTNAME);
+    // const p6: FestivalScreeningPage = p5.clickBackToEventList();
 
-    const p7: FestivalMarketplaceEventPage = p6.clickSpecificEvent(PRIVATE_EVENTNAME_1);
-    p7.assertEventNameExist(PRIVATE_EVENTNAME_1);
-    const p8: FestivalScreeningPage = p7.clickBackToEventList();
+    // const p7: FestivalMarketplaceEventPage = p6.clickSpecificEvent(PRIVATE_EVENTNAME_1);
+    // p7.assertEventNameExist(PRIVATE_EVENTNAME_1);
+    // const p8: FestivalScreeningPage = p7.clickBackToEventList();
 
-    const p9: FestivalMarketplaceEventPage = p8.clickSpecificEvent(PRIVATE_EVENTNAME_2);
-    p9.assertEventNameExist(PRIVATE_EVENTNAME_2);
-    const p10: FestivalScreeningPage = p9.clickBackToEventList();
+    // const p9: FestivalMarketplaceEventPage = p8.clickSpecificEvent(PRIVATE_EVENTNAME_2);
+    // p9.assertEventNameExist(PRIVATE_EVENTNAME_2);
+    // const p10: FestivalScreeningPage = p9.clickBackToEventList();
 
-    const p11: FestivalMarketplaceEventPage = p10.clickSpecificEvent(PRIVATE_EVENTNAME_3);
-    p11.assertEventNameExist(PRIVATE_EVENTNAME_3);
-    const p12: FestivalScreeningPage = p11.clickBackToEventList();
+    // const p11: FestivalMarketplaceEventPage = p10.clickSpecificEvent(PRIVATE_EVENTNAME_3);
+    // p11.assertEventNameExist(PRIVATE_EVENTNAME_3);
+    // const p12: FestivalScreeningPage = p11.clickBackToEventList();
+    // p4.checkEventsInMarket([PUBLIC_EVENTNAME, PRIVATE_EVENTNAME_1]);
+    p4.checkEventsInMarket([PUBLIC_EVENTNAME]);
   });
 
   it("Request invitation's screening", () => {
@@ -178,18 +201,22 @@ describe('User create a screening', () => {
   });
 
   // #2695
-  it('User add public screening to his calendar', () => {
-    signIn(USER_2);
+  it.only('User add public screening to his calendar', () => {
+    let title = 'Felicita Public Screening';
+    let movieTitle = 'Felicità';
+    cy.visit('/');
+    //signIn(USER_2);
+    (new FestivalDashboardHomePage).goToMarket();
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(ORG_NAME);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    p4.clickAddToCalendar();
+    //p4.clickAddToCalendar(title);
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
-    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(MOVIE_TITLE);
-    cy.wait(5000);
-    p6.assertScreeningExist(MOVIE_TITLE);
+    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle);
+    //cy.wait(5000);
+    p6.assertScreeningExist(movieTitle);
   });
 });
