@@ -13,6 +13,7 @@ export class MissingControlComponent implements OnInit {
   @Input() scope: Scope;
   @Input() type: string;
   @Input() link: string;
+  @Input() fragment: string;
   @Input() isLast = true;
 
   @ContentChild(TemplateRef) child: TemplateRef<any>;

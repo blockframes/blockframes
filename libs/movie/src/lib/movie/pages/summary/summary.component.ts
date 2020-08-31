@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,7 +17,7 @@ import { MovieReviewForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormSummaryComponent implements OnInit, OnDestroy {
+export class MovieFormSummaryComponent implements OnInit {
   form = this.shell.form;
   subscription: Subscription;
   missingFields: string[] = [];
@@ -38,16 +38,16 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log('this.form', this.form);
     this.findInvalidControlsRecursive(this.form);
-    this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
   }
 
   get stillPhoto() {
     return this.form.promotional.get('still_photo');
+  }
+
+  get otherLinks() {
+    return this.form.promotional.get('other_links');
   }
 
   public getPath(segment: string) {
@@ -98,17 +98,17 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
         if (!control.value) {
           this.missingFields.push(field);
         }
-        if (control instanceof FormGroup) {
-          recursiveFunc(control);
-        } else if (control instanceof FormArray) {
+        if (control instanceof FormArray || control instanceof FormGroup) {
           recursiveFunc(control);
         }
       });
+      console.log('Fields', this.invalidFields, this.missingFields)
     }
     recursiveFunc(formToInvestigate);
   }
 
   public reviewHasNoValue(review: MovieReviewForm) {
+    console.log('Review', review);
     return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }
