@@ -38,7 +38,6 @@ export class MovieFormSummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('this.form', this.form);
     this.findInvalidControlsRecursive(this.form);
   }
 
@@ -102,13 +101,11 @@ export class MovieFormSummaryComponent implements OnInit {
           recursiveFunc(control);
         }
       });
-      console.log('Fields', this.invalidFields, this.missingFields)
     }
     recursiveFunc(formToInvestigate);
   }
 
   public reviewHasNoValue(review: MovieReviewForm) {
-    console.log('Review', review);
     return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }
