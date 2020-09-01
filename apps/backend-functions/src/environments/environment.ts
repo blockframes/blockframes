@@ -48,3 +48,5 @@ export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');
 export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');
+
+export const imgixToken = mockConfigIfNeeded('imgix', 'token');

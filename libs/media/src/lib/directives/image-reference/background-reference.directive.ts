@@ -1,11 +1,12 @@
 import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core'
-import {  HostedMedia } from '../../+state/media.firestore';
+import { HostedMedia } from '../../+state/media.firestore';
 import { BehaviorSubject, combineLatest, Subscription, Observable } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
 import { getAssetPath } from '@blockframes/media/+state/media.model';
-import { ImageParameters, generateBackgroundImageUrl } from './imgix-helpers';
+import { ImageParameters } from './imgix-helpers';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Directive({
   selector: '[bgRef] [bgAsset], [bgAsset]'
@@ -27,15 +28,14 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set bgRef(image: HostedMedia) {
-    if(!image || !image.ref){
+    if (!image || !image.ref) {
 
       this.ref$.next('');
     } else {
       try {
+        this.mediaService.generateBackgroundImageUrl(image.ref, this.parameters)
+          .then(url => this.ref$.next(url));
 
-        const url = generateBackgroundImageUrl(image.ref, this.parameters);
-
-        this.ref$.next(url);
       } catch (err) {
         this.ref$.next('')
       }
@@ -54,10 +54,12 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
     this.localTheme$.next(theme);
   }
 
+
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
-    private sanitazier: DomSanitizer
+    private sanitazier: DomSanitizer,
+    private mediaService: MediaService,
   ) { }
 
   ngOnInit() {

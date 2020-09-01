@@ -4,7 +4,8 @@ import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
 import { ThemeService } from '@blockframes/ui/theme';
 import { map } from 'rxjs/operators';
 import { getAssetPath } from '../../+state/media.model';
-import { ImageParameters, generateImageSrcset } from './imgix-helpers';
+import { ImageParameters } from './imgix-helpers';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Directive({
   selector: 'img[ref][asset], img[asset]'
@@ -68,6 +69,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   constructor(
     private themeService: ThemeService,
     private cdr: ChangeDetectorRef,
+    private mediaService: MediaService,
   ) { }
 
   @HostListener('error')
@@ -96,12 +98,11 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       this.asset$,
       this.ref$,
       theme$,
-    ]).subscribe(([asset, ref, theme]) => {
+    ]).subscribe(async ([asset, ref, theme]) => {
 
       if (!!ref) {
-
         // ref
-        this.srcset = generateImageSrcset(ref, this.parameters);
+        this.srcset = await this.mediaService.generateImageSrcset(ref, this.parameters);
         this.src = this.srcset.split(' ')[0];
 
       } else {

@@ -1,11 +1,6 @@
 import * as requiredVars from './mandatory-env-vars.json';
 import * as firebaseTools from 'firebase-tools';
-import * as dotenv from 'dotenv';
 import { loadSecretsFile } from './secrets-lib';
-
-const dotenvResult = dotenv.config();
-
-// const fileExists = (fileName: string) => existsSync(resolve(process.cwd(), fileName))
 
 if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
   // Env config values probably doesn't exist in env
@@ -43,6 +38,7 @@ function getKeyValFormat(): string[] {
   output.push(`algolia.api_key=${process.env?.ALGOLIA_API_KEY}`);
   output.push(`admin.password=${process.env?.ADMIN_PASSWORD}`);
   output.push(`admin.email=${process.env?.CASCADE8_ADMIN}`);
+  output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
   return output;
 }
 
