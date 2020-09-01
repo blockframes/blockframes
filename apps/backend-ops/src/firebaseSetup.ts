@@ -7,19 +7,20 @@ import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
-import { restore, loadAdminServices } from './admin';
+import { restore } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { syncStorage } from './syncStorage';
+// import { syncStorage } from './syncStorage';
 import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
   warnMissingVars()
-  const { db, auth, storage, ci } = loadAdminServices();
+  const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching DB from blockframes-ci and uploading to local env...');
-  const dbBackupPath = await copyDbFromCi(storage, ci);
+  const dbBackupPath = await copyDbFromCi(storage, getCI());
   if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
   console.log('DB copied to local bucket!');
 
@@ -32,7 +33,7 @@ export async function prepareForTesting() {
   console.info('Backup restored!');
 
   console.info('Syncing storage...');
-  await restoreStorageFromCi(ci);
+  await restoreStorageFromCi(getCI());
   console.info('Storage synced!');
 
   console.info('Preparing the database...');
@@ -68,14 +69,14 @@ export async function prepareForTesting() {
  * This is an experimental function to see if we can speed this process up
  */
 export async function prepareInParallel() {
-  const { db, auth, storage, ci } = loadAdminServices();
+  const { db, auth, storage, getCI } = loadAdminServices();
 
-  const p1 = copyDbFromCi(storage, ci)
+  const p1 = copyDbFromCi(storage, getCI())
   const p2 = p1.then(dbPath => syncUsers(readJsonlFile(dbPath)))
   const p3 = p1.then(() => restore(appUrl.content))
   const p4 = p3.then(() => migrate(false))
   const p5 = p4.then(() => cleanDeprecatedData(db, auth))
-  const p6 = restoreStorageFromCi(ci)
+  const p6 = restoreStorageFromCi(getCI())
   const p7 = p6.then(() => cleanStorage(storage.bucket(storageBucket)))
   const p8 = p5.then(upgradeAlgoliaOrgs).then(upgradeAlgoliaMovies).then(upgradeAlgoliaUsers)
   const p9 = Promise.all([p5, p7]).then(generateWatermarks)

@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register';
 import * as firebaseTools from 'firebase-tools';
 import * as dotenv from 'dotenv';
 import { loadSecretsFile } from './lib';

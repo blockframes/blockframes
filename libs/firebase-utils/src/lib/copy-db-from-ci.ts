@@ -3,11 +3,12 @@ import { backupBucket } from 'env/env';
 import { backupBucket as backupBucketCI } from 'env/env.ci';
 import * as admin from 'firebase-admin';
 import { existsSync, mkdirSync } from 'fs';
+import { catchErrors } from './util';
 
 export async function copyDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
   const folder = join(process.cwd(), 'tmp');
 
-  try {
+  return catchErrors(async () => {
     // Get latest backup DB
     const ciStorage = ci.storage();
     const [files] = await ciStorage.bucket(backupBucketCI).getFiles();
@@ -56,12 +57,5 @@ export async function copyDbFromCi(storage: admin.storage.Storage, ci: admin.app
     const result = await myBucket.upload(destination, { destination: last?.name });
     console.log('File uploaded as', result[0].name);
     return destination;
-  } catch (err) {
-    if ('errors' in err) {
-      err.errors.forEach((error: { message: any }) => console.error('ERROR:', error.message));
-    } else {
-      console.log(err);
-    }
-    return null;
-  }
+  });
 }
