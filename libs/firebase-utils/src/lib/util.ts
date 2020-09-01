@@ -48,8 +48,8 @@ export interface AdminServices {
   ci: admin.app.App;
 }
 
-export let app: admin.app.App;
-export let ci: admin.app.App;
+let app: admin.app.App;
+let ci: admin.app.App;
 
 export function loadAdminServices(): AdminServices {
   config();
