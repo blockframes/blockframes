@@ -239,6 +239,17 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     // REQUIRED FIELDS
     //////////////////
 
+    // EMAIL
+    if (!organization.email) {
+      importErrors.errors.push({
+        type: 'warning',
+        field: 'organization.email',
+        name: 'Organization email',
+        reason: 'Organization email not defined',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
     // FULL DENOMINATION
     if (!organization.denomination.full) {
       errors.push({
