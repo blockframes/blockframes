@@ -121,19 +121,21 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a // @TODO #3188 add how to create a private source
  */
-export const getMediaToken = (data: { ref: string, parameters: ImageParameters }, context: CallableContext): string => {
-  const params = formatParameters(data.parameters);
-  let toSign = `${imgixToken}${data.ref}`;
-
-  if (!!params) {
-    toSign = `${toSign}?${params}`;
-  }
-
-  const md5 = createHash('md5');
+export const getMediaToken = (data: { ref: string, parametersSet: ImageParameters[] }, context: CallableContext): string[] => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
   // @TODO #3188 make other tests against DB here to validate user request to media
 
-  return md5.update(toSign).digest('hex');
+  return data.parametersSet.map((p: ImageParameters) => {
+    const params = formatParameters(p);
+    let toSign = `${imgixToken}${data.ref}`;
+
+    if (!!params) {
+      toSign = `${toSign}?${params}`;
+    }
+
+    return createHash('md5').update(toSign).digest('hex');
+  });
+
 }

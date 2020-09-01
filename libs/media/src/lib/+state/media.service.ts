@@ -139,12 +139,12 @@ export class MediaService {
    * @dev protected resources are stored the same way than other resources but in the "protected" directory.
    * For example 
    * @param ref (without "/protected")
-   * @param parameters ImageParameters
+   * @param parametersSet ImageParameters[]
    */
-  private async getProtectedMediaToken(ref: string, parameters: ImageParameters): Promise<string> {
+  private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[]): Promise<string[]> {
     ref = !ref.startsWith('/') ? `/${ref}` : ref;
     const f = this.functions.httpsCallable('getMediaToken');
-    return f({ ref, parameters }).toPromise();
+    return f({ ref, parametersSet }).toPromise();
   }
 
   async generateImageSrcset(ref: string, p: ImageParameters): Promise<string> {
@@ -153,17 +153,18 @@ export class MediaService {
       protectedMedia = true;
       ref = ref.slice(`${this.protectedMediaDir}/`.length);
     }
-
     const sizes = getImgSize(ref);
-    const urls = await Promise.all(sizes.map(async size => {
+
+    let tokens: string[];
+    if (protectedMedia) {
+      tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
+    };
+
+    const urls = sizes.map((size, index) => {
       const parameters: ImageParameters = { ...p, w: size };
-
-      if (protectedMedia) {
-        parameters.s = await this.getProtectedMediaToken(ref, parameters);
-      };
-
+      if (tokens[index]) { parameters.s = tokens[index] };
       return `${getImgIxResourceUrl(ref, parameters)} ${size}w`;
-    }));
+    })
 
     return urls.join(', ');
   }
@@ -186,7 +187,7 @@ export class MediaService {
     const parameters: ImageParameters = { ...p, w: imageWidth };
     if (ref.indexOf(`${this.protectedMediaDir}/`) === 0) {
       ref = ref.slice(`${this.protectedMediaDir}/`.length);
-      parameters.s = await this.getProtectedMediaToken(ref, parameters);
+      parameters.s = (await this.getProtectedMediaToken(ref, [parameters]))[0];
     };
 
     return getImgIxResourceUrl(ref, parameters);
