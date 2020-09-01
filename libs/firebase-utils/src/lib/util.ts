@@ -49,7 +49,6 @@ export interface AdminServices {
   getCI: () => admin.app.App;
 }
 
-let app: admin.app.App;
 let ci: admin.app.App;
 
 export function loadAdminServices(): AdminServices {
@@ -65,8 +64,8 @@ export function loadAdminServices(): AdminServices {
     cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
   }
 
-  if (!app) {
-    app = admin.initializeApp(
+  if (!admin.apps.length) {
+    admin.initializeApp(
       {
         ...firebase,
         credential: admin.credential.applicationDefault(),
@@ -84,16 +83,15 @@ export function loadAdminServices(): AdminServices {
         },
         'CI-app'
       );
-      return ci;
     }
     return ci;
   };
 
   return {
     getCI,
-    auth: app.auth(),
-    db: app.firestore(),
+    auth: admin.auth(),
+    db: admin.firestore(),
     firebaseConfig: firebase,
-    storage: app.storage(),
+    storage: admin.storage(),
   };
 }
