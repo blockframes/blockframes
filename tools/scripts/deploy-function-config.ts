@@ -1,6 +1,6 @@
-import * as requiredVars from './mandatory-env-vars.json';
 import * as firebaseTools from 'firebase-tools';
-import { loadSecretsFile } from './secrets-lib';
+import { loadSecretsFile } from './lib';
+import { warnMissingVars } from '@blockframes/firebase-utils';
 
 if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
   // Env config values probably doesn't exist in env
@@ -40,12 +40,4 @@ function getKeyValFormat(): string[] {
   output.push(`admin.email=${process.env?.CASCADE8_ADMIN}`);
   output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
   return output;
-}
-
-function warnMissingVars(): void | never {
-  function throwMissingVar(name: string) {
-    throw new Error(`Please ensure the following variable is set in env: ${name}`);
-  }
-  const requiredVarsArray = requiredVars.required;
-  requiredVarsArray.map(key => process.env?.[key] ?? throwMissingVar(key));
 }
