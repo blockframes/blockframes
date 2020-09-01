@@ -21,7 +21,9 @@ export default class FestivalMarketplaceEventPage {
   }
 
   assertEventNameExist(eventName: string) {
-    cy.get('festival-event-view header', {timeout: 30000}).should('contain', eventName);
+    cy.log(`assertEventNameExist : header for {${eventName}}!`);
+    cy.get('festival-event-view header', {timeout: 30000})
+      .should('contain', eventName);
   }
 
   clickBackToEventList() {
