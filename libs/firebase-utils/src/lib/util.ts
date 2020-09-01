@@ -28,15 +28,16 @@ export function warnMissingVars(): void | never {
   );
 }
 
-export function catchErrors<T>(fn: (...args: any[]) => T): T {
+export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
   try {
     return fn();
   } catch (err) {
     if ('errors' in err) {
-      err.errors.forEach((error) => console.error('ERROR:', error.message));
+      err.errors.forEach((error: any) => console.error('ERROR:', error.message));
     } else {
       console.log(err);
     }
+    return;
   }
 }
 

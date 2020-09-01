@@ -13,10 +13,11 @@ export async function restoreStorageFromCi(ciApp: admin.app.App) {
   )
     throw Error('ABORT: YOU ARE TRYING TO RUN SCRIPT AGAINST PROD - THIS WILL DELETE STORAGE!!');
 
-  return catchErrors(() => {
+  return catchErrors(async () => {
     const ciStorage = ciApp.storage();
     // @ts-ignore
-    const [files, nextQuery, apiResponse] = await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
+    const [files, nextQuery, apiResponse] =
+      await ciStorage.bucket(CI_STORAGE_BACKUP).getFiles({
       autoPaginate: false,
       delimiter: '/',
     });
