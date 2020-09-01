@@ -1,3 +1,7 @@
+import * as admin from 'firebase-admin';
+import { firebase } from '@env';
+import { firebase as firebaseCI } from 'env/env.ci';
+import { config } from 'dotenv'
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 
@@ -20,4 +24,59 @@ export function warnMissingVars(): void | never {
     console.warn(`More info: ${msg}\n`);
   };
   requiredVars.map(({ key, msg }: { key: string; msg: string }) => process.env?.[key] ?? warn(key, msg));
+}
+
+
+
+export interface AdminServices {
+  auth: admin.auth.Auth;
+  db: admin.firestore.Firestore;
+  storage: admin.storage.Storage;
+  firebaseConfig: { projectId: string };
+  ci: admin.app.App;
+}
+
+export let app: admin.app.App;
+export let ci: admin.app.App;
+
+export function loadAdminServices(): AdminServices {
+  config();
+  warnMissingVars()
+
+  type Cert = string | admin.ServiceAccount;
+  let cert: Cert;
+  try {
+    // If service account is a stringified json object
+    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
+  } catch (err) {
+    // If service account is a path
+    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
+  }
+
+  if (!app) {
+    app = admin.initializeApp(
+      {
+        ...firebase,
+        credential: admin.credential.applicationDefault(),
+      },
+      'local'
+    );
+  }
+  if (!ci) {
+    ci = admin.initializeApp(
+      {
+        projectId: firebaseCI.projectId,
+        credential: admin.credential.cert(cert),
+      },
+      'CI-app'
+    );
+  }
+
+  return {
+    ci,
+    auth: app.auth(),
+    db: app.firestore(),
+    firebaseConfig: firebase,
+    storage: app.storage(),
+  };
 }
