@@ -1,7 +1,7 @@
 import * as admin from 'firebase-admin';
 import { firebase } from '@env';
 import { firebase as firebaseCI } from 'env/env.ci';
-import { config } from 'dotenv'
+import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 
@@ -23,10 +23,22 @@ export function warnMissingVars(): void | never {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
   };
-  requiredVars.map(({ key, msg }: { key: string; msg: string }) => process.env?.[key] ?? warn(key, msg));
+  requiredVars.map(
+    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] ?? warn(key, msg)
+  );
 }
 
-
+export function catchErrors<T>(fn: (...args: any[]) => T): T {
+  try {
+    return fn();
+  } catch (err) {
+    if ('errors' in err) {
+      err.errors.forEach((error) => console.error('ERROR:', error.message));
+    } else {
+      console.log(err);
+    }
+  }
+}
 
 export interface AdminServices {
   auth: admin.auth.Auth;
@@ -41,7 +53,7 @@ export let ci: admin.app.App;
 
 export function loadAdminServices(): AdminServices {
   config();
-  warnMissingVars()
+  warnMissingVars();
 
   type Cert = string | admin.ServiceAccount;
   let cert: Cert;
