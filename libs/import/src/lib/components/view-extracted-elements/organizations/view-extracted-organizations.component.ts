@@ -242,7 +242,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
     // EMAIL
     if (!organization.email) {
       importErrors.errors.push({
-        type: 'error',
+        type: 'warning',
         field: 'organization.email',
         name: 'Organization email',
         reason: 'Organization email not defined',
