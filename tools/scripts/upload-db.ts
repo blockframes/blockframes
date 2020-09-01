@@ -4,7 +4,7 @@ import { backupBucket } from '../../env/env.ci';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-const ciStorage = loadAdminServices().ci.storage();
+const ciStorage = loadAdminServices().getCI().storage();
 const restore = join(process.cwd(), 'tmp', 'restore-ci.jsonl');
 
 async function uploadDB() {

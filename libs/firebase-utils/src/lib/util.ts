@@ -46,7 +46,7 @@ export interface AdminServices {
   db: admin.firestore.Firestore;
   storage: admin.storage.Storage;
   firebaseConfig: { projectId: string };
-  ci: admin.app.App;
+  getCI: () => admin.app.App;
 }
 
 let app: admin.app.App;
@@ -56,8 +56,7 @@ export function loadAdminServices(): AdminServices {
   config();
   warnMissingVars();
 
-  type Cert = string | admin.ServiceAccount;
-  let cert: Cert;
+  let cert: string | admin.ServiceAccount;
   try {
     // If service account is a stringified json object
     cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
@@ -75,18 +74,23 @@ export function loadAdminServices(): AdminServices {
       'local'
     );
   }
-  if (!ci) {
-    ci = admin.initializeApp(
-      {
-        projectId: firebaseCI.projectId,
-        credential: admin.credential.cert(cert),
-      },
-      'CI-app'
-    );
-  }
+
+  const getCI = () => {
+    if (!ci) {
+      ci = admin.initializeApp(
+        {
+          projectId: firebaseCI.projectId,
+          credential: admin.credential.cert(cert),
+        },
+        'CI-app'
+      );
+      return ci;
+    }
+    return ci;
+  };
 
   return {
-    ci,
+    getCI,
     auth: app.auth(),
     db: app.firestore(),
     firebaseConfig: firebase,
