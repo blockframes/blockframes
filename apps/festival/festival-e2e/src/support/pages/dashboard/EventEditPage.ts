@@ -54,6 +54,11 @@ export default class EventEditPage {
     cy.wait(500);
   }
 
+  clickMoreDetails() {
+    cy.get('button[test-id=more-details]').click();
+    cy.wait(500);
+  }
+
   goToDashboard() {
     cy.visit('/c/o/dashboard/home');
     return new FestivalDashboardHomePage();

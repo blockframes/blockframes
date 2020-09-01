@@ -22,5 +22,25 @@ export const EVENTS: Partial<Screening>[] = [
     ],
     private: true
   },
-
+  {
+    event: 'Hunted Screening',
+    by : {
+      email: 'jeanfelix@fake.com'
+    },
+    movie: { 
+      title: {
+        international: 'Hunted'
+      }
+    },
+    org : {
+      name: 'Charades'
+    },
+    invitees: [{
+        email: 'vchoukroun@fake.com'
+      }, {
+        
+      }
+    ],
+    private: true
+  },
 ];
