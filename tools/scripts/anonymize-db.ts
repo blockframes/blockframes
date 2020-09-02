@@ -1,3 +1,4 @@
+import * as faker from 'faker';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -26,8 +27,8 @@ function anonymize({ docPath, content }) {
 }
 function updateEmail(user) {
   if (user?.email) {
-    const [prefix] = user.email.split('@');
-    user.email = `${prefix}-fake@cascade8.com`;
+    // const [prefix] = user.email.split('@');
+    user.email = `dev+${faker.name.firstName().replace(/\W/g, '')}@cascade8.com`;
   }
 }
 // First argument
