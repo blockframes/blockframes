@@ -2,7 +2,8 @@
  * This module deal with migrating the system from a CURRENT version
  * to the LAST version.
  */
-import { backup, Firestore, loadAdminServices, restore } from './admin';
+import { backup, Firestore, restore } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import { last } from 'lodash';
 import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestoreMigrations';
 import { appUrl } from '@env';

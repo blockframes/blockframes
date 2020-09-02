@@ -3,11 +3,10 @@
  *
  * Helper to avoid duplicating all the "semi-broken" google type defs.
  */
-import * as admin from 'firebase-admin';
-import { firebase } from '@env';
 import request from 'request';
 import { isInMaintenance } from '@blockframes/firebase-utils';
 import { sleep } from './tools';
+import type * as admin from 'firebase-admin';
 
 export type Auth = admin.auth.Auth;
 export type Firestore = admin.firestore.Firestore;
@@ -17,24 +16,6 @@ export type QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
 export type QuerySnapshot = admin.firestore.QuerySnapshot;
 export type Transaction = admin.firestore.Transaction;
 export type UserRecord = admin.auth.UserRecord;
-
-export interface AdminServices {
-  auth: Auth;
-  db: Firestore;
-  storage: Storage;
-  firebaseConfig: { projectId: string };
-}
-
-export function loadAdminServices(): AdminServices {
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      ...firebase,
-      credential: admin.credential.applicationDefault(),
-    });
-  }
-
-  return { auth: admin.auth(), db: admin.firestore(), firebaseConfig: firebase, storage: admin.storage() };
-}
 
 function getRestoreURL(appURL: string): string {
   return `${appURL}/admin/data/restore`;

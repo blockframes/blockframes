@@ -1,6 +1,6 @@
 import { initFunctionsTestMock, populate, getTestingProjectId } from '@blockframes/testing/firebase/functions';
 import { StorageMocked } from '@blockframes/testing/firebase';
-import { loadAdminServices } from './admin';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { cleanStorage, cleanMovieDir, cleanMoviesDir, cleanOrgsDir, cleanUsersDir, cleanWatermarkDir } from './storage-cleaning';
 import { clearFirestoreData } from '@firebase/testing';
 import { getCollectionRef } from '@blockframes/firebase-utils';

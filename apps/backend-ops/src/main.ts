@@ -2,7 +2,7 @@ import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
 
-import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
+import { prepareForTesting, restoreShortcut, upgrade, prepareInParallel } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
@@ -15,6 +15,8 @@ const [cmd, ...rest] = args;
 
 if (cmd === 'prepareForTesting') {
   exitable(prepareForTesting)();
+} else if (cmd === 'prepareInParallel') {
+  exitable(prepareInParallel)();
 } else if (cmd === 'generateFixtures') {
   exitable(generateFixtures)();
 } else if (cmd === 'upgrade') {
