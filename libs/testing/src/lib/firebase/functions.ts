@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import firebaseFunctionsTest from 'firebase-functions-test';
-
+import { runChunks } from '@blockframes/firebase-utils';
 import { resolve } from 'path';
 import { config } from 'dotenv';
 import { firebase } from '@env';
@@ -24,15 +24,13 @@ config();
 export function initFunctionsTestMock(offline = true, overrideConfig?: AppOptions): FirebaseTestConfig {
   if (offline) { // ** Connect to emulator
     const firebaseTest: any = firebaseFunctionsTest();
-
-    //projectId cannot have '.' in the string; need whole numbers
-    const projectId = 'test' + testIndex++;
-
+    testIndex++;
+    const projectId = getTestingProjectId();
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
     admin.initializeApp({ projectId });
-    firebaseTest['firebaseConfig'] = { projectId };
+    firebaseTest.firebaseConfig = { projectId };
     return firebaseTest;
   }
 
@@ -41,4 +39,23 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
   const runtimeConfig = require(resolve(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);
   return testObj;
+}
+
+export function getTestingProjectId() {
+  // projectId cannot have '.' in the string; need whole numbers
+  return 'test' + testIndex;
+}
+
+////////////
+// DB TOOLS
+////////////
+
+export function populate(collection: string, set: any[]) {
+  const db = admin.firestore();
+  return runChunks(set, async (d) => {
+    const docRef = db.collection(collection).doc(d.id || d.uid);
+    if (d.date?._seconds) { d.date = new Date(d.date._seconds * 1000) };
+    if (d.end?._seconds) { d.end = new Date(d.end._seconds * 1000) };
+    await docRef.set(d);
+  }, 50, false)
 }

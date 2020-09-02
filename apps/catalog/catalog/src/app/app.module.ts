@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -51,6 +52,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     FlexLayoutModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
+    OverlayModule,
 
     // Intercom
     intercomId ? IntercomAppModule : [],

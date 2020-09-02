@@ -1,15 +1,10 @@
-import { loadAdminServices } from './admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { File as GFile } from '@google-cloud/storage';
-import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';
-import { getDocument } from '@blockframes/firebase-utils';
-import { runChunks } from './tools';
+import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 
-export async function cleanStorage() {
+export async function cleanStorage(bucket) {
   await startMaintenance();
-  const { storage } = loadAdminServices();
-  const bucket = storage.bucket(getStorageBucketName());
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
   console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "movie" directory.`);
@@ -22,6 +17,8 @@ export async function cleanStorage() {
   const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
   console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "watermark" directory.`);
   await endMaintenance();
+
+  return true;
 }
 
 /**
@@ -29,13 +26,15 @@ export async function cleanStorage() {
  * @dev this should be usefull only once
  * @param bucket 
  */
-async function cleanMovieDir(bucket) {
+export async function cleanMovieDir(bucket) {
   // Movie dir should not exists
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
+
     if (f.name.split('/').length === 2) {
+      
       // Clean files at "movie/" root
       if (await f.delete()) { deleted++; }
     } else if (f.name.split('/').pop().length >= 255) {
@@ -52,7 +51,7 @@ async function cleanMovieDir(bucket) {
   return { deleted, total: files.length };
 }
 
-async function cleanMoviesDir(bucket) {
+export async function cleanMoviesDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
   let deleted = 0;
 
@@ -79,7 +78,7 @@ async function cleanMoviesDir(bucket) {
  * files that belongs to deleted orgs on DB.
  * @param bucket 
  */
-async function cleanOrgsDir(bucket) {
+export async function cleanOrgsDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
   let deleted = 0;
 
@@ -100,7 +99,7 @@ async function cleanOrgsDir(bucket) {
   return { deleted, total: files.length };
 }
 
-async function cleanUsersDir(bucket) {
+export async function cleanUsersDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
   let deleted = 0;
 
@@ -126,7 +125,7 @@ async function cleanUsersDir(bucket) {
  * watermarks are in users/${userId}/${userId}.svg
  * @param bucket 
  */
-async function cleanWatermarkDir(bucket) {
+export async function cleanWatermarkDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
   let deleted = 0;
 

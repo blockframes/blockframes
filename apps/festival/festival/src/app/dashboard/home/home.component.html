@@ -1,4 +1,4 @@
-<ng-container *ngIf="(hasMovies$ | async) else noMovie">
+<ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -18,22 +18,46 @@
 </ng-container>
 
 <!-- @TODO (#2891) -->
-<ng-template #noMovie>
+<ng-template #noAcceptedMovies>
+  <!-- @TODO (#3337) Create specific component !-->
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no title yet.</h1>
-    <p class="mat-body-1">
-      You haven't imported titles yet.
-      <br>
-      You may add several titles at once through bulk import, or just one at a time.
-    </p>
+    <ng-container *ngIf="(hasMovies$ | async) else noMovies">
+      <h1>You have no title published yet.</h1>
+      <p class="mat-body-1">
+        As long as you have no title to display, your organization will not appear on the marketplace.
+        <br>
+        You can either add several titles at once through bulk import, or just one at a time.
+        <br>
+        <br>
+        <span class="nb">
+          N.B.: Only submitted projects will appear on the marketplace, not drafts.
+        </span>
+      </p>
+
+    </ng-container>
+    <ng-template #noMovies>
+      <h1>You have no title yet.</h1>
+      <p class="mat-body-1">
+        You haven't imported titles yet.
+        <br>
+        You may add several titles at once through bulk import, or just one at a time.
+      </p>
+    </ng-template>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
+      <!-- Should only be shown for noAcceptedMovies && !noMovies -->
+      <ng-container *ngIf="(hasMovies$ | async)">
+        <mat-card fxLayout="column" fxLayoutalign="center center">
+          <img asset="add_draft.webp" alt="Manage Drafts">
+          <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
+        </mat-card>
+      </ng-container>
       <mat-card fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.webp" alt="Add title image">
-        <a routerLink="../title/lobby" mat-stroked-button color="primary">Add one title</a>
+        <a routerLink="../tunnel/movie" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">
-        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
+        <a routerLink="../import" mat-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>
   </section>

@@ -1,9 +1,8 @@
 import { Firestore, Storage } from '../admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { File as GFile } from '@google-cloud/storage';
-import { getDocument } from 'apps/backend-functions/src/data/internals';
-import { runChunks } from '../tools';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, getDocument, runChunks } from '@blockframes/firebase-utils';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 import {
   OldHostedMedia as HostedMedia,
@@ -49,7 +48,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
   console.log('// [STORAGE] Processing movies');
   console.log('//////////////');
 
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
 
@@ -258,7 +257,7 @@ const changeResourceDirectory = async (
   const { url, ref } = media;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const fileName = url.split('%2F').pop().split('?').shift();
@@ -339,7 +338,7 @@ async function cleanMovieDir(bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
@@ -360,7 +359,7 @@ async function cleanMoviesDir(bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
@@ -380,7 +379,7 @@ async function cleanUsersDir(bucket) {
 
   await runChunks(files, async (f) => {
     const userId = f.name.split('/')[1];
-    const user = await getDocument<any>(`users/${userId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const user = await getDocument<any>(`users/${userId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!user && user.avatar !== f.name && user.watermark !== f.name && await f.delete()) { deleted++; }
@@ -400,7 +399,7 @@ async function cleanOrgsDir(bucket) {
 
   await runChunks(files, async (f) => {
     const orgId = f.name.split('/')[1];
-    const org = await getDocument<any>(`orgs/${orgId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const org = await getDocument<any>(`orgs/${orgId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!org && org.logo !== f.name && await f.delete()) { deleted++; }
@@ -429,7 +428,7 @@ function getImgSize(file: GFile) {
   return size;
 }
 
-function findImgRefInMovie(movie: any, ref: string) { // @TODO (#3175 #3066) w8 "final" doc structure
+function findImgRefInMovie(movie: any, ref: string) { // @TODO (#3503) remplace any
 
   if (movie.main.banner === ref) {
     return true;

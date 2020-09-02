@@ -66,19 +66,23 @@ const routes: Routes = [{
     },
     {
       path: 'event',
-      children: [{
-        path: '',
-        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
-      }, {
-        path: ':eventId',
-        children: [{
+      children: [
+        {
           path: '',
-          loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+          loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
-          path: 'edit',
-          loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
-        }]
-      }]
+          path: ':eventId',
+          children: [
+            {
+            path: '',
+            loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+            }, {
+              path: 'edit',
+              loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+            },
+          ],
+        },
+      ],
     },
     {
       path: 'contact',

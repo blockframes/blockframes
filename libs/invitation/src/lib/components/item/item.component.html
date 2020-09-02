@@ -5,30 +5,30 @@
     alt="Organization logo">
   <div matLine>
     <ng-container [ngSwitch]="invitation.type">
-      <div *ngSwitchCase="'attendEvent'">
+      <ng-container *ngSwitchCase="'attendEvent'">
         <ng-container *ngIf=" invitation | eventFromInvitation | async as event">
           <!-- Invited to attendEvent -->
           <ng-container *ngIf="invitation.mode === 'invitation'; else request">
-            <span>{{ invitation.fromOrg | orgName }} invited you to </span>
-            <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{event | eventRange }}</span>
+            {{ invitation.fromOrg | orgName }} invited you to 
+            <a [routerLink]="['/c/o/marketplace/event', invitation.docId]" id="link">{{ event.title }}</a>.
+            {{event | eventRange }}
           </ng-container>
           <!-- Request to attendEvent -->
           <ng-template #request>
-            <span>{{ invitation.fromUser | displayName }} would like to attend event </span>
+            {{ invitation.fromUser | displayName }} would like to attend event 
             <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
-            <span>{{ event | eventRange }}</span>
+            {{ event | eventRange }}
           </ng-template>
         </ng-container>
-      </div>
-      <div *ngSwitchCase="'joinOrganization'">
+      </ng-container>
+      <ng-container *ngSwitchCase="'joinOrganization'">
         <ng-container *ngIf="invitation.mode === 'invitation'; else request">
           {{ invitation.fromOrg | orgName }} invited you to join the organization.
         </ng-container>
         <ng-template #request>
           {{ invitation.fromUser | displayName }} wants to join your organization.
         </ng-template>
-      </div>
+      </ng-container>
     </ng-container>
   </div>
   <span matLine>
@@ -36,22 +36,22 @@
       {{ invitation.date | date: 'medium' }}
     </small>
   </span>
-  <invitation-action [invitation]="invitation | eventLink"></invitation-action>
+  <invitation-action [invitation]="invitation"></invitation-action>
   <button mat-icon-button test-id="more" [matMenuTriggerFor]="menu" aria-label="Trigger for a menu">
     <mat-icon svgIcon="more_vert">
     </mat-icon>
   </button>
 </mat-list-item>
 <mat-menu #menu="matMenu">
-  <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">Go to event</a>
+  <a test-id="go-to-event" mat-menu-item [routerLink]="eventLink">More details</a>
   <ng-container [ngSwitch]="invitation.status">
-    <div *ngSwitchCase="'pending'">
+    <ng-container *ngSwitchCase="'pending'">
       <span test-id="accept-invitation" mat-menu-item (click)="handleInvitation(invitation, 'acceptInvitation')">
         Accept invitation
       </span>
       <span test-id="decline-invitation" mat-menu-item (click)="handleInvitation(invitation, 'declineInvitation')">
         Decline invitation
       </span>
-    </div>
+    </ng-container>
   </ng-container>
 </mat-menu>

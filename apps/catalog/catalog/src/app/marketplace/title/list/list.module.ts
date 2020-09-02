@@ -24,6 +24,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -84,6 +85,7 @@ import { ListComponent } from "./list.component";
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
+    MatTooltipModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

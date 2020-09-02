@@ -1,6 +1,5 @@
 import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
-import { firestore } from "firebase-admin";
 
 export interface OldPromotionalElement {
   label: string,
