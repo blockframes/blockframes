@@ -2,8 +2,8 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
+import { getCollection } from '@blockframes/firebase-utils';
 
 import {
   OldExternalMedia as ExternalMedia,

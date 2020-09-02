@@ -5,8 +5,9 @@ import { EventForm } from '@blockframes/event/form/event.form';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable, combineLatest } from 'rxjs';
-import { filter, switchMap, startWith } from 'rxjs/operators';
+import { filter, switchMap, startWith, tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -28,12 +29,13 @@ export class EventListComponent implements OnInit {
   viewDate = new Date();
 
   @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<any>;
-  
+
   constructor(
     private service: EventService,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -42,6 +44,11 @@ export class EventListComponent implements OnInit {
       this.filter.valueChanges.pipe(startWith(this.filter.value))
     ]).pipe(
       switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerId', '==', orgId))),
+      tap(events => {
+        !!events.length ?
+          this.dynTitle.setPageTitle('My events') :
+          this.dynTitle.setPageTitle('My events', 'Empty');
+      }),
     );
   }
 

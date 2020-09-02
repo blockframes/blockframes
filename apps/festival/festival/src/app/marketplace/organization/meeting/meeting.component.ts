@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-meeting',
@@ -12,7 +13,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   styleUrls: ['./meeting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingComponent {
+export class MeetingComponent implements OnInit {
   // @todo(#2711) switch ownerId to userId
   public form = new EventForm({ type: 'meeting', ownerId: this.orgQuery.getActiveId() });
 
@@ -21,8 +22,13 @@ export class MeetingComponent {
     private orgQuery: OrganizationQuery,
     private service: EventService,
     private invitationService: InvitationService,
-    private snackbar: MatSnackBar
-  ) {}
+    private snackbar: MatSnackBar,
+    private dynTitle: DynamicTitleService,
+  ) { }
+
+  ngOnInit() {
+    this.dynTitle.setPageTitle('Sales Agent', 'Meeting');
+  }
 
   async requestMeeting() {
     try {

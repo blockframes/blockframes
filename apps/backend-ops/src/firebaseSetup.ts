@@ -7,14 +7,24 @@ import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
-import { restore } from './admin';
+import { restore, loadAdminServices } from './admin';
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
 import { syncStorage } from './syncStorage';
+import { copyDbFromCi, readJsonlFile, warnMissingVars } from '@blockframes/firebase-utils';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
-  console.info('Syncing users...');
-  await syncUsers();
+  warnMissingVars()
+  
+  console.log('Fetching DB from blockframes-ci and uploading to local env...');
+  const dbBackupPath = await copyDbFromCi();
+  if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
+  console.log('DB copied to local bucket!');
+
+  console.info(`Syncing users from : ${dbBackupPath} ...`);
+  await syncUsers(readJsonlFile(dbBackupPath));
   console.info('Users synced!');
 
   console.info('Restoring backup...');
@@ -25,11 +35,14 @@ export async function prepareForTesting() {
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Database ready for testing!');
 
-  // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
-  // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  const { db, auth, storage } = loadAdminServices();
+  console.info('Cleaning unused db data...');
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -41,9 +54,9 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  console.info('Syncing firestore with storage');
-  await syncStorage();
-  console.info('Firestore is now synced with storage!');
+  // console.info('Syncing firestore with storage');
+  // await syncStorage();
+  // console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }
@@ -57,11 +70,14 @@ export async function upgrade() {
   await migrate(true);
   console.info('Database ready for deploy!');
 
-  // @todo(#3066) Reactivate Cleaning process when unit tested
-  // console.info('Cleaning unused data...')
-  // await cleanDeprecatedData();
-  // await cleanStorage();
-  // console.info('Data clean and fresh!')
+  const { db, auth, storage } = loadAdminServices();
+  console.info('Cleaning unused db data...');
+  await cleanDeprecatedData(db, auth);
+  console.info('DB data clean and fresh!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
@@ -75,4 +91,3 @@ export async function upgrade() {
 
   process.exit(0);
 }
-

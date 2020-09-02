@@ -6,6 +6,7 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
 import { map, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const typesLabel = {
   screening: 'Screenings',
@@ -29,10 +30,12 @@ export class EventCalendarComponent implements OnInit {
   constructor(
     private service: EventService,
     private invitationQuery: InvitationQuery,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('My Calendar');
     const allEvents$ = this.invitationQuery.selectAll({
       filterBy: ({ type, status }) => type === 'attendEvent' && ['accepted', 'pending'].includes(status)
     }).pipe(

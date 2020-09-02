@@ -1,8 +1,7 @@
-const authTestSet = require('../mocked-data-unit-tests/auth.json');
 
 export class AdminAuthMocked {
 
-  private users = authTestSet;
+  public users: any[] = [];
 
   getUserByEmail(email: string) {
     return new Promise((resolve) => {
@@ -11,19 +10,20 @@ export class AdminAuthMocked {
     });
   }
 
-  listUsers(count: number, pageToken: any) {
+  listUsers(_: number, pageToken: any) {
     return new Promise((resolve) => {
       const out = {
         users: this.users,
-        pageToken: undefined
+        pageToken
       }
       resolve(out);
     });
   }
 
-  deleteUser(uid: string) {
+  deleteUsers(uids: string[]) {
     return new Promise((resolve) => {
-      resolve(true);
+      this.users = this.users.filter(u => !uids.includes(u.uid));
+      resolve();
     });
   }
 }
