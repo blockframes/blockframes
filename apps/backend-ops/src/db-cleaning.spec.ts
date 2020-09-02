@@ -13,7 +13,7 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { loadAdminServices } from './admin';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { clearFirestoreData } from '@firebase/testing';
@@ -32,6 +32,7 @@ describe('DB cleaning script', () => {
     adminAuth = new AdminAuthMocked() as any;
   });
 
+  // it.only('this', () => {expect(1).toBe(1)})
   afterEach(async () => {
     // After each test, db is reseted
     await clearFirestoreData({ projectId: getTestingProjectId() });

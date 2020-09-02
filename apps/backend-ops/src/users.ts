@@ -4,7 +4,8 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { differenceBy } from 'lodash';
-import { Auth, loadAdminServices, UserRecord } from './admin';
+import { Auth, UserRecord } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import { sleep } from './tools';
 import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord} from '@blockframes/firebase-utils';
@@ -47,14 +48,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  // TODO: #3514
-  // ! Ensure there are no duplicates!
-  const ps = users
-    .filter((user) => {
-      const dupe = users.filter((compareUser) => compareUser.email === user.email);
-      return dupe.length === 1;
-    })
-    .map((user) => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
 }
 
@@ -90,7 +84,7 @@ export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: A
   return;
 }
 
-function readUsersFromDb(db: JsonlDbRecord[]): UserConfig[] {
+function readUsersFromJsonlFixture(db: JsonlDbRecord[]): UserConfig[] {
   return db
     .filter((doc) => doc.docPath.includes('users/'))
     .filter((userDoc) => 'email' in userDoc.content)
@@ -105,7 +99,7 @@ export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
   await startMaintenance();
   const { auth } = loadAdminServices();
 
-  const expectedUsers = readUsersFromDb(db);
+  const expectedUsers = readUsersFromJsonlFixture(db);
   await removeUnexpectedUsers(expectedUsers, auth);
   await createAllUsers(expectedUsers, auth);
   await endMaintenance();
@@ -178,8 +172,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 export async function createUsers(): Promise<any> {
   const { auth } = loadAdminServices();
   const users = await readUsersFromSTDIN();
-  const usersWithPassword = users.map((user) => ({ ...user, password: 'password' }));
-  return createAllUsers(usersWithPassword, auth);
+  return createAllUsers(users, auth);
 }
 
 export async function generateWatermarks() {
