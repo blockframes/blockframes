@@ -17,7 +17,7 @@ export const EVENTS: Partial<Screening>[] = [
     invitees: [{
         email: 'vchoukroun@fake.com'
       }, {
-        
+        email: 'concierge+dkmediaconsulting@fake.com'
       }
     ],
     private: true

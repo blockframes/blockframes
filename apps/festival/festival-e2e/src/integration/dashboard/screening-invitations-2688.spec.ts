@@ -22,14 +22,23 @@ import { LandingPage } from '../../support/pages/landing';
 import { User } from '../../fixtures';
 
 const MOVIE_TITLE = MOVIES[3].title.international;
+const TestEVENT = EVENTS[0];
 let SCREENING_URL: string;
 const userFixture = new User();
-const users  =  [ 
-  (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
-  (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
-];
+const invitedUsers = TestEVENT.invitees.map(u => u.email);
+const users  =  [ userFixture.getByEmail(TestEVENT.by.email) ];
+//invitedUsers.forEach(userEmail => users.push(userFixture.getByEmail(userEmail)))
+users.concat(invitedUsers.map(e => userFixture.getByEmail(e)));
+users.push(userFixture.getByEmail('ivo.andrle@fake.com'));
 
-describe('User invites other users to his private screening', () => {
+enum UserIndex {
+  Organiser = 0,
+  InvitedUser1,
+  InvitedUser2,
+  UninvitedGuest
+}
+
+describe('Organiser invites other users to private screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     const p1 = new LandingPage();
@@ -37,27 +46,31 @@ describe('User invites other users to his private screening', () => {
   });
 
   it.only(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
-    signIn(USER_1);
+    signIn(users[UserIndex.Organiser]);
+    
+    (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar()
+    const p2: EventPage = p1.goToCalendar();
     const p3: EventEditPage = p2.createDetailedEvent(NOW);
-    p3.addEventTitle(PRIVATE_EVENTNAME_1);
+    p3.addEventTitle(TestEVENT.event);
     p3.checkAllDay();
-    p3.selectMovie(MOVIE_TITLE);
-    p3.inviteUser([USER_2.email, USER_3.email]);
+    p3.selectMovie(TestEVENT.movie.title.international);
+    p3.inviteUser(invitedUsers);
     // We need to wait to fetch the invited user
     p3.copyGuests();
-    cy.wait(30000);
+    cy.wait(8000);
     p3.saveEvent();
+
     const p4 = p3.goToDashboard();
     p4.logout();
   });
 
-  it(`${PARTICIPANT_1_NAME} logs in and accepts his invitations and run the video`, () => {
-    signIn(USER_2);
+  it.only(`InvitedUser1: Vincent logs in, accepts his invitations & runs the video`, () => {
+    signIn(users[UserIndex.InvitedUser1]);
+
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalInvitationsPage = p1.goToInvitations();
-    cy.wait(2000)
+    cy.wait(2000);
     p2.acceptInvitationScreening();
 
     // Assets video runs
@@ -73,24 +86,24 @@ describe('User invites other users to his private screening', () => {
     // TODO: Assert video is running
   });
 
-  it(`${PARTICIPANT_2_NAME} logs in and refuse her invitations and logs out`, () => {
-    signIn(USER_3);
+  it(`InvitedUser2 logs in and refuses screening invitations`, () => {
+    signIn(users[UserIndex.InvitedUser2]);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
     cy.wait(2000);
     p2.refuseInvitationScreening();
   });
 
-  it('Event create logs in and verifies the accepted invitations', () => {
-    signIn(USER_1);
+  it('Organiser logs in and verifies the accepted invitations', () => {
+    signIn(users[UserIndex.Organiser]);
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()
     p2.verifyNotification(PARTICIPANT_1_NAME, true);
     p2.verifyNotification(PARTICIPANT_2_NAME, false);
   });
 
-  it('Pamela logs in, go on event page, asserts she can\'t access to the video and force the url', () => {
-    signIn(USER_4);
+  it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {
+    signIn(users[UserIndex.UninvitedGuest]);
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();

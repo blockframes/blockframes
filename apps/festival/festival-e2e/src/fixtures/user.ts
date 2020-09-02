@@ -3,7 +3,7 @@
 //
 // All fixtures should support the Query Interface
 // ***********************************************************
-import Users from '../../../../../tools/fixtures/users.json'
+import Users from 'tools/fixtures/users.json'
 import NewUsers from './new-users.json';
 import { User as UserType } from '@blockframes/e2e/utils/type';
 import { QueryInferface } from "./queryinterface";
@@ -32,4 +32,11 @@ export default class User {
     return userSet;
   }
 
+  /**
+   * getByEmail : convenience method to signed up user by emailID
+   * @param emailID : email-id of the user
+   */
+  getByEmail(emailID: string) : Partial<UserType> {
+    return this.get({exist: true, key:'email', value: emailID})[0];
+  }
 }
