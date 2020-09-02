@@ -86,11 +86,12 @@ describe('User create a screening', () => {
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
     cy.log('=>Test Screenings are listed');
     p4.assertScreeningsExists(eventNames);
-    cy.log('=>Test Screening details exist');
-    p4.checkEventsInMarket(eventNames);
 
     cy.log('=>Test Request invite for private screening');
     p4.clickRequestInvitation(eventNames[0]);
+
+    cy.log('=>Test Screening details exist');
+    p4.checkEventsInMarket(eventNames);
   });
 
   it('Jean accepts private screening request', () => {
