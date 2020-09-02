@@ -27,7 +27,6 @@ function anonymize({ docPath, content }) {
 }
 function updateEmail(user) {
   if (user?.email) {
-    // const [prefix] = user.email.split('@');
     const rand = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
