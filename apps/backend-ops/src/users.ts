@@ -48,14 +48,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  // TODO: #3514
-  // ! Ensure there are no duplicates!
-  const ps = users
-    .filter((user) => {
-      const dupe = users.filter((compareUser) => compareUser.email === user.email);
-      return dupe.length === 1;
-    })
-    .map((user) => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
   return Promise.all(ps);
 }
 
