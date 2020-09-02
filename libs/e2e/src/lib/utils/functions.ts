@@ -29,7 +29,7 @@ export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
     //return cy.url();
   }
 
-  return "";
+  //return "";
 }
 
 export function uploadFile(p: string, type: string, testId: string): any {

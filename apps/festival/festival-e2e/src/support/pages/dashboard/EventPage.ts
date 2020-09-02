@@ -40,10 +40,4 @@ export default class EventPage {
     return new EventEditPage();
   }
 
-  //Deprecated : use createDetailedEvent
-  createDetailedEventToday(date: Date) {
-    cy.get('div [class=cal-day-columns]').children().eq(date.getDay()).find('mwl-calendar-week-view-hour-segment').first().click();
-    cy.get('button[test-id=more-details]').click();
-    return new EventEditPage();
-  }
 }
