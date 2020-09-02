@@ -1,28 +1,39 @@
-import FestivalMarketplaceCalendarPage from "./FestivalMarketplaceCalendarPage";
+﻿import FestivalMarketplaceCalendarPage from "./FestivalMarketplaceCalendarPage";
 import FestivalMarketplaceEventPage from "./FestivalMarketplaceEventPage";
 
-const PRIVATE = 'Private Screening';
-const PUBLIC = 'Public Screening';
 const CALENDAR_LABEL = 'My Calendar';
 
 export default class FestivalScreeningPage {
   constructor() {
-    cy.get('festival-screening');
-  }
-
-  assertScreeningsExists(screeningName: string) {
+    cy.get('festival-screening', {timeout: 1000});
     cy.wait(1000);
-    cy.get('festival-screening event-screening-item').should('have.length', 4).contains(screeningName);
   }
 
-  clickAskForInvitation() {
-    cy.get('festival-screening event-screening-item').contains(PRIVATE).first().parent().parent().find('button[test-id=invitation-request]').click();
-    cy.wait(3000);
+  assertScreeningsExists(screeningNames: string[]) {
+    cy.wait(1000);
+    cy.get('festival-screening event-screening-item', {timeout: 1000})
+    .then($el => {
+      screeningNames.forEach(screeningName => {
+        cy.log(`assertScreeningsExists: {${screeningName}}!`);
+        cy.wrap($el).contains(screeningName);
+      })
+    })
+    /* .should('have.length', 4) */
+    //.contains(screeningName);
   }
 
-  clickAddToCalendar() {
-    cy.get('festival-screening event-screening-item').contains(PUBLIC).first().parent().parent().find('button[test-id=invitation-request]').click();
-    cy.wait(3000);
+  /**
+   * clickRequestInvitation - Click the action button
+   *   Private Event : Invitation request is sent
+   *   Public Event  : Event is added to user's calendar
+   * @param screeningTitle : Title of event
+   */
+  clickRequestInvitation(screeningTitle: string) {
+    cy.get('festival-screening event-screening-item', {timeout: 3000})
+      .contains(screeningTitle)
+      .parent().parent().parent()
+      .find('button[test-id=invitation-request]').click();
+    //cy.wait(3000);
   }
 
   clickOnMenu() {
@@ -40,7 +51,26 @@ export default class FestivalScreeningPage {
   }
 
   clickSpecificEvent(eventName: string) {
-    cy.get('festival-screening event-screening-item h3').contains(eventName).click();
+    //TODO: check : festival-screening event-screening-item h3
+    cy.get('article h3', {timeout: 10000})
+      .contains(eventName).click();
+    
     return new FestivalMarketplaceEventPage();
+  }
+
+  /**
+   * checkEventsInMarket - check if provided list of events are 
+   *   existing
+   * @param eventNames[] : list of screening event names to check 
+   */
+  checkEventsInMarket(eventNames: string[]) {
+    eventNames.forEach(eventName => {
+      cy.log(`checkEventsInMarket : article for {${eventName}}!`);
+      let pageFestivalMarketplaceEvent = this.clickSpecificEvent(eventName);
+      cy.wait(3000);
+      pageFestivalMarketplaceEvent.assertEventNameExist(eventName);
+      //pageFestivalMarketplaceEvent.clickBackToEventList();
+      cy.go('back');
+    })
   }
 }

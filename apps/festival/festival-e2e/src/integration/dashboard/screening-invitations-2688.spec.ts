@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 // Utils
 import {
@@ -34,7 +34,7 @@ describe('User invites other users to his private screening', () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
-    const p3: EventEditPage = p2.createDetailedEventToday(NOW);
+    const p3: EventEditPage = p2.createDetailedEvent(NOW);
     p3.addEventTitle(PRIVATE_EVENTNAME_1);
     p3.checkAllDay();
     p3.selectMovie(MOVIE_TITLE);

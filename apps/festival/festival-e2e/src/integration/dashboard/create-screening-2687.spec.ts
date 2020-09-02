@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 // Pages
 import {
@@ -13,135 +13,119 @@ import {
 import {
   FestivalDashboardHomePage,
   FestivalInvitationsPage,
-  EventPage,
-  EventEditPage
+  EventPage
 } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
-import { NOW, TOMORROW, PRIVATE_EVENTNAME_1, PRIVATE_EVENTNAME_2, PRIVATE_EVENTNAME_3, USER_1, USER_2, ORG_NAME, PUBLIC_EVENTNAME } from '../../fixtures/data';
-import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { NOW } from '../../fixtures/data';
+import { EVENTS } from '@blockframes/e2e/utils/screenings';
+import { User } from '../../fixtures';
 
-let tomorrow = TOMORROW;
-const MOVIE_TITLE = MOVIES[3].title.international;
+let tomorrow, twodayslater;
+const userFixture = new User();
+let users  =  [ 
+  (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
+  (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
+];
 
 describe('User create a screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
-    tomorrow = new Date(NOW);
+    tomorrow = new Date(new Date().setDate(NOW.getDate() + 1));
+    twodayslater = new Date(new Date().setDate(NOW.getDate() + 2));
     const p1 = new LandingPage();
     p1.clickSignup();      
   });
 
-  it('User creates a private screening, that taking place tomorrow', () => {
-    signIn(USER_1);
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
-    const p3: EventEditPage = p2.createDetailedEvent(NOW);
-    p3.addEventTitle(PRIVATE_EVENTNAME_1);
-    p3.selectMovie(MOVIE_TITLE);
-    p3.saveEvent();
-  });
+  it('User Jean Felix logs in, creates 4 screening events', () => {
+  
+    signIn(users[0], true);
 
-  it('User creates a public screening, that taking place tomorrow', () => {
-    signIn(USER_1);
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
-    const p3: EventEditPage = p2.createDetailedEvent(NOW);
-    p3.addEventTitle(PUBLIC_EVENTNAME);
-    p3.uncheckPrivate();
-    p3.selectMovie(MOVIE_TITLE);
-    p3.saveEvent();
-  });
+    (new FestivalMarketplaceHomePage()).goToDashboard();
+    const marketPage = new FestivalDashboardHomePage();
+    const eventPage: EventPage = marketPage.goToCalendar();
 
-  it('User creates a private screening, that taking place tomorrow', () => {
-    signIn(USER_1);
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
-    const p3: EventEditPage = p2.createDetailedEvent(tomorrow);
-    p3.addEventTitle(PRIVATE_EVENTNAME_2);
-    p3.selectMovie(MOVIE_TITLE);
-    p3.saveEvent();
-  });
+    cy.log('Navigating to calendar');
+    cy.get('a[test-id="calendar"]').then($menu => {
+      if ($menu.length) {
+        cy.wrap($menu).click();
+      } else {
+        cy.get('button[test-id=menu]').click();
+        cy.get('a[test-id="calendar"]').click();
+      }
+      cy.wait(1000);
+      cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();
 
-  it('User creates a private screening, that taking place tomorrow', () => {
-    signIn(USER_1);
-    const p1 = new FestivalDashboardHomePage();
-    const p2: EventPage = p1.goToCalendar();
-    const p3: EventEditPage = p2.createDetailedEvent(tomorrow);
-    p3.addEventTitle(PRIVATE_EVENTNAME_3);
-    p3.selectMovie(MOVIE_TITLE);
-    p3.saveEvent();
-  });
+      //[Event Index, Date of Event, Is Public]
+      [[0, tomorrow, false], [1, tomorrow, true], 
+      [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
+          let [i, d, p] = x;
+          let eventName = EVENTS[i].event + index;
+          eventPage.createEvent(eventName, d, 
+                  EVENTS[i].movie.title.international, p);
+      });
+    });
+  })  
 
-  it('Verify the screening page and created screenings', () => {
-    signIn(USER_2);
+  it('Login Vincent, Verify screening page and created screenings', () => {
+    const OrgName = EVENTS[0].org.name;
+    const event1 = EVENTS[0].event;
+    const event2 = EVENTS[1].event;
+
+    signIn(users[1]);
+
+    const eventNames: string[] = [event1+'0', event2+'1',
+            event1+'2', event2+'3',];
+
     const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
+    cy.log(`Navigating to [${OrgName}] screening schedule`);
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(ORG_NAME);
+    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_1);
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_2);
-    p4.assertScreeningsExists(PRIVATE_EVENTNAME_3);
-    p4.assertScreeningsExists(PUBLIC_EVENTNAME);
-    // TODO: #2689 verify the eventName in each event view page
-    const p5: FestivalMarketplaceEventPage = p4.clickSpecificEvent(PUBLIC_EVENTNAME);
-    p5.assertEventNameExist(PUBLIC_EVENTNAME);
-    const p6: FestivalScreeningPage = p5.clickBackToEventList();
+    cy.log('=>Test Screenings are listed');
+    p4.assertScreeningsExists(eventNames);
+    cy.log('=>Test Screening details exist');
+    p4.checkEventsInMarket(eventNames);
 
-    const p7: FestivalMarketplaceEventPage = p6.clickSpecificEvent(PRIVATE_EVENTNAME_1);
-    p7.assertEventNameExist(PRIVATE_EVENTNAME_1);
-    const p8: FestivalScreeningPage = p7.clickBackToEventList();
-
-    const p9: FestivalMarketplaceEventPage = p8.clickSpecificEvent(PRIVATE_EVENTNAME_2);
-    p9.assertEventNameExist(PRIVATE_EVENTNAME_2);
-    const p10: FestivalScreeningPage = p9.clickBackToEventList();
-
-    const p11: FestivalMarketplaceEventPage = p10.clickSpecificEvent(PRIVATE_EVENTNAME_3);
-    p11.assertEventNameExist(PRIVATE_EVENTNAME_3);
-    const p12: FestivalScreeningPage = p11.clickBackToEventList();
+    cy.log('=>Test Request invite for private screening');
+    p4.clickRequestInvitation(eventNames[0]);
   });
 
-  it("Request invitation's screening", () => {
-    signIn(USER_2);
-    const p1 = new FestivalMarketplaceHomePage();
-    p1.clickOnMenu();
-    const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(ORG_NAME);
-    const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    p4.clickAskForInvitation();
-  });
-
-  it('Accept screening request', () => {
-    signIn(USER_1);
+  it('Jean accepts private screening request', () => {
+    signIn(users[0]);
+    (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
 
-  it('Verify that request is accepted', () => {
-    signIn(USER_2);
+  it('Vincent adds public screening to his calendar', () => {
+    const OrgName = EVENTS[0].org.name;
+    const screeningEvent = EVENTS[0].event;
+    const movieTitle = EVENTS[0].movie.title.international;
+
+    signIn(users[1]);
+
     const p1 = new FestivalMarketplaceHomePage();
-    const p2: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
+    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
     cy.wait(8000);
-    p2.verifyNotification(ORG_NAME, true);
-  });
+    cy.log(`=>Test Notification from {${OrgName}} exists`);
+    pn.verifyNotification(OrgName, true); 
 
-  // #2695
-  it('User add public screening to his calendar', () => {
-    signIn(USER_2);
-    const p1 = new FestivalMarketplaceHomePage();
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(ORG_NAME);
+    const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
+    cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();
-    p4.clickAddToCalendar();
+    p4.clickRequestInvitation(screeningEvent);
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
-    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(MOVIE_TITLE);
-    cy.wait(5000);
-    p6.assertScreeningExist(MOVIE_TITLE);
+    const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle);
+    //cy.wait(5000);
+    cy.log(`{${movieTitle}} must exist in user schedule! | [A]`);
+    p6.assertScreeningExist(movieTitle);
   });
 });
