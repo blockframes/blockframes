@@ -1,4 +1,4 @@
-import { loadAdminServices } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import {
   clearIndex,
   setIndexConfiguration,

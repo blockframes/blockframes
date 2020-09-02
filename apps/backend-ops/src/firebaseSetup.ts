@@ -7,19 +7,20 @@ import { appUrl } from '@env';
 import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
-import { restore, loadAdminServices } from './admin';
+import { restore } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { syncStorage } from './syncStorage';
-import { copyDbFromCi, readJsonlFile, warnMissingVars } from '@blockframes/firebase-utils';
+// import { syncStorage } from './syncStorage';
+import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
   warnMissingVars()
-  
+  const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching DB from blockframes-ci and uploading to local env...');
-  const dbBackupPath = await copyDbFromCi();
+  const dbBackupPath = await copyDbFromCi(storage, getCI());
   if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
   console.log('DB copied to local bucket!');
 
@@ -31,11 +32,14 @@ export async function prepareForTesting() {
   await restore(appUrl.content);
   console.info('Backup restored!');
 
+  console.info('Syncing storage...');
+  await restoreStorageFromCi(getCI());
+  console.info('Storage synced!');
+
   console.info('Preparing the database...');
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Database ready for testing!');
 
-  const { db, auth, storage } = loadAdminServices();
   console.info('Cleaning unused db data...');
   await cleanDeprecatedData(db, auth);
   console.info('DB data clean and fresh!');
@@ -59,6 +63,25 @@ export async function prepareForTesting() {
   // console.info('Firestore is now synced with storage!');
 
   process.exit(0);
+}
+
+/**
+ * This is an experimental function to see if we can speed this process up
+ */
+export async function prepareInParallel() {
+  const { db, auth, storage, getCI } = loadAdminServices();
+
+  const p1 = copyDbFromCi(storage, getCI())
+  const p2 = p1.then(dbPath => syncUsers(readJsonlFile(dbPath)))
+  const p3 = p1.then(() => restore(appUrl.content))
+  const p4 = p3.then(() => migrate(false))
+  const p5 = p4.then(() => cleanDeprecatedData(db, auth))
+  const p6 = restoreStorageFromCi(getCI())
+  const p7 = p6.then(() => cleanStorage(storage.bucket(storageBucket)))
+  const p8 = p5.then(upgradeAlgoliaOrgs).then(upgradeAlgoliaMovies).then(upgradeAlgoliaUsers)
+  const p9 = Promise.all([p5, p7]).then(generateWatermarks)
+
+  return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8, p9])
 }
 
 export async function restoreShortcut() {
