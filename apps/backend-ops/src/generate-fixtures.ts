@@ -23,6 +23,8 @@ async function generateUsers() {
   console.timeEnd('Fetching users from Firestore');
 
   const output = users.map((user) => ({
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     uid: user.uid,
     password: USER_FIXTURES_PASSWORD,
