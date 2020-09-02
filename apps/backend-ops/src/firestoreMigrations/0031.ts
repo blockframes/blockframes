@@ -206,6 +206,27 @@ async function updateMovies(
       });
     }
 
+    if (movie.salesCast?.cast && movie.salesCast.cast.length) {
+      movie.salesCast.cast = movie.salesCast.cast.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    if (movie.salesCast?.crew && movie.salesCast.crew.length) {
+      movie.salesCast.crew = movie.salesCast.crew.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    if (movie.salesCast?.producers && movie.salesCast.producers.length) {
+      movie.salesCast.producers = movie.salesCast.producers.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
     const fieldsToReset = [
       'executiveProducer',
       'coProducer',
@@ -218,12 +239,12 @@ async function updateMovies(
     ];
 
     fieldsToReset.forEach(f => {
-      if(movie.main.stakeholders[f] && movie.main.stakeholders[f].length){
+      if (movie.main.stakeholders[f] && movie.main.stakeholders[f].length) {
         movie.main.stakeholders[f] = movie.main.stakeholders[f].map(o => {
-          if(o.logo){
+          if (o.logo) {
             o.logo = '';
           }
-          if(o.avatar){
+          if (o.avatar) {
             o.avatar = '';
           }
           return o;
@@ -231,9 +252,9 @@ async function updateMovies(
       }
     });
 
-    if(movie.festivalPrizes?.prizes && movie.festivalPrizes.prizes.length) {
+    if (movie.festivalPrizes?.prizes && movie.festivalPrizes.prizes.length) {
       movie.festivalPrizes.prizes = movie.festivalPrizes.prizes.map(o => {
-        if(o.logo){
+        if (o.logo) {
           o.logo = '';
         }
         return o;
