@@ -16,10 +16,10 @@ export default class User {
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {
-    let userSet: Partial<UserType>[]  = (query.exist) ? 
+    const userSet: Partial<UserType>[]  = (query.exist) ? 
                                         Users : NewUsers;
 
-    if (query.index && query.index != -1) {
+    if (query.index && query.index !== -1) {
       return [userSet[query.index]];
     }
 

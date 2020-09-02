@@ -66,7 +66,7 @@ export default class FestivalScreeningPage {
   checkEventsInMarket(eventNames: string[]) {
     eventNames.forEach(eventName => {
       cy.log(`checkEventsInMarket : article for {${eventName}}!`);
-      let pageFestivalMarketplaceEvent = this.clickSpecificEvent(eventName);
+      const pageFestivalMarketplaceEvent = this.clickSpecificEvent(eventName);
       cy.wait(3000);
       pageFestivalMarketplaceEvent.assertEventNameExist(eventName);
       //pageFestivalMarketplaceEvent.clickBackToEventList();

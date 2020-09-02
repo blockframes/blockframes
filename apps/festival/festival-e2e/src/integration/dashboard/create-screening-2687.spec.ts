@@ -24,7 +24,7 @@ import { User } from '../../fixtures';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
-let users  =  [ 
+const users  =  [ 
   (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
   (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
 ];
@@ -60,8 +60,8 @@ describe('User create a screening', () => {
       //[Event Index, Date of Event, Is Public]
       [[0, tomorrow, false], [1, tomorrow, true], 
       [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
-          let [i, d, p] = x;
-          let eventName = EVENTS[i].event + index;
+          const [i, d, p] = x;
+          const eventName = EVENTS[i].event + index;
           eventPage.createEvent(eventName, d, 
                   EVENTS[i].movie.title.international, p);
       });

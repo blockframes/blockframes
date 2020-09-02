@@ -33,7 +33,7 @@ export default class FestivalDashboardHomePage {
 
   createEvent(eventTitle: string, eventDate: Date, 
               screeningName: string, isPublic: boolean = false) {
-    let eventPage: EventPage = new EventPage();
+    const eventPage: EventPage = new EventPage();
     cy.get('a[test-id="calendar"]').then($menu => {
       if ($menu.length) {
         cy.wrap($menu).click();

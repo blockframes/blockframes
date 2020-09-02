@@ -13,15 +13,21 @@ import {
   USER_2
 } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
-import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { EVENTS, MOVIES } from '@blockframes/e2e/utils';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, EventEditPage, FestivalInvitationsPage } from '../../support/pages/dashboard/index';
 import { LandingPage } from '../../support/pages/landing';
+import { User } from '../../fixtures';
 
 const MOVIE_TITLE = MOVIES[3].title.international;
 let SCREENING_URL: string;
+const userFixture = new User();
+const users  =  [ 
+  (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
+  (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
+];
 
 describe('User invites other users to his private screening', () => {
   beforeEach(() => {
@@ -30,7 +36,7 @@ describe('User invites other users to his private screening', () => {
     p1.clickSignup();     
   });
 
-  it(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
+  it.only(`User creates a screening and invites ${PARTICIPANT_1_NAME} and ${PARTICIPANT_2_NAME} to the screening`, () => {
     signIn(USER_1);
     const p1 = new FestivalDashboardHomePage();
     const p2: EventPage = p1.goToCalendar()
