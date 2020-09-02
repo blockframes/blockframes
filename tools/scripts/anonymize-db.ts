@@ -28,7 +28,12 @@ function anonymize({ docPath, content }) {
 function updateEmail(user) {
   if (user?.email) {
     // const [prefix] = user.email.split('@');
-    user.email = `dev+${faker.name.firstName().replace(/\W/g, '').toLowerCase()}@cascade8.com`;
+    const rand = Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '')
+      .substr(0, 3);
+    const name = faker.name.firstName().replace(/\W/g, '').toLowerCase();
+    user.email = `dev+${name}-${rand}@cascade8.com`;
   }
 }
 // First argument
