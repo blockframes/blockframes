@@ -199,28 +199,28 @@ async function updateMovies(
       }
     }
 
-    if (movie.main.directors && movie.main.directors.length) {
+    if (movie.main.directors?.length) {
       movie.main.directors = movie.main.directors.map(d => {
         d.avatar = '';
         return d;
       });
     }
 
-    if (movie.salesCast?.cast && movie.salesCast.cast.length) {
+    if (movie.salesCast?.cast?.length) {
       movie.salesCast.cast = movie.salesCast.cast.map(d => {
         d.avatar = '';
         return d;
       });
     }
 
-    if (movie.salesCast?.crew && movie.salesCast.crew.length) {
+    if (movie.salesCast?.crew?.length) {
       movie.salesCast.crew = movie.salesCast.crew.map(d => {
         d.avatar = '';
         return d;
       });
     }
 
-    if (movie.salesCast?.producers && movie.salesCast.producers.length) {
+    if (movie.salesCast?.producers?.length) {
       movie.salesCast.producers = movie.salesCast.producers.map(d => {
         d.avatar = '';
         return d;
@@ -252,7 +252,7 @@ async function updateMovies(
       }
     });
 
-    if (movie.festivalPrizes?.prizes && movie.festivalPrizes.prizes.length) {
+    if (movie.festivalPrizes?.prizes.length) {
       movie.festivalPrizes.prizes = movie.festivalPrizes.prizes.map(o => {
         if (o.logo) {
           o.logo = '';
