@@ -14,6 +14,7 @@ import { cleanStorage } from './storage-cleaning';
 // import { syncStorage } from './syncStorage';
 import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
 import { firebase } from '@env';
+import { generateFixtures } from './generate-fixtures';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
@@ -47,6 +48,10 @@ export async function prepareForTesting() {
   console.info('Cleaning unused storage data...');
   await cleanStorage(storage.bucket(storageBucket));
   console.info('Storage data clean and fresh!');
+
+  console.info('Generating fixtures...')
+  await generateFixtures()
+  console.info('Fixtures generated in: tools/fixtures/*.json')
 
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
