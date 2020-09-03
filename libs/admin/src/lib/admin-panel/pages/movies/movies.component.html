@@ -19,9 +19,7 @@
     showFilter
     showLoader
     [pageSize]="50"
-    showPaginator
-    (pageEvent)="pageEvent($event)"
-    (sortChange)="sortChange($event)">
+    showPaginator>
     <ng-template colRef="main.poster" let-posters>
       <ng-container *ngIf="posters && posters.media as poster;">
         <img class="poster" [ref]="poster" asset="empty_poster.webp">
