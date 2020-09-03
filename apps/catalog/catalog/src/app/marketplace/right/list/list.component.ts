@@ -1,6 +1,7 @@
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
+import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
+import { ContractStatus } from '@blockframes/utils/static-model';
 import { map } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

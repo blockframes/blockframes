@@ -5,6 +5,7 @@ import { InjectionToken } from '@angular/core';
 import { ExtractSlug } from './static-model/staticModels';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
+import { ProductionStatus } from './static-model';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -62,7 +63,7 @@ export interface AlgoliaUser {
   objectID: string
 }
 
-/** 
+/**
  * Create a FormList that create user with mail if no user exist
  * It's used by algolia-chips-autocomplete components to enter mail that have no user for example
  */
@@ -94,7 +95,7 @@ export interface AlgoliaMovie {
     subtitle: ExtractSlug<'LANGUAGES'>[],
     caption: ExtractSlug<'LANGUAGES'>[]
   },
-  status: ExtractSlug<'MOVIE_STATUS'>,
+  status: ProductionStatus,
   budget: number,
   orgName: string,
   storeType: ExtractSlug<'STORE_TYPE'>,

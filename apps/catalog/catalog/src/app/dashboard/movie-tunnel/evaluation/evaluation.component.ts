@@ -15,7 +15,7 @@ export class EvaluationComponent {
     this.dynTitle.setPageTitle('Marketplace Valuation', 'Title information')
   }
 
-  get salesInfo() {
-    return this.form.get('salesInfo');
-  }
+  // get salesInfo() {
+  //   return this.form.get('salesInfo');
+  // }
 }

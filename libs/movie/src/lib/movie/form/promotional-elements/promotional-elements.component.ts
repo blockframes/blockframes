@@ -15,7 +15,7 @@ export class MovieFormPromotionalElementsComponent {
     this.staticModels = staticModels;
   }
 
-  get promotionalElements(): MoviePromotionalElementsForm {
+  get promotional(): MoviePromotionalElementsForm {
     return this.controlContainer.control as MoviePromotionalElementsForm;
   }
 }

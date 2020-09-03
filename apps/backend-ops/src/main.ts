@@ -33,6 +33,7 @@ if (cmd === 'prepareForTesting') {
   exitable(createUsers)();
 } else if (cmd === 'generateWatermarks') {
   exitable(generateWatermarks)();
+  exitable(syncStorage)();
 } else if (cmd === 'upgradeAlgoliaOrgs') {
   exitable(upgradeAlgoliaOrgs)();
 } else if (cmd === 'upgradeAlgoliaMovies') {

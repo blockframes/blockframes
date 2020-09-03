@@ -1,7 +1,6 @@
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { Notification } from './notification.model';
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { Event } from '@blockframes/event/+state';
@@ -187,9 +186,9 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     return subject;
   }
 
-  public getPoster(id: string): HostedMedia {
+  public getPoster(id: string) {
     const movie = this.movieQuery.getEntity(id);
-    return movie?.main?.poster?.media || createHostedMedia();
+    return movie?.poster ?? '';
   }
 
   private getDocument<T>(path: string): Promise<T> {

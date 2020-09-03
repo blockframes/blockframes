@@ -2,12 +2,12 @@ import { createCredit } from "../common-interfaces/identity";
 import { getCodeIfExists, ExtractCode } from "../static-model/staticModels";
 
 /**
- * Example : "Steven[separator] Kostanski[separator] shortBiography|role" 
- * @param str 
- * @param separator 
+ * Example : "Steven[separator] Kostanski[separator] filmography|role"
+ * @param str
+ * @param separator
  * @param thirdItemType
  */
-export function formatCredit(str: string, separator: string = '\\s+', thirdItemType: string = 'shortBiography'): any {
+export function formatCredit(str: string, separator: string = '\\s+', thirdItemType: string = 'filmography'): any {
   const credit = createCredit();
 
   if (str.split(new RegExp(separator)).length > 1) {
@@ -18,8 +18,8 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
   }
 
   if (str.split(new RegExp(separator)).length > 2) {
-    if (thirdItemType === 'shortBiography') {
-      credit.shortBiography = str.split(new RegExp(separator))[2].trim();
+    if (thirdItemType === 'filmography') {
+      credit.filmography[0].title = str.split(new RegExp(separator))[2].trim();
     } else {
       const roleName = str.split(new RegExp(separator))[2];
       let role;
@@ -45,16 +45,16 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
 
 /**
  * Example : "Quentin[subSeparator] Dupieux[separator] Steven[subSeparator] Kostanski"
- * @param str 
- * @param separator 
- * @param subSeparator 
+ * @param str
+ * @param separator
+ * @param subSeparator
  * @param thirdItemType
  */
 export function formatCredits(
   str: string,
   separator: string = ',',
   subSeparator: string = '\\s+',
-  thirdItemType: string = 'shortBiography'
+  thirdItemType: string = 'filmography'
 ): any[] {
   const credits = [];
   str.split(separator).forEach((a: string) => {

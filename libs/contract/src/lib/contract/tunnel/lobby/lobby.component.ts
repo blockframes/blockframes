@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractService, ContractType } from '../../+state';
+import { ContractService } from '../../+state';
+import { ContractType } from '@blockframes/utils/static-model/types';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -16,7 +17,7 @@ export class LobbyComponent {
     private router: Router,
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
-  ) { 
+  ) {
     this.dynTitle.setPageTitle('Choose a contract type', 'Create an offer')
   }
 

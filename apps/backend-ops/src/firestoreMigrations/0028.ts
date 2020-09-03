@@ -1,13 +1,16 @@
 import { Firestore, Storage } from '../admin';
-import { createHostedMedia} from '@blockframes/media/+state/media.firestore';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
 import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
-import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
+import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+
+import {
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalElement
+} from './old-types';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
@@ -76,9 +79,9 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
-      notification.organization.logo = createHostedMedia();
+      (notification.organization.logo as any) = createHostedMedia();
     } else if (notification.user) {
-      notification.user.avatar = createHostedMedia();
+      (notification.user.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(notification);
   });
@@ -89,16 +92,16 @@ async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<Fi
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createHostedMedia();
+      (invitation.fromOrg.logo as any) = createHostedMedia();
     }
     if (invitation.toOrg) {
-      invitation.toOrg.logo = createHostedMedia();
+      (invitation.toOrg.logo as any) = createHostedMedia();
     }
     if (invitation.fromUser) {
-      invitation.fromUser.avatar = createHostedMedia();
+      (invitation.fromUser.avatar as any) = createHostedMedia();
     }
     if (invitation.toUser) {
-      invitation.toUser.avatar = createHostedMedia();
+      (invitation.toUser.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(invitation);
 
@@ -120,7 +123,7 @@ async function updateMovies(
   storage: Storage
 ) {
   return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as MovieDocument;
+    const movie = doc.data() as OldMovieImgRefDocument;
 
     const keys = ['banner', 'poster', 'still_photo'];
 

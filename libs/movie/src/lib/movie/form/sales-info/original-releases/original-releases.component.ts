@@ -1,7 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { OriginalReleaseForm } from '../sales-info.form';
 import { startWith } from 'rxjs/operators';
-import { MovieMainControl } from '../../main/main.form';
 import { MovieSalesInfoControl } from '../sales-info.form'
 import { Subscription } from 'rxjs';
 
@@ -14,10 +13,10 @@ import { Subscription } from 'rxjs';
 export class OriginalReleaseComponent implements OnInit, OnDestroy {
 
   @Input() releasesForm: MovieSalesInfoControl['originalRelease'];
-  @Input() countriesForm: MovieMainControl['originCountries'];
+  @Input() countriesForm;
   private sub: Subscription;
 
-  // We want a specific selection 
+  // We want a specific selection
   media = [
     { 'slug': 'pay-tv', 'label': 'Pay TV' },
     { 'slug': 'free-tv', 'label': 'Free TV' },

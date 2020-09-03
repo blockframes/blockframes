@@ -1,4 +1,6 @@
 <section [ngSwitch]="step$ | async">
+
+  <!-- Drop -->
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
@@ -9,6 +11,8 @@
     <ng-content select="[format]"></ng-content>
     <p class="mat-caption">Drag and drop a file here or <a (click)="fileUploader.click()">browse</a></p>
   </article>
+
+  <!-- Crop -->
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
     <image-cropper [imageFile]="file" [aspectRatio]="cropRatio" format="webp" [containWithinAspectRatio]="false"
       [resizeToWidth]="setWidth || parentWidth" (imageCropped)="imageCropped($event)"></image-cropper>
@@ -21,6 +25,8 @@
       </button>
     </div>
   </article>
+
+  <!-- Upload -->
   <article *ngSwitchCase="'upload'" @zoomDelay>
     <div *ngIf="( percentage$ | async ) as percentage" fxLayout="column" fxLayoutAlign="center center">
       <mat-progress-spinner color="primary" mode="determinate" [value]="percentage$ | async">
@@ -28,6 +34,8 @@
       <p>{{ percentage | number:'1.0-0' }}% uploading...</p>
     </div>
   </article>
+
+  <!-- Complete -->
   <article *ngSwitchCase="'upload_complete'">
     <svg width="100" height="100" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path @check (@check.done)="goToShow()" class="check-path" d="M34 100L74 140L167 47" stroke="#3f51b5"
@@ -38,6 +46,8 @@
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
     </div>
   </article>
+
+  <!-- Show -->
   <article class="show" *ngSwitchCase="'show'" @finalZoom>
     <ng-container>
       <div class="show">

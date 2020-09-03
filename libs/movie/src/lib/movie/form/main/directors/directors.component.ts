@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieMainControl } from '../main.form';
 
 @Component({
   selector: '[form] movie-form-directors',
@@ -9,5 +8,5 @@ import { MovieMainControl } from '../main.form';
 })
 export class DirectorsComponent {
 
-  @Input() form: MovieMainControl['directors'];
+  @Input() form;
 }

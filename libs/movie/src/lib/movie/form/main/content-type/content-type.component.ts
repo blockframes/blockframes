@@ -1,7 +1,6 @@
-import { storeType, workType } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
-import { MovieMainForm } from '../main.form';
 
 
 @Component({
@@ -12,10 +11,10 @@ import { MovieMainForm } from '../main.form';
 })
 export class ContentTypeComponent {
   public staticModels = staticModels;
-  public freshness = storeType;
-  public workType = workType;
+  public freshness = staticConsts.storeType;
+  public contentType = staticConsts.contentType;
 
-  @Input() form: MovieMainForm;
+  @Input() form;
 
   get title() {
     return this.form.get('title');

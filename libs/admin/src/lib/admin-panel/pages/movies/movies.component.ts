@@ -14,12 +14,12 @@ import { OrganizationService, orgName, Organization } from '@blockframes/organiz
 export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
-    'main.internalRef': 'Internal Ref',
-    'main.poster': 'Poster',
-    'main.title.original': 'Original title',
+    'internalRef': 'Internal Ref',
+    'poster': 'Poster',
+    'title.original': 'Original title',
     'org': 'Organization',
-    'main.storeConfig.status': 'Status',
-    'main.storeConfig.storeType': 'Store type',
+    'storeConfig.status': 'Status',
+    'storeConfig.storeType': 'Store type',
     'distributionRightsInfo': 'Distribution rights',
     'contractsInfo': 'Contracts',
     'edit': 'Edit',
@@ -27,12 +27,12 @@ export class MoviesComponent implements OnInit {
 
   public initialColumns: string[] = [
     'id',
-    'main.poster',
-    'main.internalRef',
-    'main.title.original',
+    'poster',
+    'internalRef',
+    'title.original',
     'org',
-    'main.storeConfig.status',
-    'main.storeConfig.storeType',
+    'storeConfig.status',
+    'storeConfig.storeType',
     'distributionRightsInfo',
     'contractsInfo',
     'edit',
@@ -90,10 +90,10 @@ export class MoviesComponent implements OnInit {
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'main.internalRef',
-      'main.title.original',
-      'main.storeConfig.status',
-      'main.storeConfig.storeType',
+      'internalRef',
+      'title.original',
+      'storeConfig.status',
+      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -102,12 +102,12 @@ export class MoviesComponent implements OnInit {
   public exportTable() {
     const exportedRows = this.rows.map(m => ({
       'movie id': m.id,
-      'title': m.main.title.international,
-      'internal ref': m.main.internalRef ? m.main.internalRef : '--',
+      'title': m.title.international,
+      'internal ref': m.internalRef ? m.internalRef : '--',
       'org': m.org ? orgName(m.org) : '--',
       'orgId': m.org ? m.org.id : '--',
-      'status': m.main.storeConfig.status,
-      'storeType': m.main.storeConfig.storeType,
+      'status': m.storeConfig.status,
+      'storeType': m.storeConfig.storeType,
       'distributionRightsInfo': m.distributionRightsInfo.count,
       'contractsInfo': m.contractsInfo.count,
     }))

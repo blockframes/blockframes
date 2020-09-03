@@ -15,23 +15,23 @@ export class BudgetComponent {
     this.dynTitle.setPageTitle('Budget, Quotas, Critics', 'Title information')
   }
 
-  get estimatedBudget() {
-    return this.form.get('budget').get('estimatedBudget');
-  }
+  // get estimatedBudget() {
+  //   return this.form.get('budget').get('estimatedBudget');
+  // }
 
-  get certifications() {
-    return this.form.get('salesInfo').get('certifications');
-  }
+  // get certifications() {
+  //   return this.form.get('salesInfo').get('certifications');
+  // }
 
-  get rating() {
-    return this.form.get('salesInfo').get('rating');
-  }
+  // get rating() {
+  //   return this.form.get('salesInfo').get('rating');
+  // }
 
-  get boxOffice() {
-    return this.form.get('budget').get('boxOffice');
-  }
+  // get boxOffice() {
+  //   return this.form.get('budget').get('boxOffice');
+  // }
 
-  get review() {
-    return this.form.get('movieReview');
-  }
+  // get review() {
+  //   return this.form.get('movieReview');
+  // }
 }

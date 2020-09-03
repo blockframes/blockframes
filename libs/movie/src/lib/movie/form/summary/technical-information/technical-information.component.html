@@ -1,20 +1,20 @@
 <ul>
   <li>
     <strong>Shooting Format </strong>
-    <missing-control [control]="salesInfo.get('format')" scope="MOVIE_FORMAT" [link]="link"></missing-control>
+    <missing-control [control]="movie.get('format')" scope="MOVIE_FORMAT" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Format Quality </strong>
-    <missing-control [control]="salesInfo.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY" [link]="link">
+    <missing-control [control]="movie.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY" [link]="link">
     </missing-control>
   </li>
   <li>
     <strong>Color </strong>
-    <missing-control [control]="salesInfo.get('color')" scope="COLORS" [link]="link"></missing-control>
+    <missing-control [control]="movie.get('color')" scope="COLORS" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Sound Format </strong>
-    <missing-control [control]="salesInfo.get('soundFormat')" scope="SOUND_FORMAT" [link]="link"></missing-control>
+    <missing-control [control]="movie.get('soundFormat')" scope="SOUND_FORMAT" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Versions </strong>
@@ -24,7 +24,7 @@
       </a>
     </ng-container>
     <ng-template #displayVersions>
-      <ng-container *ngFor="let version of versionInfo.controls.languages.controls | keyvalue; let isLast = last">
+      <ng-container *ngFor="let version of movie.controls.languages.controls | keyvalue; let isLast = last">
         {{ version.key | translateSlug: "LANGUAGES" }} :
         {{ version.value.value | versionPipe }}
         {{ isLast ? '' : '| ' }}
