@@ -1,4 +1,4 @@
-export interface User {
+﻿export interface User {
   uid: string;
   email: string;
   password: string;
@@ -49,4 +49,13 @@ export interface Movie {
   title: {
     international: string
   }
+}
+
+export interface Screening {
+  event: string;
+  movie: Partial<Movie>;
+  by: Partial<User>;
+  org: Partial<Organization>;
+  invitees: Partial<User>[];
+  private: boolean;
 }

@@ -32,7 +32,6 @@ describe('DB cleaning script', () => {
     adminAuth = new AdminAuthMocked() as any;
   });
 
-  // it.only('this', () => {expect(1).toBe(1)})
   afterEach(async () => {
     // After each test, db is reseted
     await clearFirestoreData({ projectId: getTestingProjectId() });

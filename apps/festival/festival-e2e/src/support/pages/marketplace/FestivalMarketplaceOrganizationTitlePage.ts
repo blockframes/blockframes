@@ -1,4 +1,4 @@
-import FestivalScreeningPage from "./FestivalScreeningPage";
+﻿import FestivalScreeningPage from "./FestivalScreeningPage";
 
 const NAV_SCREENING = 'Screening Schedule';
 
@@ -8,7 +8,8 @@ export default class FestivalMarketplaceOrganizationTitlePage {
   }
 
   clickOnScreeningSchedule() {
-    cy.get('festival-marketplace-organization-view a').contains(NAV_SCREENING).click();
+    cy.get('festival-marketplace-organization-view a')
+      .contains(NAV_SCREENING).click();
     return new FestivalScreeningPage();
   }
 }

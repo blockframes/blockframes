@@ -1,12 +1,7 @@
 import 'tsconfig-paths/register';
 import * as firebaseTools from 'firebase-tools';
-import * as dotenv from 'dotenv';
 import { loadSecretsFile } from './lib';
 import { warnMissingVars } from '@blockframes/firebase-utils';
-
-const dotenvResult = dotenv.config();
-
-// const fileExists = (fileName: string) => existsSync(resolve(process.cwd(), fileName))
 
 if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
   // Env config values probably doesn't exist in env

@@ -1,4 +1,4 @@
-﻿import { AuthLoginPage } from "../pages/auth";
+﻿import { AuthLoginPage, AuthIdentityPage } from "../pages/auth";
 import { User } from "./type";
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
@@ -12,11 +12,24 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
 }
 
 /** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
-export function signIn(user: Partial<User>) {
+export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
   const p1: AuthLoginPage = new AuthLoginPage();
   p1.switchMode();
   p1.fillSignin(user);
   p1.clickSignIn();
+  cy.wait(10000);
+  //Submit Identity on demand
+  if (fillIdentity) {
+    // cy.url().then(afterLoginURL => {
+    //   if (afterLoginURL.includes('auth/identity')) {
+    //     const pIdentity = new AuthIdentityPage();
+    //     pIdentity.confirm(user);
+    //   }
+    // });
+    //return cy.url();
+  }
+
+  //return "";
 }
 
 export function uploadFile(p: string, type: string, testId: string): any {
