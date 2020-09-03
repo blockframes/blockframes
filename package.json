@@ -40,7 +40,7 @@
     "format:write": "nx format:write",
     "format:check": "nx format:check",
     "migrate:deploy-secrets": "ts-node -P tools/tsconfig.tools.json tools/scripts/migrate-bash-secrets.ts",
-    "env:detect-service-account": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/check-google-application-credentials.ts",
+    "env:detect-service-account": "ts-node -P tools/tsconfig.tools.json tools/scripts/check-google-application-credentials.ts",
     "update": "ng update @nrwl/workspace",
     "update:check": "ng update",
     "workspace-schematic": "nx workspace-schematic",
@@ -55,11 +55,11 @@
     "storybook:ui": "ng run ui:storybook",
     "storybook:movie": "ng run movie:storybook",
     "prerender:festival": "ng build festival --prod && ng run festival:server --configuration production && angular-prerender --browser-target festival:build --server-target festival:server",
-    "db:download-prod": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/get-prod-backup.ts",
-    "db:anonymize": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/anonymize-db.ts",
-    "db:upload-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/upload-db.ts",
-    "db:fetch-from-ci": "npx ts-node -P tools/tsconfig.tools.json tools/scripts/fetch-db-from-ci.ts",
-    "backend-ops": "npx ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
+    "db:download-prod": "ts-node -P tools/tsconfig.tools.json tools/scripts/get-prod-backup.ts",
+    "db:anonymize": "ts-node -P tools/tsconfig.tools.json tools/scripts/anonymize-db.ts",
+    "db:upload-ci": "ts-node -P tools/tsconfig.tools.json tools/scripts/upload-db.ts",
+    "db:fetch-from-ci": "ts-node -P tools/tsconfig.tools.json tools/scripts/fetch-db-from-ci.ts",
+    "backend-ops": "ts-node -P tools/tsconfig.tools.json apps/backend-ops/src/main.ts"
   },
   "private": true,
   "dependencies": {
