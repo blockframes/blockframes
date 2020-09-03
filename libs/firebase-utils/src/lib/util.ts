@@ -35,7 +35,7 @@ export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
     if ('errors' in err) {
       err.errors.forEach((error: any) => console.error('ERROR:', error.message));
     } else {
-      console.log(err);
+      console.error(err);
     }
     return;
   }
@@ -65,13 +65,10 @@ export function loadAdminServices(): AdminServices {
   }
 
   if (!admin.apps.length) {
-    admin.initializeApp(
-      {
-        ...firebase,
-        credential: admin.credential.applicationDefault(),
-      },
-      'local'
-    );
+    admin.initializeApp({
+      ...firebase,
+      credential: admin.credential.applicationDefault(),
+    });
   }
 
   const getCI = () => {
