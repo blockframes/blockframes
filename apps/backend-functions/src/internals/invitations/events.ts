@@ -87,7 +87,7 @@ async function onInvitationToAnEventCreate({
     const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
     const from: EmailJSON = {
-      email: org.email ? org.email : getSendgridFrom(appKey).email,
+      email: getSendgridFrom(appKey).email,
       name: org.denomination.full ? org.denomination.full : getSendgridFrom(appKey).name
     };
 
