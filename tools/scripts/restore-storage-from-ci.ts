@@ -1,4 +1,5 @@
 import 'tsconfig-paths/register';
-import { restoreStorageFromCi } from '@blockframes/firebase-utils';
+import { loadAdminServices, restoreStorageFromCi } from '@blockframes/firebase-utils';
 
-restoreStorageFromCi();
+const adminServices = loadAdminServices();
+restoreStorageFromCi(adminServices.getCI());

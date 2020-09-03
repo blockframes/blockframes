@@ -1,3 +1,4 @@
+import 'tsconfig-paths/register';
 import * as firebaseTools from 'firebase-tools';
 import { loadSecretsFile } from './lib';
 import { warnMissingVars } from '@blockframes/firebase-utils';

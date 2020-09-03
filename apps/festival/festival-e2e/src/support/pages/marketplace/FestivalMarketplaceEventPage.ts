@@ -1,9 +1,10 @@
-import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
+﻿import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
 import FestivalScreeningPage from "./FestivalScreeningPage";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    cy.get('festival-event-view');
+    cy.get('festival-event-view', {timeout: 10000});
+    cy.wait(3000);
   }
 
   assertScreeningExist(movieTitle: string) {
@@ -20,7 +21,9 @@ export default class FestivalMarketplaceEventPage {
   }
 
   assertEventNameExist(eventName: string) {
-    cy.get('festival-event-view header', {timeout: 30000}).should('contain', eventName);
+    cy.log(`assertEventNameExist : header for {${eventName}}!`);
+    cy.get('festival-event-view header', {timeout: 30000})
+      .should('contain', eventName);
   }
 
   clickBackToEventList() {

@@ -13,7 +13,7 @@ import {
 } from './db-cleaning';
 import { every } from 'lodash';
 import { AdminAuthMocked } from '@blockframes/testing/firebase';
-import { loadAdminServices } from './admin';
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
 import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
