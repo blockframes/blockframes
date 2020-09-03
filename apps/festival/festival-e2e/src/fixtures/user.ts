@@ -24,9 +24,7 @@ export default class User {
     }
 
     if (query.key) {
-      const resultsUser = userSet.filter(u => 
-                          (u[query.key] === query.value));
-      return resultsUser;
+      return userSet.filter(u => u[query.key] === query.value);
     }
 
     return userSet;
