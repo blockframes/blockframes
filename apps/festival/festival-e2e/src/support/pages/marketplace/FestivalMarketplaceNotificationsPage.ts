@@ -4,7 +4,8 @@ export default class FestivalMarketplaceNotificationsPage {
   }
 
   verifyNotification(message: string, accepted: boolean) {
-    accepted ? cy.get('notification-item p[test-id=notification-message]').contains(message).contains('accepted')
-      : cy.get('notification-item p[test-id=notification-message]').contains(message).contains('declined')
+    const notification = accepted ? 'accepted' : 'declined';
+    cy.get('notification-item p[test-id=notification-message]')
+      .contains(message).contains(notification)
   }
 }

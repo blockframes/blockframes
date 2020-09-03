@@ -1,4 +1,4 @@
-import FestivalDashboardHomePage from './FestivalDashboardHomePage';
+﻿import FestivalDashboardHomePage from './FestivalDashboardHomePage';
 
 export default class EventEditPage {
   constructor() {
@@ -51,6 +51,11 @@ export default class EventEditPage {
 
   saveEvent() {
     cy.get('button[test-id=event-save]').click();
+    cy.wait(500);
+  }
+
+  clickMoreDetails() {
+    cy.get('button[test-id=more-details]').click();
     cy.wait(500);
   }
 
