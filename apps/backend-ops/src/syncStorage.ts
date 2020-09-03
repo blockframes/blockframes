@@ -86,7 +86,7 @@ export async function syncStorage() {
 
         try {
           // ! this will not work with array in the path
-          const promise = docRef.update({[field.field]: data});
+          const promise = docRef.update({ [field.field]: data });
           unlinkPromises.push(promise);
         } catch (error) {
           console.log(`Error with document ${docId}:`, error.message);
@@ -121,7 +121,7 @@ export async function syncStorage() {
 
       // link the firestore
       // ! this will not work with array in the path
-      await doc.update({[fieldToUpdate]: filePath });
+      await doc.update({ [fieldToUpdate]: filePath });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
     }
