@@ -155,7 +155,7 @@ export class MediaService {
     }
     const sizes = getImgSize(ref);
 
-    let tokens: string[];
+    let tokens: string[] = [];
     if (protectedMedia) {
       tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
     };
@@ -167,6 +167,22 @@ export class MediaService {
     })
 
     return urls.join(', ');
+  }
+
+  /**
+   * 
+   * @param ref string
+   * @param p ImageParameters
+   * @param w "0 = default size"
+   */
+  async generateSingleImageUrl(ref: string, p: ImageParameters, w = 0): Promise<string> {
+    const parameters: ImageParameters = { ...p, w };
+    if (ref.indexOf(`${this.protectedMediaDir}/`) === 0) {
+      ref = ref.slice(`${this.protectedMediaDir}/`.length);
+      parameters.s = (await this.getProtectedMediaToken(ref, [parameters]))[0];
+    };
+
+    return getImgIxResourceUrl(ref, parameters);
   }
 
   async generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
@@ -184,13 +200,7 @@ export class MediaService {
       p.w || Infinity,
     );
 
-    const parameters: ImageParameters = { ...p, w: imageWidth };
-    if (ref.indexOf(`${this.protectedMediaDir}/`) === 0) {
-      ref = ref.slice(`${this.protectedMediaDir}/`.length);
-      parameters.s = (await this.getProtectedMediaToken(ref, [parameters]))[0];
-    };
-
-    return getImgIxResourceUrl(ref, parameters);
+    return this.generateSingleImageUrl(ref, p, imageWidth);
   }
 
 }

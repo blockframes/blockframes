@@ -1,11 +1,13 @@
-import { Component, Input, Renderer2, ElementRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from './drop-zone.directive';
 import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
-import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { from } from 'rxjs';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -32,17 +34,6 @@ function b64toBlob(data: string) {
   const type = metadata.split(';')[0].split(':')[1];
   return new Blob([ab], { type });
 }
-
-/** Check if the path is a file path */
-function isFile(ref: string): boolean {
-  if (!ref) {
-    return false;
-  }
-  const part = ref.split('.');
-  const last = part.pop();
-  return part.length >= 1 && !last.includes('/');
-}
-
 @Component({
   selector: 'drop-cropper',
   templateUrl: './cropper.component.html',
@@ -57,8 +48,12 @@ export class CropperComponent implements OnInit {
   // Private Variables //
   //////////////////////
 
-  private ref: AngularFireStorageReference;
+  private ref: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
+  private parameters: ImageParameters = {
+    auto: 'compress,format',
+    fit: 'crop',
+  };
 
   ///////////////////////
   // Public Variables //
@@ -88,12 +83,12 @@ export class CropperComponent implements OnInit {
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
 
-  constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
+  constructor(private mediaService: MediaService) { }
 
   ngOnInit() {
     // show current image
     if (this.form.ref?.value) {
-      this.ref = this.storage.ref(this.form.ref.value);
+      this.ref = this.form.ref.value;
       this.goToShow();
     }
   }
@@ -163,8 +158,8 @@ export class CropperComponent implements OnInit {
   }
 
   /** Returns an observable of the download url of an image based on its reference */
-  private getDownloadUrl(ref: AngularFireStorageReference): Observable<string> {
-    return ref.getDownloadURL().pipe(
+  private getDownloadUrl(ref: string): Observable<string> {
+    return from(this.mediaService.generateSingleImageUrl(ref, this.parameters)).pipe(
       catchError(_ => of(''))
     )
   }
