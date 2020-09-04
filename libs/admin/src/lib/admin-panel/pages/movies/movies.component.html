@@ -1,9 +1,14 @@
 <main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
-      <span>Export to CSV</span>
-      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+      <ng-container *ngIf="exporting.$ | async else export">
+        <span>Generating CSV...</span>
+      </ng-container>
+      <ng-template #export>
+        <span>Export to CSV</span>
+        <mat-icon svgIcon="arrow_upward"></mat-icon>
+      </ng-template>
     </button>
   </article>
   <bf-table-filter
@@ -13,7 +18,7 @@
     [filterPredicate]="filterPredicate"
     showFilter
     showLoader
-    [pageSize]="100"
+    [pageSize]="50"
     showPaginator>
     <ng-template colRef="main.poster" let-posters>
       <ng-container *ngIf="posters && posters.media as poster;">
