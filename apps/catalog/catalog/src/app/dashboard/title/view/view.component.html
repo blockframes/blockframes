@@ -4,25 +4,23 @@
 <ng-container *ngIf="(movie$ | async) as movie;">
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <ng-container *ngIf="getPoster(movie) as poster">
+       <ng-container *ngIf="movie.poster as poster">
         <img class="movie-poster" [ref]="poster" asset="empty_poster.webp"  alt="movie poster">
       </ng-container>
       <div class="movie-info">
         <h4>
-          {{ movie.main.workType }}
-          <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
-          {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
-          <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|</ng-container>
-          {{ movie.main.totalRunTime | duration: 'ms' }}
+          {{ movie.contentType }}
+          <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
+          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
+          <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|</ng-container>
+          {{ movie.totalRunTime | duration: 'ms' }}
         </h4>
-        <h1>{{ movie.main.title.international }}</h1>
+        <h1>{{ movie.title.international }}</h1>
         <h6>{{ getDirectors(movie) }}</h6>
         <span>
-          <ng-container *ngFor="let country of movie.main.originCountries; let isLast=last">
+          <ng-container *ngFor="let country of movie.originCountries; let isLast=last">
             {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
           </ng-container>
-          <ng-container *ngIf="movie.main.productionYear && movie.main.originCountries.length">,</ng-container>
-          {{ movie.main.productionYear }}
         </span>
       </div>
     </article>

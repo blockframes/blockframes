@@ -5,7 +5,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
@@ -24,7 +24,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public organizationStatus = organizationStatus;
+  public organizationStatus = staticConsts.organizationStatus;
   public movies: any[];
   public app = app;
   public members: any[];
@@ -36,23 +36,23 @@ export class OrganizationComponent implements OnInit {
 
   public versionColumnsMovies = {
     'id': 'Id',
-    'main.internalRef': 'Internal Ref',
-    'main.poster': 'Poster',
-    'main.title.original': 'Original title',
-    'main.productionYear': 'Production year',
-    'main.storeConfig.status': 'Status',
-    'main.storeConfig.storeType': 'Store type',
+    'internalRef': 'Internal Ref',
+    'poster': 'Poster',
+    'title.original': 'Original title',
+    'releaseYear': 'Release year',
+    'storeConfig.status': 'Status',
+    'storeConfig.storeType': 'Store type',
     'edit': 'Edit',
   };
 
   public initialColumnsMovies: string[] = [
     'id',
-    'main.poster',
-    'main.internalRef',
-    'main.title.original',
-    'main.productionYear',
-    'main.storeConfig.status',
-    'main.storeConfig.storeType',
+    'poster',
+    'internalRef',
+    'title.original',
+    'releaseYear',
+    'storeConfig.status',
+    'storeConfig.storeType',
     'edit',
   ];
 
@@ -151,11 +151,11 @@ export class OrganizationComponent implements OnInit {
   filterPredicateMovies(data: any, filter) {
     const columnsToFilter = [
       'id',
-      'main.internalRef',
-      'main.title.original',
-      'main.productionYear',
-      'main.storeConfig.status',
-      'main.storeConfig.storeType',
+      'internalRef',
+      'title.original',
+      'releaseYear',
+      'storeConfig.status',
+      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

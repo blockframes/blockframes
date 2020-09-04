@@ -11,10 +11,10 @@
               <mat-select formControlName="titleId">
                 <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.hostedVideo">
                   <ng-container *ngIf="title.hostedVideo else noVideo">
-                    {{ title.main.title.international }}
+                    {{ title.title.international }}
                   </ng-container>
                   <ng-template #noVideo>
-                    <span class="text-disabled">{{ title.main.title.international }}</span>
+                    <span class="text-disabled">{{ title.title.international }}</span>
                     <span> - </span>
                     <span class="text-warn">Upload video first.</span>
                   </ng-template>

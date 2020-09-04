@@ -1,0 +1,49 @@
+<tunnel-page>
+  <h4 title>UPLOADED MEDIA</h4>
+  <h1 subtitle>Files & links</h1>
+  <ng-container tunnel-form>
+    <!-- Presentation deck -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Presentation deck</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload
+          test-id="presentation-deck"
+          [form]="form.promotional.get('presentation_deck')"
+          [storagePath]="presentationPath"
+          accept="['.pdf']"
+          [types]="['application/pdf']">
+          <h3 type>Presentation Deck</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+        </mat-card-content>
+      </mat-card>
+      <!-- Scenario -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Script</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload
+          test-id="scenario"
+          [form]="form.promotional.get('scenario')"
+          [storagePath]="scenarioPath"
+          accept="['.pdf']"
+          [types]="['application/pdf']">
+          <h3 type>Script</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+        </mat-card-content>
+      </mat-card>
+    <!-- File Links -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>File Links</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-promotional-links [form]="promotional"></movie-form-promotional-links>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</tunnel-page>

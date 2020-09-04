@@ -15,15 +15,15 @@ export class TunnelTechnicalInfoComponent {
         this.dynTitle.setPageTitle('Technial information', 'Title information')
     }
 
-    get movieSalesInfo() {
-        return this.form.get('salesInfo');
-    }
+    // get movieSalesInfo() {
+    //     return this.form.get('salesInfo');
+    // }
 
-    get movieVersionInfo() {
-        return this.form.get('versionInfo').get('languages');
-    }
+    // get movieVersionInfo() {
+    //     return this.form.get('versionInfo').get('languages');
+    // }
 
-    get movieOriginalLanguages() {
-        return this.form.get('main').get('originalLanguages');
-    }
+    // get movieOriginalLanguages() {
+    //     return this.form.get('main').get('originalLanguages');
+    // }
 }

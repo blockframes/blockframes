@@ -31,7 +31,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService, private router: Router) {
-    const titleName = this.movieQuery.getActive().main.title.international || 'No title'
+    const titleName = this.movieQuery.getActive().title.international || 'No title'
     this.sub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         event.url.includes('details')
@@ -50,12 +50,8 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  public getPoster(movie: Movie) {
-    return movie.main.poster.media;
-  }
-
   public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+    return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 
   ngOnDestroy() {

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieForm } from '../../movie.form';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
+import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
 
 @Component({
   selector: '[form] movie-summary-image',
@@ -15,19 +15,19 @@ export class MovieSummaryImageComponent implements OnInit {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.form.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.form.promotional.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   get photoHasNoValue() {
     try {
-      const stillPhotos: Record<string, PromotionalHostedMedia> = this.form.promotionalElements.get('still_photo').value;
+      const stillPhotos: Record<string, HostedMediaFormValue> = this.form.promotional.get('still_photo').value;
       const keys = Object.keys(stillPhotos);
 
       // if there is no still photos
       return keys.length === 0 ?
         true :
         // or if at least one still photo as an empty url
-        keys.some(key => !stillPhotos[key].media.url);
+        keys.some(key => !stillPhotos[key].ref);
 
     } catch (error) {
       console.warn(error);

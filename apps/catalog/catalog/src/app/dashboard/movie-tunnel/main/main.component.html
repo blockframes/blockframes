@@ -9,7 +9,7 @@
         <mat-card-title>Content Type</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-content-type [form]="main"></movie-form-content-type>
+        <!-- <movie-form-content-type [form]="main"></movie-form-content-type> -->
       </mat-card-content>
     </mat-card>
 
@@ -19,7 +19,7 @@
         <mat-card-title>Director{ main.get('directors').controls.length, plural,=1 {} other {s}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-directors [form]="main.get('directors')"></movie-form-directors>
+        <!-- <movie-form-directors [form]="main.get('directors')"></movie-form-directors> -->
       </mat-card-content>
     </mat-card>
 
@@ -29,17 +29,17 @@
         <mat-card-title>Countr{ main.get('originCountries').controls.length, plural,=1 {y} other {ies}} of Origin</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-original-releases
+        <!-- <movie-form-original-releases
           [releasesForm]="salesInfo.get('originalRelease')"
           [countriesForm]="main.get('originCountries')">
-        </movie-form-original-releases>
+        </movie-form-original-releases> -->
         <mat-divider></mat-divider>
         <h6 class="mat-body-2">
-          Domestic Distributor{ main.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
+          Domestic Distributor{ production.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
         </h6>
-        <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders>
+        <!-- <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders> -->
         <mat-divider></mat-divider>
-        <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages>
+        <!-- <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages> -->
       </mat-card-content>
     </mat-card>
 
@@ -49,11 +49,11 @@
         <mat-card-title>General Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
+        <!-- <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre> -->
         <mat-divider></mat-divider>
-        <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
+        <!-- <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime> -->
         <p class="mat-body-2">Principal Cast Members</p>
-        <movie-form-sales-cast role="CAST_ROLES" [form]="salesCast.get('cast')"></movie-form-sales-cast>
+        <!-- <movie-form-sales-cast role="CAST_ROLES" [form]="salesCast.get('cast')"></movie-form-sales-cast> -->
       </mat-card-content>
     </mat-card>
 
@@ -63,7 +63,7 @@
         <mat-card-title i18n>Festival{ festivalPrizes.get('prizes').controls.length, plural,=1 {} other {s}}</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-festival-prizes [form]="festivalPrizes"></movie-form-festival-prizes>
+        <!-- <movie-form-festival-prizes [form]="festivalPrizes"></movie-form-festival-prizes> -->
       </mat-card-content>
     </mat-card>
 

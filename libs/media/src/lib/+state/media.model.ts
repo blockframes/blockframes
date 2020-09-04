@@ -15,21 +15,20 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
 export function extractMediaFromDocumentBeforeUpdate(
-  form: MovieForm | ProfileForm | OrganizationForm,
-  document: Organization | PublicUser | Movie = form.value): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+  form: MovieForm | ProfileForm | OrganizationForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
-  const cleanedDocument = cloneDeep(document);
+  const cleanedDocument = cloneDeep(form.value);
 
   const medias = extractMediaFromDocument(cleanedDocument);
   updateMediaFormInForm(form);
-  
+
   return {
     documentToUpdate: cleanedDocument,
     mediasToUpload: medias,
   };
 }
 
-function extractMediaFromDocument(document: any) {
+function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
   let medias: HostedMediaFormValue[] = [];
 
   for (const key in document) {
@@ -40,8 +39,7 @@ function extractMediaFromDocument(document: any) {
         medias.push(document[key]);
       }
 
-      // convert an `HostedMediaFormValue` into an `HostedMedia`
-      // clear form values like `fileName`, `blobOrFile`, etc and keep only `ref` & `url`
+      // convert an `HostedMediaFormValue` into a simple `string`
       document[key] = clearHostedMediaFormValue(document[key]);
 
     } else if (typeof document[key] === 'object' && !!document[key]) {
@@ -57,7 +55,7 @@ function extractMediaFromDocument(document: any) {
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
-function updateMediaFormInForm(form: any) {
+function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm) {
   if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];
@@ -85,8 +83,10 @@ function isMedia(obj: any) {
     typeof obj === 'object' &&
     !!obj &&
     'ref' in obj &&
-    'url' in obj &&
-    !('media' in obj) // TODO: Can be removed after feature/movie-form has been merged into develop
+    'oldRef' in obj &&
+    'blobOrFile' in obj &&
+    'delete' in obj &&
+    'fileName' in obj
   );
 }
 
@@ -95,7 +95,10 @@ function mediaNeedsUpdate(media: HostedMediaFormValue) {
 }
 
 export function getFileNameFromPath(path: string) {
-  return path.split('/').pop()
+  if (typeof path !== 'string') {
+    console.warn('UNEXPECTED PATH', path);
+  }
+  return (!!path && typeof path === 'string') ? path.split('/').pop() : '';
 }
 
 /** Used this only for background to let the browser deal with that with picture */

@@ -1,14 +1,14 @@
 <mat-card fxLayout="column" fxLayoutAlign="start center">
   <!-- Wait for TODO #2752 add img when its ready -->
   <mat-card-subtitle>
-    <h5>{{ movieReview.journalName }}</h5>
+    <h5>{{ review.journalName }}</h5>
   </mat-card-subtitle>
   <mat-card-content>
-    <p class="mat-body-2">« {{ movieReview.criticQuote | maxLength: 144 }} »</p>
-    <span *ngIf="movieReview.criticName" class="mat-caption">{{ movieReview.criticName }}</span>
-    <span *ngIf="movieReview.publicationDate" class="mat-caption">{{ movieReview.publicationDate }}</span>
+    <p class="mat-body-2">« {{ review.criticQuote | maxLength: 144 }} »</p>
+    <span *ngIf="review.criticName" class="mat-caption">{{ review.criticName }}</span>
+    <span *ngIf="review.publicationDate" class="mat-caption">{{ review.publicationDate }}</span>
   </mat-card-content>
   <mat-card-actions>
-    <a mat-button [href]="movieReview.link">Read the Article</a>
+    <a mat-button [href]="review.link">Read the Article</a>
   </mat-card-actions>
 </mat-card>

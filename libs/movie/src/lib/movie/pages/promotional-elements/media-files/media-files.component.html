@@ -1,0 +1,45 @@
+<tunnel-page>
+  <h4 title>Promotional Elements</h4>
+  <h1 subtitle>Files</h1>
+  <ng-container tunnel-form>
+
+    <section id="presentation-deck">
+      <h3>Presentation Deck</h3>
+      <file-upload
+        test-id="presentation-deck"
+        [form]="form.promotional.get('presentation_deck')"
+        [storagePath]="getPath('presentation_deck')"
+        accept="['.pdf', '.docx']"
+        [types]="['application/pdf', 'application/docx']">
+          <h3 type>Upload Files</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf, .docx</p>
+      </file-upload>
+    </section>
+
+    <section id="scenario">
+      <h3>Scenario</h3>
+      <file-upload
+        test-id="scenario"
+        [form]="form.promotional.get('scenario')"
+        [storagePath]="getPath('scenario')"
+        accept="['.pdf', '.docx']"
+        [types]="['application/pdf', 'application/docx']">
+          <h3 type>Upload Files</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf, .docx</p>
+      </file-upload>
+    </section>
+
+    <section id="moodboard">
+      <h3>Moodboard / Artistic Deck</h3>
+      <file-upload
+        test-id="scenario"
+        [form]="form.promotional.get('moodboard')"
+        [storagePath]="getPath('moodboard')"
+        accept="['.pdf', '.docx']"
+        [types]="['application/pdf', 'application/docx']">
+          <h3 type>Upload Files</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf, .docx</p>
+      </file-upload>
+    </section>
+  </ng-container>
+</tunnel-page>

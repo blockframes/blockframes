@@ -4,8 +4,6 @@ import { getValue, downloadCsvFromJson, BehaviorStore } from '@blockframes/utils
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { OrganizationService, orgName, Organization } from '@blockframes/organization/+state';
-import { PageEvent } from '@angular/material/paginator';
-import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'admin-movies',
@@ -16,19 +14,19 @@ import { Sort } from '@angular/material/sort';
 export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
-    'main.poster': 'Poster',
-    'main.title.original': 'Original title',
+    'poster': 'Poster',
+    'title.original': 'Original title',
     'org': 'Organization',
-    'main.storeConfig.status': 'Status',
+    'storeConfig.status': 'Status',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
     'id',
-    'main.poster',
-    'main.title.original',
+    'poster',
+    'title.original',
     'org',
-    'main.storeConfig.status',
+    'storeConfig.status',
     'edit',
   ];
   public rows: any[] = [];
@@ -69,10 +67,10 @@ export class MoviesComponent implements OnInit {
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'main.internalRef',
-      'main.title.original',
-      'main.storeConfig.status',
-      'main.storeConfig.storeType',
+      'internalRef',
+      'title.original',
+      'storeConfig.status',
+      'storeConfig.storeType',
       'org.denomination.full',
       'org.denomination.public'
     ];
@@ -107,12 +105,12 @@ export class MoviesComponent implements OnInit {
       const data = await Promise.all(promises);
       const exportedRows = data.map(m => ({
         'movie id': m.id,
-        'title': m.main.title.international,
-        'internal ref': m.main.internalRef ? m.main.internalRef : '--',
+        'title': m.title.international,
+        'internal ref': m.internalRef ? m.internalRef : '--',
         'org': m.org ? orgName(m.org) : '--',
         'orgId': m.org ? m.org.id : '--',
-        'status': m.main.storeConfig.status,
-        'storeType': m.main.storeConfig.storeType,
+        'status': m.storeConfig.status,
+        'storeType': m.storeConfig.storeType,
         'distributionRightsInfo': m.distributionRightsInfo.count,
         'contractsInfo': m.contractsInfo.count,
       }));

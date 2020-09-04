@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="sidenav.toggle()"><mat-icon svgIcon="menu"></mat-icon></button>
   </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
-  <tunnel-exit [exitRedirect]="exitRedirect"></tunnel-exit>
+  <tunnel-exit [exitRedirect]="exitRedirect" askForConfirmation></tunnel-exit>
 </mat-toolbar>
 
 <mat-sidenav-container>

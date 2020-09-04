@@ -20,10 +20,12 @@ mat-card {
   margin-bottom: 56px;
 }
 
-h3, p.mat-body-2 {
-  margin: 0;
+drop-cropper {
+  h3, p.mat-body-2 {
+    margin-bottom: 4px;
+  }
+  p.mat-caption {
+    margin-bottom: 8px;
+  }
 }
 
-p.mat-caption {
-  margin-bottom: 8px;
-}

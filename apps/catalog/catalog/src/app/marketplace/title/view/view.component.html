@@ -4,14 +4,14 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
   <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
     <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
-      <div *ngIf="movie.main.poster.media as poster">
+      <div *ngIf="movie.poster as poster">
         <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster">
       </div>
       <div class="movie-info">
         <h4>{{ getTitle(movie) }}</h4>
-        <h1>{{ movie.main.title.international }}</h1>
-        <ng-container *ngIf="movie.main.title.international !== movie.main.title.original">
-          <h3>{{ movie.main.title.original }}</h3>
+        <h1>{{ movie.title.international }}</h1>
+        <ng-container *ngIf="movie.title.international !== movie.title.original">
+          <h3>{{ movie.title.original }}</h3>
         </ng-container>
         <p class="mat-body-1">{{ getDirectors(movie) }}</p>
         <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>

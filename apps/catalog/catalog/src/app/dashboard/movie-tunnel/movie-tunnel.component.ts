@@ -71,6 +71,13 @@ const steps: TunnelStep[] = [{
 })
 export class MovieTunnelComponent implements TunnelRoot, OnInit {
   steps = steps;
+
+
+  //////////////////////////////////////
+  // EVERYTHING BELOW WILL BE REMOVED //
+  //////////////////////////////////////
+
+
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
 
@@ -96,7 +103,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
     }
     const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
 
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form, movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
 
     await this.service.update(movie.id, documentToUpdate);
 

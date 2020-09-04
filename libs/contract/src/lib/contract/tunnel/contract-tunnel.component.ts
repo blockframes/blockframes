@@ -3,7 +3,8 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType, createContract, TitlesAndRights } from '../+state';
+import { ContractQuery, ContractService, createContract, TitlesAndRights } from '../+state';
+import { ContractType } from '@blockframes/utils/static-model/types';
 import { MatDialog } from '@angular/material/dialog';
 import { DistributionRightForm } from '@blockframes/distribution-rights/form/distribution-right.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
@@ -43,7 +44,7 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
     title: 'Exploitation Rights',
     icon: 'world',
     routes: movies.map(movie => ({
-      path: movie.id, label: movie.main.title.international
+      path: movie.id, label: movie.title.international
     }))
   }, {
     ...steps[1]
