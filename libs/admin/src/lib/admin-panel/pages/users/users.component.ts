@@ -77,7 +77,8 @@ export class UsersComponent implements OnInit {
       'lastName',
       'email',
       'position',
-      'org',
+      'org.denomination.full',
+      'org.denomination.public'
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -99,7 +100,7 @@ export class UsersComponent implements OnInit {
             link: `/c/o/admin/panel/user/${u.uid}`,
           },
           org: org,
-          orgCountry: org && org.addresses.main.country ? org.addresses.main.country : undefined,
+          orgCountry: org?.addresses?.main.country,
           userOrgRole: org ? await this.orgService.getMemberRole(org, u.uid) : undefined,
           type: org ? (getOrgModuleAccess(org).includes('dashboard') ? 'seller' : 'buyer') : undefined
         }
@@ -112,7 +113,7 @@ export class UsersComponent implements OnInit {
         'organization': r.org ? orgName(r.org) : '--',
         'org id': r.orgId ? r.orgId : '--',
         'type': r.type ? r.type : '--',
-        'country': r.org && r.org.addresses.main.country ? r.org.addresses.main.country : '--',
+        'country': r.org?.addresses.main.country ?? '--',
         'role': r.userOrgRole ? r.userOrgRole : '--',
         'position': r.position ? r.position : '--',
         'email': r.email,

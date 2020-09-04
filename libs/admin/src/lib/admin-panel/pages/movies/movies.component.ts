@@ -73,6 +73,8 @@ export class MoviesComponent implements OnInit {
       'main.title.original',
       'main.storeConfig.status',
       'main.storeConfig.storeType',
+      'org.denomination.full',
+      'org.denomination.public'
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
