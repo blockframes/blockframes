@@ -4,7 +4,6 @@ import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 
@@ -24,7 +23,7 @@ export class UserComponent {
   constructor(
     private service: InvitationService,
     private orgService: OrganizationService,
-    private userService: UserService) {}
+  ) {}
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
@@ -32,17 +31,8 @@ export class UserComponent {
       const emails = this.form.value.map(guest => guest.email);
       this.form.reset([]);
       this.sending.next(true);
-      if (!this.ownerId) {
-        await this.service.invite('user', emails).from('org').to('attendEvent', this.docId);
-      } else {
-        const org = await this.orgService.getValue(this.ownerId);
-        if (!!org) {
-          await this.service.invite('user', emails).from('org', org).to('attendEvent', this.docId);
-        } else {
-          const user = await this.userService.getValue(this.ownerId);
-          await this.service.invite('user', emails).from('user', user).to('attendEvent', this.docId);
-        }
-      }
+      const org = this.ownerId ? await this.orgService.getValue(this.ownerId) : undefined;
+      await this.service.invite('user', emails).from('org', org).to('attendEvent', this.docId);
       this.sending.next(false);
     }
   }
