@@ -10,7 +10,6 @@ import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firest
 import { EmailRecipient } from "@blockframes/utils/emails";
 import { getAppName, getSendgridFrom, App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
-import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
 
 
 function getEventLink(org: OrganizationDocument) {
@@ -86,10 +85,7 @@ async function onInvitationToAnEventCreate({
     const link = getEventLink(org);
     const urlToUse = applicationUrl[appKey];
     const appName = getAppName(appKey);
-    const from: EmailJSON = {
-      email: getSendgridFrom(appKey).email,
-      name: org.denomination.full ? org.denomination.full : getSendgridFrom(appKey).name
-    };
+    const from = getSendgridFrom(appKey);
 
     switch (mode) {
       case 'invitation':
