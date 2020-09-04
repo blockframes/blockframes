@@ -15,18 +15,18 @@ export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'poster': 'Poster',
-    'title.original': 'Original title',
+    'title': 'Original title',
     'org': 'Organization',
-    'storeConfig.status': 'Status',
+    'storeConfig': 'Status',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
     'id',
     'poster',
-    'title.original',
+    'title',
     'org',
-    'storeConfig.status',
+    'storeConfig',
     'edit',
   ];
   public rows: any[] = [];
@@ -70,7 +70,6 @@ export class MoviesComponent implements OnInit {
       'internalRef',
       'title.original',
       'storeConfig.status',
-      'storeConfig.storeType',
       'org.denomination.full',
       'org.denomination.public'
     ];

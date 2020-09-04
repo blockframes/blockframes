@@ -25,6 +25,9 @@
         <img class="poster" [ref]="posters" asset="empty_poster.webp">
       </ng-container>
     </ng-template>
+    <ng-template colRef="title" let-title>
+      {{ title.original }}
+    </ng-template>
     <ng-template colRef="id" let-id>
       <span>{{ id }} </span>
       <admin-go-to type="title" [id]="id"></admin-go-to>
@@ -51,11 +54,8 @@
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
-    <ng-template colRef="storeConfig.status" let-storeStatus>
-      {{ storeStatus | toLabel: 'storeStatus' | async }}
-    </ng-template>
-    <ng-template colRef="storeConfig.storeType" let-storeType>
-      {{ storeType | toLabel: 'storeType' | async }}
+    <ng-template colRef="storeConfig" let-storeConfig>
+      {{ storeConfig.status | toLabel: 'storeStatus' | async }}
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">
