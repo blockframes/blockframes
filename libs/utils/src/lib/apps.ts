@@ -2,7 +2,7 @@
  * Apps definition
  */
 import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
-import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
+import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
