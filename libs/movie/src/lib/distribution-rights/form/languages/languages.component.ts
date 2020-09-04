@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { MovieVersionInfoForm } from '@blockframes/movie/form/version-info/version-info.form';
+import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
 import { FormStaticValue } from '@blockframes/utils/form';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 

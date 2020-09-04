@@ -1,5 +1,5 @@
 export * from './join.module';
-export * from './translate-slug.module';
+export * from './translate-slug.pipe';
 export * from './term-date.module';
 export * from './to-label.pipe';
 export * from './reverse.module';

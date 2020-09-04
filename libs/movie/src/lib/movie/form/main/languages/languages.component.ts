@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieMainControl } from '../main.form';
 import { default as staticModel } from '@blockframes/utils/static-model/staticModels';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
@@ -14,7 +13,7 @@ type Language = typeof staticModel.LANGUAGES;
 })
 export class LanguagesComponent implements OnInit {
 
-  @Input() form: MovieMainControl['originalLanguages'];
+  @Input() form;
   private focusIndex = new BehaviorSubject(0);
   languages = staticModel.LANGUAGES;
 

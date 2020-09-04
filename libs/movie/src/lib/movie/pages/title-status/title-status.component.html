@@ -1,0 +1,42 @@
+<tunnel-page>
+  <h4 title>First Step</h4>
+  <h1 subtitle>Production Status</h1>
+  <ng-container tunnel-form>
+    <section id="title-status">
+      <h3>Select your project's production status</h3>
+      <p class="mat-body-2">Your project's production status will define the form that will follow.
+        <br>
+        - If you are creating a new project, please select the right production status to start filling the form.
+        <br>
+        - If you are updating an existing project, please keep in mind that changing production status might
+        require you to specify some new information.
+      </p>
+
+      <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="row wrap" fxLayoutAlign="start center"
+        fxLayoutGap="16px">
+
+        <mat-card>
+          <img (click)="form.productionStatus.setValue('financing')" asset="development.svg" />
+          <mat-radio-button value="financing" color="primary">In development</mat-radio-button>
+        </mat-card>
+        <mat-card>
+          <img (click)="form.productionStatus.setValue('shooting')" asset="production.svg" />
+          <mat-radio-button value="shooting" color="primary">In Production</mat-radio-button>
+        </mat-card>
+        <mat-card>
+          <img (click)="form.productionStatus.setValue('post-production')" asset="post_production.svg" />
+          <mat-radio-button value="post-production" color="primary">In Post-Production</mat-radio-button>
+        </mat-card>
+        <mat-card>
+          <img (click)="form.productionStatus.setValue('finished')" asset="completed.svg" />
+          <mat-radio-button value="finished" color="primary">Completed</mat-radio-button>
+        </mat-card>
+        <mat-card>
+          <img (click)="form.productionStatus.setValue('released')" asset="released.svg" />
+          <mat-radio-button #radio value="released" color="primary">Released</mat-radio-button>
+        </mat-card>
+
+      </mat-radio-group>
+    </section>
+  </ng-container>
+</tunnel-page>

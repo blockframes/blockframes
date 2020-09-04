@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+
+  width: 100%;
+}
+
+section {
+  padding: 72px 0 0 48px;
+}
+
+img {
+  min-width: 50%;
+}
+
+a,
+span {
+  width: fit-content;
+  align-self: center;
+}
+
+mat-spinner{
+  align-self: center;
+}
+
+@media only screen and (max-width: 600px) {
+  :host {
+    flex-wrap: wrap-reverse;
+  }
+}

@@ -1,0 +1,79 @@
+<tunnel-page>
+  <h4 title>Promotional Elements</h4>
+  <h1 subtitle>Videos</h1>
+  <ng-container tunnel-form>
+
+    <h3>Videos</h3>
+    <section id="videos" fxLayout="column">
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Teaser Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('teaser_link')" name="teaserLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Trailer Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('trailer_link')" name="trailerLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Promo Reel</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('promo_reel_link')" name="promoReelLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Screener</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('screener_link')" name="screenerLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Clip Link</mat-label>
+        <input matInput type="url" [formControl]="form.promotional.get('clip_link')" name="clipLink" placeholder="https://example.com" />
+        <mat-error>
+          Please enter a valid url.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-divider></mat-divider>
+
+      <h6 class="mat-caption">Other links</h6>
+
+      <bf-form-table [columns]="otherLinksColumns" [form]="form.promotional.get('other_links')" buttonText="Add another Link" saveButtonText="Save Link">
+        <ng-template formView let-otherLinkForm>
+          <article [formGroup]="otherLinkForm" fxLayout="row" fxLayoutGap="24px">
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Link Name</mat-label>
+              <input matInput type="text" formControlName="name" name="otherLinkName"/>
+              <mat-hint>
+                Give a name to your video.
+              </mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Link Url</mat-label>
+              <input matInput type="url" formControlName="url" name="otherLinkUrl" placeholder="https://example.com" />
+              <mat-error>
+                Please enter a valid url.
+              </mat-error>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+    </section>
+
+  </ng-container>
+</tunnel-page>

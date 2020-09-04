@@ -1,0 +1,34 @@
+:host {
+  display: block;
+}
+
+h4 {
+  text-transform: uppercase;
+}
+
+h3 {
+  margin-bottom: 24px;
+}
+
+drop-cropper {
+  h3, p.mat-body-2 {
+    margin-bottom: 4px;
+  }
+}
+
+section {
+  margin-left: 16px;
+}
+
+mat-divider {
+  margin-top: 36px;
+  margin-bottom: 36px;
+}
+
+mat-form-field, div {
+  width: 100%;
+}
+
+#images article {
+  margin-bottom: 30px;
+}

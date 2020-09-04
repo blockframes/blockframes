@@ -7,7 +7,7 @@
           <mat-icon svgIcon="excel"></mat-icon>
           <span>Import Movies</span>
         </a>
-        <a mat-mini-fab color="primary" routerLink="../tunnel/movie" matTooltip="Add a new title">
+        <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add a new title">
           <mat-icon svgIcon="add"></mat-icon>
         </a>
       </div>
@@ -18,7 +18,6 @@
         (rowClick)="goToTitle($event)">
         <ng-template colRef="director" let-director>{{ director | displayName }}</ng-template>
         <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
         <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' | async  }}</ng-template>
       </bf-table-filter>
@@ -42,7 +41,7 @@
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.webp" alt="Add title image">
-        <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
+        <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">

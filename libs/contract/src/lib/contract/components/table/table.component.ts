@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Contract, getTotalPrice, ContractStatus } from '../../+state';
+import { Contract, getTotalPrice } from '../../+state';
+import { ContractStatus } from '@blockframes/utils/static-model/types';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DistributionRightQuery } from '@blockframes/distribution-rights/+state';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -87,7 +88,7 @@ export class ContractTableComponent {
       territories: this.rightQuery.getTerritoriesFromContract(contract.lastVersion),
       creationDate: contract.lastVersion.creationDate,
       moviesLength: contract.titleIds.length,
-      titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.main.title.international),
+      titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.title.international),
       price: getTotalPrice(contract.lastVersion.titles),
       paid: contract.lastVersion.status === 'paid' ? 'Yes' : 'No',
       status: contract.lastVersion.status

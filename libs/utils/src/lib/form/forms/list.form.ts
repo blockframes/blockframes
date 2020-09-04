@@ -33,21 +33,19 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   controls: Control[];
   valueChanges: Observable<T[]>;
 
-  constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
+  private constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }
 
   static factory<T, Control extends AbstractControl = any>(value: T[], createControl?: (value?: Partial<T>) => Control, validators?: Validator): FormList<T, Control> {
-    const form = new FormList<T>([], validators);
     if (createControl) {
+      const controls = Array.isArray(value) ? value.map(createControl) : [createControl(value)];
+      const form = new FormList<T>(controls, validators);
       form['createControl'] = createControl.bind(form);
-    }
-    if (!value || !value.length) {
-      form.add();
+      return form;
     } else {
-      value.forEach(v => form.add(v as GetPartial<T>))
+      return new FormList<T>([], validators);
     }
-    return form;
   }
 
   /** Get value of item that has value */

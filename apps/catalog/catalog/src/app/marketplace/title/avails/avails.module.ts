@@ -8,7 +8,7 @@ import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
 import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
 // Material

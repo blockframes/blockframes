@@ -15,15 +15,15 @@ export class TunnelSynopsisComponent {
     this.dynTitle.setPageTitle('Storyline Elements', 'Title information')
   }
 
-  get synopsis() {
-    return this.form.get('story').get('synopsis');
-  }
+  // get synopsis() {
+  //   return this.form.get('story').get('synopsis');
+  // }
 
-  get keyAssets() {
-    return this.form.get('promotionalDescription').get('keyAssets');
-  }
+  // get keyAssets() {
+  //   return this.form.get('promotionalDescription').get('keyAssets');
+  // }
 
-  get keywords() {
-    return this.form.get('promotionalDescription').get('keywords');
-  }
+  // get keywords() {
+  //   return this.form.get('promotionalDescription').get('keywords');
+  // }
 }

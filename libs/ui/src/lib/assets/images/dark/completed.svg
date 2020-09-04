@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="122px" height="89px" viewBox="0 0 122 89" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <defs>
+        <filter x="-65.1%" y="-62.5%" width="230.2%" height="225.0%" filterUnits="objectBoundingBox" id="filter-1">
+            <feGaussianBlur stdDeviation="5" in="SourceGraphic"></feGaussianBlur>
+        </filter>
+    </defs>
+    <g id="Add-movie-form-blue" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0-AddFilm-Overview" transform="translate(-1025.000000, -457.000000)">
+            <g id="page-content" transform="translate(304.000000, 156.000000)">
+                <g id="form-group" transform="translate(0.000000, 102.000000)">
+                    <g id="status_options" transform="translate(16.000000, 174.000000)">
+                        <g id="status_completed" transform="translate(460.000000, 0.000000)">
+                            <g id="Group-2" transform="translate(245.000000, 25.000000)">
+                                <circle id="Oval-Copy-5" stroke="#435191" stroke-width="1.5" cx="44.5" cy="44.5" r="43.75"></circle>
+                                <g id="Group-7" transform="translate(13.000000, 21.000000)">
+                                    <rect id="Rectangle" fill="#1B203C" x="0" y="13" width="52" height="34" rx="3"></rect>
+                                    <g id="Group-3" transform="translate(11.000000, 9.000000)">
+                                        <rect id="Rectangle-2" stroke="#404B8A" stroke-width="2" x="6" y="-5.63993297e-14" width="39" height="27" rx="2"></rect>
+                                        <path d="M3.699,7 L3.7,28.5879621 C3.7,29.6925316 4.5954305,30.5879621 5.7,30.5879621 L5.7,30.5879621 L39,30.587 L39,32 C39,33.1045695 38.1045695,34 37,34 L2,34 C0.8954305,34 1.3527075e-16,33.1045695 0,32 L0,9.0003956 C-1.3527075e-16,7.8958261 0.8954305,7.0003956 2,7.0003956 L3.699,7 Z" id="Rectangle-3" fill="#404B8A"></path>
+                                        <polygon id="Triangle" fill="#FF6E61" transform="translate(26.500000, 13.200000) rotate(90.000000) translate(-26.500000, -13.200000) " points="26.5 8 33 18.4 20 18.4"></polygon>
+                                    </g>
+                                    <g id="feather" transform="translate(76.004838, 15.499406) scale(-1, 1) rotate(14.000000) translate(-76.004838, -15.499406) translate(64.004838, 2.999406)" fill="#8DA4FA">
+                                        <ellipse id="Oval" filter="url(#filter-1)" cx="11.7832649" cy="12.0855483" rx="11.52" ry="12"></ellipse>
+                                        <ellipse id="Oval-Copy-9" cx="11.7832649" cy="12.0855483" rx="11.52" ry="12"></ellipse>
+                                    </g>
+                                    <g id="Path-2" transform="translate(70.000000, 10.000000)" fill="#010314">
+                                        <polygon id="Path" points="4.44911882 8.67859806 1.13018761 5.25801641 0 6.41461596 4.44911882 11 14 1.15659955 12.8777715 0"></polygon>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,98 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Selection & Reviews</h1>
+  <ng-container tunnel-form>
+    <h3>Festival & Awards</h3>
+    <section id="festival">
+      <bf-form-table [columns]="prizesColumns" [form]="prizes" buttonText="Add a Festival">
+        <ng-template colRef="premiere" let-prizes>{{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+        <ng-template formView let-prizesForm>
+          <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Name</mat-label>
+                <input test-id="prize-name" matInput formControlName="name" />
+                <!-- Uncomment that when we implement a static for festivals -->
+                <!-- <mat-hint>If you can't find the festival you're looking for, select “Other” and specify. </mat-hint> -->
+              </mat-form-field>
+            </div>
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Awards/Selections</mat-label>
+                <input test-id="prize" matInput formControlName="prize" />
+                <mat-error *ngIf="prizesForm.get('prize').hasError('maxlength')">
+                  Awards and selections should not exceed 200 characters.
+                </mat-error>
+                <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
+                <mat-error>Please enter a 4 digit date (e.g. 2020)</mat-error>
+                <mat-error *ngIf="prizesForm.hasError('required')">
+                  Year is required.
+                </mat-error>
+              </mat-form-field>
+
+            </div>
+
+            <h6 class="mat-caption">Premiere</h6>
+            <div>
+              <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
+                <ng-container *ngFor="let premiere of premieres">
+                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
+                    [matTooltipDisabled]="!premiere?.hint">
+                    {{ premiere.label }}
+                  </mat-button-toggle>
+                </ng-container>
+              </mat-button-toggle-group>
+            </div>
+            <span class="mat-caption">Select premiere that apply</span>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <h3>Film Reviews</h3>
+    <section id="reviews">
+
+      <bf-form-table [columns]="reviewsColumns" [form]="reviews" buttonText="Add a Film Review">
+        <ng-template formView let-form>
+          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Film's Critic's Name</mat-label>
+                <input test-id="critic-name" matInput formControlName="criticName" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Journal Name</mat-label>
+                <input test-id="journal-name" matInput formControlName="journalName" />
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Article Link</mat-label>
+              <input test-id="link" matInput formControlName="revueLink" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Quote</mat-label>
+              <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+
+    </section>
+
+  </ng-container>
+</tunnel-page>
