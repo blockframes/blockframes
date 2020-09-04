@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
 
@@ -15,10 +16,11 @@ import { Validators } from '@angular/forms';
 })
 export class UserComponent {
   @Input() docId: string;
+  @Input() orgId: string;
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   sending = new BehaviorSubject(false);
-  constructor(private service: InvitationService) {}
+  constructor(private service: InvitationService, private orgService: OrganizationService) {}
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
   async invite() {
@@ -26,7 +28,8 @@ export class UserComponent {
       const emails = this.form.value.map(guest => guest.email);
       this.form.reset([]);
       this.sending.next(true);
-      await this.service.invite('user', emails).from('org').to('attendEvent', this.docId);
+      const org = this.orgId ? await this.orgService.getValue(this.orgId) : undefined;
+      await this.service.invite('user', emails).from('org', org).to('attendEvent', this.docId);
       this.sending.next(false);
     }
   }
