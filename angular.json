@@ -562,10 +562,7 @@
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
-            "dev": {
-              "optimization": true,
-              "buildOptimizer": true
-            },
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
