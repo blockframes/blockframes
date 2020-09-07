@@ -1,16 +1,16 @@
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
   switch (sortIdentifier) {
     case 'Title':
-      return a.main.title.international.localeCompare(b.main.title.international);
+      return a.title.international.localeCompare(b.title.international);
     case 'Director':
-      return a.main.directors[0]?.lastName.localeCompare(b.main.directors[0]?.lastName);
+      return a.directors[0]?.lastName.localeCompare(b.directors[0]?.lastName);
     case 'Production Year':
-      if (b.main.productionYear < a.main.productionYear) {
+      if (b.release.year < a.release.year) {
         return -1;
       }
-      if (b.main.productionYear > a.main.productionYear) {
+      if (b.release.year > a.release.year) {
         return 1;
       }
       return 0;

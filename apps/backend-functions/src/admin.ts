@@ -76,7 +76,7 @@ adminApp.get(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.Re
   }
 
   // return the html form
-  return res.send(dataQuorumCreatePage(movieData!.main.title.international));
+  return res.send(dataQuorumCreatePage(movieData!.title.international));
 });
 
 

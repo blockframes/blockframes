@@ -1,5 +1,14 @@
-<ng-container *ngFor="let item of items">
-  <mat-checkbox (change)="handleChange($event)" [name]="item.slug" [(ngModel)]="item.value" color="primary">
-    {{item.label}}
-  </mat-checkbox>
-</ng-container>
+<div *ngIf="type === 'model'">
+  <ng-container *ngFor="let item of items">
+    <mat-checkbox (change)="handleChange($event)" [value]="item.slug" color="primary">
+      {{item.label}}
+    </mat-checkbox>
+  </ng-container>
+</div>
+<div *ngIf="type === 'constant'">
+  <ng-container *ngFor="let item of items | keyvalue">
+    <mat-checkbox (change)="handleChange($event)" [value]="item.key" color="primary">
+      {{item.value}}
+    </mat-checkbox>
+  </ng-container>
+</div>

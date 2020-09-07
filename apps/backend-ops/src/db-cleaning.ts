@@ -4,19 +4,14 @@ import { InvitationDocument } from '@blockframes/invitation/+state/invitation.fi
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
-import { EventMeta, EventDocument } from '@blockframes/event/+state/event.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getDocument, startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import admin from 'firebase-admin';
 
 export const numberOfDaysToKeepNotifications = 14;
 const currentTimestamp = new Date().getTime();
 export const dayInMillis = 1000 * 60 * 60 * 24;
-
-// @TODO #3066 once "final" media structure is ready, remplace by const EMPTY_MEDIA = ''. 
-// Also update in unit test scripts
-const EMPTY_MEDIA = createHostedMedia();
+const EMPTY_MEDIA = '';
 
 /** Reusable data cleaning script that can be updated along with data model */
 
@@ -173,7 +168,7 @@ export async function cleanUsers(
     // Check if a DB user have a record in Auth.
     const authUserId = await auth.getUserByEmail(user.email).then(u => u.uid).catch(_ => undefined);
     if (!!authUserId) {
-      // Check if ids are the same 
+      // Check if ids are the same
       if (authUserId !== user.uid) {
         console.error(`uid mistmatch for ${user.email}. db: ${user.uid} - auth : ${authUserId}`);
       } else {

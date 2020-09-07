@@ -46,7 +46,7 @@
             <missing-control [control]="price.currency" link="../details"></missing-control>
           </li>
           <li *ngFor="let movie of movies$ | async">
-            <strong>{{ movie.main.title.international }}</strong>
+            <strong>{{ movie.title.international }}</strong>
             <span *ngIf="rights[movie.id]">{{ rights[movie.id] }}</span>
             <a mat-button color="warn" routerLink="../details" *ngIf="!rights[movie.id]">Mandatory</a>
           </li>

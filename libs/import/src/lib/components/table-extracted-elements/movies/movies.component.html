@@ -64,31 +64,31 @@
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.main.internalRef">
+  <ng-container matColumnDef="movie.internalRef">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.main.internalRef }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.internalRef }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.main.title.original">
+  <ng-container matColumnDef="movie.title.original">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Origninal Title </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.main.title.original || '--' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.title.original || '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.main.storeConfig.status">
+  <ng-container matColumnDef="movie.storeConfig.status">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.main.storeConfig.status | toLabel: 'storeStatus' | async  }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.storeConfig.status | toLabel: 'storeStatus' | async  }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="movie.main.storeConfig.storeType">
+  <ng-container matColumnDef="movie.storeConfig.storeType">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Store type </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.main.storeConfig.storeType | toLabel: 'storeType' | async  }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.storeConfig.storeType | toLabel: 'storeType' | async  }} </td>
   </ng-container>
 
   <!-- TODO issue #3091
-  <ng-container matColumnDef="movie.main.poster">
+  <ng-container matColumnDef="movie.poster">
     <th mat-header-cell *matHeaderCellDef> Poster </th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.movie.main.poster.media as poster; else noposter">
+      <ng-container *ngIf="element.movie.poster.media as poster; else noposter">
         <img class="poster" [ref]="poster" alt="Movie Poster" asset="empty_poster.webp">
       </ng-container>
       <ng-template #noposter>
@@ -97,9 +97,9 @@
     </td>
   </ng-container> -->
 
-  <ng-container matColumnDef="movie.main.productionYear">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Production Year </th>
-    <td mat-cell *matCellDef="let element"> {{ element.movie.main.productionYear || '--' }} </td>
+  <ng-container matColumnDef="movie.releaseYear">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Release Year </th>
+    <td mat-cell *matCellDef="let element"> {{ element.movie.releaseYear || '--' }} </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">

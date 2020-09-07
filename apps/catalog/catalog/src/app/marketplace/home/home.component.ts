@@ -27,13 +27,13 @@ export class MarketplaceHomeComponent implements OnInit {
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.productionYear >= 2018 && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
+      filterBy: movies => movies.release.year >= 2018 && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
     const postProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'post-production' && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
+      filterBy: movies => movies.productionStatus === 'post-production' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
     const completed$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'finished' && movies.main.storeConfig.appAccess.catalog && movies.main.storeConfig.status === "accepted"
+      filterBy: movies => movies.productionStatus === 'finished' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
 
     this.moviesBySections$ = combineLatest([latest$, postProduction$, completed$]).pipe(
@@ -69,10 +69,10 @@ export class MarketplaceHomeComponent implements OnInit {
 
   // TODO 1880 country short code
   public getMainInfo(movie: Movie) {
-    const { originCountries, totalRunTime, genres } = movie.main;
+    const { originCountries, runningTime, genres } = movie;
     return [
       originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
+      typeof runningTime.time === 'number' ? `${runningTime.time} min` : 'TBC',
       genres.slice(0, 2).map(genre => getLabelBySlug('GENRES', genre)).join(', '),
     ].filter(value => !!value).join(' | ');
   }

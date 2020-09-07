@@ -36,7 +36,7 @@ export class RightComponent implements OnInit {
       }),
       tap(movie => {
         if(movie){
-          this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
+          this.dynTitle.setPageTitle(`${movie.title.international}`, 'Exploitation Rights - Create a contract offer')
         }
       }))
   }

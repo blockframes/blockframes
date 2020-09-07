@@ -1,0 +1,8 @@
+<mat-form-field [appearance]="appearance">
+  <mat-label>Budget Range</mat-label>
+  <mat-select [formControl]="form" [placeholder]="placeholder">
+    <mat-option *ngFor="let opt of optionsBudget" [value]="opt">
+      {{ opt.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

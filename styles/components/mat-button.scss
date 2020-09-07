@@ -64,6 +64,15 @@
         fill: mat-color($warn, default-contrast);
       }
     }
+    // Used only in the upload component, remove it when the component will be reworked
+    &.mat-divider {
+      background-color: mat-color($foreground, divider);
+      svg g,
+      svg polygon,
+      svg path {
+        fill: mat-color($primary, default-contrast);
+      }
+    }
   }
 
   .mat-button,
@@ -80,7 +89,7 @@
 
   .mat-stroked-button:not([disabled]) {
     border-radius: 26px;
-    border-color: mat-color($foreground, text);
+    border-color: mat-color($foreground, divider);
     &.mat-primary {
       border-color: mat-color($primary);
     }
@@ -90,6 +99,10 @@
     &.mat-warn {
       border-color: mat-color($warn);
     }
+  }
+
+  .mat-stroked-button {
+    border-radius: 26px;
   }
 
   .mat-flat-button {
@@ -110,6 +123,12 @@
   // Add a border around the avatar of the user in the toolbar
   auth-widget button[mat-icon-button] img {
     border: 1px solid mat-color($foreground, divider);
+  }
+
+  // Override the padding of the button wrapper to get icon vertical aligned in the mini fab button
+  // For example, see available materials page.
+  tunnel-page section article button[mat-mini-fab] .mat-button-wrapper {
+    padding: 0;
   }
 }
 

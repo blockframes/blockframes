@@ -11,7 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Pages

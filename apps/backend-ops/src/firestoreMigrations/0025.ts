@@ -1,9 +1,8 @@
 import { Firestore, Storage } from '../admin';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { OldImgRef, OldPublicUser, OldPublicOrganization } from './old-types';
+import { OldImgRef, OldPublicUser, OldPublicOrganization, OldMovieImgRefDocument, OldPromotionalElement } from './old-types';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
@@ -65,13 +64,13 @@ async function updateMovies(
 ) {
   return Promise.all(
     movies.docs.map(async doc => {
-      const movie = doc.data() as MovieDocument;
+      const movie = doc.data() as OldMovieImgRefDocument;
 
       const keys = ['banner', 'poster', 'still_photo'];
 
       for (const key of keys) {
         if (!!movie.promotionalElements[key]) {
-          const value: PromotionalElement | PromotionalElement[] = movie.promotionalElements[key];
+          const value: OldPromotionalElement | OldPromotionalElement[] = movie.promotionalElements[key];
           if (Array.isArray(value)) {
             for (let i = 0 ; i < value.length ; i++) {
               movie.promotionalElements[key][i] = await updateMovieField(movie.id, `promotionalElements.${key}[${i}]`, value[i], 'media', storage);
@@ -104,7 +103,7 @@ async function updateMovies(
   );
 }
 
-const updateMovieField = async <T extends Credit | PromotionalElement>(
+const updateMovieField = async <T extends Credit | OldPromotionalElement>(
   movieID: string,
   fieldName: string,
   value: T,
@@ -134,7 +133,7 @@ const updateOrgLogo = async (org: OldPublicOrganization, storage: Storage) => {
 
 const updateImgRef = async (
   destinationFolder: string,
-  element: OldPublicUser | OldPublicOrganization | Credit | PromotionalElement,
+  element: OldPublicUser | OldPublicOrganization | Credit | OldPromotionalElement,
   key: 'logo' | 'avatar' | 'media',
   storage: Storage
 ): Promise<OldImgRef> => {

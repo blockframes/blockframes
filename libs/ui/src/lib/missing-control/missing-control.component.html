@@ -1,6 +1,6 @@
 <!-- Check if required -->
 <ng-container *ngIf="control.hasError('required') else notRequired">
-  <a [routerLink]="link" class="mandatory-control">
+  <a [routerLink]="link" [fragment]="fragment" class="mandatory-control">
     Mandatory{{ isLast ? '' : ', ' }}
   </a>
 </ng-container>
@@ -8,7 +8,7 @@
 <!-- If not required, check if value is missing -->
 <ng-template #notRequired>
   <ng-container *ngIf="!control.value else content">
-    <a [routerLink]="link" class="missing-control">
+    <a [routerLink]="link" [fragment]="fragment" class="missing-control">
       <span>Missing{{ isLast ? '' : ', ' }}</span>
     </a>
   </ng-container>

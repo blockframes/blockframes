@@ -68,7 +68,7 @@
     "@angular/common": "^10.0.4",
     "@angular/compiler": "^10.0.4",
     "@angular/core": "^10.0.4",
-    "@angular/fire": "^6.0.2",
+    "@angular/fire": "6.0.0",
     "@angular/flex-layout": "^10.0.0-beta.32",
     "@angular/forms": "^10.0.4",
     "@angular/google-maps": "^9.2.1",

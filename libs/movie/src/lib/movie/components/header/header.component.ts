@@ -4,24 +4,22 @@ import {
   Input,
   ChangeDetectionStrategy,
   Directive,
-  HostBinding,
   ViewEncapsulation
 } from '@angular/core';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
-    directors: movie.main.directors,
+    directors: movie.directors,
     title: {
-      original: movie.main.title.original,
-      international: movie.main.title.international
+      original: movie.title.original,
+      international: movie.title.international
     },
-    banner: movie.main.banner,
-    poster: movie.main.poster,
+    banner: movie.banner,
+    poster: movie.poster,
   }
 }
 
@@ -39,7 +37,7 @@ export class HeaderComponent {
   public movieView: MovieHeaderView;
   public movie: Movie;
 
-  constructor(private sanitazier: DomSanitizer, private location: Location) { }
+  constructor(private location: Location) { }
 
   // @HostBinding('style.backgroundImage') background: SafeStyle;
 

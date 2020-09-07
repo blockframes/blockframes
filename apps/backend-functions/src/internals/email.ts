@@ -7,14 +7,14 @@ import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
 import { getSendgridFrom } from '@blockframes/utils/apps';
-import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
 /**
  * Sends a transactional email configured by the EmailRequest provided.
  *
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
-export async function sendMail({ to, subject, text }: EmailRequest, from: EmailData = getSendgridFrom()): Promise<any> {
+export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<any> {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;
@@ -30,7 +30,7 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailD
   return SendGrid.send(msg);
 }
 
-export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: EmailData = getSendgridFrom()) {
+export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: EmailJSON = getSendgridFrom()) {
   if (sendgridAPIKey === '') {
     console.warn('No sendgrid API key set, skipping');
     return;
@@ -54,7 +54,7 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
  * @param context 
  */
 export const sendTestMail = async (
-  data: { request: EmailRequest, from: string },
+  data: { request: EmailRequest, from: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }

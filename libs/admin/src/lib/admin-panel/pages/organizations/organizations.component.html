@@ -14,7 +14,7 @@
     </div>
   </article>
 
-  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="100"
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="50"
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo; else nologo">

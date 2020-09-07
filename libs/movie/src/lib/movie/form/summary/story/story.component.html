@@ -1,20 +1,20 @@
 <ul>
   <li>
-    <strong>Synopsis </strong><missing-control [control]="story.get('synopsis')" [link]="link"></missing-control>
+    <strong>Synopsis </strong><missing-control [control]="movie.get('synopsis')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Key Assets </strong><missing-control [control]="promotionalDescription.get('keyAssets')" [link]="link"></missing-control>
+    <strong>Key Assets </strong><missing-control [control]="movie.get('keyAssets')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Keywords </strong>
     <mat-chip-list fxLayout="row" fxLayoutGap="5px">
-      <ng-container *ngIf="!this.promotionalDescription.get('keywords').value.length else display">
+      <ng-container *ngIf="!this.movie.get('keywords').value.length else display">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
       </ng-container>
       <ng-template #display>
-        <ng-container *ngFor="let keyword of promotionalDescription.get('keywords').value">
+        <ng-container *ngFor="let keyword of movie.get('keywords').value">
           <mat-chip>
             {{ keyword }}
           </mat-chip>

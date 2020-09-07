@@ -1,0 +1,29 @@
+section {
+  margin: 0 16px;
+
+  h4 {
+    text-transform: uppercase;
+  }
+
+  article {
+    margin: 24px 0;
+  }
+
+  footer {
+    mat-divider {
+      width: 100%;
+      border-top-color: var(--primary);
+      border-top-width: 2px;
+      margin-right: 16px;
+    }
+    span {
+      white-space: nowrap;
+    }
+  }
+}
+
+drop-cropper {
+  h3, p.mat-body-2 {
+    margin-bottom: 4px;
+  }
+}

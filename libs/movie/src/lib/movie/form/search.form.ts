@@ -1,11 +1,11 @@
 
-import { GenresSlug, LanguagesSlug, TerritoriesSlug, MovieStatusSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
+import { GenresSlug, LanguagesSlug, TerritoriesSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus } from '../+state/movie.firestore';
+import { StoreStatus, ProductionStatus } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 
@@ -28,7 +28,7 @@ export interface MovieSearch extends AlgoliaSearch {
   genres: GenresSlug[];
   originCountries: TerritoriesSlug[];
   languages: LanguagesSearch;
-  productionStatus: MovieStatusSlug[];
+  productionStatus: ProductionStatus[];
   minBudget: number;
   sellers: AlgoliaRecordOrganization[];
 }
@@ -73,7 +73,7 @@ function createMovieSearchControl(search: MovieSearch) {
     genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
     originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
-    productionStatus: FormList.factory<ExtractSlug<'MOVIE_STATUS'>>(search.productionStatus),
+    productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
   };

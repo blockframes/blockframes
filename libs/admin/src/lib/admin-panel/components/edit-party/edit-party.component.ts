@@ -4,8 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.form';
-import { staticModels } from '@blockframes/utils/static-model';
-import { contractStatus } from '@blockframes/contract/contract/+state';
+import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 
 interface PartyDialogData {
   title: string,
@@ -21,7 +20,7 @@ interface PartyDialogData {
 })
 export class EditPartyComponent implements OnInit {
   public form: PartyDetailsForm;
-  public statuses = contractStatus;
+  public statuses = staticConsts.contractStatus;
   public staticRoles = staticModels.LEGAL_ROLES;
   public staticSubRoles = staticModels.SUB_LICENSOR_ROLES;
   public algoliaOrg = algolia.indexNameOrganizations;
