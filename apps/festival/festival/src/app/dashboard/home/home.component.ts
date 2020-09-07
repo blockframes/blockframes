@@ -11,10 +11,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { map, switchMap, shareReplay, filter, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 
-// RxJs
-import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
-
 @Component({
   selector: 'festival-dashboard-home',
   templateUrl: './home.component.html',

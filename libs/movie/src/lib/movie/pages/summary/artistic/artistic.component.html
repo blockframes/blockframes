@@ -22,7 +22,10 @@
         <span>&nbsp;</span>
         <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
           <span *ngIf="film.get('title').value">
-            <missing-control [control]="film.get('title')" [link]="link" fragment="cast-member"></missing-control>&nbsp;
+            <missing-control [control]="film.get('title')" [link]="link" fragment="cast-member"></missing-control>
+            <span>&nbsp;</span>
+            <span>(<missing-control [control]="film.get('year')" [link]="link" fragment="cast-member"></missing-control>)</span>
+            <ng-container>{{ isLast ? '' : ', ' }}</ng-container>
           </span>
         </ng-container>
       </li>
@@ -54,7 +57,10 @@
         <span>&nbsp;</span>
         <ng-container *ngFor="let film of crew.filmography.controls; let isLast = last">
           <span *ngIf="film.get('title').value">
-            <missing-control [control]="film.get('title')" [link]="link" fragment="crew-member"></missing-control>&nbsp;
+            <missing-control [control]="film.get('title')" [link]="link" fragment="crew-member"></missing-control>
+            <span>&nbsp;</span>
+            <span>(<missing-control [control]="film.get('year')" [link]="link" fragment="cast-member"></missing-control>)</span>
+            <ng-container>{{ isLast ? '' : ', ' }}</ng-container>
           </span>
         </ng-container>
       </li>

@@ -45,7 +45,7 @@
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Screener Link </strong>
     <ng-container *ngIf="!form.promotional.get('screener_link').value else screenerLink">
-      <a [routerLink]="link" fragment="files" class="missing-control">
+      <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
@@ -53,6 +53,22 @@
       <a [href]="form.promotional.get('screener_link').value" target="_blank">
         {{ form.promotional.get('screener_link').value }}
       </a>
+    </ng-template>
+  </li>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Other Links </strong>
+    <ng-container *ngIf="!form.promotional.get('other_links') else otherLinks">
+      <a [routerLink]="link" fragment="videos" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #otherLinks>
+      <ng-container *ngFor="let link of form.promotional.controls.other_links.controls, let isLast = last">
+        <a [href]="link.controls.url.value" target="_blank">
+          <span>{{ link.controls.name.value }}</span>
+        </a>
+        <span>{{ isLast ? '' : ', ' }}</span>
+      </ng-container>
     </ng-template>
   </li>
 </ul>
