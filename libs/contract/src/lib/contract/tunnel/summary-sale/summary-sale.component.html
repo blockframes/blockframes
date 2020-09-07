@@ -42,7 +42,7 @@
           </li>
           <!-- Titles -->
           <li *ngFor="let movie of movies$ | async">
-            <strong>{{ movie.main.title.international }}: </strong>
+            <strong>{{ movie.title.international }}: </strong>
             <missing-control [control]="moviePrices[movie.id]" link="../details">
               <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
             </missing-control>

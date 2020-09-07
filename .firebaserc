@@ -203,7 +203,13 @@
     "blockframes-clelia": {
       "hosting": {
         "catalog": [
-          "blockframes-clelia"
+          "catalog-blockframes-clelia"
+        ],
+        "festival": [
+          "festival-blockframes-clelia"
+        ],
+        "crm": [
+          "crm-blockframes-clelia"
         ]
       }
     },

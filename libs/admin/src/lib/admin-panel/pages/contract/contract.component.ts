@@ -6,11 +6,12 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { PublicContract, createContractPartyDetail, Contract, ContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
-import { contractStatus, contractType, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
@@ -31,8 +32,8 @@ export class ContractComponent implements OnInit {
   public contract$: Observable<Contract>;
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
-  public contractStatus = contractStatus;
-  public contractType = contractType;
+  public contractStatus = staticConsts.contractStatus;
+  public contractType = staticConsts.contractType;
   public publicContract$: Observable<PublicContract>;
 
   // Tables
@@ -61,13 +62,13 @@ export class ContractComponent implements OnInit {
   // Table TITLES
   public versionColumnsTableTitles = {
     'id': 'Movie Id',
-    'movie.main.internalRef': 'Internal Ref',
-    'movie.main.poster': 'Poster',
-    'movie.main.title.original': 'Original title',
-    'movie.main.productionYear': 'Production year',
+    'movie.internalRef': 'Internal Ref',
+    'movie.poster': 'Poster',
+    'movie.title.original': 'Original title',
+    'movie.releaseYear': 'Release year',
     'price': 'Price',
-    'movie.main.storeConfig.status': 'Status',
-    'movie.main.storeConfig.storeType': 'Store type',
+    'movie.storeConfig.status': 'Status',
+    'movie.storeConfig.storeType': 'Store type',
     'rights': 'rights',
     'explorerights': 'All rights for this title',
     'edit': 'Edit',
@@ -75,13 +76,13 @@ export class ContractComponent implements OnInit {
 
   public initialColumnsTableTitles: string[] = [
     'id',
-    'movie.main.internalRef',
-    'movie.main.poster',
-    'movie.main.title.original',
-    'movie.main.productionYear',
+    'movie.internalRef',
+    'movie.poster',
+    'movie.title.original',
+    'movie.releaseYear',
     'price',
-    'movie.main.storeConfig.status',
-    'movie.main.storeConfig.storeType',
+    'movie.storeConfig.status',
+    'movie.storeConfig.storeType',
     'rights',
     'explorerights',
     'edit',
@@ -91,13 +92,13 @@ export class ContractComponent implements OnInit {
   filterPredicateTableTitles(data: any, filter) {
     const columnsToFilter = [
       'id',
-      'movie.main.internalRef',
-      'movie.main.poster',
-      'movie.main.title.original',
-      'movie.main.productionYear',
+      'movie.internalRef',
+      'movie.poster',
+      'movie.title.original',
+      'movie.releaseYear',
       'price',
-      'movie.main.storeConfig.status',
-      'movie.main.storeConfig.storeType',
+      'movie.storeConfig.status',
+      'movie.storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

@@ -1,10 +1,10 @@
-import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { Movie, createMovie } from '@blockframes/movie/+state';
 
-function createMoviePromotionalDescriptionControls(promotionalDescription?: Partial<MoviePromotionalDescription>) {
-  const entity = createMoviePromotionalDescription(promotionalDescription);
+function createMoviePromotionalDescriptionControls(promotionalDescription?: Partial<Movie>) {
+  const entity = createMovie(promotionalDescription);
   return {
     keywords: FormList.factory(entity.keywords),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)])
@@ -14,7 +14,7 @@ function createMoviePromotionalDescriptionControls(promotionalDescription?: Part
 export type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotionalDescriptionControl>{
-  constructor(promotionalDescription?: MoviePromotionalDescription) {
+  constructor(promotionalDescription?: Movie) {
     super(createMoviePromotionalDescriptionControls(promotionalDescription));
   }
 

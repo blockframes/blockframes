@@ -14,7 +14,7 @@ import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayListComponent {
-  public displayedColumns: string[] = ['picture', 'title', 'director', 'productionYear', 'action'];
+  public displayedColumns: string[] = ['picture', 'title', 'director', 'releaseYear', 'action'];
   public dataSource: MatTableDataSource<Movie>;
 
   @Input()
@@ -37,12 +37,12 @@ export class MovieDisplayListComponent {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${movie.title.international} has been added to your selection.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${movie.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 }

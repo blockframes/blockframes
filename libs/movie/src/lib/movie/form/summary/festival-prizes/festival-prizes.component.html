@@ -1,5 +1,5 @@
 <ul>
-  <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
+  <ng-container *ngFor="let festivalPrize of movie.prizes.controls">
     <li>
       <strong>Festivals </strong>
       <ng-container *ngIf="festivalPrizeHasNoValue(festivalPrize) else display">

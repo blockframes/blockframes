@@ -25,7 +25,7 @@ export class MovieActiveGuard extends CollectionGuard<MovieState> {
       map(movie => {
         if (!!movie) {
           const appName = this.routerQuery.getValue().state.root.data.app;
-          const hasAccess = hasAppAccess(appName, movie.main.storeConfig.appAccess);
+          const hasAccess = hasAppAccess(appName, movie.storeConfig.appAccess);
           if (hasAccess) {
             return true;
           } else {

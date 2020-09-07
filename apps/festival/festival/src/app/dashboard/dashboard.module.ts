@@ -54,6 +54,9 @@ const routes: Routes = [{
         path: '',
         loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
       }, {
+        path: 'lobby',
+        loadChildren: () => import('@blockframes/movie/pages/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
@@ -101,9 +104,6 @@ const routes: Routes = [{
   children: [{
     path: 'movie',
     children: [{
-      path: '',
-      loadChildren: () => import('./tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
-    }, {
       path: ':movieId',
       canActivate: [MovieActiveGuard, MovieTunnelGuard],
       canDeactivate: [MovieActiveGuard],

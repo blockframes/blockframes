@@ -1,7 +1,7 @@
 <ul>
   <li>
     <strong>Original Languages </strong>
-    <ng-container *ngFor="let language of main.originalLanguages.controls; let isLast = last">
+    <ng-container *ngFor="let language of movie.originalLanguages.controls; let isLast = last">
       <missing-control [control]="language" scope="LANGUAGES" [link]="link" [isLast]="isLast"></missing-control>
     </ng-container>
   </li>
@@ -19,8 +19,8 @@
   </li>
   <li>
     <strong>Running Time </strong>
-    <missing-control [control]="main.get('totalRunTime')" [link]="link">
-      <ng-template #content>{{ main.get('totalRunTime').value | duration }}</ng-template>
+    <missing-control [control]="movie.get('runningTime')" [link]="link">
+      <ng-template #content>{{ movie.runningTime.get('time').value | duration }}</ng-template>
     </missing-control>
   </li>
 </ul>

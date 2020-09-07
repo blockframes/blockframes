@@ -2,10 +2,9 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
-import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
+import { staticConsts } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { app } from '@blockframes/utils/apps';
@@ -21,9 +20,9 @@ export class MovieComponent implements OnInit {
   public movie: Movie;
   public movieForm: MovieAdminForm;
   public movieAppAccessForm: MovieAppAccessAdminForm;
-  public storeType = storeType;
-  public storeStatus = storeStatus;
-  public staticModels = staticModels;
+  public storeType = staticConsts.storeType;
+  public storeStatus = staticConsts.storeStatus;
+  public staticConsts = staticConsts;
   public rows: any[] = [];
   public app = app;
 
@@ -69,10 +68,10 @@ export class MovieComponent implements OnInit {
       return;
     }
 
-    this.movie.main.storeConfig.status = this.movieForm.get('storeStatus').value;
-    this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
-    this.movie.main.status = this.movieForm.get('productionStatus').value;
-    this.movie.main.internalRef = this.movieForm.get('internalRef').value;
+    this.movie.storeConfig.status = this.movieForm.get('storeStatus').value;
+    this.movie.storeConfig.storeType = this.movieForm.get('storeType').value;
+    this.movie.productionStatus = this.movieForm.get('productionStatus').value;
+    this.movie.internalRef = this.movieForm.get('internalRef').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 
@@ -84,7 +83,7 @@ export class MovieComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
     }
 
-    this.movie.main.storeConfig.appAccess = this.movieAppAccessForm.value;
+    this.movie.storeConfig.appAccess = this.movieAppAccessForm.value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 

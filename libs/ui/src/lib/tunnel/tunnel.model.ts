@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 export interface TunnelRoute {
   path: string;
   label: string;
+  shouldDisplay?: Observable<boolean>
 }
 
 export interface TunnelStep {

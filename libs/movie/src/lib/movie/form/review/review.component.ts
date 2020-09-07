@@ -9,6 +9,6 @@ import { MovieControl } from '../movie.form';
 })
 export class ReviewComponent {
 
-  @Input() form: MovieControl['movieReview'];
+  @Input() form: MovieControl['review'];
 
 }

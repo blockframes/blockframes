@@ -6,7 +6,7 @@ import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { Intercom } from 'ng-intercom';
 
-const isAcceptedInApp = movie => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.catalog === true;
+const isAcceptedInApp = movie => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.catalog === true;
 
 @Component({
   selector: 'catalog-home',
@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // @todo(#2684) use syncWithAnalytics instead
-    this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
+    this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
     this.movieQuery.getCount()
       ? this.dynTitle.setPageTitle('Seller\'s Dashboard')

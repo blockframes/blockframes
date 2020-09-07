@@ -1,5 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
+import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { getLabelBySlug, Scope } from '../static-model/staticModels';
+import { CommonModule } from '@angular/common';
 
 @Pipe({
   name: 'translateSlug'
@@ -15,3 +16,10 @@ export class TranslateSlugPipe implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  declarations: [TranslateSlugPipe],
+  imports: [CommonModule],
+  exports: [TranslateSlugPipe]
+})
+export class TranslateSlugModule { }
