@@ -2,7 +2,7 @@ import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default class LandingPage {
   constructor() {
-    cy.get('catalog-landing');
+    //cy.get('catalog-landing');
   }
 
   public clickLogin() {

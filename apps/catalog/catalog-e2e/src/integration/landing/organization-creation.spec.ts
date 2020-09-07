@@ -9,10 +9,10 @@ import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 // Create new users
 const USERS: Partial<User>[] = [
   {
-    email: `organization-creation-test@cypress.com`,
+    email: `organization-creation-testx@cypress.com`,
     password: 'blockframes',
-    firstName: `${Date.now()}-Cypress first name`,
-    lastName: `${Date.now()}-Cypress last name`
+    firstName: `${Date.now()}-Cypress first name1`,
+    lastName: `${Date.now()}-Cypress last name1`
   },
   {
     email: `organization-creation-test2@cypress.com`,
@@ -74,12 +74,13 @@ function navigateToOrganizationHome(user: Partial<User>): OrganizationHomePage {
 // Before each test, go to login page
 beforeEach(() => {
   clearDataAndPrepareTest('/');
+  //cy.visit('/');
 });
 
 // FIND ORGANIZATION
 
-describe('User can choose to find an organization', () => {
-  it('Create a user, then click on "Find your Organization"', () => {
+describe.skip('User can choose to find an organization', () => {
+  it.only('Create a user, then click on "Find your Organization"', () => {
     const p1: OrganizationHomePage = createNewUserAndNavigate(USERS[0]);
     p1.clickFindOrganization();
     const p2: OrganizationFindPage = p1.clickSubmitToFind();
@@ -89,8 +90,8 @@ describe('User can choose to find an organization', () => {
 
 // CREATE ORGANIZATION
 
-describe('Try with all fields except name', () => {
-  it('Fill all the fields except company name', () => {
+describe.only('Try with all fields except name', () => {
+  it.only('Fill all the fields except company name', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USERS[0]);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
@@ -98,7 +99,8 @@ describe('Try with all fields except name', () => {
     const ORG_WITHOUT_NAME_AND_BANK_ACCOUNT = { ...ORGANIZATION };
     delete ORG_WITHOUT_NAME_AND_BANK_ACCOUNT.name;
     delete ORG_WITHOUT_NAME_AND_BANK_ACCOUNT.bankAccount; // @TODO (#2692)
-    p2.fillEveryFields(ORG_WITHOUT_NAME_AND_BANK_ACCOUNT);
+    //p2.fillEveryFields(ORG_WITHOUT_NAME_AND_BANK_ACCOUNT);
+    p2.testOrgForm(ORG_WITHOUT_NAME_AND_BANK_ACCOUNT);
     // Since we expect an error, use false in parameter to not navigate to a new page
     p2.clickCreate(false);
     p2.assertMoveToOrgCreatePage();

@@ -5,6 +5,14 @@ const PATH = '/c/organization/create';
 
 type Entity = 'org' | 'bank';
 
+//TODO: Move this to command interface
+interface FormData {
+  name: string;
+  id: string;
+  testId: string;
+  value: string;
+}
+
 function form(entity: Entity): string {
   switch (entity) {
     case 'org':
@@ -27,7 +35,14 @@ function fillAllFields(target, fields, entity?: Entity) {
   Object.entries(fields).forEach(([key, value]) => {
     const newKey = key.charAt(0).toUpperCase() + key.substring(1);
     const methodName = `fill${newKey}`;
-    target[methodName](value, entity);
+    try {
+      target[methodName](value, entity);
+    } catch (e) {
+      debugger;
+      console.log(`${methodName} not found.`);
+      console.log(value)
+      fillAllFields(target, value, entity);
+    }
   });
 }
 
@@ -119,5 +134,64 @@ export default class OrganizationCreatePage {
     if (navigate) {
       return new OrganizationAppAccessPage();
     }
+  }
+
+  private handleFormInputs<E extends HTMLElement>($formEl: JQuery<E>, keyBag: string) {
+    //For now do nothing..
+    return true;
+  }
+
+  // TODO: Make this as a cypress command.
+  // Parameters : fieldSelectors in the form
+  // Value: Object data to pass in to fill the form
+  // Callback : Function to handle special testId with custom form operation 
+  // Logs : cy.log = fields that did not have test IDs set.
+  // Debug output console.table() all the selectors and values filled.  
+  public testOrgForm(org: Organization) {
+    cy.log("OrganizationCreatePage: Test all form fields");
+    const selector = 'organization-form form input, mat-select';
+    let formData:FormData[] = [];
+
+    cy.get(selector).each(($formEl) => {
+      const keyBag = $formEl.attr('test-id');
+      let fData = {name: $formEl[0].localName, id: $formEl.attr('id'),
+                   testId: $formEl.attr('test-id'), value: 'skipped'}
+  
+      if (keyBag == undefined) {
+        fData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
+                                     $formEl.attr('aria-label') || 
+                                     $formEl.attr('data-placeholder')}]`;
+        fData.value = 'untouched';
+        cy.log(JSON.stringify(fData));
+        formData.push(fData);
+        return;
+      }
+      const keyBunch = keyBag.split('-');
+      //TODO: Pass this as an argument
+      let vault: any = org;
+      for (let i = 0 ; vault && (i < keyBunch.length); i++) {
+        vault = vault[keyBunch[i]];
+      }
+  
+      /* 
+       * Perform some extra handling on the input if needed..
+       * TODO: convert to callback some stuff
+       */
+      const needsHandling = this.handleFormInputs($formEl, keyBag);
+  
+      fData.value = vault;
+      if (needsHandling && (vault !== undefined)) {
+        //Set the form field..
+        cy.wrap($formEl).click().type(vault);
+        if ($formEl.is('mat-select') || ($formEl.attr('role') == 'combobox')) {
+          cy.get('mat-option')
+            .contains(vault).click();
+        } 
+      }
+      formData.push(fData);
+    })
+    .last().then(() => {
+      console.table(formData);
+    })    
   }
 }
