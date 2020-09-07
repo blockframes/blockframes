@@ -1,0 +1,19 @@
+<h6>
+  Images
+  <a mat-icon-button [routerLink]="link"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+</h6>
+<ul>
+  <ng-container *ngIf="objectHasNoValue(stillPhoto) else displayImages">
+    <a [routerLink]="link" class="missing-control">
+      Missing
+    </a>
+  </ng-container>
+  <ng-template #displayImages>
+    <li *ngFor="let image of stillPhoto.controls | keyvalue; let i = index; let isLast = last">
+      <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Image {{ i+1 }} </strong>
+      <a [href]="link">
+        {{ image.value.oldRef.value | fileName }}
+      </a>
+    </li>
+  </ng-template>
+</ul>
