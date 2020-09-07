@@ -1,17 +1,17 @@
 <!-- FESTIVAL -->
 <article>
   <h6>
-    Festival{ form.prizes.controls.length, plural, =0 {} =1 {} other {s}}
+    Festival{ movie.prizes.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="festival"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngIf="!form.prizes.controls.length else displayFestivals">
+    <ng-container *ngIf="!movie.prizes.controls.length else displayFestivals">
       <a [routerLink]="link" fragment="festival"class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayFestivals>
-      <li *ngFor="let festivalPrize of form.prizes.controls">
+      <li *ngFor="let festivalPrize of movie.prizes.controls">
         <strong>
           <missing-control [control]="festivalPrize.get('name')">
             <ng-template #content>{{ festivalPrize.get('name').value }} </ng-template>
@@ -38,11 +38,11 @@
 <!-- REVIEW -->
 <article>
   <h6>
-    Film Review{ form.review.controls.length, plural, =0 {} =1 {} other {s}}
+    Film Review{ movie.review.controls.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="reviews"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngFor="let review of form.review.controls">
+    <ng-container *ngFor="let review of movie.review.controls">
       <li>
         <ng-container *ngIf="reviewHasNoValue(review) else displayReviews">
           <a [routerLink]="link" class="missing-control">

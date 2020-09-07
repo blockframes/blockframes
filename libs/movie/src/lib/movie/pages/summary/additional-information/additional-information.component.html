@@ -1,4 +1,4 @@
-<ng-container *ngIf="form | hasStatus: ['released']">
+<ng-container *ngIf="movie | hasStatus: ['released']">
 
   <!-- RELEASE -->
   <article>
@@ -7,13 +7,13 @@
       <a mat-icon-button [routerLink]="link" fragment="release"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
     </h6>
     <ul>
-      <ng-container *ngIf="!form.originalRelease.controls.length else displayRelease">
+      <ng-container *ngIf="!movie.originalRelease.controls.length else displayRelease">
         <a [routerLink]="link" fragment="release"class="missing-control">
           Missing
         </a>
       </ng-container>
       <ng-template #displayRelease>
-        <li *ngFor="let release of form.originalRelease.controls; let isLast = last">
+        <li *ngFor="let release of movie.originalRelease.controls; let isLast = last">
           <ng-container *ngIf="!release.value else displayRelease">
             <a [routerLink]="link" fragment="release" class="missing-control">
               Missing
@@ -44,13 +44,13 @@
       <a mat-icon-button [routerLink]="link" fragment="box-office"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
     </h6>
     <ul>
-      <ng-container *ngIf="!form.boxOffice.controls.length else displayBoxOffice">
+      <ng-container *ngIf="!movie.boxOffice.controls.length else displayBoxOffice">
         <a [routerLink]="link" fragment="box-office"class="missing-control">
           Missing
         </a>
       </ng-container>
       <ng-template #displayBoxOffice>
-        <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of form.boxOffice.controls">
+        <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of movie.boxOffice.controls">
           <ng-container *ngIf="boxOffice.get('territory').value">
             <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}&nbsp;</strong>
           </ng-container>
@@ -81,13 +81,13 @@
       <a mat-icon-button [routerLink]="link" fragment="rating"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
     </h6>
     <ul>
-      <ng-container *ngIf="!form.boxOffice.controls.length else displayRating">
+      <ng-container *ngIf="!movie.boxOffice.controls.length else displayRating">
         <a [routerLink]="link" fragment="rating"class="missing-control">
           Missing
         </a>
       </ng-container>
       <ng-template #displayRating>
-        <li *ngFor="let rating of form.rating.controls; let isLast = last">
+        <li *ngFor="let rating of movie.rating.controls; let isLast = last">
           <strong>
             <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
           </strong>
@@ -102,17 +102,17 @@
 <!-- CERTIFICATION -->
 <article>
   <h6>
-    Qualification{ form.qualifications.value.length, plural, =0 {} =1 {} other {s}}
+    Qualification{ movie.qualifications.value.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="qualifications"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngIf="!form.qualifications.value.length else displayQualifications">
+    <ng-container *ngIf="!movie.qualifications.value.length else displayQualifications">
       <a [routerLink]="link" fragment="qualifications"class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayQualifications>
-      <li *ngFor="let value of form.qualifications.value; let isLast = last">
+      <li *ngFor="let value of movie.qualifications.value; let isLast = last">
         {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
       </li>
     </ng-template>

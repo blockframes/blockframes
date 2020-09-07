@@ -5,65 +5,65 @@
 <ul>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Teaser Link </strong>
-    <ng-container *ngIf="!form.promotional.get('teaser_link').value else teaserLink">
+    <ng-container *ngIf="!movie.promotional.get('teaser_link').value else teaserLink">
       <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #teaserLink>
-      <a [href]="form.promotional.get('teaser_link').value" target="_blank">
-        {{ form.promotional.get('teaser_link').value }}
+      <a [href]="movie.promotional.get('teaser_link').value" target="_blank">
+        {{ movie.promotional.get('teaser_link').value }}
       </a>
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Trailer Link </strong>
-    <ng-container *ngIf="!form.promotional.get('trailer_link').value else trailerLink">
+    <ng-container *ngIf="!movie.promotional.get('trailer_link').value else trailerLink">
       <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #trailerLink>
-      <a [href]="form.promotional.get('trailer_link').value" target="_blank">
-        {{ form.promotional.get('trailer_link').value }}
+      <a [href]="movie.promotional.get('trailer_link').value" target="_blank">
+        {{ movie.promotional.get('trailer_link').value }}
       </a>
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Promo Link </strong>
-    <ng-container *ngIf="!form.promotional.get('promo_reel_link').value else promoLink">
+    <ng-container *ngIf="!movie.promotional.get('promo_reel_link').value else promoLink">
       <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #promoLink>
-      <a [href]="form.promotional.get('promo_reel_link').value" target="_blank">
-        {{ form.promotional.get('promo_reel_link').value }}
+      <a [href]="movie.promotional.get('promo_reel_link').value" target="_blank">
+        {{ movie.promotional.get('promo_reel_link').value }}
       </a>
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Screener Link </strong>
-    <ng-container *ngIf="!form.promotional.get('screener_link').value else screenerLink">
+    <ng-container *ngIf="!movie.promotional.get('screener_link').value else screenerLink">
       <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #screenerLink>
-      <a [href]="form.promotional.get('screener_link').value" target="_blank">
-        {{ form.promotional.get('screener_link').value }}
+      <a [href]="movie.promotional.get('screener_link').value" target="_blank">
+        {{ movie.promotional.get('screener_link').value }}
       </a>
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Other Links </strong>
-    <ng-container *ngIf="!form.promotional.get('other_links') else otherLinks">
+    <ng-container *ngIf="!movie.promotional.get('other_links') else otherLinks">
       <a [routerLink]="link" fragment="videos" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #otherLinks>
-      <ng-container *ngFor="let link of form.promotional.controls.other_links.controls, let isLast = last">
+      <ng-container *ngFor="let link of movie.promotional.controls.other_links.controls, let isLast = last">
         <a [href]="link.controls.url.value" target="_blank">
           <span>{{ link.controls.name.value }}</span>
         </a>

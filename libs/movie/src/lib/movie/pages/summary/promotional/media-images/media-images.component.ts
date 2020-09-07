@@ -9,14 +9,11 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 })
 export class SummaryMediaImagesComponent {
 
-  form = this.shell.form;
   @Input() movie: MovieForm;
   @Input() link: string;
 
-  constructor(private shell: MovieFormShellComponent) { }
-
   get stillPhoto() {
-    return this.form.promotional.get('still_photo');
+    return this.movie.promotional.get('still_photo');
   }
 
   public objectHasNoValue(valueAsRecord: Record<any, any>) {

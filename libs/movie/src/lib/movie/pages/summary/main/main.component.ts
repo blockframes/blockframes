@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { MovieFormShellComponent } from '../../shell/shell.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
@@ -9,18 +8,15 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 })
 export class SummaryMainComponent {
 
-  form = this.shell.form;
   @Input() movie: MovieForm;
   @Input() link: string;
 
-  constructor(private shell: MovieFormShellComponent) { }
-
   get title() {
-    return this.form.get('title');
+    return this.movie.get('title');
   }
 
   public get genres() {
-    return [this.form.get('genres'), ...this.form.get('customGenres').controls];
+    return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
 
 }

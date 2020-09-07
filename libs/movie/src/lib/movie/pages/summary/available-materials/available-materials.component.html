@@ -5,7 +5,7 @@
   </h6>
   <ul>
     <li>
-      <ng-container *ngIf="!form.isOriginalVersionAvailable.value else originalVersionAvailable">
+      <ng-container *ngIf="!movie.isOriginalVersionAvailable.value else originalVersionAvailable">
         Not Available
       </ng-container>
       <ng-template #originalVersionAvailable>
@@ -18,17 +18,17 @@
 <!-- LANGUAGES -->
 <article>
   <h6>
-    Available Version{ form.languages.controls.length, plural, =1 {} other {s}}
+    Available Version{ movie.languages.controls.length, plural, =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="available-versions"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngIf="objectHasNoValue(form.languages) else displayAvailableLanguages">
+    <ng-container *ngIf="objectHasNoValue(movie.languages) else displayAvailableLanguages">
       <a [routerLink]="link" fragment="available-versions"class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayAvailableLanguages>
-      <li *ngFor="let language of form.languages.controls | keyvalue; let isLast = last">
+      <li *ngFor="let language of movie.languages.controls | keyvalue; let isLast = last">
         <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
         <span>{{ language.value.value | versionPipe }}</span>
       </li>

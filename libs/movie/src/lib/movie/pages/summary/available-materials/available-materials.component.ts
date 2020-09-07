@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { MovieFormShellComponent } from '../../shell/shell.component';
 
 @Component({
   selector: '[movie][link] movie-summary-available-materials',
@@ -9,11 +8,8 @@ import { MovieFormShellComponent } from '../../shell/shell.component';
 })
 export class SummaryAvailableMaterialsComponent {
 
-  form = this.shell.form;
   @Input() movie: MovieForm;
   @Input() link: string;
-
-  constructor(private shell: MovieFormShellComponent) { }
 
   public objectHasNoValue(valueAsRecord: Record<any, any>) {
     try {

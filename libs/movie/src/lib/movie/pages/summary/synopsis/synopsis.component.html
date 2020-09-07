@@ -6,7 +6,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="form.get('logline')"></missing-control>
+      <missing-control [control]="movie.get('logline')"></missing-control>
     </li>
   </ul>
 </article>
@@ -19,7 +19,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="form.get('synopsis')"></missing-control>
+      <missing-control [control]="movie.get('synopsis')"></missing-control>
     </li>
   </ul>
 </article>
@@ -32,7 +32,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="form.get('keyAssets')"></missing-control>
+      <missing-control [control]="movie.get('keyAssets')"></missing-control>
     </li>
   </ul>
 </article>
@@ -46,13 +46,13 @@
   <ul>
     <li>
       <mat-chip-list fxLayout="row" fxLayoutGap="5px">
-        <ng-container *ngIf="!form.get('keywords').value.length else display">
+        <ng-container *ngIf="!movie.get('keywords').value.length else display">
           <a [routerLink]="link" fragment="keywords" class="missing-control">
             Missing
           </a>
         </ng-container>
         <ng-template #display>
-          <ng-container *ngFor="let keyword of form.get('keywords').value">
+          <ng-container *ngFor="let keyword of movie.get('keywords').value">
             <mat-chip>
               {{ keyword }}
             </mat-chip>

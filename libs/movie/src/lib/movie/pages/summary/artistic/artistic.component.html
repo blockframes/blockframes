@@ -5,13 +5,13 @@
     <a mat-icon-button [routerLink]="link" fragment="cast-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngIf="!form.cast.controls.length else displayCast">
+    <ng-container *ngIf="!movie.cast.controls.length else displayCast">
       <a [routerLink]="link" fragment="cast-member"class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayCast>
-      <li *ngFor="let cast of form.cast.controls">
+      <li *ngFor="let cast of movie.cast.controls">
         <strong>
           <missing-control [control]="cast.get('firstName')" [link]="link" fragment="cast-member"></missing-control>
         </strong>
@@ -40,13 +40,13 @@
     <a mat-icon-button [routerLink]="link" fragment="crew-member"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
-    <ng-container *ngIf="!form.crew.controls.length else displayCrew">
+    <ng-container *ngIf="!movie.crew.controls.length else displayCrew">
       <a [routerLink]="link" fragment="crew-member"class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #displayCrew>
-      <li *ngFor="let crew of form.crew.controls">
+      <li *ngFor="let crew of movie.crew.controls">
         <strong>
           <missing-control [control]="crew.get('firstName')" [link]="link" fragment="crew-member"></missing-control>
         </strong>

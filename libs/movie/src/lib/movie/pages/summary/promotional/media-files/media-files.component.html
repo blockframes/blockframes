@@ -5,35 +5,35 @@
 <ul>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
-    <ng-container *ngIf="(form.promotional.get('presentation_deck').value.ref | isEmptyImgRef) else presentationDeck">
+    <ng-container *ngIf="(movie.promotional.get('presentation_deck').value.ref | isEmptyImgRef) else presentationDeck">
       <a [routerLink]="link" fragment="files" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #presentationDeck>
-      {{ form.promotional.get('presentation_deck').value.fileName }}
+      {{ movie.promotional.get('presentation_deck').value.fileName }}
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Scenario </strong>
-    <ng-container *ngIf="(form.promotional.get('scenario').value.ref | isEmptyImgRef) else scenario">
+    <ng-container *ngIf="(movie.promotional.get('scenario').value.ref | isEmptyImgRef) else scenario">
       <a [routerLink]="link" fragment="files" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #scenario>
-      {{ form.promotional.get('scenario').value.fileName }}
+      {{ movie.promotional.get('scenario').value.fileName }}
     </ng-template>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
-    <ng-container *ngIf="(form.promotional.get('moodboard').value.ref | isEmptyImgRef) else moodboard">
+    <ng-container *ngIf="(movie.promotional.get('moodboard').value.ref | isEmptyImgRef) else moodboard">
       <a [routerLink]="link" fragment="files" class="missing-control">
         Missing
       </a>
     </ng-container>
     <ng-template #moodboard>
-      {{ form.promotional.get('moodboard').value.fileName }}
+      {{ movie.promotional.get('moodboard').value.fileName }}
     </ng-template>
   </li>
 </ul>
