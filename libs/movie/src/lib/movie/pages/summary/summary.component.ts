@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,7 +9,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { MovieReviewForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'movie-form-summary',
@@ -17,7 +16,7 @@ import { MovieReviewForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormSummaryComponent implements OnInit {
+export class MovieFormSummaryComponent implements OnInit, OnDestroy {
   form = this.shell.form;
   subscription: Subscription;
   missingFields: string[] = [];
@@ -39,30 +38,16 @@ export class MovieFormSummaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.findInvalidControlsRecursive(this.form);
+    this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
   }
 
-  get stillPhoto() {
-    return this.form.promotional.get('still_photo');
-  }
-
-  get otherLinks() {
-    return this.form.promotional.get('other_links');
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
-  }
-
-  public objectHasNoValue(valueAsRecord: Record<any, any>) {
-    try {
-      const objectToCheck = valueAsRecord.value;
-      const keys = Object.keys(objectToCheck);
-      return keys.length === 0 ? true : keys.some(key => !objectToCheck[key]);
-    } catch (error) {
-      console.warn(error);
-      return true;
-    }
   }
 
   public async submit() {
@@ -103,9 +88,5 @@ export class MovieFormSummaryComponent implements OnInit {
       });
     }
     recursiveFunc(formToInvestigate);
-  }
-
-  public reviewHasNoValue(review: MovieReviewForm) {
-    return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }

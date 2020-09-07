@@ -1,0 +1,64 @@
+<!-- LOGLINE -->
+<article>
+  <h6>
+    Logline
+    <a mat-icon-button [routerLink]="link" fragment="logline"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <missing-control [control]="movie.get('logline')"></missing-control>
+    </li>
+  </ul>
+</article>
+
+<!-- SYNOPSIS -->
+<article>
+  <h6>
+    Synopsis
+    <a mat-icon-button [routerLink]="link" fragment="synopsis"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <missing-control [control]="movie.get('synopsis')"></missing-control>
+    </li>
+  </ul>
+</article>
+
+<!-- KEY ASSETS -->
+<article>
+  <h6>
+    Key Assets
+    <a mat-icon-button [routerLink]="link" fragment="key-assets"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <missing-control [control]="movie.get('keyAssets')"></missing-control>
+    </li>
+  </ul>
+</article>
+
+<!-- KEYWORDS -->
+<article>
+  <h6>
+    Keywords
+    <a mat-icon-button [routerLink]="link" fragment="keywords"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <mat-chip-list fxLayout="row" fxLayoutGap="5px">
+        <ng-container *ngIf="!movie.get('keywords').value.length else display">
+          <a [routerLink]="link" fragment="keywords" class="missing-control">
+            Missing
+          </a>
+        </ng-container>
+        <ng-template #display>
+          <ng-container *ngFor="let keyword of movie.get('keywords').value">
+            <mat-chip>
+              {{ keyword }}
+            </mat-chip>
+          </ng-container>
+        </ng-template>
+      </mat-chip-list>
+    </li>
+  </ul>
+</article>

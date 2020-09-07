@@ -217,6 +217,11 @@ export interface MovieRunningTime {
   status: string,
 }
 
+export interface OtherLink {
+  name: string;
+  url: string;
+}
+
 /////////////////////
 // MOVIE ANALYTICS //
 /////////////////////
@@ -242,9 +247,4 @@ export interface MovieAnalytics {
     current: MovieEventAnalytics[],
     past: MovieEventAnalytics[]
   }
-}
-
-export interface OtherLink {
-  name: string;
-  url: string;
 }

@@ -26,10 +26,33 @@ import { EmptyImagePipeModule } from '@blockframes/media/directives/image-refere
 import { MatDividerModule } from '@angular/material/divider';
 
 // Summary Components
-import { MainComponent } from './main/main.component';
+import { SummaryMainComponent } from './main/main.component';
+import { SummarySynopsisComponent } from './synopsis/synopsis.component';
+import { SummaryProductionComponent } from './production/production.component';
+import { SummaryArtisticComponent } from './artistic/artistic.component';
+import { SummaryReviewComponent } from './review/review.component';
+import { SummaryAdditionalInformationComponent } from './additional-information/additional-information.component';
+import { SummaryTechnicalInfoComponent } from './technical-info/technical-info.component';
+import { SummaryAvailableMaterialsComponent } from './available-materials/available-materials.component';
+import { SummaryMediaFilesComponent } from './promotional/media-files/media-files.component';
+import { SummaryMediaImagesComponent } from './promotional/media-images/media-images.component';
+import { SummaryMediaVideosComponent } from './promotional/media-videos/media-videos.component';
 
 @NgModule({
-  declarations: [MovieFormSummaryComponent, MainComponent],
+  declarations: [
+    MovieFormSummaryComponent,
+    SummaryMainComponent,
+    SummarySynopsisComponent,
+    SummaryProductionComponent,
+    SummaryArtisticComponent,
+    SummaryReviewComponent,
+    SummaryAdditionalInformationComponent,
+    SummaryTechnicalInfoComponent,
+    SummaryAvailableMaterialsComponent,
+    SummaryMediaFilesComponent,
+    SummaryMediaImagesComponent,
+    SummaryMediaVideosComponent
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
