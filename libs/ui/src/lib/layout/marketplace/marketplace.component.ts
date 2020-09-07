@@ -60,6 +60,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdkScrollable.scrollTo({top: 0});
       this.sidenav.close();
     });
+    // this.cdkScrollable.elementScrolled().subscribe(console.log);
   }
 
   ngOnDestroy() {
