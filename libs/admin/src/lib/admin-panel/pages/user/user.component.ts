@@ -2,12 +2,16 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { UserAdminForm } from '../../forms/user-admin.form';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { AdminService } from '@blockframes/admin/admin/+state';
 import { Subscription } from 'rxjs';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'admin-user',
@@ -29,9 +33,10 @@ export class UserComponent implements OnInit {
     private organizationService: OrganizationService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
     private adminService: AdminService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
   ) { }
 
   async ngOnInit() {
@@ -131,5 +136,24 @@ export class UserComponent implements OnInit {
   public async sendPasswordResetEmail() {
     await this.adminService.sendPasswordResetEmail(this.user.email);
     this.snackBar.open(`Reset password email sent to : ${this.user.email}`, 'close', { duration: 2000 });
+  }
+
+  public async deleteUser() {
+    // check if user is not last superAdmin
+    const permissions = await this.permissionService.getValue(this.user.orgId);
+    if (!!this.user.orgId && !this.permissionService.hasLastSuperAdmin(permissions, this.userId, 'member')) {
+      throw new Error('There must be at least one Super Admin in the organization.');
+    }
+
+    this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Are you sure you want to delete this user?',
+        question: 'this action is irreversable',
+        buttonName: 'Yes',
+        onConfirm: () => {
+          this.userService.remove(this.userId);
+        }
+      }
+    });
   }
 }

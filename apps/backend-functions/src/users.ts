@@ -3,10 +3,10 @@ import * as functions from 'firebase-functions';
 import { db, getStorageBucketName } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser } from './data/types';
+import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { upsertWatermark, getCollection } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from './templates/ids';
@@ -148,8 +148,49 @@ export async function onUserDelete(
   userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
 ): Promise<any> {
 
+  const user = userSnapshot.data() as PublicUser;
+
   // update Algolia index
-  return deleteObject(algolia.indexNameUsers, userSnapshot.id);
+  deleteObject(algolia.indexNameUsers, userSnapshot.id);
+
+  // delete user
+  admin.auth().deleteUser(user.uid);
+
+  // remove id from org array
+  if (!!user.orgId) {
+    const orgRef = db.doc(`orgs/${user.orgId}`);
+    const orgDoc = await orgRef.get();
+    const org = orgDoc.data() as OrganizationDocument
+    const userIds = org.userIds.filter(userId => userId !== user.uid);
+    orgRef.update({userIds});
+  }
+
+  // remove permissions
+  if (!!user.orgId) {
+    const permissionsRef = db.doc(`permissions/${user.orgId}`);
+    const permissionsDoc = await permissionsRef.get();
+    const permissions = permissionsDoc.data() as PermissionsDocument;
+    const roles = permissions.roles;
+    delete roles[user.uid];
+    permissionsRef.update({roles}); 
+  }
+
+  // remove all invitations related to user
+  const invitations = await getCollection<InvitationDocument>(`invitations`)
+  invitations
+    .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
+    .map(invitation => invitation.id)
+    .map(id => db.doc(`invitations/${id}`).delete());
+  
+  // remove all notifications related to user
+  const notificationsRef = db.collection(`notifications`).where('toUserId', '==', user.uid);
+  const notificationsSnap = await notificationsRef.get();
+  notificationsSnap.forEach(notification => db.doc(`notifications/${notification.id}`).delete());
+
+  // delete blockframesAdmin doc?
+
+  // delete events owned by the user?
+
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
