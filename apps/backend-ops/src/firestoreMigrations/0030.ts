@@ -1,13 +1,8 @@
 import { Firestore } from '../admin';
-import { runChunks } from '../tools';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
-import {
-  OldHostedMedia as HostedMedia,
-  createOldHostedMedia as createHostedMedia,
-} from './old-types';
+import { startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
+import { OldHostedMedia, createOldHostedMedia } from './old-types';
 
-
-const EMPTY_REF: HostedMedia = { ref: '', url: '' };
+const EMPTY_REF: OldHostedMedia = createOldHostedMedia();
 
 export async function upgrade(db: Firestore) {
   await startMaintenance();
@@ -56,7 +51,7 @@ async function updateUsers(
 
     if (user.avatar?.original?.ref) {
       const avatar = user.avatar?.original;
-      user.avatar = createHostedMedia({ ref: avatar.ref, url: avatar.url });
+      user.avatar = createOldHostedMedia({ ref: avatar.ref, url: avatar.url });
     } else {
       user.avatar = EMPTY_REF;
     }
@@ -76,7 +71,7 @@ async function updateOrgs(
 
     if (org.logo?.original?.ref) {
       const logo = org.logo?.original;
-      org.logo = createHostedMedia({ ref: logo.ref, url: logo.url });
+      org.logo = createOldHostedMedia({ ref: logo.ref, url: logo.url });
     } else {
       org.logo = EMPTY_REF;
     }
@@ -95,14 +90,14 @@ async function updateMovies(
 
     if (movie.main.banner?.media?.original?.ref) {
       const banner = movie.main.banner.media.original;
-      movie.main.banner.media = createHostedMedia({ ref: banner.ref, url: banner.url });
+      movie.main.banner.media = createOldHostedMedia({ ref: banner.ref, url: banner.url });
     } else {
       movie.main.banner.media = EMPTY_REF;
     }
 
     if (movie.main.poster?.media?.original?.ref) {
       const poster = movie.main.poster.media.original;
-      movie.main.poster.media = createHostedMedia({ ref: poster.ref, url: poster.url });
+      movie.main.poster.media = createOldHostedMedia({ ref: poster.ref, url: poster.url });
     } else {
       movie.main.poster = EMPTY_REF;
     }
@@ -111,7 +106,7 @@ async function updateMovies(
       for (const stillKey of Object.keys(movie.promotionalElements.still_photo)) {
         if(movie.promotionalElements.still_photo[stillKey].media?.original?.ref){
           const still = movie.promotionalElements.still_photo[stillKey].media.original;
-          movie.promotionalElements.still_photo[stillKey].media = createHostedMedia({ ref: still.ref, url: still.url });
+          movie.promotionalElements.still_photo[stillKey].media = createOldHostedMedia({ ref: still.ref, url: still.url });
         } else {
           delete movie.promotionalElements.still_photo[stillKey];
         }

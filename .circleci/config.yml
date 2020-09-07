@@ -191,7 +191,8 @@ jobs:
           npx firebase use staging &&
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
-          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+          npx firebase deploy --only firestore --force && 
           npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
@@ -233,7 +234,8 @@ jobs:
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -261,7 +263,8 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -290,7 +293,8 @@ jobs:
             npx firebase use demo1 &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage,firestore &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+            npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -310,6 +314,19 @@ jobs:
       - run: npm run db:download-prod
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
+  copy-storage-from-prod:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - ENV: blockframes-ci
+      - NODE_OPTIONS: "--max_old_space_size=7168"
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run: gcloud auth activate-service-account --key-file=creds.json
+      - run: gcloud --quiet config set project ${ENV}
+      - run: gcloud info
+      - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
 workflows:
   version: 2.1
   push-anon-db-to-ci-weekly:
@@ -385,3 +402,13 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
+  copy-storage-from-prod-weekly:
+    triggers:
+      - schedule:
+          cron: '0 0 * * 0'
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - copy-storage-from-prod

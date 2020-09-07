@@ -4,7 +4,7 @@ import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
-import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from '@blockframes/firebase-utils';
+import { endMaintenance, META_COLLECTION_NAME, startMaintenance, runChunks } from '@blockframes/firebase-utils';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
@@ -142,7 +142,7 @@ const clear = async () => {
   const processingQueue = new Queue();
 
   // Note: this code is heavily inspired by the backup function,
-  // TODO: implement a generalized way to go through all docs & collections
+  // @TODO (#3512) & implement a generalized way to go through all docs & collections
   // and use it in both functions.
 
   // retrieve all the collections at the root.
@@ -155,16 +155,14 @@ const clear = async () => {
 
     // keep all docs subcollection to be deleted to,
     // delete every doc content.
-    const promises = docs.map(async doc => {
+    await runChunks(docs, async (doc: any) => {
       // Adding the current path to the subcollections to backup
       const subCollections = await doc.listCollections();
-      subCollections.forEach(x => processingQueue.push(x.path));
+      subCollections.forEach((x: any) => processingQueue.push(x.path));
 
       // Delete the document
       return doc.delete();
-    });
-
-    await Promise.all(promises);
+    }, 500, false);
   }
 
   return true;
@@ -228,7 +226,6 @@ export const restore = async (req: any, resp: any) => {
     terminal: false
   });
 
-  const promises: Promise<any>[] = [];
 
   const readerDone = new Promise(resolve => {
     lineReader.on('close', resolve);
@@ -238,21 +235,22 @@ export const restore = async (req: any, resp: any) => {
     lineReader.close();
   });
 
-  // TODO: make this part scalable too, we're going to load the file
-  // and create promises "as fast as possible", we should backpressure the
-  // callback somehow to make sure the X previous promises have been completed
-  // before adding more. This will protect us from memory overflow (similar
-  // to the note in the backup code).
+  const lines: any[] = [];
   lineReader.on('line', line => {
-    const stored: StoredDocument = JSON.parse(line);
-    promises.push(db.doc(stored.docPath).set(reEncodeObject(stored.content)));
+    lines.push(line);
   });
 
-  promises.push(readerDone);
-  await Promise.all(promises);
+  await readerDone;
+
+  await runChunks(lines, async (line: any) => {
+    const stored: StoredDocument = JSON.parse(line);
+    if (stored.docPath !== '_META/_MAINTENANCE') {
+      await db.doc(stored.docPath).set(reEncodeObject(stored.content));
+    }
+  }, 500, false);
 
   await endMaintenance();
 
-  console.info(`Done processing: ${promises.length - 1} lines loaded`);
+  console.info(`Done processing: ${lines.length - 1} lines loaded`);
   return resp.status(200).send('success');
 };

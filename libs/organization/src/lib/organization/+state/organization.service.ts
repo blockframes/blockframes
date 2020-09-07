@@ -14,7 +14,7 @@ import { createPermissions, UserRole } from '../../permissions/+state/permission
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
-import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
 import { network, baseEnsDomain } from '@env';
 
@@ -28,7 +28,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
-    private permissionsQuery: PermissionsQuery,
     private permissionsService: PermissionsService,
   ) {
     super(store);
@@ -130,16 +129,18 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   ////////////
 
   /** Remove a member from the organization. */
-  public removeMember(uid: string) {
-    const superAdminNumber = this.permissionsQuery.superAdminCount;
-    const role = this.permissionsQuery.getActive().roles[uid];
+  public async removeMember(uid: string) {
+    const orgId = (await this.userService.getValue(uid)).orgId
+    const permissions = await this.permissionsService.getValue(orgId);
+    const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
+    const role = permissions.roles[uid];
     if (role === 'superAdmin' && superAdminNumber <= 1) {
       throw new Error('You can\'t remove the last Super Admin.');
     }
 
-    const org = this.query.getActive();
+    const org = await this.getValue(orgId);
     const userIds = org.userIds.filter(userId => userId !== uid);
-    return this.update(org.id, { userIds });
+    return this.update(orgId, { userIds });
   }
 
   public async getMembers(orgId: string): Promise<OrganizationMember[]> {

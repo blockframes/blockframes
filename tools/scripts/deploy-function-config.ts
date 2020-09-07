@@ -1,32 +1,10 @@
-import * as requiredVars from './mandatory-env-vars.json';
+import 'tsconfig-paths/register';
+import { config } from 'dotenv';
+config();
+
 import * as firebaseTools from 'firebase-tools';
-import * as dotenv from 'dotenv';
-import { loadSecretsFile } from './secrets-lib';
-
-const dotenvResult = dotenv.config();
-
-// const fileExists = (fileName: string) => existsSync(resolve(process.cwd(), fileName))
-
-if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
-  // Env config values probably doesn't exist in env
-  loadSecretsFile();
-}
-
-setFirebaseConfig();
-
-async function setFirebaseConfig() {
-  // * Check if we are in CI
-  const FIREBASE_CONFIG: any = {};
-  if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN;
-  process.stdout.write('Existing Firebase Functions Config Values:\n');
-  await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG).then(console.log);
-  process.stdout.write('Writing new config...\n');
-
-  const keyVal = getKeyValFormat(); // TODO: This should parse. not hardcoded
-  await firebaseTools.functions.config
-    .set(keyVal, FIREBASE_CONFIG)
-    .then(() => console.log('Config Deployed'));
-}
+import { loadSecretsFile } from './lib';
+import { warnMissingVars } from '@blockframes/firebase-utils';
 
 /**
  * This is temporary because key names are hardcoded.
@@ -46,10 +24,27 @@ function getKeyValFormat(): string[] {
   return output;
 }
 
-function warnMissingVars(): void | never {
-  function throwMissingVar(name: string) {
-    throw new Error(`Please ensure the following variable is set in env: ${name}`);
+async function setFirebaseConfig() {
+  if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
+    // Env config values probably doesn't exist in env
+    console.warn(
+      'PLEASE UPDATE TO THE NEW .env FORMAT! Please run "npm run migrate:deploy-secrets"'
+    );
+    loadSecretsFile();
   }
-  const requiredVarsArray = requiredVars.required;
-  requiredVarsArray.map(key => process.env?.[key] ?? throwMissingVar(key));
+  // * Check if we are in CI
+  const FIREBASE_CONFIG: any = {};
+  if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN;
+  process.stdout.write('Existing Firebase Functions Config Values:\n');
+  await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG).then(console.log);
+  process.stdout.write('Writing new config...\n');
+
+  const keyVal = getKeyValFormat(); // TODO(#3620) Parse .env rather than read hardcoded values
+  await firebaseTools.functions.config
+    .set(keyVal, FIREBASE_CONFIG)
+    .then(() => console.log('Config Deployed'));
 }
+
+setFirebaseConfig()
+  .then(() => process.exit(0))
+  .catch(() => process.exit(1));

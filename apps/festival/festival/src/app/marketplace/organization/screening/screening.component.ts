@@ -4,6 +4,7 @@ import { ViewComponent } from '../view/view.component';
 import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-screening',
@@ -17,9 +18,11 @@ export class ScreeningComponent implements OnInit {
   constructor(
     private parent: ViewComponent,
     private service: EventService,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Sales Agent', 'Screenings');
     this.events$ = this.parent.org$.pipe(
       switchMap(org => {
         const query = ref => ref.where('ownerId', '==', org.id)

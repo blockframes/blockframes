@@ -1,12 +1,12 @@
-import { loadAdminServices } from './admin';
+import { loadAdminServices } from "@blockframes/firebase-utils";
 import {
   clearIndex,
   setIndexConfiguration,
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-} from '../../backend-functions/src/internals/algolia';
-import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';
+} from '../../backend-functions/src/internals/algolia';  // @TODO (#3471) remove this call to backend-functions
+import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
 import { algolia } from '@env';
 
 // TODO MIGRATE TO ALGOLIA v4 #2554

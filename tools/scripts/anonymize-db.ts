@@ -1,5 +1,8 @@
+import * as faker from 'faker';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
+
+const userTable: [string, string][] = []; // uid, newEmail
 
 function anonymize({ docPath, content }) {
   // USERS
@@ -25,9 +28,20 @@ function anonymize({ docPath, content }) {
   return { docPath, content };
 }
 function updateEmail(user) {
-  if (user && user.email) {
-    const [prefix] = user.email.split('@');
-    user.email = `${prefix}@fake.com`;
+  if (!user?.email) return;
+  const foundUser = userTable.find(([uid]) => user.uid === uid);
+  if (foundUser) {
+    // Already set this user previously
+    const [, newEmail] = foundUser;
+    user.email = newEmail;
+  } else {
+    const rand = Math.random()
+      .toString(36)
+      .replace(/[^a-z]+/g, '')
+      .substr(0, 3);
+    const name = faker.name.firstName().replace(/\W/g, '').toLowerCase();
+    user.email = `dev+${name}-${rand}@cascade8.com`;
+    userTable.push([user.uid, user.email]);
   }
 }
 // First argument

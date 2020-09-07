@@ -82,9 +82,7 @@ export class MovieFormSummaryComponent implements OnInit, OnDestroy {
         if (!control.value) {
           this.missingFields.push(field);
         }
-        if (control instanceof FormGroup) {
-          recursiveFunc(control);
-        } else if (control instanceof FormArray) {
+        if (control instanceof FormArray || control instanceof FormGroup) {
           recursiveFunc(control);
         }
       });

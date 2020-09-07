@@ -11,7 +11,7 @@ import { EmailRecipient } from '@blockframes/utils/emails';
 const ORG_HOME = '/c/o/organization/';
 const USER_CREDENTIAL_INVITATION = '/auth/connexion#login';
 export const ADMIN_ACCEPT_ORG_PATH = '/c/o/admin/panel/organization';
-export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
+export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore // TODO: ! Why is this here? Move elsewhere into env
 
 // ------------------------- //
 //   FOR BLOCKFRAMES USERS   //
@@ -93,9 +93,11 @@ export function organizationAppAccessChanged(admin: PublicUser, appLabel: string
 }
 
 /** Send email to a user to inform him that he joined an org */
-export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market): EmailTemplateRequest {
+export function userJoinedAnOrganization(userEmail: string, url: string = appUrl.market, orgName: string, userFirstName: string): EmailTemplateRequest {
   const data = {
-    pageURL: `${url}/c/o`
+    pageURL: `${url}/c/o`,
+    userFirstName,
+    orgName
   };
   return { to: userEmail, templateId: templateIds.request.joinOrganization.accepted, data };
 }

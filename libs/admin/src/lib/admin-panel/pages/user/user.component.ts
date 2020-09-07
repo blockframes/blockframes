@@ -87,9 +87,9 @@ export class UserComponent implements OnInit {
     return this.snackBar.open(message, 'close', { duration: 2000 });
   }
 
-  public removeMember(uid: string) {
+  public async removeMember(uid: string) {
     try {
-      this.organizationService.removeMember(uid);
+      await this.organizationService.removeMember(uid);
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

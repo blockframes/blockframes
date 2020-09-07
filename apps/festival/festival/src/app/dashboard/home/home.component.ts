@@ -5,6 +5,11 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+
+// RxJs
+import { map, switchMap, shareReplay, filter, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 // RxJs
 import { map, switchMap, shareReplay, filter } from 'rxjs/operators';
@@ -20,28 +25,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public hasAcceptedMovies$: Observable<boolean>;
   public hasMovies$: Observable<boolean>;
-
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
 
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
-    const titles$ = this.orgQuery.selectActive().pipe(
+    const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
       filter(movies => !!movies && movies.length >= 1),
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig?.status === 'accepted')),
       shareReplay(1)
-    )
+    );
 
-    this.hasMovies$ = titles$.pipe(
-      map(titles => !!titles.length)
+    this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(
+      map(movies => movies.some(movie => movie.storeConfig.status === 'accepted'))
+    );
+
+    this.hasMovies$ = allMoviesFromOrg$.pipe(
+      map(movies => !!movies.length)
+    );
+
+    const titles$ = allMoviesFromOrg$.pipe(
+      map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted')),
+      tap(movies => {
+        !!movies.length ?
+          this.dynTitle.setPageTitle('Dashboard') :
+          this.dynTitle.setPageTitle('Dashboard', 'Empty');
+      }),
     );
 
     this.sub = titles$.pipe(

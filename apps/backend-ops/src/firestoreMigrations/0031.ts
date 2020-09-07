@@ -1,9 +1,8 @@
 import { Firestore, Storage } from '../admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { File as GFile } from '@google-cloud/storage';
-import { getDocument } from 'apps/backend-functions/src/data/internals';
-import { runChunks } from '../tools';
-import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, getDocument, runChunks } from '@blockframes/firebase-utils';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 import {
   OldHostedMedia as HostedMedia,
@@ -49,7 +48,7 @@ export async function upgrade(db: Firestore, storage: Storage) {
   console.log('// [STORAGE] Processing movies');
   console.log('//////////////');
 
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
   console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
 
@@ -203,8 +202,29 @@ async function updateMovies(
       }
     }
 
-    if (movie.main.directors && movie.main.directors.length) {
+    if (movie.main.directors?.length) {
       movie.main.directors = movie.main.directors.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    if (movie.salesCast?.cast?.length) {
+      movie.salesCast.cast = movie.salesCast.cast.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    if (movie.salesCast?.crew?.length) {
+      movie.salesCast.crew = movie.salesCast.crew.map(d => {
+        d.avatar = '';
+        return d;
+      });
+    }
+
+    if (movie.salesCast?.producers?.length) {
+      movie.salesCast.producers = movie.salesCast.producers.map(d => {
         d.avatar = '';
         return d;
       });
@@ -222,12 +242,12 @@ async function updateMovies(
     ];
 
     fieldsToReset.forEach(f => {
-      if(movie.main.stakeholders[f] && movie.main.stakeholders[f].length){
+      if (movie.main.stakeholders[f] && movie.main.stakeholders[f].length) {
         movie.main.stakeholders[f] = movie.main.stakeholders[f].map(o => {
-          if(o.logo){
+          if (o.logo) {
             o.logo = '';
           }
-          if(o.avatar){
+          if (o.avatar) {
             o.avatar = '';
           }
           return o;
@@ -235,9 +255,9 @@ async function updateMovies(
       }
     });
 
-    if(movie.festivalPrizes?.prizes && movie.festivalPrizes.prizes.length) {
+    if (movie.festivalPrizes?.prizes.length) {
       movie.festivalPrizes.prizes = movie.festivalPrizes.prizes.map(o => {
-        if(o.logo){
+        if (o.logo) {
           o.logo = '';
         }
         return o;
@@ -258,7 +278,7 @@ const changeResourceDirectory = async (
   const { url, ref } = media;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const fileName = url.split('%2F').pop().split('?').shift();
@@ -339,7 +359,7 @@ async function cleanMovieDir(bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
@@ -360,7 +380,7 @@ async function cleanMoviesDir(bucket) {
 
   await runChunks(files, async (f) => {
     const movieId = f.name.split('/')[1];
-    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const movie = await getDocument<any>(`movies/${movieId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!movie && !findImgRefInMovie(movie, f.name) && await f.delete()) { deleted++; }
@@ -380,7 +400,7 @@ async function cleanUsersDir(bucket) {
 
   await runChunks(files, async (f) => {
     const userId = f.name.split('/')[1];
-    const user = await getDocument<any>(`users/${userId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const user = await getDocument<any>(`users/${userId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!user && user.avatar !== f.name && user.watermark !== f.name && await f.delete()) { deleted++; }
@@ -400,7 +420,7 @@ async function cleanOrgsDir(bucket) {
 
   await runChunks(files, async (f) => {
     const orgId = f.name.split('/')[1];
-    const org = await getDocument<any>(`orgs/${orgId}`); // @TODO (#3175 #3066) w8 "final" doc structure
+    const org = await getDocument<any>(`orgs/${orgId}`); // @TODO (#3503) remplace any
     if (haveImgSize(f) && !isOriginal(f)) {
       if (await f.delete()) { deleted++; }
     } else if (!!org && org.logo !== f.name && await f.delete()) { deleted++; }
@@ -429,7 +449,7 @@ function getImgSize(file: GFile) {
   return size;
 }
 
-function findImgRefInMovie(movie: any, ref: string) { // @TODO (#3175 #3066) w8 "final" doc structure
+function findImgRefInMovie(movie: any, ref: string) { // @TODO (#3503) remplace any
 
   if (movie.main.banner === ref) {
     return true;

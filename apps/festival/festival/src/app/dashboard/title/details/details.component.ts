@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-title-details',
@@ -23,10 +24,12 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private movieQuery: MovieQuery,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
   ) {}
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Title page', 'Film Details');
     this.subscription = this.movieQuery.selectActive().subscribe(movie => {
       this.form = new MovieForm(movie);
       this.cdr.markForCheck();

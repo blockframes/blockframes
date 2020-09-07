@@ -1,12 +1,12 @@
 import { Firestore, Storage } from '../admin';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from 'apps/backend-functions/src/data/types';
-
+import { OldPromotionalElement } from './old-types'; // @TODO (#3471) remove this call to backend-functions
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 import {
   createOldHostedMedia as createHostedMedia,
-  OldNewPromotionalElement as PromotionalElement
 } from './old-types';
 
 /**
@@ -78,7 +78,7 @@ export async function updateMovies(
 
     for (const key of keys) {
       if (!!movieData.promotionalElements[key]) {
-        const value: PromotionalElement | PromotionalElement[] = movieData.promotionalElements[key];
+        const value: OldPromotionalElement | OldPromotionalElement[] = movieData.promotionalElements[key];
         if (Array.isArray(value)) {
           for (let i = 0; i < value.length; i++) {
             movieData.promotionalElements[key][i] = await updateMovieField(value[i], 'media', storage);
@@ -113,7 +113,7 @@ export async function updateMovies(
 }
 
 async function updateMovieField(
-  value: Credit | PromotionalElement,
+  value: Credit | OldPromotionalElement,
   imgRefFieldName: 'avatar' | 'logo' | 'media',
   storage: Storage) {
   const newImageRef = await updateImgRef(value, imgRefFieldName, storage);
@@ -134,7 +134,7 @@ const updateOrgLogo = async (org: PublicOrganization, storage: Storage) => {
 };
 
 async function updateImgRef(
-  element: PublicUser | PublicOrganization | Credit | PromotionalElement,
+  element: PublicUser | PublicOrganization | Credit | OldPromotionalElement,
   key: 'logo' | 'avatar' | 'media',
   storage: Storage) {
   // get the current ref
@@ -154,7 +154,7 @@ async function updateImgRef(
 
       // Set the new folder in the bucket
       const newPngFile = ref.replace('/original/', '/fallback/').replace(fileName, newFileName);
-      const bucket = storage.bucket(getStorageBucketName());
+      const bucket = storage.bucket(storageBucket);
 
       const output = bucket.file(newPngFile);
       const [exists] = await output.exists();

@@ -9,17 +9,10 @@ import { PermissionsDocument } from '@blockframes/permissions/+state/permissions
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
-import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { getDocument } from '@blockframes/firebase-utils';
 
 export { getDocument };
-
-export function getCollection<T>(path: string): Promise<T[]> {
-  return db
-    .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data() as T));
-}
 
 export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
@@ -114,7 +107,7 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
  * This guess the app from the org app access and returns the "from" email address to use
  * @param _org
  */
-export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
+export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailJSON> {
   const key = await getOrgAppKey(_org);
   return getSendgridFrom(key);
 }

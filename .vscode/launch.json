@@ -24,7 +24,14 @@
             "request": "launch",
             "type": "chrome",
             "url": "http://localhost:4200",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            "sourceMaps": true,
+            "sourceMapPathOverrides": {
+                "/./*": "${webRoot}/*",
+                "/src/*": "${webRoot}/*",
+                "/*": "*",
+                "/./~/*": "${webRoot}/node_modules/*"
+            }
         }
     ]
 }

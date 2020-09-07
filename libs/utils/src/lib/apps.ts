@@ -2,8 +2,8 @@
  * Apps definition
  */
 import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
-import { StoreStatus } from "@blockframes/utils/static-model/types";
-import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { StoreStatus } from "./static-model";
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
 export const app = ['catalog', 'festival'] as const;
@@ -19,7 +19,7 @@ export const appName = {
   crm: 'Blockframes CRM'
 };
 
-export const sendgridEmailsFrom = {
+export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
@@ -148,7 +148,7 @@ export function getMoviePublishStatus(a: App): StoreStatus {
  * Returns the "from" email that should be used depending on the current app
  * @param a
  */
-export function getSendgridFrom(a?: App): EmailData {
+export function getSendgridFrom(a?: App): EmailJSON {
   if (!a) {
     return sendgridEmailsFrom.default;
   } else {

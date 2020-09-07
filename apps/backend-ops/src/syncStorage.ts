@@ -1,12 +1,13 @@
-import { loadAdminServices } from './admin';
-import { getStorageBucketName, db } from 'apps/backend-functions/src/internals/firebase';
-import { getDocAndPath } from 'apps/backend-functions/src/media';
-import { getCollection } from 'apps/backend-functions/src/data/internals';
+import { loadAdminServices } from "@blockframes/firebase-utils";
+import { db } from 'apps/backend-functions/src/internals/firebase';  // @TODO (#3471) remove this call to backend-functions
+import { getDocAndPath } from 'apps/backend-functions/src/media';  // @TODO (#3471) remove this call to backend-functions
 import { has, get } from 'object-path';
-import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, isInMaintenance, getCollection } from '@blockframes/firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
 
 enum mediaFieldType {
   single,
@@ -46,7 +47,7 @@ const mediaReferences = [
 export async function syncStorage() {
 
   let startedMaintenance = false;
-  if (!await isInMaintenance()) {
+  if (!await isInMaintenance(0)) {
     startedMaintenance = true;
     await startMaintenance();
   }
@@ -85,7 +86,7 @@ export async function syncStorage() {
 
         try {
           // ! this will not work with array in the path
-          const promise = docRef.update({[field.field]: data});
+          const promise = docRef.update({ [field.field]: data });
           unlinkPromises.push(promise);
         } catch (error) {
           console.log(`Error with document ${docId}:`, error.message);
@@ -102,7 +103,7 @@ export async function syncStorage() {
   console.log('//////////////');
 
   const { storage } = loadAdminServices();
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
   const [files] = await bucket.getFiles();
 
   for (const file of files) {
@@ -120,7 +121,7 @@ export async function syncStorage() {
 
       // link the firestore
       // ! this will not work with array in the path
-      await doc.update({[fieldToUpdate]: filePath });
+      await doc.update({ [fieldToUpdate]: filePath });
     } catch (error) {
       console.log(`An error happened when syncing ${file.name}!`, error.message);
     }
