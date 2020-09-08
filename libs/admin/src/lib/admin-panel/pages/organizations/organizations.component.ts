@@ -43,14 +43,14 @@ export class OrganizationsComponent implements OnInit {
   async ngOnInit() {
     const orgs = await this.organizationService.getValue();
     this.rows = orgs.map(o => ({
-      'id': o.id,
-      'status': o.status,
-      'logo': o.logo,
-      'email': o.email,
-      'companyName': o.denomination.full,
-      'shortName': o.denomination.public,
-      'country': o.addresses.main.country,
-      'appAccess': o.appAccess,
+      id: o.id,
+      status: o.status,
+      logo: o.logo,
+      email: o.email,
+      companyName: o.denomination.full,
+      shortName: o.denomination.public,
+      country: o.addresses.main.country,
+      appAccess: o.appAccess,
       edit: {
         id: o.id,
         link: `/c/o/admin/panel/organization/${o.id}`,
