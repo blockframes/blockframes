@@ -188,14 +188,12 @@ export async function onUserDelete(
   notificationsSnap.forEach(notification => db.doc(`notifications/${notification.id}`).delete());
 
   // delete blockframesAdmin doc?
-
-  // delete events owned by the user?
+  db.doc(`blockframesAdmin/${user.uid}`).delete();
 
   // delete media from storage
   const bucket = admin.storage().bucket(getStorageBucketName());
   if (!!user.avatar) bucket.file(user.avatar).delete();
   if (!!user.watermark) bucket.file(user.watermark).delete();
-
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
