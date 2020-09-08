@@ -67,7 +67,7 @@ export class OrganizationComponent implements OnInit {
     edit: 'Edit',
   };
 
-  public memberColumnsIndex = ['uid', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
@@ -158,10 +158,10 @@ export class OrganizationComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'internalRef',
-      'title.original',
+      'title',
       'releaseYear',
-      'storeConfig.status',
-      'storeConfig.storeType',
+      'status',
+      'storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
