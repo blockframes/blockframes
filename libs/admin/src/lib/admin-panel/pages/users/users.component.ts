@@ -55,7 +55,10 @@ export class UsersComponent implements OnInit {
     const rows = users.map(async u => {
       const org = u.orgId ? await this.getOrg(u.orgId) : undefined;
       return {
-        ...u,
+        uid: u.uid,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
         firstConnexion: this.adminQuery.getFirstConnexion(u.uid),
         lastConnexion: this.adminQuery.getLastConnexion(u.uid),
         edit: {
@@ -76,10 +79,9 @@ export class UsersComponent implements OnInit {
       'firstName',
       'lastName',
       'email',
-      'position',
-      'org.denomination.full',
-      'org.denomination.public'
+      'position'
     ];
+    if (data.org?.denomination?.full) columnsToFilter.push('org.denomination.full', 'org.denomination.public');
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }

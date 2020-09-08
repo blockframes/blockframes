@@ -26,36 +26,17 @@
       </ng-container>
     </ng-template>
     <ng-template colRef="title" let-title>
-      {{ title.original }}
+      {{ title }}
     </ng-template>
     <ng-template colRef="id" let-id>
       <span>{{ id }} </span>
       <admin-go-to type="title" [id]="id"></admin-go-to>
     </ng-template>
-    <ng-template colRef="distributionRights" let-distributionRights>
-      {{ distributionRights.length }}
-    </ng-template>
-    <ng-template colRef="distributionRightsInfo" let-distributionRightsInfo>
-      <ng-container *ngIf="distributionRightsInfo.count else noRights">
-        <a [routerLink]="distributionRightsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ distributionRightsInfo.count }})
-      </ng-container>
-      <ng-template #noRights>
-        --
-      </ng-template>
-    </ng-template>
-    <ng-template colRef="contractsInfo" let-contractsInfo>
-      <ng-container *ngIf="contractsInfo.count else noRights">
-        <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ contractsInfo.count }})
-      </ng-container>
-      <ng-template #noRights>
-        --
-      </ng-template>
-    </ng-template>
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
-    <ng-template colRef="storeConfig" let-storeConfig>
-      {{ storeConfig.status | toLabel: 'storeStatus' | async }}
+    <ng-template colRef="status" let-status>
+      {{ status | toLabel: 'storeStatus' | async }}
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">

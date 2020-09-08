@@ -30,10 +30,6 @@ export class MemberRepertoryComponent {
 
   @Input() memberColumnsIndex = ['firstName', 'lastName', 'email', 'position', 'role'];
 
-  get initialColumns() {
-    return this.isSuperAdmin ? [...this.memberColumnsIndex, 'uid'] : this.memberColumnsIndex;
-  }
-
   public displayRole(role: UserRole) {
     switch (role) {
       case 'superAdmin':

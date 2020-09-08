@@ -38,10 +38,10 @@ export class OrganizationComponent implements OnInit {
     'id': 'Id',
     'internalRef': 'Internal Ref',
     'poster': 'Poster',
-    'title.original': 'Original title',
+    'title': 'Original title',
     'releaseYear': 'Release year',
-    'storeConfig.status': 'Status',
-    'storeConfig.storeType': 'Store type',
+    'status': 'Status',
+    'storeType': 'Store type',
     'edit': 'Edit',
   };
 
@@ -49,10 +49,10 @@ export class OrganizationComponent implements OnInit {
     'id',
     'poster',
     'internalRef',
-    'title.original',
+    'title',
     'releaseYear',
-    'storeConfig.status',
-    'storeConfig.storeType',
+    'status',
+    'storeType',
     'edit',
   ];
 
@@ -88,7 +88,13 @@ export class OrganizationComponent implements OnInit {
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
     const movies = await Promise.all(moviePromises);
     this.movies = movies.filter(m => !!m).map(m => ({
-      ...m,
+      id: m.id,
+      internalRef: m.internalRef,
+      poster: m.poster,
+      title: m.title.original,
+      releaseYear: m.release.year,
+      status: m.storeConfig.status,
+      storeType: m.storeConfig.storeType,
       edit: {
         id: m.id,
         link: `/c/o/admin/panel/movie/${m.id}`,
