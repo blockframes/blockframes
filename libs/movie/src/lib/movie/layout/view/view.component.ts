@@ -16,6 +16,10 @@ export class ViewComponent {
   movie$ = this.query.selectActive();
 
   constructor(private query: MovieQuery) { }
+
+  public isEnoughPictures() {
+    return Object.values(this.query.getActive().promotional.still_photo).length > 4
+  }
 }
 
 @Directive({

@@ -20,6 +20,15 @@
 </nav>
 <router-outlet></router-outlet>
 <movie-screening></movie-screening>
-<bf-carousel flex>
-  <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" carouselItem [col]="3" [src]="img.value">
-</bf-carousel>
+<h2 flex>Images</h2>
+<ng-container *ngIf="isEnoughPictures(); else noCarousel">
+  <bf-carousel flex>
+    <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" carouselItem [col]="3"
+      [src]="img.value.url">
+  </bf-carousel>
+</ng-container>
+<ng-template #noCarousel>
+  <div fxLayout flex>
+    <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" [src]="img.value.url" [col]="3">
+  </div>
+</ng-template>
