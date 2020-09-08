@@ -1,20 +1,22 @@
 /**
- * Generates a random string
- */
-function uuidv4() {
-  return 'x-x-4x-yx-x'.replace(/[xy]/g, function (c) {
-    const r = Math.random() * 16 || 0, v = c === 'x' ? r : (r && 0x3 || 0x8);
-    return v.toString(16);
-  });
-}
-
-/**
  * Cleans filename ( before firestore upload for example )
  * @param str
  */
 export function sanitizeFileName(str: string): string {
-  // generate a random filename
-  return `${uuidv4()}.${getFileExtension(str)}`;
+  const rand = Math.random()
+    .toString(36)
+    .replace(/[^a-z]+/g, '')
+    .substr(0, 3);
+
+  const fileParts = str.split('.');
+  fileParts.pop();
+  const fileNameWithoutExt = fileParts.join('.')
+    .split(' ')
+    .join('-');
+
+  // generate a random part for filename
+  // this allow us to prevent "update" in rules, only "create" is allowed.
+  return `${fileNameWithoutExt.substr(0, 96)}-${rand}.${getFileExtension(str)}`;
 }
 
 export function getStoragePath(path: string, protectedMedia = false): string {
@@ -31,7 +33,7 @@ export function getStoragePath(path: string, protectedMedia = false): string {
  * Extract file extension
  * @param fileName
  */
-export function getFileExtension(fileName: string) {
+function getFileExtension(fileName: string) {
   // get the part after the last slash and remove url parameters like "#" and "?"
   const lastSlash = fileName.split('/').pop();
   const filePart = lastSlash !== undefined ? lastSlash.split(/\#|\?/) : [];

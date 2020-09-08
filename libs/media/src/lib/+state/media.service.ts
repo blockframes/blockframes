@@ -38,14 +38,6 @@ export class MediaService {
     private overlay: Overlay
   ) { }
 
-  /** Check if a file exists in the **Firebase storage** */
-  async exists(path: string, fileName: string): Promise<boolean> {
-
-    return this.storage.ref(path).listAll().toPromise()
-      .then((res) => res.items.some(item => item.name === fileName))
-      .catch(() => false);
-  }
-
   async upload(uploadFiles: UploadData | UploadData[]) {
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
     const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
@@ -63,6 +55,7 @@ export class MediaService {
    * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
    */
   async removeFile(path: string) {
+    // @TODO (#3188) should be handled by a backend function
     await this.storage.ref(path).delete().toPromise();
   }
 
@@ -95,13 +88,6 @@ export class MediaService {
 
   async uploadOrDeleteMedia(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
-
-      if (!!mediaForm.fileName) {
-        // remove every characters after the 100th to avoid file too long error
-        // this way we don't need to sanitize name anymore
-        // (firebase also supports file names with unicode chars)
-        mediaForm.fileName = mediaForm.fileName.substr(0, 100);
-      }
 
       // if the file needs to be deleted and we know its path
       if (mediaForm.delete && !!mediaForm.oldRef) {

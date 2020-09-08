@@ -8,7 +8,7 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { from } from 'rxjs';
-import { getStoragePath } from '@blockframes/utils/file-sanitizer';
+import { getStoragePath, sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -121,7 +121,7 @@ export class CropperComponent implements OnInit {
       this.nextStep('show');
 
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
+      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `.webp`));
 
       this.form.patchValue({
         ref: getStoragePath(this.storagePath, this.protected),

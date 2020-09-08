@@ -29,8 +29,8 @@ service firebase.storage {
     
     match /public/orgs/{orgId} {
       match /logo/{logoId} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingImage(); // @TODO (#3188) update should not be allowed anywere, we need to make filename uniques
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingImage();
         allow delete: if request.auth != null; // @TODO (#3188) should be handled by a backend function
       }
     }
@@ -39,26 +39,26 @@ service firebase.storage {
     // with the documents we want to access (we only have movieId and cannot access DB here)
     match /public/movies/{movieId} {
       match /banner/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingImage();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingImage();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
 
       match /poster/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingImage();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingImage();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
 
       match /promotional.presentation_deck/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingPdf();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingPdf();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
 
       match /promotional.scenario/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingPdf();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingPdf();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
     }
@@ -68,14 +68,14 @@ service firebase.storage {
     match /protected/movies/{movieId} {
 
       match /promotional.presentation_deck/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingPdf();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingPdf();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
 
       match /promotional.scenario/{media} {
-        allow read: if false;
-        allow create, update: if request.auth != null && isValidIncomingPdf();
+        allow read, update: if false;
+        allow create: if request.auth != null && isValidIncomingPdf();
         allow delete: if request.auth != null;// @TODO (#3188) should be handled by a backend function
       }
     }
