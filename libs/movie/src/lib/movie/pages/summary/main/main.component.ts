@@ -1,5 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { MovieFormShellComponent } from '../../shell/shell.component';
+import { Component, Input } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
@@ -7,23 +6,17 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+export class SummaryMainComponent {
 
-  form = this.shell.form;
   @Input() movie: MovieForm;
   @Input() link: string;
 
-  constructor(private shell: MovieFormShellComponent) { }
-
-  ngOnInit(): void {
-  }
-
   get title() {
-    return this.form.get('title');
+    return this.movie.get('title');
   }
 
   public get genres() {
-    return [this.form.get('genres'), ...this.form.get('customGenres').controls];
+    return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
 
 }
