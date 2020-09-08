@@ -191,6 +191,11 @@ export async function onUserDelete(
 
   // delete events owned by the user?
 
+  // delete media from storage
+  const bucket = admin.storage().bucket(getStorageBucketName());
+  if (!!user.avatar) bucket.file(user.avatar).delete();
+  if (!!user.watermark) bucket.file(user.watermark).delete();
+
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
