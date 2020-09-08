@@ -1,6 +1,5 @@
-import { loadAdminServices } from "@blockframes/firebase-utils";
+import { loadAdminServices, getDocAndPath } from "@blockframes/firebase-utils";
 import { db } from 'apps/backend-functions/src/internals/firebase';  // @TODO (#3471) remove this call to backend-functions
-import { getDocAndPath } from 'apps/backend-functions/src/media';  // @TODO (#3471) remove this call to backend-functions
 import { has, get } from 'object-path';
 import { startMaintenance, endMaintenance, isInMaintenance, getCollection } from '@blockframes/firebase-utils';
 import { PublicUser } from '@blockframes/user/types';

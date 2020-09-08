@@ -1,59 +1,13 @@
-import { db, functions } from './internals/firebase';
+import { functions } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
 import { createHash } from 'crypto';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { getDocAndPath } from '@blockframes/firebase-utils';
 
-/**
- *
- * @param filePath the storage path of the file
- */
-export async function getDocAndPath(filePath: string | undefined) {
 
-  if (!filePath) {
-    throw new Error('Upload Error : Undefined File Path');
-  }
-
-  const filePathElements = filePath.split('/');
-
-  if (filePathElements.length < 4) {
-    throw new Error(`Upload Error : File Path ${filePath}
-    is malformed, it should at least contain 2 slash
-    Example: 'collection/id/field/fileName'`);
-  }
-
-  // remove "protected/"" or "public/"
-  if (['protected', 'public'].includes(filePathElements[0])) {
-    filePathElements.shift();
-  }
-
-  const collection = filePathElements.shift()!;
-  const docId = filePathElements.shift()!;
-
-  // remove the file name at the end
-  // `filePathElements` is now only composed by the field to update
-  filePathElements.pop();
-
-  const doc = db.collection(collection).doc(docId);
-  const docSnapshot = await doc.get();
-
-  if (!docSnapshot.exists) {
-    throw new Error('File Path point to a firestore document that does not exists');
-  }
-
-  const docData = docSnapshot.data()!;
-
-  const fieldToUpdate = filePathElements.join('.');
-
-  return {
-    filePath,
-    doc,
-    docData,
-    fieldToUpdate
-  }
-}
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -67,6 +21,8 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
 
   // get the needed values
   const { filePath, doc, fieldToUpdate } = await getDocAndPath(data.name);
+
+  // @TODO (#3188) check context if uid have right to linkFile
 
   // create an access url
   const bucket = admin.storage().bucket(data.bucket);
