@@ -1,4 +1,8 @@
-import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation, } from '@angular/core';
+// Angular
+import { Component, Input, ChangeDetectionStrategy, Directive } from '@angular/core';
+
+// Blockframes
+import { MovieQuery } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'movie-view',
@@ -7,7 +11,15 @@ import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent {
-@Input() navLinks: { path: string, label: string }[];
+  @Input() navLinks: { path: string, label: string }[];
+
+  movie$ = this.query.selectActive();
+
+  constructor(private query: MovieQuery) { }
+
+  public isEnoughPictures() {
+    return Object.values(this.query.getActive().promotional.still_photo).length > 4
+  }
 }
 
 @Directive({
@@ -15,4 +27,4 @@ export class ViewComponent {
   host: { class: 'movie-header' }
 })
 // tslint:disable-next-line: directive-class-suffix
-export class MovieHeader {}
+export class MovieHeader { }
