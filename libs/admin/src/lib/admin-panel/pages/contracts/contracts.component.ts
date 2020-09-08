@@ -14,9 +14,9 @@ export class ContractsComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'type': 'Type',
-    'lastVersion.id': 'Version',
-    'lastVersion.status': 'Status',
-    'lastVersion.scope': 'Scope',
+    'lastVersionId': 'Version',
+    'lastVersionStatus': 'Status',
+    'lastVersionScope': 'Scope',
     'partyIds': 'Parties',
     'titleIds': 'Titles',
     'edit': 'Edit',
@@ -25,9 +25,9 @@ export class ContractsComponent implements OnInit {
   public initialColumns: string[] = [
     'id',
     'type',
-    'lastVersion.id',
-    'lastVersion.status',
-    'lastVersion.scope',
+    'lastVersionId',
+    'lastVersionStatus',
+    'lastVersionScope',
     'partyIds',
     'titleIds',
     'edit',
@@ -51,7 +51,13 @@ export class ContractsComponent implements OnInit {
     }
 
     const promises = contracts.map(async contract => {
-      const row = { ...contract } as any;
+      const row = { 
+        ...contract,
+        lastVersionId: contract.lastVersion.id,
+        lastVersionStatus: contract.lastVersion.status,
+        lastVersionScope: contract.lastVersion.scope
+      } as any;
+
       // Append new data for table display
       row.edit = {
         id: row.id,
@@ -68,8 +74,8 @@ export class ContractsComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'type',
-      'lastVersion.id',
-      'lastVersion.status',
+      'lastVersionId',
+      'lastVersionStatus',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

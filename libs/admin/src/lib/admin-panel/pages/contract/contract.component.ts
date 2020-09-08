@@ -61,28 +61,28 @@ export class ContractComponent implements OnInit {
 
   // Table TITLES
   public versionColumnsTableTitles = {
-    'id': 'Movie Id',
-    'movie.internalRef': 'Internal Ref',
-    'movie.poster': 'Poster',
-    'movie.title.original': 'Original title',
-    'movie.releaseYear': 'Release year',
+    'titleId': 'Movie Id',
+    'movieInternalRef': 'Internal Ref',
+    'moviePoster': 'Poster',
+    'movieTitleOriginal': 'Original title',
+    'movieReleaseYear': 'Release year',
     'price': 'Price',
-    'movie.storeConfig.status': 'Status',
-    'movie.storeConfig.storeType': 'Store type',
+    'movieStoreConfigStatus': 'Status',
+    'movieStoreConfigStoreType': 'Store type',
     'rights': 'rights',
     'explorerights': 'All rights for this title',
     'edit': 'Edit',
   };
 
   public initialColumnsTableTitles: string[] = [
-    'id',
-    'movie.internalRef',
-    'movie.poster',
-    'movie.title.original',
-    'movie.releaseYear',
+    'titleId',
+    'movieInternalRef',
+    'moviePoster',
+    'movieTitleOriginal',
+    'movieReleaseYear',
     'price',
-    'movie.storeConfig.status',
-    'movie.storeConfig.storeType',
+    'movieStoreConfigStatus',
+    'movieStoreConfigStoreType',
     'rights',
     'explorerights',
     'edit',
@@ -91,14 +91,14 @@ export class ContractComponent implements OnInit {
   // FILTERS
   filterPredicateTableTitles(data: any, filter) {
     const columnsToFilter = [
-      'id',
-      'movie.internalRef',
-      'movie.poster',
-      'movie.title.original',
-      'movie.releaseYear',
+      'titleId',
+      'movieInternalRef',
+      'moviePoster',
+      'movieTitleOriginal',
+      'movieReleaseYear',
       'price',
-      'movie.storeConfig.status',
-      'movie.storeConfig.storeType',
+      'movieStoreConfigStatus',
+      'movieStoreConfigStoreType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -141,7 +141,12 @@ export class ContractComponent implements OnInit {
               this.titles.push({
                 titleId,
                 price: c.lastVersion.titles[titleId].price,
-                movie,
+                movieInternalRef: movie.internalRef,
+                moviePoster: movie.poster,
+                movieTitleOriginal: movie.title.original,
+                movieReleaseYear: movie.release.year,
+                movieStoreConfigStatus: movie.storeConfig.status,
+                movieStoreConfigStoreType: movie.storeConfig.storeType,
                 rights: c.lastVersion.titles[titleId].distributionRightIds ? c.lastVersion.titles[titleId].distributionRightIds.map(d => ({ id: d, movie: titleId })) : [],
                 explorerights: `/c/o/admin/panel/rights/${titleId}`,
                 edit: titleId,
