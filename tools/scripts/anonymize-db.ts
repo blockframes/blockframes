@@ -13,9 +13,8 @@ import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { JsonlDbRecord } from '@blockframes/firebase-utils';
 
-type Id = string;
-const newUsers: Record<Id, User | PublicUser> = {};
-const newOrgs: Record<Id, Organization | PublicOrganization> = {};
+const userCache: { [uid: string]: User | PublicUser } = {};
+const orgCache: { [id: string]: Organization | PublicOrganization } = {};
 
 const fakeEmail = (name: string) =>
   `dev+${name.replace(/\W/g, '').toLowerCase()}-${Math.random()
@@ -28,7 +27,7 @@ function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T 
 }
 
 function assertType<T extends object>(doc: any, ...keys: (keyof T)[]): asserts doc is T {
-  if (hasKeys<T>(doc, ...keys)) throw Error('WRONG OBJECT TYPE!');
+  if (!hasKeys<T>(doc, ...keys)) throw Error('WRONG OBJECT TYPE!');
 }
 
 function processUser<T extends User | PublicUser>(u: T): T {
@@ -66,10 +65,11 @@ function processNotification(n: NotificationDocument): NotificationDocument {
 function updateUser(user: User | PublicUser) {
   if (!user) return;
   if (hasKeys<PublicUser>(user, 'uid') && !hasKeys<User>(user, 'watermark')) { // Is public
-    return createPublicUser( newUsers?.[user.uid] || (newUsers[user.uid] = processUser(user)));
+    const newUser =  userCache?.[user.uid] || (userCache[user.uid] = processUser(user))
+    return createPublicUser(newUser);
     // If not in cache, process the user, write to cache, make it a publicUser and return it
   } else if (hasKeys<User>(user, 'uid')) {
-    return newUsers?.[user.uid] || (newUsers[user.uid] = processUser(user));
+    return userCache?.[user.uid] || (userCache[user.uid] = processUser(user));
   }
   throw Error(`Unable to process user: ${JSON.stringify(user, null, 4)}`);
 }
@@ -77,19 +77,15 @@ function updateUser(user: User | PublicUser) {
 function updateOrg(org: Organization | PublicOrganization) {
   if (!org) return;
   if (hasKeys<PublicOrganization>(org, 'denomination') && !hasKeys<Organization>(org, 'email')) { // Is public
-    return createPublicOrganization(newOrgs?.[org.id] || (newOrgs[org.id] = processOrg(org))
-    );
+    const newOrg = orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
+    return createPublicOrganization(newOrg);
   } else if (hasKeys<Organization>(org, 'email')) {
-    return newOrgs?.[org.id] || (newOrgs[org.id] = processOrg(org));
+    return orgCache?.[org.id] || (orgCache[org.id] = processOrg(org));
   }
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
 function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
-  // function pathHasAny(path: string) { return docPath.includes(path) }
-  function pathHasAny(...paths: string[]) {
-    return !paths.every((path) => !docPath.includes(path));
-  }
   const ignorePaths = [
     '_META/',
     'blockframesAdmin/',
@@ -100,16 +96,16 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
     'permissions/',
     'publicContracts/',
   ];
-  if (!doc || pathHasAny(...ignorePaths)) return { docPath, content: doc };
+  if (!doc || ignorePaths.some((path) => docPath.includes(path))) return { docPath, content: doc };
 
   try {
-    if (pathHasAny('users/') && hasKeys<User>(doc, 'uid') && doc?.email) { // USERS
+    if (docPath.includes('users/') && hasKeys<User>(doc, 'uid') && doc?.email) { // USERS
       return { docPath, content: updateUser(doc) };
-    } else if (pathHasAny('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) { // ORGS
+    } else if (docPath.includes('orgs/') && hasKeys<Organization>(doc, 'id', 'denomination')) { // ORGS
       return { docPath, content: updateOrg(doc) };
-    } else if (pathHasAny('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
+    } else if (docPath.includes('invitations/') && hasKeys<Invitation>(doc, 'type', 'status', 'mode')) { // INVITATIONS
       return { docPath, content: processInvitation(doc) };
-    } else if (pathHasAny('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
+    } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
     }
   } catch (e) {
