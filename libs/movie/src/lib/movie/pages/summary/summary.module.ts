@@ -75,7 +75,21 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
-    RouterModule.forChild([{ path: '', component: MovieFormSummaryComponent }])
+    RouterModule.forChild([])
   ],
+  exports: [
+    MovieFormSummaryComponent,
+    SummaryMainComponent,
+    SummarySynopsisComponent,
+    SummaryProductionComponent,
+    SummaryArtisticComponent,
+    SummaryReviewComponent,
+    SummaryAdditionalInformationComponent,
+    SummaryTechnicalInfoComponent,
+    SummaryAvailableMaterialsComponent,
+    SummaryMediaFilesComponent,
+    SummaryMediaImagesComponent,
+    SummaryMediaVideosComponent
+  ]
 })
 export class TunnelSummaryModule {}

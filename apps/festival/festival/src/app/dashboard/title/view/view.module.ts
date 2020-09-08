@@ -12,6 +12,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
+import { TunnelSummaryModule } from '@blockframes/movie/pages/summary/summary.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDividerModule } from '@angular/material/divider';
 
 const routes = [{
   path: '',
@@ -26,17 +28,13 @@ const routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'details',
+      redirectTo: 'main',
       pathMatch: 'full'
     },
     {
       path: 'activity',
       loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
     },
-    {
-      path: 'details',
-      loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
-    }
   ]
 }];
 
@@ -50,12 +48,14 @@ const routes = [{
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
+    TunnelSummaryModule,
     // Material
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatDividerModule,
     // Routes
     RouterModule.forChild(routes)
   ]

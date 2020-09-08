@@ -38,16 +38,70 @@
       </div>
     </article>
   </header>
+
   <section>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-         *ngFor="let link of navLinks"
-         [routerLink]="link.path"
-         routerLinkActive #rla="routerLinkActive"
-         [active]="rla.isActive">
-        {{link.label}}
-      </a>
-    </nav>
+    <mat-tab-group>
+      <!-- MAIN INFORMATION TAB -->
+      <mat-tab label="Main Information">
+        <article class="body-tab">
+          <h3>Main Information</h3>
+          <article class="summary">
+            <movie-summary-main [movie]="form" [link]="getPath('main')"></movie-summary-main>
+          </article>
+
+          <mat-divider></mat-divider>
+
+          <h3>Selections and Reviews</h3>
+          <article class="summary">
+            <movie-summary-review [movie]="form" [link]="getPath('reviews')"></movie-summary-review>
+          </article>
+        </article>
+      </mat-tab>
+
+      <!-- ARTISTIC INFORMATION TAB -->
+      <mat-tab label="Artistic Information">
+        <article class="body-tab">
+          <h3>Artistic Team</h3>
+          <article class="summary">
+            <movie-summary-artistic [movie]="form" [link]="getPath('artistic')"></movie-summary-artistic>
+          </article>
+        </article>
+      </mat-tab>
+
+      <!-- PRODUCTION INFORMATION TAB -->
+      <mat-tab label="Production Information">
+        <article class="body-tab">
+          <h3>Production Information</h3>
+          <article class="summary">
+            <movie-summary-production [movie]="form" [link]="getPath('production')"></movie-summary-production>
+          </article>
+        </article>
+      </mat-tab>
+
+      <!-- ADDITIONAL INFORMATION TAB -->
+      <mat-tab label="Additional Information">
+        <article class="body-tab">
+          <h3>Additional Information</h3>
+          <article class="summary">
+            <movie-summary-additional-information [movie]="form" [link]="getPath('additional-information')"></movie-summary-additional-information>
+          </article>
+
+          <mat-divider></mat-divider>
+
+          <h3>Technical Information</h3>
+          <article class="summary">
+            <movie-summary-technical-info [movie]="form" [link]="getPath('technical-info')"></movie-summary-technical-info>
+          </article>
+
+          <mat-divider></mat-divider>
+
+          <h3>Available Materials</h3>
+          <article class="summary">
+            <movie-summary-available-materials [movie]="form" [link]="getPath('available-materials')"></movie-summary-available-materials>
+          </article>
+        </article>
+      </mat-tab>
+    </mat-tab-group>
     <router-outlet></router-outlet>
   </section>
 </ng-container>
