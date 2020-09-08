@@ -8,6 +8,7 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { from } from 'rxjs';
+import { getStoragePath } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -82,6 +83,7 @@ export class CropperComponent implements OnInit {
   /** Disable fileUploader & delete buttons in 'show' step */
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
+  @Input() protected = false;
 
   constructor(private mediaService: MediaService) { }
 
@@ -122,7 +124,7 @@ export class CropperComponent implements OnInit {
       const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
 
       this.form.patchValue({
-        ref: `${this.storagePath}/`,
+        ref: getStoragePath(this.storagePath, this.protected),
         blobOrFile: blob,
         delete: false,
         fileName: fileName,

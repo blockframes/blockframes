@@ -24,6 +24,11 @@ export async function getDocAndPath(filePath: string | undefined) {
     Example: 'collection/id/field/fileName'`);
   }
 
+  // remove "protected/"" or "public/"
+  if (['protected', 'public'].includes(filePathElements[0])) {
+    filePathElements.shift();
+  }
+
   const collection = filePathElements.shift()!;
   const docId = filePathElements.shift()!;
 
@@ -74,7 +79,7 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
 
   // link the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: filePath });
+  return doc.update({ [fieldToUpdate]: filePath });
 }
 
 /**
@@ -101,7 +106,7 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
   // unlink the firestore
   // ! this will not work with array in the path like for poster
-  return doc.update({[fieldToUpdate]: '' });
+  return doc.update({ [fieldToUpdate]: '' });
 }
 
 /**

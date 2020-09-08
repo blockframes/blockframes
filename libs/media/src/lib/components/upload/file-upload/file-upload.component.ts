@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getMimeType } from '@blockframes/utils/file-sanitizer';
+import { getMimeType, getStoragePath } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { Observable } from 'rxjs';
@@ -28,6 +28,7 @@ export class FileUploadComponent implements OnInit {
   /** firestore path */
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
+  @Input() protected = false;
 
   public size$: Observable<string>;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
@@ -103,7 +104,7 @@ export class FileUploadComponent implements OnInit {
     this.state = 'ready';
 
     this.form.patchValue({
-      ref: this.storagePath,
+      ref: getStoragePath(this.storagePath, this.protected),
       blobOrFile: file,
       delete: false,
       fileName: file.name,

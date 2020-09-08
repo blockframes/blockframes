@@ -17,6 +17,16 @@ export function sanitizeFileName(str: string): string {
   return `${uuidv4()}.${getFileExtension(str)}`;
 }
 
+export function getStoragePath(path: string, protectedMedia = false): string {
+  // Remove first trailing slash if any
+  path = path.indexOf('/') === 0 ? path.slice(1) : path;
+
+  // Add last traling slash if missing
+  path = path[path.length - 1] !== '/' ? `${path}/` : path;
+
+  return `${protectedMedia ? 'protected/' : 'public/'}${path}`;
+}
+
 /**
  * Extract file extension
  * @param fileName
