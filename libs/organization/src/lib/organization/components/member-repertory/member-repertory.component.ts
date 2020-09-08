@@ -20,6 +20,7 @@ export class MemberRepertoryComponent {
   @Output() updatedToMember = new EventEmitter<string>();
 
   @Input() memberColumns = {
+    uid: '',
     firstName: 'First Name',
     lastName: 'Last Name',
     email: 'Email Address',

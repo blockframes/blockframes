@@ -57,7 +57,7 @@ export class OrganizationComponent implements OnInit {
   ];
 
   public memberColumns = {
-    userId: 'Id',
+    uid: '',
     firstName: 'First Name',
     avatar: 'Avatar',
     lastName: 'Last Name',
@@ -67,7 +67,7 @@ export class OrganizationComponent implements OnInit {
     edit: 'Edit',
   };
 
-  public memberColumnsIndex = ['userId', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['uid', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
