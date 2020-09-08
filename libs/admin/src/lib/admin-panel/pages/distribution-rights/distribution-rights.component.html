@@ -16,13 +16,13 @@
       <span>{{ id }} </span>
       <admin-go-to type="title" [id]="id"></admin-go-to>
     </ng-template>
-    <ng-template colRef="right.publicId" let-publicId>
+    <ng-template colRef="rightPublicId" let-publicId>
       {{ publicId ? publicId : '-- '}}
     </ng-template>
-    <ng-template colRef="right.terms" let-terms>
+    <ng-template colRef="rightTerms" let-terms>
       <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
     </ng-template>
-    <ng-template colRef="right.exclusive" let-exclusive>
+    <ng-template colRef="rightExclusive" let-exclusive>
       {{ exclusive ? 'Yes': 'No'}}
     </ng-template>
   </bf-table-filter>
