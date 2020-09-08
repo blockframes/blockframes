@@ -23,18 +23,18 @@
     </ng-container>
     <ng-template #noOrg>--</ng-template>
   </ng-template>
-  <ng-template colRef="event.id" let-eventId>
+  <ng-template colRef="eventId" let-eventId>
     <a [routerLink]="['/c/o/admin/panel/event', eventId]">
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </ng-template>
-  <ng-template colRef="event.start" let-start>
+  <ng-template colRef="eventStart" let-start>
     {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="event.end" let-end>
+  <ng-template colRef="eventEnd" let-end>
     {{ end | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="event.isPrivate" let-privateEvent>
+  <ng-template colRef="eventIsPrivate" let-privateEvent>
     {{ privateEvent ? 'private' : 'public'}}
   </ng-template>
   <ng-template colRef="movie" let-movie>
@@ -43,7 +43,7 @@
         <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
-        <span>{{ movie.title.international }} ({{ movie.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>

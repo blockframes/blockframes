@@ -159,7 +159,7 @@
           showFilter
           showLoader
           showPaginator>
-          <ng-template colRef="movie.poster" let-posters>
+          <ng-template colRef="moviePoster" let-posters>
             <ng-container *ngIf="posters; else noposter">
               <img class="poster" [ref]="posters" asset="empty_poster.webp">
             </ng-container>
@@ -188,10 +188,10 @@
           <ng-template colRef="explorerights" let-rightslink>
             <a [routerLink]="rightslink"><mat-icon svgIcon="eye"></mat-icon></a>
           </ng-template>
-          <ng-template colRef="movie.storeConfig.status" let-storeStatus>
+          <ng-template colRef="movieStoreConfigStatus" let-storeStatus>
             {{ storeStatus | toLabel: 'storeStatus' | async }}
           </ng-template>
-          <ng-template colRef="movie.storeConfig.storeType" let-storeType>
+          <ng-template colRef="movieStoreConfigStoreType" let-storeType>
             {{ storeType | toLabel: 'storeType' | async }}
           </ng-template>
           <ng-template colRef="edit" let-edit>

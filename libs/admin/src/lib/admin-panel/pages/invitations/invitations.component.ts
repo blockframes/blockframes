@@ -25,16 +25,16 @@ export class InvitationsComponent implements OnInit {
   public columns: string[] = [
     'id',
     'org',
-    'event.title',
-    'event.id',
-    'event.start',
-    'event.end',
-    'event.type',
+    'eventTitle',
+    'eventId',
+    'eventStart',
+    'eventEnd',
+    'eventType',
     'movie',
-    'event.isPrivate',
-    'guest.email',
-    'guest.firstName',
-    'guest.lastName',
+    'eventIsPrivate',
+    'guestEmail',
+    'guestFirstName',
+    'guestLastName',
     'guestOrg',
     'date',
     'mode',
@@ -52,44 +52,56 @@ export class InvitationsComponent implements OnInit {
   async ngOnInit() {
     const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'));
 
-    const orgs = invitations.map(async i => {
-      const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
-      invitation.org = await this.getOrg(getHost(invitation, 'org').id);
-      invitation.event = await this.getEvent(invitation.docId);
+    const invitationsDetailed = invitations.map(async i => {
+
+      const org = await this.getOrg(getHost(i, 'org').id);
+      const event = await this.getEvent(i.docId);
+
+      const invitation = { 
+        ...i,
+        org,
+        eventTitle: event.title,
+        eventId: event.id,
+        eventStart: event.start,
+        eventEnd: event.end,
+        eventType: event.type,
+        eventIsPrivate: event.isPrivate,
+       } as InvitationDetailed;
+
       const guestOrgId = getGuest(i, 'user').orgId;
       if (guestOrgId) {
         invitation.guestOrg = await this.getOrg(guestOrgId);
       }
 
-      if (invitation.event.type === 'screening') {
-        const titleId = invitation.event.meta.titleId as string;
+      if (invitation.eventType === 'screening') {
+        const titleId = event.meta.titleId as string;
         if (titleId) {
           try {
             invitation.movie = await this.getMovie(titleId);
           } catch (err) {
-            console.log(`Error while loading movie for event : ${invitation.event.id}`);
+            console.log(`Error while loading movie for event : ${invitation.eventId}`);
           }
         }
       }
       return invitation;
     })
 
-    this.invitations = await Promise.all(orgs);
+    this.invitations = await Promise.all(invitationsDetailed);
     this.invitationListLoaded = true;
     this.cdRef.markForCheck();
   }
 
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
-      'event id': i.event.id,
-      'event name': i.event.title,
-      'start date': i.event.start,
-      'end date': i.event.end,
+      'event id': i.eventId,
+      'event name': i.eventTitle,
+      'start date': i.eventStart,
+      'end date': i.eventEnd,
       'host organization': orgName(i.org),
       'host org id': i.org.id,
-      'event type': i.event.type,
+      'event type': i.eventType,
       'title': i.movie ? i.movie.title.international : '--',
-      'privacy status': i.event.isPrivate ? 'private' : 'public',
+      'privacy status': i.eventIsPrivate ? 'private' : 'public',
       'invitation date': i.date,
       'guest email': getGuest(i, 'user').email,
       'guest first name': getGuest(i, 'user').firstName || '--',
