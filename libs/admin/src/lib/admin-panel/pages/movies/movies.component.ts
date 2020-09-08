@@ -17,7 +17,7 @@ export class MoviesComponent implements OnInit {
     'poster': 'Poster',
     'title': 'Original title',
     'org': 'Organization',
-    'storeConfig': 'Status',
+    'status': 'Status',
     'edit': 'Edit',
   };
 
@@ -26,7 +26,7 @@ export class MoviesComponent implements OnInit {
     'poster',
     'title',
     'org',
-    'storeConfig',
+    'status',
     'edit',
   ];
   public rows: any[] = [];
@@ -45,7 +45,13 @@ export class MoviesComponent implements OnInit {
     const movies = await this.movieService.getAllMovies();
 
     const promises = movies.map(async m => {
-      const row = { ...m } as any;
+      const row = {} as any;
+
+      row.id = m.id
+      row.internalRef = m.internalRef,
+      row.poster = m.poster
+      row.title = m.title.original
+      row.status = m.storeConfig.status
 
       // Edit link
       row.edit = {
@@ -68,8 +74,8 @@ export class MoviesComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'internalRef',
-      'title.original',
-      'storeConfig.status',
+      'title',
+      'status',
       'org.denomination.full',
       'org.denomination.public'
     ];

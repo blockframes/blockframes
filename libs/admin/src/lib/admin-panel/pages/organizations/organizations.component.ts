@@ -13,9 +13,9 @@ export class OrganizationsComponent implements OnInit {
     'id': 'Id',
     'status': 'Status',
     'logo': 'Logo',
-    'denomination.full': 'Company name',
-    'denomination.public': 'Short name',
-    'addresses.main.country': 'Country',
+    'companyName': 'Company name',
+    'shortName': 'Short name',
+    'country': 'Country',
     'email': 'Email',
     'appAccess': 'Authorizations',
     'edit': 'Edit',
@@ -24,9 +24,9 @@ export class OrganizationsComponent implements OnInit {
   public initialColumns: string[] = [
     'id',
     'logo',
-    'denomination.full',
-    'denomination.public',
-    'addresses.main.country',
+    'companyName',
+    'shortName',
+    'country',
     'status',
     'email',
     'appAccess',
@@ -43,7 +43,14 @@ export class OrganizationsComponent implements OnInit {
   async ngOnInit() {
     const orgs = await this.organizationService.getValue();
     this.rows = orgs.map(o => ({
-      ...o,
+      'id': o.id,
+      'status': o.status,
+      'logo': o.logo,
+      'email': o.email,
+      'companyName': o.denomination.full,
+      'shortName': o.denomination.public,
+      'country': o.addresses.main.country,
+      'appAccess': o.appAccess,
       edit: {
         id: o.id,
         link: `/c/o/admin/panel/organization/${o.id}`,
@@ -56,8 +63,9 @@ export class OrganizationsComponent implements OnInit {
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'denomination.full',
-      'denomination.public',
+      'companyName',
+      'shortName',
+      'country',
       'status',
       'email',
     ];
