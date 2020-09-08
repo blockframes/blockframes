@@ -9,7 +9,7 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -17,6 +17,11 @@ import { UserService, OrganizationMember, createOrganizationMember, PublicUser }
 import { PermissionsService } from '@blockframes/permissions/+state';
 import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
 import { network, baseEnsDomain } from '@env';
+
+const findOrgByMovieIdQuery = (movieId: string) => ({
+  path: 'orgs',
+  queryFn: ref => ref.where('movieIds', 'array-contains', movieId)
+})
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -167,5 +172,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     uniqueOnEthereum = !orgEthAddress ? true : false;
     uniqueOnFirestore = await this.orgNameExist(orgName).then(exist => !exist);
     return uniqueOnEthereum && uniqueOnFirestore;
+  }
+
+  public findOrgByMovieId(id: string) {
+    return queryChanges.call(this, findOrgByMovieIdQuery(id));
   }
 }
