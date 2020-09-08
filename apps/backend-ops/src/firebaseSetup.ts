@@ -70,8 +70,22 @@ export async function prepareForTesting() {
   process.exit(0);
 }
 
+export async function prepareDb() {
+  const { db, auth, storage, getCI } = loadAdminServices();
+
+  const p1 = copyDbFromCi(storage, getCI());
+  const p3 = p1.then(() => restore(appUrl.content));
+  const p4 = p3.then(() => migrate(false));
+  const p5 = p4.then(() => cleanDeprecatedData(db, auth));
+  const p6 = p5.then(generateFixtures)
+  return Promise.all([p1, p2, p3, p4, p5, p6, p8]);
+}
+
+// ! sync users
+// ! do algolia
 /**
  * This is an experimental function to see if we can speed this process up
+ // !!! await generateFixtures()
  */
 export async function prepareInParallel() {
   const { db, auth, storage, getCI } = loadAdminServices();

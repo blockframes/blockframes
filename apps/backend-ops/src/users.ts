@@ -5,13 +5,14 @@
  */
 import { differenceBy } from 'lodash';
 import { Auth, UserRecord } from './admin';
-import { loadAdminServices } from "@blockframes/firebase-utils";
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { sleep } from './tools';
 import readline from 'readline';
-import { upsertWatermark, runChunks, JsonlDbRecord} from '@blockframes/firebase-utils';
+import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 import { firebase } from '@env';
+import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 
 export const { storageBucket } = firebase;
 
@@ -100,8 +101,10 @@ export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
   const { auth } = loadAdminServices();
 
   const expectedUsers = readUsersFromJsonlFixture(db);
-  await removeUnexpectedUsers(expectedUsers, auth);
-  await createAllUsers(expectedUsers, auth);
+  const deleteResult = await deleteAllUsers(auth);
+  const createResult = await importAllUsers(auth, expectedUsers);
+  console.log(deleteResult);
+  console.log(createResult);
   await endMaintenance();
 }
 
