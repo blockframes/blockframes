@@ -19,8 +19,6 @@ export class MediaService {
 
   private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
 
-  private protectedMediaDir = 'protected';
-
   private breakpointsWidth = [600, 1024, 1440, 1920];
 
   private overlayOptions = {
@@ -134,23 +132,26 @@ export class MediaService {
   }
 
   async generateImageSrcset(ref: string, p: ImageParameters): Promise<string> {
-    let protectedMedia = false;
-    if (ref.indexOf(`${this.protectedMediaDir}/`) === 0) {
-      protectedMedia = true;
-      ref = ref.slice(`${this.protectedMediaDir}/`.length);
+    const refParts = ref.split('/');
+    const protectedMedia = refParts[0] === 'protected';
+
+    if (['public', 'protected'].includes(refParts[0])) {
+      refParts.shift();
+      ref = refParts.join('/');
     }
+
     const sizes = getImgSize(ref);
 
     let tokens: string[] = [];
     if (protectedMedia) {
       tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
-    };
+    }
 
     const urls = sizes.map((size, index) => {
       const parameters: ImageParameters = { ...p, w: size };
       if (tokens[index]) { parameters.s = tokens[index] };
       return `${getImgIxResourceUrl(ref, parameters)} ${size}w`;
-    })
+    });
 
     return urls.join(', ');
   }
@@ -163,10 +164,12 @@ export class MediaService {
    */
   async generateSingleImageUrl(ref: string, p: ImageParameters, w = 0): Promise<string> {
     const parameters: ImageParameters = { ...p, w };
-    if (ref.indexOf(`${this.protectedMediaDir}/`) === 0) {
-      ref = ref.slice(`${this.protectedMediaDir}/`.length);
-      parameters.s = (await this.getProtectedMediaToken(ref, [parameters]))[0];
-    };
+    const refParts = ref.split('/');
+
+    if (['public', 'protected'].includes(refParts[0])) {
+      refParts.shift();
+      ref = refParts.join('/');
+    }
 
     return getImgIxResourceUrl(ref, parameters);
   }
