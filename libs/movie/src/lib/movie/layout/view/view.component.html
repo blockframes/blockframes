@@ -2,7 +2,8 @@
   <header fxLayout fxLayoutAlign="start center">
     <app-menu></app-menu>
     <ng-container *ngFor="let link of navLinks">
-      <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive">
+      <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
+        #rla="routerLinkActive">
         {{link.label}}
       </a>
     </ng-container>
@@ -12,12 +13,13 @@
 <ng-content select="movie-header"></ng-content>
 
 <nav id="nav" mat-tab-nav-bar>
-  <a mat-tab-link
-    *ngFor="let link of navLinks"
-    [routerLink]="link.path"
-    routerLinkActive #rla="routerLinkActive"
+  <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
     [active]="rla.isActive">
-  {{link.label}}
+    {{link.label}}
   </a>
 </nav>
 <router-outlet></router-outlet>
+<movie-screening></movie-screening>
+<bf-carousel flex>
+  <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" carouselItem [col]="3" [src]="img.value">
+</bf-carousel>
