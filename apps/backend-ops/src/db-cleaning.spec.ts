@@ -16,7 +16,6 @@ import { AdminAuthMocked } from '@blockframes/testing/firebase';
 import { loadAdminServices } from '@blockframes/firebase-utils';
 import { removeUnexpectedUsers, UserConfig } from './users';
 import { getCollectionRef } from '@blockframes/firebase-utils';
-import { createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { clearFirestoreData } from '@firebase/testing';
 
 type Snapshot = FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
@@ -386,11 +385,11 @@ describe('DB cleaning script', () => {
     ];
 
     const testUsers = [
-      { uid: 'A', email: 'A@fake.com', watermark: createHostedMedia({ url: 'A.svg' }), avatar: createHostedMedia({ url: 'A.png' }) },
-      { uid: 'B', email: 'B@fake.com', watermark: createHostedMedia({ url: 'B.svg' }), avatar: createHostedMedia({ url: 'B.png' }) }
+      { uid: 'A', email: 'A@fake.com', watermark: 'A.svg', avatar: 'A.png' },
+      { uid: 'B', email: 'B@fake.com', watermark: 'B.svg', avatar: 'B.png' }
     ];
 
-    const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: createHostedMedia({ url: 'org-A.svg' }) }];
+    const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
     await populate('notifications', testNotifications);
@@ -582,11 +581,11 @@ describe('DB cleaning script', () => {
     ];
 
     const testUsers = [
-      { uid: 'A', email: 'A@fake.com', watermark: createHostedMedia({ url: 'A.svg' }), avatar: createHostedMedia({ url: 'A.png' }) },
-      { uid: 'B', email: 'B@fake.com', watermark: createHostedMedia({ url: 'B.svg' }), avatar: createHostedMedia({ url: 'B.png' }) }
+      { uid: 'A', email: 'A@fake.com', watermark: 'A.svg', avatar: 'A.png' },
+      { uid: 'B', email: 'B@fake.com', watermark: 'B.svg', avatar: 'B.png' }
     ];
 
-    const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: createHostedMedia({ url: 'org-A.svg' }) }];
+    const testOrgs = [{ id: 'org-A', email: 'org-A@fake.com', logo: 'org-A.svg' }];
 
     // Load our test set
     await populate('invitations', testInvitations);

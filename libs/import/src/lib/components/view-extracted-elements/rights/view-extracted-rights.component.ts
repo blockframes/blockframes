@@ -79,7 +79,7 @@ export class ViewExtractedRightsComponent implements OnInit {
           distributionRight,
           errors: [],
           movieInternalRef: spreadSheetRow[SpreadSheetDistributionRight.internalRef],
-          movieTitle: movie ? movie.main.title.original : undefined,
+          movieTitle: movie ? movie.title.original : undefined,
           movieId: movie ? movie.id : undefined
         } as RightsImportState;
 

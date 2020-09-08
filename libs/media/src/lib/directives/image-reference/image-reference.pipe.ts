@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform, NgModule } from "@angular/core";
-import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 
 
 @Pipe({
@@ -7,10 +6,10 @@ import { HostedMedia } from "@blockframes/media/+state/media.firestore";
 })
 export class EmptyImagePipe implements PipeTransform {
   transform(
-    image: HostedMedia
+    image: string
   ): boolean {
     try {
-      return !image.ref;
+      return !image;
     } catch (error) {
       console.warn(error);
       return true;

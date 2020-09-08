@@ -10,27 +10,26 @@ import {
   MEDIAS_SLUG,
   TerritoriesSlug,
   TERRITORIES_SLUG,
-  MovieStatusLabel,
-  MovieStatusSlug,
-  MOVIE_STATUS_SLUG
+  ProductionStatus,
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
 import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
+import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 
 /////////////////////////
 // CatalogGenresFilter //
 /////////////////////////
 
 export interface CatalogSearch {
-  productionYear: DateRange;
+  releaseYear: DateRange;
   genres: GenresSlug[];
-  productionStatus: MovieStatusLabel[];
+  productionStatus: string[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
@@ -59,7 +58,7 @@ export interface AvailsSearch {
 
 function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch {
   return {
-    productionYear: {
+    releaseYear: {
       from: null,
       to: null
     },
@@ -134,7 +133,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     {} // Initial value. No controls at the beginning
   );
   return {
-    productionYear: createTermsControl(search.productionYear),
+    releaseYear: createTermsControl(search.releaseYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
@@ -210,18 +209,18 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     this.updateValueAndValidity();
   }
 
-  addStatus(status: MovieStatusSlug) {
-    if (!MOVIE_STATUS_SLUG.includes(status)) {
+  addStatus(status: ProductionStatus) {
+    if (!Object.keys(staticConsts.productionStatus).includes(status)) {
       throw new Error(
-        `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
+        `Production status ${status} is not part of the defined status, here is the complete list currently available: ${Object.keys(staticConsts.productionStatus)}`
       );
     } else {
       this.productionStatus.setValue([...this.productionStatus.value, status]);
     }
   }
 
-  removeStatus(status: MovieStatusSlug) {
-    if (MOVIE_STATUS_SLUG.includes(status)) {
+  removeStatus(status: ProductionStatus) {
+    if (Object.keys(staticConsts.productionStatus).includes(status)) {
       const newControls = this.get('productionStatus').value.filter(
         statusToRemove => statusToRemove !== status
       );
@@ -254,15 +253,15 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   checkStoreType(type: StoreType) {
     // check if media is already checked by the user
-    if (!this.get('storeType').value.includes(storeType)) {
-      this.get('storeType').setValue([...this.get('storeType').value, storeType]);
-    } else if ( this.get('storeType').value.includes(storeType)) {
+    if (!this.get('storeType').value.includes(staticConsts.storeType)) {
+      this.get('storeType').setValue([...this.get('storeType').value, staticConsts.storeType]);
+    } else if ( this.get('storeType').value.includes(staticConsts.storeType)) {
         const types = this.get('storeType').value.filter(
           (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
         );
         this.get('storeType').setValue(types);
     } else {
-      throw new Error(`Store Type ${storeType[type]} doesn't exist`);
+      throw new Error(`Store Type ${staticConsts.storeType[type]} doesn't exist`);
     }
   }
 

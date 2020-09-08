@@ -71,13 +71,13 @@ export class WishlistComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     this.service.removeMovieFromWishlist(movie.id);
     this.snackbar.open(
-      `${movie.main.title.international} has been removed from your selection.`,
+      `${movie.title.international} has been removed from your selection.`,
       'close',
       { duration: 2000 }
     );
     this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
-      movieTitle: movie.main.title.original
+      movieTitle: movie.title.original
     });
   }
 

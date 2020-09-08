@@ -1,8 +1,9 @@
-import { MovieSalesInfo, createMovieSalesInfo, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/+state/movie.firestore';
 import { FormStaticValue } from '@blockframes/utils/form';
+import { toDate } from '@blockframes/utils/helpers';
+import { createMovie, Movie } from '@blockframes/movie/+state';
 
 // Ratings
 
@@ -24,6 +25,14 @@ export class MovieRatingForm extends FormEntity<RatingFormControl> {
   }
 }
 
+export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
+  return {
+    country: null,
+    value: '',
+    ...params
+  };
+}
+
 // Original Release
 
 function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
@@ -43,41 +52,37 @@ export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> 
   }
 }
 
+export function createMovieOriginalRelease(
+  params: Partial<MovieOriginalRelease> = {}
+): MovieOriginalRelease {
+  return {
+    country: null,
+    ...params,
+    date: toDate(params.date),
+  };
+}
+
 // Sales infos
 
-function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
-  const entity = createMovieSalesInfo(salesInfo);
+function createMovieSalesInfoControls(salesInfo: Partial<Movie> = {}){
+  const entity = createMovie(salesInfo);
   return {
     scoring: new FormControl(entity.scoring),
     color: new FormControl(entity.color),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     certifications: new FormControl(entity.certifications),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     soundFormat: new FormControl(entity.soundFormat),
-    // theatricalRelease: new FormControl(entity.theatricalRelease),
   }
 }
 
 export type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
 
 export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
-  constructor(SalesInfo?: Partial<MovieSalesInfo>) {
+  constructor(SalesInfo?: Partial<Movie>) {
     super(createMovieSalesInfoControls(SalesInfo));
-  }
-
-  get broadcasterCoproducers() {
-    return this.get('broadcasterCoproducers');
-  }
-
-  public addBroadcasterCoproducers(): void {
-    this.broadcasterCoproducers.push(new FormControl(''));
-  }
-
-  public removeBroadcasterCoproducers(i: number): void {
-   this.broadcasterCoproducers.removeAt(i);
   }
 
   get rating() {

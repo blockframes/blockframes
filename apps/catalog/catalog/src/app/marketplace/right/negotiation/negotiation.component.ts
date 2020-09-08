@@ -25,7 +25,7 @@ export class NegotiationComponent {
   ) { }
 
   getDirectors(movie: Movie) {
-    return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
+    return  movie.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
   }
 
   openIntercom() {

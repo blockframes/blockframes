@@ -2,10 +2,14 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.firestore';
 import { OldImgRef } from './old-types';
 import { getCollection } from '@blockframes/firebase-utils';
+
+import {
+  OldExternalMedia as ExternalMedia,
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalHostedMedia
+} from './old-types';
 
 /**
  * Migrate old medias & images and some refactoring on the movie.
@@ -58,7 +62,7 @@ function updateOrgs(db: Firestore, orgs: Organization[]) {
   }
 }
 
-async function updateMovies(db: Firestore, movies: Movie[]) {
+async function updateMovies(db: Firestore, movies) {
   const externalMediaLinks = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link'];
   const hostedMediaLinks = ['presentation_deck', 'scenario'];
   const legacyKeysExternalMedia = ['originalFileName', 'originalRef', 'ref'];
@@ -125,10 +129,10 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
 }
 
 /**
- * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url} 
+ * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url}
  * But references points to old structore on storage.
- * @param element 
- * @param property 
+ * @param element
+ * @param property
  */
 function updateImgRef<T extends (PublicUser | Organization | PromotionalHostedMedia)>(
   element: T,

@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { ExternalMedia } from '@blockframes/media/+state/media.firestore';
 
 @Pipe({
   name: 'promotionalLinks',
@@ -10,7 +9,7 @@ import { ExternalMedia } from '@blockframes/media/+state/media.firestore';
 export class PromotionalLinksPipe implements PipeTransform {
   transform(links: string[], movie: Movie) {
     return links.map(link => {
-      const { url } = (movie.promotionalElements[link].media as ExternalMedia);
+      const url = (movie.promotional[link] as string);
       if (!!url) {
         const shouldDownload = ['scenario', 'presentation_deck'].includes(link);
         const linkLabel = getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link);

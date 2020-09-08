@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 // Component
 import { MovieTunnelComponent } from './movie-tunnel.component';
 import { MovieTunnelRoutingModule } from './movie-tunnel-routing.module';
+import { MovieFormShellModule } from '@blockframes/movie/pages/shell/shell.module';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -24,6 +25,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     CommonModule,
     MovieTunnelRoutingModule,
     RouterModule,
+    MovieFormShellModule,
     FlexLayoutModule,
     TunnelLayoutModule,
     ImageReferenceModule,

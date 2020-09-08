@@ -1,9 +1,14 @@
 <main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
-      <span>Export to CSV</span>
-      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+      <ng-container *ngIf="exporting.$ | async else export">
+        <span>Generating CSV...</span>
+      </ng-container>
+      <ng-template #export>
+        <span>Export to CSV</span>
+        <mat-icon svgIcon="arrow_upward"></mat-icon>
+      </ng-template>
     </button>
   </article>
   <bf-table-filter
@@ -13,11 +18,11 @@
     [filterPredicate]="filterPredicate"
     showFilter
     showLoader
-    [pageSize]="100"
+    [pageSize]="50"
     showPaginator>
-    <ng-template colRef="main.poster" let-posters>
-      <ng-container *ngIf="posters && posters.media as poster;">
-        <img class="poster" [ref]="poster" asset="empty_poster.webp">
+    <ng-template colRef="poster" let-posters>
+      <ng-container *ngIf="posters">
+        <img class="poster" [ref]="posters" asset="empty_poster.webp">
       </ng-container>
     </ng-template>
     <ng-template colRef="id" let-id>
@@ -46,10 +51,10 @@
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
-    <ng-template colRef="main.storeConfig.status" let-storeStatus>
+    <ng-template colRef="storeConfig.status" let-storeStatus>
       {{ storeStatus | toLabel: 'storeStatus' | async }}
     </ng-template>
-    <ng-template colRef="main.storeConfig.storeType" let-storeType>
+    <ng-template colRef="storeConfig.storeType" let-storeType>
       {{ storeType | toLabel: 'storeType' | async }}
     </ng-template>
     <ng-template colRef="org" let-org>

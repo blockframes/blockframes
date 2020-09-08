@@ -1,5 +1,4 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieMainControl } from '../main.form';
 
 @Component({
   selector: '[form] movie-form-total-runtime',
@@ -9,6 +8,6 @@ import { MovieMainControl } from '../main.form';
 })
 export class TotalRuntimeComponent {
 
-  @Input() form: MovieMainControl['totalRunTime'];
+  @Input() form;
 
 }

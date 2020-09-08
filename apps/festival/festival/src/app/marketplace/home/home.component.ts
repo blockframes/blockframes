@@ -2,7 +2,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 
 // RxJs
@@ -44,16 +44,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
-    const selectMovies = (status: MovieMain['status']) => {
+    const selectMovies = (status: Movie['productionStatus']) => {
       return this.movieQuery.selectAll({
-        filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival && movies.main.storeConfig.status === "accepted"
+        filterBy: movies => movies.productionStatus === status && movies.storeConfig.appAccess.festival && movies.storeConfig.status === "accepted"
       });
     }
     this.sections = [
       {
         title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival })
+        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival })
       },
       {
         title: 'In production',

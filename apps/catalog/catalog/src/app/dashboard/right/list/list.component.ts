@@ -1,6 +1,7 @@
 import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
-import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
+import { ContractQuery, ContractService, Contract } from '@blockframes/contract/contract/+state';
+import { ContractStatus } from '@blockframes/utils/static-model';
 import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Router, ActivatedRoute } from '@angular/router';

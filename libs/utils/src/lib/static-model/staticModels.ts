@@ -108,6 +108,38 @@ const models = {
       'label': 'Production Manager'
     },
   ] as const,
+  'DIRECTOR_CATEGORY': [
+    {
+      'slug': 'first-feature',
+      'label': 'First Feature'
+    },
+    {
+      'slug': 'rising-talent',
+      'label': 'Rising Talent'
+    },
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed Director'
+    },
+    {
+      'slug': 'prestige',
+      'label': 'Prestige'
+    }
+  ],
+  'MEMBER_STATUS': [
+    {
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    },
+    {
+      'slug': 'loosely-attached',
+      'label': 'Loosely Attached'
+    },
+    {
+      'slug': 'target',
+      'label': 'Target'
+    }
+  ],
   // TODO #2306
   'CAST_ROLES': [
     {
@@ -176,22 +208,46 @@ const models = {
       'label': 'Original Author'
     }
   ],
-  'MOVIE_STATUS': [
+  'RELEASE_STATUS': [
     {
-      'slug': 'financing',
-      'label': 'Pre-production'
+      'slug': 'estimated',
+      'label': 'Estimated'
     },
     {
-      'slug': 'shooting',
-      'label': 'In Production'
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    }
+  ] as const,
+  'SCREENING_STATUS': [
+    {
+      'slug': 'tobedetermined',
+      'label': 'To be determined'
     },
     {
-      'slug': 'post-production',
-      'label': 'Post-production'
+      'slug': 'estimated',
+      'label': 'Estimated'
     },
     {
-      'slug': 'finished',
-      'label': 'Completed'
+      'slug': 'confirmed',
+      'label': 'Confirmed'
+    }
+  ] as const,
+  'PREMIERE_TYPE': [
+    {
+      'slug': 'world',
+      'label': 'World'
+    },
+    {
+      'slug': 'international',
+      'label': 'International'
+    },
+    {
+      'slug': 'national',
+      'label': 'National'
+    },
+    {
+      'slug': 'market',
+      'label': 'Market'
     }
   ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
@@ -584,7 +640,6 @@ export default models;
 export interface SlugAndLabel {
   label: string;
   slug: string;
-  value?: boolean; // for checkboxes
 }
 
 export interface CurrencyWithLabel {

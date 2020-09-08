@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MoviePromotionalElementsForm } from '../promotional-elements.form';
 
 const links = [
   {
@@ -23,7 +22,7 @@ const links = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PromotionalLinksComponent {
-  @Input() form: MoviePromotionalElementsForm;
+  @Input() form;
 
   public links = links;
 }

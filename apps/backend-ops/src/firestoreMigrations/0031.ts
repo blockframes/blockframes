@@ -1,10 +1,13 @@
 import { Firestore, Storage } from '../admin';
-import { PromotionalHostedMedia } from '@blockframes/movie/+state/movie.firestore';
-import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { File as GFile } from '@google-cloud/storage';
 import { startMaintenance, endMaintenance, getDocument, runChunks } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
+
+import {
+  OldHostedMedia as HostedMedia,
+  OldNewPromotionalElement as PromotionalHostedMedia
+} from './old-types';
 
 const EMPTY_REF = '';
 
@@ -72,8 +75,8 @@ export async function upgrade(db: Firestore, storage: Storage) {
 /**
  * Moves resources to the right folder on storage and updates
  * the model
- * @param users 
- * @param storage 
+ * @param users
+ * @param storage
  */
 async function updateUsers(
   users: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
@@ -99,8 +102,8 @@ async function updateUsers(
 /**
  * Moves resources to the right folder on storage and updates
  * the model
- * @param orgs 
- * @param storage 
+ * @param orgs
+ * @param storage
  */
 async function updateOrgs(
   orgs: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
@@ -123,8 +126,8 @@ async function updateOrgs(
 /**
  * Moves resources to the right folder on storage and updates
  * the model
- * @param movies 
- * @param storage 
+ * @param movies
+ * @param storage
  */
 async function updateMovies(
   movies: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
@@ -347,7 +350,7 @@ const changeResourceDirectory = async (
 /**
  * Deletes everything that is not original
  * and removes files that are not linked in DB
- * @param bucket 
+ * @param bucket
  */
 async function cleanMovieDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
@@ -368,7 +371,7 @@ async function cleanMovieDir(bucket) {
 /**
  * Deletes everything that is not original
  * and removes files that are not linked in DB
- * @param bucket 
+ * @param bucket
  */
 async function cleanMoviesDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
@@ -389,7 +392,7 @@ async function cleanMoviesDir(bucket) {
 /**
  * Deletes everything that is not original
  * and removes files that are not linked in DB
- * @param bucket 
+ * @param bucket
  */
 async function cleanUsersDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
@@ -409,7 +412,7 @@ async function cleanUsersDir(bucket) {
 /**
  * Deletes everything that is not original
  * and removes files that are not linked in DB
- * @param bucket 
+ * @param bucket
  */
 async function cleanOrgsDir(bucket) {
   const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];

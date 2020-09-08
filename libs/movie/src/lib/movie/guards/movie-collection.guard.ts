@@ -8,7 +8,7 @@ import { Movie } from '../+state/movie.model';
 /** Query all the movies with their distributionRights */
 const movieListWithRightsQuery = () => ({
   path: 'movies',
-  queryFn: ref => ref.where('main.storeConfig.status', '==', 'accepted'),
+  queryFn: ref => ref.where('storeConfig.status', '==', 'accepted'),
   distributionRights: (movie: Movie) => ({
     path: `movies/${movie.id}/distributionRights`
   })

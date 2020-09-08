@@ -1,10 +1,9 @@
-import { HostedMedia, createHostedMedia } from '@blockframes/media/+state/media.firestore';
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
 //////////////////////////
-// VARIOUS IDENTIY OBJECTS
+// VARIOUS IDENTITY OBJECTS
 // Inclusive & LGBT compatible model
 // Even a company can identify as a human!
 //////////////////////////
@@ -34,13 +33,13 @@ interface IdentityRaw {
 export interface Person extends IdentityRaw {
   firstName?: string,
   lastName?: string,
-  avatar?: HostedMedia,
+  avatar?: string,
 }
 
 export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
-  logo?: HostedMedia;
+  logo?: string;
   countries?: TerritoriesSlug[],
 }
 
@@ -49,14 +48,28 @@ export interface Stakeholder extends StakeholderRaw {
  * @dev interface to represent a movie credit
  */
 export interface Credit extends Person {
-  shortBiography?: string,
+  description?: string,
+  filmography?: Filmography[],
+  status?: string,
 };
+
+export interface Filmography {
+  title?: string,
+  year?: number,
+}
 
 /**
  * @dev interface to represent a producer credit
  */
 export interface Producer extends Credit {
   role: ProducerRolesSlug, // overrided role scope from Producer interface
+};
+
+/**
+ * @dev interface to represent a director credit
+ */
+export interface Director extends Credit {
+  category?: string, // TODO Do a static when we have predefined value for category
 };
 
 /**
@@ -95,7 +108,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
     orgId: '',
     countries: [],
     ...params,
-    logo: createHostedMedia(params.logo),
+    logo: params.logo ?? '',
   }
 }
 
@@ -108,13 +121,24 @@ export function createParty(params: Partial<Party> = {}): Party {
   }
 }
 
-export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
+export function createCredit(params: Partial<Credit> = {}) {
   return {
     firstName: '',
     lastName: '',
     role: '',
-    shortBiography: '',
-    avatar: createHostedMedia(),
+    filmography: [],
+    description: '',
+    status: '',
+    category: '',
+    avatar: '',
     ...params
-  } as T;
+  }
+}
+
+export function createFilmography(params: Partial<Filmography> = {}): Filmography {
+  return {
+    title: '',
+    year: 0,
+    ...params
+  }
 }

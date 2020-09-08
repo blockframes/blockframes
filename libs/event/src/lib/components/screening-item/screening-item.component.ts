@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
-import { HostedMedia } from '@blockframes/media/+state/media.firestore';
 import { ScreeningEvent } from '../../+state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +12,7 @@ import { Movie } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ScreeningItemComponent {
-  public poster: HostedMedia;
+  public poster: string;
   public movie: Movie;
   public screening: ScreeningEvent;
   public invitation$: Observable<Invitation>;
@@ -21,7 +20,7 @@ export class ScreeningItemComponent {
   @Input() set event(screening: ScreeningEvent) {
     this.screening = screening;
     this.movie = screening.movie;
-    this.poster = screening.movie?.main.poster.media;
+    this.poster = screening.movie?.poster;
     this.invitation$ = this.invitationQuery.selectAll().pipe(
       map(invits => invits.find(e => e.docId === screening.id))
     );

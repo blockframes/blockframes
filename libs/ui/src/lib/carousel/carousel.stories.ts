@@ -27,8 +27,8 @@ export const bfCarousel = () => ({
               </div>
             </figure>
             <article>
-            <h6>{{ movie.main.title.international }}</h6>
-            <p class="mat-caption">{{ movie.main.directors | displayName }}</p>
+            <h6>{{ movie.title.international }}</h6>
+            <p class="mat-caption">{{ movie.directors | displayName }}</p>
             </article>
             </div>
           </ng-container>

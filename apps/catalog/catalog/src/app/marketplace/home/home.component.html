@@ -18,22 +18,22 @@
           <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/title">See more</a>
         </aside>
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
-          <bf-slide *ngFor="let movie of section.movies;" [image]="movie.main.banner.media"
+          <bf-slide *ngFor="let movie of section.movies;" [image]="movie.banner"
             overlayColor="medium">
             <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>
               <wishlist-button [movieId]="movie.id" small></wishlist-button>
               <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
-                <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
+                <h3 mat-button color="primary">{{ movie.title.international }}</h3>
                 <div>
                   <span class="mat-body-2"
-                    *ngFor="let director of movie.main.directors; let isLast=last; let i = index">
-                    {{ movie.main.directors[i] | displayName }}{{isLast ? '' : ', '}}
+                    *ngFor="let director of movie.directors; let isLast=last; let i = index">
+                    {{ movie.directors[i] | displayName }}{{isLast ? '' : ', '}}
                   </span>
                 </div>
                 <span class="mat-caption">{{ getMainInfo(movie) }}</span>
                 <span class="mat-caption"
-                  *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                  *ngFor="let salesAgent of movie.stakeholders.salesAgent; let isLast=last">
                   {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
                 </span>
               </div>

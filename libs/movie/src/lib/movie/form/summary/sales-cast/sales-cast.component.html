@@ -1,7 +1,7 @@
 <ul>
   <li>
     <strong>Principal Cast </strong>
-    <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
+    <ng-container *ngFor="let cast of movie.cast.controls; let isLast = last">
       <!-- TODO #2306 -->
       <!--       <ng-container *ngIf="cast.get('role').value === 'lead-role'"> -->
       <missing-control [control]="cast.get('firstName')" [link]="link"></missing-control>

@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieStoryControl } from '../story.form';
 @Component({
   selector: '[form] movie-form-synopsis',
   templateUrl: './synopsis.component.html',
@@ -8,5 +7,5 @@ import { MovieStoryControl } from '../story.form';
 })
 export class SynopsisComponent{
 
-  @Input() form: MovieStoryControl['synopsis'];
+  @Input() form;
 }
