@@ -1,0 +1,43 @@
+<ng-container *ngIf="(screenings$ | async)?.length; else noScreenings">
+  <ng-container *ngIf="screenings$ | async as screenings">
+    <h3>Next Screenings</h3>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px">
+      <ng-container *ngFor="let screening of screenings; let index = index">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <h5>{{ index === 0 ? 'FIRST SESSION' : 'SECOND SESSION' }}</h5>
+          <span class="mat-body-1" fxLayout="row" fxLayoutAlign="center start">
+            {{ screening | eventRange }}
+          </span>
+          <span class="mat-body-1" fxLayout="row" fxLayoutAlign="center start">
+            <!-- Start hour -->
+            {{ screening.start | date: 'h a' }}
+            <!-- Splitter -->
+            -
+            <!-- End Hour -->
+            {{ screening.end | date: 'h a'}}
+          </span>
+        </div>
+        <mat-divider *ngIf="index === 0" vertical></mat-divider>
+      </ng-container>
+    </div>
+    <caption class="mat-caption">Pay attention, the screenings are live sessions.
+      They will only be available at the mentioned times.</caption>
+    <mat-form-field appearance="outline">
+      <mat-label>Choose screening session</mat-label>
+      <mat-select [formControl]="sessionCtrl">
+        <mat-option value="first">First Session</mat-option>
+        <mat-option value="second">Second Session</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-flat-button color="accent" (click)="askForInvitation(screenings)" [disabled]="invitationWasSent">Ask for
+      Invitation</button>
+  </ng-container>
+</ng-container>
+<ng-template #noScreenings>
+  <ng-container *ngIf="org | async as org">
+    <span class="mat-body-1">There are no screenings scheduled at the moment. You can contact
+      {{ org[0].denomination?.public || 'the organization' }} for any
+      questions</span>
+    <a mat-flat-button color="accent" [href]="'mailto:'+ org[0].email">Contact Seller</a>
+  </ng-container>
+</ng-template> 

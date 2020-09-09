@@ -1,4 +1,4 @@
-export const production = false;
+﻿export const production = false;
 export const dev = false;
 export const hmr = false; // hot-reloading: use true for local dev
 
@@ -175,3 +175,8 @@ export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
+
+// Local setup related settings
+// ============================
+// change watermarkRowConcurrency to 5 or lesser in case scripts fail 
+export const watermarkRowConcurrency = 10;
