@@ -43,8 +43,7 @@ export class GuestTableComponent {
 
   @Input() set invitations(invitations: InvitationDetailed[]) {
     if (invitations) {
-      this._invitations = invitations.map(i => {
-        const invitation = { ...i } as InvitationDetailed;
+      this._invitations = invitations.map((invitation: InvitationDetailed) => {
         invitation.guest = getGuest(invitation, 'user');
         return invitation;
       });
