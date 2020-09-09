@@ -31,9 +31,6 @@
       <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
       <ng-template #noOrgCountry>--</ng-template>
     </ng-template>
-    <ng-template colRef="position" let-position>
-      {{ position ? position : '--' }}
-    </ng-template>
     <ng-template colRef="firstConnexion" let-firstConnexion>
       {{ firstConnexion | date }}
     </ng-template>

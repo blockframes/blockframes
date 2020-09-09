@@ -10,10 +10,10 @@
       <p>It will be used as a cover for the project page on the marketplace.</p>
       <ng-container *ngFor="let still of stillPhoto.controls | keyvalue; let i = index; trackBy: trackByFn">
         <article>
-          <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still' : still.key" ratio="banner"
+          <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still' : still.key" ratio="still"
             [form]="still.value">
             <h3 type>Stills</h3>
-            <p class="mat-body-2" dimensions>Ratio : 16/9</p>
+            <p class="mat-body-2" dimensions>Ratio : 16/10</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
           </drop-cropper>
         </article>
