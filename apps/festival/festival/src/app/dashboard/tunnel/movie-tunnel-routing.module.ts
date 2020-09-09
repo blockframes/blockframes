@@ -47,10 +47,6 @@ const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
       {
-        path: 'budget',
-        loadChildren: () => import('@blockframes/movie/form/budget/budget.module').then(m => m.BudgetModule)
-      },
-      {
         path: 'technical-info',
         loadChildren: () =>
           import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)

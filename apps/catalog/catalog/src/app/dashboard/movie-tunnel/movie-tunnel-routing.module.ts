@@ -18,37 +18,37 @@ const tunnelRoutes: Routes = [
       // Page 2
       {
         path: 'main',
-        loadChildren: () => import('@blockframes/movie/pages/main/main.module').then(m => m.MovieFormMainModule)
+        loadChildren: () => import('@blockframes/movie/form/main/main.module').then(m => m.MovieFormMainModule)
       },
       {
         path: 'synopsis',
-        loadChildren: () => import('@blockframes/movie/pages/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+        loadChildren: () => import('@blockframes/movie/form/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
       },
       // Page 4
       {
         path: 'credits',
-        loadChildren: () => import('@blockframes/movie/pages/credits/credits.module').then(m => m.CreditsModule)
+        loadChildren: () => import('@blockframes/movie/form/credits/credits.module').then(m => m.CreditsModule)
       },
       // Page 5
       {
         path: 'budget',
-        loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
+        loadChildren: () => import('@blockframes/movie/form/budget/budget.module').then(m => m.BudgetModule)
       },
       // Page 6
       {
         path: 'technical-info',
         loadChildren: () =>
-          import('@blockframes/movie/pages/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+          import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
       // Page 10
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/pages/media-image/media-image.module').then(m => m.MediaImageModule)
+        loadChildren: () => import('@blockframes/movie/form/media-image/media-image.module').then(m => m.MediaImageModule)
       // Page 11
       },
       {
         path: 'files&links',
-        loadChildren: () => import('@blockframes/movie/pages/media-file/media-file.module').then(m => m.MediaFileModule)
+        loadChildren: () => import('@blockframes/movie/form/media-file/media-file.module').then(m => m.MediaFileModule)
       },
       // Page 12.1
       {
@@ -62,12 +62,12 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'summary',
-        loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule)
+        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.TunnelSummaryModule)
       },
       // Last page
       {
         path: 'end',
-        loadChildren: () => import('@blockframes/movie/pages/end/end.module').then(m => m.EndTunnelModule)
+        loadChildren: () => import('@blockframes/movie/form/end/end.module').then(m => m.EndTunnelModule)
       }
     ]
   }
