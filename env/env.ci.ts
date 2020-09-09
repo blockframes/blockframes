@@ -22,6 +22,7 @@ export const sentryDsn = undefined;
 export const appUrl = {
   content: 'https://blockframes-ci.web.app',
   market: 'http://blockframes-ci-festival.web.app',
+  financiers: 'http://blockframes-ci-financiers.web.app',
   crm: 'https://blockframes-ci-crm.web.app',
 }
 

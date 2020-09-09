@@ -22,6 +22,7 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 export const appUrl = {
   content: 'https://archipelcontent.com',
   market: 'https://archipelmarket.com',
+  financiers: 'https://mediafinanciers.com',
   crm: 'https://crm.blockframes.io',
 }
 

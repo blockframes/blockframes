@@ -1,0 +1,52 @@
+<ng-container *ngIf="(hasMovies$ | async); else noTitle">
+  <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="import">
+      <h1>My Titles</h1>
+      <div fxLayoutGap="24px">
+        <a mat-stroked-button color="primary" routerLink="../import">
+          <mat-icon svgIcon="excel"></mat-icon>
+          <span>Import Movies</span>
+        </a>
+        <a mat-mini-fab color="primary" routerLink="lobby" matTooltip="Add a new title">
+          <mat-icon svgIcon="add"></mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <mat-card>
+      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
+        (rowClick)="goToTitle($event)">
+        <ng-template colRef="director" let-director>{{ director | displayName }}</ng-template>
+        <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
+        <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' | async  }}</ng-template>
+      </bf-table-filter>
+    </mat-card>
+  </ng-container>
+
+  <ng-template #isLoading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+</ng-container>
+
+<!-- @TODO (#2891) -->
+<ng-template #noTitle>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <h1>You have no title yet.</h1>
+    <p class="mat-body-1">
+      You haven't imported titles yet.
+      <br>
+      You may add several titles at once through bulk import, or just one at a time.
+    </p>
+    <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
+      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
+        <img asset="add_title.webp" alt="Add title image">
+        <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
+      </mat-card>
+      <mat-card class="no-title-card" fxLayout="column">
+        <img asset="add_files.webp" alt="Upload files image">
+        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
+      </mat-card>
+    </article>
+  </section>
+</ng-template>

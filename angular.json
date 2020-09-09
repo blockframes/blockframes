@@ -1419,6 +1419,168 @@
           }
         }
       }
+    },
+    "financiers": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/financiers/financiers",
+      "sourceRoot": "apps/financiers/financiers/src",
+      "prefix": "financiers",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/financiers/financiers",
+            "index": "apps/financiers/financiers/src/index.html",
+            "main": "apps/financiers/financiers/src/main.ts",
+            "polyfills": "apps/financiers/financiers/src/polyfills.ts",
+            "tsConfig": "apps/financiers/financiers/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/financiers/financiers/src/favicon.ico",
+              "apps/financiers/financiers/src/assets",
+              "apps/financiers/financiers/src/manifest.webmanifest"
+            ],
+            "styles": ["apps/financiers/financiers/src/styles.scss"],
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            }
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                },
+                {
+                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
+                  "with": "apps/financiers/financiers/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "apps/financiers/financiers/ngsw-config.json"
+            },
+            "ci": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
+                  "with": "apps/financiers/financiers/src/environments/environment.ci.ts"
+                }
+              ]
+            },
+            "staging": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "financiers:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "financiers:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "financiers:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/financiers/financiers/tsconfig.app.json",
+              "apps/financiers/financiers/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/financiers/financiers/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/financiers/financiers/jest.config.js",
+            "tsConfig": "apps/financiers/financiers/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/financiers/financiers/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "financiers-e2e": {
+      "root": "apps/financiers/financiers-e2e",
+      "sourceRoot": "apps/financiers/financiers-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/financiers/financiers-e2e/cypress.json",
+            "tsConfig": "apps/financiers/financiers-e2e/tsconfig.e2e.json",
+            "devServerTarget": "financiers:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "financiers:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/financiers/financiers-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/financiers/financiers-e2e/**/*"]
+          }
+        }
+      }
     }
   },
   "cli": {
