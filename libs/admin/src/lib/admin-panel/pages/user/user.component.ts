@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { UserAdminForm } from '../../forms/user-admin.form';
 import { UserService } from '@blockframes/user/+state/user.service';
@@ -31,6 +31,7 @@ export class UserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private organizationService: OrganizationService,
+    private router: Router,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private permissionService: PermissionsService,
@@ -150,8 +151,10 @@ export class UserComponent implements OnInit {
         title: 'Are you sure you want to delete this user?',
         question: 'this action is irreversable',
         buttonName: 'Yes',
-        onConfirm: () => {
-          this.userService.remove(this.userId);
+        onConfirm: async () => {
+          await this.userService.remove(this.userId);
+          this.snackBar.open('User deleted !', 'close', { duration: 5000 });
+          this.router.navigate(['c/o/admin/panel/users']);
         }
       }
     });
