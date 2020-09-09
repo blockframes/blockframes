@@ -24,7 +24,7 @@ import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { linkFile, unlinkFile, getMediaToken as _getMediaToken } from './media';
+import { linkFile, unlinkFile, getMediaToken as _getMediaToken, deleteMedia as _deleteMedia } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
@@ -272,5 +272,7 @@ export const onFileUpload = functions.storage.object().onFinalize(skipInMaintena
 //--------------------------------
 //         File delete          //
 //--------------------------------
+
+export const deleteMedia = functions.https.onCall(logErrors(_deleteMedia));
 
 export const onFileDelete = functions.storage.object().onDelete(skipInMaintenance(unlinkFile));

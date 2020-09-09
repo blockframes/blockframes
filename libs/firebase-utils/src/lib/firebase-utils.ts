@@ -35,8 +35,8 @@ export async function getDocAndPath(filePath: string | undefined) {
 
   if (filePathElements.length < 4) {
     throw new Error(`Upload Error : File Path ${filePath}
-    is malformed, it should at least contain 2 slash
-    Example: 'collection/id/field/fileName'`);
+    is malformed, it should at least contain 3 slash
+    Example: 'public/collection/id/field/fileName'`);
   }
 
   // remove "protected/"" or "public/"
@@ -44,8 +44,8 @@ export async function getDocAndPath(filePath: string | undefined) {
     filePathElements.shift();
   }
 
-  const collection = filePathElements.shift()!;
-  const docId = filePathElements.shift()!;
+  const collection = filePathElements.shift() || '';
+  const docId = filePathElements.shift() || '';
 
   // remove the file name at the end
   // `filePathElements` is now only composed by the field to update
@@ -58,7 +58,7 @@ export async function getDocAndPath(filePath: string | undefined) {
     throw new Error('File Path point to a firestore document that does not exists');
   }
 
-  const docData = docSnapshot.data()!;
+  const docData = docSnapshot.data();
 
   const fieldToUpdate = filePathElements.join('.');
 

@@ -1,4 +1,4 @@
-import { functions } from './internals/firebase';
+import { functions, getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get } from 'lodash';
 import { createHash } from 'crypto';
@@ -92,4 +92,21 @@ export const getMediaToken = (data: { ref: string, parametersSet: ImageParameter
     return createHash('md5').update(toSign).digest('hex');
   });
 
+}
+
+export const deleteMedia = async (data: { ref: string }, context: CallableContext): Promise<any> => {
+
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+
+  // @TODO #3188 make other tests against DB here to validate user request
+
+  const bucket = admin.storage().bucket(getStorageBucketName());
+  const file = bucket.file(data.ref);
+
+  const [exists] = await file.exists();
+  if (!exists) {
+    throw new Error('Upload Error : File does not exists in the storage');
+  }
+
+  return file.delete();
 }

@@ -47,14 +47,14 @@ export class MediaService {
   }
 
   /**
-   * Delete a file from teh firebase storage.
+   * Delete a file from the firebase storage.
    * @note the function needs the **full** path of the file
    * **this include the file name!**
    * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
    */
-  async removeFile(path: string) {
-    // @TODO (#3188) should be handled by a backend function
-    await this.storage.ref(path).delete().toPromise();
+  async removeFile(ref: string) {
+    const f = this.functions.httpsCallable('deleteMedia');
+    await f({ ref }).toPromise();
   }
 
   private addTasks(tasks: AngularFireUploadTask[]) {

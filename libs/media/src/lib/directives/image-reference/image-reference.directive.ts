@@ -103,7 +103,7 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
         // ref
         this.srcset = await this.mediaService.generateImageSrcset(ref, this.parameters);
-        // @TODO #3188 problem with ref containing spaces
+
         this.src = this.srcset.split(' ')[0];
 
       } else {

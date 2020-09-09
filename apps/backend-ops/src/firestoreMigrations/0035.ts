@@ -22,7 +22,7 @@ export async function upgrade(_: Firestore, storage: Storage) {
         const newFilePath = await changeResourceDirectory(filePath, storage, doc.id);
         await doc.update({ [fieldToUpdate]: newFilePath });
       } else {
-        // await f.delete();
+        await f.delete();
         console.log(`Image ref not found on DB. Removed ${f.name}.`);
       }
     } catch (error) {
@@ -42,7 +42,9 @@ const changeResourceDirectory = async (
   const bucket = storage.bucket(storageBucket);
 
   try {
-    const newRef = !['protected', 'public'].includes(ref.split('/').shift()) ? `public/${ref}` : ref;
+    let newRef = !['protected', 'public'].includes(ref.split('/').shift()) ? `public/${ref}` : ref;
+    newRef = newRef.split(' ').join('-');
+
     const to = bucket.file(newRef);
     const from = bucket.file(ref);
     const [exists] = await from.exists();
