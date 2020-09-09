@@ -3,7 +3,9 @@ import { Component, Input, ChangeDetectionStrategy, Directive } from '@angular/c
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
-import { filter, map } from 'rxjs/operators';
+
+// RxJs
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-view',
