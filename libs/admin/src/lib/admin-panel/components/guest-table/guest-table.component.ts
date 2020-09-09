@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Invitation, InvitationDetailed } from '@blockframes/invitation/+state';
+import { InvitationDetailed } from '@blockframes/invitation/+state';
 import { getGuest } from '@blockframes/invitation/pipes/guest.pipe';
 import { getValue } from '@blockframes/utils/helpers';
 
@@ -10,41 +10,41 @@ import { getValue } from '@blockframes/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuestTableComponent {
-  public _invitations: Invitation[] | InvitationDetailed[];
+  public _invitations: InvitationDetailed[];
 
   public headers = {
     'id': 'Id',
     'org': 'Org',
-    'event.id': '',
-    'event.title': 'Event title',
-    'event.start': 'Event start',
-    'event.end': 'Event end',
-    'event.type': 'Event type',
-    'event.isPrivate': 'Privacy status',
+    'eventId': '',
+    'eventTitle': 'Event title',
+    'eventStart': 'Event start',
+    'eventEnd': 'Event end',
+    'eventType': 'Event type',
+    'eventIsPrivate': 'Privacy status',
     'date': 'Invitation date',
-    'guest.firstName': 'FirstName',
-    'guest.lastName': 'LastName',
+    'guestFirstName': 'FirstName',
+    'guestLastName': 'LastName',
     'guestOrg': 'Guest org',
     'mode': 'Mode',
     'status': 'Status',
-    'guest.email': 'Email',
+    'guestEmail': 'Email',
     'movie': 'Movie'
   };
 
   @Input() initialColumns: string[] = [
     'id',
     'date',
-    'guest.firstName',
-    'guest.lastName',
+    'guestFirstName',
+    'guestLastName',
     'mode',
     'status',
-    'guest.email',
+    'guestEmail',
   ];
 
-  @Input() set invitations(invitations: InvitationDetailed[]) {
+  @Input() set invitations(invitations: any[]) {
     if (invitations) {
       this._invitations = invitations.map(i => {
-        const invitation = { ...i } as any;
+        const invitation = { ...i } as InvitationDetailed;
         invitation.guest = getGuest(invitation, 'user');
         return invitation;
       });
@@ -56,14 +56,14 @@ export class GuestTableComponent {
       'id',
       'org.denomination.full',
       'org.denomination.public',
-      'event.title',
-      'event.type',
+      'eventTitle',
+      'eventType',
       'date',
-      'guest.firstName',
-      'guest.lastName',
+      'guestFirstName',
+      'guestLastName',
       'mode',
       'status',
-      'guest.email',
+      'guestEmail',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
