@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { MovieFormShellComponent } from '../../../shell/shell.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({

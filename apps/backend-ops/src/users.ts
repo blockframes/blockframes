@@ -11,7 +11,7 @@ import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord} from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
-import { firebase } from '@env';
+import { firebase, watermarkRowConcurrency } from '@env';
 
 export const { storageBucket } = firebase;
 
@@ -202,7 +202,7 @@ export async function generateWatermarks() {
     } else {
       await user.ref.update({ watermark: file.name });
     }
-  });
+  }, watermarkRowConcurrency);
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();
