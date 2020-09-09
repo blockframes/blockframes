@@ -4,7 +4,7 @@
 import { NOW } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';
-import { User } from '../../fixtures';
+import { User } from '@blockframes/e2e/fixtures/users';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';

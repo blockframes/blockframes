@@ -20,7 +20,7 @@ import { LandingPage } from '../../support/pages/landing';
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW } from '../../fixtures/data';
 import { EVENTS } from '@blockframes/e2e/utils';
-import User from '@blockframes/e2e/fixtures/users';
+import { User } from '@blockframes/e2e/fixtures/users';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
@@ -102,9 +102,9 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it('Invitee adds public screening to his calendar', () => {
+  it.only('Invitee adds public screening to his calendar', () => {
     const OrgName = EVENTS[0].org.name;
-    const screeningEvent = EVENTS[0].event;
+    const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
 
     signIn(users[1]);

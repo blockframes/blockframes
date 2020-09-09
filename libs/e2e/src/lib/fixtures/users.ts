@@ -2,8 +2,6 @@
 import { QueryInferface } from "../utils/queryinterface";
 import userFixture from 'tools/fixtures/users.json';
 
-//export const USERS: Partial<User>[] = userFixture;
-
 let newUsers: Partial<UserType>[] = [
   {
     firstName: "Mano",
@@ -13,7 +11,7 @@ let newUsers: Partial<UserType>[] = [
   }  
 ]
 
-export default class User {
+export class User {
   constructor() {
 
   }
