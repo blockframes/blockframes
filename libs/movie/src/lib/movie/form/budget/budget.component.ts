@@ -1,9 +1,5 @@
-// Angular
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-
-// Blockframes  Utils
-import { BUDGET_LIST } from './budget.form';
-import { FormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-form-budget',
@@ -12,9 +8,27 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormBudgetComponent {
-  @Input() form: FormControl;
-  @Input() placeholder?: String;
-  @Input() appearance = 'outline'
+  form = this.shell.form;
 
-  optionsBudget = BUDGET_LIST;
+  constructor(private shell: MovieFormShellComponent) { }
+
+  get estimatedBudget() {
+    return this.form.get('estimatedBudget');
+  }
+
+  get certifications() {
+    return this.form.get('certifications');
+  }
+
+  get rating() {
+    return this.form.get('rating');
+  }
+
+  get boxOffice() {
+    return this.form.get('boxOffice');
+  }
+
+  get review() {
+    return this.form.get('review');
+  }
 }
