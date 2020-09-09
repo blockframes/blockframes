@@ -3,6 +3,7 @@ import { Component, Input, ChangeDetectionStrategy, Directive } from '@angular/c
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'movie-view',
@@ -18,11 +19,8 @@ export class ViewComponent {
   constructor(private query: MovieQuery) { }
 
   public isEnoughPicturesThen(min: number) {
-/* TODO MF: DONT USE A FUNC FOT THAT, RXJS IS THE KEY */
-    return Object.values(this.query.getActive().promotional.still_photo).length > min
+    return this.query.selectActive().pipe(filter(movie => Object.values(movie.promotional.still_photo).length > min));
   }
-
-
 }
 
 @Directive({
