@@ -78,8 +78,7 @@ export class UsersComponent implements OnInit {
       'uid',
       'firstName',
       'lastName',
-      'email',
-      'position'
+      'email'
     ];
     if (data.org?.denomination?.full) columnsToFilter.push('org.denomination.full', 'org.denomination.public');
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
