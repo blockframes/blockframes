@@ -1517,6 +1517,10 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.staging.ts"
+                },
+                {
+                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
+                  "with": "apps/financiers/financiers/src/environments/environment.staging.ts"
                 }
               ]
             }
