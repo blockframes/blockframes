@@ -25,8 +25,8 @@ import { User } from '../../fixtures';
 let tomorrow, twodayslater;
 const userFixture = new User();
 const users  =  [ 
-  (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
-  (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
+  (userFixture.get({exist: true, key:'uid', value: EVENTS[0].by.uid})[0]),
+  (userFixture.get({exist: true, key:'uid', value: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'})[0])
 ];
 
 describe('User create a screening', () => {
@@ -38,7 +38,7 @@ describe('User create a screening', () => {
     p1.clickSignup();      
   });
 
-  it('User Jean Felix logs in, creates 4 screening events', () => {
+  it('Organiser logs in, creates 4 screening events', () => {
   
     signIn(users[0], true);
 
@@ -68,7 +68,7 @@ describe('User create a screening', () => {
     });
   })  
 
-  it('Login Vincent, Verify screening page and created screenings', () => {
+  it('Invitee1, Verify screening page and created screenings', () => {
     const OrgName = EVENTS[0].org.name;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
@@ -94,7 +94,7 @@ describe('User create a screening', () => {
     p4.checkEventsInMarket(eventNames);
   });
 
-  it('Jean accepts private screening request', () => {
+  it('Organiser accepts private screening request', () => {
     signIn(users[0]);
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
@@ -102,7 +102,7 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it('Vincent adds public screening to his calendar', () => {
+  it('Invitee adds public screening to his calendar', () => {
     const OrgName = EVENTS[0].org.name;
     const screeningEvent = EVENTS[0].event;
     const movieTitle = EVENTS[0].movie.title.international;

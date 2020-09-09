@@ -13,14 +13,11 @@ import { LandingPage } from '../../support/pages/landing';
 
 const TestEVENT = EVENTS[0];
 const OrgName = TestEVENT.org.name;
-const invitedUsers = TestEVENT.invitees.map(u => u.email);
+const invitedUsers = TestEVENT.invitees.map(u => u.uid);
 const userFixture = new User();
-const users  =  [ userFixture.getByEmail(TestEVENT.by.email) ];
-users.push(...invitedUsers.map(e => userFixture.getByEmail(e)));
-users.push(userFixture.getByEmail('ivo.andrle@fake.com'));
-//TODO: Fix in User Fixture
-const Invitee1name = 'Vincent';
-const Invitee2name = 'Concierge';
+const users  =  [ userFixture.getByUID(TestEVENT.by.uid) ];
+users.push(...invitedUsers.map(uid => userFixture.getByUID(uid)));
+users.push(userFixture.getByUID('K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2'));
 let SCREENING_URL: string;
 
 enum UserIndex {
@@ -48,14 +45,17 @@ describe('Organiser invites other users to private screening', () => {
     p3.addEventTitle(TestEVENT.event);
     p3.checkAllDay();
     p3.selectMovie(TestEVENT.movie.title.international);
-    p3.inviteUser(invitedUsers);
+
+    const invitees = [users[UserIndex.InvitedUser1].email,
+                      users[UserIndex.InvitedUser2].email];
+    p3.inviteUser(invitees);
     // We need to wait to fetch the invited user
     p3.copyGuests();
     cy.wait(8000);
     p3.saveEvent();
   });
 
-  it(`InvitedUser1: Vincent logs in, accepts his invitations & runs the video`, () => {
+  it(`InvitedUser1: logs in, accepts his invitations & runs the video`, () => {
     signIn(users[UserIndex.InvitedUser1]);
 
     const p1 = new FestivalMarketplaceHomePage();
@@ -89,8 +89,8 @@ describe('Organiser invites other users to private screening', () => {
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
     const p2 = p1.goToNotifications()
-    p2.verifyNotification(Invitee1name, true);
-    p2.verifyNotification(Invitee2name, false);
+    p2.verifyNotification(users[UserIndex.InvitedUser1].firstName, true);
+    p2.verifyNotification(users[UserIndex.InvitedUser2].firstName, false);
   });
 
   it('UninvitedGuest logs in, go on event page, asserts no access to the video', () => {

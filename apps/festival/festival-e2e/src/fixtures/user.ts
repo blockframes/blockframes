@@ -37,4 +37,12 @@ export default class User {
   getByEmail(emailID: string) : Partial<UserType> {
     return this.get({exist: true, key:'email', value: emailID})[0];
   }
+
+  /**
+   * getByUID : convenience method to signed up user by UID
+   * @param uid : uid of the user
+   */
+  getByUID(uid: string) : Partial<UserType> {
+    return this.get({exist: true, key:'uid', value: uid})[0];
+  }  
 }
