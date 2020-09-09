@@ -1,23 +1,26 @@
-// ***********************************************************
-// Primary import for all fixtures
-//
-// All fixtures should support the Query Interface
-// ***********************************************************
-import Users from 'tools/fixtures/users.json'
-import NewUsers from './new-users.json';
-import { User as UserType } from '@blockframes/e2e/utils/type';
-import { QueryInferface } from "./queryinterface";
+﻿import { User as UserType } from '../utils/type';
+import { QueryInferface } from "../utils/queryinterface";
+import userFixture from 'tools/fixtures/users.json';
+
+//export const USERS: Partial<User>[] = userFixture;
+
+let newUsers: Partial<UserType>[] = [
+  {
+    firstName: "Mano",
+    lastName: "Bangera",
+    email: "mano@blockframes.com",
+    password: "blockframes"
+  }  
+]
 
 export default class User {
-  newUsers: Partial<UserType>[];
-
   constructor() {
 
   }
 
   get(query: QueryInferface) : Partial<UserType>[] {
     const userSet: Partial<UserType>[]  = (query.exist) ? 
-                                        Users : NewUsers;
+                                          userFixture : newUsers;
 
     if (query.index && query.index !== -1) {
       return [userSet[query.index]];

@@ -19,14 +19,14 @@ import { LandingPage } from '../../support/pages/landing';
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW } from '../../fixtures/data';
-import { EVENTS } from '@blockframes/e2e/utils/screenings';
-import { User } from '../../fixtures';
+import { EVENTS } from '@blockframes/e2e/utils';
+import User from '@blockframes/e2e/fixtures/users';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
 const users  =  [ 
-  (userFixture.get({exist: true, key:'uid', value: EVENTS[0].by.uid})[0]),
-  (userFixture.get({exist: true, key:'uid', value: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'})[0])
+  (userFixture.getByUID(EVENTS[0].by.uid)),
+  (userFixture.getByUID('MDnN2GlVUeadIVJbzTToQQNAMWZ2'))
 ];
 
 describe('User create a screening', () => {
