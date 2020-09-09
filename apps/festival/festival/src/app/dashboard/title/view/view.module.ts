@@ -12,7 +12,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/pages/summary/summary.module';
+import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

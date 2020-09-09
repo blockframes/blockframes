@@ -1,130 +1,99 @@
-<tunnel-page>
-  <ng-container tunnel-form>
-    <h4 title>LAST STEP</h4>
-    <h1 subtitle>Summary Page</h1>
-    <p description class="mat-body-1">
-      Please verify that all the information you have entered is correct before submitting to Archipel Market for validation.
-    </p>
+<!-- <tunnel-page>
+  <h4 title>END</h4>
+  <h1 subtitle>Summary & Submission</h1>
+  <p description class="mat-body-1">
+    Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
+  </p>
 
-    <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
-    </div>
-
-    <!-- MAIN INFORMATION -->
-    <section id="main-information">
-      <h3>Main Information</h3>
-      <article>
+  <ng-container tunnel-form> -->
+    <!-- Main card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Main Information</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
         <movie-summary-main [movie]="form" [link]="getPath('main')"></movie-summary-main>
-      </article>
-    </section>
+        <movie-summary-country [movie]="form" [main]="form.main" [link]="getPath('main')"></movie-summary-country>
+        <movie-summary-information [movie]="form" [link]="getPath('main')"></movie-summary-information>
+        <movie-summary-sales-cast [movie]="form" [link]="getPath('main')"></movie-summary-sales-cast>
+        <movie-summary-festival-prizes [movie]="form" [link]="getPath('main')"></movie-summary-festival-prizes>
+      </mat-card-content>
+    </mat-card>
+ -->
+    <!-- Story card -->
+   <!--  <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Storyline Elements</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-story [movie]="form" [link]="getPath('synopsis')"></movie-summary-story>
+      </mat-card-content>
+    </mat-card> -->
 
-    <mat-divider></mat-divider>
+    <!-- Credit card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Credits</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-credit [movie]="form" [link]="getPath('credits')"></movie-summary-credit>
+      </mat-card-content>
+    </mat-card>
+ -->
+    <!-- Budget card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Budget, Quota & Critics</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-budget [movie]="form" [review]="form.review" [link]="getPath('budget')"></movie-summary-budget>
+      </mat-card-content>
+    </mat-card> -->
 
-    <!-- STORYLINE ELEMENTS -->
+    <!-- Technical Information card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Technical Information</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-technical-information [movie]="form" [link]="getPath('technical-info')"></movie-summary-technical-information>
+      </mat-card-content>
+    </mat-card> -->
 
-    <section id="storyline-elements">
-      <h3>Storyline Elements</h3>
-      <article>
-        <movie-summary-synopsis [movie]="form" [link]="getPath('synopsis')"></movie-summary-synopsis>
-      </article>
-    </section>
+    <!-- Images card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Promotional Images</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-image [movie]="movie" [link]="getPath('images')"></movie-summary-image>
+      </mat-card-content>
+    </mat-card> -->
 
-    <mat-divider></mat-divider>
-
-    <!-- PRODUCTION INFORMATION -->
-
-    <section id="production-information">
-      <h3>Production Information</h3>
-      <article>
-        <movie-summary-production [movie]="form" [link]="getPath('production')"></movie-summary-production>
-      </article>
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- ARTISTIC TEAM -->
-
-    <section id="artistic-team">
-      <h3>Artistic Team</h3>
-      <article>
-        <movie-summary-artistic [movie]="form" [link]="getPath('artistic')"></movie-summary-artistic>
-      </article>
-
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- SELECTION AND REVIEWS -->
-
-    <section id="reviews">
-      <h3>Selections and Reviews</h3>
-      <article>
-        <movie-summary-review [movie]="form" [link]="getPath('reviews')"></movie-summary-review>
-      </article>
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- ADDITIONAL INFORMATION -->
-
-    <section id="additional-information">
-      <h3>
-        Additional Information
-      </h3>
-      <article>
-        <movie-summary-additional-information [movie]="form" [link]="getPath('additional-information')"></movie-summary-additional-information>
-      </article>
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- TECHNICAL INFORMATION -->
-
-    <section id="technical-information">
-      <h3>Technical Information</h3>
-      <article>
-        <movie-summary-technical-info [movie]="form" [link]="getPath('technical-info')"></movie-summary-technical-info>
-      </article>
-
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- AVAILABLE MATERIALS -->
-
-    <section id="available-materials">
-      <h3>Available Materials</h3>
-      <article>
-        <movie-summary-available-materials [movie]="form" [link]="getPath('available-materials')"></movie-summary-available-materials>
-      </article>
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <!-- PROMOTIONAL ELEMENTS -->
-
-    <section id="promotional-elements">
-      <h3>Promotional Elements</h3>
-      <article>
-        <movie-summary-media-files [movie]="form" [link]="getPath('media-files')"></movie-summary-media-files>
-      </article>
-
-      <article>
-        <movie-summary-media-images [movie]="form" [link]="getPath('media-images')"></movie-summary-media-images>
-      </article>
-
-      <article>
-        <movie-summary-media-videos [movie]="form" [link]="getPath('media-videos')"></movie-summary-media-videos>
-      </article>
-
-    </section >
+    <!-- Files card -->
+<!--     <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Files & Links</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-file [promotional]="form.promotional" [link]="getPath('files&links')"></movie-summary-file>
+      </mat-card-content>
+    </mat-card>
+ -->
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
+  <!--   <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </ng-container>
 
 </tunnel-page>
+ -->

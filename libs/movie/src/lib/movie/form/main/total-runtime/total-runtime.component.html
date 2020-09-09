@@ -1,8 +1,0 @@
-<mat-form-field appearance="outline">
-  <mat-label>Running Time</mat-label>
-  <input matInput type="number" min="0" [formControl]="form" name="runningTime"/>
-  <mat-hint>In minutes</mat-hint>
-  <mat-error *ngIf="form.hasError('min')">
-    Only positive values are accepted.
-  </mat-error>
-</mat-form-field>
