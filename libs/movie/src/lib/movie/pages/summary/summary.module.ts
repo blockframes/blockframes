@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { MovieFormSummaryComponent } from './summary.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -40,7 +39,6 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
 
 @NgModule({
   declarations: [
-    MovieFormSummaryComponent,
     SummaryMainComponent,
     SummarySynopsisComponent,
     SummaryProductionComponent,
@@ -75,7 +73,20 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
     MatButtonModule,
     MatSnackBarModule,
     MatDividerModule,
-    RouterModule.forChild([{ path: '', component: MovieFormSummaryComponent }])
+    RouterModule.forChild([])
   ],
+  exports: [
+    SummaryMainComponent,
+    SummarySynopsisComponent,
+    SummaryProductionComponent,
+    SummaryArtisticComponent,
+    SummaryReviewComponent,
+    SummaryAdditionalInformationComponent,
+    SummaryTechnicalInfoComponent,
+    SummaryAvailableMaterialsComponent,
+    SummaryMediaFilesComponent,
+    SummaryMediaImagesComponent,
+    SummaryMediaVideosComponent
+  ]
 })
-export class TunnelSummaryModule {}
+export class MovieTunnelSummaryModule {}

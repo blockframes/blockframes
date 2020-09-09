@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+
 @Component({
   selector: '[form] auth-form-profile',
   templateUrl: './profile.component.html',
