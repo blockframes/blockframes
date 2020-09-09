@@ -15,18 +15,18 @@ export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'poster': 'Poster',
-    'title': 'Original title',
+    'title.original': 'Original title',
     'org': 'Organization',
-    'status': 'Status',
+    'storeConfig.status': 'Status',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
     'id',
     'poster',
-    'title',
+    'title.original',
     'org',
-    'status',
+    'storeConfig.status',
     'edit',
   ];
   public rows: any[] = [];
@@ -44,23 +44,14 @@ export class MoviesComponent implements OnInit {
   async ngOnInit() {
     const movies = await this.movieService.getAllMovies();
 
-    const promises = movies.map(async m => {
-      const row = {} as any;
-
-      row.id = m.id
-      row.internalRef = m.internalRef,
-      row.poster = m.poster
-      row.title = m.title.original
-      row.status = m.storeConfig.status
-
+    const promises = movies.map(async (row :any) => {
       // Edit link
       row.edit = {
-        id: m.id,
-        link: `/c/o/admin/panel/movie/${m.id}`,
+        id: row.id,
+        link: `/c/o/admin/panel/movie/${row.id}`,
       }
 
-      row.org = await this.getOrg(m.id);
-
+      row.org = await this.getOrg(row.id);
       return row;
     })
 
@@ -74,8 +65,8 @@ export class MoviesComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'internalRef',
-      'title',
-      'status',
+      'title.original',
+      'storeConfig.status',
       'org.denomination.full',
       'org.denomination.public'
     ];
