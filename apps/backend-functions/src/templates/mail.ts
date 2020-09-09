@@ -3,7 +3,7 @@
  */
 import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
-import { templateIds } from '@env';
+import { templateIds } from './ids';
 import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { EmailRecipient } from '@blockframes/utils/emails';

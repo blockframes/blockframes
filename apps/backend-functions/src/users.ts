@@ -9,7 +9,7 @@ import { algolia } from './environments/environment';
 import { upsertWatermark } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
-import { templateIds } from '@env';
+import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
 
 type UserRecord = admin.auth.UserRecord;
