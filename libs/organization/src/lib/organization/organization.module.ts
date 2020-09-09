@@ -42,7 +42,6 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 // Pages
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
 import { UserGuard } from '@blockframes/user/guard/user.guard';
-import { ActiveDaoGuard } from './guard/active-dao.guard';
 
 export const organizationRoutes: Routes = [
   {
@@ -56,12 +55,6 @@ export const organizationRoutes: Routes = [
         canDeactivate: [UserGuard],
         component: ActivateDaoComponent
       },
-      {
-        path: 'dao',
-        canActivate: [UserGuard, ActiveDaoGuard],
-        canDeactivate: [UserGuard],
-        loadChildren: () => import('@blockframes/ethers/dao/dao.module').then(m => m.DaoModule)
-      }
     ]
   }
 ];
