@@ -26,7 +26,7 @@
     </ng-template>
   </li>
   <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Moodboard / Artistic Deck </strong>
     <ng-container *ngIf="(movie.promotional.get('moodboard').value.ref | isEmptyImgRef) else moodboard">
       <a [routerLink]="link" fragment="files" class="missing-control">
         Missing

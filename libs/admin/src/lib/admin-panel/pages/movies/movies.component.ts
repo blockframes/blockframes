@@ -44,17 +44,14 @@ export class MoviesComponent implements OnInit {
   async ngOnInit() {
     const movies = await this.movieService.getAllMovies();
 
-    const promises = movies.map(async m => {
-      const row = { ...m } as any;
-
+    const promises = movies.map(async (row :any) => {
       // Edit link
       row.edit = {
-        id: m.id,
-        link: `/c/o/admin/panel/movie/${m.id}`,
+        id: row.id,
+        link: `/c/o/admin/panel/movie/${row.id}`,
       }
 
-      row.org = await this.getOrg(m.id);
-
+      row.org = await this.getOrg(row.id);
       return row;
     })
 
@@ -70,7 +67,6 @@ export class MoviesComponent implements OnInit {
       'internalRef',
       'title.original',
       'storeConfig.status',
-      'storeConfig.storeType',
       'org.denomination.full',
       'org.denomination.public'
     ];

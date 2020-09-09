@@ -67,7 +67,7 @@ export class OrganizationComponent implements OnInit {
     edit: 'Edit',
   };
 
-  public memberColumnsIndex = ['uid', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,

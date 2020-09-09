@@ -43,7 +43,7 @@
         <img class="poster" [ref]="poster" asset="empty_poster.webp">
       </ng-container>
       <a [routerLink]="['/c/o/admin/panel/movie', movie.id]">
-        <span>{{ movie.title.international }} ({{ movie.internalRef }}) </span><mat-icon svgIcon="eye"></mat-icon>
+        <span>{{ movie.title.international }} {{ movie.internalRef ? '(' + movie.internalRef + ')': ''}} </span><mat-icon svgIcon="eye"></mat-icon>
       </a>
     </div>
     <ng-template #noMovie>--</ng-template>
