@@ -6,7 +6,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { TunnelSummaryComponent } from './summary.component';
 
 // Summary components
-import { MovieTunnelSummaryModule } from '@blockframes/movie/pages/summary/summary.module';
+import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

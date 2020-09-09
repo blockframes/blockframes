@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 // Component
 import { MovieTunnelComponent } from './movie-tunnel.component';
 import { MovieTunnelRoutingModule } from './movie-tunnel-routing.module';
-import { MovieFormShellModule } from '@blockframes/movie/pages/shell/shell.module';
+import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
