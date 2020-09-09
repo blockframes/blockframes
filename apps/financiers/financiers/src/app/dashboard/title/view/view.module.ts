@@ -23,21 +23,6 @@ import { MatSelectModule } from '@angular/material/select';
 const routes = [{
   path: '',
   component: TitleViewComponent,
-  children: [
-    {
-      path: '',
-      redirectTo: 'details',
-      pathMatch: 'full'
-    },
-    {
-      path: 'activity',
-      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
-    },
-    {
-      path: 'details',
-      loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
-    }
-  ]
 }];
 
 @NgModule({

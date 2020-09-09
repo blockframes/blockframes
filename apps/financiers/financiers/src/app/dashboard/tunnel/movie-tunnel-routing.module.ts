@@ -14,83 +14,66 @@ const tunnelRoutes: Routes = [
         redirectTo: 'title-status',
         pathMatch: 'full'
       },
-      // Page 1
       {
         path: 'title-status',
-        loadChildren: () => import('@blockframes/movie/pages/title-status/title-status.module').then(m => m.TitleStatusModule)
+        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
-      // Page 2
       {
         path: 'main',
-        loadChildren: () => import('@blockframes/movie/pages/main/main.module').then(m => m.MovieFormMainModule)
+        loadChildren: () => import('@blockframes/movie/form/main/main.module').then(m => m.MovieFormMainModule)
       },
-      // Page 3
       {
         path: 'synopsis',
-        loadChildren: () => import('@blockframes/movie/pages/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+        loadChildren: () => import('@blockframes/movie/form/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
       },
-      // Page 4
       {
         path: 'production',
-        loadChildren: () => import('@blockframes/movie/pages/production/production.module').then(m => m.MovieFormProductionModule)
+        loadChildren: () => import('@blockframes/movie/form/production/production.module').then(m => m.MovieFormProductionModule)
       },
-      // Page 5
       {
         path: 'artistic',
-        loadChildren: () => import('@blockframes/movie/pages/artistic/artistic.module').then(m => m.MovieFormArtisticModule)
+        loadChildren: () => import('@blockframes/movie/form/artistic/artistic.module').then(m => m.MovieFormArtisticModule)
       },
-      // Page 6
       {
         path: 'reviews',
-        loadChildren: () => import('@blockframes/movie/pages/reviews/reviews.module').then(m => m.MovieFormReviewsModule)
+        loadChildren: () => import('@blockframes/movie/form/reviews/reviews.module').then(m => m.MovieFormReviewsModule)
       },
-      // Page 7
       {
         path: 'additional-information',
-        loadChildren: () => import('@blockframes/movie/pages/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
+        loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
       },
-      // Page 9
       {
         path: 'available-materials',
-        loadChildren: () => import('@blockframes/movie/pages/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
+        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
-      // Page 8
-      {
-        path: 'budget',
-        loadChildren: () => import('@blockframes/movie/pages/budget/budget.module').then(m => m.BudgetModule)
-      },
-      // Page 9
       {
         path: 'technical-info',
         loadChildren: () =>
-          import('@blockframes/movie/pages/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+          import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
-      // Page 10
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/pages/media-image/media-image.module').then(m => m.MediaImageModule)
-        // Page 11
+        loadChildren: () => import('@blockframes/movie/form/media-image/media-image.module').then(m => m.MediaImageModule)
       },
       {
         path: 'media-files',
-        loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
       },
       {
         path: 'media-images',
-        loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-videos',
-        loadChildren: () => import('@blockframes/movie/pages/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
       {
         path: 'summary',
-        loadChildren: () => import('@blockframes/movie/pages/summary/summary.module').then(m => m.TunnelSummaryModule)
+        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.MovieTunnelSummaryModule)
       },
-      // Last page
       {
         path: 'end',
-        loadChildren: () => import('@blockframes/movie/pages/end/end.module').then(m => m.EndTunnelModule)
+        loadChildren: () => import('@blockframes/movie/form/end/end.module').then(m => m.EndTunnelModule)
       }
     ]
   }
