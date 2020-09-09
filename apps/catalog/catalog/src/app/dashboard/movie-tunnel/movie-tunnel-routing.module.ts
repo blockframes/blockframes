@@ -41,7 +41,7 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'summary',
-        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.TunnelSummaryModule)
+        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.MovieTunnelSummaryModule)
       },
       {
         path: 'end',
