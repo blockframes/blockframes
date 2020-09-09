@@ -1443,7 +1443,12 @@
             "assets": [
               "apps/financiers/financiers/src/favicon.ico",
               "apps/financiers/financiers/src/assets",
-              "apps/financiers/financiers/src/manifest.webmanifest"
+              "apps/financiers/financiers/src/manifest.webmanifest",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
             ],
             "styles": ["apps/financiers/financiers/src/styles.scss"],
             "scripts": [],
