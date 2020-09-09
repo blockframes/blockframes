@@ -38,10 +38,10 @@ export class OrganizationComponent implements OnInit {
     'id': 'Id',
     'internalRef': 'Internal Ref',
     'poster': 'Poster',
-    'title': 'Original title',
+    'title.original': 'Original title',
     'releaseYear': 'Release year',
-    'status': 'Status',
-    'storeType': 'Store type',
+    'storeConfig.status': 'Status',
+    'storeConfig.storeType': 'Store type',
     'edit': 'Edit',
   };
 
@@ -49,10 +49,10 @@ export class OrganizationComponent implements OnInit {
     'id',
     'poster',
     'internalRef',
-    'title',
+    'title.original',
     'releaseYear',
-    'status',
-    'storeType',
+    'storeConfig.status',
+    'storeConfig.storeType',
     'edit',
   ];
 
@@ -88,13 +88,7 @@ export class OrganizationComponent implements OnInit {
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
     const movies = await Promise.all(moviePromises);
     this.movies = movies.filter(m => !!m).map(m => ({
-      id: m.id,
-      internalRef: m.internalRef,
-      poster: m.poster,
-      title: m.title.original,
-      releaseYear: m.release.year,
-      status: m.storeConfig.status,
-      storeType: m.storeConfig.storeType,
+      ...m,
       edit: {
         id: m.id,
         link: `/c/o/admin/panel/movie/${m.id}`,
@@ -158,10 +152,10 @@ export class OrganizationComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'internalRef',
-      'title',
+      'title.original',
       'releaseYear',
-      'status',
-      'storeType',
+      'storeConfig.status',
+      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
