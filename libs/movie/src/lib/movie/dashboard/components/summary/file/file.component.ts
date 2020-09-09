@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 import { MoviePromotionalElementsForm } from '../../../../form/movie.form';
 
@@ -23,21 +23,11 @@ const fileLinks = {
   styleUrls: ['./file.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryFileComponent implements OnInit, OnDestroy {
+export class MovieSummaryFileComponent {
   private sub: Subscription;
   fileLinks = fileLinks;
   fileRefs = fileRefs;
 
   @Input() promotional: MoviePromotionalElementsForm;
   @Input() link: string;
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngOnInit() {
-    this.sub = this.promotional.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 }

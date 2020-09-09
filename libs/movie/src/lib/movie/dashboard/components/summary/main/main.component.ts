@@ -1,4 +1,7 @@
+// Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+
+// Form
 import { MovieForm, DirectorForm } from '../../../../form/movie.form';
 
 @Component({

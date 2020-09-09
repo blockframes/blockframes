@@ -1,13 +1,10 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Blockframes
 import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
 
 import { MovieForm } from '../../../../form/movie.form';
-
-// RxJs
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[form] movie-summary-image',
@@ -15,17 +12,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./image.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryImageComponent implements OnInit, OnDestroy {
+export class MovieSummaryImageComponent {
   @Input() form: MovieForm;
   @Input() link: string;
-
-  private sub: Subscription;
-
-  constructor(private cdr: ChangeDetectorRef) { }
-
-  ngOnInit() {
-    this.sub = this.form.promotional.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
 
   get photoHasNoValue() {
     try {
@@ -42,9 +31,5 @@ export class MovieSummaryImageComponent implements OnInit, OnDestroy {
       console.warn(error);
       return true;
     }
-  }
-
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
   }
 }

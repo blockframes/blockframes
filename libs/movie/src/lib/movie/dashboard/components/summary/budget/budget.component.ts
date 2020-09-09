@@ -1,8 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieReview } from '@blockframes/movie/+state/movie.model';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { MovieReviewForm } from '../../../../form/movie.form';
-import { MovieForm } from '../../../../form/movie.form';
+import { MovieForm, MovieReviewForm } from '../../../../form/movie.form';
 
 @Component({
   selector: '[movie] [review] movie-summary-budget',
@@ -10,16 +9,10 @@ import { MovieForm } from '../../../../form/movie.form';
   styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryBudgetComponent implements OnInit {
+export class MovieSummaryBudgetComponent {
   @Input() movie: MovieForm;
   @Input() review: FormList<MovieReview>;
   @Input() link: string;
-
-  constructor(private cdr: ChangeDetectorRef) { }
-
-  ngOnInit() {
-    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
 
   public reviewHasNoValue(review: MovieReviewForm) {
     return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
