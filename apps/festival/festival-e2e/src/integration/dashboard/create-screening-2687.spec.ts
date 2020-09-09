@@ -104,6 +104,7 @@ describe('User create a screening', () => {
 
   it('Invitee adds public screening to his calendar', () => {
     const OrgName = EVENTS[0].org.name;
+    //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
 

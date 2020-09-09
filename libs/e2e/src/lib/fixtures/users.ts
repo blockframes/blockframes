@@ -2,7 +2,7 @@
 import { QueryInferface } from "../utils/queryinterface";
 import userFixture from 'tools/fixtures/users.json';
 
-let newUsers: Partial<UserType>[] = [
+const newUsers: Partial<UserType>[] = [
   {
     firstName: "Mano",
     lastName: "Bangera",
