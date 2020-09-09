@@ -13,22 +13,22 @@ import { DistributionRightWithMovieId, createDistributionRightWithMovieId } from
 export class DistributionRightsComponent implements OnInit {
   public versionColumns = {
     'rightLink': 'Id',
-    'rightPublicId': 'Public id',
+    'right.publicId': 'Public id',
     'movieId': 'Movie',
-    'rightStatus': 'Status',
-    'rightContractId': 'Contract',
-    'rightTerms': 'Scope',
-    'rightExclusive': 'Exclusive',
+    'right.status': 'Status',
+    'right.contractId': 'Contract',
+    'right.terms': 'Scope',
+    'right.exclusive': 'Exclusive',
   };
 
   public initialColumns: string[] = [
     'rightLink',
-    'rightPublicId',
+    'right.publicId',
     'movieId',
-    'rightStatus',
-    'rightContractId',
-    'rightTerms',
-    'rightExclusive'
+    'right.status',
+    'right.contractId',
+    'right.terms',
+    'right.exclusive'
   ];
   public rows: any[] = [];
   public movieId = '';
@@ -50,38 +50,37 @@ export class DistributionRightsComponent implements OnInit {
           movieId: this.movieId,
         });
 
-        return this.formatRow(d);
-      });
+        // Append new data for table display
+        const row = { ...d } as any;
+        row.rightLink = {
+          id: d.right.id,
+          movieId: d.movieId,
+        }
+        return row;
+      })
     } else {
       const rights = await this.distributionRightService.getAllDistributionRightsWithMovieId();
-      this.rows = rights.map(d => this.formatRow(d));
+      this.rows = rights.map(d => {
+        const row = { ...d } as any;
+        // Append new data for table display
+        row.rightLink = {
+          id: d.right.id,
+          movieId: d.movieId,
+        }
+        return row;
+      });
     }
 
     this.cdRef.markForCheck();
   }
 
-  public formatRow(d : DistributionRightWithMovieId) : any {
-    return { 
-      ...d,
-      rightPublicId: d.right.publicId,
-      rightStatus: d.right.status,
-      rightContractId: d.right.contractId,
-      rightTerms: d.right.terms,
-      rightExclusive: d.right.exclusive,
-      rightLink: {
-        id: d.right.id,
-        movieId: d.movieId,
-      }
-    };
-  }
-
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
-      'rightId',
-      'rightPublicId',
+      'right.id',
+      'right.publicId',
       'movieId',
-      'rightStatus',
-      'rightContractId',
+      'right.status',
+      'right.contractId',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

@@ -3,10 +3,10 @@
 
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
-    <ng-template colRef="lastVersionScope" let-terms>
+    <ng-template colRef="lastVersion.scope" let-terms>
       <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
     </ng-template>
-    <ng-template colRef="lastVersionStatus" let-status>
+    <ng-template colRef="lastVersion.status" let-status>
       {{ status | toLabel: 'contractStatus' | async }}
     </ng-template>
     <ng-template colRef="type" let-type>
