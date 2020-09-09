@@ -102,7 +102,7 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it.only('Invitee adds public screening to his calendar', () => {
+  it('Invitee adds public screening to his calendar', () => {
     const OrgName = EVENTS[0].org.name;
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
