@@ -1,23 +1,22 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieForm, DirectorForm } from '../../movie.form';
+import { Component, Input } from '@angular/core';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
-  selector: '[movie] movie-summary-main',
+  selector: '[movie][link] movie-summary-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./main.component.scss']
 })
-export class MovieSummaryMainComponent implements OnInit {
+export class SummaryMainComponent {
+
   @Input() movie: MovieForm;
   @Input() link: string;
 
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngOnInit() {
-    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  get title() {
+    return this.movie.get('title');
   }
 
-  public directorHasErrorRequired(director: DirectorForm) {
-    return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');
+  public get genres() {
+    return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
+
 }

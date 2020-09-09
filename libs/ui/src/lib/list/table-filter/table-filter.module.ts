@@ -7,6 +7,7 @@ import { TableFilterComponent } from './table-filter.component';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 import { ColRefModule } from '@blockframes/utils/directives/col-ref.directive';
 import { QueryListFindModule } from '@blockframes/utils/pipes/find.pipe';
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +32,7 @@ import { RouterModule } from '@angular/router';
     FlexLayoutModule,
     ColRefModule,
     QueryListFindModule,
+    DeepKeyPipeModule,
 
     // Material
     MatButtonModule,

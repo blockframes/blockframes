@@ -2,7 +2,7 @@
   <input #fileExplorer [accept]="accept" type="file" (change)="selected($event.target.files)" />
 
   <!-- Waiting -->
-  <section *ngSwitchCase="'waiting'">
+  <section *ngSwitchCase="'waiting'" class="drop-zone">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
         <img asset="add_files.webp" alt="upload image">
@@ -17,17 +17,19 @@
   </section>
 
   <!-- Hovering -->
-  <section *ngSwitchCase="'hovering'">
+  <section *ngSwitchCase="'hovering'" class="drop-zone">
     <img asset="add_files.webp" alt="upload image" class="picture-hover">
+    <h3>Drop your file here</h3>
   </section>
 
   <!-- Ready -->
   <section *ngSwitchCase="'ready'">
     <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
     <h3>{{ form.fileName.value }}</h3>
-    <span class="mat-body-2 primary-text">Click on SAVE to launch the upload</span>
-    <span class="mat-caption">Continue to fill the form during the upload</span>
-    <span class="mat-caption" (click)="delete()">Delete</span>
+    <span class="mat-body-2">{{ localSize }}</span>
+    <button mat-mini-fab color="divider">
+      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
+    </button>
   </section>
 
   <!-- File -->

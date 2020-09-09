@@ -12,6 +12,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
+import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -19,26 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-
-const routes = [{
-  path: '',
-  component: TitleViewComponent,
-  children: [
-    {
-      path: '',
-      redirectTo: 'details',
-      pathMatch: 'full'
-    },
-    {
-      path: 'activity',
-      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
-    },
-    {
-      path: 'details',
-      loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
-    }
-  ]
-}];
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [TitleViewComponent],
@@ -50,14 +32,16 @@ const routes = [{
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
+    MovieTunnelSummaryModule,
     // Material
     MatButtonModule,
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    // Routes
-    RouterModule.forChild(routes)
+    MatDividerModule,
+    // Route
+    RouterModule.forChild([{ path: '', component: TitleViewComponent }])
   ]
 })
 export class TitleViewModule { }

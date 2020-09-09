@@ -55,7 +55,7 @@ const routes: Routes = [{
         loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
       }, {
         path: 'lobby',
-        loadChildren: () => import('@blockframes/movie/pages/start/start-tunnel.module').then(m => m.StartTunnelModule)
+        loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
