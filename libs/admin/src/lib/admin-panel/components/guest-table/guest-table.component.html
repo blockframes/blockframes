@@ -23,18 +23,18 @@
     </ng-container>
     <ng-template #noOrg>--</ng-template>
   </ng-template>
-  <ng-template colRef="eventId" let-eventId>
+  <ng-template colRef="event.id" let-eventId>
     <a [routerLink]="['/c/o/admin/panel/event', eventId]">
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </ng-template>
-  <ng-template colRef="eventStart" let-start>
+  <ng-template colRef="event.start" let-start>
     {{ start | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="eventEnd" let-end>
+  <ng-template colRef="event.end" let-end>
     {{ end | date: 'medium'}}
   </ng-template>
-  <ng-template colRef="eventIsPrivate" let-privateEvent>
+  <ng-template colRef="event.isPrivate" let-privateEvent>
     {{ privateEvent ? 'private' : 'public'}}
   </ng-template>
   <ng-template colRef="movie" let-movie>

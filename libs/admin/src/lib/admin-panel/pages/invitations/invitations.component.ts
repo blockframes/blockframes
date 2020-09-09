@@ -25,16 +25,16 @@ export class InvitationsComponent implements OnInit {
   public columns: string[] = [
     'id',
     'org',
-    'eventTitle',
-    'eventId',
-    'eventStart',
-    'eventEnd',
-    'eventType',
+    'event.title',
+    'event.id',
+    'event.start',
+    'event.end',
+    'event.type',
     'movie',
-    'eventIsPrivate',
-    'guestEmail',
-    'guestFirstName',
-    'guestLastName',
+    'event.isPrivate',
+    'guest.email',
+    'guest.firstName',
+    'guest.lastName',
     'guestOrg',
     'date',
     'mode',
@@ -61,35 +61,35 @@ export class InvitationsComponent implements OnInit {
         invitation.guestOrg = await this.getOrg(guestOrgId);
       }
 
-      if (invitation.eventType === 'screening') {
-        const titleId = event.meta.titleId as string;
+      if (invitation.event.type === 'screening') {
+        const titleId = invitation.event.meta.titleId as string;
         if (titleId) {
           try {
             invitation.movie = await this.getMovie(titleId);
           } catch (err) {
-            console.log(`Error while loading movie for event : ${invitation.eventId}`);
+            console.log(`Error while loading movie for event : ${invitation.event.id}`);
           }
         }
       }
       return invitation;
     })
 
-    this.invitations = await Promise.all(invitationsDetailed);
+    this.invitations = await Promise.all(orgs);
     this.invitationListLoaded = true;
     this.cdRef.markForCheck();
   }
 
   public exportTable() {
     const exportedRows = this.invitations.map(i => ({
-      'event id': i.eventId,
-      'event name': i.eventTitle,
-      'start date': i.eventStart,
-      'end date': i.eventEnd,
+      'event id': i.event.id,
+      'event name': i.event.title,
+      'start date': i.event.start,
+      'end date': i.event.end,
       'host organization': orgName(i.org),
       'host org id': i.org.id,
-      'event type': i.eventType,
+      'event type': i.event.type,
       'title': i.movie ? i.movie.title.international : '--',
-      'privacy status': i.eventIsPrivate ? 'private' : 'public',
+      'privacy status': i.event.isPrivate ? 'private' : 'public',
       'invitation date': i.date,
       'guest email': getGuest(i, 'user').email,
       'guest first name': getGuest(i, 'user').firstName || '--',
