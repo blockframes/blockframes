@@ -30,7 +30,7 @@ export const USER_FIXTURES_PASSWORD = 'blockframes';
  * @param auth  Firestore Admin Auth object
  * @param userConfig
  */
-async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
+async function createUserIfNonexistent(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
   const { uid, email } = userConfig;
   try {
     console.log('trying to get user:', uid, email);
@@ -49,7 +49,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfNonexistent(auth, user));
   return Promise.all(ps);
 }
 
@@ -128,7 +128,7 @@ export async function clearUsers(): Promise<any> {
   const { auth } = loadAdminServices();
 
   // clear users is equivalent to "we expect no users", we can reuse the code.
-  return removeUnexpectedUsers([], auth);
+  return deleteAllUsers(auth);
 }
 
 function readUsersFromSTDIN(): Promise<UserConfig[]> {

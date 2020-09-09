@@ -37,7 +37,7 @@ export async function prepareForTesting() {
   await restoreStorageFromCi(getCI());
   console.info('Storage synced!');
 
-  console.info('Preparing the database...');
+  console.info('Preparing the database...'); // ! Also updates storage
   await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
   console.info('Database ready for testing!');
 
@@ -71,37 +71,35 @@ export async function prepareForTesting() {
 }
 
 export async function prepareDb() {
-  const { db, auth, storage, getCI } = loadAdminServices();
-
-  const p1 = copyDbFromCi(storage, getCI());
-  const p3 = p1.then(() => restore(appUrl.content));
-  const p4 = p3.then(() => migrate(false));
-  const p5 = p4.then(() => cleanDeprecatedData(db, auth));
-  const p6 = p5.then(generateFixtures)
-  return Promise.all([p1, p2, p3, p4, p5, p6, p8]);
+  const { db, auth } = loadAdminServices();
+  console.warn( 'This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
+  console.warn( 'Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
+  console.log('Restoring latest db from storage...')
+  await restore(appUrl.content);
+  console.log('Anonymized DB restored. Migrating...');
+  await migrate(false);
+  console.log('DB migration complete. Cleaning up...');
+  await cleanDeprecatedData(db, auth);
+  console.log('Deprecated data removed!');
 }
 
-// ! sync users
-// ! do algolia
-/**
- * This is an experimental function to see if we can speed this process up
- // !!! await generateFixtures()
- */
-export async function prepareInParallel() {
-  const { db, auth, storage, getCI } = loadAdminServices();
-
-  const p1 = copyDbFromCi(storage, getCI())
-  const p2 = p1.then(dbPath => syncUsers(readJsonlFile(dbPath)))
-  const p3 = p1.then(() => restore(appUrl.content))
-  const p4 = p3.then(() => migrate(false))
-  const p5 = p4.then(() => cleanDeprecatedData(db, auth))
-  const p6 = restoreStorageFromCi(getCI())
-  const p7 = p6.then(() => cleanStorage(storage.bucket(storageBucket)))
-  const p8 = p5.then(upgradeAlgoliaOrgs).then(upgradeAlgoliaMovies).then(upgradeAlgoliaUsers)
-  const p9 = Promise.all([p5, p7]).then(generateWatermarks)
-
-  return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8, p9])
-}
+// /**
+//  * This is an experimental function to see if we can speed this process up
+//  */
+// export async function prepareInParallel() {
+//   const { db, auth, storage, getCI } = loadAdminServices();
+//   const p1 = copyDbFromCi(storage, getCI())
+//   const p2 = p1.then(dbPath => syncUsers(readJsonlFile(dbPath)))
+//   const p3 = p1.then(() => restore(appUrl.content))
+//   const p4 = p3.then(() => migrate(false))
+//   const p5 = p4.then(() => cleanDeprecatedData(db, auth))
+//   const p6 = restoreStorageFromCi(getCI())
+//   const p7 = p6.then(() => cleanStorage(storage.bucket(storageBucket)))
+//   const p8 = p5.then(upgradeAlgoliaOrgs).then(upgradeAlgoliaMovies).then(upgradeAlgoliaUsers)
+//   // !!! await generateFixtures()
+//   const p9 = Promise.all([p5, p7]).then(generateWatermarks)
+//   return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8, p9])
+// }
 
 export async function restoreShortcut() {
   return restore(appUrl.content);

@@ -1,11 +1,11 @@
-import { loadAdminServices } from "@blockframes/firebase-utils";
+import { loadAdminServices, getCollectionInBatches } from "@blockframes/firebase-utils";
 import {
   clearIndex,
   setIndexConfiguration,
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-} from '../../backend-functions/src/internals/algolia';  // @TODO (#3471) remove this call to backend-functions
+} from '../../backend-functions/src/internals/algolia';  // TODO (#3471) remove this call to backend-functions
 import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
 import { algolia } from '@env';
 
@@ -25,14 +25,16 @@ export async function upgradeAlgoliaOrgs() {
   await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
-  const orgs = await db.collection('orgs').get();
+  const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
+  for await (const orgs of orgsIterator) {
+    const promises = orgs.map(async org => {
+      return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
+    });
 
-  const promises = orgs.docs.map(async doc => {
-    const org = doc.data() as OrganizationDocument;
-    return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
-  });
+    await Promise.all(promises);
+    console.log(`chunk of ${orgs.length} orgs processed...`)
+  }
 
-  await Promise.all(promises);
   console.log('Algolia Orgs index updated with success !');
 }
 
@@ -70,36 +72,36 @@ export async function upgradeAlgoliaMovies() {
   await clearIndex(algolia.indexNameMovies, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
-  const movies = await db.collection('movies').get();
+  const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
 
-  const promises = movies.docs.map(async movie => {
-    const movieData = movie.data() as MovieDocument;
+  for await (const movies of moviesIterator) {
+    const promises = movies.map(async movie => {
+      try {
 
-    try {
+        // TODO issue#2692
+        const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
 
-      // TODO issue#2692
-      const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
+        if (querySnap.size === 0) {
+          throw new Error(`Movie ${movie.id} is not part of any orgs`);
+        }
 
-      if (querySnap.size === 0) {
-        throw new Error(`Movie ${movie.id} is not part of any orgs`);
+        // TODO : here we might decide to arbitrary choose first org
+        if (querySnap.size > 1) {
+          throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
+        }
+
+        const org = (querySnap.docs[0].data() as OrganizationDocument);
+        const orgName = org.denomination.public || org.denomination.full;
+
+        await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
+      } catch (error) {
+        console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
+        console.error(error);
       }
-
-      // TODO : here we might decide to arbitrary choose first org
-      if (querySnap.size > 1) {
-        throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
-      }
-
-      const org = (querySnap.docs[0].data() as OrganizationDocument);
-      const orgName = org.denomination.public || org.denomination.full;
-
-      await storeSearchableMovie(movieData, orgName, process.env['ALGOLIA_API_KEY'])
-    } catch (error) {
-      console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
-      console.error(error);
-    }
-  });
-
-  await Promise.all(promises);
+    });
+    await Promise.all(promises);
+    console.log(`chunk of ${movies.length} movies processed...`)
+  }
 
   console.log('Algolia Movies index updated with success !');
 }
@@ -119,17 +121,18 @@ export async function upgradeAlgoliaUsers() {
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
-  const users = await db.collection('users').get();
-
-  const promises = users.docs.map(async user => {
-    const userData = user.data() as PublicUser;
-    try {
-      await storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']);
-    } catch (error) {
-      console.error(`\n\n\tFailed to insert a movie ${user.id} : skipping\n\n`);
-      console.error(error);
-    }
-  });
-  await Promise.all(promises);
+  const usersIterator = getCollectionInBatches<PublicUser>(db.collection('users'), 'uid', 300)
+  for await (const users of usersIterator) {
+    const promises = users.map(async user => {
+      try {
+        await storeSearchableUser(user, process.env['ALGOLIA_API_KEY']);
+      } catch (error) {
+        console.error(`\n\n\tFailed to insert a user ${user.uid} : skipping\n\n`);
+        console.error(error);
+      }
+    });
+    await Promise.all(promises);
+    console.log(`chunk of ${users.length} users processed...`)
+  }
   console.log('Algolia Users index updated with success !');
 }
