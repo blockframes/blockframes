@@ -17,9 +17,12 @@ export class ViewComponent {
 
   constructor(private query: MovieQuery) { }
 
-  public isEnoughPictures() {
-    return Object.values(this.query.getActive().promotional.still_photo).length > 4
+  public isEnoughPicturesThen(min: number) {
+/* TODO MF: DONT USE A FUNC FOT THAT, RXJS IS THE KEY */
+    return Object.values(this.query.getActive().promotional.still_photo).length > min
   }
+
+
 }
 
 @Directive({
