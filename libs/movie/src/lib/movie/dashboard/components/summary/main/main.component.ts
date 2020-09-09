@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieForm, DirectorForm } from '../../movie.form';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MovieForm, DirectorForm } from '../../../../form/movie.form';
 
 @Component({
   selector: '[movie] movie-summary-main',
@@ -7,15 +7,9 @@ import { MovieForm, DirectorForm } from '../../movie.form';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryMainComponent implements OnInit {
+export class MovieSummaryMainComponent {
   @Input() movie: MovieForm;
   @Input() link: string;
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngOnInit() {
-    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
 
   public directorHasErrorRequired(director: DirectorForm) {
     return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');

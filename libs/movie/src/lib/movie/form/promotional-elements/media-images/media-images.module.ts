@@ -15,7 +15,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 
 // Blockframes Movie
-import { PromotionalLinksModule } from '@blockframes/movie/form/promotional-elements/promotional-links/promotional-links.module';
+import { PromotionalLinksModule } from '@blockframes/movie/form/promotional-elements/links/promotional-links.module';
 
 // Blockframes Media
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';

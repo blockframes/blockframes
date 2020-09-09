@@ -1,5 +1,9 @@
+// Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { MoviePromotionalElementsForm } from '../../movie.form';
+
+import { MoviePromotionalElementsForm } from '../../../../form/movie.form';
+
+// RxJs
 import { Subscription } from 'rxjs';
 
 const fileRefs = {

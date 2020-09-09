@@ -12,7 +12,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 // Blockframes Movie
-import { PromotionalLinksModule } from '@blockframes/movie/form/promotional-elements/promotional-links/promotional-links.module';
+import { PromotionalLinksModule } from '@blockframes/movie/form/promotional-elements/links/promotional-links.module';
 
 // Blockframes Media
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';

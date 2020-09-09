@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MoviePrizeForm } from '../../movie.form';
-import { MovieForm } from '../../movie.form';
+// Angular
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MovieForm, MoviePrizeForm } from '../../../../form/movie.form';
 
 @Component({
   selector: '[movie] movie-summary-festival-prizes',
@@ -8,15 +8,9 @@ import { MovieForm } from '../../movie.form';
   styleUrls: ['./festival-prizes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryFestivalPrizesComponent implements OnInit {
+export class MovieSummaryFestivalPrizesComponent {
   @Input() movie: MovieForm;
   @Input() link: string;
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
-  ngOnInit() {
-    this.movie.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
 
   public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {
     return !festivalPrize.get('name').value && !festivalPrize.get('prize').value && !festivalPrize.get('year').value && !festivalPrize.get('premiere').value;
