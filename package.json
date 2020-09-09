@@ -12,6 +12,7 @@
     "build:stats": "ng build --prod --stats-json",
     "build:catalog": "cross-env ng build catalog --configuration=\"$ENV\"",
     "build:festival": "cross-env ng build festival --configuration=\"$ENV\"",
+    "build:financiers": "cross-env ng build financiers --configuration=\"$ENV\"",
     "build:backend-functions": "cross-env ng build backend-functions --configuration=\"$ENV\"",
     "build:backend-ops": "cross-env ng build backend-ops --configuration=\"$ENV\"",
     "build:crm": "npx ng build crm --configuration=\"$ENV\"",
