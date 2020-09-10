@@ -55,7 +55,7 @@ export function getCurrentModule(path: string): Module | 'landing' {
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
-    appAccess[a] = createModuleAccess(_appAccess[a] ? _appAccess[a] : {});
+    appAccess[a] = createModuleAccess(_appAccess[a]);
   }
   return appAccess;
 }
