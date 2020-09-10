@@ -127,9 +127,3 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
-
-
-// Local setup related settings
-// ============================
-// change watermarkRowConcurrency to 5 or lesser in case scripts fail 
-export const watermarkRowConcurrency = 10;

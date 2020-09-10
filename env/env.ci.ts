@@ -128,9 +128,3 @@ export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
-
-
-// Local setup related settings
-// ============================
-// change watermarkRowConcurrency to 5 or lesser in case scripts fail 
-export const watermarkRowConcurrency = 10;

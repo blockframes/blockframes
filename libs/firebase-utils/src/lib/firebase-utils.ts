@@ -20,8 +20,8 @@ export function getCollection<T>(path: string): Promise<T[]> {
   return getCollectionRef(path).then(collection => collection.docs.map(doc => doc.data() as T));
 }
 
-export async function runChunks(rows: any[], cb: any, rowsConcurrency = 10, verbose = true) {
-  const chunks = chunk(rows, rowsConcurrency);
+export async function runChunks(rows: any[], cb: any, rowsConcurrency? : number, verbose = true) {
+  const chunks = chunk(rows, rowsConcurrency || ( process.env.CHUNK_SIZE && Number(process.env.CHUNK_SIZE) ) || 10);
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];
     if (verbose) { console.log(`Processing chunk ${i + 1}/${chunks.length}`); }
