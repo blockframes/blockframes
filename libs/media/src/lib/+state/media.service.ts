@@ -167,16 +167,38 @@ export class MediaService {
    * @param p ImageParameters
    * @param w "0 = default size"
    */
-  async generateSingleImageUrl(ref: string, p: ImageParameters, w = 0): Promise<string> {
+  generateSingleImageUrl(ref: string, p: ImageParameters, w = 0): Promise<string> {
     const parameters: ImageParameters = { ...p, w };
+    return this.generateImgIxUrl(ref, parameters);
+  }
+
+  /**
+   * 
+   * @param ref string
+   */
+  async generatePdfUrl(ref: string): Promise<string> {
+    return this.generateImgIxUrl(ref);
+  }
+
+  /**
+   * 
+   * @param ref string
+   * @param p any
+   */
+  async generateImgIxUrl(ref: string, p: any = {}): Promise<string> {
     const refParts = ref.split('/');
+    const protectedMedia = refParts[0] === 'protected';
 
     if (['public', 'protected'].includes(refParts[0])) {
       refParts.shift();
       ref = refParts.join('/');
     }
 
-    return getImgIxResourceUrl(ref, parameters);
+    if (protectedMedia) {
+      p.s = (await this.getProtectedMediaToken(ref, [p]))[0];
+    }
+
+    return getImgIxResourceUrl(ref, p);
   }
 
   async generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
