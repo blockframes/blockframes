@@ -17,8 +17,7 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'title-status',
-        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule),
-        data: { disabled: Object.keys(staticConsts.productionStatus).filter(status => status !== 'released') }
+        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
       {
         path: 'main',
@@ -27,6 +26,26 @@ const tunnelRoutes: Routes = [
       {
         path: 'synopsis',
         loadChildren: () => import('@blockframes/movie/form/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+      },
+      {
+        path: 'production',
+        loadChildren: () => import('@blockframes/movie/form/production/production.module').then(m => m.MovieFormProductionModule)
+      },
+      {
+        path: 'artistic',
+        loadChildren: () => import('@blockframes/movie/form/artistic/artistic.module').then(m => m.MovieFormArtisticModule)
+      },
+      {
+        path: 'reviews',
+        loadChildren: () => import('@blockframes/movie/form/reviews/reviews.module').then(m => m.MovieFormReviewsModule)
+      },
+      {
+        path: 'additional-information',
+        loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
+      },
+      {
+        path: 'available-materials',
+        loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
       {
         path: 'technical-info',
@@ -38,8 +57,16 @@ const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
-        path: 'files&links',
+        path: 'media-files',
         loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
+      },
+      {
+        path: 'media-images',
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+      },
+      {
+        path: 'media-videos',
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
       {
         path: 'summary',
