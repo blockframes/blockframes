@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { RouterModule } from '@angular/router';
 
 // Components
 import { MovieViewMainComponent } from './main.component';
@@ -17,6 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     MovieTunnelSummaryModule,
     MatDividerModule,
+    RouterModule.forChild([{ path: '', component: MovieViewMainComponent }])
   ],
   exports: [MovieViewMainComponent]
 })

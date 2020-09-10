@@ -1,27 +1,27 @@
 <h3>Main Information</h3>
-<article class="summary">
-  <movie-summary-main [movie]="movie" [link]="getPath('main')"></movie-summary-main>
+<article>
+  <movie-summary-main [movie]="form" [link]="getPath('main')"></movie-summary-main>
 </article>
 
 <mat-divider></mat-divider>
 
 <h3>Storyline Elements</h3>
-<article class="summary">
-  <movie-summary-synopsis [movie]="movie" [link]="getPath('synopsis')"></movie-summary-synopsis>
+<article>
+  <movie-summary-synopsis [movie]="form" [link]="getPath('synopsis')"></movie-summary-synopsis>
 </article>
 
 <mat-divider></mat-divider>
 
 <h3>Selections and Reviews</h3>
-<article class="summary">
-  <movie-summary-review [movie]="movie" [link]="getPath('reviews')"></movie-summary-review>
+<article>
+  <movie-summary-review [movie]="form" [link]="getPath('reviews')"></movie-summary-review>
 </article>
 
 <mat-divider></mat-divider>
 
 <h3>Files & Links</h3>
-<article class="summary">
-  <movie-summary-media-files [movie]="movie" [link]="getPath('media-files')"></movie-summary-media-files>
-  <movie-summary-media-images [movie]="movie" [link]="getPath('media-images')"></movie-summary-media-images>
-  <movie-summary-media-videos [movie]="movie" [link]="getPath('media-videos')"></movie-summary-media-videos>
+<article>
+  <movie-summary-media-files [movie]="form" [link]="getPath('media-files')"></movie-summary-media-files>
+  <movie-summary-media-images [movie]="form" [link]="getPath('media-images')"></movie-summary-media-images>
+  <movie-summary-media-videos [movie]="form" [link]="getPath('media-videos')"></movie-summary-media-videos>
 </article>

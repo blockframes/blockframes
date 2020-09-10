@@ -23,6 +23,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 
+const routes = [{
+  path: '',
+  component: TitleViewComponent,
+  children: [
+    {
+      path: '',
+      redirectTo: 'main',
+      pathMatch: 'full'
+    },
+    {
+      path: 'activity',
+      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
+    },
+    {
+      path: 'main',
+      loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule)
+    }
+  ]
+}];
+
 @NgModule({
   declarations: [TitleViewComponent],
   imports: [
@@ -43,7 +63,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSelectModule,
     MatDividerModule,
     // Route
-    RouterModule.forChild([{ path: '', component: TitleViewComponent }])
+    RouterModule.forChild(routes)
   ]
 })
 export class TitleViewModule { }

@@ -12,11 +12,18 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
-  form = new MovieForm(this.movieQuery.getActive());
+
+  navLinks = [
+    {
+      path: 'main',
+      label: 'Main Information'
+    }
+  ];
 
   constructor(private movieQuery: MovieQuery, private route: ActivatedRoute) {}
 
