@@ -24,17 +24,8 @@ header h4 {
   border-radius: 5px;
 }
 
-article.body-tab {
-  margin-top: 40px;
-}
-
-.summary {
-  margin-left: 16px;
-}
-
-mat-divider {
-  border-top-width: 2px;
-  margin: 24px 0;
+nav.mat-tab-nav-bar {
+  margin-bottom: 32px;
 }
 
 @include layout-bp(lt-md) {
