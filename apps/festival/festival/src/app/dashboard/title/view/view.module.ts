@@ -13,6 +13,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 // Components
 import { TitleViewComponent } from './view.component';
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { MovieViewMainModule } from '@blockframes/movie/dashboard/components/view/main/main.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -33,6 +34,7 @@ import { MatDividerModule } from '@angular/material/divider';
     TranslateSlugModule,
     DurationModule,
     MovieTunnelSummaryModule,
+    MovieViewMainModule,
     // Material
     MatButtonModule,
     MatIconModule,

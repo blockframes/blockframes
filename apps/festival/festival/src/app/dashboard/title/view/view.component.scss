@@ -28,15 +28,6 @@ article.body-tab {
   margin-top: 40px;
 }
 
-.summary {
-  margin-left: 16px;
-}
-
-mat-divider {
-  border-top-width: 2px;
-  margin: 24px 0;
-}
-
 @include layout-bp(lt-md) {
   header {
     height: auto;
