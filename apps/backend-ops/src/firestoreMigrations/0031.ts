@@ -294,6 +294,12 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
+    } else if (ref.includes(`movies/${docId}/promotionalElements.presentation_deck.media`)) {
+      oldRef = ref;
+      newRef = `movies/${docId}/promotional.presentation_deck/${ref.split('/').pop()}`;
+    } else if (ref.includes(`movies/${docId}/promotionalElements.scenario.media`)) {
+      oldRef = ref;
+      newRef = `movies/${docId}/promotional.scenario/${ref.split('/').pop()}`;
     } else if (url.includes(`movies%2F${docId}%2FpromotionalElements.presentation_deck.media`)) {
       oldRef = `movies/${docId}/promotionalElements.presentation_deck.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
       newRef = `movies/${docId}/promotional.presentation_deck/${fileName}`;
