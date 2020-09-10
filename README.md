@@ -159,4 +159,4 @@ Go to Firebase console > Authentication > Templates > ...
 
 Click on the pen to edit the template. At the very bottom of the form, click on `customize action URL`. If this database is used for development, the path should be `https://localhost:4200/...`, if it belongs to production, you should put `https://app.blockframes.io/...`.
 
-You can also customize the message of each type of mail (email verification, password reset, email modification).
+You can also customize the message of each type of mail (email verification, password reset, email modification). 

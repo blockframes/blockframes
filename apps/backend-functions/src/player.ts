@@ -1,13 +1,14 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, admin } from './internals/firebase';
+import { db, admin, getStorageBucketName } from './internals/firebase';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
-import { MovieDocument } from './data/types';
+import { MovieDocument, PublicUser } from './data/types';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
+import { upsertWatermark } from '@blockframes/firebase-utils';
 
 // No typing
 const JWPlayerApi = require('jwplatform');
@@ -92,6 +93,44 @@ export const getPrivateVideoUrl = async (
       error: 'NO_INVITATION',
       result: `You have not been invited to see this movie`
     };
+  }
+
+  // watermark fallback : in case the user's watermark doesn't exist we generate it
+  const userRef = db.collection('users').doc(context.auth.uid);
+  const userSnap = await userRef.get();
+  const user = userSnap.data() as PublicUser;
+
+  // if (!user.watermark) { // TODO use this line with the new image data model
+  if (!user.watermark || !user.watermark.ref || !user.watermark.url) {
+
+    upsertWatermark(user, getStorageBucketName());
+
+    // wait for the function to update the user document after watermark creation
+    const success = await new Promise(resolve => {
+
+      const unsubscribe = userRef.onSnapshot(snap => {
+        const userData = snap.data() as PublicUser;
+
+        // if (!!userData.watermark) { // TODO use this line with the new image data model
+        if (!!userData.watermark && !!userData.watermark.ref && !!userData.watermark.url) {
+          unsubscribe();
+          resolve(true);
+        }
+      });
+
+      // timeout after 10s
+      setTimeout(() => {
+        unsubscribe();
+        resolve(false);
+      }, 10000);
+    });
+
+    if (!success) {
+      return {
+        error: 'WATERMARK_CREATION_TIMEOUT',
+        result: `The watermark creation has timeout, please try again later`
+      };
+    }
   }
 
   // we need expiry date in UNIX Timestamp (aka seconds), JS Date give use milliseconds,
