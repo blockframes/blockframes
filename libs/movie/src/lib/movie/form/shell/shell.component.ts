@@ -91,7 +91,6 @@ function getSteps(status: FormControl, app?: string): TunnelStep[] {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  // Have to be initialized in the constructor as children page use it in the constructor too
   @Input() form = new MovieForm(this.query.getActive());
   @Input() steps: TunnelStep[];
 
@@ -138,7 +137,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
       new MutationObserver((_, observer) => {
         resolve(this.doc.getElementById(id));
-        observer.disconnect;
       }).observe(this.doc.documentElement, {childList: true, subtree: true});
     })
   }

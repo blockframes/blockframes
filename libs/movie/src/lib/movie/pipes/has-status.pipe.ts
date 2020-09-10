@@ -9,6 +9,7 @@ import { MovieForm } from '../form/movie.form';
 })
 export class HasStatusPipe implements PipeTransform {
   transform(form: MovieForm, status: string[]): boolean {
+    console.log(form.get('productionStatus').value)
     /* If the user skipped the question of the production status, we want to display all controls */
     if (form.get('productionStatus').value === null) {
       return true

@@ -11,12 +11,8 @@ const tunnelRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'title-status',
+        redirectTo: 'main',
         pathMatch: 'full'
-      },
-      {
-        path: 'title-status',
-        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
       {
         path: 'main',
@@ -33,11 +29,11 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/media-image/media-image.module').then(m => m.MediaImageModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'files&links',
-        loadChildren: () => import('@blockframes/movie/form/media-file/media-file.module').then(m => m.MediaFileModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
       },
       {
         path: 'summary',
