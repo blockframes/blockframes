@@ -6,9 +6,10 @@
     <section id="company">
       <h6 class="mat-caption">Production Company</h6>
 
-      <bf-form-table [columns]="productionColumns" [form]="productionCompany" buttonText="Add Production Company">
-        <ng-template colRef="countries" let-productionCompany>
-          {{ productionCompany.countries | translateSlug: 'TERRITORIES' }}</ng-template>
+      <bf-form-list [form]="productionCompany" buttonText="Add Production Company">
+        <ng-template itemRef let-productionCompany>
+          {{ productionCompany.displayName }} - {{ productionCompany.countries | translateSlug: 'TERRITORIES' }}
+        </ng-template>
         <ng-template formView let-productionForm>
           <article [formGroup]="productionForm" fxLayout fxLayoutGap="24px">
             <mat-form-field appearance="outline" fxFlex>
@@ -26,13 +27,12 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
     <section id="co-company">
       <h6 class="mat-caption">Co-Production Company</h6>
-      <bf-form-table [columns]="coProductionColumns" [form]="coProductionCompany"
-        buttonText="Add Co-Production Company">
+      <bf-form-list [form]="coProductionCompany" buttonText="Add Co-Production Company">
         <ng-template colRef="countries" let-coProductionCompany>
           {{ coProductionCompany.countries | translateSlug: 'TERRITORIES' }}</ng-template>
         <ng-template formView let-coProductionForm>
@@ -52,13 +52,13 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
     <section id="producers">
       <h6 class="mat-caption">Producer(s)</h6>
-      <bf-form-table [columns]="producerColumns" [form]="form.producers" buttonText="Add Producer">
-        <ng-template colRef="role" let-producer>{{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
+      <bf-form-list [form]="form.producers" buttonText="Add Producer">
+        <ng-template let-producer>{{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
         <ng-template formView let-producerForm>
           <article [formGroup]="producerForm">
 
@@ -83,7 +83,7 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
     <mat-divider></mat-divider>
@@ -91,8 +91,8 @@
     <h3>Distributor(s)</h3>
     <section id="distributors">
 
-      <bf-form-table [columns]="distributorColumns" [form]="distributors" buttonText="Add Distribution Company">
-        <ng-template colRef="countries" let-distributor>{{ distributor.countries | translateSlug: 'TERRITORIES' }}
+      <bf-form-list [form]="distributors" buttonText="Add Distribution Company">
+        <ng-template let-distributor>{{ distributor.countries | translateSlug: 'TERRITORIES' }}
         </ng-template>
         <ng-template formView let-distributorForm>
           <article [formGroup]="distributorForm" fxLayout fxLayoutGap="24px">
@@ -111,7 +111,7 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
     <mat-divider></mat-divider>
@@ -119,8 +119,8 @@
     <h3>International Sales</h3>
     <section id="sales">
 
-      <bf-form-table [columns]="salesColumns" [form]="internationalSales" buttonText="Add Sales Company">
-        <ng-template colRef="countries" let-sales>{{ sales.countries | translateSlug: 'TERRITORIES' }}</ng-template>
+      <bf-form-list [form]="internationalSales" buttonText="Add Sales Company">
+        <ng-template let-sales>{{ sales.countries | translateSlug: 'TERRITORIES' }}</ng-template>
         <ng-template formView let-salesForm>
           <article [formGroup]="salesForm" fxLayout fxLayoutGap="24px">
 
@@ -138,7 +138,7 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
   </ng-container>
