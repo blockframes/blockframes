@@ -4,20 +4,28 @@
   <ng-container tunnel-form>
     <section id="title-status">
       <h3>Select your project's production status</h3>
-      <p class="mat-body-2">Your project's production status will define the form that will follow.
-        <br>
-        - If you are creating a new project, please select the right production status to start filling the form.
-        <br>
-        - If you are updating an existing project, please keep in mind that changing production status might
-        require you to specify some new information.
-      </p>
+      <ng-container *ngIf="appInformation.disabledStatus.length <= 3; else oneStatus">
+        <p class="mat-body-2">Your project's production status will define the form that will follow.
+          <br>
+          - If you are creating a new project, please select the right production status to start filling the form.
+          <br>
+          - If you are updating an existing project, please keep in mind that changing production status might
+          require you to specify some new information.
+        </p>
+      </ng-container>
+      <ng-template #oneStatus>
+        <p class="mat-body-2">{{appInformation.appName.label}} only accepts released projects. Please make sure that
+          your project is
+          released before filling the following form. If you have any questions, <a (click)="openIntercom()">contact
+            us</a>.</p>
+      </ng-template>
 
       <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="row wrap" fxLayoutAlign="start center"
         fxLayoutGap="16px">
 
         <ng-container *ngFor="let status of status">
           <mat-card [ngClass]="{ disabled: status.disabled }">
-            <img (click)="setValue(status.value)" [asset]="status.image"/>
+            <img (click)="setValue(status.value)" [asset]="status.image" />
             <mat-radio-button [value]="status.value" color="primary" [disabled]="status.disabled">{{status.name}}
             </mat-radio-button>
           </mat-card>
