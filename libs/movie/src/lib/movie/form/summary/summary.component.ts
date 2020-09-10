@@ -7,7 +7,7 @@ import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
-import { MovieFormShellComponent } from '@blockframes/movie/pages/shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { Subscription } from 'rxjs';
 
 @Component({
