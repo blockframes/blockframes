@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 // Components
 import { MovieViewMainComponent } from './main.component';
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -18,6 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     MovieTunnelSummaryModule,
     MatDividerModule,
+    GetPathModule,
     RouterModule.forChild([{ path: '', component: MovieViewMainComponent }])
   ],
   exports: [MovieViewMainComponent]
