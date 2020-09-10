@@ -6,6 +6,7 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { ImageParameters, getImgIxResourceUrl } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { PublicUser } from '@blockframes/user/types';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { UserQuery } from '@blockframes/user/+state';
 
 declare const jwplayer: any;
 
@@ -24,6 +25,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
+    private userQuery: UserQuery,
     private db: AngularFirestore,
     private functions: AngularFireFunctions,
   ) {}
@@ -56,20 +58,17 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     const { error, result } = await callDeploy({ eventId: id }).toPromise();
 
     if (!!error) {
-      console.log('ERROR', error);
-      throw new Error(error);
+      // if error is set, result will contain the error message
+      throw new Error(result);
     } else {
 
-      const userRef = this.db.collection('users').doc(this.authQuery.userId);
-      const userSnap = await userRef.get().toPromise();
-      const userData = userSnap.data() as PublicUser;
+      const userData = this.userQuery.getEntity(this.authQuery.userId);
       const parameters: ImageParameters = {
         auto: 'compress,format',
         fit: 'crop',
       };
       const watermarkUrl = getImgIxResourceUrl(userData.watermark, parameters);
       if (!watermarkUrl) {
-        console.error('We cannot load video without watermark.');
         throw new Error('We cannot load video without watermark.');
       }
 
