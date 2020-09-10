@@ -21,33 +21,17 @@ export class MovieFormSynopsisComponent implements OnInit {
   constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
-    this.values$ = this.keywords.valueChanges.pipe(startWith(this.keywords.value));
-  }
-
-  get logline() {
-    return this.form.get('logline');
-  }
-
-  get synopsis() {
-    return this.form.get('synopsis');
-  }
-
-  get keyAssets() {
-    return this.form.get('keyAssets');
-  }
-
-  get keywords() {
-    return this.form.get('keywords');
+    this.values$ = this.form.keywords.valueChanges.pipe(startWith(this.form.keywords.value));
   }
 
   public add(event: MatChipInputEvent): void {
     const { value = '' } = event;
 
-    this.keywords.add(value)
+    this.form.keywords.add(value)
     this.keyword.reset();
   }
 
   public remove(i: number): void {
-    this.keywords.removeAt(i);
+    this.form.keywords.removeAt(i);
   }
 }
