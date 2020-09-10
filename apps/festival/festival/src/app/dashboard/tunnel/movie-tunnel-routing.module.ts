@@ -53,7 +53,7 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/media-image/media-image.module').then(m => m.MediaImageModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-files',
