@@ -14,6 +14,13 @@ import { abi as ENS_REGISTRY_ABI } from '@blockframes/smart-contracts/ENSRegistr
 import { abi as ENS_RESOLVER_ABI } from '@blockframes/smart-contracts/PublicResolver.json';
 import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from '@blockframes/smart-contracts/Organization.json';
 
+////////////////////////////////////////////////////////////////////////
+// To enable build, everything inside ethers folder has been ignored. //
+// To reactivate it, go to tsconfig.app.json and remove exclude.      //
+////////////////////////////////////////////////////////////////////////
+
+
+
 type TxResponse = TransactionResponse;
 type TxReceipt = TransactionReceipt;
 
