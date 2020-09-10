@@ -9,6 +9,16 @@ export default class SearchPage extends NavbarPage {
     cy.get('catalog-marketplace-title-list');
   }
 
+  public clearAllFilters(optionSortBy: string) {
+    cy.get('mat-select').click();
+    cy.get('mat-option')
+      .contains(optionSortBy)
+      .click();
+    cy.get('[mattooltip="Clear all filters"]')
+      .click();      
+    cy.wait(3000);
+  }
+
   public fillProductionYear(years: Dates) {
     cy.get('catalog-marketplace-title-list input[test-id=production-year-input-from]').type(years.from);
     cy.get('catalog-marketplace-title-list input[test-id=production-year-input-to]').type(years.to);
