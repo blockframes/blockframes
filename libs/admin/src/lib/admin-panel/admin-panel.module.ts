@@ -31,6 +31,7 @@ import { OverviewModule } from './pages/overview/overview.module';
 import { InvitationsModule } from './pages/invitations/invitations.module';
 import { EventModule } from './pages/event/event.module';
 import { GoToModule } from './components/go-to/go-to.module';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -108,6 +109,7 @@ export const panelRoutes: Routes = [
     OverviewModule,
     InvitationsModule,
     GoToModule,
+    ConfirmModule
   ],
   declarations: [
     MoviesComponent,
