@@ -10,17 +10,20 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { mergeDeep } from '@blockframes/utils/helpers';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { mergeDeep } from '@blockframes/utils/helpers';
 
 // RxJs
 import { switchMap, map } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 
-function getSteps(status: FormControl, app?: string): TunnelStep[] {
+// Utils
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+function getSteps(status: FormControl): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -104,7 +107,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private mediaService: MediaService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {

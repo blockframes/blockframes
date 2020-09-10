@@ -11,8 +11,13 @@ const tunnelRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'main',
+        redirectTo: 'title-status',
         pathMatch: 'full'
+      },
+      {
+        path: 'title-status',
+        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule),
+        data: { productionStatus: 'released' }
       },
       {
         path: 'main',
