@@ -56,7 +56,7 @@ export async function getDocAndPath(filePath: string | undefined) {
   const collection = filePathElements.shift();
   const docId = filePathElements.shift();
 
-  if(!docId || !collection){
+  if (!docId || !collection) {
     throw new Error('Invalid path pattern');
   }
 

@@ -26,7 +26,8 @@ export async function upgrade(_: Firestore, storage: Storage) {
         console.log(`Image ref not found on DB. Removed ${f.name}.`);
       }
     } catch (error) {
-      console.log(`An error happened when syncing ${f.name}!`, error.message);
+      await f.delete();
+      console.log(`An error happened when syncing ${f.name}! Removed ${f.name}.`, error.message);
     }
 
   });
