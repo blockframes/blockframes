@@ -39,6 +39,14 @@ const routes = [{
     {
       path: 'main',
       loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule)
+    },
+    {
+      path: 'artistic',
+      loadChildren: () => import('@blockframes/movie/dashboard/components/view/artistic/artistic.module').then(m => m.MovieViewArtisticModule)
+    },
+    {
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/dashboard/components/view/production/production.module').then(m => m.MovieViewProductionModule)
     }
   ]
 }];
