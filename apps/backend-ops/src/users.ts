@@ -12,9 +12,9 @@ import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { loadDBVersion } from './migrations';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
-import { firebase } from '@env';
+import * as env from '@env';
 
-export const { storageBucket } = firebase;
+export const { storageBucket } = env.firebase;
 
 export interface UserConfig {
   uid: string;
@@ -205,7 +205,7 @@ export async function generateWatermarks() {
     } else {
       await user.ref.update({ watermark: file.name });
     }
-  }, process.env?.HEAVY_CHUNK_SIZE && Number(process.env.HEAVY_CHUNK_SIZE));
+  }, env?.['heavyChunkSize'] ?? 10);
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();
