@@ -149,7 +149,7 @@ export class UserComponent implements OnInit {
     this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure you want to delete this user?',
-        question: 'this action is irreversable',
+        question: 'this action is irreversible',
         buttonName: 'Yes',
         onConfirm: async () => {
           await this.userService.remove(this.userId);

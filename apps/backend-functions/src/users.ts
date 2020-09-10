@@ -187,7 +187,7 @@ export async function onUserDelete(
   const notificationsSnap = await notificationsRef.get();
   notificationsSnap.forEach(notification => db.doc(`notifications/${notification.id}`).delete());
 
-  // delete blockframesAdmin doc?
+  // delete blockframesAdmin doc
   db.doc(`blockframesAdmin/${user.uid}`).delete();
 
   // delete media from storage
