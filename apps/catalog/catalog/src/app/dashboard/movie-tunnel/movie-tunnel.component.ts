@@ -7,4 +7,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./movie-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent { }
+export class MovieTunnelComponent {}

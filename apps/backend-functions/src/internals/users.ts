@@ -1,10 +1,10 @@
 
 import { App, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
-import { templateIds } from '@env';
 import { generate as passwordGenerator } from 'generate-password';
 import { OrganizationDocument, InvitationType } from '../data/types';
 import { getDocument } from '../data/internals';
 import { userInvite, userFirstConnexion } from '../templates/mail';
+import { templateIds } from '../templates/ids';
 import { auth } from './firebase';
 import { sendMailFromTemplate, sendMail } from './email';
 import { PublicUser } from '@blockframes/user/types';

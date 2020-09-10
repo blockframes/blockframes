@@ -17,8 +17,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 // Blockframes Movie
 import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module';
-import { MovieFormKeywordsModule } from '@blockframes/movie/form/promotional-description/keywords/keywords.module';
-import { MovieFormPromotionalDescriptionModule } from '@blockframes/movie/form/promotional-description/promotional-description.module';
 import { MovieFormBudgetRangeModule } from '@blockframes/movie/form/budget/range/budget-range.module';
 
 // Blockframes UI
@@ -39,8 +37,6 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     ReactiveFormsModule,
 
     // Movie Form Modules
-    MovieFormKeywordsModule,
-    MovieFormPromotionalDescriptionModule,
     MovieFormStoryModule,
     MovieFormBudgetRangeModule,
 

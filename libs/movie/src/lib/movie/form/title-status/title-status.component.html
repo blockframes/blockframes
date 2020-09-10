@@ -15,26 +15,13 @@
       <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="row wrap" fxLayoutAlign="start center"
         fxLayoutGap="16px">
 
-        <mat-card>
-          <img (click)="form.productionStatus.setValue('financing')" asset="development.svg" />
-          <mat-radio-button value="financing" color="primary">In development</mat-radio-button>
-        </mat-card>
-        <mat-card>
-          <img (click)="form.productionStatus.setValue('shooting')" asset="production.svg" />
-          <mat-radio-button value="shooting" color="primary">In Production</mat-radio-button>
-        </mat-card>
-        <mat-card>
-          <img (click)="form.productionStatus.setValue('post-production')" asset="post_production.svg" />
-          <mat-radio-button value="post-production" color="primary">In Post-Production</mat-radio-button>
-        </mat-card>
-        <mat-card>
-          <img (click)="form.productionStatus.setValue('finished')" asset="completed.svg" />
-          <mat-radio-button value="finished" color="primary">Completed</mat-radio-button>
-        </mat-card>
-        <mat-card>
-          <img (click)="form.productionStatus.setValue('released')" asset="released.svg" />
-          <mat-radio-button #radio value="released" color="primary">Released</mat-radio-button>
-        </mat-card>
+        <ng-container *ngFor="let status of status">
+          <mat-card [ngClass]="{ disabled: status.disabled }">
+            <img (click)="setValue(status.value)" [asset]="status.image"/>
+            <mat-radio-button [value]="status.value" color="primary" [disabled]="status.disabled">{{status.name}}
+            </mat-radio-button>
+          </mat-card>
+        </ng-container>
 
       </mat-radio-group>
     </section>

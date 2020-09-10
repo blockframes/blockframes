@@ -1,8 +1,14 @@
 // Angular
-import { Component, ChangeDetectionStrategy, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
+
+// Utils
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+// Blockframes 
+import { staticConsts } from '@blockframes/utils/static-model'
 
 @Component({
   selector: 'movie-form-title-status',
@@ -10,7 +16,53 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   styleUrls: ['./title-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleStatusComponent {
+export class TitleStatusComponent implements OnInit {
   public form = this.shell.form;
-  constructor(private shell: MovieFormShellComponent) { }
+
+  public status = [{
+    name: 'In Development',
+    value: 'financing',
+    image: 'development.svg',
+    disabled: false
+  }, {
+    name: 'In Production',
+    value: 'shooting',
+    image: 'production.svg',
+    disabled: false
+  }, {
+    name: 'In Post-Production',
+    value: 'post-production',
+    image: 'post_production.svg',
+    disabled: false
+  }, {
+    name: 'Completed',
+    value: 'finished',
+    image: 'completed.svg',
+    disabled: false
+  }, {
+    name: 'Released',
+    value: 'released',
+    image: 'released.svg',
+    disabled: false
+  }]
+
+
+  constructor(private shell: MovieFormShellComponent, private routerQuery: RouterQuery) { }
+
+  ngOnInit() {
+    const disabledStatus = this.routerQuery.getData()?.disabled || [];
+    this.status = this.status.map(s => ({ ...s, disabled: disabledStatus.includes(s.value) }))
+    if (disabledStatus.length) {
+      const value = Object.keys(staticConsts.productionStatus).filter(status => status === 'released')
+      this.form.productionStatus.setValue(value[0])
+    }
+  }
+
+  setValue(value: string) {
+    /* If status is defined via the router data object, we don't want to change
+    the status via the click event from the image */
+    if (!this.routerQuery.getData()?.disabled?.includes(value)) {
+      this.form.productionStatus.setValue(value)
+    }
+  }
 }

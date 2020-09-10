@@ -15,8 +15,6 @@ import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
-import { network, baseEnsDomain } from '@env';
 
 const findOrgByMovieIdQuery = (movieId: string) => ({
   path: 'orgs',
@@ -163,15 +161,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
-    let uniqueOnEthereum = false;
-    let uniqueOnFirestore = false;
-
-    const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
-    const provider = getProvider(network);
-    const orgEthAddress = await provider.resolveName(orgENS);
-    uniqueOnEthereum = !orgEthAddress ? true : false;
-    uniqueOnFirestore = await this.orgNameExist(orgName).then(exist => !exist);
-    return uniqueOnEthereum && uniqueOnFirestore;
+    return this.orgNameExist(orgName).then(exist => !exist);
   }
 
   public findOrgByMovieId(id: string) {

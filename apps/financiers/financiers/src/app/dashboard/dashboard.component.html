@@ -1,0 +1,34 @@
+<layout-dashboard>
+  <aside fxLayout="column" fxLayoutAlign="space-between">
+    <mat-nav-list fxFlex>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+        <span matLine><b>Dashboard</b></span>
+      </a>
+      <a mat-list-item routerLink="title" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+        <span matLine><b>My Titles</b></span>
+      </a>
+      <a mat-list-item routerLink="event" routerLinkActive="active" test-id="calendar">
+        <mat-icon matListIcon svgIcon="calendar"></mat-icon>
+        <span matLine><b>My Events</b></span>
+      </a>
+      <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
+        <mat-divider></mat-divider>
+        <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="search_table"></mat-icon>
+          <span matLine><b>Buyer's Platform</b></span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+    <mat-nav-list *ngIf="org$ | async as org">
+      <mat-divider></mat-divider>
+      <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+        <img matListAvatar [ref]="org.logo" asset="empty_organization_sidenav.webp" alt="Organization logo">
+        <span mat-line>{{ org | orgName }}
+          <small mat-line class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</small>
+        </span>
+      </a>
+    </mat-nav-list>
+  </aside>
+</layout-dashboard>

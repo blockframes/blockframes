@@ -17,7 +17,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-const steps = [{
+const steps: TunnelStep[] = [{
   title: 'Step 1',
   icon: 'document',
   routes: [{
