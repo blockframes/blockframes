@@ -1,6 +1,5 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
@@ -18,7 +17,6 @@ export class MovieViewMainComponent implements OnInit, OnDestroy {
   public form: MovieForm;
 
   constructor(
-    private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
@@ -34,10 +32,5 @@ export class MovieViewMainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  public getPath(segment: string) {
-    const { movieId } = this.route.snapshot.params;
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 }
