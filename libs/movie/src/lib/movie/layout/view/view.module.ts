@@ -1,11 +1,19 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { ViewComponent, MovieHeader } from './view.component';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+
+// Blockframes
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
+import { CarouselModule } from '@blockframes/ui/carousel/carousel.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -18,7 +26,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 @NgModule({
   declarations: [ViewComponent, MovieHeader],
   exports: [ViewComponent, MovieHeader],
-  
+
   imports: [
     CommonModule,
     RouterModule,
@@ -27,6 +35,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     DisplayNameModule,
     TranslateSlugModule,
     AppBarModule,
+    UpcomingScreeningsModule,
+    MovieCardModule,
+    CarouselModule,
+    MatLayoutModule,
     // Material
     MatTabsModule,
     MatIconModule,

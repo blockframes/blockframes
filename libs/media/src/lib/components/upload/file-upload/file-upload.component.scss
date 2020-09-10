@@ -24,6 +24,9 @@ section {
     flex: 1;
   }
 }
+section.drop-zone {
+  border: dashed 1px var(--primary);
+}
 
 .upload-button-container {
   button.mat-icon-button {

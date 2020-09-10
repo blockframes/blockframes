@@ -58,6 +58,7 @@ export class OrganizationsComponent implements OnInit {
       'id',
       'denomination.full',
       'denomination.public',
+      'addresses.main.country',
       'status',
       'email',
     ];

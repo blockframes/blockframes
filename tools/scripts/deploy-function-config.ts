@@ -35,9 +35,9 @@ async function setFirebaseConfig() {
   // * Check if we are in CI
   const FIREBASE_CONFIG: any = {};
   if (process.env.FIREBASE_CI_TOKEN) FIREBASE_CONFIG.token = process.env.FIREBASE_CI_TOKEN;
-  process.stdout.write('Existing Firebase Functions Config Values:\n');
+  console.log('Existing Firebase Functions Config Values:\n');
   await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG).then(console.log);
-  process.stdout.write('Writing new config...\n');
+  console.log('Writing new config...\n');
 
   const keyVal = getKeyValFormat(); // TODO(#3620) Parse .env rather than read hardcoded values
   await firebaseTools.functions.config
