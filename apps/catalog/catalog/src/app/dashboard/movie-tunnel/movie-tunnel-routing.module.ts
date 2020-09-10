@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieTunnelComponent } from './movie-tunnel.component';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import  staticConsts  from '@blockframes/utils/static-model/staticConsts'
 
 const tunnelRoutes: Routes = [
   {
@@ -17,7 +18,7 @@ const tunnelRoutes: Routes = [
       {
         path: 'title-status',
         loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule),
-        data: { productionStatus: 'released' }
+        data: { disabled: Object.keys(staticConsts.productionStatus).filter(status => status !== 'released') }
       },
       {
         path: 'main',

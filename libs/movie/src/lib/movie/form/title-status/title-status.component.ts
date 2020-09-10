@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, ViewChildren, QueryList, AfterViewInit, ElementRef, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Component
 import { MovieFormShellComponent } from '../shell/shell.component';
@@ -7,8 +7,8 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 // Utils
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-// Material
-import { MatRadioButton } from '@angular/material/radio';
+// Blockframes 
+import { staticConsts } from '@blockframes/utils/static-model'
 
 @Component({
   selector: 'movie-form-title-status',
@@ -16,40 +16,52 @@ import { MatRadioButton } from '@angular/material/radio';
   styleUrls: ['./title-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleStatusComponent implements OnInit, AfterViewInit {
+export class TitleStatusComponent implements OnInit {
   public form = this.shell.form;
 
-  private status: string;
+  public status = [{
+    name: 'In Development',
+    value: 'financing',
+    image: 'development.svg',
+    disabled: false
+  }, {
+    name: 'In Production',
+    value: 'shooting',
+    image: 'production.svg',
+    disabled: false
+  }, {
+    name: 'In Post-Production',
+    value: 'post-production',
+    image: 'post_production.svg',
+    disabled: false
+  }, {
+    name: 'Completed',
+    value: 'finished',
+    image: 'completed.svg',
+    disabled: false
+  }, {
+    name: 'Released',
+    value: 'released',
+    image: 'released.svg',
+    disabled: false
+  }]
 
-  @ViewChildren('image') images: QueryList<ElementRef<HTMLImageElement>>
-  @ViewChildren('radioButton') radioButton: QueryList<MatRadioButton>
 
   constructor(private shell: MovieFormShellComponent, private routerQuery: RouterQuery) { }
 
   ngOnInit() {
-    this.status = this.routerQuery.getData()?.productionStatus
-    if (this.status) {
-      this.form.productionStatus.setValue(this.status)
+    const disabledStatus = this.routerQuery.getData()?.disabled || [];
+    this.status = this.status.map(s => ({ ...s, disabled: disabledStatus.includes(s.value) }))
+    if (disabledStatus.length) {
+      const value = Object.keys(staticConsts.productionStatus).filter(status => status === 'released')
+      this.form.productionStatus.setValue(value[0])
     }
-  }
-
-  ngAfterViewInit() {
-    this.images.forEach(image => {
-      if (!image.nativeElement.srcset.includes(this.status) && !!this.status) {
-        image.nativeElement.style.opacity = '0.5'
-      }
-    })
-    this.radioButton.forEach(button => {
-      if (button.value !== this.status && !!this.status) {
-        button.disabled = true;
-      }
-    })
   }
 
   setValue(value: string) {
     /* If status is defined via the router data object, we don't want to change
     the status via the click event from the image */
-    if (!this.status) {
+    if (!this.routerQuery.getData()?.disabled?.includes(value)) {
       this.form.productionStatus.setValue(value)
     }
   }
