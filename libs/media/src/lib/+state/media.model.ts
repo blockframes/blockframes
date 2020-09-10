@@ -9,9 +9,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
 /**
- * This function **clean** a document from it's medias before updating it in the firestore.
- * We need to clean it because the backend functions are supposed to manage medias in the db,
- * and **not the front**.
+ * This function prepare media references in db documents before updating it in firestore.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
 export function extractMediaFromDocumentBeforeUpdate(
@@ -67,7 +65,7 @@ function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm)
           control.patchValue({
             blobOrFile: '',
             delete: false,
-            oldRef: `${control.ref.value}${control.fileName.value}`,
+            oldRef: clearHostedMediaFormValue(control.value), 
           });
 
         }

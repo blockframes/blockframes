@@ -3,20 +3,13 @@
  * @param str
  */
 export function sanitizeFileName(str: string): string {
-  const rand = Math.random()
-    .toString(36)
-    .replace(/[^a-z]+/g, '')
-    .substr(0, 3);
-
   const fileParts = str.split('.');
+  // removes extension
   fileParts.pop();
-  const fileNameWithoutExt = fileParts.join('.')
-    .split(' ')
-    .join('-');
+  // replace spaces by "-"
+  const fileNameWithoutExt = fileParts.join('.').split(' ').join('-');
 
-  // generate a random part for filename
-  // this allow us to prevent "update" in rules, only "create" is allowed.
-  return `${fileNameWithoutExt.substr(0, 96)}-${rand}.${getFileExtension(str)}`;
+  return `${fileNameWithoutExt.substr(0, 100)}.${getFileExtension(str)}`;
 }
 
 export function getStoragePath(path: string, protectedMedia = false): string {

@@ -24,7 +24,12 @@ import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { linkFile, unlinkFile, getMediaToken as _getMediaToken, deleteMedia as _deleteMedia } from './media';
+import {
+  linkFile,
+  unlinkFile,
+  getMediaToken as _getMediaToken,
+  deleteMedia as _deleteMedia
+} from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
@@ -179,7 +184,7 @@ export const onMovieCreateEvent = onDocumentCreate(
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent =  functions
+export const onMovieUpdateEvent = functions
   .runWith(heavyConfig) // movie update can potentially trigger images processing
   .firestore.document('movies/{movieId}')
   .onUpdate(skipInMaintenance(onMovieUpdate));
@@ -263,15 +268,10 @@ export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
 
 //--------------------------------
-//         File upload          //
+//      Files management        //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. */
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
-
-//--------------------------------
-//         File delete          //
-//--------------------------------
 
 export const deleteMedia = functions.https.onCall(logErrors(_deleteMedia));
 

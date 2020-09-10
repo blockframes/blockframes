@@ -6,36 +6,34 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
-
-
+import { createPublicUser, PublicUser } from '@blockframes/user/types';
 
 /**
- * This function is executed on every files uploaded on the storage.
- *
- * It should **only** link the storage file to the firestore.
- *
- * Updating the firestore will cause an update event that will
- * eventually trigger post-processing (like image resize).
+ * This function is executed on every files uploaded on the tmp directory of the storage.
+ * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
  */
 export async function linkFile(data: functions.storage.ObjectMetadata) {
-
   // get the needed values
-  const { filePath, doc, fieldToUpdate } = await getDocAndPath(data.name);
+  const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
 
-  // @TODO (#3188) check context if uid have right to linkFile
+  if (isInTmpDir && data.name) {
+    const savedRef: string = get(docData, fieldToUpdate);
+    const bucket = admin.storage().bucket(getStorageBucketName());
+    const from = bucket.file(data.name);
+    if (filePath === savedRef) {
+      const to = bucket.file(filePath);
+      const [exists] = await from.exists();
+      if (exists) {
+        await from.copy(to);
+        await from.delete();
+      }
+      return true;
+    } else {
+      await from.delete();
+    }
 
-  // create an access url
-  const bucket = admin.storage().bucket(data.bucket);
-  const file = bucket.file(filePath);
-
-  const [exists] = await file.exists();
-  if (!exists) {
-    throw new Error('Upload Error : File does not exists in the storage');
   }
-
-  // link the firestore
-  // ! this will not work with array in the path like for poster
-  return doc.update({ [fieldToUpdate]: filePath });
+  return false;
 }
 
 /**
@@ -43,26 +41,26 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
  *
  * It should **only** unlink the storage file from the firestore.
  *
- * Updating the firestore will cause an update event that will
- * eventually trigger post-processing (like deleting other image size).
- * @note To unlink in firestore we don't delete the keys (`ref` and `url`)
- * but we simply replace them by an empty string to avoid
- * `cannot read property 'url' of undefined` errors
  */
 export async function unlinkFile(data: functions.storage.ObjectMetadata) {
 
   // get the needed values
-  const { doc, docData, fieldToUpdate } = await getDocAndPath(data.name);
+  const { doc, docData, fieldToUpdate, isInTmpDir } = await getDocAndPath(data.name);
 
-  // if firestore wasn't link to this file, we should not unlink it
-  const ref: string = get(docData, fieldToUpdate);
-  if (data.name !== ref) {
-    return;
+  if (!isInTmpDir) {
+
+    // if firestore wasn't link to this file, we should not unlink it
+    const ref: string = get(docData, fieldToUpdate);
+    if (data.name !== ref) {
+      return;
+    }
+
+    // unlink the firestore
+    // ! this will not work with array in the path like for poster
+    return doc.update({ [fieldToUpdate]: '' });
+  } else {
+    return false;
   }
-
-  // unlink the firestore
-  // ! this will not work with array in the path like for poster
-  return doc.update({ [fieldToUpdate]: '' });
 }
 
 /**
@@ -94,11 +92,11 @@ export const getMediaToken = (data: { ref: string, parametersSet: ImageParameter
 
 }
 
-export const deleteMedia = async (data: { ref: string }, context: CallableContext): Promise<any> => {
+export const deleteMedia = async (data: { ref: string }, context: CallableContext): Promise<void> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  // @TODO #3188 make other tests against DB here to validate user request
+  if (!(await isAllowedToDelete(data.ref, context.auth.uid))) { throw new Error('Permission denied. User is not allowed'); }
 
   const bucket = admin.storage().bucket(getStorageBucketName());
   const file = bucket.file(data.ref);
@@ -108,5 +106,37 @@ export const deleteMedia = async (data: { ref: string }, context: CallableContex
     throw new Error('Upload Error : File does not exists in the storage');
   }
 
-  return file.delete();
+  await file.delete();
+}
+
+async function isAllowedToDelete(ref: string, uid: string): Promise<boolean> {
+  const pathInfo = getPathInfo(ref);
+  const db = admin.firestore();
+  // @TODO #3188 make other tests against DB here to validate user request
+  switch (pathInfo.collection) {
+    case 'users':
+      return pathInfo.docId === uid;
+    case 'orgs':
+      const user = await db.collection('users').doc(uid).get();
+      if (!user.exists) { return false; }
+      const userDoc: PublicUser = createPublicUser(user.data());
+      // @TODO (#3188) check if user have permission on org
+      return pathInfo.docId === userDoc.orgId;
+    default:
+      return false;
+  }
+}
+
+function getPathInfo(ref: string) {
+  const refParts = ref.split('/');
+
+  const pathInfo = {} as any;
+  if (['protected', 'public'].includes(refParts[0])) {
+    pathInfo.securityLevel = refParts.shift();
+  }
+
+  pathInfo.collection = refParts.shift();
+  pathInfo.docId = refParts.shift();
+
+  return pathInfo;
 }

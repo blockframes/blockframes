@@ -19,7 +19,7 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
 /**
  * - Generate a svg file with the name & email of the user
  * - Store the watermark file in the storage bucket
- * - User's firestore doc is updated by onFileUpload backend function
+ * - Update the user document
  */
 export async function upsertWatermark(user: PublicUser, bucketName: string, protectedMedia = false): Promise<any> {
 
@@ -35,6 +35,10 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, prot
   await new Promise(res => {
     file.createWriteStream({ contentType: 'image/svg+xml' }).end(watermark, () => res());
   });
+
+  const db = admin.firestore();
+  const doc = await db.collection('users').doc(user.uid);
+  await doc.update({ watermark: ref });
 
   return file;
 }

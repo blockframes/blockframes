@@ -39,13 +39,26 @@ export async function getDocAndPath(filePath: string | undefined) {
     Example: 'public/collection/id/field/fileName'`);
   }
 
-  // remove "protected/"" or "public/"
-  if (['protected', 'public'].includes(filePathElements[0])) {
+  // remove tmp/
+  let isInTmpDir = false;
+  if (filePathElements[0] === 'tmp') {
     filePathElements.shift();
+    filePath = filePathElements.join('/');
+    isInTmpDir = true;
   }
 
-  const collection = filePathElements.shift() || '';
-  const docId = filePathElements.shift() || '';
+  let security;
+  // remove "protected/"" or "public/"
+  if (['protected', 'public'].includes(filePathElements[0])) {
+    security = filePathElements.shift();
+  }
+
+  const collection = filePathElements.shift();
+  const docId = filePathElements.shift();
+
+  if(!docId || !collection){
+    throw new Error('Invalid path pattern');
+  }
 
   // remove the file name at the end
   // `filePathElements` is now only composed by the field to update
@@ -63,6 +76,8 @@ export async function getDocAndPath(filePath: string | undefined) {
   const fieldToUpdate = filePathElements.join('.');
 
   return {
+    isInTmpDir,
+    security,
     filePath,
     doc,
     docData,

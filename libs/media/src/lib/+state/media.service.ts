@@ -38,7 +38,12 @@ export class MediaService {
 
   async upload(uploadFiles: UploadData | UploadData[]) {
     const files = Array.isArray(uploadFiles) ? uploadFiles : [uploadFiles];
-    const tasks = files.map(file => this.storage.upload(`${file.path}${file.fileName}`, file.data));
+    /**
+     * @dev Every file goes into tmp dir.
+     * Then a backend functions performs a check on DB document to check if
+     * file have to be moved to correct folder or deleted.
+     */
+    const tasks = files.map(file => this.storage.upload(`tmp/${file.path}${file.fileName}`, file.data));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
       .then(() => delay(5000))

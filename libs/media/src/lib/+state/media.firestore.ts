@@ -7,9 +7,13 @@ export interface HostedMediaFormValue {
   fileName: string;
 }
 
-export function clearHostedMediaFormValue(formValue: HostedMediaFormValue) {
-  // we don't want the new ref witch is maybe not yet uploaded
-  return formValue.oldRef ?? '';
+export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
+  if (formValue.delete) { return ''; }
+  const ref = formValue.ref;
+  const refParts = ref.split('/');
+  return refParts.pop() === formValue.fileName ?
+    `${formValue.ref}` :
+    `${formValue.ref}${formValue.fileName}`;
 }
 
 export interface UploadData {
