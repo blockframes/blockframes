@@ -27,22 +27,6 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   certifications = staticModels.CERTIFICATIONS.filter(cert =>
     (cert.slug !== 'awarded-film' && cert.slug !== 'a-list-cast'));
 
-  public releaseColumns = {
-    country: "Country",
-    media: 'Release Media Name',
-    date: 'Date',
-  }
-
-  public boxOfficeColumns = {
-    territory: "Country",
-    unit: 'Metrics',
-    value: 'Figures'
-  }
-
-  public ratingColumns = {
-    value: "Rating",
-    country: 'Country',
-  }
 
   public qualificationsColumns = {
     certifications: "Qualifications",
@@ -55,21 +39,5 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
       startWith(this.form.boxOffice.value),
       map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
     );
-  }
-
-  get qualifications() {
-    return this.form.get('certifications');
-  }
-
-  get rating() {
-    return this.form.get('rating');
-  }
-
-  get originalRelease() {
-    return this.form.get('originalRelease');
-  }
-
-  get boxOffice() {
-    return this.form.get('boxOffice');
   }
 }
