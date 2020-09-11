@@ -6,9 +6,8 @@ import { prepareForTesting, restoreShortcut, upgrade, prepareDb } from './fireba
 import { migrate } from './migrations';
 import { showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
-import { clearUsers, createUsers, printUsers, syncUsers, generateWatermarks } from './users';
+import { clearUsers, createUsers, printUsers, generateWatermarks } from './users';
 import { generateFixtures } from "./generate-fixtures";
-import { syncStorage } from './syncStorage';
 
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
@@ -33,17 +32,14 @@ async function runCommand() {
   } else if (cmd === 'createUsers') {
     return createUsers();
   } else if (cmd === 'generateWatermarks') {
-    await generateWatermarks();
-    return syncStorage();
+    return generateWatermarks();
   } else if (cmd === 'upgradeAlgoliaOrgs') {
     return upgradeAlgoliaOrgs();
   } else if (cmd === 'upgradeAlgoliaMovies') {
     return upgradeAlgoliaMovies();
   } else if (cmd === 'upgradeAlgoliaUsers') {
     return upgradeAlgoliaUsers();
-  } else if (cmd === 'syncStorage') {
-    return syncStorage();
-  } else {
+  }  else {
     showHelp();
     return Promise.reject('Command not recognised');
   }
