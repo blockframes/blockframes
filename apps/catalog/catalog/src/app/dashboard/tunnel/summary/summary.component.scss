@@ -27,9 +27,11 @@ button.submit {
   & span {
     display: block;
   }
-
 }
 
-article {
-  margin-left: 16px;
+section {
+  *:not(h3) {
+    display: block;
+    margin: 0 16px;
+  }
 }
