@@ -92,7 +92,7 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
-      if (org.appAccess[a][m]) {
+      if (org.appAccess[a]?.[m]) {
         allowedApps[a] = true;
       }
     }
@@ -123,14 +123,14 @@ export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocum
 
   if (_a) {
     for (const m of module) {
-      if (org.appAccess[_a][m]) {
+      if (org.appAccess[_a]?.[m]) {
         allowedModules[m] = true;
       }
     }
   } else {
     for (const a of app) {
       for (const m of module) {
-        if (org.appAccess[a][m]) {
+        if (org.appAccess[a]?.[m]) {
           allowedModules[m] = true;
         }
       }
