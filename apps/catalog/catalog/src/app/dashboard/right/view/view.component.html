@@ -16,7 +16,7 @@
       <span class="mat-caption"> {{ version.date | date }} </span>
       <h2>{{ price.amount | currency: price.currency }}</h2>
       <mat-chip-list>
-        <mat-chip>{{ version.status | toLabel: 'contractStatus' | async }}</mat-chip>
+        <mat-chip>{{ version.status | toLabel: 'contractStatus' }}</mat-chip>
       </mat-chip-list>
     </section>
   </header>

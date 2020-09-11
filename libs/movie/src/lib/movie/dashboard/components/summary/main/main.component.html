@@ -3,7 +3,7 @@
     <strong>Content Type </strong>
     <missing-control [control]="movie.get('contentType')" [link]="link">
       <ng-template #content>
-        {{ movie.get('contentType').value | toLabel: 'contentType' | async | titlecase }}
+        {{ movie.get('contentType').value | toLabel: 'contentType' | titlecase }}
       </ng-template>
     </missing-control>
   </li>

@@ -52,7 +52,7 @@
         <bf-form-table [columns]="boxOfficeColumns" [form]="boxOffice" buttonText="Add a Box Office">
           <ng-template colRef="country" let-boxOffice>{{ boxOffice.country | translateSlug: 'TERRITORIES' }}
           </ng-template>
-          <ng-template colRef="unit" let-boxOffice>{{ boxOffice.unit | toLabel: 'unitBox' | async }}</ng-template>
+          <ng-template colRef="unit" let-boxOffice>{{ boxOffice.unit | toLabel: 'unitBox' }}</ng-template>
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
 

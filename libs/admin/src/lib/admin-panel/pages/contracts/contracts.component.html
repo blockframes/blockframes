@@ -7,10 +7,10 @@
       <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
     </ng-template>
     <ng-template colRef="lastVersion.status" let-status>
-      {{ status | toLabel: 'contractStatus' | async }}
+      {{ status | toLabel: 'contractStatus' }}
     </ng-template>
     <ng-template colRef="type" let-type>
-      {{ type | toLabel: 'contractType' | async }}
+      {{ type | toLabel: 'contractType' }}
     </ng-template>
     <ng-template colRef="partyIds" let-partyIds>
       <ul *ngIf="partyIds.length else noParties">
