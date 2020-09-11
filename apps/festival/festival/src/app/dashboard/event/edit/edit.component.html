@@ -27,6 +27,7 @@
           </ng-template>
         </mat-card>
       </ng-container>
+
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
@@ -50,6 +51,13 @@
             <mat-label>Description</mat-label>
             <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
           </mat-form-field>
+          <h6>Files</h6>
+          <p>
+            Select files you want to share during the meeting.
+            Every member of the meeting will be able to see and download the selected files.
+          </p>
+          <p>TODO FILE SELECTOR issue#3672</p>
+          <!-- TODO FILE SELECTOR COMPONENT #3672 -->
         </mat-card>
       </ng-container>
     </ng-container>

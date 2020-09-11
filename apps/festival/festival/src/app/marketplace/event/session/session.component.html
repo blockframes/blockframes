@@ -36,20 +36,18 @@
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
 
-      <article class="dark-contrast-theme screen" bgAsset="meeting.webp">
-        <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
-          <span class="mat-display-2">{{ event.title }}</span>
-          <span class="mat-caption">Meeting now</span>
-          <a *ngIf="event.meta.callUrl" mat-flat-button color="accent" [href]="event.meta.callUrl" target="_blank">
-            <mat-icon svgIcon="play"></mat-icon>
-            <span>Join the meeting</span>
-          </a>
-          <p *ngIf="!event.meta.callUrl">
-            Contact <a [href]="'mailto:' + event.organizedBy.email">{{ event.organizedBy | displayName }}</a> to provide a link for the meeting
-          </p>
+      <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
+
+      <!-- WORK IN PROGRESS -->
+      <article fxLayout="column" class="meeting">
+        <div fxLayout="row" class="meeting-container">
+          <div [fxFlex]="mediaContainerSize">MEDIA</div>
+          <div [fxFlex]="visioContainerSize">VISIO</div>
         </div>
+        <div fxFlex="15%" *ngIf="event.isOwner">CURRENT MEDIA CONTROL</div>
+        <div fxFlex="35%" *ngIf="event.isOwner">MEDIA LIST</div>
       </article>
-      <!-- TODO update the picture here with Mathilde's picture, she needs to validate with Marie to create it -->
+
       <img asset="meeting.webp" alt="Meeting room">
 
     </section>
