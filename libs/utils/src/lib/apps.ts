@@ -55,7 +55,7 @@ export function getCurrentModule(path: string): Module | 'landing' {
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
-    appAccess[a] = createModuleAccess(_appAccess[a] ? _appAccess[a] : {});
+    appAccess[a] = createModuleAccess(_appAccess[a]);
   }
   return appAccess;
 }
@@ -92,7 +92,7 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
-      if (org.appAccess[a][m]) {
+      if (org.appAccess[a]?.[m]) {
         allowedApps[a] = true;
       }
     }
@@ -123,14 +123,14 @@ export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocum
 
   if (_a) {
     for (const m of module) {
-      if (org.appAccess[_a][m]) {
+      if (org.appAccess[_a]?.[m]) {
         allowedModules[m] = true;
       }
     }
   } else {
     for (const a of app) {
       for (const m of module) {
-        if (org.appAccess[a][m]) {
+        if (org.appAccess[a]?.[m]) {
           allowedModules[m] = true;
         }
       }
