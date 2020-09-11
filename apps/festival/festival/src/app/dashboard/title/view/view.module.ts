@@ -22,6 +22,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
 
 const routes = [{
   path: '',
@@ -63,6 +64,7 @@ const routes = [{
     DurationModule,
     MovieTunnelSummaryModule,
     MovieViewMainModule,
+    DashboardTitleShellModule,
     // Material
     MatButtonModule,
     MatIconModule,
