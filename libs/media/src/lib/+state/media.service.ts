@@ -163,28 +163,9 @@ export class MediaService {
   /**
    * 
    * @param ref string
-   * @param _parameters ImageParameters
-   * @param w "0 = default size"
-   */
-  generateSingleImageUrl(ref: string, _parameters: ImageParameters, w = 0): Promise<string> {
-    const parameters: ImageParameters = { ..._parameters, w };
-    return this.generateImgIxUrl(ref, parameters);
-  }
-
-  /**
-   * 
-   * @param ref string
-   */
-  generatePdfUrl(ref: string): Promise<string> {
-    return this.generateImgIxUrl(ref);
-  }
-
-  /**
-   * 
-   * @param ref string
    * @param parameters ImageParameters
    */
-  private async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
+  async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
     const refParts = ref.split('/');
 
     if (privacies.includes(refParts[0] as any)) {
@@ -202,6 +183,7 @@ export class MediaService {
 
   generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
 
+    // default client width
     let clientWidth = 1024;
 
     if (!!window || !!window.innerWidth) {
@@ -210,12 +192,9 @@ export class MediaService {
 
     // Math.min(n, undefined) = Nan,
     // to prevent that we use Infinity to pick clientWidth if parameters.width is undefined
-    const imageWidth = Math.min(
-      clientWidth,
-      p.w || Infinity,
-    );
+    p.w = Math.min(clientWidth, p.w || Infinity);
 
-    return this.generateSingleImageUrl(ref, p, imageWidth);
+    return this.generateImgIxUrl(ref, p);
   }
 
 }

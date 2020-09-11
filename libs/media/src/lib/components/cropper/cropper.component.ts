@@ -49,6 +49,7 @@ export class CropperComponent implements OnInit {
   private parameters: ImageParameters = {
     auto: 'compress,format',
     fit: 'crop',
+    w: 0,
   };
 
   ///////////////////////
@@ -183,6 +184,6 @@ export class CropperComponent implements OnInit {
    * If media is protected, this will also try to fetch a security token.
    * */
   private getDownloadUrl(ref: string): Promise<string> {
-    return this.mediaService.generateSingleImageUrl(ref, this.parameters);
+    return this.mediaService.generateImgIxUrl(ref, this.parameters);
   }
 }

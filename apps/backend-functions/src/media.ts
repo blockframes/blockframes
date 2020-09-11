@@ -25,11 +25,14 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
       const to = bucket.file(filePath);
       const [exists] = await from.exists();
       if (exists) {
+        // Copy file to new location
         await from.copy(to);
+        // Remove previous
         await from.delete();
       }
       return true;
     } else {
+      // If the ref is not found on db, we delete the file because it means that it is lost
       await from.delete();
     }
 
