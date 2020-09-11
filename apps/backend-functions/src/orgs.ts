@@ -13,7 +13,7 @@ import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/ty
 import { algolia } from './environments/environment';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, Module, getAppName } from '@blockframes/utils/apps';
+import { app, module, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
@@ -70,17 +70,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    let appAccessChanged = false;
-    for (const a of app) {
-      const accessChanged = (module: Module) => {
-        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
-      }
-      if (accessChanged('dashboard') || accessChanged('marketplace')) {
-        appAccessChanged = true;
-      }
-    }
-
-    return appAccessChanged;
+    return app.some(a => module.some(m => after.appAccess[a]?.[m] !== before.appAccess[a]?.[m]));
   }
   return false;
 }
