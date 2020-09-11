@@ -127,3 +127,7 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+export const heavyChunkSize = 15;
+
+export const chunkSize = 30;
