@@ -3,6 +3,10 @@
 
   <article fxLayout="column" fxLayoutAlign="center center">
     <div fxLayout fxLayoutGap="16px">
+      <button mat-flat-button color="primary" (click)="createOrg()">
+        <span>Create org</span>
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
       <a mat-flat-button color="primary" [href]="'festival' | goToApp:'dashboard':'import'">
         <span>Import orgs</span>
         <mat-icon svgIcon="arrow_downward"></mat-icon>
