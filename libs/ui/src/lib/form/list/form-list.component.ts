@@ -50,12 +50,7 @@ export class FormListComponent<T> implements OnInit {
       startWith(this.form.value),
       distinctUntilChanged())
 
-    /* If form is empty, we need a placeholder for the ngTemplateOutletContext */
-    if (this.isFormEmpty) {
       this.add();
-    } else {
-      this.formItem = this.form.last();
-    }
   }
 
   get isFormEmpty() {

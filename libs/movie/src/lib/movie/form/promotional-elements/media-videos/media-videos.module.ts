@@ -6,7 +6,8 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieFormMediaVideosComponent } from './media-videos.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +21,8 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     TunnelPageModule,
     FlexLayoutModule,
-    FormTableModule,
+    FormListModule,
+    MaxLengthModule,
 
     // Material
     MatFormFieldModule,
