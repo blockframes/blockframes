@@ -9,11 +9,12 @@ import { chunk } from 'lodash';
 export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
   function* batchGenerator() {
     const chunks = chunk(batch, chunkSize);
-    while (chunks && chunks.length > 0) {
+    while (chunks.length > 0) {
       console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
-      yield Promise.all(chunks.pop().map(cb))
+      const next = chunks.pop();
+      if (next) yield Promise.all(next.map(cb));
     }
-    console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`)
+    console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`);
   }
   return batchGenerator();
 }
