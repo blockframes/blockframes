@@ -176,7 +176,7 @@ export class MediaService {
    * 
    * @param ref string
    */
-  async generatePdfUrl(ref: string): Promise<string> {
+  generatePdfUrl(ref: string): Promise<string> {
     return this.generateImgIxUrl(ref);
   }
 
@@ -201,7 +201,7 @@ export class MediaService {
     return getImgIxResourceUrl(ref, p);
   }
 
-  async generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
+  generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {
 
     let clientWidth = 1024;
 
