@@ -4,8 +4,9 @@
   <ng-container tunnel-form>
     <h3>Festival & Awards</h3>
     <section id="festival">
-      <bf-form-table [columns]="prizesColumns" [form]="prizes" buttonText="Add a Festival">
-        <ng-template colRef="premiere" let-prizes>{{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+      <bf-form-list [form]="form.prizes" buttonText="Add a Festival">
+        <ng-template itemRef let-prizes>{{ prizes.name }} - {{ prizes.prize }} - {{ prizes.year }} -
+          {{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
         <ng-template formView let-prizesForm>
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -54,7 +55,7 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
     </section>
 
     <mat-divider></mat-divider>
@@ -62,9 +63,11 @@
     <h3>Film Reviews</h3>
     <section id="reviews">
 
-      <bf-form-table [columns]="reviewsColumns" [form]="reviews" buttonText="Add a Film Review">
-        <ng-template formView let-form>
-          <article [formGroup]="form" fxLayout="column" fxLayoutGap="24px">
+      <bf-form-list [form]="form.review" buttonText="Add a Film Review">
+        <ng-template itemRef let-review>{{ review.criticName }} - {{ review.journalName }} -
+          {{ review.revueLink | maxLength: 20 }} - {{ review.criticQuote | maxLength: 20 }} </ng-template>
+        <ng-template formView let-reviewForm>
+          <article [formGroup]="reviewForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout fxLayoutGap="24px">
               <mat-form-field appearance="outline" fxFlex>
@@ -90,7 +93,7 @@
 
           </article>
         </ng-template>
-      </bf-form-table>
+      </bf-form-list>
 
     </section>
 

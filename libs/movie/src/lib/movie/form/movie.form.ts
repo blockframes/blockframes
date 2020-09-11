@@ -658,7 +658,7 @@ function createOtherLinkFormControl(otherLink?: Partial<OtherLink>) {
   const { name, url } = createOtherLink(otherLink);
   return {
     name: new FormControl(name, [Validators.required]),
-    url: new FormControl(url, [Validators.required]),
+    url: new FormControl(url, [Validators.required, urlValidators]),
   }
 }
 

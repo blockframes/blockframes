@@ -33,8 +33,9 @@
     <section id="co-company">
       <h6 class="mat-caption">Co-Production Company</h6>
       <bf-form-list [form]="coProductionCompany" buttonText="Add Co-Production Company">
-        <ng-template colRef="countries" let-coProductionCompany>
-          {{ coProductionCompany.countries | translateSlug: 'TERRITORIES' }}</ng-template>
+        <ng-template itemRef let-coProductionCompany>
+          {{ coProductionCompany.displayName }} - {{ coProductionCompany.countries | translateSlug: 'TERRITORIES' }}
+        </ng-template>
         <ng-template formView let-coProductionForm>
           <article [formGroup]="coProductionForm" fxLayout fxLayoutGap="24px">
 
@@ -58,7 +59,9 @@
     <section id="producers">
       <h6 class="mat-caption">Producer(s)</h6>
       <bf-form-list [form]="form.producers" buttonText="Add Producer">
-        <ng-template let-producer>{{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
+        <ng-template itemRef let-producer>
+          {{ producer.firstName }} - {{ producer.lastName}} -
+          {{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
         <ng-template formView let-producerForm>
           <article [formGroup]="producerForm">
 
@@ -92,7 +95,9 @@
     <section id="distributors">
 
       <bf-form-list [form]="distributors" buttonText="Add Distribution Company">
-        <ng-template let-distributor>{{ distributor.countries | translateSlug: 'TERRITORIES' }}
+        <ng-template itemRef let-distributor>
+          {{ distributor.displayName }} -
+          {{ distributor.countries | translateSlug: 'TERRITORIES' }}
         </ng-template>
         <ng-template formView let-distributorForm>
           <article [formGroup]="distributorForm" fxLayout fxLayoutGap="24px">
@@ -120,7 +125,8 @@
     <section id="sales">
 
       <bf-form-list [form]="internationalSales" buttonText="Add Sales Company">
-        <ng-template let-sales>{{ sales.countries | translateSlug: 'TERRITORIES' }}</ng-template>
+        <ng-template itemRef let-sales> {{ sales.displayName }} - {{ sales.countries | translateSlug: 'TERRITORIES' }}
+        </ng-template>
         <ng-template formView let-salesForm>
           <article [formGroup]="salesForm" fxLayout fxLayoutGap="24px">
 
