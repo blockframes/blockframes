@@ -10,7 +10,7 @@ import {
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 
-export const urlValidators = Validators.pattern('(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?');
+export const urlValidators = Validators.pattern('/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g');
 
 export function yearValidators(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {

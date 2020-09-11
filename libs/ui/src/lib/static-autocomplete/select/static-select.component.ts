@@ -22,7 +22,12 @@ export class StaticSelectComponent implements OnInit {
     this._required = coerceBooleanProperty(value);
   }
   @ContentChild(TemplateRef) template: TemplateRef<any>;
+/* TODO MF
 
+ for main component form 
+ I think Season, Volume, Episode and Collection can go
+16:32 Uhr
+the rest should stay. but would it be possible to change "Short" to "Short Film" and "Serie" to "TV Series"*/
   public _required: boolean;
 
   ngOnInit() {
