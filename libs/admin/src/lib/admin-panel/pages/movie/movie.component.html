@@ -88,7 +88,7 @@
           <a [routerLink]="['/c/o/admin/panel/right',rightLink.id, 'm', rightLink.movieId]"><mat-icon svgIcon="pencil"></mat-icon></a>
         </ng-template>
         <ng-template colRef="status" let-status>
-          {{ status | toLabel: 'distributionRightStatus' | async }}
+          {{ status | toLabel: 'distributionRightStatus'  }}
         </ng-template>
       </bf-table-filter>
     </mat-card>

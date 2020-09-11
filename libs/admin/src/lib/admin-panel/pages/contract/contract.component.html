@@ -34,7 +34,7 @@
             <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="pencil"></mat-icon></button>
           </section>
           <ul>
-            <li><strong>Status : </strong>{{ partyDetails.status | toLabel: 'contractStatus' | async  }}</li>
+            <li><strong>Status : </strong>{{ partyDetails.status | toLabel: 'contractStatus' }}</li>
             <li><strong>Sign date : </strong>{{ partyDetails.signDate ? (partyDetails.signDate | date: 'short') : ' -- ' }}</li>
             <li><strong>Role : </strong>{{ partyDetails.party.role }}</li>
             <li><strong>Show name : </strong>{{ partyDetails.party.showName ? 'yes' : 'no' }}</li>
@@ -141,7 +141,7 @@
             </ng-template>
           </ng-template>
           <ng-template colRef="status" let-contractStatus>
-            {{ contractStatus | toLabel: 'contractStatus' | async }}
+            {{ contractStatus | toLabel: 'contractStatus' }}
           </ng-template>
         </bf-table-filter>
       </article>
@@ -189,10 +189,10 @@
             <a [routerLink]="rightslink"><mat-icon svgIcon="eye"></mat-icon></a>
           </ng-template>
           <ng-template colRef="movie.storeConfig.status" let-storeStatus>
-            {{ storeStatus | toLabel: 'storeStatus' | async }}
+            {{ storeStatus | toLabel: 'storeStatus' }}
           </ng-template>
           <ng-template colRef="movie.storeConfig.storeType" let-storeType>
-            {{ storeType | toLabel: 'storeType' | async }}
+            {{ storeType | toLabel: 'storeType' }}
           </ng-template>
           <ng-template colRef="edit" let-edit>
             <button mat-icon-button color="accent" (click)="editTitle(edit)"><mat-icon svgIcon="pencil"></mat-icon></button>

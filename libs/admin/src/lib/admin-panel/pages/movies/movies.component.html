@@ -33,10 +33,10 @@
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
     <ng-template colRef="storeConfig.status" let-storeStatus>
-      {{ storeStatus | toLabel: 'storeStatus' | async }}
+      {{ storeStatus | toLabel: 'storeStatus' }}
     </ng-template>
     <ng-template colRef="storeConfig.storeType" let-storeType>
-      {{ storeType | toLabel: 'storeType' | async }}
+      {{ storeType | toLabel: 'storeType' }}
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">

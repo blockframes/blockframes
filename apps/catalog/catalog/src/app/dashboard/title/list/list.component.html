@@ -23,7 +23,7 @@
           (rowClick)="goToTitle($event)">
           <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
           <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
-          <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' | async  }}</ng-template>
+          <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
         </bf-table-filter>
       </mat-card>
     </ng-container>
