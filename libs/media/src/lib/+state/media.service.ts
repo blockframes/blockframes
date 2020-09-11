@@ -143,8 +143,7 @@ export class MediaService {
     let tokens: string[] = [];
 
     if (privacies.includes(refParts[0] as any)) {
-      const privacy = refParts[0] as Privacy;
-      refParts.shift();
+      const privacy = refParts.shift() as Privacy;
       ref = refParts.join('/');
 
       if (privacy === 'protected') {
@@ -169,8 +168,7 @@ export class MediaService {
     const refParts = ref.split('/');
 
     if (privacies.includes(refParts[0] as any)) {
-      const privacy = refParts[0] as Privacy;
-      refParts.shift();
+      const privacy = refParts.shift() as Privacy;
       ref = refParts.join('/');
       if (privacy === 'protected') {
         const [token] = await this.getProtectedMediaToken(ref, [parameters]);
