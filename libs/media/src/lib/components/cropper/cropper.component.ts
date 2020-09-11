@@ -120,7 +120,7 @@ export class CropperComponent implements OnInit {
   ///////////
 
   async goToShow() {
-    this.previewUrl$.next(this.getDownloadUrl(this.ref));
+    this.previewUrl$.next(await this.getDownloadUrl(this.ref));
     this.nextStep('show');
   }
 
@@ -182,10 +182,7 @@ export class CropperComponent implements OnInit {
 
 
   /** Returns an observable of the download url of an image based on its reference */
-  private getDownloadUrl(ref: string): Observable<string> {
-    return from(this.mediaService.generateSingleImageUrl(ref, this.parameters)).pipe(
-      catchError(_ => of(''))
-    )
+  private getDownloadUrl(ref: string): Promise<string> {
+    return this.mediaService.generateSingleImageUrl(ref, this.parameters);
   }
-
 }
