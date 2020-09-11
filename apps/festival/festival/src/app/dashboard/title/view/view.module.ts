@@ -12,7 +12,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/pages/summary/summary.module';
+import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { MovieViewMainModule } from '@blockframes/movie/dashboard/components/view/main/main.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +22,26 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+
+const routes = [{
+  path: '',
+  component: TitleViewComponent,
+  children: [
+    {
+      path: '',
+      redirectTo: 'main',
+      pathMatch: 'full'
+    },
+    {
+      path: 'activity',
+      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
+    },
+    {
+      path: 'main',
+      loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule)
+    }
+  ]
+}];
 
 @NgModule({
   declarations: [TitleViewComponent],
@@ -33,6 +54,7 @@ import { MatDividerModule } from '@angular/material/divider';
     TranslateSlugModule,
     DurationModule,
     MovieTunnelSummaryModule,
+    MovieViewMainModule,
     // Material
     MatButtonModule,
     MatIconModule,
@@ -41,7 +63,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatSelectModule,
     MatDividerModule,
     // Route
-    RouterModule.forChild([{ path: '', component: TitleViewComponent }])
+    RouterModule.forChild(routes)
   ]
 })
 export class TitleViewModule { }

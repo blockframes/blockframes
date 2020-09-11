@@ -118,7 +118,7 @@ const constants = {
 
 
   // ------------- //
-  // ORGANISATION  //
+  // ORGANIZATION  //
   // ------------- //
   cartStatus: {
     pending: 'Pending',

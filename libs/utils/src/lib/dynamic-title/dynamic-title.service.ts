@@ -3,9 +3,11 @@ import { Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getAppName, appName } from '../apps';
+import { getAppName, appName, App } from '../apps';
 
-const pages = {
+type PageKey = App | 'crm' | 'blockframes';
+
+const pages: Record<PageKey, any> = {
   catalog: {
     app: appName.catalog,
     section: (section: string, showAppName: boolean, _appName: string) => {
@@ -39,6 +41,17 @@ const pages = {
       return `${titleName} - ${section} ${suffix}`;
     }
   },
+  financiers: {
+    app: appName.financiers,
+    section: (section: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
+      return `${section} ${suffix}`;
+    },
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, _appName: string) => {
+      const suffix = showAppName ? `- ${_appName}` : '';
+      return `${titleName} - ${section} ${suffix}`;
+    }
+  },
   crm: {
     app: appName.crm,
     section: (section: string, showAppName: boolean, _appName: string) => {
@@ -51,9 +64,7 @@ const pages = {
     }
   }
 }
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class DynamicTitleService implements OnDestroy {
   private app: SlugAndLabel;
 

@@ -31,59 +31,71 @@ export class FileUploadComponent implements OnInit {
   @Input() protected = false;
 
   public size$: Observable<string>;
+  public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
   constructor(private snackBar: MatSnackBar, private storage: AngularFireStorage) { }
 
   ngOnInit() {
-    // show current file
-    if (!!this.form.oldRef?.value) {
-      this.state = 'file';
-    }
 
-    const file = this.storage.ref(this.form.oldRef.value);
-    this.size$ =  file.getMetadata().pipe(map(data => {
-      const size = (data.size / 10000);
-      if (size < 1000) {
-        const fileSize = size.toFixed(1);
-        return `${fileSize} KB`;
-      }
-      if (size > 1000) {
-        const fileSize = (size / 100).toFixed(1)
-        return `${fileSize} MB`;
-      }
-    }));
+    // show current file
+
+    if (!!this.form.blobOrFile.value) {
+      this.selected(this.form.blobOrFile.value);
+    } else if (!!this.form.oldRef?.value) {
+      this.state = 'file';
+
+      const file = this.storage.ref(this.form.oldRef.value);
+      file.getMetadata().toPromise().then(data => console.log('promise !', data));
+      this.size$ =  file.getMetadata().pipe(map(data => {
+        const size = (data.size / 10000);
+        if (size < 1000) {
+          const fileSize = size.toFixed(1);
+          return `${fileSize} KB`;
+        } else {
+          const fileSize = (size / 100).toFixed(1)
+          return `${fileSize} MB`;
+        }
+      }));
+    }
   }
 
   @HostListener('drop', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDrop($event: any) {
+  onDrop($event: DragEvent) {
     $event.preventDefault();
     this.selected($event.dataTransfer.files);
   }
 
   @HostListener('dragover', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDragOver($event: any) {
+  onDragOver($event: DragEvent) {
     $event.preventDefault();
     this.state = 'hovering';
   }
 
   @HostListener('dragleave', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDragLeave($event: any) {
+  onDragLeave($event: DragEvent) {
     $event.preventDefault();
     this.state = 'waiting';
   }
 
-  public selected(files: FileList) {
-    if (!files.item(0)) {
-      this.snackBar.open('No file found', 'close', { duration: 1000 });
-      this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
-      return;
-    }
+  public selected(files: FileList | File) {
 
-    const file = files.item(0);
+    let file;
+    if ('item' in files) {
+      if (!files.item(0)) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        return;
+      }
+      file = files.item(0);
+    } else {
+      if (!files) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        return;
+      }
+      file = files
+    }
 
     const fileType = getMimeType(file);
 
@@ -101,6 +113,12 @@ export class FileUploadComponent implements OnInit {
       return;
     }
 
+    const size = (file.size / 1000);
+    if (size < 1000) {
+      this.localSize = `${size.toFixed(1)} KB`;
+    } else {
+      this.localSize = `${(size / 100).toFixed(1)} MB`;
+    }
     this.state = 'ready';
 
     this.form.patchValue({

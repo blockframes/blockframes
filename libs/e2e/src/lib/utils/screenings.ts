@@ -4,7 +4,7 @@ export const EVENTS: Partial<Screening>[] = [
   {
     event: 'Felicità Private Screening',
     by : {
-      email: 'jeanfelix@fake.com'
+      uid: '2OJUZoWtTVcew27YDZa8FQQdg5q2'
     },
     movie: { 
       title: {
@@ -15,9 +15,9 @@ export const EVENTS: Partial<Screening>[] = [
       name: 'Charades'
     },
     invitees: [{
-        email: 'vchoukroun@fake.com'
+        uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
       }, {
-        email: 'concierge+dkmediaconsulting@fake.com'
+        uid: 'mVUZ097xoAeubsPiQlqrzgUF8y83'
       }
     ],
     private: true
@@ -25,7 +25,7 @@ export const EVENTS: Partial<Screening>[] = [
   {
     event: 'Hunted Screening',
     by : {
-      email: 'jeanfelix@fake.com'
+      uid: '2OJUZoWtTVcew27YDZa8FQQdg5q2'
     },
     movie: { 
       title: {
@@ -36,7 +36,7 @@ export const EVENTS: Partial<Screening>[] = [
       name: 'Charades'
     },
     invitees: [{
-        email: 'vchoukroun@fake.com'
+        uid: 'MDnN2GlVUeadIVJbzTToQQNAMWZ2'
       }, {
         
       }

@@ -190,6 +190,9 @@
         ],
         "festival": [
           "blockframes-festival-max"
+        ],
+        "financiers": [
+          "blockframes-max-financiers"
         ]
       }
     },

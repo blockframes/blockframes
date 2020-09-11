@@ -6,7 +6,7 @@ import { StoreStatus } from "./static-model";
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
-export const app = ['catalog', 'festival'] as const;
+export const app = ['catalog', 'festival', 'financiers'] as const;
 export type App = typeof app[number];
 
 export const module = ['dashboard', 'marketplace'] as const;
@@ -15,6 +15,7 @@ export type Module = typeof module[number];
 export const appName = {
   catalog: 'Archipel Content',
   festival: 'Archipel Market',
+  financiers: 'Media Financiers',
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM'
 };
@@ -22,6 +23,7 @@ export const appName = {
 export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
+  financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
@@ -31,7 +33,8 @@ export type MovieAppAccess = Record<App, boolean>;
 
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
-  catalog: appUrl.content
+  catalog: appUrl.content,
+  financiers: appUrl.financiers
 }
 
 export function getCurrentApp(routerQuery: any): App {

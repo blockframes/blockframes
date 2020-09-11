@@ -63,7 +63,12 @@ const routes: Routes = [
           canActivate: [MovieOrganizationListGuard],
           canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
-        }, {
+        },
+        {
+          path: 'lobby',
+          loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
+        },
+        {
           path: ':movieId',
           canActivate: [MovieActiveGuard],
           canDeactivate: [MovieActiveGuard],
@@ -110,12 +115,12 @@ const routes: Routes = [
       path: 'movie',
       children: [{
         path: '',
-        loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+        loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+        loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
         data: {
           redirect: '/c/o/dashboard/tunnel/movie'
         },
@@ -125,7 +130,7 @@ const routes: Routes = [
       children: [{
         path: '',
         loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-      },{
+      }, {
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
@@ -156,4 +161,4 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class DashboardModule {}
+export class DashboardModule { }

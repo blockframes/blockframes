@@ -1,16 +1,15 @@
-import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { DropZoneDirective } from './drop-zone.directive';
 import { catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of } from 'rxjs';
-import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { from } from 'rxjs';
 import { getStoragePath, sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 
-type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
+type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
 type MediaRatio = typeof mediaRatio;
 type MediaRatioType = keyof MediaRatio;
@@ -40,8 +39,6 @@ function b64toBlob(data: string) {
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [DropZoneDirective],
-  animations: [zoom, zoomDelay, check, finalZoom]
 })
 export class CropperComponent implements OnInit {
 
@@ -66,9 +63,7 @@ export class CropperComponent implements OnInit {
   cropRatio: number;
   parentWidth: number;
   prev: CropStep;
-  previewUrl$: Observable<string | null>;
-  percentage$: Observable<number>;
-  resizing = false;
+  previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
 
   /////////////
   // Inputs //
@@ -85,19 +80,50 @@ export class CropperComponent implements OnInit {
   @Input() useDelete?= true;
   @Input() protected = false;
 
-  constructor(private mediaService: MediaService) { }
+  constructor(
+    private mediaService: MediaService,
+    private sanitizer: DomSanitizer,
+  ) { }
 
   ngOnInit() {
-    // show current image
-    if (this.form.ref?.value) {
+    if (!!this.form.blobOrFile.value) {
+      const blobUrl = URL.createObjectURL(this.form.blobOrFile.value);
+      const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
+      this.previewUrl$.next(previewUrl);
+      this.nextStep('show');
+    } else if (this.form.ref?.value) {
       this.ref = this.form.ref.value;
       this.goToShow();
     }
   }
 
+  @HostListener('drop', ['$event'])
+  onDrop($event: DragEvent) {
+    $event.preventDefault();
+    this.filesSelected($event.dataTransfer.files);
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver($event: DragEvent) {
+    $event.preventDefault();
+    this.nextStep('hovering');
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave($event: DragEvent) {
+    $event.preventDefault();
+    this.nextStep('drop');
+  }
+
   ///////////
   // Steps //
   ///////////
+
+  async goToShow() {
+    this.previewUrl$.next(this.getDownloadUrl(this.ref));
+    this.nextStep('show');
+  }
+
 
   // drop
   filesSelected(fileList: FileList): void {
@@ -136,11 +162,6 @@ export class CropperComponent implements OnInit {
     }
   }
 
-  async goToShow() {
-    this.previewUrl$ = this.getDownloadUrl(this.ref);
-    this.nextStep('show');
-  }
-
   delete() {
     if (this.croppedImage) {
       this.croppedImage = '';
@@ -158,6 +179,7 @@ export class CropperComponent implements OnInit {
     this.prev = this.step.getValue();
     this.step.next(name);
   }
+
 
   /** Returns an observable of the download url of an image based on its reference */
   private getDownloadUrl(ref: string): Observable<string> {

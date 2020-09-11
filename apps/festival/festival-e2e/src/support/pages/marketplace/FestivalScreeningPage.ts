@@ -37,6 +37,7 @@ export default class FestivalScreeningPage {
   }
 
   clickOnMenu() {
+    cy.wait(200);
     cy.get('festival-marketplace button[test-id=menu]').click();
   }
 

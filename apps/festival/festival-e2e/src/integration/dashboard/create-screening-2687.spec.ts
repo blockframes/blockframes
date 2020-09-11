@@ -19,14 +19,14 @@ import { LandingPage } from '../../support/pages/landing';
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW } from '../../fixtures/data';
-import { EVENTS } from '@blockframes/e2e/utils/screenings';
-import { User } from '../../fixtures';
+import { EVENTS } from '@blockframes/e2e/utils';
+import { User } from '@blockframes/e2e/fixtures/users';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
 const users  =  [ 
-  (userFixture.get({exist: true, key:'email', value: EVENTS[0].by.email})[0]),
-  (userFixture.get({exist: true, key:'email', value: 'vchoukroun@fake.com'})[0])
+  (userFixture.getByUID(EVENTS[0].by.uid)),
+  (userFixture.getByUID('MDnN2GlVUeadIVJbzTToQQNAMWZ2'))
 ];
 
 describe('User create a screening', () => {
@@ -38,7 +38,7 @@ describe('User create a screening', () => {
     p1.clickSignup();      
   });
 
-  it('User Jean Felix logs in, creates 4 screening events', () => {
+  it('Organiser logs in, creates 4 screening events', () => {
   
     signIn(users[0], true);
 
@@ -68,7 +68,7 @@ describe('User create a screening', () => {
     });
   })  
 
-  it('Login Vincent, Verify screening page and created screenings', () => {
+  it('Invitee1, Verify screening page and created screenings', () => {
     const OrgName = EVENTS[0].org.name;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
@@ -94,7 +94,7 @@ describe('User create a screening', () => {
     p4.checkEventsInMarket(eventNames);
   });
 
-  it('Jean accepts private screening request', () => {
+  it('Organiser accepts private screening request', () => {
     signIn(users[0]);
     (new FestivalMarketplaceHomePage()).goToDashboard();
     const p1 = new FestivalDashboardHomePage();
@@ -102,9 +102,10 @@ describe('User create a screening', () => {
     p2.acceptInvitationScreening();
   });
 
-  it('Vincent adds public screening to his calendar', () => {
+  it('Invitee adds public screening to his calendar', () => {
     const OrgName = EVENTS[0].org.name;
-    const screeningEvent = EVENTS[0].event;
+    //Screening event prefixed 2 created above.
+    const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
 
     signIn(users[1]);
