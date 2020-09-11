@@ -55,7 +55,7 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    let superAdmin = createPublicUser(existingSuperAdmin);
+    const superAdmin = createPublicUser(existingSuperAdmin);
     if (!existingSuperAdmin) {
       const newUser = await this.authService.createUser(
         superAdminEmail,
