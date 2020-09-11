@@ -9,7 +9,7 @@ import { chunk } from 'lodash';
 export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
   function* batchGenerator() {
     const chunks = chunk(batch, chunkSize);
-    while (chunks.length > 0) {
+    while (chunks && chunks.length > 0) {
       console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
       yield Promise.all(chunks.pop().map(cb))
     }
@@ -28,7 +28,7 @@ export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<
  */
 export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 1000 ) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
-  let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot;
+  let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
 
   function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
     return querySnap.docs.map((snap, i, arr) => {
