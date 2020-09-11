@@ -97,7 +97,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     // when user is creating organization
     // Once bug resolved move this to onCreate
     return new Promise(resolve => setTimeout(resolve, 500))
-      .then(_ => this.userService.update(user.uid, { orgId, ...user }))
+      .then(_ => this.userService.update(user.uid, { ...user, orgId }))
       .then(_ => orgId)
   }
 

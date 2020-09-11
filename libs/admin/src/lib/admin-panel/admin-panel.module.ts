@@ -32,6 +32,7 @@ import { InvitationsModule } from './pages/invitations/invitations.module';
 import { EventModule } from './pages/event/event.module';
 import { GoToModule } from './components/go-to/go-to.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
+import { AdminOrganizationFormModule } from './components/organization/forms/organization-form/organization-form.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -53,6 +54,7 @@ import { EventComponent } from './pages/event/event.component';
 import { MailsComponent } from './pages/mails/mails.component';
 import { DevAreaComponent } from './pages/dev-area/dev-area.component';
 import { InvitationsComponent } from './pages/invitations/invitations.component';
+import { OrganizationCreateComponent } from './components/organization/create-organization/create.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -109,7 +111,8 @@ export const panelRoutes: Routes = [
     OverviewModule,
     InvitationsModule,
     GoToModule,
-    ConfirmModule
+    ConfirmModule,
+    AdminOrganizationFormModule
   ],
   declarations: [
     MoviesComponent,
@@ -127,6 +130,7 @@ export const panelRoutes: Routes = [
     EventsComponent,
     MailsComponent,
     DevAreaComponent,
+    OrganizationCreateComponent,
   ]
 })
 export class AdminPanelModule { }
