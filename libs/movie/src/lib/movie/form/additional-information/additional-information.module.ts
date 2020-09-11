@@ -13,6 +13,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 // Blockframes Movie
@@ -45,6 +46,7 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     ChipsAutocompleteModule,
     StaticSelectModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     FlexLayoutModule,
     FormCountryModule,
     FormListModule,

@@ -119,7 +119,7 @@
     <h3>Qualifications</h3>
     <section id="qualifications">
       <article>
-        <mat-button-toggle-group [formControl]="form.qualifications" multiple name="certifications"
+        <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications">
             <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"

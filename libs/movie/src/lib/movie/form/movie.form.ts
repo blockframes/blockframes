@@ -182,7 +182,7 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('rating');
   }
 
-  get qualifications() {
+  get certifications() {
     return this.get('certifications');
   }
 
