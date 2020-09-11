@@ -33,7 +33,7 @@ export async function deleteAndAwaitWatermark(userId: string, bucketName: string
 
       const unsubscribe = userRef.onSnapshot(doc => {
         const user = doc.data() as PublicUser;
-        if (!user.watermark) {
+        if (!!user.watermark && !user.watermark.ref && !user.watermark.url) {
           unsubscribe();
           resolve(true);
         }
