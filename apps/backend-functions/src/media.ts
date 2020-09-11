@@ -133,7 +133,7 @@ async function isAllowedToDelete(ref: string, uid: string): Promise<boolean> {
 function getPathInfo(ref: string) {
   const refParts = ref.split('/');
 
-  const pathInfo = {} as any;
+  const pathInfo: Record<string, string | undefined> = {};
   if (privacies.includes(refParts[0] as any)) {
     pathInfo.securityLevel = refParts.shift();
   }

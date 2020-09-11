@@ -137,9 +137,9 @@ export class MediaService {
     return this.getMediaToken({ ref, parametersSet }).toPromise();
   }
 
-  async generateImageSrcset(ref: string, p: ImageParameters): Promise<string> {
+  async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
     const refParts = ref.split('/');
-    const sizes = getImgSize(ref);
+    const params: ImageParameters[] = getImgSize(ref).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
     if (privacies.includes(refParts[0] as any)) {
@@ -148,15 +148,14 @@ export class MediaService {
       ref = refParts.join('/');
 
       if (privacy === 'protected') {
-        tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
+        tokens = await this.getProtectedMediaToken(ref, params);
       }
     }
 
-    const urls = sizes.map((size, index) => {
-      const parameters: ImageParameters = { ...p, w: size };
-      if (tokens[index]) { parameters.s = tokens[index] };
-      return `${getImgIxResourceUrl(ref, parameters)} ${size}w`;
-    });
+    const urls = params.map((param, index) => {
+      if (tokens[index]) { param.s = tokens[index] };
+      return `${getImgIxResourceUrl(ref, param)} ${param.w}w`;
+    })
 
     return urls.join(', ');
   }
