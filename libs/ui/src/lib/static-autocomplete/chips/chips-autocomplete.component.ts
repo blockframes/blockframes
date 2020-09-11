@@ -22,7 +22,6 @@ import { startWith, map } from 'rxjs/operators';
 import { staticModels } from '@blockframes/utils/static-model';
 import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: '[form][model]chips-autocomplete',
@@ -44,7 +43,13 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() placeholder = '';
   @Input() @boolean required: boolean;
   // The parent form to connect to
-  @Input() form: FormList<string>;
+  @Input()
+  get form() { return this._form }
+  set form(form) {
+    this._form = form
+    this.values$ = form.valueChanges.pipe(startWith(this.form.value));
+  };
+  private _form
 
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
@@ -62,7 +67,6 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
-    this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
     this.items = staticModels[this.model] as any;
 
     if (this.placeholder === '') {
