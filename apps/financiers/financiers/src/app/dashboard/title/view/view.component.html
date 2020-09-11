@@ -14,9 +14,9 @@
       </ng-container>
       <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
         <h4>
-          {{ movie.contentType | toLabel: 'contentType' | async }}
+          {{ movie.contentType | toLabel: 'contentType' }}
           <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
+          {{ movie.productionStatus | toLabel: 'productionStatus' }}
           <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|
           {{ movie.totalRunTime }} min
           </ng-container>

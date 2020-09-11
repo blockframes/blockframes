@@ -27,7 +27,7 @@
   <ng-template #withType>
     <!-- If there is a type string -->
     <ng-container *ngIf="(type && !!control.value) else withoutType">
-      <span>{{ control.value | toLabel: type | async }}</span>
+      <span>{{ control.value | toLabel: type }}</span>
     </ng-container>
     <!-- if it's not a type string or a static model -->
     <ng-template #withoutType>
