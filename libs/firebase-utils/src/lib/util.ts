@@ -4,6 +4,45 @@ import { firebase as firebaseCI } from 'env/env.ci';
 import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
+import { chunk } from 'lodash';
+
+export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
+  function* batchGenerator() {
+    const chunks = chunk(batch, chunkSize);
+    while (chunks.length > 0) {
+      console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
+      const next = chunks.pop();
+      if (next) yield Promise.all(next.map(cb));
+    }
+    console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`);
+  }
+  return batchGenerator();
+}
+
+/**
+ * This function is an iterator that allows you to fetch documents from a collection in chunks
+ * This is a generator, which means you should use `for await ()` syntax.
+ * Make sure you output the iterator before iterating from the generator
+ * @param ref the collection reference object
+ * @param orderBy the unique key of the document object to order by
+ * @param batchSize how many docs to fetch per iteration
+ */
+export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 1000 ) {
+  let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
+  let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
+
+  function getDocs(querySnap: FirebaseFirestore.QuerySnapshot) {
+    return querySnap.docs.map((snap, i, arr) => {
+      if (i === (arr.length - 1)) lastSnapshot = snap;
+      return snap.data() as K;
+    })
+  }
+
+  while (!querySnapshot.empty) {
+    yield getDocs(querySnapshot);
+    querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get()
+  }
+}
 
 export interface JsonlDbRecord {
   docPath: string;

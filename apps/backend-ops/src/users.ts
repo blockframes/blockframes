@@ -5,14 +5,15 @@
  */
 import { differenceBy } from 'lodash';
 import { Auth, UserRecord } from './admin';
-import { loadAdminServices } from "@blockframes/firebase-utils";
+import { loadAdminServices } from '@blockframes/firebase-utils';
 import { sleep } from './tools';
 import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
-import { firebase, watermarkRowConcurrency } from '@env';
+import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
+import * as env from '@env';
 
-export const { storageBucket } = firebase;
+export const { storageBucket } = env.firebase;
 
 export interface UserConfig {
   uid: string;
@@ -28,7 +29,7 @@ export const USER_FIXTURES_PASSWORD = 'blockframes';
  * @param auth  Firestore Admin Auth object
  * @param userConfig
  */
-async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
+async function createUserIfNonexistent(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
   const { uid, email } = userConfig;
   try {
     console.log('trying to get user:', uid, email);
@@ -47,7 +48,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map((user) => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfNonexistent(auth, user));
   return Promise.all(ps);
 }
 
@@ -99,8 +100,10 @@ export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
   const { auth } = loadAdminServices();
 
   const expectedUsers = readUsersFromJsonlFixture(db);
-  await removeUnexpectedUsers(expectedUsers, auth);
-  await createAllUsers(expectedUsers, auth);
+  const deleteResult = await deleteAllUsers(auth);
+  const createResult = await importAllUsers(auth, expectedUsers);
+  console.log(deleteResult);
+  console.log(createResult);
   await endMaintenance();
 }
 
@@ -124,7 +127,7 @@ export async function clearUsers(): Promise<any> {
   const { auth } = loadAdminServices();
 
   // clear users is equivalent to "we expect no users", we can reuse the code.
-  return removeUnexpectedUsers([], auth);
+  return deleteAllUsers(auth);
 }
 
 function readUsersFromSTDIN(): Promise<UserConfig[]> {
@@ -188,7 +191,7 @@ export async function generateWatermarks() {
   await runChunks(
     users.docs,
     (user) => upsertWatermark(user.data(), storageBucket, false),
-    watermarkRowConcurrency
+    env?.['heavyChunkSize'] ?? 10
   );
 
   // deactivate maintenance
