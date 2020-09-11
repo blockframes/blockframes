@@ -2,7 +2,9 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
+
   <movie-dashboard-title-shell [routes]="navLinks">
+
     <header fxLayout="row" fxLayoutAlign="start start">
       <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
         <ng-container *ngIf="movie.poster as poster">
@@ -27,16 +29,6 @@
       </article>
     </header>
 
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-          *ngFor="let link of navLinks"
-          [routerLink]="link.path"
-          routerLinkActive #rla="routerLinkActive"
-          [active]="rla.isActive">
-        {{link.label}}
-      </a>
-    </nav>
-    <router-outlet></router-outlet>
   </movie-dashboard-title-shell>
 
 

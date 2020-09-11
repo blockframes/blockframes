@@ -1,5 +1,13 @@
 <ng-content select="header"></ng-content>
 
-<ng-content select="nav"></ng-content>
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+      *ngFor="let link of routes"
+      [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+    {{link.label}}
+  </a>
+</nav>
 
 <router-outlet></router-outlet>
