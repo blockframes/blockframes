@@ -135,7 +135,6 @@ export class OrganizationComponent implements OnInit {
     }
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
-    // @TODO (#2987) (check org import via excel)
     await this.organizationService.update(this.orgId, documentToUpdate);
     this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
