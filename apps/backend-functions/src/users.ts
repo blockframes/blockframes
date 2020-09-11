@@ -6,7 +6,7 @@ import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { upsertWatermark, deleteAndAwaitWatermark } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from '@env';
@@ -138,7 +138,9 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.lastName !== after.lastName ||
     before.email !== after.email
   ) {
-    promises.push(upsertWatermark(after, getStorageBucketName()));
+    const bucketName = getStorageBucketName();
+    await deleteAndAwaitWatermark(after.uid, bucketName);
+    promises.push(upsertWatermark(after, bucketName));
   }
 
   return Promise.all(promises);

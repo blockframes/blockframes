@@ -17,6 +17,42 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
 }
 
 /**
+ * This function delete the watermark file in the storage, then await for the change to be
+ * propagated on the firestore db
+ */
+export async function deleteAndAwaitWatermark(userId: string, bucketName: string): Promise<any> {
+  const ref = `users/${userId}/watermark/${userId}.svg`;
+  const file = admin.storage().bucket(bucketName).file(ref);
+
+  const [exists] = await file.exists();
+
+  if (exists) {
+    file.delete();
+    const userRef = admin.firestore().collection('users').doc(userId);
+    const success = await new Promise(resolve => {
+
+      const unsubscribe = userRef.onSnapshot(doc => {
+        const user = doc.data() as PublicUser;
+        if (!user.watermark) {
+          unsubscribe();
+          resolve(true);
+        }
+      });
+
+      setTimeout(() => {
+        unsubscribe();
+        resolve(false);
+      }, 10000);
+
+    });
+
+    if (!success) {
+      throw new Error('Delete Watermark has timeout, please try again.');
+    }
+  }
+}
+
+/**
  * - Generate a svg file with the name & email of the user
  * - Store the watermark file in the storage bucket
  * - User's firestore doc is updated by onFileUpload backend function
