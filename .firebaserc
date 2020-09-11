@@ -90,12 +90,9 @@
     },
     "blockframes-francois": {
       "hosting": {
-        "catalog": [
-          "blockframes-francois"
-        ],
-        "festival": [
-          "blockframes-francois"
-        ]
+        "catalog": ["blockframes-francois"],
+        "festival": ["blockframes-francois-festival"],
+        "financiers": ["blockframes-francois-financier"]
       }
     },
     "blockframes-bruce": {

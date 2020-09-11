@@ -25,8 +25,12 @@ function getKeyValFormat(): string[] {
   return output;
 }
 
+function envHasKeys(keys: string[]) {
+  return keys.every(key => typeof process.env[key] === 'string')
+}
+
 async function setFirebaseConfig() {
-  if (!process.env.SENDGRID_API_KEY || !process.env.ALGOLIA_API_KEY) {
+  if (!envHasKeys(['SENDGRID_API_KEY', 'ALGOLIA_API_KEY'])) {
     // Env config values probably doesn't exist in env
     console.warn(
       'PLEASE UPDATE TO THE NEW .env FORMAT! Please run "npm run migrate:deploy-secrets"'
