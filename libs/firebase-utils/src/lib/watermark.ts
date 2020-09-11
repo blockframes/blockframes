@@ -1,6 +1,7 @@
 
 import * as admin from 'firebase-admin';
 import { PublicUser } from '@blockframes/user/types';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
   return `
@@ -21,7 +22,7 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
  * - Store the watermark file in the storage bucket
  * - Update the user document
  */
-export async function upsertWatermark(user: PublicUser, bucketName: string, protectedMedia = false): Promise<any> {
+export async function upsertWatermark(user: PublicUser, bucketName: string, privacy : Privacy = 'public'): Promise<any> {
 
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
@@ -29,7 +30,7 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, prot
 
   const watermark = getWatermark(user.email, user.firstName, user.lastName);
 
-  const ref = `${protectedMedia ? 'protected' : 'public'}/users/${user.uid}/watermark/${user.uid}.svg`;
+  const ref = `${privacy}/users/${user.uid}/watermark/${user.uid}.svg`;
   const file = admin.storage().bucket(bucketName).file(ref);
 
   await new Promise(res => {

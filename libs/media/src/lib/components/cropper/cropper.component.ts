@@ -1,12 +1,10 @@
 import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { catchError } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
-import { from } from 'rxjs';
-import { getStoragePath, sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
@@ -78,7 +76,7 @@ export class CropperComponent implements OnInit {
   /** Disable fileUploader & delete buttons in 'show' step */
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
-  @Input() protected = false;
+  @Input() filePrivacy : Privacy = 'public';
 
   constructor(
     private mediaService: MediaService,
@@ -147,10 +145,10 @@ export class CropperComponent implements OnInit {
       this.nextStep('show');
 
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, `.webp`));
+      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp'));
 
       this.form.patchValue({
-        ref: getStoragePath(this.storagePath, this.protected),
+        ref: getStoragePath(this.storagePath, this.filePrivacy),
         blobOrFile: blob,
         delete: false,
         fileName: fileName,
@@ -180,8 +178,10 @@ export class CropperComponent implements OnInit {
     this.step.next(name);
   }
 
-
-  /** Returns an observable of the download url of an image based on its reference */
+  /** 
+   * Returns a promise with the download url of an image based on its reference.
+   * If media is protected, this will also try to fetch a security token.
+   * */
   private getDownloadUrl(ref: string): Promise<string> {
     return this.mediaService.generateSingleImageUrl(ref, this.parameters);
   }

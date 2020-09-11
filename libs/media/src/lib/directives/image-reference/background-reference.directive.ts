@@ -27,17 +27,12 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   /** Set background-image attribute in any html tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set bgRef(image: string) {
-    if(!image){
-
+    if (!image) {
       this.ref$.next('');
     } else {
-      try {
-        this.mediaService.generateBackgroundImageUrl(image, this.parameters)
-          .then(url => this.ref$.next(url));
-
-      } catch (err) {
-        this.ref$.next('')
-      }
+      this.mediaService.generateBackgroundImageUrl(image, this.parameters)
+        .then(url => this.ref$.next(url))
+        .catch(_ => this.ref$.next(''));
     }
   }
 
@@ -52,7 +47,6 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   @Input() set bgTheme(theme: 'dark' | 'light') {
     this.localTheme$.next(theme);
   }
-
 
   constructor(
     private themeService: ThemeService,

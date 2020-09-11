@@ -1,4 +1,5 @@
 import { firebase } from '@env';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 /**
  * Interface that hold the image options for imgix processing.
@@ -53,7 +54,15 @@ export function formatParameters(parameters: ImageParameters): string {
   return query;
 }
 
-export function getImgIxResourceUrl(ref: string, parameters: ImageParameters, protectedMediaDir = 'protected') {
+export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
+  /**
+   * @dev This is the directory that must be set in imgIx source config.
+   * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
+   * If parameters contains "s" attribute, the file is protected and then the protected imgix source 
+   * must be used (it should be "blockframes-firstName-protected")
+   */
+  const protectedMediaDir : Privacy = 'protected'; 
   const query = formatParameters(parameters);
-  return `https://${firebase.projectId}${parameters.s ? `-${protectedMediaDir}` : ''}.imgix.net/${ref}?${query}`;
+  const imgixSource = parameters.s ? `${firebase.projectId}-${protectedMediaDir}` : firebase.projectId;
+  return `https://${imgixSource}.imgix.net/${ref}?${query}`;
 }

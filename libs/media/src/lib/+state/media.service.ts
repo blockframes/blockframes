@@ -13,6 +13,7 @@ import { UploadWidgetComponent } from "../components/upload/widget/upload-widget
 import { delay, BehaviorStore } from "@blockframes/utils/helpers";
 import { ImageParameters, getImgSize, getImgIxResourceUrl } from "../directives/image-reference/imgix-helpers";
 import { clamp } from '@blockframes/utils/utils';
+import { tempUploadDir, privacies, Privacy } from "@blockframes/utils/file-sanitizer";
 
 @Injectable({ providedIn: 'root' })
 export class MediaService {
@@ -29,6 +30,7 @@ export class MediaService {
   }
 
   public overlayRef: OverlayRef;
+  private getMediaToken = this.functions.httpsCallable('getMediaToken');
 
   constructor(
     private storage: AngularFireStorage,
@@ -43,7 +45,7 @@ export class MediaService {
      * Then a backend functions performs a check on DB document to check if
      * file have to be moved to correct folder or deleted.
      */
-    const tasks = files.map(file => this.storage.upload(`tmp/${file.path}${file.fileName}`, file.data));
+    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}${file.fileName}`, file.data));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
       .then(() => delay(5000))
@@ -132,24 +134,22 @@ export class MediaService {
    */
   private async getProtectedMediaToken(ref: string, parametersSet: ImageParameters[]): Promise<string[]> {
     ref = !ref.startsWith('/') ? `/${ref}` : ref;
-    const f = this.functions.httpsCallable('getMediaToken');
-    return f({ ref, parametersSet }).toPromise();
+    return this.getMediaToken({ ref, parametersSet }).toPromise();
   }
 
   async generateImageSrcset(ref: string, p: ImageParameters): Promise<string> {
     const refParts = ref.split('/');
-    const protectedMedia = refParts[0] === 'protected';
+    const sizes = getImgSize(ref);
+    let tokens: string[] = [];
 
-    if (['public', 'protected'].includes(refParts[0])) {
+    if (privacies.includes(refParts[0] as any)) {
+      const privacy = refParts[0] as Privacy;
       refParts.shift();
       ref = refParts.join('/');
-    }
 
-    const sizes = getImgSize(ref);
-
-    let tokens: string[] = [];
-    if (protectedMedia) {
-      tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
+      if (privacy === 'protected') {
+        tokens = await this.getProtectedMediaToken(ref, sizes.map(size => ({ ...p, w: size } as ImageParameters)));
+      }
     }
 
     const urls = sizes.map((size, index) => {
@@ -164,11 +164,11 @@ export class MediaService {
   /**
    * 
    * @param ref string
-   * @param p ImageParameters
+   * @param _parameters ImageParameters
    * @param w "0 = default size"
    */
-  generateSingleImageUrl(ref: string, p: ImageParameters, w = 0): Promise<string> {
-    const parameters: ImageParameters = { ...p, w };
+  generateSingleImageUrl(ref: string, _parameters: ImageParameters, w = 0): Promise<string> {
+    const parameters: ImageParameters = { ..._parameters, w };
     return this.generateImgIxUrl(ref, parameters);
   }
 
@@ -183,22 +183,22 @@ export class MediaService {
   /**
    * 
    * @param ref string
-   * @param p any
+   * @param parameters ImageParameters
    */
-  async generateImgIxUrl(ref: string, p: any = {}): Promise<string> {
+  private async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
     const refParts = ref.split('/');
-    const protectedMedia = refParts[0] === 'protected';
 
-    if (['public', 'protected'].includes(refParts[0])) {
+    if (privacies.includes(refParts[0] as any)) {
+      const privacy = refParts[0] as Privacy;
       refParts.shift();
       ref = refParts.join('/');
+      if (privacy === 'protected') {
+        const [token] = await this.getProtectedMediaToken(ref, [parameters]);
+        parameters.s = token;
+      }
     }
 
-    if (protectedMedia) {
-      p.s = (await this.getProtectedMediaToken(ref, [p]))[0];
-    }
-
-    return getImgIxResourceUrl(ref, p);
+    return getImgIxResourceUrl(ref, parameters);
   }
 
   generateBackgroundImageUrl(ref: string, p: ImageParameters): Promise<string> {

@@ -190,7 +190,7 @@ export async function generateWatermarks() {
 
   await runChunks(
     users.docs,
-    (user) => upsertWatermark(user.data(), storageBucket, false),
+    (user) => upsertWatermark(user.data(), storageBucket),
     env?.['heavyChunkSize'] ?? 10
   );
 

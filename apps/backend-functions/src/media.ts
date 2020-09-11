@@ -7,6 +7,7 @@ import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
+import { privacies } from '@blockframes/utils/file-sanitizer';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
@@ -56,7 +57,6 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
     }
 
     // unlink the firestore
-    // ! this will not work with array in the path like for poster
     return doc.update({ [fieldToUpdate]: '' });
   } else {
     return false;
@@ -96,7 +96,10 @@ export const deleteMedia = async (data: { ref: string }, context: CallableContex
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  if (!(await isAllowedToDelete(data.ref, context.auth.uid))) { throw new Error('Permission denied. User is not allowed'); }
+  const canDelete = await isAllowedToDelete(data.ref, context.auth.uid);
+  if (!canDelete) {
+    throw new Error('Permission denied. User is not allowed');
+  }
 
   const bucket = admin.storage().bucket(getStorageBucketName());
   const file = bucket.file(data.ref);
@@ -131,7 +134,7 @@ function getPathInfo(ref: string) {
   const refParts = ref.split('/');
 
   const pathInfo = {} as any;
-  if (['protected', 'public'].includes(refParts[0])) {
+  if (privacies.includes(refParts[0] as any)) {
     pathInfo.securityLevel = refParts.shift();
   }
 

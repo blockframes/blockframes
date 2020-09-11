@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import { chunk } from "lodash";
 import * as env from '@env'
+import { tempUploadDir, privacies } from "@blockframes/utils/file-sanitizer";
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -42,7 +43,7 @@ export async function getDocAndPath(filePath: string | undefined) {
 
   // remove tmp/
   let isInTmpDir = false;
-  if (filePathElements[0] === 'tmp') {
+  if (filePathElements[0] === tempUploadDir) {
     filePathElements.shift();
     filePath = filePathElements.join('/');
     isInTmpDir = true;
@@ -50,7 +51,7 @@ export async function getDocAndPath(filePath: string | undefined) {
 
   let security;
   // remove "protected/"" or "public/"
-  if (['protected', 'public'].includes(filePathElements[0])) {
+  if (privacies.includes(filePathElements[0] as any)) { 
     security = filePathElements.shift();
   }
 

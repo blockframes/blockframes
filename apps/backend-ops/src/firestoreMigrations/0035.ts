@@ -3,6 +3,7 @@ import { File as GFile } from '@google-cloud/storage';
 import { startMaintenance, endMaintenance, runChunks, getDocAndPath } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { has, get } from 'lodash';
+import { privacies } from '@blockframes/utils/file-sanitizer';
 export const { storageBucket } = firebase;
 const EMPTY_REF = '';
 
@@ -43,7 +44,7 @@ const changeResourceDirectory = async (
   const bucket = storage.bucket(storageBucket);
 
   try {
-    let newRef = !['protected', 'public'].includes(ref.split('/').shift()) ? `public/${ref}` : ref;
+    let newRef = !privacies.includes(ref.split('/').shift() as any) ? `public/${ref}` : ref;
     newRef = newRef.split(' ').join('-');
 
     const to = bucket.file(newRef);

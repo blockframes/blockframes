@@ -1,3 +1,7 @@
+export const privacies = ['public', 'protected'] as const;
+export type Privacy = typeof privacies[number];
+export const tempUploadDir = 'tmp';
+
 /**
  * Cleans filename ( before firestore upload for example )
  * @param str
@@ -12,14 +16,14 @@ export function sanitizeFileName(str: string): string {
   return `${fileNameWithoutExt.substr(0, 100)}.${getFileExtension(str)}`;
 }
 
-export function getStoragePath(path: string, protectedMedia = false): string {
+export function getStoragePath(path: string, privacy: Privacy = 'public'): string {
   // Remove first trailing slash if any
   path = path.indexOf('/') === 0 ? path.slice(1) : path;
 
-  // Add last traling slash if missing
+  // Add last trailing slash if missing
   path = path[path.length - 1] !== '/' ? `${path}/` : path;
 
-  return `${protectedMedia ? 'protected/' : 'public/'}${path}`;
+  return `${privacy}/${path}`;
 }
 
 /**
