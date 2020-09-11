@@ -68,16 +68,16 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 }
 
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
-function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
+function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => module.some(m => after.appAccess[a]?.[m] !== before.appAccess[a]?.[m]));
+    return app.some(a => module.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
   }
   return false;
 }
 
 /** Sends a mail to admin to inform that an org is waiting approval */
 async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
-  if (hasOrgAppAccessChanged(before, after)) {
+  if (newAppAccessGranted(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
     const from = await getFromEmail(after);
