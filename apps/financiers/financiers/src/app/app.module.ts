@@ -61,7 +61,7 @@ import { environment } from '../environments/environment';
     intercomId ? IntercomAppModule : [],
 
     // Firebase
-    AngularFireModule.initializeApp(firebase),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
