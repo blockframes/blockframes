@@ -36,7 +36,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Ensures that there is always at least one super Admin in the organization. */
-  private hasLastSuperAdmin(permissions: PermissionsDocument, uid: string, role: UserRole) {
+  public hasLastSuperAdmin(permissions: PermissionsDocument, uid: string, role: UserRole) {
     if (role !== 'superAdmin' && permissions.roles[uid] === 'superAdmin') {
       const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
       return superAdminNumber > 1 ? true : false;
