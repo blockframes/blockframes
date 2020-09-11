@@ -6,20 +6,16 @@ import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
 import { chunk } from 'lodash';
 
-export async function runInBatches<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
+export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
   function* batchGenerator() {
     const chunks = chunk(batch, chunkSize);
     while (chunks.length > 0) {
       console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
       yield Promise.all(chunks.pop().map(cb))
     }
+    console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`)
   }
-  const batchIterator = batchGenerator();
-  for await (let i of batchIterator) {
-    i = i;
-    console.log('Chunk processed')
-  }
-  console.log('Batch finished!')
+  return batchGenerator();
 }
 
 /**

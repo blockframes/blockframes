@@ -27,7 +27,7 @@ export async function upgradeAlgoliaOrgs() {
   const { db } = loadAdminServices();
   const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
   for await (const orgs of orgsIterator) {
-    const promises = orgs.map(async org => {
+    const promises = orgs.map(org => {
       return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
     });
 
