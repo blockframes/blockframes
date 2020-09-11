@@ -1,7 +1,3 @@
-:host > * {
-  margin-top: 20px
-}
-
 section > * {
   margin-bottom: 16px;
 }
@@ -11,4 +7,8 @@ section > * {
   .mat-card-title {
     margin-top: 10px;
   }
+}
+
+h6 {
+  opacity: 0.5;
 }

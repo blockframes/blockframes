@@ -25,8 +25,16 @@ export class TitleViewComponent implements OnInit, OnDestroy {
       label: 'Marketplace Activity'
     },
     {
-      path: 'details',
-      label: 'Film Details'
+      path: 'main',
+      label: 'Main Information'
+    },
+    {
+      path: 'artistic',
+      label: 'Artistic Information'
+    },
+    {
+      path: 'production',
+      label: 'Production Information'
     }
   ];
 
