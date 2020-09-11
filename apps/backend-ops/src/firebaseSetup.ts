@@ -11,7 +11,6 @@ import { restore } from './admin';
 import { loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-// import { syncStorage } from './syncStorage';
 import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
@@ -62,10 +61,6 @@ export async function prepareForTesting() {
   console.info('Generating watermarks...');
   await generateWatermarks();
   console.info('Watermarks generated!');
-
-  // console.info('Syncing firestore with storage');
-  // await syncStorage();
-  // console.info('Firestore is now synced with storage!');
 
   process.exit(0);
 }
