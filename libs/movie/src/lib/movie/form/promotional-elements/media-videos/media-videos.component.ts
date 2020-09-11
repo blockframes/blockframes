@@ -10,8 +10,5 @@ import { MovieFormShellComponent } from '../../shell/shell.component';
 export class MovieFormMediaVideosComponent {
   form = this.shell.form;
 
-  constructor(
-    private shell: MovieFormShellComponent,
-  ) { }
-
+  constructor(private shell: MovieFormShellComponent) { }
 }

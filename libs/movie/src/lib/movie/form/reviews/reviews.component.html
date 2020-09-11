@@ -83,7 +83,10 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Article Link</mat-label>
-              <input test-id="link" matInput formControlName="revueLink" />
+              <input test-id="link" type="url" matInput formControlName="revueLink" />
+              <mat-error *ngIf="reviewForm.get('revueLink').hasError('pattern')">
+                Please enter a valid url.
+              </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
