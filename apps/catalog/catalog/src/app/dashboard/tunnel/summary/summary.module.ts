@@ -5,19 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { TunnelSummaryComponent } from './summary.component';
 
-// Summary components
-import { MovieSummaryMainModule } from '@blockframes/movie/dashboard/components/summary/main/main.module';
-import { MovieSummaryFestivalPrizesModule } from '@blockframes/movie/dashboard/components/summary/festival-prizes/festival-prizes.module';
-import { MovieSummarySalesCastModule } from '@blockframes/movie/dashboard/components/summary/sales-cast/sales-cast.module';
-import { MovieSummaryCountryModule } from '@blockframes/movie/dashboard/components/summary/country/country.module';
-import { MovieSummaryInformationModule } from '@blockframes/movie/dashboard/components//summary/information/information.module';
-import { MovieSummaryStoryModule } from '@blockframes/movie/dashboard/components/summary/story/story.module';
-import { MovieSummaryCreditModule } from '@blockframes/movie/dashboard/components/summary/credit/credit.module';
-import { MovieSummaryBudgetModule } from '@blockframes/movie/dashboard/components/summary/budget/budget.module';
-import { MovieSummaryTechnicalInformationModule } from '@blockframes/movie/dashboard/components/summary/technical-information/technical-information.module';
-import { MovieSummaryImageModule } from '@blockframes/movie/dashboard/components/summary/image/image.module';
-import { MovieSummaryFileModule } from '@blockframes/movie/dashboard/components/summary/file/file.module';
-import { MovieSummaryEvaluationModule } from '@blockframes/movie/dashboard/components/summary/evaluation/evaluation.module';
+import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -32,7 +21,8 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-
+    MovieTunnelSummaryModule,
+    GetPathModule,
     // Materials
     MatCardModule,
     MatIconModule,
