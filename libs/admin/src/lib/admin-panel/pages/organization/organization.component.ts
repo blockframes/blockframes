@@ -5,14 +5,14 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { staticConsts } from '@blockframes/utils/static-model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Component({
   selector: 'admin-organization',
@@ -24,9 +24,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public organizationStatus = staticConsts.organizationStatus;
   public movies: any[];
-  public app = app;
   public members: any[];
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
@@ -77,12 +75,12 @@ export class OrganizationComponent implements OnInit {
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
+    private mediaService: MediaService
   ) { }
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
     this.org = await this.organizationService.getValue(this.orgId);
-    this.storagePath = `orgs/${this.orgId}/logo`;
     this.orgForm = new OrganizationAdminForm(this.org);
 
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
@@ -136,11 +134,10 @@ export class OrganizationComponent implements OnInit {
       return;
     }
 
-    const { denomination, email, addresses, activity, fiscalNumber, status, appAccess } = this.orgForm.value;
-    const update = { denomination, email, addresses, activity, fiscalNumber, status, appAccess };
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
+    await this.organizationService.update(this.orgId, documentToUpdate);
+    this.mediaService.uploadOrDeleteMedia(mediasToUpload);
 
-    // @TODO (#2987) (check org import via excel)
-    await this.organizationService.update(this.orgId, update);
     if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);
     }
