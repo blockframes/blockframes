@@ -128,8 +128,6 @@ export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.e
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
+export const heavyChunkSize = 15;
 
-// Local setup related settings
-// ============================
-// change watermarkRowConcurrency to 5 or lesser in case scripts fail 
-export const watermarkRowConcurrency = 10;
+export const chunkSize = 30;

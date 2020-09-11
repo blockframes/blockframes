@@ -129,8 +129,6 @@ export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
 
+export const heavyChunkSize = 7;
 
-// Local setup related settings
-// ============================
-// change watermarkRowConcurrency to 5 or lesser in case scripts fail 
-export const watermarkRowConcurrency = 10;
+export const chunkSize = 15;
