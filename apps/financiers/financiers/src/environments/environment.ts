@@ -1,9 +1,13 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+
+import { firebase } from '@env';
 
 export const environment = {
   production: false,
+  firebase: {
+    ...firebase,
+    appId: "1:309694417970:web:d1a39b02d25a5edfe8802b",
+    measurementId: "G-6CDHMTRH4T"
+  }
 };
 
 /*
@@ -13,4 +17,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error';  // Included with Angular CLI.

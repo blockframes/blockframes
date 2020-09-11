@@ -61,8 +61,9 @@ export function warnMissingVars(): void | never {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
   };
+  // Use '||' instead of '??' to detect empty string
   requiredVars.map(
-    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] ?? warn(key, msg)
+    ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg)
   );
 }
 
