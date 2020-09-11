@@ -4,6 +4,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { DashboardTitleShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-view-main',
@@ -14,12 +15,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieViewMainComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
-  public form: MovieForm;
+  public form = this.shell.form;
 
   constructor(
     private movieQuery: MovieQuery,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private shell: DashboardTitleShellComponent
   ) {}
 
   ngOnInit() {

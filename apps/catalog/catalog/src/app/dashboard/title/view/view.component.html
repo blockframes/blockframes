@@ -2,39 +2,42 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-  <header fxLayout="row" fxLayoutAlign="start start">
-    <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <ng-container *ngIf="movie.poster as poster">
-        <img class="movie-poster" [ref]="poster" asset="empty_poster.webp"  alt="movie poster">
-      </ng-container>
-      <div class="movie-info">
-        <h4>
-          {{ movie.contentType }}
-          <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | toLabel: 'productionStatus' }}
-          <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|</ng-container>
-          {{ movie.totalRunTime | duration: 'ms' }}
-        </h4>
-        <h1>{{ movie.title.international }}</h1>
-        <h6>{{ getDirectors(movie) }}</h6>
-        <span>
-          <ng-container *ngFor="let country of movie.originCountries; let isLast=last">
-            {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
-          </ng-container>
-        </span>
-      </div>
-    </article>
-  </header>
+  <movie-dashboard-title-shell [routes]="navLinks">
+    <header fxLayout="row" fxLayoutAlign="start start">
+      <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
+        <ng-container *ngIf="movie.poster as poster">
+          <img class="movie-poster" [ref]="poster" asset="empty_poster.webp"  alt="movie poster">
+        </ng-container>
+        <div class="movie-info">
+          <h4>
+            {{ movie.contentType }}
+            <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
+            {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
+            <ng-container *ngIf="movie.productionStatus && movie.totalRunTime">|</ng-container>
+            {{ movie.totalRunTime | duration: 'ms' }}
+          </h4>
+          <h1>{{ movie.title.international }}</h1>
+          <h6>{{ getDirectors(movie) }}</h6>
+          <span>
+            <ng-container *ngFor="let country of movie.originCountries; let isLast=last">
+              {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
+            </ng-container>
+          </span>
+        </div>
+      </article>
+    </header>
 
-  <nav mat-tab-nav-bar>
-    <a mat-tab-link
-        *ngFor="let link of navLinks"
-        [routerLink]="link.path"
-        routerLinkActive #rla="routerLinkActive"
-        [active]="rla.isActive">
-      {{link.label}}
-    </a>
-  </nav>
-  <router-outlet></router-outlet>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+          *ngFor="let link of navLinks"
+          [routerLink]="link.path"
+          routerLinkActive #rla="routerLinkActive"
+          [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </nav>
+    <router-outlet></router-outlet>
+  </movie-dashboard-title-shell>
+
 
   </ng-container>
