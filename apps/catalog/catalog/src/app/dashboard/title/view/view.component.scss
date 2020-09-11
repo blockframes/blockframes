@@ -1,6 +1,6 @@
 @import '~@angular/flex-layout/mq';
 
-header, section {
+header {
   padding: 0 24px;
 }
 
@@ -18,7 +18,7 @@ header h4 {
 }
 
 nav.mat-tab-nav-bar {
-  margin-bottom: 32px;
+  margin: 0 24px 32px;
 }
 
 .movie-poster {

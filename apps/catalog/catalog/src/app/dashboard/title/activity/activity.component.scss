@@ -1,5 +1,5 @@
-section > * {
-  margin-bottom: 16px;
+section {
+  margin: 0 24px;
 }
 
 .mat-card {
@@ -7,8 +7,4 @@ section > * {
   .mat-card-title {
     margin-top: 10px;
   }
-}
-
-h6 {
-  opacity: 0.5;
 }

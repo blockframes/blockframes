@@ -4,5 +4,9 @@ mat-divider {
 }
 
 article {
-  margin: 0 16px;
-}
+  margin: 0 24px;
+  *:not(h3) {
+    display: block;
+    margin: 0 16px;
+  }
+ }
