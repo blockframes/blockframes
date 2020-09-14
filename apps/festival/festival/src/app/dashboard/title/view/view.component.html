@@ -13,7 +13,7 @@
         <h4>
           {{ movie.contentType | toLabel: 'contentType' }}
           <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | toLabel: 'productionStatus' | async }}
+          {{ movie.productionStatus | toLabel: 'productionStatus' }}
           <ng-container *ngIf="movie.productionStatus && movie.runningTime.time">|
             {{ movie.runningTime.time ? movie.runningTime.time + ' min' : 'TBC' }}
           </ng-container>
