@@ -10,4 +10,6 @@
   </a>
 </nav>
 
-<router-outlet></router-outlet>
+<section [@routeAnimation]="routerData$ | async">
+  <router-outlet></router-outlet>
+</section>

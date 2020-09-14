@@ -80,4 +80,20 @@ export const routeAnimation = trigger('routeAnimation', [
         query(':leave', animateChild(), { optional: true }),
         query(':enter', animateChild(), { optional: true }),
     ]),
+    transition(':increment', [
+      ...prepare,
+      query(':enter', [ style({ opacity: 0, transform: 'translateX(30vw)' }) ], { optional: true }),
+      sequence([
+        query(':leave', [ animate(`500ms ${Easing.easeIncubic}`, style({ opacity: 0, transform: 'translateX(-30vw)' })) ], { optional: true }),
+        query(':enter', [ animate(`500ms ${Easing.easeOutcubic}`, style({ opacity: 1, transform: 'translateX(0)' })) ], { optional: true }),
+      ]),
+    ]),
+    transition(':decrement', [
+      ...prepare,
+      query(':enter', [ style({ opacity: 0, transform: 'translateX(-30vw)' }) ], { optional: true }),
+      sequence([
+        query(':leave', [ animate(`500ms ${Easing.easeIncubic}`, style({ opacity: 0, transform: 'translateX(30vw)' })) ], { optional: true }),
+        query(':enter', [ animate(`500ms ${Easing.easeOutcubic}`, style({ opacity: 1, transform: 'translateX(0)' })) ], { optional: true }),
+      ]),
+    ])
 ]);
