@@ -1,0 +1,40 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.import {
+  margin-bottom: 24px;
+}
+
+header {
+  margin-bottom: 16px;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+  background-color: transparent;
+}
+
+mat-card {
+  margin-bottom: 80px;
+}
+
+.no-title-card {
+  width: 330px;
+  height: 220px;
+  img {
+    width: 100px;
+    align-self: center;
+  }
+}
+
+p {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+h1 {
+  margin: 0;
+}

@@ -10,13 +10,5 @@ import { MovieFormShellComponent } from '../../shell/shell.component';
 export class MovieFormMediaVideosComponent {
   form = this.shell.form;
 
-  public otherLinksColumns = {
-    name: 'Name',
-    url: 'Link',
-  }
-
-  constructor(
-    private shell: MovieFormShellComponent,
-  ) { }
-
+  constructor(private shell: MovieFormShellComponent) { }
 }

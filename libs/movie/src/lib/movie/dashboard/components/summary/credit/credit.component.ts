@@ -2,8 +2,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 // Form
-import { CreditForm } from '../../../../form/sales-cast/sales-cast.form';
-import { MovieForm } from '../../../../form/movie.form';
+import { MovieForm, CreditForm } from '../../../../form/movie.form';
 
 @Component({
   selector: '[movie] movie-summary-credit',

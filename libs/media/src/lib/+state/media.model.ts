@@ -5,6 +5,7 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
@@ -15,7 +16,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
 export function extractMediaFromDocumentBeforeUpdate(
-  form: MovieForm | ProfileForm | OrganizationForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+  form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);
 
@@ -55,7 +56,7 @@ function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
-function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm) {
+function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm) {
   if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];

@@ -87,6 +87,13 @@
     },
     "firebase-utils": {
       "tags": []
+    },
+    "financiers": {
+      "tags": []
+    },
+    "financiers-e2e": {
+      "tags": [],
+      "implicitDependencies": ["financiers"]
     }
   },
   "tasksRunnerOptions": {

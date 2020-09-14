@@ -6,11 +6,11 @@
       <h3>Logline</h3>
       <mat-form-field appearance="outline">
         <textarea matInput
-          [formControl]="logline"
+          [formControl]="form.logline"
           cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350" type="string"
           placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
         <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
-        <mat-error *ngIf="logline.hasError('maxlength')">
+        <mat-error *ngIf="form.logline.hasError('maxlength')">
           Logline should not exceed 350 characters.
         </mat-error>
       </mat-form-field>
@@ -22,11 +22,11 @@
       <h3>Synopsis *</h3>
       <mat-form-field appearance="outline">
         <textarea matInput
-          [formControl]="synopsis"
+          [formControl]="form.synopsis"
           cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="1500" type="string" aria-label="synopsis"
           placeholder="e.g A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic." required></textarea>
-        <mat-hint align="start">{{ synopsis.value.length }} / 1500</mat-hint>
-        <mat-error *ngIf="synopsis.hasError('required')">
+        <mat-hint align="start">{{ form.synopsis.value.length }} / 1500</mat-hint>
+        <mat-error *ngIf="form.synopsis.hasError('required')">
           Please fill in your project's synopsis.
         </mat-error>
       </mat-form-field>
@@ -40,10 +40,10 @@
         <mat-label>Key Assets</mat-label>
         <textarea matInput maxlength="750" cdkTextareaAutosize cdkAutosizeMinRows="5" type="string"
         placeholder="e.g. Titanic is one of the most awarded films and biggest box-office successes of all time, starring young award-winning Kate Winslet and Leonardo DiCaprio, with an original soundtrack from Céline Dion."
-        [formControl]="keyAssets">
+        [formControl]="form.keyAssets">
         </textarea>
         <mat-hint align="start">Highlight your film's main selling point(s).</mat-hint>
-        <mat-error *ngIf="keyAssets.hasError('maxlength')">
+        <mat-error *ngIf="form.keyAssets.hasError('maxlength')">
           Key assets should not exceed 750 characters.
         </mat-error>
       </mat-form-field>
