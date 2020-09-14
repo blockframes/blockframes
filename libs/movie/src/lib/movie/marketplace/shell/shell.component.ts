@@ -1,21 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Directive } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
-  selector: 'festival-movie-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss'],
+  selector: 'marketplace-movie-shell',
+  templateUrl: './shell.component.html',
+  styleUrls: ['./shell.component.scss'],
   animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit {
+export class MovieShellComponent implements OnInit {
   @HostBinding('@scaleIn') animPage;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
@@ -39,11 +40,18 @@ export class ViewComponent implements OnInit {
     'trailer_link'
   ];
 
+  public isEnoughPicturesThen(min: number) {
+    return this.movieQuery.selectActive().pipe(
+      map(movie => Object.values(movie.promotional.still_photo).length > min)
+    );
+  }
+
   constructor(
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
-    public router: Router
-  ) {}
+    public router: Router,
+    public routerQuery: RouterQuery,
+    ) {}
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
@@ -52,3 +60,10 @@ export class ViewComponent implements OnInit {
     );
   }
 }
+
+@Directive({
+  selector: 'movie-header, [movieHeader]',
+  host: { class: 'movie-header' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class MovieHeader { }

@@ -1,0 +1,56 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <!-- App bar -->
+  <ng-template pageBar targetId="nav">
+    <header fxLayout fxLayoutAlign="start center">
+      <app-menu></app-menu>
+      <ng-container *ngFor="let link of navLinks">
+        <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
+          #rla="routerLinkActive">
+          {{link.label}}
+        </a>
+      </ng-container>
+    </header>
+  </ng-template>
+
+  <!-- Header -->
+  <movie-header [movie]="movie">
+    <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
+      <ng-container *ngFor="let org of orgs$ | async">
+        <org-chip [org]="org"></org-chip>
+        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+          <span>Contact Sales Agent</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </ng-container>
+    </movie-header-cta>
+    <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+      <wishlist-button [movieId]="movie.id"></wishlist-button>
+      <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+    </movie-header-actions>
+  </movie-header>
+  
+  <!-- Content -->
+  <nav id="nav" mat-tab-nav-bar>
+    <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+
+  <!-- Footer -->
+  <movie-screening></movie-screening>
+  <h2 flex *ngIf="isEnoughPicturesThen(1) | async">Images</h2>
+  <ng-container *ngIf="isEnoughPicturesThen(4) | async; else noCarousel">
+    <bf-carousel flex>
+      <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" carouselItem [col]="3"
+        [ref]="img.value" asset="empty_poster.webp">
+    </bf-carousel>
+  </ng-container>
+  <ng-template #noCarousel>
+    <div fxLayout flex>
+      <img *ngFor="let img of (movie$ | async).promotional.still_photo | keyvalue" [ref]="img.value"
+      asset="empty_poster.webp" [col]="3">
+    </div>
+  </ng-template>
+</ng-container>

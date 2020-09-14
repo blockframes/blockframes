@@ -41,9 +41,9 @@
           <strong>Director </strong>
           <span>{{ movie.directors | displayName }} </span>
         </li>
-        <li *ngIf="movie.releaseYear">
+        <li *ngIf="movie.release.year">
           <strong>Production Year </strong>
-          <span>{{ movie.releaseYear }} </span>
+          <span>{{ movie.release.year }} </span>
         </li>
         <li *ngIf="movie.originCountries">
           <strong>Country of Origin </strong>
