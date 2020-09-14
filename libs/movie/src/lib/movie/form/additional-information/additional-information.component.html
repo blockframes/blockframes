@@ -50,7 +50,7 @@
 
         <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
           <ng-template itemRef let-boxOffice>{{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
-            {{ boxOffice.unit | toLabel: 'unitBox' | async }}: {{ boxOffice.value }}
+            {{ boxOffice.unit | toLabel: 'unitBox' }}: {{ boxOffice.value }}
           </ng-template>
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
