@@ -82,7 +82,7 @@ export default class SearchPage extends NavbarPage {
   }
 
   public  getAllMovies(movieCount: number) {
-    let movies = [];
+    const movies = [];
     cy.get('movie-card article h6', {timeout: 10000}).then((m) => {
       for (let i =0; i < movieCount; i++) {
         movies.push(m[i].firstChild.textContent);

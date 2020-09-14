@@ -47,19 +47,19 @@ export default class WishlistPage extends NavbarPage {
    * @param movieNames : an array of movies to search and remove
    */
   public removeMovieFromWishlist(movieNames: string[] = []) {
-    cy.get("catalog-wishlist").then($el => {
-      if ($el.find("tr").length === 0) {
+    cy.get("catalog-wishlist").then($table => {
+      if ($table.find("tr").length === 0) {
         cy.log("Wishlist empty...");
         return;
       }
 
       if (movieNames.length === 0) {
-        let likedMovies = [];
+        const likedMovies = [];
         cy.get('catalog-wishlist tr').each(($el, index) => {
           if (index === 0) return;
-          let v = Cypress.$($el)[0].firstElementChild.textContent.trim()
-          console.log(v);
-          likedMovies.push(v);
+          const title = Cypress.$($el)[0].firstElementChild.textContent.trim()
+          console.log(title);
+          likedMovies.push(title);
         })
         .last().then(() => {
           console.table(likedMovies);

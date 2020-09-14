@@ -3,13 +3,12 @@
 import { HomePage } from "../../support/pages/marketplace";
 import { LandingPage } from '../../support/pages/landing';
 import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
-import { User } from "@blockframes/e2e/utils/type";
-import { USERS } from "@blockframes/e2e/utils/users";
+import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
-// Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
+const userFixture = new User();
+const users  =  [ userFixture.getByUID(USER.Jean) ];
 
 const EVENT = 'Contract Signature Date';
 const EVENT_SUMMARY = 'ContractSignatureDate';
@@ -35,7 +34,7 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     // Connexion
     const p2: AuthLoginPage = new AuthLoginPage();
     p2.switchMode();
-    p2.fillSignin(LOGIN_CREDENTIALS);
+    p2.fillSignin(users[0]);
     p2.clickSignIn();
     const p3 = new HomePage();
 

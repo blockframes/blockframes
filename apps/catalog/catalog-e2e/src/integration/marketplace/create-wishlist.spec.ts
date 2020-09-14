@@ -33,14 +33,14 @@ describe('Test wishlist features from library, detail page',  () => {
 
     p3.getAllMovies(movieViewCount);
     cy.get('@movieList').then(x => {
-      let watchList: string[] = x as any;
+      const watchList: string[] = x as any;
       movieViewCount = watchList.length;
 
       //1. Create a list of movies to test.
       let movieList1 = watchList;
       movieList1 = watchList.slice(0, MOVIE_LIST1_COUNT);
       let likedCount = movieList1.length;
-      let movieList2 = watchList.slice(likedCount - 1, watchList.length);
+      const movieList2 = watchList.slice(likedCount - 1, watchList.length);
 
       //2. Add movies to wishlist
       cy.log(`A: Updating WishList: [${JSON.stringify(movieList1)}]`);
@@ -50,7 +50,7 @@ describe('Test wishlist features from library, detail page',  () => {
       });
 
       //3. Verify list
-      const p4: WishlistPage = p3.clickWishlist();
+      p3.clickWishlist();
       cy.wait(5000);
       movieList1.forEach(movieName => {
         p4.assertMovieInCurrentWishlist(movieName);
@@ -65,10 +65,10 @@ describe('Test wishlist features from library, detail page',  () => {
       movieList2.forEach(movieName => {
         p3.clearAllFilters('All films');
         cy.wait(5000);
-        const p4: ViewPage = p3.selectMovie(movieName);
-        p4.clickWishListButton();
-        p4.openSideNav();
-        p4.clickLibrary();
+        const p5: ViewPage = p3.selectMovie(movieName);
+        p5.clickWishListButton();
+        p5.openSideNav();
+        p5.clickLibrary();
       });
 
       // one movie got removed from likes.

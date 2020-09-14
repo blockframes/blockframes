@@ -38,7 +38,6 @@ function fillAllFields(target, fields, entity?: Entity) {
     try {
       target[methodName](value, entity);
     } catch (e) {
-      debugger;
       console.log(`${methodName} not found.`);
       console.log(value)
       fillAllFields(target, value, entity);
@@ -150,20 +149,20 @@ export default class OrganizationCreatePage {
   public testOrgForm(org: Organization) {
     cy.log("OrganizationCreatePage: Test all form fields");
     const selector = 'organization-form form input, mat-select';
-    let formData:FormData[] = [];
+    const formData:FormData[] = [];
 
     cy.get(selector).each(($formEl) => {
       const keyBag = $formEl.attr('test-id');
-      let fData = {name: $formEl[0].localName, id: $formEl.attr('id'),
+      const formelData = {name: $formEl[0].localName, id: $formEl.attr('id'),
                    testId: $formEl.attr('test-id'), value: 'skipped'}
   
-      if (keyBag == undefined) {
-        fData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
+      if (keyBag === undefined) {
+        formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
                                      $formEl.attr('aria-label') || 
                                      $formEl.attr('data-placeholder')}]`;
-        fData.value = 'untouched';
-        cy.log(JSON.stringify(fData));
-        formData.push(fData);
+        formelData.value = 'untouched';
+        cy.log(JSON.stringify(formelData));
+        formData.push(formelData);
         return;
       }
       const keyBunch = keyBag.split('-');
@@ -179,16 +178,16 @@ export default class OrganizationCreatePage {
        */
       const needsHandling = this.handleFormInputs($formEl, keyBag);
   
-      fData.value = vault;
+      formelData.value = vault;
       if (needsHandling && (vault !== undefined)) {
         //Set the form field..
         cy.wrap($formEl).click().type(vault);
-        if ($formEl.is('mat-select') || ($formEl.attr('role') == 'combobox')) {
+        if ($formEl.is('mat-select') || ($formEl.attr('role') === 'combobox')) {
           cy.get('mat-option')
             .contains(vault).click();
         } 
       }
-      formData.push(fData);
+      formData.push(formelData);
     })
     .last().then(() => {
       console.table(formData);
