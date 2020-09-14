@@ -16,7 +16,7 @@ export default class SearchPage extends NavbarPage {
       .click();
     cy.get('[mattooltip="Clear all filters"]')
       .click();      
-    cy.wait(3000);
+
   }
 
   public fillProductionYear(years: Dates) {
@@ -67,6 +67,7 @@ export default class SearchPage extends NavbarPage {
   }
 
   public selectMovie(movieName: string) {
+    cy.log(`=>selectMovie : {${movieName}}`);
     cy.get('movie-card', {timeout: 30000})
       .contains(movieName).parent().parent()
       .find('a').click();
@@ -77,6 +78,18 @@ export default class SearchPage extends NavbarPage {
     cy.get('movie-card', {timeout: 30000})
       .contains(movieName).parent().parent()
       .find('button[test-id=heart-button]').click();
+    cy.wait(2000);
+  }
+
+  public  getAllMovies(movieCount: number) {
+    let movies = [];
+    cy.get('movie-card article h6', {timeout: 10000}).then((m) => {
+      for (let i =0; i < movieCount; i++) {
+        movies.push(m[i].firstChild.textContent);
+      }
+      console.log(movies);
+      cy.wrap(movies).as('movieList');
+    })
   }
 }
 
