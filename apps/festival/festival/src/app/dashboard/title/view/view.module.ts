@@ -12,8 +12,8 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
-import { MovieViewMainModule } from '@blockframes/movie/dashboard/components/view/main/main.module';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
-import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
 
 const routes = [{
   path: '',
@@ -62,9 +61,8 @@ const routes = [{
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
-    MovieTunnelSummaryModule,
-    MovieViewMainModule,
     DashboardTitleShellModule,
+    DisplayNameModule,
     // Material
     MatButtonModule,
     MatIconModule,

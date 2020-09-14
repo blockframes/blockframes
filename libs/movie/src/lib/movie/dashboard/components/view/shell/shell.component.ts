@@ -4,7 +4,7 @@ import { MovieQuery } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
-  selector: '[routes] movie-dashboard-title-shell',
+  selector: '[routes] title-dashboard-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
