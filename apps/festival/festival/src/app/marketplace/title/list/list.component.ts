@@ -57,7 +57,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(() => this.filterForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      tap(console.log),
       tap(movies => this.hitsViewed = this.hitsViewed + movies.length),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
@@ -80,19 +79,10 @@ export class ListComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  set() {
-    this.scrollService.set();
-  }
-
-  go() {
-    this.scrollService.go();
-  }
-
   async loadMore() {
     this.scrollService.set();
     this.filterForm.page.setValue(this.filterForm.page.value + 1);
     await this.filterForm.search();
-    this.scrollService.go();
   }
   
 }

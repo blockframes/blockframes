@@ -78,7 +78,6 @@
   </button>
 
   <!-- TITLE CARD -->
-  <!-- <ng-template titleCard *cdkVirtualFor="let title of movieSearchResults$ | async"> -->
   <ng-template titleCard let-title>
 
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]" size="poster">
