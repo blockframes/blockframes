@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
@@ -12,19 +12,24 @@ import { Observable, BehaviorSubject } from 'rxjs';
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
-export class EventEditComponent {
+export class EventEditComponent implements OnInit {
 
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
   invitationForm = createAlgoliaUserForm();
   progress: Observable<number>;
   sending = new BehaviorSubject(false);
+  eventLink: string;
 
   constructor(
     private service: EventService,
     private router: Router,
     private route: ActivatedRoute,
   ) { }
+
+  ngOnInit() {
+    this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
+  }
 
   get meta() {
     return this.form.get('meta');
