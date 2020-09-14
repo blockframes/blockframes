@@ -94,6 +94,7 @@ export default class AuthLoginPage {
 
   public clickSignupToOrgHome() {
     cy.get('auth-signup-form button[type=submit]').click();
+    cy.wait(3000);
     return new OrganizationHomePage();
   }
 
@@ -116,11 +117,12 @@ export default class AuthLoginPage {
 
   /** Connection returns to the home page of the application in which you are. You have to create it. */
   public clickSignIn() {
-    cy.get('auth-signin-form button[type=submit]').click();
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3000}).click();
   }
 
   public clickSigninToOrgHome() {
-    cy.get('auth-signin-form button[type=submit]').click();
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3000}).click();
+    cy.wait(3000);
     return new OrganizationHomePage();
   }
 }

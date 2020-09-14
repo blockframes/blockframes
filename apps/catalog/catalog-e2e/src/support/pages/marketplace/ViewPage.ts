@@ -14,7 +14,10 @@ export default class ViewPage extends NavbarPage {
   }
 
   public clickWishListButton() {
-    cy.get('catalog-movie-view [test-id=heart-button]').click();
+    cy.get('nav [ng-reflect-router-link="avails"]', {timeout: 3000})
+      .click();
+    cy.get('catalog-movie-view [test-id=heart-button]', {timeout: 3000})
+      .click();
     cy.wait(5000);
   }
 }

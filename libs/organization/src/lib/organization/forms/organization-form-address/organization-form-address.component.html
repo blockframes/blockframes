@@ -4,22 +4,22 @@
   </mat-card-header>
   <mat-form-field appearance="outline">
     <mat-label>Street</mat-label>
-    <input test-id="street" matInput placeholder="Street" aria-label="street" formControlName="street" />
+    <input test-id="address-street" matInput placeholder="Street" aria-label="street" formControlName="street" />
   </mat-form-field>
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
     <mat-form-field appearance="outline">
       <mat-label>City</mat-label>
-      <input test-id="city" matInput placeholder="City" aria-label="city" formControlName="city" />
+      <input test-id="address-city" matInput placeholder="City" aria-label="city" formControlName="city" />
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Zip code</mat-label>
-      <input test-id="zipCode" matInput placeholder="Zip code" aria-label="zip code" formControlName="zipCode" />
+      <input test-id="address-zipCode" matInput placeholder="Zip code" aria-label="zip code" formControlName="zipCode" />
     </mat-form-field>
   </div>
   <form-country noWorld [form]="form.get('country')"></form-country>
   <mat-form-field appearance="outline">
     <mat-label>Company phone number</mat-label>
-    <input test-id="phoneNumber" matInput placeholder="Company phone number" aria-label="Company phone number"
+    <input test-id="address-phoneNumber" matInput placeholder="Company phone number" aria-label="Company phone number"
       formControlName="phoneNumber" />
   </mat-form-field>
 </form>
