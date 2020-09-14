@@ -78,6 +78,22 @@ export async function prepareDb() {
   console.log('Deprecated data removed!');
 }
 
+export async function prepareStorage() {
+  const { storage, getCI } = loadAdminServices();
+
+  console.info('Syncing storage with production backup stored in blockframes-ci...');
+  await restoreStorageFromCi(getCI());
+  console.info('Storage synced!');
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('Migrations complete!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
+}
+
 export async function restoreShortcut() {
   return restore(appUrl.content);
 }

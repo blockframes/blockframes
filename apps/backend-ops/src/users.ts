@@ -5,7 +5,7 @@
  */
 import { differenceBy } from 'lodash';
 import { Auth, UserRecord } from './admin';
-import { loadAdminServices } from '@blockframes/firebase-utils';
+import { loadAdminServices, getCollectionInBatches } from '@blockframes/firebase-utils';
 import { sleep } from './tools';
 import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
@@ -13,6 +13,7 @@ import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/
 import { loadDBVersion } from './migrations';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
+import { User } from '@blockframes/user/types';
 
 export const { storageBucket } = env.firebase;
 
@@ -96,14 +97,25 @@ function readUsersFromJsonlFixture(db: JsonlDbRecord[]): UserConfig[] {
     }));
 }
 
-export async function syncUsers(db: JsonlDbRecord[]): Promise<any> {
-  await startMaintenance();
-  const { auth } = loadAdminServices();
+async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
+  const usersIterator = getCollectionInBatches<User>(db.collection('users'), 'uid', 300);
+  const output: UserConfig[] = [];
+  for await (const users of usersIterator)
+    output.push(...users.map(({ uid, email }) => ({ uid, email, password: USER_FIXTURES_PASSWORD })));
+  return output;
+}
 
-  const expectedUsers = readUsersFromJsonlFixture(db);
+/**
+ * If `jsonl` param is not provided, the function will read users from local Firestore
+ * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
+ */
+export async function syncUsers(jsonl?: JsonlDbRecord[]): Promise<any> {
+  await startMaintenance();
+  const { auth, db } = loadAdminServices();
+  const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
   const deleteResult = await deleteAllUsers(auth);
-  const createResult = await importAllUsers(auth, expectedUsers);
   console.log(deleteResult);
+  const createResult = await importAllUsers(auth, expectedUsers);
   console.log(createResult);
   await endMaintenance();
 }
