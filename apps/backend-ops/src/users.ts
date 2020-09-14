@@ -110,11 +110,10 @@ async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
  * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
  */
 export async function syncUsers(jsonl?: JsonlDbRecord[]): Promise<any> {
-  await startMaintenance();
   const { auth, db } = loadAdminServices();
+  await startMaintenance();
   const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
-  const deleteResult = await deleteAllUsers(auth);
-  console.log(deleteResult);
+  await deleteAllUsers(auth);
   const createResult = await importAllUsers(auth, expectedUsers);
   console.log(createResult);
   await endMaintenance();
@@ -191,7 +190,7 @@ export async function createUsers(): Promise<any> {
 }
 
 export async function generateWatermarks() {
-  const { db } = loadAdminServices();
+  const { db, storage } = loadAdminServices();
   const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
@@ -203,7 +202,7 @@ export async function generateWatermarks() {
   const users = await db.collection('users').get();
 
   await runChunks(users.docs, async (user) => {
-    const file = await upsertWatermark(user.data(), storageBucket);
+    const file = await upsertWatermark(user.data(), storageBucket, storage);
     // We are in maintenance mode, trigger are stopped
     // so we update manually the user document
     if (dbVersion < 31) {

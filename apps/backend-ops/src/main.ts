@@ -1,6 +1,8 @@
 import 'tsconfig-paths/register';
 import { config } from 'dotenv';
 config(); // * Must be run here!
+import { warnMissingVars } from '@blockframes/firebase-utils';
+warnMissingVars()
 
 import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
 import { migrate } from './migrations';

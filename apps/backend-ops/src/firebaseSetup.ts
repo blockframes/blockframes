@@ -11,13 +11,12 @@ import { restore } from './admin';
 import { loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
+import { copyDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
-  warnMissingVars()
   const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
   const dbBackupPath = await copyDbFromCi(storage, getCI());
@@ -62,7 +61,6 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  process.exit(0);
 }
 
 export async function prepareDb() {
@@ -92,6 +90,10 @@ export async function prepareStorage() {
   console.info('Cleaning unused storage data...');
   await cleanStorage(storage.bucket(storageBucket));
   console.info('Storage data clean and fresh!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
 }
 
 export async function restoreShortcut() {
@@ -122,5 +124,4 @@ export async function upgrade() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  process.exit(0);
 }
