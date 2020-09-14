@@ -12,9 +12,7 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, takeWhile, scan } from 'rxjs/operators';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { PageEvent } from '@angular/material/paginator';
-import { interval as observableInterval } from "rxjs";
-import { MatSidenavContainer, MatSidenavContent } from '@angular/material/sidenav';
+import { ScrollService } from '@blockframes/ui/layout/marketplace/scroll.service';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -36,11 +34,10 @@ export class ListComponent implements OnInit, OnDestroy {
   public filterForm = new MovieSearchForm();
 
   constructor(
-    private sidenavContainer: MatSidenavContainer,
-    private sidenavContent: MatSidenavContent,
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private scrollService: ScrollService
   ) { }
 
   ngOnInit() {
@@ -66,6 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
       // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
       tap(movies => this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies))),
+      tap(_ => setTimeout(() => this.scrollService.go(), 0))
     ).subscribe();
   }
 
@@ -76,45 +74,25 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
+    this.scrollService.go();
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
     this.filterForm.reset(initial);
     this.cdr.markForCheck();
   }
 
-  pageEvent(event: PageEvent, el) {
-    console.log('scrolling to top')
-    this.sidenavContainer.scrollable.scrollTo({ start: 0, behavior: 'smooth' });
-    this.sidenavContent.scrollTo({ behavior: 'smooth', start: 0 });
-    this.sidenavContent.elementScrolled().subscribe(console.log);
-    // this.scroller.scrollable.elementScrolled().subscribe(console.log);
-    
-    // window.scrollTo(0, 0);
-    // this.scrollToElement(el);
-    // this.filterForm.page.setValue(event.pageIndex);
-    // this.filterForm.search();
+  set() {
+    this.scrollService.set();
   }
 
-  // scrollToElement(el): void {
-  //   const duration = 600;
-  //   const interval = 5;
-  //   const moveEl = el.scrollTop * interval / duration;
+  go() {
+    this.scrollService.go();
+  }
 
-  //   console.log('wtf: ', el.scrollTop)
-   
-  //   observableInterval(interval).pipe(
-  //     scan((acc, curr) => acc - moveEl, el.scrollTop),
-  //     tap(position => el.scrollTop = position),
-  //     takeWhile(val => val > 0)
-  //   ).subscribe();
-  // }
-
-  loadMore() {
+  async loadMore() {
+    this.scrollService.set();
     this.filterForm.page.setValue(this.filterForm.page.value + 1);
-    this.filterForm.search();
-  }
-
-  handler(ev) {
-    console.log('ev: ', ev);
+    await this.filterForm.search();
+    this.scrollService.go();
   }
   
 }
