@@ -104,7 +104,7 @@
       </article>
 
       <chips-autocomplete [form]="form.get('originCountries')" scope="TERRITORIES"
-        placeholder="Enter Country/ies of Origin">
+        placeholder="Enter Country/ies of Origin" [filterOutScope]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
         <mat-hint>
@@ -113,7 +113,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete [form]="form.get('originalLanguages')" scope="LANGUAGES"
-        placeholder="Enter Original Language(s)">
+        placeholder="Enter Original Language(s)" [filterOutScope]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
         <mat-hint>
@@ -129,7 +129,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="form.get('genres').value.includes('other')">
         <mat-label>Other Genre(s)</mat-label>
         <mat-chip-list #chipList>
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
@@ -176,13 +176,13 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
-        <ng-template colRef="status" let-director>{{ director.status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
-        <ng-template colRef="category" let-director>{{ director.category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        <ng-template colRef="status" let-status>{{ status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
         </ng-template>
-        <ng-template colRef="filmography" let-director>
-          <ng-container *ngFor="let film of director.filmography; let isLast = last">
+        <ng-template colRef="filmography" let-filmography>
+          <ng-container *ngFor="let film of filmography; let isLast = last; let index = index;">
             <ng-container *ngIf="film.title">
-              {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
+              {{ film.title}} ({{film.year}}){{ !isLast && filmography[index + 1].title ? ', ' : '' }}
             </ng-container>
           </ng-container>
         </ng-template>
@@ -242,6 +242,9 @@
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
                     <input matInput formControlName="year" type="number">
+                    <mat-error *ngIf="filmography.get('year').hasError('invalidYear')">Please enter a 4 digit date (e.g.
+                      2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>

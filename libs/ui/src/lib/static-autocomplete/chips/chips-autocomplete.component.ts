@@ -10,7 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -22,9 +22,10 @@ import { startWith, map } from 'rxjs/operators';
 import { staticModels } from '@blockframes/utils/static-model';
 import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
-  selector: '[form][model]chips-autocomplete',
+  selector: '[form][scope]chips-autocomplete',
   templateUrl: './chips-autocomplete.component.html',
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,7 +35,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   /**
    * The static model to display
    * @example
-   * <chips-autocomplete model="TERRITORIES" ...
+   * <chips-autocomplete scope="TERRITORIES" ...
    */
   @Input() scope: Scope;
   @Input() selectable = true;
@@ -45,7 +46,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() filterOutScope: string[] = []
   // The parent form to connect to
   @Input()
-  get form() { return this._form }
+  get form(): FormList<any> { return this._form }
   set form(form) {
     this._form = form
     this.values$ = form.valueChanges.pipe(startWith(this.form.value));
@@ -71,7 +72,6 @@ export class ChipsAutocompleteComponent implements OnInit {
     this.items = this.filterOutScope.length
       ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.filterOutScope.includes(value.slug))
       : staticModels[this.scope] as SlugAndLabel[];
-
     if (this.placeholder === '') {
       this.placeholder = `${this.scope[0].toUpperCase()}${this.scope.slice(1).toLowerCase()}`;
     }
@@ -109,6 +109,7 @@ export class ChipsAutocompleteComponent implements OnInit {
     this.form.add(option.value);
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
+    this.focusOut();
   }
 
   /** Remove a chip */

@@ -38,7 +38,7 @@ function getSteps(status: FormControl): TunnelStep[] {
       path: 'main',
       label: 'Main Information'
     }, {
-      path: 'synopsis',
+      path: 'story-elements',
       label: 'Storyline Elements'
     }, {
       path: 'production',

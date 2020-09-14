@@ -25,8 +25,8 @@ const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/main/main.module').then(m => m.MovieFormMainModule)
       },
       {
-        path: 'synopsis',
-        loadChildren: () => import('@blockframes/movie/form/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+        path: 'story-elements',
+        loadChildren: () => import('@blockframes/movie/form/story-elements/story-elements.module').then(m => m.MovieFormStoryElementsModule)
       },
       {
         path: 'production',

@@ -7,12 +7,12 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'movie-form-synopsis',
-  templateUrl: './synopsis.component.html',
-  styleUrls: ['./synopsis.component.scss'],
+  selector: 'movie-form-story-elements',
+  templateUrl: './story-elements.component.html',
+  styleUrls: ['./story-elements.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MovieFormSynopsisComponent implements OnInit {
+export class MovieFormStoryElementsComponent implements OnInit {
   values$: Observable<string[]>;
   form = this.shell.form;
   keyword = new FormControl();
