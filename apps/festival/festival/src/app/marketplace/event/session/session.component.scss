@@ -58,6 +58,18 @@ section {
   }
 }
 
+.meeting {
+  border: solid 1px black;
+  width: 100%;
+  height: 70vh;
+  div {
+    border: solid 1px black;
+  }
+  .meeting-container {
+    height: 100%;
+  }
+}
+
 @include layout-bp(lt-md) {
   .screen {
     width: 100%;
