@@ -1,15 +1,18 @@
-import { getCollection } from '@blockframes/firebase-utils';
+import { getCollection, getDocument, loadAdminServices } from '@blockframes/firebase-utils';
 import { User } from '@blockframes/user/types';
 import { promises as fsPromises } from 'fs';
 import { join } from 'path';
 import { USER_FIXTURES_PASSWORD } from './users';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
+import staticUsers from 'tools/static-users.json'
 
 export async function generateFixtures() {
+  loadAdminServices()
   await generateUsers();
   await generateMovies();
   await generateOrgs();
+  await generateStaticUsers();
 }
 
 /**
@@ -77,4 +80,23 @@ async function generateOrgs() {
   const dest = join(process.cwd(), 'tools', 'fixtures', 'orgs.json');
   await fsPromises.writeFile(dest, JSON.stringify(output));
   console.log('Orgs fixture saved:', dest);
+}
+
+async function generateStaticUsers() {
+  console.log('Generating static user fixtures...');
+
+  for (const userType in staticUsers) {
+    try {
+      const { email, uid } = await getDocument<User>(`users/${staticUsers[userType]}`);
+      console.log(`User type: ${userType} found! UID: ${uid}`)
+      staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD }
+    } catch (e) {
+      console.log(`Failed to find: ${userType} : ${staticUsers[userType]}`)
+      return;
+    }
+  }
+
+  const dest = join(process.cwd(), 'tools', 'fixtures', 'static-users.json');
+  await fsPromises.writeFile(dest, JSON.stringify(staticUsers));
+  console.log('Static user fixture saved:', dest);
 }
