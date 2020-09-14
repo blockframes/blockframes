@@ -1,19 +1,19 @@
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 
 export const SECRETS_FILEPATH = 'secrets.sh';
 export const SECRETS_TEMPLATE_FILEPATH = 'secrets.template.sh';
+export const absSecretPath = join(process.cwd(), SECRETS_FILEPATH);
+export const absTemplatePath = join(process.cwd(), SECRETS_TEMPLATE_FILEPATH);
 
 export function loadSecretsFile() {
   let deploySecrets: { [key: string]: string };
   let secretsBuffer: Buffer;
-  const secretPath = join(process.cwd(), SECRETS_FILEPATH);
-  if (existsSync(secretPath)) {
     try {
-      secretsBuffer = readFileSync(secretPath);
+      secretsBuffer = readFileSync(absSecretPath);
     } catch (e) {
       // * secrets file read failed, use template instead
-      secretsBuffer = readFileSync(join(process.cwd(), SECRETS_TEMPLATE_FILEPATH));
+      secretsBuffer = readFileSync(absTemplatePath);
     } finally {
       // * Parse secrets.sh file.
       deploySecrets = parseBashExports(secretsBuffer.toString()); // forEach(char => console.log(char, '\n'));
@@ -23,7 +23,6 @@ export function loadSecretsFile() {
       process.env[key] = deploySecrets[key];
     });
     return deploySecrets;
-  }
 }
 
 /**
