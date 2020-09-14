@@ -36,12 +36,13 @@ export class ChipsAutocompleteComponent implements OnInit {
    * @example
    * <chips-autocomplete model="TERRITORIES" ...
    */
-  @Input() model: Scope;
+  @Input() scope: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
   @Input() @boolean required: boolean;
+  @Input() filterOutScope: string[] = []
   // The parent form to connect to
   @Input()
   get form() { return this._form }
@@ -67,10 +68,12 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
-    this.items = staticModels[this.model] as any;
+    this.items = this.filterOutScope.length
+      ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.filterOutScope.includes(value.slug))
+      : staticModels[this.scope] as SlugAndLabel[];
 
     if (this.placeholder === '') {
-      this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
+      this.placeholder = `${this.scope[0].toUpperCase()}${this.scope.slice(1).toLowerCase()}`;
     }
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
@@ -91,7 +94,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   /** Add a chip based on key code */
   public add({ value }: MatChipInputEvent) {
     value.trim();
-    const slugByLabel = getCodeIfExists(this.model, value)
+    const slugByLabel = getCodeIfExists(this.scope, value)
     if (value && slugByLabel) {
       this.form.add(slugByLabel);
       this.added.emit(value);

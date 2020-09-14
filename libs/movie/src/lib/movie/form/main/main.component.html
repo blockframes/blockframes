@@ -24,7 +24,8 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex
+          [filterOutScope]="['volume', 'episode', 'collection']">
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project's content type.
@@ -50,7 +51,8 @@
       <article>
         <h6>Film Poster</h6>
         <p class="mat-body-2">
-          The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.
+          The poster image will be used as the main image to represent your film on the marketplace, and, more
+          generally, for all film components requiring vertical formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
@@ -62,7 +64,8 @@
       <article>
         <h6>Film Banner</h6>
         <p class="mat-body-2">
-          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.
+          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
+          for all film components requiring horizontal formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 type>Film Banner Image</h3>
@@ -100,7 +103,7 @@
 
       </article>
 
-      <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES"
+      <chips-autocomplete [form]="form.get('originCountries')" scope="TERRITORIES"
         placeholder="Enter Country/ies of Origin">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
@@ -109,7 +112,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"
+      <chips-autocomplete [form]="form.get('originalLanguages')" scope="LANGUAGES"
         placeholder="Enter Original Language(s)">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
@@ -118,7 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" model="GENRES" placeholder="Enter Genre(s)">
+      <chips-autocomplete [form]="form.get('genres')" scope="GENRES" placeholder="Enter Genre(s)">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -154,7 +157,8 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
-          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" placeholder="To be determined/Estimated/Confirmed" fxFlex>
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
+            placeholder="To be determined/Estimated/Confirmed" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
