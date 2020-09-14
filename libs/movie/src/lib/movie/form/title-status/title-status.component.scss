@@ -20,3 +20,17 @@ mat-radio-group {
 img {
   cursor: pointer;
 }
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+
+  > * {
+    cursor: not-allowed;
+  }
+}
+
+a {
+  text-decoration: underline;
+  cursor: pointer;
+}

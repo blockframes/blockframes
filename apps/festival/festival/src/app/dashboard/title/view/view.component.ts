@@ -1,10 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -12,13 +10,28 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
-  form = new MovieForm(this.movieQuery.getActive());
 
-  constructor(private movieQuery: MovieQuery, private route: ActivatedRoute) {}
+  navLinks = [
+    {
+      path: 'main',
+      label: 'Main Information'
+    },
+    {
+      path: 'artistic',
+      label: 'Artistic Information'
+    },
+    {
+      path: 'production',
+      label: 'Production Information'
+    }
+  ];
+
+  constructor(private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.getMovie();
@@ -31,10 +44,5 @@ export class TitleViewComponent implements OnInit {
 
   public getDirectors(movie: Movie) {
     return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
-  }
-
-  public getPath(segment: string) {
-    const { movieId } = this.route.snapshot.params;
-    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 }

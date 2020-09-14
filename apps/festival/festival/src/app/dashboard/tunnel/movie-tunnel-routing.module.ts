@@ -53,7 +53,7 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/media-image/media-image.module').then(m => m.MediaImageModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-files',
@@ -69,7 +69,7 @@ const tunnelRoutes: Routes = [
       },
       {
         path: 'summary',
-        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.MovieTunnelSummaryModule)
+        loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule)
       },
       {
         path: 'end',

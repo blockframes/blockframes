@@ -6,10 +6,9 @@
       <h3>Release</h3>
       <section id="release">
 
-        <bf-form-table [columns]="releaseColumns" [form]="originalRelease" buttonText="Add a Release">
-          <ng-template colRef="country" let-release>{{ release.country | translateSlug: 'TERRITORIES' }}</ng-template>
-          <ng-template colRef="media" let-release>{{ release.media | translateSlug: 'MEDIAS' }}</ng-template>
-          <ng-template colRef="date" let-release>{{ release.date | date: 'shortDate' }}</ng-template>
+        <bf-form-list [form]="form.originalRelease" buttonText="Add a Release">
+          <ng-template itemRef let-release>{{ release.country | translateSlug: 'TERRITORIES' }} -
+            {{ release.media | translateSlug: 'MEDIAS' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -34,7 +33,7 @@
 
             </article>
           </ng-template>
-        </bf-form-table>
+        </bf-form-list>
 
       </section>
 
@@ -49,10 +48,10 @@
       <h3>Box Office</h3>
       <section id="box-office" *ngIf="units$ | async as units">
 
-        <bf-form-table [columns]="boxOfficeColumns" [form]="boxOffice" buttonText="Add a Box Office">
-          <ng-template colRef="country" let-boxOffice>{{ boxOffice.country | translateSlug: 'TERRITORIES' }}
+        <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
+          <ng-template itemRef let-boxOffice>{{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
+            {{ boxOffice.unit | toLabel: 'unitBox' }}: {{ boxOffice.value }}
           </ng-template>
-          <ng-template colRef="unit" let-boxOffice>{{ boxOffice.unit | toLabel: 'unitBox' | async }}</ng-template>
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">
 
@@ -89,16 +88,15 @@
 
             </article>
           </ng-template>
-        </bf-form-table>
+        </bf-form-list>
       </section>
 
       <mat-divider></mat-divider>
 
       <h3>Rating</h3>
       <section id="rating">
-        <bf-form-table [columns]="ratingColumns" [form]="rating" buttonText="Add a Rating">
-          <ng-template colRef="country" let-rating>
-            {{ rating.country | translateSlug: 'TERRITORIES'}}
+        <bf-form-list [form]="form.rating" buttonText="Add a Rating">
+          <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | translateSlug: 'TERRITORIES'}}
           </ng-template>
           <ng-template formView let-ratingForm>
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
@@ -111,7 +109,7 @@
               <form-country test-id="rating-country" [form]="ratingForm.get('country')"></form-country>
             </div>
           </ng-template>
-        </bf-form-table>
+        </bf-form-list>
       </section>
 
       <mat-divider></mat-divider>
@@ -121,7 +119,7 @@
     <h3>Qualifications</h3>
     <section id="qualifications">
       <article>
-        <mat-button-toggle-group [formControl]="qualifications" multiple name="certifications"
+        <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications">
             <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"

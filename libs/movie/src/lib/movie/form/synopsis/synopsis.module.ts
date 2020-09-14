@@ -11,9 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 // Blockframes Movie
-import { MovieFormPromotionalDescriptionModule } from '@blockframes/movie/form/promotional-description/promotional-description.module';
 import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module';
-import { MovieFormKeywordsModule } from '@blockframes/movie/form/promotional-description/keywords/keywords.module';
 
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -27,8 +25,6 @@ import { MovieFormSynopsisComponent } from './synopsis.component';
     ReactiveFormsModule,
 
     // Movie Form Modules
-    MovieFormKeywordsModule,
-    MovieFormPromotionalDescriptionModule,
     MovieFormStoryModule,
 
     // Other Modules

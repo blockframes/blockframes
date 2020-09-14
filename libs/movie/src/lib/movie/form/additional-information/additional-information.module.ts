@@ -13,18 +13,17 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 // Blockframes Movie
 import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module';
-import { MovieFormKeywordsModule } from '@blockframes/movie/form/promotional-description/keywords/keywords.module';
-import { MovieFormPromotionalDescriptionModule } from '@blockframes/movie/form/promotional-description/promotional-description.module';
 import { MovieFormBudgetRangeModule } from '@blockframes/movie/form/budget/range/budget-range.module';
 
 // Blockframes UI
 import { FormCountryModule } from '@blockframes/ui/form';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
@@ -39,8 +38,6 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     ReactiveFormsModule,
 
     // Movie Form Modules
-    MovieFormKeywordsModule,
-    MovieFormPromotionalDescriptionModule,
     MovieFormStoryModule,
     MovieFormBudgetRangeModule,
 
@@ -49,9 +46,10 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     ChipsAutocompleteModule,
     StaticSelectModule,
     MatDatepickerModule,
+    MatNativeDateModule,
     FlexLayoutModule,
     FormCountryModule,
-    FormTableModule,
+    FormListModule,
     HasStatusModule,
     TranslateSlugModule,
     ToLabelModule,

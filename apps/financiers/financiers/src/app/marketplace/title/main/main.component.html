@@ -1,0 +1,210 @@
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
+  <!-- STORY CARD -->
+  <mat-card *ngIf="hasStory(movie)">
+    <mat-card-header>
+      <h3>Storyline Elements</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li *ngIf="movie.synopsis as synopsis">
+          <strong>Synopsis </strong><span class="synopsis">{{ synopsis }}</span>
+        </li>
+        <li *ngIf="movie.keywords.length > 0">
+          <strong>Keywords </strong>
+          <mat-chip-list fxLayout="row" fxLayoutGap="5px">
+            <ng-container *ngFor="let keyword of movie.keywords">
+              <mat-chip>{{ keyword }}</mat-chip>
+            </ng-container>
+          </mat-chip-list>
+        </li>
+        <li *ngIf="movie.keyAssets">
+          <strong>Key Assets </strong><span>{{ movie.keyAssets }}</span>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- GENERAL INFORMATION -->
+  <mat-card>
+    <mat-card-header>
+      <h3>General Information</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li *ngIf="movie.genres">
+          <strong>Genre </strong>
+          <ng-container *ngFor="let genre of movie.genres, let isLast=last">
+            <span>{{ genre | translateSlug: 'GENRES' }}{{ isLast ? '' : ', '}} </span>
+          </ng-container>
+        </li>
+        <li *ngIf="movie.directors">
+          <strong>Director </strong>
+          <span>{{ movie.directors | displayName }} </span>
+        </li>
+        <li *ngIf="movie.releaseYear">
+          <strong>Production Year </strong>
+          <span>{{ movie.releaseYear }} </span>
+        </li>
+        <li *ngIf="movie.originCountries">
+          <strong>Country of Origin </strong>
+          <ng-container *ngFor="let country of movie.originCountries; let isLast=last">
+            {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
+          </ng-container>
+        </li>
+        <li *ngIf="movie.originalLanguages">
+          <strong>Original Language </strong>
+          <ng-container *ngFor="let language of movie.originalLanguages; let isLast=last">
+            <span>{{ language | translateSlug: 'LANGUAGES' }}{{ isLast ? '' : ', ' }}</span>
+          </ng-container>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- FESTIVALS -->
+  <mat-card *ngIf="movie.prizes.length > 0">
+    <mat-card-header>
+      <h3>Financierss</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <ng-container *ngIf="movie.prizes as prizes">
+          <li><strong>Financierss </strong></li>
+          <li *ngFor="let prize of prizes">{{ getPrize(prize) | titlecase }}</li>
+        </ng-container>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- CREDIT CARD -->
+  <mat-card *ngIf="movie.cast || movie.stakeholders || movie.producers">
+    <mat-card-header>
+      <h3>Credits</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <ng-container *ngIf="movie.cast.length > 0">
+          <h5>Cast</h5>
+          <li><strong i18n>Principal Cast </strong>
+            <ng-container *ngFor="let cast of movie.cast; let isLast = last">
+              <span>{{ cast.firstName }} {{ cast.lastName }}{{ isLast? '' : ', '}}</span>
+            </ng-container>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="movie.stakeholders || movie.producers.length > 0">
+          <h5>Company Credits</h5>
+          <ng-container *ngIf="movie.stakeholders as stakeholders">
+            <li *ngIf="stakeholders.productionCompany.length > 0"><strong i18n>Production Companies</strong>
+              <span> {{ getStakeholder(movie, 'productionCompany') }}</span></li>
+            <li *ngIf="stakeholders.coProductionCompany.length > 0"><strong i18n>Co-Producer{stakeholders.coProductionCompany.length,
+                plural,=1 {} other {s}}</strong>
+              <span> {{ getStakeholder(movie, 'coProductionCompany') }}</span></li>
+          </ng-container>
+          <ng-container *ngIf="movie.producers.length > 0">
+            <li><strong i18n>Producer{movie.producers.length, plural,=1 {} other {s}}</strong>
+              <span> {{ getProducers(movie, 'PRODUCER_ROLES') }}</span></li>
+          </ng-container>
+          <ng-container *ngIf="movie.stakeholders as stakeholders">
+            <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length,
+                plural,=1 {} other {s}}</strong>
+              <span> {{ getStakeholder(movie, 'distributor') }}</span></li>
+            <li *ngIf="stakeholders.salesAgent.length > 0"><strong i18n>Sales Agent{stakeholders.salesAgent.length,
+                plural,=1 {} other {s}}</strong>
+              <span> {{ getStakeholder(movie, 'salesAgent') }}</span></li>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="movie.crew.length > 0">
+          <h5>Artistic Crew</h5>
+          <li *ngFor="let crew of getSalesCrew(movie, 'CREW_ROLES')">
+            <strong i18n>{{ crew.label }} </strong>
+            <span>{{ crew.firstName }} {{ crew.lastName }}</span>
+          </li>
+        </ng-container>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- BUDGET CARD -->
+  <mat-card *ngIf="hasBudget(movie)">
+    <mat-card-header>
+      <h3>Budget, Quota & Critics</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li *ngIf="movie.estimatedBudget.from && movie.estimatedBudget.to">
+          <strong>Budget </strong>
+          <span>{{ budgetRange(movie.estimatedBudget) }}</span>
+        </li>
+        <ng-container *ngIf="movie.boxOffice.length > 0 && hasTerritory(movie)">
+          <li *ngFor="let boxOffice of movie.boxOffice">
+            <strong>Box Office </strong>
+            <span>
+              <ng-container *ngIf="boxOffice.unit === 'boxoffice_dollar'">
+                <mat-icon [svgIcon]="'USD'" class="currency-icon"></mat-icon>
+              </ng-container>
+              <ng-container *ngIf="boxOffice.unit === 'boxoffice_euro'">
+                <mat-icon [svgIcon]="'EUR'" class="currency-icon"></mat-icon>
+              </ng-container>
+              {{ boxOffice.value | number }}
+              <ng-container *ngIf="boxOffice.unit === 'admissions'">
+                Admissions
+              </ng-container>
+              ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}})
+            </span>
+          </li>
+        </ng-container>
+        <li *ngIf="movie.certifications.length > 0"><strong>Quotas </strong>
+          <span
+            *ngFor="let quota of movie.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span>
+        </li>
+        <li *ngIf="movie.rating.length > 0"><strong>Rating </strong>
+          <span *ngFor="let rating of movie.rating; let isLast = last">
+            {{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}
+          </span>
+        </li>
+        <li *ngIf="movie.review.length > 0"><strong>Film Review </strong>
+          <span *ngFor="let review of movie.review">{{ review.criticName }} in {{ review.journalName}}
+            "{{ review.criticQuote }}" {{ review.revueLink }}</span></li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- TECHNICAL INFORMATION CARD -->
+  <mat-card *ngIf="movie">
+    <mat-card-header>
+      <h3>Technical Information</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <ng-container *ngIf="movie.format">
+          <li *ngIf="movie.format"><strong>Shooting Format </strong>
+            <span>{{ movie.format | translateSlug: 'MOVIE_FORMAT'}}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.formatQuality">
+          <li *ngIf="movie.formatQuality"><strong>Format Quality </strong>
+            <span>{{ movie.formatQuality }}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.color">
+          <li *ngIf="movie.color"><strong>Color / B&W </strong>
+            <span>{{ movie.color | translateSlug: 'COLORS'}}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.soundFormat">
+          <li *ngIf="movie.soundFormat"><strong>Sound Format </strong>
+            <span>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</span></li>
+        </ng-container>
+        <li *ngIf="movie.languages"><strong>Versions </strong>
+          <ng-container *ngFor="let version of movie.languages | keyvalue; let isLast = last">
+            {{ version.key | translateSlug: 'LANGUAGES'}}:
+            <ng-container *ngFor="let info of version.value | keyvalue; let isLast = last">
+              <ng-container *ngIf="info.value">
+                {{ info.key | translateSlug: 'VERSION_INFO' }}
+              </ng-container>
+            </ng-container>
+            {{ isLast ? '' : '| ' }}
+          </ng-container>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+</ng-container>

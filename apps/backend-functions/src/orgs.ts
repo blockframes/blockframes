@@ -10,12 +10,10 @@ import { deleteObject, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { mnemonic, relayer, algolia } from './environments/environment';
-import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
-import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
+import { algolia } from './environments/environment';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, Module, getAppName } from '@blockframes/utils/apps';
+import { app, module, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
@@ -70,26 +68,16 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 }
 
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
-function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
+function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    let appAccessChanged = false;
-    for (const a of app) {
-      const accessChanged = (module: Module) => {
-        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
-      }
-      if (accessChanged('dashboard') || accessChanged('marketplace')) {
-        appAccessChanged = true;
-      }
-    }
-
-    return appAccessChanged;
+    return app.some(a => module.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
   }
   return false;
 }
 
 /** Sends a mail to admin to inform that an org is waiting approval */
 async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
-  if (hasOrgAppAccessChanged(before, after)) {
+  if (newAppAccessGranted(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
     const mailRequest = await organizationRequestedAccessToApp(after);
     const from = await getFromEmail(after);
@@ -158,29 +146,30 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
     await triggerNotifications([notification]);
   }
 
-  const RELAYER_CONFIG: RelayerConfig = {
-    ...relayer,
-    mnemonic
-  };
-  const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
-  if (blockchainBecomeEnabled) {
-    const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
+  // @todo(#3640) 09/09/2020 : We got rid of ethers dependancies
+  // const RELAYER_CONFIG: RelayerConfig = {
+  //   ...relayer,
+  //   mnemonic
+  // };
+  // const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
+  // if (blockchainBecomeEnabled) {
+  //   const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
-    const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
+  //   const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 
-    if (isOrgRegistered) {
-      throw new Error(`This organization has already an ENS name: ${orgENS}`);
-    }
+  //   if (isOrgRegistered) {
+  //     throw new Error(`This organization has already an ENS name: ${orgENS}`);
+  //   }
 
-    const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
-    const provider = getProvider(RELAYER_CONFIG.network);
-    const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-    const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
+  //   const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
+  //   const provider = getProvider(RELAYER_CONFIG.network);
+  //   const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
+  //   const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
-    console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-    const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
-    console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
-  }
+  //   console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
+  //   const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
+  //   console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
+  // }
 
   // Update algolia's index
   await storeSearchableOrg(after)

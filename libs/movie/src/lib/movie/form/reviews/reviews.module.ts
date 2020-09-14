@@ -17,7 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
-import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
+import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { TranslateSlugModule } from '@blockframes/utils/pipes';
 
 import { MovieFormReviewscComponent } from './reviews.component';
@@ -33,8 +34,9 @@ import { MovieFormReviewscComponent } from './reviews.component';
     StaticSelectModule,
     ChipsAutocompleteModule,
     FlexLayoutModule,
-    FormTableModule,
+    FormListModule,
     TranslateSlugModule,
+    MaxLengthModule,
 
     // Material
     MatFormFieldModule,

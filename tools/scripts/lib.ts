@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 export const SECRETS_FILEPATH = 'secrets.sh';
 export const SECRETS_TEMPLATE_FILEPATH = 'secrets.template.sh';
@@ -7,20 +7,23 @@ export const SECRETS_TEMPLATE_FILEPATH = 'secrets.template.sh';
 export function loadSecretsFile() {
   let deploySecrets: { [key: string]: string };
   let secretsBuffer: Buffer;
-  try {
-    secretsBuffer = readFileSync(resolve(process.cwd(), SECRETS_FILEPATH));
-  } catch (e) {
-    // * secrets file read failed, use template instead
-    secretsBuffer = readFileSync(resolve(process.cwd(), SECRETS_TEMPLATE_FILEPATH));
-  } finally {
-    // * Parse secrets.sh file.
-    deploySecrets = parseBashExports(secretsBuffer.toString()); // forEach(char => console.log(char, '\n'));
+  const secretPath = join(process.cwd(), SECRETS_FILEPATH);
+  if (existsSync(secretPath)) {
+    try {
+      secretsBuffer = readFileSync(secretPath);
+    } catch (e) {
+      // * secrets file read failed, use template instead
+      secretsBuffer = readFileSync(join(process.cwd(), SECRETS_TEMPLATE_FILEPATH));
+    } finally {
+      // * Parse secrets.sh file.
+      deploySecrets = parseBashExports(secretsBuffer.toString()); // forEach(char => console.log(char, '\n'));
+    }
+    // * Write parsed keys to environment for use in other scripts
+    Object.keys(deploySecrets).forEach(key => {
+      process.env[key] = deploySecrets[key];
+    });
+    return deploySecrets;
   }
-  // * Write parsed keys to environment for use in other scripts
-  Object.keys(deploySecrets).forEach(key => {
-    process.env[key] = deploySecrets[key];
-  });
-  return deploySecrets;
 }
 
 /**

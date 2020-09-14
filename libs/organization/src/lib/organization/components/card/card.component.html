@@ -3,7 +3,7 @@
 </a>
 <div fxLayout="column" fxLayoutAlign="center center">
   <h5>{{ org | orgName }}</h5>
-  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity' | async) || "-" }}</span>
+  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </div>
 <mat-tab-group headerPosition="below" mat-align-tabs="center">
   <mat-tab>
