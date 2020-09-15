@@ -1,3 +1,4 @@
+import { sleep } from '@blockframes/firebase-utils';
 // tslint:disable: no-console
 import type * as admin from 'firebase-admin';
 
@@ -21,17 +22,16 @@ export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.Us
   async function* iterateImportUsers(u: admin.auth.UserImportRecord[]) {
     while (u.length > 0) {
       const batch = u.splice(0, 1000);
-      yield auth.importUsers(batch);
+      await sleep(100)
+      yield Promise.all(batch.map(userRecord => auth.createUser(userRecord)))
     }
   }
   const importUsersIterator = iterateImportUsers(users);
-  const output = { errors: [], successCount: 0, failureCount: 0 };
+  let successCount = 0;
   for await (const deletion of importUsersIterator) {
-    const { errors, failureCount, successCount } = deletion;
-    output.errors.push(errors);
-    output.successCount += successCount;
-    output.failureCount += failureCount;
+    sleep(1000)
+    successCount += deletion.length;
   }
   console.timeEnd(timeMsg);
-  return output;
+  return successCount;
 }

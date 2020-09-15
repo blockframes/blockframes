@@ -5,8 +5,7 @@
  */
 import { differenceBy } from 'lodash';
 import { Auth, UserRecord } from './admin';
-import { loadAdminServices, getCollectionInBatches } from '@blockframes/firebase-utils';
-import { sleep } from './tools';
+import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';

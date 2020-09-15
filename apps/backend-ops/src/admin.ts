@@ -4,8 +4,7 @@
  * Helper to avoid duplicating all the "semi-broken" google type defs.
  */
 import request from 'request';
-import { isInMaintenance } from '@blockframes/firebase-utils';
-import { sleep } from './tools';
+import { isInMaintenance, sleep } from '@blockframes/firebase-utils';
 import type * as admin from 'firebase-admin';
 
 export type Auth = admin.auth.Auth;

@@ -130,3 +130,9 @@ export function loadAdminServices(): AdminServices {
     storage: admin.storage(),
   };
 }
+
+export const sleep = ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
