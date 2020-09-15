@@ -30,7 +30,7 @@ describe('Storage cleaning script', () => {
   it('should clean movie directory', async () => {
     const movies = [{ id: 'mov-A' }];
 
-    const prefix = 'public/movie/';
+    const prefix = 'public/movie';
     const filesBefore = [
       'test.png', // File at "movie/" root, should be removed
       'mov-A/banner.png', // Should be kept 
@@ -50,14 +50,14 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(3);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(1);
   });
 
   it('should clean movies directory', async () => {
     const movies = [{ id: 'mov-A' }];
 
-    const prefix = 'public/movies/';
+    const prefix = 'public/movies';
     const filesBefore = [
       'test.png', // File at "movies/" root, should be removed
       'mov-A/poster.jpg', // Should be kept 
@@ -77,14 +77,14 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(3);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(1);
   });
 
   it('should clean public/orgs directory', async () => {
     const orgs = [{ id: 'org-A' }];
 
-    const prefix = 'public/orgs/';
+    const prefix = 'public/orgs';
     const filesBefore = [
       'random-filename.jpg', // File at "orgs/" root, should be removed
       'org-A/logo/poster.jpg', // Should be kept 
@@ -103,14 +103,14 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(2);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(1);
   });
 
   it('should clean public/users directory', async () => {
     const users = [{ uid: 'A' }, { uid: 'C' }];
 
-    const prefix = 'public/users/';
+    const prefix = 'public/users';
     const filesBefore = [
       'random-filename.png', // File at "users/" root, should be removed
       'A/avatar/my-best-profile.svg', // Should be kept 
@@ -130,14 +130,14 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(2);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(2);
   });
 
   it('should empty public/watermark directory if migration 29 went well', async () => {
     const users = [{ uid: 'A' }, { uid: 'C' }];
 
-    const prefix = 'public/watermark/';
+    const prefix = 'public/watermark';
     const filesBefore = [
       'A.svg',
       'B.svg',
@@ -156,15 +156,15 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(3);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(0);
   });
 
   it('should skip files while emptying public/watermark directory if migration 29 went badly', async () => {
-    const prefix = 'public/watermark/';
+    const prefix = 'public/watermark';
     const users = [
       { uid: 'A', watermark: `public/users/A/watermark/A.svg` }, // Good watermark location
-      { uid: 'C', watermark: `${prefix}C.svg` } // Bad watermark location
+      { uid: 'C', watermark: `${prefix}/C.svg` } // Bad watermark location
     ];
 
     const filesBefore = [
@@ -185,7 +185,7 @@ describe('Storage cleaning script', () => {
     expect(output.total).toEqual(filesBefore.length);
     expect(output.deleted).toEqual(2);
 
-    const filesAfter = (await bucket.getFiles({ prefix }))[0];
+    const filesAfter = (await bucket.getFiles({ prefix: `${prefix}/` }))[0];
     expect(filesAfter.length).toEqual(1);
   });
 });

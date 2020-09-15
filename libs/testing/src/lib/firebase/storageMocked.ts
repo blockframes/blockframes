@@ -7,8 +7,8 @@ export class MockedGFile {
   public prefix: string;
 
   constructor(name: string, prefix: string) {
-    this.name = `${prefix}${name}`;
-    this.prefix = prefix;
+    this.name = `${prefix}/${name}`;
+    this.prefix = `${prefix}/`;
     if (!bucketFiles[this.prefix]) {
       bucketFiles[this.prefix] = [];
     }
