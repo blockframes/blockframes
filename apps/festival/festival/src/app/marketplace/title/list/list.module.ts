@@ -3,7 +3,7 @@ import { MovieCardModule } from "@blockframes/movie/components/card/card.module"
 import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
 
 // Pipes
-import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
+import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.pipe";
 
 // Pages

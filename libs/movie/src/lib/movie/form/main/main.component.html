@@ -14,9 +14,6 @@
           <mat-error *ngIf="international.hasError('required')">
             Please specify your project's international title.
           </mat-error>
-          <mat-hint>
-            This reference is for you only, to help you find your content more easily. 30 characters maximum.
-          </mat-hint>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
@@ -27,7 +24,8 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex>
+        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex
+          [withoutValues]="['volume', 'episode', 'collection']">
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project's content type.
@@ -51,13 +49,14 @@
       <h3>Images</h3>
 
       <article>
-        <h6>Poster Image</h6>
+        <h6>Film Poster</h6>
         <p class="mat-body-2">
-          The poster image will be used as the main image to represent your film on the marketplace, and, more generally, for all film components requiring vertical formats on the marketplace.
+          The poster image will be used as the main image to represent your film on the marketplace, and, more
+          generally, for all film components requiring vertical formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
-          <p class="mat-body-2" dimensions>Size: 300 x 700 px</p>
+          <p class="mat-body-2" dimensions>Ratio: 3 / 4</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
       </article>
@@ -65,7 +64,8 @@
       <article>
         <h6>Film Banner</h6>
         <p class="mat-body-2">
-          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally, for all film components requiring horizontal formats on the marketplace.
+          The banner image will be used as a cover picture on your project page on the marketplace, and, more generally,
+          for all film components requiring horizontal formats on the marketplace.
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 type>Film Banner Image</h3>
@@ -103,8 +103,8 @@
 
       </article>
 
-      <chips-autocomplete [form]="form.get('originCountries')" model="TERRITORIES"
-        placeholder="Enter Country/ies of Origin">
+      <chips-autocomplete [form]="form.get('originCountries')" scope="TERRITORIES"
+        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
         <mat-hint>
@@ -112,8 +112,8 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('originalLanguages')" model="LANGUAGES"
-        placeholder="Enter Original Language(s)">
+      <chips-autocomplete [form]="form.get('originalLanguages')" scope="LANGUAGES"
+        placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
         <mat-hint>
@@ -121,7 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" model="GENRES" placeholder="Enter Genre(s)">
+      <chips-autocomplete [form]="form.get('genres')" scope="GENRES" placeholder="Enter Genre(s)">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -129,7 +129,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" *ngIf="form.get('genres').value.includes('other')">
         <mat-label>Other Genre(s)</mat-label>
         <mat-chip-list #chipList>
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
@@ -157,7 +157,8 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
-          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')" placeholder="To be determined/Estimated/Confirmed" fxFlex>
+          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
+            placeholder="To be determined/Estimated/Confirmed" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
@@ -175,16 +176,10 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
-        <ng-template colRef="status" let-director>{{ director.status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
-        <ng-template colRef="category" let-director>{{ director.category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        <ng-template colRef="status" let-status>{{ status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
         </ng-template>
-        <ng-template colRef="filmography" let-director>
-          <ng-container *ngFor="let film of director.filmography; let isLast = last">
-            <ng-container *ngIf="film.title">
-              {{ film.title}} ({{film.year}}){{ isLast ? '':','}}
-            </ng-container>
-          </ng-container>
-        </ng-template>
+        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">
 
@@ -241,6 +236,9 @@
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
                     <input matInput formControlName="year" type="number">
+                    <mat-error *ngIf="filmography.get('year').hasError('invalidYear')">Please enter a 4 digit date (e.g.
+                      2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>
