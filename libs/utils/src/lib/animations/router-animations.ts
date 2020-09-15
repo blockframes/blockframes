@@ -32,12 +32,14 @@ const listToView = [
 
 /** Prepare page before leaving/entering (use absolute to get out of the page flow) */
 const prepare = [
-    style({ position: 'relative' }),
+    style({ position: 'relative', minHeight: '100vh', overflow: 'hidden' }),
     query(':enter, :leave', [
         style({
           position: 'absolute',
           top: 0,
           left: 0,
+          bottom: 0,
+          right: 0,
           width: '100%',
           overflow: 'hidden'
         })
