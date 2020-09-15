@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TunnelGuard implements CanActivate, CanDeactivate<any> {
-  constructor(private service: TunnelService) {}
+  constructor(private service: TunnelService) { }
 
   canActivate() {
     this.service.isInTunnel = true;
@@ -18,6 +18,7 @@ export class TunnelGuard implements CanActivate, CanDeactivate<any> {
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ) {
+    console.log(component)
     return component.confirmExit().pipe(
       map(canLeave => {
         if (!canLeave) return false;
@@ -27,5 +28,4 @@ export class TunnelGuard implements CanActivate, CanDeactivate<any> {
       })
     )
   }
-
 }

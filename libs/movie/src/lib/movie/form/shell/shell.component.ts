@@ -20,9 +20,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, map } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 
-// Utils
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-
 function getSteps(status: FormControl): TunnelStep[] {
   return [{
     title: 'First Step',
