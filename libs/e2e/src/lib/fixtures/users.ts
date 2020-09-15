@@ -2,6 +2,11 @@
 import { QueryInferface } from "../utils/queryinterface";
 import userFixture from 'tools/fixtures/users.json';
 
+export enum USER {
+  Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
+  Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+}
+
 const newUsers: Partial<UserType>[] = [
   {
     firstName: "Mano",

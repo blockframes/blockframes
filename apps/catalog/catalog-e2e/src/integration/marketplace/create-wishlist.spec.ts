@@ -1,109 +1,89 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
-import { User } from '@blockframes/e2e/utils/type';
-import { USERS } from '@blockframes/e2e/utils/users';
-import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 
-// Select user: john.bryant@love-and-sons.fake.cascade8.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[4];
+const BINGE_WATCH_COUNT = 5;
+const MOVIE_LIST1_COUNT = 3;
 
-const MOVIES_LIST = [MOVIES[0], MOVIES[1]];
-const MOVIENAMELIST: string[] = MOVIES_LIST.map(movie => movie.title.international);
+const userFixture = new User();
+const users  =  [ userFixture.getByUID(USER.Vincent) ];
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  signIn(LOGIN_CREDENTIALS);
+  signIn(users[0]);
 });
 
-describe('Test wishlist icon from library page', () => {
-  it('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
-    const p2 = new HomePage();
-
-    // Add two movies to the wishlist
-    const p3: SearchPage = p2.clickViewTheLibrary();
-    cy.wait(5000);
-    MOVIENAMELIST.forEach(movieName => {
-      p3.clickWishlistButton(movieName);
-      cy.wait(2000);
-    });
-
-    // Go to wishlist and verify movies are here
+describe('Test wishlist features from library, detail page',  () => {
+  it.only('User logs in, (dis)likes from library page, verifies wishlist.', () => {
+    const p1 = new HomePage();
+    const p3: SearchPage = p1.clickViewTheLibrary();
     const p4: WishlistPage = p3.clickWishlist();
+    cy.get('catalog-wishlist', {timeout: 3000});
     cy.wait(5000);
-    MOVIENAMELIST.forEach(movieName => {
-      p4.assertMovieInCurrentWishlist(movieName);
-    });
-    p4.checkWishListCount(MOVIENAMELIST.length);
+    cy.log('Clear WatchList');
+    p4.removeMovieFromWishlist();
+    cy.go('back');
 
-    // Remove movies from the current wishlist
-    MOVIENAMELIST.forEach(movieName => {
-      p4.removeMovieFromWishlist(movieName);
-    });
+    p3.clearAllFilters('All films');
+    cy.wait(8000);
 
-    // Check that current wishlist is empty
-    p4.assertNoMovieInWishlist();
-    p4.assertNoWishListCount(MOVIENAMELIST.length);
-  });
-});
+    let movieViewCount = BINGE_WATCH_COUNT;
 
-describe('Test wishlist icon from movie view page', () => {
-  it('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
-    const p2 = new HomePage();
+    p3.getAllMovies(movieViewCount);
+    cy.get('@movieList').then(x => {
+      const watchList: string[] = x as any;
+      movieViewCount = watchList.length;
 
-    // VIEW PAGE
+      //1. Create a list of movies to test.
+      let movieList1 = watchList;
+      movieList1 = watchList.slice(0, MOVIE_LIST1_COUNT);
+      let likedCount = movieList1.length;
+      const movieList2 = watchList.slice(likedCount - 1, watchList.length);
 
-    // Add movies to the wishlist form the view page
-    const p3: SearchPage = p2.clickViewTheLibrary();
-    MOVIENAMELIST.forEach(movieName => {
-      cy.wait(5000);
-      const p4: ViewPage = p3.selectMovie(movieName);
-      p4.clickWishListButton();
-      p4.openSideNav();
-      p4.clickLibrary();
-    });
-
-    // Go to wishlist and verify movies are here
-    const p5: WishlistPage = p3.clickWishlist();
-    cy.wait(2000);
-    MOVIENAMELIST.forEach(movieName => {
-      p5.assertMovieInCurrentWishlist(movieName);
-    });
-    p5.checkWishListCount(MOVIENAMELIST.length);
-  });
-
-  describe('Test wishlist from home and line-up pages', () => {
-    it(`Login into an existing account, add and remove a movie from home page, add and remove
-    two movies from their view page and add and remove two movies from line-up page.`, () => {
-      const p2 = new HomePage();
-
-      // HOME PAGE
-
-      // Add and remove a movie with wishlist button from home page
-      cy.wait(2000);
-      p2.clickFirstWishlistButton();
-      p2.assertWishListCountIsOne();
-
-      const p3: SearchPage = p2.clickViewTheLibrary();
-      cy.wait(5000);
-      // LINE-UP PAGE
-
-      // Add two movies from line-up page
-      MOVIENAMELIST.forEach(movieName => {
-        cy.wait(5000);
+      //2. Add movies to wishlist
+      cy.log(`A: Updating WishList: [${JSON.stringify(movieList1)}]`);
+      movieList1.forEach(movieName => {
         p3.clickWishlistButton(movieName);
+        cy.wait(2000);
       });
-      // Assert one movie exists in the wishlist
-      p3.checkWishListCount(MOVIENAMELIST.length -1);
 
-      // Remove two movies from line-up page
-      MOVIENAMELIST.forEach(movieName => {
-        cy.wait(5000);
-        p3.clickWishlistButton(movieName);
+      //3. Verify list
+      p3.clickWishlist();
+      cy.wait(5000);
+      movieList1.forEach(movieName => {
+        p4.assertMovieInCurrentWishlist(movieName);
       });
-      // Assert one movie exists in the wishlist
-      p3.checkWishListCount(MOVIENAMELIST.length - 1);
-    });
+      cy.log(`Checking WishList count: [${movieList1.length}] | A`);
+      p4.checkWishListCount(movieList1.length);
+
+
+      //4. let movieList2 = []
+      cy.go('back');
+      cy.log(`B: Updating WishList: [${JSON.stringify(movieList2)}]`);
+      movieList2.forEach(movieName => {
+        p3.clearAllFilters('All films');
+        cy.wait(5000);
+        const p5: ViewPage = p3.selectMovie(movieName);
+        p5.clickWishListButton();
+        p5.openSideNav();
+        p5.clickLibrary();
+      });
+
+      // one movie got removed from likes.
+      likedCount +=  (BINGE_WATCH_COUNT - MOVIE_LIST1_COUNT) - 1;
+
+      //5. Remove a movie from Line view
+      p3.clearAllFilters('All films');
+      cy.wait(8000);
+      cy.log(`C: Dropping from WishList: [${movieList2[1]}]`);
+      p3.clickWishlistButton(movieList2[1]);
+      likedCount -= 1;
+
+      //6. Verify movie counts
+      cy.log(`Checking WishList count: [${likedCount}] | C`);
+      p3.checkWishListCount(likedCount);
+    })
   });
 });
