@@ -265,6 +265,16 @@
           "blockframes-mano-festival"
         ]
       }
+    },
+    "blockframes-hugo-2": {
+      "hosting": {
+        "catalog": [
+          "blockframes-hugo-2"
+        ],
+        "festival": [
+          "blockframes-hugo-2"
+        ]
+      }
     }
   }
 }
