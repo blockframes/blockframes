@@ -1,9 +1,9 @@
-<ng-container *ngIf="type === 'model'">
+<ng-container *ngIf="type === 'model'; else constant">
   <mat-form-field [appearance]="mode">
     <mat-label>
       <ng-content select="mat-label"></ng-content>
     </mat-label>
-    <mat-select [formControl]="control" [placeholder]="placeholder" [required]="_required">
+    <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
       <mat-option *ngFor="let scope of _scope" [value]="scope.slug">
         <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
         </ng-template>
@@ -21,7 +21,7 @@
   </mat-form-field>
 </ng-container>
 
-<ng-template *ngIf="type === 'constant'">
+<ng-template #constant>
   <mat-form-field [appearance]="mode">
     <mat-label>
       <ng-content select="mat-label"></ng-content>

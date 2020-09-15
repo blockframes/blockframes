@@ -1,12 +1,17 @@
-﻿import { NgModule } from '@angular/core';
+﻿// Angular
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+
+// Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel-routing.routes';
 
 // Guards

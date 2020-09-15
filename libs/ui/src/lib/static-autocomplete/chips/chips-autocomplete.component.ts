@@ -10,7 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -18,7 +18,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-// blockframes
+// Blockframes
 import { staticModels } from '@blockframes/utils/static-model';
 import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { boolean } from '@blockframes/utils/decorators/decorators';
@@ -43,7 +43,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() disabled = false;
   @Input() placeholder = '';
   @Input() @boolean required: boolean;
-  @Input() filterOutScope: string[] = []
+  @Input() withoutValues: string[] = []
   // The parent form to connect to
   @Input()
   get form(): FormList<any> { return this._form }
@@ -69,8 +69,8 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
-    this.items = this.filterOutScope.length
-      ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.filterOutScope.includes(value.slug))
+    this.items = this.withoutValues.length
+      ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.withoutValues.includes(value.slug))
       : staticModels[this.scope] as SlugAndLabel[];
     if (this.placeholder === '') {
       this.placeholder = `${this.scope[0].toUpperCase()}${this.scope.slice(1).toLowerCase()}`;

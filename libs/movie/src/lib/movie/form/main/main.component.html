@@ -25,7 +25,7 @@
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
         <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex
-          [filterOutScope]="['volume', 'episode', 'collection']">
+          [withoutValues]="['volume', 'episode', 'collection']">
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
             Please specify your project's content type.
@@ -104,7 +104,7 @@
       </article>
 
       <chips-autocomplete [form]="form.get('originCountries')" scope="TERRITORIES"
-        placeholder="Enter Country/ies of Origin" [filterOutScope]="['world']">
+        placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
         <mat-hint>
@@ -113,7 +113,7 @@
       </chips-autocomplete>
 
       <chips-autocomplete [form]="form.get('originalLanguages')" scope="LANGUAGES"
-        placeholder="Enter Original Language(s)" [filterOutScope]="['all']">
+        placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
         <mat-hint>

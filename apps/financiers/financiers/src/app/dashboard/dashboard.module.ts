@@ -1,8 +1,11 @@
-﻿import { NgModule } from '@angular/core';
+﻿// Angular
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -20,6 +23,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
+
+// Tunnel routes
+import { tunnelRoutes } from './tunnel/movie-tunnel-routing.routes';
 
 const routes: Routes = [{
   path: '',
@@ -87,7 +93,7 @@ const routes: Routes = [{
       path: ':movieId',
       canActivate: [MovieActiveGuard, MovieTunnelGuard],
       canDeactivate: [MovieActiveGuard],
-      loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+      children: tunnelRoutes,
       data: {
         redirect: '/c/o/dashboard/tunnel/movie'
       },

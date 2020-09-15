@@ -6,6 +6,7 @@ export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
+    loadChildren: () => import('@blockframes/movie/form/shell/shell.module').then(m => m.MovieFormShellModule),
     canDeactivate: [TunnelGuard],
     children: [
       {
