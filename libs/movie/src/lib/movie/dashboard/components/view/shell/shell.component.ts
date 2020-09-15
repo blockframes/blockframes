@@ -1,8 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -11,11 +12,32 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardTitleShellComponent {
+export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   public routerData$ = this.routerQuery.selectData('animation');
   @Input() routes;
-  @Input() form = new MovieForm(this.query.getActive());
+  private sub: Subscription;
 
-  constructor(private query: MovieQuery, private routerQuery: RouterQuery) {}
+  private _form = new BehaviorSubject<MovieForm>(undefined);
+  public form$ = this._form.asObservable();
+  @Input()
+  set form(form: MovieForm) {
+    this._form.next(form);
+  }
+  get form(): MovieForm {
+    return this._form.getValue();
+  }
 
+  constructor(private query: MovieQuery, private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) {}
+
+
+  ngOnInit() {
+    this.sub = this.query.selectActive().subscribe(movie => {
+      this.form = new MovieForm(movie);
+      this.cdr.markForCheck();
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 }
