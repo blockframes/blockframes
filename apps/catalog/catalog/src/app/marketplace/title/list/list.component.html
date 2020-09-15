@@ -41,7 +41,7 @@
 
     <!-- TODO issue#2576 -->
     <ng-template filter label="Library / Line-up" [form]="filterForm.storeType">
-      <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="filterForm.storeType" model="STORE_TYPE" type="model"></static-check-boxes>
+      <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="filterForm.storeType" scope="STORE_TYPE" type="model"></static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Genres" [form]="filterForm.genres">
