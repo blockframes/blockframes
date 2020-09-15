@@ -4,20 +4,6 @@ import { firebase as firebaseCI } from 'env/env.ci';
 import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
-import { chunk } from 'lodash';
-
-export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<any>, chunkSize = 10) {
-  function* batchGenerator() {
-    const chunks = chunk(batch, chunkSize);
-    while (chunks.length > 0) {
-      console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
-      const next = chunks.pop();
-      if (next) yield Promise.all(next.map(cb));
-    }
-    console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`);
-  }
-  return batchGenerator();
-}
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -27,7 +13,7 @@ export function batchIteratorFactory<K = any>(batch: K[], cb: (p: K) => Promise<
  * @param orderBy the unique key of the document object to order by
  * @param batchSize how many docs to fetch per iteration
  */
-export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 1000 ) {
+export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650 ) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
   let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
 
@@ -132,3 +118,5 @@ export function loadAdminServices(): AdminServices {
     storage: admin.storage(),
   };
 }
+
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

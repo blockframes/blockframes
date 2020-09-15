@@ -11,13 +11,12 @@ import { restore } from './admin';
 import { loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { copyDbFromCi, readJsonlFile, restoreStorageFromCi, warnMissingVars} from '@blockframes/firebase-utils';
+import { copyDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
-  warnMissingVars()
   const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
   const dbBackupPath = await copyDbFromCi(storage, getCI());
@@ -62,7 +61,6 @@ export async function prepareForTesting() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  process.exit(0);
 }
 
 export async function prepareDb() {
@@ -76,6 +74,26 @@ export async function prepareDb() {
   console.log('DB migration complete. Cleaning up...');
   await cleanDeprecatedData(db, auth);
   console.log('Deprecated data removed!');
+}
+
+export async function prepareStorage() {
+  const { storage, getCI } = loadAdminServices();
+
+  console.info('Syncing storage with production backup stored in blockframes-ci...');
+  await restoreStorageFromCi(getCI());
+  console.info('Storage synced!');
+
+  console.info('Preparing database & storage by running migrations...');
+  await migrate(false); // run the migration, do not trigger a backup before, since we already have it!
+  console.info('Migrations complete!');
+
+  console.info('Cleaning unused storage data...');
+  await cleanStorage(storage.bucket(storageBucket));
+  console.info('Storage data clean and fresh!');
+
+  console.info('Generating watermarks...');
+  await generateWatermarks();
+  console.info('Watermarks generated!');
 }
 
 export async function restoreShortcut() {
@@ -106,5 +124,4 @@ export async function upgrade() {
   await generateWatermarks();
   console.info('Watermarks generated!');
 
-  process.exit(0);
 }
