@@ -18,7 +18,7 @@
           {{ movie.runningTime.time ? movie.runningTime.time + ' min' : 'TBC' }}
         </h4>
         <h1>{{ movie.title.international }}</h1>
-        <h6>{{ getDirectors(movie) }}</h6>
+        <h6>{{ movie.directors | displayName }}</h6>
         <span>{{ movie.originCountries | translateSlug: 'TERRITORIES' }}</span>
       </div>
     </header>

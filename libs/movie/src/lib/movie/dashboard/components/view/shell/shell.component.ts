@@ -29,7 +29,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   constructor(private query: MovieQuery, private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) {}
 
-
   ngOnInit() {
     this.sub = this.query.selectActive().subscribe(movie => {
       this.form = new MovieForm(movie);

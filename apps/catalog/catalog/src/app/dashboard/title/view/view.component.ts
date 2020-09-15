@@ -58,10 +58,6 @@ export class TitleViewComponent implements OnInit, OnDestroy {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  public getDirectors(movie: Movie) {
-    return movie.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
-  }
-
   ngOnDestroy() {
     this.sub.unsubscribe();
   }

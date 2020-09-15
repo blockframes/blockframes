@@ -1,15 +1,11 @@
 @import '~@angular/flex-layout/mq';
 
 header {
-  padding: 53px 24px 17px 24px;
+  padding: 24px;
   height: 300px;
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
-  article {
-    height: 168px;
-  }
   img {
-    width: 168px;
-    height: 220px;
+    height: 100%;
     margin-right: 16px;
     border-radius: 5px;
   }
