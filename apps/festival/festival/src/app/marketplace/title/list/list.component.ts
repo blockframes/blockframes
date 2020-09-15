@@ -26,7 +26,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public movieSearchResults$: Observable<Movie[]>;
   private sub: Subscription;
   public nbHits: number;
-  public hitsViewed: number = 0;
+  public hitsViewed = 0;
 
   public sortByControl: FormControl = new FormControl('Title');
   public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
