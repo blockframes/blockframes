@@ -36,9 +36,10 @@ export async function getDocAndPath(filePath: string | undefined) {
   const filePathElements = filePath.split('/');
 
   if (filePathElements.length < 4) {
-    throw new Error(`Upload Error : File Path ${filePath}
-    is malformed, it should at least contain 3 slash
-    Example: 'public/collection/id/field/fileName'`);
+    const error = `Upload Error : File Path ${filePath} is malformed.`;
+    const solution = 'It should at least contain 3 slash.';
+    const example = 'Example: public/collection/id/field/fileName';
+    throw new Error(`${error} ${solution}\n${example}`);
   }
 
   // remove tmp/
@@ -51,7 +52,7 @@ export async function getDocAndPath(filePath: string | undefined) {
 
   let security;
   // remove "protected/"" or "public/"
-  if (privacies.includes(filePathElements[0] as any)) { 
+  if (privacies.includes(filePathElements[0] as any)) {
     security = filePathElements.shift();
   }
 
@@ -87,7 +88,7 @@ export async function getDocAndPath(filePath: string | undefined) {
   }
 }
 
-export async function runChunks(rows: any[], cb: any, rowsConcurrency? : number, verbose = true) {
+export async function runChunks(rows: any[], cb: any, rowsConcurrency?: number, verbose = true) {
   const chunks = chunk(rows, rowsConcurrency || env?.['chunkSize'] || 10);
   for (let i = 0; i < chunks.length; i++) {
     const c = chunks[i];

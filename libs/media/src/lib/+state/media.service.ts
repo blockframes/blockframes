@@ -31,6 +31,7 @@ export class MediaService {
 
   public overlayRef: OverlayRef;
   private getMediaToken = this.functions.httpsCallable('getMediaToken');
+  private deleteMedia = this.functions.httpsCallable('deleteMedia');
 
   constructor(
     private storage: AngularFireStorage,
@@ -60,8 +61,7 @@ export class MediaService {
    * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
    */
   async removeFile(ref: string) {
-    const f = this.functions.httpsCallable('deleteMedia');
-    await f({ ref }).toPromise();
+    await this.deleteMedia({ ref }).toPromise();
   }
 
   private addTasks(tasks: AngularFireUploadTask[]) {
