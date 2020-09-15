@@ -17,10 +17,12 @@ const maintenanceRef = () => {
 };
 
 export async function startMaintenance() {
+  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
   return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
 }
 
 export async function endMaintenance() {
+  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
   return maintenanceRef().set({
     endedAt: admin.firestore.FieldValue.serverTimestamp(),
     startedAt: null
