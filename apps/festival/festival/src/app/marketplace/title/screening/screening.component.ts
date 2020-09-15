@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { MovieShellComponent } from '../shell/shell.component';
+import { MovieShellComponent } from '@blockframes/movie/marketplace/shell/shell.component';
 import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';

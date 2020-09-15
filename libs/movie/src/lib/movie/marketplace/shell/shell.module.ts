@@ -25,31 +25,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 
-const routes = [
-  {
-    path: '',
-    component: MovieShellComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: 'main',
-        pathMatch: 'full'
-      },
-      {
-        path: 'main',
-        loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
-      },
-      {
-        path: 'screenings',
-        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
-      }
-    ]
-  }
-];
-
 @NgModule({
   declarations: [MovieShellComponent, MovieHeader],
-  exports: [MovieHeader],
+  exports: [MovieShellComponent, MovieHeader],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -71,7 +49,7 @@ const routes = [
     MatTabsModule,
     
     // Routes
-    RouterModule.forChild(routes)
+    RouterModule
   ]
 })
 export class MovieShellModule {}
