@@ -52,7 +52,7 @@ const routes: Routes = [{
         path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('@blockframes/movie/marketplace/shell/shell.module').then(m => m.MovieShellModule),
+        loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { animation: 'title-view', redirect: '/c/o/marketplace/home' }
       }]
     },
