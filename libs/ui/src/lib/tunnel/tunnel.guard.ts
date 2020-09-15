@@ -18,7 +18,6 @@ export class TunnelGuard implements CanActivate, CanDeactivate<any> {
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ) {
-    console.log(component)
     return component.confirmExit().pipe(
       map(canLeave => {
         if (!canLeave) return false;

@@ -18,7 +18,8 @@ export function yearValidators(): ValidatorFn {
       if (typeof control.value === 'string') {
         return /^[1-2][0-9]{3}$/.test(control.value) ? null : { invalidYear: true };
       } else if (typeof control.value === 'number') {
-        return control.value > 1900 && control.value < new Date().getFullYear() + 20 ? null : { invalidYear: true };
+        const max =  new Date().getFullYear() + 20;
+        return control.value > 1900 && control.value < max ? null : { invalidYear: true };
       } else {
         return null;
       }
