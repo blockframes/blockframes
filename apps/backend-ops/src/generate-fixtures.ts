@@ -92,7 +92,6 @@ async function generateStaticUsers() {
       staticUsers[userType] = { uid, email, password: USER_FIXTURES_PASSWORD }
     } catch (e) {
       console.log(`Failed to find: ${userType} : ${staticUsers[userType]}`)
-      return;
     }
   }
 
