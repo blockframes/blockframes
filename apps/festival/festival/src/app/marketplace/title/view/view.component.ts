@@ -19,9 +19,4 @@ export class MarketplaceMovieViewComponent {
     }
   ];
 
-  constructor() {
-    console.log('IN HERE')
-    console.log('!navlinks: ', this.navLinks);
-  }
-
 }

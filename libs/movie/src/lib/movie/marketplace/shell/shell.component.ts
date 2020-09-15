@@ -21,12 +21,7 @@ export class MovieShellComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
 
-  public _navLinks;
-
-  @Input() set navLinks(links) {
-    console.log('LINKS SHOULD BE HERE: ', links)
-    this._navLinks = links
-  };
+  @Input() navLinks;
 
   promoLinks = [
     'promo_reel_link',
@@ -51,7 +46,6 @@ export class MovieShellComponent implements OnInit {
     ) {}
 
   ngOnInit() {
-    console.log('navlinks: ', this._navLinks);
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.movieQuery.selectActiveId().pipe(
       switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
