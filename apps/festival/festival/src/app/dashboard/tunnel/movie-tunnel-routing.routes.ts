@@ -1,9 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
-const tunnelRoutes: Routes = [
+export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
@@ -78,9 +77,3 @@ const tunnelRoutes: Routes = [
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(tunnelRoutes)],
-  exports: [RouterModule]
-})
-export class MovieTunnelRoutingModule { }

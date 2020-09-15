@@ -1,4 +1,4 @@
-<div *ngIf="type === 'model'">
+<ng-container *ngIf="type === 'model'">
   <mat-form-field [appearance]="mode">
     <mat-label>
       <ng-content select="mat-label"></ng-content>
@@ -19,17 +19,17 @@
       <ng-content select="mat-error"></ng-content>
     </mat-error>
   </mat-form-field>
-</div>
+</ng-container>
 
-<div *ngIf="type === 'constant'">
+<ng-template *ngIf="type === 'constant'">
   <mat-form-field [appearance]="mode">
     <mat-label>
       <ng-content select="mat-label"></ng-content>
     </mat-label>
     <mat-select [formControl]="control" [placeholder]="placeholder">
-      <ng-container *ngFor="let type of _scope | keyvalue">
-        <mat-option *ngIf="!filterOutScope.includes(type.key)" [value]="type.key">
-          {{ type.value }}
+      <ng-container *ngFor="let type of _scope">
+        <mat-option [value]="type">
+          {{ type | toLabel: scope }}
         </mat-option>
       </ng-container>
     </mat-select>
@@ -40,4 +40,4 @@
       <ng-content select="mat-error"></ng-content>
     </mat-error>
   </mat-form-field>
-</div>
+</ng-template>

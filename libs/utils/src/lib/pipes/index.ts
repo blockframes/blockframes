@@ -7,3 +7,4 @@ export * from './filter-by-date.pipe';
 export * from './value-by-path.pipe';
 export * from './workspace.pipe';
 export * from './deep-key.pipe';
+export * from './filmography.pipe';

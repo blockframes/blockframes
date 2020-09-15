@@ -7,6 +7,7 @@ import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboar
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { tunnelRoutes } from './tunnel/movie-tunnel-routing.routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -74,8 +75,8 @@ const routes: Routes = [{
           path: ':eventId',
           children: [
             {
-            path: '',
-            loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+              path: '',
+              loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
             }, {
               path: 'edit',
               loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
@@ -107,7 +108,7 @@ const routes: Routes = [{
       path: ':movieId',
       canActivate: [MovieActiveGuard, MovieTunnelGuard],
       canDeactivate: [MovieActiveGuard],
-      loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+      children: tunnelRoutes,
       data: {
         redirect: '/c/o/dashboard/tunnel/movie'
       },
@@ -126,6 +127,7 @@ const routes: Routes = [{
     OrgNameModule,
     ToLabelModule,
     OrgAccessModule,
+
     // Material
     MatDividerModule,
     MatListModule,

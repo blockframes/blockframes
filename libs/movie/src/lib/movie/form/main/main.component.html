@@ -179,13 +179,7 @@
         <ng-template colRef="status" let-status>{{ status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
         <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
         </ng-template>
-        <ng-template colRef="filmography" let-filmography>
-          <ng-container *ngFor="let film of filmography; let isLast = last; let index = index;">
-            <ng-container *ngIf="film.title">
-              {{ film.title}} ({{film.year}}){{ !isLast && filmography[index + 1].title ? ', ' : '' }}
-            </ng-container>
-          </ng-container>
-        </ng-template>
+        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">
 

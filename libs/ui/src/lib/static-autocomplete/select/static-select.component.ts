@@ -1,7 +1,7 @@
 import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: '[scope][type][control] static-select',
@@ -17,20 +17,14 @@ export class StaticSelectComponent implements OnInit {
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
-  @Input()
-  set required(value: boolean) {
-    this._required = coerceBooleanProperty(value);
+  @Input() @boolean required: boolean;
+  @Input() set filterOutScope(value: any[]) {
+    this._scope = Object.keys(staticConsts[this.scope]).filter(x => value.includes(x));
   }
-  @Input() filterOutScope: string[] = []
 
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
-  /* TODO MF
   
-   for main component form 
-   I think Season, Volume, Episode and Collection can go
-  16:32 Uhr
-  the rest should stay. but would it be possible to change "Short" to "Short Film" and "Serie" to "TV Series"*/
-  public _required: boolean;
+  @ContentChild(TemplateRef) template: TemplateRef<any>;
+
 
   ngOnInit() {
     if (this.type === 'constant') {
