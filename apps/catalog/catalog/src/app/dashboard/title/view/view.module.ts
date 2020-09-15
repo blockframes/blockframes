@@ -9,7 +9,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 // Components
 import { TitleViewComponent } from './view.component';

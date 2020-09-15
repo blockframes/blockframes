@@ -4,6 +4,7 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -13,12 +14,13 @@ import { BehaviorSubject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
-  public routerData$ = this.routerQuery.selectData('animation');
-  @Input() routes;
   private sub: Subscription;
-
   private _form = new BehaviorSubject<MovieForm>(undefined);
+
   public form$ = this._form.asObservable();
+  public routerData$ = this.routerQuery.selectData('animation');
+
+  @Input() routes: RouteDescription[];
   @Input()
   set form(form: MovieForm) {
     this._form.next(form);

@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -16,7 +17,7 @@ export class TitleViewComponent implements OnInit {
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
 
-  navLinks = [
+  navLinks: RouteDescription[] = [
     {
       path: 'main',
       label: 'Main Information'

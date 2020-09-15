@@ -13,7 +13,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';

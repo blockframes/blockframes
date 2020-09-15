@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'catalog-title-view',
@@ -19,7 +20,7 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   public getLabelBySlug = getLabelBySlug;
   private sub: Subscription;
 
-  navLinks = [
+  navLinks: RouteDescription[] = [
     {
       path: 'activity',
       label: 'Marketplace Activity'
