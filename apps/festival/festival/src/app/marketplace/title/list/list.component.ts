@@ -10,7 +10,7 @@ import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, takeWhile, scan } from 'rxjs/operators';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
+// import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ScrollService } from '@blockframes/ui/layout/marketplace/scroll.service';
 
@@ -73,7 +73,6 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    this.scrollService.go();
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
     this.filterForm.reset(initial);
     this.cdr.markForCheck();
