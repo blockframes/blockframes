@@ -20,7 +20,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
-import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
+import { TermDateModule } from '@blockframes/utils/pipes/term-date.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';

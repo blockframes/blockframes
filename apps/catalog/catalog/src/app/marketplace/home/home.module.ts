@@ -19,7 +19,7 @@ import { MarketplaceHomeComponent } from './home.component';
 import { CropperModule } from '@blockframes/media/components/cropper/cropper.module';
 
 // Pipes
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 @NgModule({
   declarations: [MarketplaceHomeComponent],

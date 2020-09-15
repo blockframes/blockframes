@@ -41,15 +41,15 @@
 
     <!-- TODO issue#2576 -->
     <ng-template filter label="Library / Line-up" [form]="filterForm.storeType">
-      <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="filterForm.storeType" model="STORE_TYPE" type="model"></static-check-boxes>
+      <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="filterForm.storeType" scope="STORE_TYPE" type="model"></static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Genres" [form]="filterForm.genres">
-      <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
+      <chips-autocomplete [form]="filterForm.genres" scope="GENRES"></chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="filterForm.originCountries">
-      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" model="TERRITORIES"></chips-autocomplete>
+      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES"></chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Language & Version" [form]="filterForm.languages">
@@ -57,7 +57,7 @@
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="filterForm.productionStatus">
-      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="productionStatus" type="constant"></static-check-boxes>
+      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" scope="productionStatus" type="constant"></static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Minimum Budget" [form]="filterForm.minBudget">

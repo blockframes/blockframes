@@ -16,10 +16,10 @@ import { MovieFormStoryModule } from '@blockframes/movie/form/story/story.module
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
-import { MovieFormSynopsisComponent } from './synopsis.component';
+import { MovieFormStoryElementsComponent } from './story-elements.component';
 
 @NgModule({
-  declarations: [MovieFormSynopsisComponent],
+  declarations: [MovieFormStoryElementsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -38,7 +38,7 @@ import { MovieFormSynopsisComponent } from './synopsis.component';
     MatDividerModule,
 
     // Routes
-    RouterModule.forChild([{ path: '', component: MovieFormSynopsisComponent }]),
+    RouterModule.forChild([{ path: '', component: MovieFormStoryElementsComponent }]),
   ],
 })
-export class MovieFormSynopsisModule { }
+export class MovieFormStoryElementsModule { }

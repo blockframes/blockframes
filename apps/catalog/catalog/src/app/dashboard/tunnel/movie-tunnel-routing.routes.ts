@@ -1,13 +1,16 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { MovieTunnelComponent } from './movie-tunnel.component';
+// Angular
+import { Routes } from '@angular/router';
+
+// Blockframes
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import staticConsts from '@blockframes/utils/static-model/staticConsts'
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
-const tunnelRoutes: Routes = [
+export const tunnelRoutes: Routes = [
   {
     path: '',
-    component: MovieTunnelComponent,
+    component: MovieFormShellComponent,
+    loadChildren: () => import('@blockframes/movie/form/shell/shell.module').then(m => m.MovieFormShellModule),
     canDeactivate: [TunnelGuard],
     children: [
       {
@@ -25,8 +28,8 @@ const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/main/main.module').then(m => m.MovieFormMainModule)
       },
       {
-        path: 'synopsis',
-        loadChildren: () => import('@blockframes/movie/form/synopsis/synopsis.module').then(m => m.MovieFormSynopsisModule)
+        path: 'story-elements',
+        loadChildren: () => import('@blockframes/movie/form/story-elements/story-elements.module').then(m => m.MovieFormStoryElementsModule)
       },
       {
         path: 'production',
@@ -80,9 +83,3 @@ const tunnelRoutes: Routes = [
     ]
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(tunnelRoutes)],
-  exports: [RouterModule]
-})
-export class MovieTunnelRoutingModule { }
