@@ -8,9 +8,9 @@ export class FilmographyPipe implements PipeTransform {
   transform(value: Filmography[]): string {
     return value.map((filmography, index) => {
       return index < value.length
-        ? filmography.title.concat(filmography.year.toString()).concat(', ')
+        ? filmography.title.concat(`(${filmography.year.toString()})`)
         : filmography.title.concat(filmography.year.toString())
-    }).toString();
+    }).join(', ');
   }
 }
 
