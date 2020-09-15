@@ -20,7 +20,7 @@ export class MediaService {
 
   private _tasks = new BehaviorStore<AngularFireUploadTask[]>([]);
 
-  private breakpointsWidth = [600, 1024, 1440, 1920];
+  private breakpoints = [600, 1024, 1440, 1920];
 
   private overlayOptions = {
     height: '400px',
@@ -45,7 +45,7 @@ export class MediaService {
      * Then a backend functions performs a check on DB document to check if
      * file have to be moved to correct folder or deleted.
      */
-    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}${file.fileName}`, file.data));
+    const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
       .then(() => delay(5000))
@@ -139,13 +139,12 @@ export class MediaService {
 
   async generateImageSrcset(ref: string, _parameters: ImageParameters): Promise<string> {
     const refParts = ref.split('/');
+    const privacy = refParts.shift() as Privacy;
     const params: ImageParameters[] = getImgSize(ref).map(size => ({ ..._parameters, w: size }));
     let tokens: string[] = [];
 
-    if (privacies.includes(refParts[0] as any)) {
-      const privacy = refParts.shift() as Privacy;
+    if (privacies.includes(privacy)) {
       ref = refParts.join('/');
-
       if (privacy === 'protected') {
         tokens = await this.getProtectedMediaToken(ref, params);
       }
@@ -166,9 +165,9 @@ export class MediaService {
    */
   async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
     const refParts = ref.split('/');
+    const privacy = refParts.shift() as Privacy;
 
-    if (privacies.includes(refParts[0] as any)) {
-      const privacy = refParts.shift() as Privacy;
+    if (privacies.includes(privacy)) {
       ref = refParts.join('/');
       if (privacy === 'protected') {
         const [token] = await this.getProtectedMediaToken(ref, [parameters]);
@@ -185,7 +184,7 @@ export class MediaService {
     let clientWidth = 1024;
 
     if (!!window || !!window.innerWidth) {
-      clientWidth = clamp(window.innerWidth, this.breakpointsWidth);
+      clientWidth = clamp(window.innerWidth, this.breakpoints);
     }
 
     // Math.min(n, undefined) = Nan,

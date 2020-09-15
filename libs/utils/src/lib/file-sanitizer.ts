@@ -16,12 +16,17 @@ export function sanitizeFileName(str: string): string {
   return `${fileNameWithoutExt.substr(0, 100)}.${getFileExtension(str)}`;
 }
 
+/**
+ * Cleans and returns the storage path
+ * @dev example output: 
+ * public/users/123abc/avatar
+ */
 export function getStoragePath(path: string, privacy: Privacy = 'public'): string {
   // Remove first trailing slash if any
-  path = path.indexOf('/') === 0 ? path.slice(1) : path;
+  path = path[0] === '/' ? path.slice(1) : path;
 
-  // Add last trailing slash if missing
-  path = path[path.length - 1] !== '/' ? `${path}/` : path;
+  // Remove last trailing slash if any
+  path = path[path.length - 1] === '/' ? path.slice(0, path.length - 1) : path;
 
   return `${privacy}/${path}`;
 }

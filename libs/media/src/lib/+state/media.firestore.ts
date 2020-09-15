@@ -20,7 +20,7 @@ export interface UploadData {
   /**
   * firebase storage upload path *(or ref)*,
   * @note **Make sure that the path param does not include the filename.**
-  * @note **Make sure that the path ends with a `/`.**
+  * @note **Make sure that the path does not ends with a `/`.**
   */
   path: string,
   data: Blob | File,
