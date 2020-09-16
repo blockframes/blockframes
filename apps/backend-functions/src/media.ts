@@ -127,7 +127,7 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   if (!user.exists) { return false; }
   const userDoc = createPublicUser(user.data());
 
-  const blockframesAdmin = await db.doc(`blockframesAdmin/${uid}`).get();
+  const blockframesAdmin = await  db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
 
   switch (pathInfo.collection) {
