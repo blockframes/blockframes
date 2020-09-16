@@ -4,7 +4,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'financiers-movie-finance',
+  selector: 'festival-movie-finance',
   templateUrl: './finance.component.html',
   styleUrls: ['./finance.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
