@@ -5,10 +5,10 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { ViewComponent } from './view.component';
+import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
-import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
+import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
@@ -18,13 +18,11 @@ import { WishlistButtonModule } from '@blockframes/organization/components/wishl
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips';
 
 const routes = [
   {
     path: '',
-    component: ViewComponent,
+    component: MarketplaceMovieViewComponent,
     children: [
       {
         path: '',
@@ -33,7 +31,19 @@ const routes = [
       },
       {
         path: 'main',
-        loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+        loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule)
+      },
+      {
+        path: 'artistic',
+        loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
+      },
+      {
+        path: 'additional',
+        loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
+      },
+      {
+        path: 'finance',
+        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule)
       },
       {
         path: 'screenings',
@@ -44,22 +54,19 @@ const routes = [
 ];
 
 @NgModule({
-  declarations: [ViewComponent],
+  declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    MovieViewLayoutModule,
+    MovieShellModule,
     ImageReferenceModule,
     MovieHeaderModule,
     OrgChipModule,
     WishlistButtonModule,
     PromotionalLinksModule,
-
     // Material
-    MatChipsModule,
     MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,
     // Routes
     RouterModule.forChild(routes)
   ]
