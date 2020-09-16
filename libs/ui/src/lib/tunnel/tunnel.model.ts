@@ -1,16 +1,11 @@
 import { Observable } from "rxjs";
-
-export interface TunnelRoute {
-  path: string;
-  label: string;
-  shouldDisplay?: Observable<boolean>
-}
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 export interface TunnelStep {
   title: string;
   icon: string;
   time?: number;
-  routes: TunnelRoute[];
+  routes: RouteDescription[];
 }
 
 export interface TunnelStepData {

@@ -1,26 +1,26 @@
-<h3>Main Information</h3>
 <article>
+<h3>Main Information</h3>
   <movie-summary-main [movie]="form" [link]="('main' | getPath)"></movie-summary-main>
 </article>
 
 <mat-divider></mat-divider>
 
-<h3>Storyline Elements</h3>
 <article>
+  <h3>Storyline Elements</h3>
   <movie-summary-synopsis [movie]="form" [link]="('synopsis' | getPath)"></movie-summary-synopsis>
 </article>
 
 <mat-divider></mat-divider>
 
-<h3>Selections and Reviews</h3>
 <article>
+  <h3>Selections and Reviews</h3>
   <movie-summary-review [movie]="form" [link]="('review' | getPath)"></movie-summary-review>
 </article>
 
 <mat-divider></mat-divider>
 
-<h3>Files & Links</h3>
 <article>
+  <h3>Files & Links</h3>
   <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
   <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
   <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
