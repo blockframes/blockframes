@@ -111,6 +111,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    customPrize: FormList.factory(entity.customPrize, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
@@ -132,6 +133,10 @@ export type MovieControl = ReturnType<typeof createMovieControls>;
 export class MovieForm extends FormEntity<MovieControl, Movie> {
   constructor(movie?: Partial<Movie>) {
     super(createMovieControls(movie));
+  }
+
+  get customPrize() {
+    return this.get('customPrize');
   }
 
   get banner() {

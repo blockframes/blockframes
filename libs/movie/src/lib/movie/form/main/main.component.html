@@ -129,7 +129,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <mat-form-field appearance="outline" *ngIf="form.get('genres').value.includes('other')">
+      <mat-form-field appearance="outline">
         <mat-label>Other Genre(s)</mat-label>
         <mat-chip-list #chipList>
           <ng-container *ngFor="let value of valuesCustomGenres$ | async; let i = index">
@@ -141,8 +141,8 @@
         </mat-chip-list>
         <input matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCustomGenre($event)"
-          placeholder="Please specify" />
-        <mat-hint>Use commas or press Enter key to separate genres.</mat-hint>
+          placeholder="Please specify if you did not find any genre above." />
+        <mat-hint>Please specify if you did not find any genre above.</mat-hint>
       </mat-form-field>
 
       <article flxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">

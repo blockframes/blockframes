@@ -27,14 +27,16 @@ export class StaticSelectComponent {
     }
   };
   @Input() control: FormControl;
+  @Input() label: string;
+  @Input() hint: string;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
     if (this.type === 'constant') {
-      this.staticValue = Object.keys(staticConsts[this.scope]).filter(scopeValue => !toFilterValue.includes(scopeValue));
+      this.staticValue = Object.keys(staticConsts[this._scope]).filter(scopeValue => !toFilterValue.includes(scopeValue));
     } else {
-        this._scope = staticModels[this.scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug)) 
+      this._scope = staticModels[this._scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
     }
   }
 

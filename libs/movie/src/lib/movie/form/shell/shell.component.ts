@@ -105,7 +105,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
@@ -137,7 +137,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
       new MutationObserver((_, observer) => {
         resolve(this.doc.getElementById(id));
-      }).observe(this.doc.documentElement, {childList: true, subtree: true});
+      }).observe(this.doc.documentElement, { childList: true, subtree: true });
     })
   }
 
@@ -157,7 +157,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   confirmExit() {
-    if (this.form.pristine) {
+    if (this.form.status !== 'INVALID') {
       return of(true);
     }
     const dialogRef = this.dialog.open(TunnelConfirmComponent, {

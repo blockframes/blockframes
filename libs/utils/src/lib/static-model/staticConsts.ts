@@ -164,8 +164,7 @@ const constants = {
     sanSebastian: 'San Sebastian International Film Festival',
     oscar: 'Oscar Academy Awards',
     goldenGlobe: 'Golden Globe Awards',
-    bfta: 'BAFTA Film Awards',
-    other: 'Other(specify)'
+    bfta: 'BAFTA Film Awards'
   }
 };
 
