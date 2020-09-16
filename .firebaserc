@@ -47,9 +47,6 @@
     },
     "blockframes-ci": {
       "hosting": {
-        "storybook": [
-          "blockframes-storybook"
-        ],
         "catalog": [
           "blockframes-ci"
         ],
@@ -242,14 +239,17 @@
     },
     "blockframes-george": {
       "hosting": {
-        "storybook": [
-          "blockframes-george-storybook"
-        ],
         "catalog": [
           "blockframes-george"
         ],
         "festival": [
           "blockframes-george-festival"
+        ],
+        "financiers": [
+          "blockframes-george-financiers"
+        ],
+        "crm": [
+          "blockframes-george-crm"
         ]
       }
     },
@@ -257,9 +257,6 @@
       "hosting": {
         "catalog": [
           "blockframes-mano"
-        ],
-        "storybook": [
-          "blockframes-mano-storybook"
         ],
         "festival": [
           "blockframes-mano-festival"

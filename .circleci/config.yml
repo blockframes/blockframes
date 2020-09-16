@@ -69,20 +69,6 @@ executors:
     working_directory: ~/repo
     resource_class: large
 jobs:
-  build-and-deploy-storybook:
-    executor: blockframes-ci
-    environment:
-      - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
-    steps:
-      - checkout_project
-      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
-      - run: npx nx run movie:build-storybook
-      - run:
-          command: |
-            npx firebase use ci &&
-            npx firebase deploy --only hosting:storybook
   build-and-test-all:
     executor: blockframes-ci
     environment:
@@ -375,11 +361,6 @@ workflows:
             branches:
               only:
                 - ci
-      - build-and-deploy-storybook:
-          filters:
-            branches:
-              only:
-                - develop
       - deploy-to-demo1:
           filters:
             branches:
