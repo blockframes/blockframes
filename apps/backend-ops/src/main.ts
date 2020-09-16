@@ -6,7 +6,7 @@ warnMissingVars()
 
 import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
 import { migrate } from './migrations';
-import { showHelp } from './tools';
+import { isMaintenanceRequired, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
@@ -17,6 +17,8 @@ const [cmd, ...flags] = args;
 async function runCommand() {
   if (cmd === 'prepareForTesting') {
     return prepareForTesting();
+  } else if (cmd === 'isMaintenanceRequired') {
+    return isMaintenanceRequired();
   } else if (cmd === 'prepareDb') {
     return prepareDb();
   } else if (cmd === 'prepareStorage') {

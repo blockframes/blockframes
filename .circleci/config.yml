@@ -245,14 +245,16 @@ jobs:
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - run:
+          # ! npm run backend-ops isMaintenanceRequired && echo 'YES IT IS' || echo 'NO ITS NOT'
           command: |
             npx firebase use staging &&
+            ( npm run backend-ops isMaintenanceRequired || cp firestore.rules firestore.maintenance.rules ) &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
             npx firebase deploy --only firestore --force && 
             npx firebase deploy --only functions --force
-      - run: node dist/apps/backend-ops/main.js upgrade
+      - run: npm run backend-ops isMaintenanceRequired && npm run backend-ops upgrade || npm run backend-ops upgrade skipMaintenance
       - run:
           command: |
             cp firestore.rules.regular firestore.rules &&
