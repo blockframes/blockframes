@@ -14,13 +14,16 @@ const routes = [{
     pathMatch: 'full'
   }, {
     path: 'title',
-    loadChildren: () => import('../title/title.module').then(m => m.OrganizationTitleModule)
+    loadChildren: () => import('../title/title.module').then(m => m.OrganizationTitleModule),
+    data: { animation: '0' }
   }, {
     path: 'member',
-    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule)
+    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule),
+    data: { animation: '1' }
   }, {
     path: 'screening',
-    loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
+    loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule),
+    data: { animation: '2' }
   // Put the meeting tab in comment to prevent users to go in
   // }, {
   //   path: 'meeting',
