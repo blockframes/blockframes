@@ -1,0 +1,30 @@
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
+
+  <mat-card *ngIf="hasBudget(movie)">
+    <mat-card-header>
+      <h3>Budget, Quota & Critics</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li *ngIf="movie.estimatedBudget.from && movie.estimatedBudget.to"><strong>Budget </strong>
+          <span>{{ budgetRange(movie.estimatedBudget) }}</span></li>
+        <li *ngIf="movie.boxOffice.length > 0"><strong>Box Office </strong>
+          <span *ngFor="let boxOffice of movie.boxOffice; let isLast = last">{{ boxOffice.unit }} {{ boxOffice.value }} ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}}){{ isLast ? '' : ', ' }}</span></li>
+        <li *ngIf="movie.certifications.length > 0"><strong>Quotas </strong>
+          <span *ngFor="let quota of movie.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span></li>
+        <li *ngIf="movie.rating.length > 0"><strong>Rating </strong>
+          <span *ngFor="let rating of movie.rating; let isLast = last">
+          {{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}
+          </span>
+        </li>
+        <li *ngIf="movie.review.length > 0"><strong>Film Review </strong>
+        <span *ngFor="let review of movie.review">{{ review.criticName }} in {{ review.journalName}} "{{ review.criticQuote }}" {{ review.revueLink }}</span></li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+</ng-container>
+

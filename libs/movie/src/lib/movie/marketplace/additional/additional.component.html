@@ -1,0 +1,43 @@
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
+
+  <mat-card *ngIf="movie.languages" class="tech-information">
+    <mat-card-header>
+      <h3>Technical Information</h3>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <ng-container *ngIf="movie.format">
+          <li *ngIf="movie.format"><strong>Shooting Format </strong>
+            <span>{{ movie.format | translateSlug: 'MOVIE_FORMAT'}}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.formatQuality">
+          <li *ngIf="movie.formatQuality"><strong>Format Quality </strong>
+          <span>{{ movie.formatQuality }}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.color">
+          <li *ngIf="movie.color"><strong>Color / B&W </strong>
+          <span>{{ movie.color | translateSlug: 'COLORS'}}</span></li>
+        </ng-container>
+        <ng-container *ngIf="movie.soundFormat">
+          <li *ngIf="movie.soundFormat"><strong>Sound Format </strong>
+          <span>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</span></li>
+        </ng-container>
+        <li *ngIf="movie.languages"><strong>Versions </strong>
+          <ng-container *ngFor="let version of movie.languages | keyvalue; let isLast = last">
+            {{ version.key | translateSlug: 'LANGUAGES'}}:
+            <ng-container *ngFor="let info of version.value | keyvalue; let isLast = last">
+              <ng-container *ngIf="info.value">
+                {{ info.key | translateSlug: 'VERSION_INFO' }}
+              </ng-container>
+            </ng-container>
+            {{ isLast ? '' : '| ' }}
+          </ng-container>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+
+</ng-container>
