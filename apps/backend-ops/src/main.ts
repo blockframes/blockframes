@@ -51,12 +51,12 @@ async function runCommand() {
   }
 }
 
-function flagExists(compare: string) {
-  return flags.find(flag => flag === compare)
+function hasFlag(compare: string) {
+  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`)
 }
 
-if (flagExists('--skipMaintenance') || flagExists('skipMaintenance')) {
-  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'CLI flag';
+if (hasFlag('skipMaintenance')) {
+  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
   console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true, meaning maintenance mode is disabled!')
 }
 

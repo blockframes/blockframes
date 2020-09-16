@@ -17,7 +17,10 @@ const maintenanceRef = () => {
 };
 
 export async function startMaintenance() {
-  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
+  if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
+    console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
+    return;
+  }
   return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
 }
 
