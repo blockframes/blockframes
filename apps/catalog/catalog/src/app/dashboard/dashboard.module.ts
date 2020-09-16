@@ -12,6 +12,7 @@ import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboar
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
@@ -30,7 +31,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Tunnel routes
-import { tunnelRoutes } from './tunnel/movie-tunnel-routing.routes';
+import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 
 const routes: Routes = [
   {
@@ -157,6 +158,7 @@ const routes: Routes = [
     ImageReferenceModule,
     OrgNameModule,
     ToLabelModule,
+    MovieFormShellModule
 
     // Material
     MatDividerModule,
