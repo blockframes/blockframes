@@ -1,15 +1,42 @@
-<ng-content></ng-content>
+<section fxLayout="column">
+  <header fxLayout="row" fxLayout.lt-md="column" fxFlex>
+  <img [ref]="form.get('poster').value" asset="empty_poster.webp" alt="movie poster">
 
-<nav mat-tab-nav-bar>
-  <a mat-tab-link
-      *ngFor="let link of routes"
-      [routerLink]="link.path"
-      routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-    {{link.label}}
-  </a>
-</nav>
+    <article fxLayout="column">
+      <h4>
+        {{ form.get('contentType').value | toLabel: 'contentType' }}
+        <ng-container *ngIf="form.contentType && form.productionStatus">|</ng-container>
+        {{ form.get('productionStatus').value | toLabel: 'productionStatus' }}
+        <ng-container *ngIf="form.productionStatus && form.runningTime">|</ng-container>
+        {{ runningTime }}
+      </h4>
+      <h1>{{ form.title.get('international').value }}</h1>
+      <h6>{{ directors }}</h6>
+      <span>
+        {{ form.get('originCountries').value | translateSlug: 'TERRITORIES'}}
+        <ng-container *ngIf="form.get('originCountries').value && form.release.get('year').value">,</ng-container>
+        {{ form.release.get('year').value }}
+      </span>
 
-<section [@routeAnimation]="animationOutlet(outlet)">
-  <router-outlet #outlet="outlet"></router-outlet>
+      <!-- <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', form.id]">
+        <mat-icon svgIcon="pencil"></mat-icon>
+        <span>Edit</span>
+      </a> -->
+    </article>
+  </header>
+
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link
+        *ngFor="let link of routes"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+
+  <div [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
+
 </section>

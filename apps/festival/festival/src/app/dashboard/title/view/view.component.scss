@@ -1,13 +1,5 @@
 @import '~@angular/flex-layout/mq';
 
-nav.mat-tab-nav-bar {
-  margin-bottom: 32px;
-}
-
-movie-header-actions {
-  margin: 16px 0;
-}
-
 @include layout-bp(lt-md) {
   header {
     height: auto;

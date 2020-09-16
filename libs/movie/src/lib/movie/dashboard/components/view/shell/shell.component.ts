@@ -3,7 +3,6 @@ import { RouterOutlet } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
@@ -29,7 +28,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return this._form.getValue();
   }
 
-  constructor(private query: MovieQuery, private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) {}
+  constructor(private query: MovieQuery, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.sub = this.query.selectActive().subscribe(movie => {
@@ -42,8 +41,20 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  
   animationOutlet(outlet: RouterOutlet) {
     return outlet?.activatedRouteData?.animation;
   }
+
+  get runningTime() {
+    const time = this.form.runningTime.get('time').value;
+    return time === 'TBC' || null ? 'TBC' : time + ' min';
+  }
+
+  get directors() {
+    return this.form.directors.controls.map(director => `${director.get('firstName').value}  ${director.get('lastName').value}`).join(', ');
+  }
+
+  // get movieId() {
+  //   return this.form.get('id').value;
+  // }
 }

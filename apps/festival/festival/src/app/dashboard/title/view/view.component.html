@@ -3,16 +3,6 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
 
-  <title-dashboard-shell [routes]="navLinks">
-
-    <title-dashboard-header [movie]="movie">
-      <movie-header-actions>
-        <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="pencil"></mat-icon>
-          <span>Edit</span>
-        </a>
-      </movie-header-actions>
-    </title-dashboard-header>
-  </title-dashboard-shell>
+  <title-dashboard-shell [routes]="navLinks"></title-dashboard-shell>
 
 </ng-container>
