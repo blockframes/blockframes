@@ -4,13 +4,13 @@ import {
   Movie,
   MovieService,
   createDocumentMeta,
-  createMoviePromotional,
   createMovieRating,
   createMovieReview,
   createMovieOriginalRelease,
   createPrize,
   populateMovieLanguageSpecification,
-  createBoxOffice
+  createBoxOffice,
+  createMovie
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -66,8 +66,8 @@ enum SpreadSheetMovie {
   // poster, TODO issue #3091
   // bannerLink, TODO issue #3091
   // stillLinks, TODO issue #3091
-  presentationDeck,
-  scenarioLink,
+  // presentationDeck, TODO issue #3091
+  // scenarioLink, TODO issue #3091
   screenerLink,
   promoReelLink,
   trailerLink,
@@ -128,12 +128,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     sheetTab.rows.forEach(async spreadSheetRow => {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle] && spreadSheetRow[SpreadSheetMovie.internalRef]) {
         const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
-        const movie = {
-          promotional: createMoviePromotional({}),
-          languages: { languages: {} }, // TODO issue #1596
-          ...existingMovie ? cleanModel(existingMovie) : undefined
-        } as Movie;
-
+        const movie = existingMovie ? cleanModel(existingMovie) as Movie : createMovie();
         const importErrors = { movie, errors: [] } as MovieImportState;
 
         //////////////////
@@ -640,6 +635,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
+        // TODO issue #3091
+        /*
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
           // TODO issue#3091
@@ -652,7 +649,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
@@ -808,7 +805,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // }
 
         // PRESENTATION DECK
-        if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
+        // TODO issue #3091
+        /*if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
           // TODO issue#3091
           movie.promotional.presentation_deck = spreadSheetRow[SpreadSheetMovie.presentationDeck];
         } else {
@@ -819,7 +817,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         //////////////////
         // FESTIVAL FIELDS
