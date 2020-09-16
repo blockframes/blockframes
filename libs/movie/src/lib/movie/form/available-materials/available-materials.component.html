@@ -8,7 +8,7 @@
       <mat-slide-toggle [formControl]="form.get('isOriginalVersionAvailable')" color="primary">Original Version
         Authorized</mat-slide-toggle>
       <span class="mat-caption">Please specify if original version is available or not.</span>
-      </article>
+    </article>
 
     <h3>Add Versions</h3>
 
@@ -18,13 +18,13 @@
       <ng-container *ngFor="let language of form.languages.controls | keyvalue">
         <div fxLayout="column" fxLayoutGap="8px">
           <h5>{{ language.key | titlecase }}</h5>
-          <div [formGroupName]="language.key" fxLayout="row">
+          <div [formGroupName]="language.key" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
             <div fxLayout="row" fxLayoutGap="16px">
               <mat-checkbox formControlName="subtitle" color="primary">Subtitled </mat-checkbox>
               <mat-checkbox formControlName="caption" color="primary">Closed-captioned</mat-checkbox>
               <mat-checkbox formControlName="dubbed" color="primary">Dubbed</mat-checkbox>
             </div>
-            <button mat-mini-fab (click)="deleteLanguage(language.key)" class="delete-button" color="warn">
+            <button mat-mini-fab (click)="deleteLanguage(language.key)" color="warn">
               <mat-icon svgIcon="trash"></mat-icon>
             </button>
           </div>
@@ -34,21 +34,23 @@
 
     <!-- Buttons -->
 
-    <footer *ngIf="!showButtons">
+    <!-- Can't use footer html node because tunnel layout component as some styles set on the footer -->
+    <div *ngIf="!showButtons">
       <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
       <div fxLayout="row" fxLayoutAlign="space-between start">
-        <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()" [disabled]="!languageCtrl.value">
+        <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
+          [disabled]="!languageCtrl.value">
           <mat-icon svgIcon="floppy"></mat-icon>
           <span>Save Language</span>
         </button>
       </div>
-    </footer>
-    <footer fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
+    </div>
+    <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons" class="footer">
       <mat-divider></mat-divider>
       <span class="mat-caption text-primary">Add a Version</span>
       <button mat-mini-fab color="primary" (click)="showForm()">
         <mat-icon svgIcon="add"></mat-icon>
       </button>
-    </footer>
+    </div>
   </section>
 </tunnel-page>

@@ -23,7 +23,9 @@ export class StaticSelectComponent implements OnInit {
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
     if (this.type === 'constant') {
-      this._scope = Object.keys(staticConsts[this.scope]).filter(scopeValue => toFilterValue.includes(scopeValue))
+      this._scope = Object.keys(staticConsts[this.scope]).filter(scopeValue => !toFilterValue.includes(scopeValue))
+    } else {
+      this._scope = staticModels[this.scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
     }
   }
 
@@ -32,7 +34,7 @@ export class StaticSelectComponent implements OnInit {
   ngOnInit() {
     if (this.type === 'constant' && !this._scope.length) {
       this._scope = staticConsts[this.scope];
-    } else {
+    } else if (!this._scope) {
       this._scope = staticModels[this.scope];
     }
   }
