@@ -1,15 +1,13 @@
 @import '~@angular/flex-layout/mq';
 
-header, section {
-  padding: 0 24px;
-}
-
 header {
+  padding: 24px;
   height: 300px;
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
-  article {
-    padding: 53px 0px 17px 24px;
-    height: 168px;
+  img {
+    height: 100%;
+    margin-right: 16px;
+    border-radius: 5px;
   }
 }
 
@@ -17,12 +15,6 @@ header h4 {
   text-transform: uppercase;
 }
 
-.movie-poster {
-  width: 168px;
-  height: 220px;
-  margin-right: 16px;
-  border-radius: 5px;
-}
 
 nav.mat-tab-nav-bar {
   margin-bottom: 32px;

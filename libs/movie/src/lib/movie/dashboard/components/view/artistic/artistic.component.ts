@@ -4,19 +4,18 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 import { DashboardTitleShellComponent } from '../shell/shell.component';
 
 @Component({
-  selector: 'movie-view-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss'],
+  selector: 'movie-view-artistic',
+  templateUrl: './artistic.component.html',
+  styleUrls: ['./artistic.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieViewMainComponent implements OnInit {
+export class MovieViewArtisticComponent implements OnInit {
 
   public form = this.shell.form;
 
   constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) {}
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page', 'Main Information');
+    this.dynTitle.setPageTitle('Title page', 'Artistic Information');
   }
-
 }
