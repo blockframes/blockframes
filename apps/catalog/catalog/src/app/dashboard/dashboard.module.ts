@@ -158,7 +158,7 @@ const routes: Routes = [
     ImageReferenceModule,
     OrgNameModule,
     ToLabelModule,
-    MovieFormShellModule
+    MovieFormShellModule,
 
     // Material
     MatDividerModule,
