@@ -6,8 +6,9 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
-import { createPublicUser, PublicUser } from '@blockframes/user/types';
+import { createPublicUser } from '@blockframes/user/types';
 import { privacies } from '@blockframes/utils/file-sanitizer';
+import { createOrganizationBase } from '@blockframes/organization/+state/organization.firestore';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
@@ -74,13 +75,16 @@ export async function unlinkFile(data: functions.storage.ObjectMetadata) {
  * @param data 
  * @param context 
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
- * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a // @TODO #3188 add how to create a private source
+ * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
-export const getMediaToken = (data: { ref: string, parametersSet: ImageParameters[] }, context: CallableContext): string[] => {
+export const getMediaToken = async (data: { ref: string, parametersSet: ImageParameters[] }, context: CallableContext): Promise<string[]> => {
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  // @TODO #3188 make other tests against DB here to validate user request to media
+  const canAccess = await isAllowedToAccessMedia(data.ref, context.auth.uid);
+  if (!canAccess) {
+    throw new Error('Permission denied. User is not allowed');
+  }
 
   return data.parametersSet.map((p: ImageParameters) => {
     const params = formatParameters(p);
@@ -99,7 +103,7 @@ export const deleteMedia = async (data: { ref: string }, context: CallableContex
 
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  const canDelete = await isAllowedToDelete(data.ref, context.auth.uid);
+  const canDelete = await isAllowedToAccessMedia(data.ref, context.auth.uid);
   if (!canDelete) {
     throw new Error('Permission denied. User is not allowed');
   }
@@ -115,19 +119,28 @@ export const deleteMedia = async (data: { ref: string }, context: CallableContex
   await file.delete();
 }
 
-async function isAllowedToDelete(ref: string, uid: string): Promise<boolean> {
+async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean> {
   const pathInfo = getPathInfo(ref);
   const db = admin.firestore();
-  // @TODO #3188 make other tests against DB here to validate user request
+
+  const user = await db.collection('users').doc(uid).get();
+  if (!user.exists) { return false; }
+  const userDoc = createPublicUser(user.data());
+
+  const blockframesAdmin = await db.doc(`blockframesAdmin/${uid}`).get();
+  if (blockframesAdmin.exists) { return true; }
+
   switch (pathInfo.collection) {
     case 'users':
       return pathInfo.docId === uid;
     case 'orgs':
-      const user = await db.collection('users').doc(uid).get();
-      if (!user.exists) { return false; }
-      const userDoc: PublicUser = createPublicUser(user.data());
-      // @TODO (#3188) check if user have permission on org
+      if (!userDoc.orgId) { return false; }
       return pathInfo.docId === userDoc.orgId;
+    case 'movies':
+      if (!userDoc.orgId) { return false; }
+      const org = await db.collection('orgs').doc(userDoc.orgId).get();
+      const orgDoc = createOrganizationBase(org.data());
+      return orgDoc.movieIds.some(id => pathInfo.docId === id);
     default:
       return false;
   }

@@ -10,9 +10,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
 import { AngularFireStorage } from "@angular/fire/storage";
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 
 @Component({
   selector: '[form] [storagePath] file-upload',
@@ -30,33 +27,17 @@ export class FileUploadComponent implements OnInit {
   @Input() form: HostedMediaForm;
   @Input() filePrivacy : Privacy = 'public';
 
-  public size$: Observable<string>;
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
   constructor(private snackBar: MatSnackBar, private storage: AngularFireStorage) { }
 
   ngOnInit() {
-
     // show current file
-
     if (!!this.form.blobOrFile.value) {
       this.selected(this.form.blobOrFile.value);
     } else if (!!this.form.oldRef?.value) {
       this.state = 'file';
-
-      const file = this.storage.ref(this.form.oldRef.value);
-      file.getMetadata().toPromise().then(data => console.log('promise !', data));
-      this.size$ =  file.getMetadata().pipe(map(data => {
-        const size = (data.size / 10000);
-        if (size < 1000) {
-          const fileSize = size.toFixed(1);
-          return `${fileSize} KB`;
-        } else {
-          const fileSize = (size / 100).toFixed(1)
-          return `${fileSize} MB`;
-        }
-      }));
     }
   }
 
