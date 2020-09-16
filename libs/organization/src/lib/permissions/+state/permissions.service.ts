@@ -4,7 +4,6 @@ import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { UserService } from '@blockframes/user/+state';
 
 @Injectable({
@@ -34,22 +33,6 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
     (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
-  }
-
-  /**
-   * Takes a contract, create relative permissions for each party of
-   * the contract, then add them to documentPermissions subcollection.
-   * @param contract
-   * @param write
-   */
-  public addContractPermissions(contract: Contract) {
-    this.db.firestore.runTransaction(async tx => {
-      contract.partyIds.forEach(partyId => {
-        const contractPermissions = createDocPermissions({ id: contract.id });
-        const contractPermissionsRef = this.db.doc(`permissions/${partyId}/documentPermissions/${contractPermissions.id}`).ref;
-        tx.set(contractPermissionsRef, contractPermissions)
-      })
-    })
   }
 
   /** Ensures that there is always at least one super Admin in the organization. */

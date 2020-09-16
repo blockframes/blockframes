@@ -7,15 +7,15 @@ export async function cleanStorage(bucket) {
   await startMaintenance();
 
   const cleanMovieDirOutput = await cleanMovieDir(bucket);
-  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "movie" directory.`);
+  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "public/movie" directory.`);
   const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
-  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "movies" directory.`);
+  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "public/movies" directory.`);
   const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
-  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "orgs" directory.`);
+  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "public/orgs" directory.`);
   const cleanUsersDirOutput = await cleanUsersDir(bucket);
-  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "users" directory.`);
+  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`);
   const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
-  console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "watermark" directory.`);
+  console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "public/watermark" directory.`);
   await endMaintenance();
 
   return true;
@@ -28,20 +28,19 @@ export async function cleanStorage(bucket) {
  */
 export async function cleanMovieDir(bucket) {
   // Movie dir should not exists
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'movie/' }))[0];
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movie/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
 
-    if (f.name.split('/').length === 2) {
-      
-      // Clean files at "movie/" root
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/movie/" root
       if (await f.delete()) { deleted++; }
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const movieId = f.name.split('/')[1];
+      const movieId = f.name.split('/')[2];
       // We check if the file is used before removing it
       const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
       if (!movie && await f.delete()) { deleted++; }
@@ -52,18 +51,18 @@ export async function cleanMovieDir(bucket) {
 }
 
 export async function cleanMoviesDir(bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'movies/' }))[0];
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movies/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
-    if (f.name.split('/').length === 2) {
-      // Clean files at "movies/" root
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/movies/" root
       if (await f.delete()) { deleted++; }
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const movieId = f.name.split('/')[1];
+      const movieId = f.name.split('/')[2];
       const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
       if (!movie && await f.delete()) { deleted++; }
     }
@@ -79,18 +78,18 @@ export async function cleanMoviesDir(bucket) {
  * @param bucket 
  */
 export async function cleanOrgsDir(bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'orgs/' }))[0];
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/orgs/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
-    if (f.name.split('/').length === 2) {
-      // Clean files at "orgs/" root
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/orgs/" root
       if (await f.delete()) { deleted++; }
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const orgId = f.name.split('/')[1];
+      const orgId = f.name.split('/')[2];
       const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
       if (!org && await f.delete()) { deleted++; }
     }
@@ -100,18 +99,18 @@ export async function cleanOrgsDir(bucket) {
 }
 
 export async function cleanUsersDir(bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'users/' }))[0];
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/users/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
-    if (f.name.split('/').length === 2 || f.name.split('/').length === 3) {
-      // Clean files at "users/" or "user/{$userId}/" root
+    if (f.name.split('/').length === 3 || f.name.split('/').length === 4) {
+      // Clean files at "public/users/" or "public/user/{$userId}/" root
       if (await f.delete()) { deleted++; }
     } else if (f.name.split('/').pop().length >= 255) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const userId = f.name.split('/')[1];
+      const userId = f.name.split('/')[2];
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!user && await f.delete()) { deleted++; }
     }
@@ -122,11 +121,11 @@ export async function cleanUsersDir(bucket) {
 
 /**
  * watermark dir is not used anymore
- * watermarks are in users/${userId}/${userId}.svg
+ * watermarks are in public/users/${userId}/${userId}.svg
  * @param bucket 
  */
 export async function cleanWatermarkDir(bucket) {
-  const files: GFile[] = (await bucket.getFiles({ prefix: 'watermark/' }))[0];
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/watermark/' }))[0];
   let deleted = 0;
 
   await runChunks(files, async (f) => {
@@ -134,7 +133,7 @@ export async function cleanWatermarkDir(bucket) {
       // Cleaning files that have a too long name
       if (await f.delete()) { deleted++; }
     } else {
-      const userId = f.name.split('/')[1].replace('.svg', '');
+      const userId = f.name.split('/')[2].replace('.svg', '');
       const user = await getDocument<PublicUser>(`users/${userId}`);
       if (!!user) {
         if (user.watermark === f.name) {

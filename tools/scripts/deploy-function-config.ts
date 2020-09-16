@@ -22,6 +22,7 @@ function getKeyValFormat(): string[] {
   output.push(`algolia.api_key="${process.env?.ALGOLIA_API_KEY}"`);
   output.push(`admin.password="${process.env?.ADMIN_PASSWORD}"`);
   output.push(`admin.email="${process.env?.CASCADE8_ADMIN}"`);
+  output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
   return output;
 }
 

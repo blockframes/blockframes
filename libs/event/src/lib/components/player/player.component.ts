@@ -3,7 +3,8 @@ import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { ImageParameters, generateBackgroundImageUrl } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 type Timeout = NodeJS.Timeout;
 
@@ -25,6 +26,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
+    private mediaService: MediaService,
   ) {}
 
   async loadScript() {
@@ -84,7 +86,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
       auto: 'compress,format',
       fit: 'crop',
     };
-    const watermarkUrl = generateBackgroundImageUrl(this.authQuery.user.watermark, parameters);
+    const watermarkUrl = await this.mediaService.generateBackgroundImageUrl(this.authQuery.user.watermark, parameters);
     await this.loadScript();
     this.initPlayer(watermarkUrl);
   }
