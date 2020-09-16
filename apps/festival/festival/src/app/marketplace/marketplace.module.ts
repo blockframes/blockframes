@@ -29,31 +29,28 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
-      data: { animation: 'notifications' }
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
     {
       path: 'invitations',
-      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
-      data: { animation: 'invitations' }
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
     },
     {
       path: 'wishlist',
-      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule),
-      data: { animation: 'wishlist' }
+      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule)
     },
     {
       path: 'title',
       children: [{
         path: '',
         loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule),
-        data: { animation: 'title-list' }
+        data: { animation: 'list' }
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
-        data: { animation: 'title-view', redirect: '/c/o/marketplace/home' }
+        data: { animation: 'view', redirect: '/c/o/marketplace/home' }
       }]
     },
     {
@@ -61,11 +58,11 @@ const routes: Routes = [{
       children: [{
         path: '',
         loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
-        data: { animation: 'organization-list' }
+        data: { animation: 'list' }
       }, {
         path: ':orgId',
         loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
-        data: { animation: 'organization-view' },
+        data: { animation: 'view' },
       }]
     },
     {
@@ -73,15 +70,15 @@ const routes: Routes = [{
       children: [{
         path: '',
         loadChildren: () => import('./event/list/list.module').then(m => m.ListModule),
-        data: { animation: 'event-list' }
       }, {
         path: 'calendar',
         loadChildren: () => import('./event/calendar/calendar.module').then(m => m.EventCalendarModule),
+        data: { animation: 'list' },
       }, {
         path: ':eventId',
         canActivate: [EventActiveGuard],
         canDeactivate: [EventActiveGuard],
-        data: { animation: 'event-view' },
+        data: { animation: 'view' },
         children: [{
           path: '',
           loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
