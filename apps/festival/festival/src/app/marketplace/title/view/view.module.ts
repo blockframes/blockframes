@@ -22,6 +22,18 @@ const routes = [
         loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule)
       },
       {
+        path: 'artistic',
+        loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
+      },
+      {
+        path: 'additional',
+        loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
+      },
+      {
+        path: 'finance',
+        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule)
+      },
+      {
         path: 'screenings',
         loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
       }

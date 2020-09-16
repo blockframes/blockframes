@@ -8,9 +8,10 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+// import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
-  selector: 'marketplace-movie-shell',
+  selector: 'title-marketplace-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
   animations: [scaleIn],
@@ -21,7 +22,8 @@ export class MovieShellComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
 
-  @Input() navLinks;
+  // TODO add RouteDescrtipion interface from PR #3663 to routes variable
+  @Input() routes;
 
   promoLinks = [
     'promo_reel_link',

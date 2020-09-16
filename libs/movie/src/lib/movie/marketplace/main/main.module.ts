@@ -7,13 +7,15 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pip
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MainComponent } from './main.component';
+import { FestivalPrizeCardModule } from '../../components/festival-prize-card/festival-prize-card.module';
+import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [MainComponent],
@@ -24,11 +26,14 @@ import { MatChipsModule } from '@angular/material/chips';
     DisplayNameModule,
     ToLabelModule,
     ImageReferenceModule,
+    FestivalPrizeCardModule,
+    MatLayoutModule,
     // Material
     MatCardModule,
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: MainComponent }])
   ]
 })

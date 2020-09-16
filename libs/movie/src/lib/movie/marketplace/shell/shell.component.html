@@ -3,7 +3,7 @@
   <ng-template pageBar targetId="nav">
     <header fxLayout fxLayoutAlign="start center">
       <app-menu></app-menu>
-      <ng-container *ngFor="let link of navLinks">
+      <ng-container *ngFor="let link of routes">
         <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
           #rla="routerLinkActive">
           {{link.label}}
@@ -14,15 +14,19 @@
 
   <!-- Header -->
   <movie-header [movie]="movie">
-    <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
-      <ng-container *ngFor="let org of orgs$ | async">
-        <org-chip [org]="org"></org-chip>
-        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-          <span>Contact Sales Agent</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
-      </ng-container>
-    </movie-header-cta>
+
+    <!-- TODO: movie-header-cta should be festival only -->
+      <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
+        <ng-container *ngFor="let org of orgs$ | async">
+          <org-chip [org]="org"></org-chip>
+          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+            <span>Contact Sales Agent</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </ng-container>
+      </movie-header-cta>
+    <!-- END FESTIVAL ONLY -->
+
     <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
       <wishlist-button [movieId]="movie.id"></wishlist-button>
       <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
@@ -31,7 +35,7 @@
   
   <!-- Content -->
   <nav id="nav" mat-tab-nav-bar>
-    <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+    <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
       [active]="rla.isActive">
       {{link.label}}
     </a>

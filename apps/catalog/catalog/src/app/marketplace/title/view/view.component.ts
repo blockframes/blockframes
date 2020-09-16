@@ -11,7 +11,20 @@ export class MarketplaceMovieViewComponent {
   public navLinks = [{
     path: 'main',
     label: 'Main Information'
-  }, {
+  },
+  {
+    path: 'artistic',
+    label: 'Artistic Information'
+  },
+  {
+    path: 'additional',
+    label: 'Additional Information'
+  },
+  {
+    path: 'finance',
+    label: 'Financing Conditions'
+  },
+  {
     path: 'avails',
     label: 'Avails'
   }];
