@@ -1,23 +1,11 @@
 @import '~@angular/flex-layout/mq';
 
-header {
-  padding: 24px;
-  height: 300px;
-  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
-  img {
-    height: 100%;
-    margin-right: 16px;
-    border-radius: 5px;
-  }
-}
-
-header h4 {
-  text-transform: uppercase;
-}
-
-
 nav.mat-tab-nav-bar {
   margin-bottom: 32px;
+}
+
+movie-header-actions {
+  margin: 16px 0;
 }
 
 @include layout-bp(lt-md) {
@@ -26,9 +14,5 @@ nav.mat-tab-nav-bar {
     article {
       height: auto;
     }
-  }
-
-  .movie-info {
-    margin: 20px 0px;
   }
 }

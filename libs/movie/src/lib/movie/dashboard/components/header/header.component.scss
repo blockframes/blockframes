@@ -1,0 +1,14 @@
+header {
+  padding: 24px;
+  height: 300px;
+  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+  img {
+    height: 100%;
+    margin-right: 16px;
+    border-radius: 5px;
+  }
+}
+
+h4 {
+  text-transform: uppercase;
+}

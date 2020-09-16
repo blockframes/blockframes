@@ -14,11 +14,14 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
+import { TitleDashboardHeaderModule } from '@blockframes/movie/dashboard/components/header/header.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes = [{
   path: '',
@@ -63,10 +66,13 @@ const routes = [{
     ToLabelModule,
     DashboardTitleShellModule,
     DisplayNameModule,
+    TitleDashboardHeaderModule,
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatButtonModule,
+    MatIconModule,
     // Routes
     RouterModule.forChild(routes)
   ]
