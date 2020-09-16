@@ -15,8 +15,7 @@
               <div fxLayout="row" fxLayoutGap="24px">
                 <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
 
-                <static-select test-id="release-media" type="model" [control]="releaseForm.get('media')" scope="MEDIAS"
-                  fxFlex
+                <static-select test-id="release-media" type="model" [control]="releaseForm.get('media')" scope="MEDIAS" fxFlex
                   [withoutValues]="['pay-tv', 'free-tv', 'pay-per-view', 'est', 'n-vod','a-vod', 'f-vod', 's-vod', 'planes', 'boats']">
                   <mat-label>Release Media</mat-label>
                 </static-select>
