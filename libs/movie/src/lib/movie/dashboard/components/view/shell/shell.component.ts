@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
@@ -18,7 +19,6 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private _form = new BehaviorSubject<MovieForm>(undefined);
 
   public form$ = this._form.asObservable();
-  public routerData$ = this.routerQuery.selectData('animation');
 
   @Input() routes: RouteDescription[];
   @Input()
@@ -40,5 +40,10 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
   }
 }

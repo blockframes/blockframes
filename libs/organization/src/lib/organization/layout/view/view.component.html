@@ -20,7 +20,7 @@
     </div>
   </ng-template>
 
-  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" @fade class="dark-contrast-theme" bgAsset="profil_banner.webp">
+  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" class="dark-contrast-theme" bgAsset="profil_banner.webp">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
@@ -47,7 +47,7 @@
       </article>
     </div>
   </header>
-  <nav id="nav" mat-tab-nav-bar @fade>
+  <nav id="nav" mat-tab-nav-bar>
     <a mat-tab-link
         *ngFor="let link of navLinks"
         [routerLink]="link.path"
@@ -56,5 +56,7 @@
       {{link.label}}
     </a>
   </nav>
-  <router-outlet></router-outlet>
+  <section [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </section>
 </ng-container>
