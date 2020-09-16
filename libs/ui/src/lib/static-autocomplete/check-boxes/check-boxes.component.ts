@@ -12,7 +12,7 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: '[form][model][type] static-check-boxes',
+  selector: '[form][scope][type] static-check-boxes',
   templateUrl: './check-boxes.component.html',
   styleUrls: ['./check-boxes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,11 +21,11 @@ export class StaticCheckBoxesComponent implements OnInit {
 
 
   /**
-   * The static model or constant to display
+   * The static scope or constant to display
    * @example
-   * <static-check-boxes model="TERRITORIES" ...
+   * <static-check-boxes scope="TERRITORIES" ...
    */
-  @Input() model: string;
+  @Input() scope: string;
   @Input() type: 'constant' | 'model' = 'model';
 
   // The form to connect to
@@ -38,9 +38,9 @@ export class StaticCheckBoxesComponent implements OnInit {
 
   ngOnInit() {
     if(this.type === 'constant') {
-      this.items = staticConsts[this.model];
+      this.items = staticConsts[this.scope];
     } else {
-      this.items = staticModels[this.model];
+      this.items = staticModels[this.scope];
     }
   }
 

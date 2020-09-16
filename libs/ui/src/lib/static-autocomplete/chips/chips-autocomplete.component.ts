@@ -18,13 +18,14 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-// blockframes
+// Blockframes
 import { staticModels } from '@blockframes/utils/static-model';
 import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
-  selector: '[form][model]chips-autocomplete',
+  selector: '[form][scope]chips-autocomplete',
   templateUrl: './chips-autocomplete.component.html',
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -34,17 +35,18 @@ export class ChipsAutocompleteComponent implements OnInit {
   /**
    * The static model to display
    * @example
-   * <chips-autocomplete model="TERRITORIES" ...
+   * <chips-autocomplete scope="TERRITORIES" ...
    */
-  @Input() model: Scope;
+  @Input() scope: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
   @Input() @boolean required: boolean;
+  @Input() withoutValues: string[] = []
   // The parent form to connect to
   @Input()
-  get form() { return this._form }
+  get form(): FormList<any> { return this._form }
   set form(form) {
     this._form = form
     this.values$ = form.valueChanges.pipe(startWith(this.form.value));
@@ -67,10 +69,11 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
-    this.items = staticModels[this.model] as any;
-
+    this.items = this.withoutValues.length
+      ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.withoutValues.includes(value.slug))
+      : staticModels[this.scope] as SlugAndLabel[];
     if (this.placeholder === '') {
-      this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
+      this.placeholder = `${this.scope[0].toUpperCase()}${this.scope.slice(1).toLowerCase()}`;
     }
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
@@ -91,7 +94,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   /** Add a chip based on key code */
   public add({ value }: MatChipInputEvent) {
     value.trim();
-    const slugByLabel = getCodeIfExists(this.model, value)
+    const slugByLabel = getCodeIfExists(this.scope, value)
     if (value && slugByLabel) {
       this.form.add(slugByLabel);
       this.added.emit(value);
@@ -106,6 +109,7 @@ export class ChipsAutocompleteComponent implements OnInit {
     this.form.add(option.value);
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
+    this.focusOut();
   }
 
   /** Remove a chip */

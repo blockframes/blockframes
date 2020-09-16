@@ -72,8 +72,8 @@ const constants = {
   // ------ //
   contentType: {
     feature_film: 'Feature Film',
-    short: 'Short',
-    serie: 'Serie',
+    short: 'Short Film',
+    serie: 'Tv Serie',
     season: 'Season',
     volume: 'Volume',
     episode: 'Episode',

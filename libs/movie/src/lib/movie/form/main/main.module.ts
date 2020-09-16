@@ -30,6 +30,7 @@ import { MovieFormMainComponent } from './main.component';
 // Pipe
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { TranslateSlugModule } from '@blockframes/utils/pipes';
+import { FilmographyPipeModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -48,6 +49,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes';
     FormTableModule,
     HasStatusModule,
     TranslateSlugModule,
+    FilmographyPipeModule,
 
     // Material
     MatDividerModule,

@@ -6,7 +6,7 @@
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
-        {{ value | translateSlug: model }}
+        {{ value | translateSlug: scope }}
         <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
       </mat-chip>
     </ng-container>

@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Person } from '../common-interfaces';
 
 @Pipe({
@@ -20,3 +21,10 @@ export class DisplayNamePipe implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  declarations: [DisplayNamePipe],
+  imports: [CommonModule],
+  exports: [DisplayNamePipe]
+})
+export class DisplayNameModule { }
