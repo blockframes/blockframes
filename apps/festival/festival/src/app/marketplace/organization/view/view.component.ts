@@ -22,7 +22,6 @@ const navLinks = [{
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent {
-  // @HostBinding('@scaleIn') animation = true;
   // Cannot use Guard Active + selectActive as the active organization is the one from the user
   org$ = this.route.params.pipe(
     pluck('orgId'),

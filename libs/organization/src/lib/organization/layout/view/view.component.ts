@@ -12,7 +12,6 @@ import { RouterOutlet } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent {
-  // @HostBinding('@fade') animation = true;
   @Input() navLinks;
   @Input() org: Organization;
 
