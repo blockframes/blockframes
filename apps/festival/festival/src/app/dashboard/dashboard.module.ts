@@ -10,9 +10,10 @@ import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboar
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 
 // Tunnel routes
-import { tunnelRoutes } from './tunnel/movie-tunnel-routing.routes';
+import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -132,6 +133,7 @@ const routes: Routes = [{
     OrgNameModule,
     ToLabelModule,
     OrgAccessModule,
+    MovieFormShellModule,
 
     // Material
     MatDividerModule,
