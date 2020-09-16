@@ -13,7 +13,7 @@ export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): stri
   const refParts = ref.split('/');
   return refParts.pop() === formValue.fileName ?
     `${formValue.ref}` :
-    `${formValue.ref}${formValue.fileName}`;
+    `${formValue.ref}/${formValue.fileName}`;
 }
 
 export interface UploadData {
