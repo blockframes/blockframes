@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
@@ -12,30 +12,31 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./static-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticSelectComponent implements OnInit {
+export class StaticSelectComponent {
 
-  public _scope: string[];
-  @Input() scope;
   @Input() type: 'constant' | 'model';
+
+  public staticValue;
+  public _scope
+  @Input() set scope(value: string) {
+    this._scope = value;
+    if (this.type === 'constant') {
+      this.staticValue = Object.keys(staticConsts[value])
+    } else {
+      this.staticValue = staticModels[value]
+    }
+  };
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
     if (this.type === 'constant') {
-      this._scope = Object.keys(staticConsts[this.scope]).filter(scopeValue => !toFilterValue.includes(scopeValue))
+      this.staticValue = Object.keys(staticConsts[this.scope]).filter(scopeValue => !toFilterValue.includes(scopeValue));
     } else {
-      this._scope = staticModels[this.scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
+        this._scope = staticModels[this.scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug)) 
     }
   }
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;
-
-  ngOnInit() {
-    if (this.type === 'constant' && !this._scope.length) {
-      this._scope = staticConsts[this.scope];
-    } else if (!this._scope) {
-      this._scope = staticModels[this.scope];
-    }
-  }
 }

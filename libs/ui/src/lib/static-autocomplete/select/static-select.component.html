@@ -4,7 +4,7 @@
       <ng-content select="mat-label"></ng-content>
     </mat-label>
     <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
-      <mat-option *ngFor="let scope of _scope" [value]="scope.slug">
+      <mat-option *ngFor="let scope of staticValue" [value]="scope.slug">
         <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
         </ng-template>
         <ng-template #label>
@@ -27,9 +27,9 @@
       <ng-content select="mat-label"></ng-content>
     </mat-label>
     <mat-select [formControl]="control" [placeholder]="placeholder">
-      <ng-container *ngFor="let type of _scope">
+      <ng-container *ngFor="let type of staticValue">
         <mat-option [value]="type">
-          {{ type | toLabel: scope }}
+          {{ type | toLabel: _scope }}
         </mat-option>
       </ng-container>
     </mat-select>
