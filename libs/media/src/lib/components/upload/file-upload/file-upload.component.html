@@ -36,7 +36,6 @@
   <section *ngSwitchCase="'file'">
     <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
     <h3>{{ form.fileName.value }}</h3>
-    <span class="mat-body-2">{{ size$ | async }}</span>
     <button mat-mini-fab color="divider">
       <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
     </button>
