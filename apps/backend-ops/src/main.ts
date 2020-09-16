@@ -12,7 +12,7 @@ import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } fr
 import { generateFixtures } from './generate-fixtures';
 
 const args = process.argv.slice(2);
-const [cmd, ...rest] = args;
+const [cmd, ...flags] = args;
 
 async function runCommand() {
   if (cmd === 'prepareForTesting') {
@@ -49,6 +49,15 @@ async function runCommand() {
     showHelp();
     return Promise.reject('Command not recognised');
   }
+}
+
+function hasFlag(compare: string) {
+  return flags.some(flag => flag === compare) || flags.some(flag => flag === `--${compare}`)
+}
+
+if (hasFlag('skipMaintenance')) {
+  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
+  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true, meaning maintenance mode is disabled!')
 }
 
 const consoleMsg = `Time running command "${cmd}"`;
