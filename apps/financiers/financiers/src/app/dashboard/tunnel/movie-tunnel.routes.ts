@@ -2,15 +2,13 @@
 import { Routes } from '@angular/router';
 
 // Blockframes
-import { TunnelGuard } from '@blockframes/ui/tunnel';
-import staticConsts from '@blockframes/utils/static-model/staticConsts'
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
-    loadChildren: () => import('@blockframes/movie/form/shell/shell.module').then(m => m.MovieFormShellModule),
     canDeactivate: [TunnelGuard],
     children: [
       {
@@ -20,8 +18,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'title-status',
-        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule),
-        data: { disabled: Object.keys(staticConsts.productionStatus).filter(status => status !== 'released') }
+        loadChildren: () => import('@blockframes/movie/form/title-status/title-status.module').then(m => m.TitleStatusModule)
       },
       {
         path: 'main',
@@ -74,7 +71,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'summary',
-        loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule)
+        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.MovieTunnelSummaryModule)
       },
       {
         path: 'end',
