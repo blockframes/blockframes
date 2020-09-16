@@ -1,6 +1,7 @@
 <ng-container *ngIf="movie$ | async as movie">
-  <movie-view [navLinks]="navLinks">
+  <title-marketplace-shell [routes]="navLinks">
     <movie-header [movie]="movie">
+
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
@@ -10,10 +11,11 @@
           </a>
         </ng-container>
       </movie-header-cta>
+
       <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
         <wishlist-button [movieId]="movie.id"></wishlist-button>
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
-  </movie-view>
+  </title-marketplace-shell>
 </ng-container>

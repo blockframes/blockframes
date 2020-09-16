@@ -1,6 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 
 // RxJs
@@ -42,8 +42,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
-    private routerQuery: RouterQuery,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -67,7 +66,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 
-  prepareRoute() {
-    return this.routerQuery.getValue().state.root.data.animation;
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
   }
 }

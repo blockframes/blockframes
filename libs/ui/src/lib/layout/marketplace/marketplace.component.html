@@ -55,8 +55,8 @@
 
     <!-- CONTENT -->
     <main fxFlex cdkScrollable>
-      <div class="page" [@routeAnimation]="prepareRoute()">
-        <router-outlet></router-outlet>
+      <div class="page" [@routeAnimation]="animationOutlet(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
       </div>
       <bf-footer></bf-footer>
     </main>
