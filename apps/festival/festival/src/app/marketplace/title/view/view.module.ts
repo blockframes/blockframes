@@ -6,6 +6,14 @@ import { CommonModule } from '@angular/common';
 import { MarketplaceMovieViewComponent } from './view.component';
 import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
 import { RouterModule } from '@angular/router';
+import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
+import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
+import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
+
+// Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 const routes = [
   {
@@ -46,6 +54,13 @@ const routes = [
   imports: [
     CommonModule,
     MovieShellModule,
+    MovieHeaderModule,
+    OrgChipModule,
+    WishlistButtonModule,
+    PromotionalLinksModule,
+    // Material
+    MatIconModule,
+    MatButtonModule,
     RouterModule.forChild(routes)
   ]
 })

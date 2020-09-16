@@ -13,25 +13,7 @@
   </ng-template>
 
   <!-- Header -->
-  <movie-header [movie]="movie">
-
-    <!-- TODO: movie-header-cta should be festival only -->
-      <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="32px">
-        <ng-container *ngFor="let org of orgs$ | async">
-          <org-chip [org]="org"></org-chip>
-          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-            <span>Contact Sales Agent</span>
-            <mat-icon svgIcon="arrow_forward"></mat-icon>
-          </a>
-        </ng-container>
-      </movie-header-cta>
-    <!-- END FESTIVAL ONLY -->
-
-    <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
-      <wishlist-button [movieId]="movie.id"></wishlist-button>
-      <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
-    </movie-header-actions>
-  </movie-header>
+  <ng-content select="movie-header"></ng-content>
   
   <!-- Content -->
   <nav id="nav" mat-tab-nav-bar>

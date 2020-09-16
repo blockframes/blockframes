@@ -1,1 +1,10 @@
-<title-marketplace-shell [routes]="navLinks"></title-marketplace-shell>
+<ng-container *ngIf="movie$ | async as movie">
+  <title-marketplace-shell [routes]="navLinks">
+    <movie-header [movie]="movie">
+      <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+        <wishlist-button [movieId]="movie.id"></wishlist-button>
+        <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+      </movie-header-actions>
+    </movie-header>
+  </title-marketplace-shell>
+</ng-container>

@@ -1,4 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -6,7 +9,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent {
+export class MarketplaceMovieViewComponent implements OnInit {
+  public movie$: Observable<Movie>;
 
   public navLinks = [{
     path: 'main',
@@ -28,5 +32,22 @@ export class MarketplaceMovieViewComponent {
     path: 'avails',
     label: 'Avails'
   }];
+
+  promoLinks = [
+    'promo_reel_link',
+    'scenario',
+    'screener_link',
+    'teaser_link',
+    'presentation_deck',
+    'trailer_link'
+  ];
+
+  constructor(
+    private movieQuery: MovieQuery,
+    ) {}
+
+  ngOnInit() {
+    this.movie$ = this.movieQuery.selectActive();
+  }
 
 }
