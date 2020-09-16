@@ -9,7 +9,6 @@ import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/f
 import readline from 'readline';
 import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
-import { loadDBVersion } from './migrations';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';
 import { User } from '@blockframes/user/types';
@@ -193,7 +192,6 @@ export async function createUsers(): Promise<any> {
 
 export async function generateWatermarks() {
   const { db, storage } = loadAdminServices();
-  const dbVersion = await loadDBVersion(db);
   // activate maintenance to prevent cloud functions to trigger
   let startedMaintenance = false;
   if (!(await isInMaintenance(0))) {
@@ -203,22 +201,11 @@ export async function generateWatermarks() {
 
   const users = await db.collection('users').get();
 
-  await runChunks(users.docs, async (user) => {
-    const file = await upsertWatermark(user.data(), storageBucket, storage);
-    // We are in maintenance mode, trigger are stopped
-    // so we update manually the user document
-    if (dbVersion < 31) {
-      const [signedUrl] = await file.getSignedUrl({
-        action: 'read',
-        expires: '01-01-3000',
-        version: 'v2',
-      });
-      const watermark = { ref: file.name, url: signedUrl };
-      await user.ref.update({ watermark });
-    } else {
-      await user.ref.update({ watermark: file.name });
-    }
-  }, env?.['heavyChunkSize'] ?? 10);
+  await runChunks(
+    users.docs,
+    (user) => upsertWatermark(user.data(), storageBucket, storage),
+    env?.['heavyChunkSize'] ?? 10
+  );
 
   // deactivate maintenance
   if (startedMaintenance) await endMaintenance();

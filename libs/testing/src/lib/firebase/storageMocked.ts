@@ -6,9 +6,9 @@ export class MockedGFile {
   public name: string;
   public prefix: string;
 
-  constructor(name: string) {
-    this.name = name;
-    this.prefix = `${this.name.split('/')[0]}/`;
+  constructor(name: string, prefix: string) {
+    this.name = `${prefix}/${name}`;
+    this.prefix = `${prefix}/`;
     if (!bucketFiles[this.prefix]) {
       bucketFiles[this.prefix] = [];
     }
@@ -31,8 +31,8 @@ export class BucketMocked {
     this.name = name;
   }
 
-  populate(files: string[]) {
-    files.forEach(name => new MockedGFile(name));
+  populate(files: string[], prefix) {
+    files.forEach(name => new MockedGFile(name, prefix));
   }
 
   getFiles(options: { prefix: string }) {

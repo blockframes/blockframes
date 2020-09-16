@@ -17,7 +17,12 @@ import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { linkFile, unlinkFile } from './media';
+import {
+  linkFile,
+  unlinkFile,
+  getMediaToken as _getMediaToken,
+  deleteMedia as _deleteMedia
+} from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
@@ -122,6 +127,9 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
   onDocumentPermissionCreate
 );
 
+/** Trigger: when an user ask for a private media. */
+export const getMediaToken = functions.https.onCall(logErrors(_getMediaToken));
+
 //--------------------------------
 //    Invitations Management    //
 //--------------------------------
@@ -169,7 +177,7 @@ export const onMovieCreateEvent = onDocumentCreate(
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent =  functions
+export const onMovieUpdateEvent = functions
   .runWith(heavyConfig) // movie update can potentially trigger images processing
   .firestore.document('movies/{movieId}')
   .onUpdate(skipInMaintenance(onMovieUpdate));
@@ -241,14 +249,11 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 
 
 //--------------------------------
-//         File upload          //
+//      Files management        //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. */
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
-//--------------------------------
-//         File delete          //
-//--------------------------------
+export const deleteMedia = functions.https.onCall(logErrors(_deleteMedia));
 
 export const onFileDelete = functions.storage.object().onDelete(skipInMaintenance(unlinkFile));
