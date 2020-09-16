@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 import { PublicUser } from '@blockframes/user/types';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 export function getWatermark(email: string, firstName: string = '', lastName: string = '') {
   return `
@@ -18,9 +19,9 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
 /**
  * - Generate a svg file with the name & email of the user
  * - Store the watermark file in the storage bucket
- * - User's firestore doc is updated by onFileUpload backend function
+ * - Update the user document
  */
-export async function upsertWatermark(user: PublicUser, bucketName: string, storage?: admin.storage.Storage): Promise<any> {
+export async function upsertWatermark(user: PublicUser, bucketName: string, storage?: admin.storage.Storage, privacy : Privacy = 'public'): Promise<any> {
 
   if (!user.email) {
     throw new Error(`Cannot generate watermark for user ${user.uid} because 'email' is not provided.`);
@@ -28,12 +29,16 @@ export async function upsertWatermark(user: PublicUser, bucketName: string, stor
 
   const watermark = getWatermark(user.email, user.firstName, user.lastName);
 
-  const ref = `users/${user.uid}/watermark/${user.uid}.svg`;
+  const ref = `${privacy}/users/${user.uid}/watermark/${user.uid}.svg`;
   const file = storage ? storage.bucket(bucketName).file(ref) : admin.storage().bucket(bucketName).file(ref);
 
   await new Promise(res => {
     file.createWriteStream({ contentType: 'image/svg+xml' }).end(watermark, () => res());
   });
+
+  const db = admin.firestore();
+  const doc = await db.collection('users').doc(user.uid);
+  await doc.update({ watermark: ref });
 
   return file;
 }

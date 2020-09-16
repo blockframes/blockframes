@@ -2,8 +2,10 @@ import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener } from 
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { generateBackgroundImageUrl, ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
+import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -30,7 +32,6 @@ function b64toBlob(data: string) {
   const type = metadata.split(';')[0].split(':')[1];
   return new Blob([ab], { type });
 }
-
 @Component({
   selector: 'drop-cropper',
   templateUrl: './cropper.component.html',
@@ -43,7 +44,13 @@ export class CropperComponent implements OnInit {
   // Private Variables //
   //////////////////////
 
+  private ref: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
+  private parameters: ImageParameters = {
+    auto: 'compress,format',
+    fit: 'crop',
+    w: 0,
+  };
 
   ///////////////////////
   // Public Variables //
@@ -70,27 +77,22 @@ export class CropperComponent implements OnInit {
   /** Disable fileUploader & delete buttons in 'show' step */
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
+  @Input() filePrivacy : Privacy = 'public';
 
   constructor(
+    private mediaService: MediaService,
     private sanitizer: DomSanitizer,
   ) { }
 
   ngOnInit() {
-    // show current image
     if (!!this.form.blobOrFile.value) {
       const blobUrl = URL.createObjectURL(this.form.blobOrFile.value);
       const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
       this.previewUrl$.next(previewUrl);
       this.nextStep('show');
-    } else if (this.form.oldRef?.value) {
-      const parameters: ImageParameters = {
-        auto: 'compress,format',
-        fit: 'crop',
-        w: 300,
-      };
-      const previewUrl = generateBackgroundImageUrl(this.form.oldRef.value, parameters);
-      this.previewUrl$.next(previewUrl);
-      this.nextStep('show');
+    } else if (this.form.ref?.value) {
+      this.ref = this.form.ref.value;
+      this.goToShow();
     }
   }
 
@@ -116,6 +118,12 @@ export class CropperComponent implements OnInit {
   // Steps //
   ///////////
 
+  async goToShow() {
+    this.previewUrl$.next(await this.getDownloadUrl(this.ref));
+    this.nextStep('show');
+  }
+
+
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
@@ -138,10 +146,10 @@ export class CropperComponent implements OnInit {
       this.nextStep('show');
 
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
+      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp'));
 
       this.form.patchValue({
-        ref: `${this.storagePath}/`,
+        ref: getStoragePath(this.storagePath, this.filePrivacy),
         blobOrFile: blob,
         delete: false,
         fileName: fileName,
@@ -171,4 +179,11 @@ export class CropperComponent implements OnInit {
     this.step.next(name);
   }
 
+  /** 
+   * Returns a promise with the download url of an image based on its reference.
+   * If media is protected, this will also try to fetch a security token.
+   * */
+  private getDownloadUrl(ref: string): Promise<string> {
+    return this.mediaService.generateImgIxUrl(ref, this.parameters);
+  }
 }
