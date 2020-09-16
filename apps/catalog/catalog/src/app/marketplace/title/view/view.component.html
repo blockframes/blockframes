@@ -1,40 +1,10 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
-</ng-template>
-<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
-  <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
-    <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
-      <div *ngIf="movie.poster as poster">
-        <img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster">
-      </div>
-      <div class="movie-info">
-        <h4>{{ getTitle(movie) }}</h4>
-        <h1>{{ movie.title.international }}</h1>
-        <ng-container *ngIf="movie.title.international !== movie.title.original">
-          <h3>{{ movie.title.original }}</h3>
-        </ng-container>
-        <p class="mat-body-1">{{ getDirectors(movie) }}</p>
-        <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>
-      </div>
-    </article>
-    <article fxLayout="column" fxLayoutAlign="space-around end">
-      <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary"
-       routerLink="avails">Switch to Avails</a>
-      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary"
-      routerLink="main">Switch to Main Information</a>
-      <wishlist-button [movieId]="movie.id"></wishlist-button>
-    </article>
-  </header>
-  <section>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-      *ngFor="let link of navLinks"
-      [routerLink]="link.path"
-      routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-     {{link.label}}
-      </a>
-    </nav>
-    <router-outlet></router-outlet>
-  </section>
+<ng-container *ngIf="movie$ | async as movie">
+  <title-marketplace-shell [routes]="navLinks">
+    <movie-header [movie]="movie">
+      <movie-header-actions fxLayout.lt-sm="column" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="24px">
+        <wishlist-button [movieId]="movie.id"></wishlist-button>
+        <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
+      </movie-header-actions>
+    </movie-header>
+  </title-marketplace-shell>
 </ng-container>
