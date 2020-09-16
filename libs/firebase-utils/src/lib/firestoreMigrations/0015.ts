@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { omit } from 'lodash';
 /**
  * Update user and organization in notifications and invitations collections

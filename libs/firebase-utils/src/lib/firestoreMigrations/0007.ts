@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import admin from 'firebase-admin';
 import Timestamp = admin.firestore.Timestamp;

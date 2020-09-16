@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 /**
  * Update last version in contract documents

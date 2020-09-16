@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';

@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 export async function upgrade(db: Firestore) {
   const orgs = await db.collection('orgs').get();

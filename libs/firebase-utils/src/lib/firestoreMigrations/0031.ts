@@ -1,4 +1,4 @@
-import { Firestore, Storage } from '../admin';
+import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
 import { startMaintenance, endMaintenance, getDocument, runChunks } from '@blockframes/firebase-utils';
 import { firebase } from '@env';

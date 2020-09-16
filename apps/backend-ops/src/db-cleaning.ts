@@ -1,11 +1,18 @@
-import { Auth, Firestore, QueryDocumentSnapshot } from './admin';
 import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { OrganizationDocument, PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { removeUnexpectedUsers, UserConfig } from './users';
-import { getDocument, startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
+import {
+  Auth,
+  Firestore,
+  QueryDocumentSnapshot,
+  getDocument,
+  startMaintenance,
+  endMaintenance,
+  runChunks,
+} from '@blockframes/firebase-utils';
 import admin from 'firebase-admin';
 
 export const numberOfDaysToKeepNotifications = 14;

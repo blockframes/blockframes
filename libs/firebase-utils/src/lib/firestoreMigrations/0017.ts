@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 /**
  * Create missing movies documentPermissions.

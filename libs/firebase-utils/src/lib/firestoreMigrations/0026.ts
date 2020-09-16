@@ -1,4 +1,4 @@
-import { Firestore, Storage } from '../admin';
+import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
 import { PublicOrganization } from 'apps/backend-functions/src/data/types';

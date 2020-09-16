@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 const updateStoreConfig = (oldStoreConfig) => {
   if (oldStoreConfig) {

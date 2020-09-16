@@ -34,7 +34,7 @@ import * as v0033 from './0033';
 import * as v0034 from './0034';
 import * as v0035 from './0035';
 
-import { Firestore, Storage } from '../admin';
+import { Firestore, Storage } from '../types';
 
 export interface IMigration {
   upgrade: (db: Firestore, storage: Storage) => Promise<any>;

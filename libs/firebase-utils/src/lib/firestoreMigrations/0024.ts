@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { PublicUser } from '@blockframes/user/types';
 import { upsertWatermark } from '@blockframes/firebase-utils';
 import { firebase } from '@env';

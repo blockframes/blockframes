@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { OldImgRef, OldPromotionalElement, createOldImgRef, createOldPromotionalElement } from './old-types';
 

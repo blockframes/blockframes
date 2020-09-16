@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 /**
  * Rename a key in a SIMPLE object. pure function: returns a NEW object,

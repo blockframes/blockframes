@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 
 function convertPrice(price: any) {

@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 
 const orgAppAccessMapping = {
   jnbHKBP5YLvRQGcyQ8In: { catalogDashboard: true, catalogMarketplace: true },

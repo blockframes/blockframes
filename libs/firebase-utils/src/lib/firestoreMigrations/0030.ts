@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '../types';
 import { startMaintenance, endMaintenance, runChunks } from '@blockframes/firebase-utils';
 import { OldHostedMedia, createOldHostedMedia } from './old-types';
 

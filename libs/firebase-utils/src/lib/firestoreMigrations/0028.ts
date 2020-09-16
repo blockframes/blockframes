@@ -1,4 +1,4 @@
-import { Firestore, Storage } from '../admin';
+import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
