@@ -16,7 +16,6 @@ import { NotificationQuery } from '@blockframes/notification/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { ScrollService } from './scroll.service';
 
 @Component({
   selector: 'layout-marketplace',
@@ -44,8 +43,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
-    private router: Router,
-    private scrollService: ScrollService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -63,7 +61,6 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
       this.cdkScrollable.scrollTo({top: 0});
       this.sidenav.close();
     });
-    this.scrollService.scrollable = this.cdkScrollable;
   }
 
   ngOnDestroy() {

@@ -12,7 +12,7 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, takeWhile, scan } from 'rxjs/operators';
 // import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ScrollService } from '@blockframes/ui/layout/marketplace/scroll.service';
+import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -33,11 +33,13 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public filterForm = new MovieSearchForm();
 
+  private offset: number;
+
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private scrollService: ScrollService
+    private scrollable: CdkScrollable
   ) { }
 
   ngOnInit() {
@@ -62,7 +64,7 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
       // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
       tap(movies => this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies))),
-      tap(_ => setTimeout(() => this.scrollService.go(), 0))
+      tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))
     ).subscribe();
   }
 
@@ -79,9 +81,17 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async loadMore() {
-    this.scrollService.set();
+    this.setScrollOffset();
     this.filterForm.page.setValue(this.filterForm.page.value + 1);
     await this.filterForm.search();
+  }
+
+  setScrollOffset() {
+    this.offset = this.scrollable.measureScrollOffset('top');
+  }
+
+  scrollToScrollOffset() {
+    this.scrollable.scrollTo({ top: this.offset });
   }
   
 }
