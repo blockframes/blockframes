@@ -1,10 +1,6 @@
 {
   "hosting": [
     {
-      "target": "storybook",
-      "public": "dist/storybook"
-    },
-    {
       "target": "catalog",
       "public": "dist/apps/catalog/",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
