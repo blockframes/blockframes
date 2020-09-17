@@ -7,6 +7,7 @@
 }
 
 export interface Organization {
+  id: string;
   name: string;
   email: string;
   address: Location;
@@ -46,6 +47,7 @@ export interface Dates {
 }
 
 export interface Movie {
+  id: string;
   title: {
     international: string
   }

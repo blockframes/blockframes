@@ -2,7 +2,11 @@
 
 export default class EventEditPage {
   constructor() {
-    cy.get('event-edit')
+    cy.wait(8000);
+    // setTimeout(() => {
+    //   cy.get('event-edit', {timeout: 20000})
+    // }, 10000)
+    cy.get('event-edit', {timeout: 20000})
   }
 
   addEventTitle(title: string) {
@@ -27,7 +31,8 @@ export default class EventEditPage {
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-edit mat-select[formControlName=titleId]').click();
+    cy.get('event-edit mat-select[formControlName=titleId]', {timeout: 20000})
+      .click();
     cy.get('mat-option').contains(movieName).click();
   }
 

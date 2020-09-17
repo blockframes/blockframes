@@ -1,0 +1,38 @@
+﻿import { Organization as OrgType } from '../utils/type';
+import { QueryInferface } from "../utils/queryinterface";
+import orgsFixture from 'tools/fixtures/orgs.json';
+
+export enum ORG {
+  Xara = 'sLchj1Ib4Cxhwr0ZBW4m',
+  GG = 'emaVtLWE8YFK3AQo2CaS',
+}
+
+export class Orgs {
+  constructor() {
+
+  }
+
+  get(query: QueryInferface) : Partial<OrgType>[] {
+    const orgSet: Partial<OrgType>[]  = (query.exist) ? 
+                                      orgsFixture : null;
+
+    if (query.index && query.index !== -1) {
+      return [orgSet[query.index]];
+    }
+
+    if (query.key) {
+      return orgSet.filter(u => u[query.key] === query.value);
+    }
+
+    return orgSet;
+  }
+
+  /**
+   * getByID : convenience method to signed up org by ID
+   * @param ID : id of the org
+   */
+  getByID(ID: string) : Partial<OrgType> {
+    return this.get({exist: true, key:'id', value: ID})[0];
+  }
+
+}
