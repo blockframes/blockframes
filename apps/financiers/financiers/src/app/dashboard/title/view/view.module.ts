@@ -22,8 +22,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
-  path: '',
-  component: TitleViewComponent,
+    path: '',
+    redirectTo: 'main',
+    pathMatch: 'full'
+  },
+  {
+    path: 'main',
+    loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule),
+    data: { animation: 1 }
+  },
+  {
+    path: 'artistic',
+    loadChildren: () => import('@blockframes/movie/dashboard/components/view/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+    data: { animation: 2 }
+  },
+  {
+    path: 'production',
+    loadChildren: () => import('@blockframes/movie/dashboard/components/view/production/production.module').then(m => m.MovieViewProductionModule),
+    data: { animation: 3 }
 }];
 
 @NgModule({

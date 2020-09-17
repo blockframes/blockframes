@@ -41,14 +41,9 @@ const routes = [
         data: { animation: '2' }
       },
       {
-        path: 'finance',
-        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
-        data: { animation: '3' }
-      },
-      {
         path: 'screenings',
         loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule),
-        data: { animation: '4' }
+        data: { animation: '3' }
       }
     ]
   }
