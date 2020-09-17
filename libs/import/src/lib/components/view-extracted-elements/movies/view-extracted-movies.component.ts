@@ -482,7 +482,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRIZES (Prizes)
         if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
-          movie.prizes = [];
+          movie.customPrizes = [];
           spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
             const prizeParts = p.split(this.subSeparator);
             if (prizeParts.length >= 3) {
@@ -501,11 +501,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 }
 
               }
-              // TODO issue #3091
-              // if (prizeParts.length >= 5) {
-              //   prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
-              // }
-              movie.prizes.push(prize);
+              movie.customPrizes.push(prize);
             }
           });
         }

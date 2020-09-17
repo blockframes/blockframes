@@ -8,6 +8,7 @@ header {
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
     height: 100%;
+    max-width: 12%;
     margin-right: 16px;
     border-radius: 5px;
   }

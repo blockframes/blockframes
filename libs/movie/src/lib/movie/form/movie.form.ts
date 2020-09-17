@@ -94,6 +94,7 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
+    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
@@ -111,7 +112,6 @@ function createMovieControls(movie: Partial<Movie>) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
-    customPrize: FormList.factory(entity.customPrize, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
@@ -135,8 +135,8 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     super(createMovieControls(movie));
   }
 
-  get customPrize() {
-    return this.get('customPrize');
+  get customPrizes() {
+    return this.get('customPrizes');
   }
 
   get banner() {

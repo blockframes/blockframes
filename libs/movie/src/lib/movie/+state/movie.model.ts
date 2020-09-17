@@ -53,6 +53,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     documents: createMovieLegalDocuments(params.documents),
     // Mandatory fields
     contentType: 'feature_film',
+    customPrizes: [],
     directors: [],
     genres: [],
     originalLanguages: [],
@@ -74,7 +75,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     logline: '',
     originalRelease: [],
     prizes: [],
-    customPrize: [],
     producers: [],
     productionStatus: null,
     rating: [],

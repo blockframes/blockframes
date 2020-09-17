@@ -51,6 +51,7 @@ interface MovieRaw<D> {
   contentType: ContentType; //! required
   crew?: Crew[],
   customGenres?: string[],
+  customPrizes: Prize[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   format?: FormatSlug,
@@ -71,7 +72,6 @@ interface MovieRaw<D> {
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
   prizes?: Prize[],
-  customPrize?: Prize[],
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],
