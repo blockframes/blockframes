@@ -123,6 +123,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
+    const pristineSub = this.form.valueChanges.subscribe(_ => this.form.markAsPristine());
+    this.sub.add(pristineSub);
   }
 
   ngOnDestroy() {
@@ -157,7 +159,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   confirmExit() {
-    if (this.form.status !== 'INVALID') {
+    if (this.form.pristine) {
       return of(true);
     }
     const dialogRef = this.dialog.open(TunnelConfirmComponent, {

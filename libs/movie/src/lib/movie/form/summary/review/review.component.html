@@ -15,17 +15,17 @@
     <ng-template #displayFestivals>
       <li *ngFor="let festivalPrize of movie.prizes.controls">
         <strong>
-          <missing-control [control]="festivalPrize.get('name')">
+          <missing-control [control]="festivalPrize.get('name')" [link]="link" fragment="festival">
             <ng-template #content>{{ festivalPrize.get('name').value | toLabel: 'festival' }} </ng-template>
           </missing-control>
         </strong>
-        <missing-control [control]="festivalPrize.get('prize')">
+        <missing-control [control]="festivalPrize.get('prize')" [link]="link" fragment="festival">
           <ng-template #content>{{ festivalPrize.get('prize').value }} </ng-template>
         </missing-control>
-        <missing-control [control]="festivalPrize.get('year')">
+        <missing-control [control]="festivalPrize.get('year')" [link]="link" fragment="festival">
           <ng-template #content>{{ festivalPrize.get('year').value }} </ng-template>
         </missing-control>
-        <missing-control [control]="festivalPrize.get('premiere')">
+        <missing-control [control]="festivalPrize.get('premiere')" [link]="link" fragment="festival">
           <ng-template let-premieres>
             <ng-container *ngIf="festivalPrize.get('premiere')">
               <span>{{ festivalPrize.get('premiere').value | titlecase }} Premiere</span>
@@ -41,7 +41,7 @@
 <article>
   <h6>
     Custom Festival{ movie.customPrize.controls.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="festival">
+    <a mat-icon-button [routerLink]="link" fragment="custom-festival">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
   </h6>
@@ -49,17 +49,17 @@
     <ng-container *ngIf="movie.customPrize.controls.length">
       <li *ngFor="let customPrize of movie.customPrize.controls">
         <strong>
-          <missing-control [control]="customPrize.get('name')">
+          <missing-control [control]="customPrize.get('name')" [link]="link" fragment="custom-festival">
             <ng-template #content>{{ customPrize.get('name').value }} </ng-template>
           </missing-control>
         </strong>
-        <missing-control [control]="customPrize.get('prize')">
+        <missing-control [control]="customPrize.get('prize')" [link]="link" fragment="custom-festival">
           <ng-template #content>{{ customPrize.get('prize').value }} </ng-template>
         </missing-control>
-        <missing-control [control]="customPrize.get('year')">
+        <missing-control [control]="customPrize.get('year')" [link]="link" fragment="custom-festival">
           <ng-template #content>{{ customPrize.get('year').value }} </ng-template>
         </missing-control>
-        <missing-control [control]="customPrize.get('premiere')">
+        <missing-control [control]="customPrize.get('premiere')" [link]="link" fragment="custom-festival">
           <ng-template let-premieres>
             <ng-container *ngIf="customPrize.get('premiere')">
               <span>{{ customPrize.get('premiere').value | titlecase }} Premiere</span>
