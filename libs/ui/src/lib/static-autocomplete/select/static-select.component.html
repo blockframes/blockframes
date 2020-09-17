@@ -27,7 +27,7 @@
     <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
       <ng-container *ngFor="let value of staticValue">
         <mat-option [value]="value">
-          {{ value | toLabel: _scope }}
+          {{ value | toLabel: option }}
         </mat-option>
       </ng-container>
     </mat-select>

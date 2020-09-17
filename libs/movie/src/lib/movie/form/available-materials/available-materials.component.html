@@ -34,7 +34,6 @@
 
     <!-- Buttons -->
 
-    <!-- Can't use footer html node because tunnel layout component as some styles set on the footer -->
     <div *ngIf="!showButtons">
       <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
       <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -45,7 +44,7 @@
         </button>
       </div>
     </div>
-    <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons" class="footer">
+    <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px" *ngIf="showButtons">
       <mat-divider></mat-divider>
       <span class="mat-caption text-primary">Add a Version</span>
       <button mat-mini-fab color="primary" (click)="showForm()">

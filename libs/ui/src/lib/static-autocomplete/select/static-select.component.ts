@@ -16,10 +16,10 @@ export class StaticSelectComponent {
 
   @Input() type: 'constant' | 'model';
 
-  public staticValue;
-  public _scope
+  public staticValue: any[] = [];
+  public option: string;
   @Input() set scope(value: string) {
-    this._scope = value;
+    this.option = value;
     if (this.type === 'constant') {
       this.staticValue = Object.keys(staticConsts[value])
     } else {
@@ -34,9 +34,9 @@ export class StaticSelectComponent {
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
     if (this.type === 'constant') {
-      this.staticValue = Object.keys(staticConsts[this._scope]).filter(scopeValue => !toFilterValue.includes(scopeValue));
+      this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue));
     } else {
-      this._scope = staticModels[this._scope].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
+      this.option = staticModels[this.option].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
     }
   }
 
