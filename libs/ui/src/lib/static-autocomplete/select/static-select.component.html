@@ -1,4 +1,4 @@
-<div *ngIf="type === 'model'">
+<ng-container *ngIf="type === 'model'">
   <mat-form-field [appearance]="mode">
     <mat-label>
       <ng-content select="mat-label"></ng-content>
@@ -19,9 +19,9 @@
       <ng-content select="mat-error"></ng-content>
     </mat-error>
   </mat-form-field>
-</div>
+</ng-container>
 
-<div *ngIf="type === 'constant'">
+<ng-container *ngIf="type === 'constant'">
   <mat-form-field [appearance]="mode">
     <mat-label>{{ label }}</mat-label>
     <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
@@ -36,4 +36,4 @@
       <ng-content select="mat-error"></ng-content>
     </mat-error>
   </mat-form-field>
-</div>
+</ng-container>
