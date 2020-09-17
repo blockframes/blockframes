@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { MovieShellComponent, MovieHeader } from './shell.component';
+import { MovieShellComponent } from './shell.component';
 
 // Custom Modules
 import { AppBarModule } from '@blockframes/ui/app-bar';
@@ -26,8 +26,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
-  declarations: [MovieShellComponent, MovieHeader],
-  exports: [MovieShellComponent, MovieHeader],
+  declarations: [MovieShellComponent],
+  exports: [MovieShellComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
