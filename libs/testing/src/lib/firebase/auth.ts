@@ -1,4 +1,4 @@
-import { runInBatches, sleep } from '@blockframes/firebase-utils';
+import { runChunks } from '@blockframes/firebase-utils';
 import * as env from '@env';
 // tslint:disable: no-console
 import type * as admin from 'firebase-admin';
@@ -19,7 +19,6 @@ export async function deleteAllUsers(auth: admin.auth.Auth) {
 export async function importAllUsers(auth: admin.auth.Auth, users: admin.auth.UserImportRecord[]) {
   const timeMsg = `Creating ${users.length} users took`;
   console.time(timeMsg);
-  const output = await runInBatches(users, userRecord => auth.createUser(userRecord), (env?.['chunkSize'] || 10) * 10)
+  await runChunks(users, userRecord => auth.createUser(userRecord), (env?.['chunkSize'] || 10) * 10);
   console.timeEnd(timeMsg);
-  return output.length;
 }

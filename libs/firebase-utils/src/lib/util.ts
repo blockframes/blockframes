@@ -4,8 +4,6 @@ import { firebase as firebaseCI } from 'env/env.ci';
 import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
-import { chunk } from 'lodash';
-import * as env from '@env'
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -30,21 +28,6 @@ export async function* getCollectionInBatches<K>(ref: admin.firestore.Collection
     yield getDocs(querySnapshot);
     querySnapshot = await ref.orderBy(orderBy).startAfter(lastSnapshot).limit(batchSize).get()
   }
-}
-
-export async function runInBatches<T, K>(batch: K[], cb: (i: K) => Promise<T>, chunkSize = env?.['chunkSize'] || 10) {
-  const chunks = chunk(batch, chunkSize);
-  let output: T[] = [];
-  while (chunks.length > 0) {
-    console.log(`Operations remaining: ${chunks.length * chunkSize}/${batch.length}`);
-    const next = chunks.pop();
-    if (next) {
-      const result = await Promise.all(next.map(cb));
-      output = output.concat(result);
-    }
-  }
-  console.log(`Batch of ${batch.length} finished with chunkSize ${chunkSize}`);
-  return output;
 }
 
 export interface JsonlDbRecord {
