@@ -60,7 +60,7 @@ export class ProfileViewComponent implements OnInit {
         const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.profileForm);
 
         await this.authService.update({ uid, ...documentToUpdate });
-        this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+        this.mediaService.uploadMedias(mediasToUpload);
 
         this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
       }
