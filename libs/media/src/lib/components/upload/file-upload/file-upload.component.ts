@@ -105,7 +105,6 @@ export class FileUploadComponent implements OnInit {
     this.form.patchValue({
       ref: getStoragePath(this.storagePath, this.filePrivacy),
       blobOrFile: file,
-      delete: false,
       fileName: sanitizeFileName(file.name),
     })
     this.form.markAsDirty();
@@ -113,7 +112,7 @@ export class FileUploadComponent implements OnInit {
 
   public delete() {
     this.state = 'waiting';
-    this.form.patchValue({ delete: true });
+    this.form.patchValue({ ref: '' });
     this.form.markAsDirty();
   }
 
@@ -121,7 +120,6 @@ export class FileUploadComponent implements OnInit {
 
     this.form.patchValue({
       blobOrFile: undefined,
-      delete: false,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     })
     this.form.markAsDirty();
