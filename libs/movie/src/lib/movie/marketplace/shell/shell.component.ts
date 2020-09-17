@@ -15,7 +15,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieShellComponent implements OnInit {
+export class TitleMarketplaceShellComponent implements OnInit {
   public movie$: Observable<Movie>;
 
   @Input() routes: RouteDescription[];
