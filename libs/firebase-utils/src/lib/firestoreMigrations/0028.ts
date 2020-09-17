@@ -2,7 +2,7 @@ import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
-import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
+import { upsertWatermark, runChunks } from '../../';
 import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
