@@ -3,6 +3,7 @@ import {
   HoldbackWithDates as Holdback
 } from './distribution-right.firestore';
 import { createTerms, formatTerms } from '@blockframes/utils/common-interfaces/terms';
+import { Optional } from '@blockframes/utils/common-interfaces/utility';
 
 export { DistributionRightDocumentWithDates as DistributionRight } from './distribution-right.firestore';
 
@@ -28,7 +29,6 @@ export function createDistributionRight(params: Partial<DistributionRight> = {})
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {
     terms: createTerms(params.terms),
-    media: null,
     ...params
   };
 }
@@ -56,10 +56,9 @@ export interface DistributionRightWithMovieId {
   movieId: string;
 }
 
-export function createDistributionRightWithMovieId(params: Partial<DistributionRightWithMovieId> = {}): DistributionRightWithMovieId {
+export function createDistributionRightWithMovieId(params: Optional<DistributionRightWithMovieId, 'right'>): DistributionRightWithMovieId {
   return {
-    right: createDistributionRight(params.right),
-    movieId: params.movieId,
+    right: createDistributionRight(params?.right),
     ...params
   };
 }
