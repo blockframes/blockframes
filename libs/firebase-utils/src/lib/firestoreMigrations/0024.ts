@@ -1,6 +1,6 @@
 import { Firestore } from '../types';
 import { PublicUser } from '@blockframes/user/types';
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { upsertWatermark } from '../../';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 
