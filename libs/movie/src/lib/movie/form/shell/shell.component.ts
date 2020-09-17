@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 
 function getSteps(status: FormControl): TunnelStep[] {
@@ -123,8 +123,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
-    const pristineSub = this.form.valueChanges.subscribe(_ => this.form.markAsDirty());
-    this.sub.add(pristineSub);
   }
 
   ngOnDestroy() {
@@ -170,7 +168,13 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
     });
     return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(true))
+      switchMap(shouldSave => {
+        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
+        if (typeof shouldSave === 'undefined') {
+          return of(false)
+        }
+        return shouldSave ? this.save() : of(true)
+      })
     );
   }
 }
