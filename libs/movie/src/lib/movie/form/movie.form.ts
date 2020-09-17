@@ -111,6 +111,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    customPrize: FormList.factory(entity.customPrize, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
@@ -132,6 +133,10 @@ export type MovieControl = ReturnType<typeof createMovieControls>;
 export class MovieForm extends FormEntity<MovieControl, Movie> {
   constructor(movie?: Partial<Movie>) {
     super(createMovieControls(movie));
+  }
+
+  get customPrize() {
+    return this.get('customPrize');
   }
 
   get banner() {
@@ -683,11 +688,11 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     notes: new HostedMediaForm(entity.notes),
 
     // External Media
-    clip_link: new FormControl(entity.clip_link),
-    promo_reel_link: new FormControl(entity.promo_reel_link),
-    screener_link: new FormControl(entity.screener_link),
-    trailer_link: new FormControl(entity.trailer_link),
-    teaser_link: new FormControl(entity.teaser_link),
+    clip_link: new FormControl(entity.clip_link, urlValidators),
+    promo_reel_link: new FormControl(entity.promo_reel_link, urlValidators),
+    screener_link: new FormControl(entity.screener_link, urlValidators),
+    trailer_link: new FormControl(entity.trailer_link, urlValidators),
+    teaser_link: new FormControl(entity.teaser_link, urlValidators),
     other_links: FormList.factory<OtherLink>(entity.other_links, el => new OtherLinkForm(el)),
   }
 }

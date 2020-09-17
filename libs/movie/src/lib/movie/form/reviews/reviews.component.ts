@@ -14,5 +14,4 @@ export class MovieFormReviewscComponent {
   public premieres = staticModels['PREMIERE_TYPE'];
 
   constructor(private shell: MovieFormShellComponent) {}
-
 }

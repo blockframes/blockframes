@@ -50,8 +50,8 @@ function getSteps(status: FormControl): TunnelStep[] {
       path: 'additional-information',
       label: 'Additional Information'
     }, {
-      path: 'technical-info',
-      label: 'Technical Information'
+      path: 'technical-spec',
+      label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
@@ -105,7 +105,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
@@ -137,7 +137,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
       new MutationObserver((_, observer) => {
         resolve(this.doc.getElementById(id));
-      }).observe(this.doc.documentElement, {childList: true, subtree: true});
+      }).observe(this.doc.documentElement, { childList: true, subtree: true });
     })
   }
 
@@ -168,7 +168,13 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
     });
     return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(false))
+      switchMap(shouldSave => {
+        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
+        if (typeof shouldSave === 'undefined') {
+          return of(false)
+        }
+        return shouldSave ? this.save() : of(true)
+      })
     );
   }
 }
