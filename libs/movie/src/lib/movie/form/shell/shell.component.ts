@@ -123,7 +123,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
-    const pristineSub = this.form.valueChanges.subscribe(_ => this.form.markAsPristine());
+    const pristineSub = this.form.valueChanges.subscribe(_ => this.form.markAsDirty());
     this.sub.add(pristineSub);
   }
 
@@ -170,7 +170,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
     });
     return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(false))
+      switchMap(shouldSave => shouldSave ? this.save() : of(true))
     );
   }
 }
