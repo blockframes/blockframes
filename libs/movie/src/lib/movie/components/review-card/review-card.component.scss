@@ -1,5 +1,22 @@
-mat-card-action {
+.container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+}
+
+
+img {
+  width: 120px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+
+p {
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+a, button {
+  margin-top: 32px;
 }

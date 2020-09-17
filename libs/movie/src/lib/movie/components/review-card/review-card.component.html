@@ -1,22 +1,23 @@
-<mat-card>
+<mat-card class="container">
   <img asset="empty_news.webp" alt="News brand logo">
   <h5>{{ review.journalName }}</h5>
   <p class="mat-body-2">"{{ review.criticQuote | maxLength: 300 }}"</p>
   <caption class="mat-caption">{{ review.criticName }}</caption>
-  <mat-card-actions>
-    <a *ngIf="review.revueLink" mat-button [href]="review.revueLink" target="_blank">
-      Read the article
-    </a>
-    <a *ngIf="!review.revueLink" mat-button (click)="openDialog()">
-      Read the article
-    </a>
-  </mat-card-actions>
+
+  <a *ngIf="review.revueLink" mat-button [href]="review.revueLink" target="_blank">
+    Read the article
+  </a>
+  <button *ngIf="!review.revueLink" mat-button (click)="openDialog()">
+    Read the article
+  </button>
 </mat-card>
 
 
 <ng-template #dialogRef>
-  <img asset="empty_news.webp" alt="News brand logo">
-  <h5>{{ review.journalName }}</h5>
-  <p class="mat-body-2">"{{ review.criticQuote }}"</p>
-  <caption class="mat-caption">{{ review.criticName }}</caption>
+  <div class="container">
+    <img asset="empty_news.webp" alt="News brand logo">
+    <h5>{{ review.journalName }}</h5>
+    <p class="mat-body-2">"{{ review.criticQuote }}"</p>
+    <caption class="mat-caption">{{ review.criticName }}</caption>
+  </div>
 </ng-template>

@@ -15,6 +15,6 @@ export class ReviewCardComponent {
   constructor(private dialog: MatDialog) { }
 
   openDialog() {
-    this.dialog.open(this.dialogRef);
+    this.dialog.open(this.dialogRef, { maxWidth: 400 });
   }
 }

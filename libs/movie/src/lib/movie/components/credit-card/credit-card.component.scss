@@ -1,18 +1,10 @@
 :host {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
 }
-
-h5,
-span {
-  text-align: center;
-  margin: 0;
-}
-
 .status {
-  padding: 4px;
   background-color: rgba(white, 0.3);
+  padding: 4px;
+  margin: 16px;
 }
 
 mat-tab-group {
@@ -22,11 +14,14 @@ mat-tab-group {
 
 .tab-content {
   padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 p {
   text-align: center;
-  margin-bottom: 4px;
+  margin: 16px;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
