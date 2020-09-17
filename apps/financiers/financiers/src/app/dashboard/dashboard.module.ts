@@ -31,8 +31,7 @@ import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe
 const routes: Routes = [{
   path: '',
   component: DashboardComponent,
-  children: [
-    {
+  children: [{
       path: '',
       pathMatch: 'full',
       redirectTo: 'home'
@@ -82,25 +81,24 @@ const routes: Routes = [{
     {
       path: 'privacy',
       loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
-    }
-  ]
-},
-{
-  path: 'tunnel',
-  canActivate: [TunnelGuard],
-  children: [{
-    path: 'movie',
-    children: [{
-      path: ':movieId',
-      canActivate: [MovieActiveGuard, MovieTunnelGuard],
-      canDeactivate: [MovieActiveGuard],
-      children: tunnelRoutes,
-      data: {
-        redirect: '/c/o/dashboard/tunnel/movie'
-      },
     }]
-  }]
-},
+  },
+  {
+    path: 'tunnel',
+    canActivate: [TunnelGuard],
+    children: [{
+      path: 'movie',
+      children: [{
+        path: ':movieId',
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
+        canDeactivate: [MovieActiveGuard],
+        children: tunnelRoutes,
+        data: {
+          redirect: '/c/o/dashboard/tunnel/movie'
+        },
+      }]
+    }]
+  },
 ];
 
 @NgModule({

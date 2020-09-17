@@ -1,9 +1,6 @@
-// Angular
 import { Routes } from '@angular/router';
-
-// Blockframes
-import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 export const tunnelRoutes: Routes = [
   {
@@ -71,7 +68,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'summary',
-        loadChildren: () => import('@blockframes/movie/form/summary/summary.module').then(m => m.MovieTunnelSummaryModule)
+        loadChildren: () => import('./summary/summary.module').then(m => m.TunnelSummaryModule)
       },
       {
         path: 'end',
