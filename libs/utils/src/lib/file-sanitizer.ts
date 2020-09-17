@@ -22,6 +22,8 @@ export function sanitizeFileName(str: string): string {
  * public/users/123abc/avatar
  */
 export function getStoragePath(path: string, privacy: Privacy = 'public'): string {
+  if(!path) return '';
+  
   // Remove first trailing slash if any
   path = path[0] === '/' ? path.slice(1) : path;
 
