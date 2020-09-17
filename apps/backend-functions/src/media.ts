@@ -46,9 +46,9 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
  * Generates an Imgix token for a given protected resource
  * Protected resources are in the "protected" dir of the bucket.
  * An Imgix source must be configured to that directory and marked as private
- * 
- * @param data 
- * @param context 
+ *
+ * @param data
+ * @param context
  * @see https://github.com/imgix/imgix-blueprint#securing-urls
  * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
  */
@@ -130,57 +130,57 @@ function getPathInfo(ref: string) {
 
 
 export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
-  const mediasToDelete = [];
+  const mediaToDelete: string[] = [];
   if (!!after) { // Updating
     // Check if avatar have been changed/removed
     if (!!before.avatar && (before.avatar !== after.avatar || after.avatar === '')) { // Avatar was previously setted and was updated or removed
-      mediasToDelete.push(before.avatar);
+      mediaToDelete.push(before.avatar);
     }
   } else { // Deleting
     if (!!before.avatar) {
-      mediasToDelete.push(before.avatar);
+      mediaToDelete.push(before.avatar);
     }
 
     if (!!before.watermark) {
-      mediasToDelete.push(before.watermark);
+      mediaToDelete.push(before.watermark);
     }
   }
 
-  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 }
 
 export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
-  const mediasToDelete = [];
+  const mediaToDelete: string[] = [];
   if (!!after) { // Updating
     if (!!before.logo && (before.logo !== after.logo || after.logo === '')) {
-      mediasToDelete.push(before.logo);
+      mediaToDelete.push(before.logo);
     }
   } else { // Deleting
     if (!!before.logo) {
-      mediasToDelete.push(before.logo);
+      mediaToDelete.push(before.logo);
     }
   }
 
-  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 }
 
 export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
-  const mediasToDelete = [];
+  const mediaToDelete: string[] = [];
   if (!!after) { // Updating
     if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
-      mediasToDelete.push(before.banner);
+      mediaToDelete.push(before.banner);
     }
 
     if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
-      mediasToDelete.push(before.poster);
+      mediaToDelete.push(before.poster);
     }
 
     if (!!before.promotional.presentation_deck && (before.promotional.presentation_deck !== after.promotional.presentation_deck || after.promotional.presentation_deck === '')) {
-      mediasToDelete.push(before.promotional.presentation_deck);
+      mediaToDelete.push(before.promotional.presentation_deck);
     }
 
     if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
-      mediasToDelete.push(before.promotional.scenario);
+      mediaToDelete.push(before.promotional.scenario);
     }
 
     Object.keys(before.promotional.still_photo)
@@ -189,33 +189,33 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
         const stillBefore = before.promotional.still_photo[key];
         const stillAfter = after.promotional.still_photo[key];
         if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediasToDelete.push(stillBefore);
+          mediaToDelete.push(stillBefore);
         }
       });
 
   } else { // Deleting
 
     if (!!before.banner) {
-      mediasToDelete.push(before.banner);
+      mediaToDelete.push(before.banner);
     }
 
     if (!!before.poster) {
-      mediasToDelete.push(before.poster);
+      mediaToDelete.push(before.poster);
     }
 
     if (!!before.promotional.presentation_deck) {
-      mediasToDelete.push(before.promotional.presentation_deck);
+      mediaToDelete.push(before.promotional.presentation_deck);
     }
 
     if (!!before.promotional.scenario) {
-      mediasToDelete.push(before.promotional.scenario);
+      mediaToDelete.push(before.promotional.scenario);
     }
 
     Object.keys(before.promotional.still_photo)
       .filter(key => !!before.promotional.still_photo[key])
-      .forEach(key => mediasToDelete.push(before.promotional.still_photo[key]));
+      .forEach(key => mediaToDelete.push(before.promotional.still_photo[key]));
   }
 
-  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+  await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
 
 }
