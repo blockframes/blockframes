@@ -136,7 +136,7 @@ export class OrganizationComponent implements OnInit {
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
     await this.organizationService.update(this.orgId, documentToUpdate);
-    this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+    this.mediaService.uploadMedias(mediasToUpload);
 
     if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);

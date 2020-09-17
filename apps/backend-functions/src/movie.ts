@@ -6,6 +6,7 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { cleanMovieMedias } from './media';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -31,6 +32,8 @@ export async function onMovieDelete(
   context: functions.EventContext
 ) {
   const movie = snap.data() as MovieDocument;
+
+  await cleanMovieMedias(movie);
 
   /**
    *  When a movie is deleted, we also delete its sub-collections and references in other collections/documents.
@@ -70,6 +73,8 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
+  await cleanMovieMedias(before, after);
+
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
   const isMovieAccepted = isAccepted(before.storeConfig, after.storeConfig);
 
@@ -89,15 +94,15 @@ export async function onMovieUpdate(
   if (isMovieAccepted) { // When Archipel Content accept the movie
     const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
-    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(toUserId => {
-      return createNotification({
-        toUserId,
-        type: 'movieAccepted',
-        docId: after.id
+      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map(toUserId => {
+        return createNotification({
+          toUserId,
+          type: 'movieAccepted',
+          docId: after.id
+        });
       });
-    });
 
     await triggerNotifications(notifications);
   }
