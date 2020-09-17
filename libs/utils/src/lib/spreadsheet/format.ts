@@ -1,4 +1,4 @@
-import { createCredit } from "../common-interfaces/identity";
+import { createCredit, createFilmography } from "../common-interfaces/identity";
 import { getCodeIfExists, ExtractCode } from "../static-model/staticModels";
 
 /**
@@ -19,7 +19,8 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
 
   if (str.split(new RegExp(separator)).length > 2) {
     if (thirdItemType === 'filmography') {
-      credit.filmography[0].title = str.split(new RegExp(separator))[2].trim();
+      const filmofraphy = createFilmography({ title: str.split(new RegExp(separator))[2].trim() });
+      credit.filmography.push(filmofraphy);
     } else {
       const roleName = str.split(new RegExp(separator))[2];
       let role;
