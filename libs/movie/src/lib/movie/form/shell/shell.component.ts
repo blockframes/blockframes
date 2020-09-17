@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map, tap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 
 function getSteps(status: FormControl): TunnelStep[] {
