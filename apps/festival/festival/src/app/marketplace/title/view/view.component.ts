@@ -5,6 +5,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'festival-movie-view',
@@ -16,7 +17,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
 
-  public navLinks = [
+  public navLinks: RouteDescription[] = [
     {
       path: 'main',
       label: 'Main Information'
