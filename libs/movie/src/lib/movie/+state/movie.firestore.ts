@@ -71,6 +71,7 @@ interface MovieRaw<D> {
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
   prizes?: Prize[],
+  customPrize?: Prize[],
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],
@@ -213,7 +214,7 @@ export interface MovieRelease {
 }
 
 export interface MovieRunningTime {
-  time: number,
+  time: number | string,
   status: string,
 }
 

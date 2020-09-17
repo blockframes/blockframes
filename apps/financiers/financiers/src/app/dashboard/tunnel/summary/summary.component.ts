@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'festival-summary-tunnel',
+  selector: 'financiers-summary-tunnel',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -21,12 +21,12 @@ export class TunnelSummaryComponent {
         private snackBar: MatSnackBar,
         private routerQuery: RouterQuery */
   ) { }
-  /* 
+  /*
     public getPath(segment: string) {
       const { movieId } = this.route.snapshot.params;
       return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
     }
-  
+
     public async submit() {
       if (this.form.valid) {
         const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
@@ -42,8 +42,8 @@ export class TunnelSummaryComponent {
         })
       } else {
         // Log the invalid forms
-        /* console.error(this.findInvalidControlsRecursive(this.form)) 
-      } 
+        /* console.error(this.findInvalidControlsRecursive(this.form))
+      }
        this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
       } */
 

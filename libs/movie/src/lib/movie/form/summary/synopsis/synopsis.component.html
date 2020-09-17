@@ -2,11 +2,13 @@
 <article>
   <h6>
     Logline
-    <a mat-icon-button [routerLink]="link" fragment="logline"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="logline">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.get('logline')"></missing-control>
+      <missing-control [control]="movie.get('logline')" [link]="link" fragment="logline"></missing-control>
     </li>
   </ul>
 </article>
@@ -15,11 +17,13 @@
 <article>
   <h6>
     Synopsis
-    <a mat-icon-button [routerLink]="link" fragment="synopsis"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="synopsis">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.get('synopsis')"></missing-control>
+      <missing-control [control]="movie.get('synopsis')" [link]="link" fragment="synopsis"></missing-control>
     </li>
   </ul>
 </article>
@@ -28,11 +32,13 @@
 <article>
   <h6>
     Key Assets
-    <a mat-icon-button [routerLink]="link" fragment="key-assets"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="key-assets">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.get('keyAssets')"></missing-control>
+      <missing-control [control]="movie.get('keyAssets')" [link]="link" fragment="key-assets"></missing-control>
     </li>
   </ul>
 </article>
@@ -41,7 +47,9 @@
 <article>
   <h6>
     Keywords
-    <a mat-icon-button [routerLink]="link" fragment="keywords"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="keywords">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
