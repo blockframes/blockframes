@@ -5,6 +5,7 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: '[routes] title-dashboard-shell',
@@ -18,6 +19,7 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   private _form = new BehaviorSubject<MovieForm>(undefined);
 
   public form$ = this._form.asObservable();
+  public movieId: string;
 
   @Input() routes: RouteDescription[];
   @Input()
@@ -28,13 +30,14 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return this._form.getValue();
   }
 
-  constructor(private query: MovieQuery, private cdr: ChangeDetectorRef) {}
+  constructor(private query: MovieQuery, private cdr: ChangeDetectorRef, private router: RouterQuery) {}
 
   ngOnInit() {
     this.sub = this.query.selectActive().subscribe(movie => {
       this.form = new MovieForm(movie);
       this.cdr.markForCheck();
     })
+    this.movieId = this.router.getParams('movieId');
   }
 
   ngOnDestroy() {

@@ -14,14 +14,9 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
-import { TitleDashboardHeaderModule } from '@blockframes/movie/dashboard/components/header/header.module';
 
 // Material
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
   path: '',
@@ -67,13 +62,8 @@ const routes = [{
     DurationModule,
     DashboardTitleShellModule,
     DisplayNameModule,
-    TitleDashboardHeaderModule,
     // Material
-    MatButtonModule,
-    MatIconModule,
-    MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     // Route
     RouterModule.forChild(routes)
   ]
