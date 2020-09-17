@@ -1,83 +1,101 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
-  <!-- STORY CARD -->
-  <mat-card *ngIf="hasStory(movie)">
-    <mat-card-header>
-      <h3>Storyline Elements</h3>
-    </mat-card-header>
-    <mat-card-content>
-      <ul>
-        <li *ngIf="movie.synopsis as synopsis">
-          <strong>Synopsis </strong><span class="synopsis">{{ synopsis }}</span>
-        </li>
-        <li *ngIf="movie.keyAssets">
-          <strong>Key Assets </strong><span>{{ movie.keyAssets }}</span>
-        </li>
-        <li *ngIf="movie.keywords.length > 0">
-          <strong>Keywords </strong>
-          <mat-chip-list fxLayout="row" fxLayoutGap="5px">
-            <ng-container *ngFor="let keyword of movie.keywords">
-              <mat-chip>{{ keyword }}</mat-chip>
-            </ng-container>
-          </mat-chip-list>
-        </li>
-      </ul>
-    </mat-card-content>
-  </mat-card>
+
+  <h1>Main Information</h1>
+  <section *ngIf="movie | hasKeys: keys.main">
+    <h2>Story Elements</h2>
+    <article *ngIf="movie.logline">
+      <h5>Logline</h5>
+      <p>{{ movie.logline }}</p>
+    </article>
+
+    <article *ngIf="movie.synopsis">
+      <h5>Synopsis</h5>
+      <p>{{ movie.synopsis }}</p>
+    </article>
+
+    <article *ngIf="movie.keywords.length">
+      <h5>Keywords</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let keyword of movie.keywords">
+          <mat-chip>{{ keyword }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
 
   <!-- GENERAL INFORMATION -->
-  <mat-card>
-    <mat-card-header>
-      <h3>General Information</h3>
-    </mat-card-header>
-    <mat-card-content>
-      <ul>
-        <li *ngIf="movie.genres">
-          <strong>Genre </strong>
-          <ng-container *ngFor="let genre of movie.genres, let isLast=last">
-            <span>{{ genre | translateSlug: 'GENRES' }}{{ isLast ? '' : ', '}} </span>
-          </ng-container>
-        </li>
-        <li *ngIf="movie.directors">
-          <strong>Director </strong>
-          <span>{{ movie.directors | displayName }} </span>
-        </li>
-        <li *ngIf="movie.release.year">
-          <strong>Production Year </strong>
-          <span>{{ movie.release.year }} </span>
-        </li>
-        <li *ngIf="movie.originCountries">
-          <strong>Country of Origin </strong>
-          <ng-container *ngFor="let country of movie.originCountries; let isLast=last">
-            {{ country | translateSlug: 'TERRITORIES' }}{{ isLast ? '' : ', ' }}
-          </ng-container>
-        </li>
-        <li *ngIf="movie.originalLanguages">
-          <strong>Original Language </strong>
-          <ng-container *ngFor="let language of movie.originalLanguages; let isLast=last">
-            <span>{{ language | translateSlug: 'LANGUAGES' }}{{ isLast ? '' : ', ' }}</span>
-          </ng-container>
-        </li>
-      </ul>
-    </mat-card-content>
-  </mat-card>
+  <section *ngIf="movie | hasKeys: keys.general ">
+    <h2>General Information</h2>
 
-  <!-- FESTIVALS -->
-  <mat-card *ngIf="movie.prizes.length > 0">
-    <mat-card-header>
-      <h3>Festivals</h3>
-    </mat-card-header>
-    <mat-card-content>
-      <ul>
-        <ng-container *ngIf="movie.prizes as prizes">
-          <li><strong>Festivals </strong></li>
-          <div fxLayout fxLayoutGap="16px" flex>
-            <ng-container *ngFor="let prize of prizes">
-              <movie-festival-prize-card [prize]="prize" [col]="3"></movie-festival-prize-card>
-            </ng-container>
-          </div>
-        </ng-container>
-      </ul>
-    </mat-card-content>
-  </mat-card>
+    <article *ngIf="movie.release.year">
+      <h5>Release Year</h5>
+      <p>
+        <span>{{ movie.release.year }}</span>
+        <span *ngIf="movie.release.status"> ({{ movie.release.status }})</span>
+      </p>
+    </article>
+
+    <article *ngIf="movie.originCountries.length">
+      <h5>Country of origin</h5>
+      <p>{{ movie.originCountries | translateSlug: 'TERRITORIES' }}</p>
+    </article>
+
+    <article *ngIf="movie.originalLanguages.length">
+      <h5>Country of origin</h5>
+      <p>{{ movie.originalLanguages | translateSlug: 'LANGUAGES' }}</p>
+    </article>
+
+    <article *ngIf="movie.genres.length">
+      <h5>Genres</h5>
+      <p>
+        <span>{{ movie.genres | translateSlug: 'GENRES' }}</span>
+        <span *ngIf="movie.customGenres.length">, {{ movie.customGenres.join(', ') }}</span>
+      </p>
+    </article>
+
+    <article *ngIf="movie.runningTime.time || movie.runningTime.time">
+      <h5>Running time</h5>
+      <div fxLayout fxLayoutGap="8px">
+        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time }}min</span>
+        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status }}</span>
+      </div>
+    </article>
+
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section *ngIf="movie.directors.length">
+    <h2>Directors</h2>
+    <article grid>
+      <ng-container *ngFor="let director of movie.directors">
+        <title-credit-card [col]="3" [credit]="director"></title-credit-card>
+      </ng-container>
+    </article>
+  </section>
+
+  
+  <h1  *ngIf="movie | hasKeys: keys.prizes">
+    Selection & reviews
+  </h1>
+  <section *ngIf="movie | hasKeys: keys.prizes">
+    <h5>Festivals</h5>
+    <article grid>
+      <ng-container *ngFor="let prize of movie.prizes">
+        <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
+      </ng-container>
+    </article>
+
+    <mat-divider></mat-divider>
+
+    <h5>Film Reviews</h5>
+    <article grid>
+      <ng-container *ngFor="let review of movie.review">
+        <title-review-card [col]="3" [review]="review"></title-review-card>
+      </ng-container>
+    </article>
+  </section>
 
 </ng-container>

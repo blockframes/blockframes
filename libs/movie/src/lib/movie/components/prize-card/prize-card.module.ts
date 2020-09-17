@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Component
-import { FestivalPrizeCardComponent } from './festival-prize-card.component';
+import { PrizeCardComponent } from './prize-card.component';
 
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
@@ -13,7 +13,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     CommonModule,
     ImageReferenceModule
   ],
-  exports: [FestivalPrizeCardComponent],
-  declarations: [FestivalPrizeCardComponent],
+  exports: [PrizeCardComponent],
+  declarations: [PrizeCardComponent],
 })
-export class FestivalPrizeCardModule { }
+export class PrizeCardModule { }

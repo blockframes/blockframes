@@ -9,17 +9,17 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pip
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 
-import { FestivalPrizeCardModule } from '../../components/festival-prize-card/festival-prize-card.module';
-import { CreditCardModule } from '@blockframes/movie/components/credit-card/credit-card.module';
-
+import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
+import { CreditCardModule } from '../../components/credit-card/credit-card.module';
+import { ReviewCardModule } from '../../components/review-card/review-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
+import { HasKeysModule } from '@blockframes/utils/pipes';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [MainComponent],
@@ -28,17 +28,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     TranslateSlugModule,
     DisplayNameModule,
+    HasKeysModule,
     ToLabelModule,
     ImageReferenceModule,
-    FestivalPrizeCardModule,
-    CreditCardModule,
     MatLayoutModule,
+    PrizeCardModule,
+    CreditCardModule,
+    ReviewCardModule,
     // Material
-    MatCardModule,
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
-    MatProgressSpinnerModule,
+    MatDividerModule,
     RouterModule.forChild([{ path: '', component: MainComponent }])
   ]
 })

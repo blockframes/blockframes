@@ -12,6 +12,11 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MainComponent implements OnInit {
 
   public movie$ = this.shell.movie$;
+  public keys: Record<string, (keyof Movie)[]> = {
+    main: ['logline', 'synopsis', 'keywords'],
+    general: ['release', 'originCountries', 'originalLanguages', 'genres', 'runningTime'],
+    prizes: ['prizes', 'review']
+  }
 
   constructor(
     private shell: TitleMarketplaceShellComponent,
