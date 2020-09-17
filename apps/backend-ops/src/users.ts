@@ -97,11 +97,11 @@ function readUsersFromJsonlFixture(db: JsonlDbRecord[]): UserConfig[] {
 
 async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
   const usersIterator = getCollectionInBatches<User>(db.collection('users'), 'uid', 300);
-  const output: UserConfig[] = [];
+  let output: UserConfig[] = [];
   for await (const users of usersIterator) {
     const password = USER_FIXTURES_PASSWORD;
     const outputChunk = users.map(({ uid, email }) => ({ uid, email, password} ))
-    output.concat(outputChunk);
+    output = output.concat(outputChunk);
   }
   return output;
 }
