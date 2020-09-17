@@ -30,14 +30,14 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
     return this._form.getValue();
   }
 
-  constructor(private query: MovieQuery, private cdr: ChangeDetectorRef, private router: RouterQuery) {}
+  constructor(private query: MovieQuery, private cdr: ChangeDetectorRef, private routerQuery: RouterQuery) {}
 
   ngOnInit() {
     this.sub = this.query.selectActive().subscribe(movie => {
       this.form = new MovieForm(movie);
       this.cdr.markForCheck();
     })
-    this.movieId = this.router.getParams('movieId');
+    this.movieId = this.routerQuery.getParams('movieId');
   }
 
   ngOnDestroy() {
@@ -56,8 +56,4 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   get directors() {
     return this.form.directors.controls.map(director => `${director.get('firstName').value}  ${director.get('lastName').value}`).join(', ');
   }
-
-  // get movieId() {
-  //   return this.form.get('id').value;
-  // }
 }
