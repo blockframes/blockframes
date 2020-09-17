@@ -5,6 +5,7 @@ import { FormControl } from '@angular/forms';
 // Blockframes
 import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[scope][type][control] static-select',
@@ -16,7 +17,7 @@ export class StaticSelectComponent {
 
   @Input() type: 'constant' | 'model';
 
-  public staticValue: any[] = [];
+  public staticValue: string[] | SlugAndLabel[] = [];
   public option: string;
   @Input() set scope(value: string) {
     this.option = value;

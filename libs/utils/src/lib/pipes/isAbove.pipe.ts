@@ -5,7 +5,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 })
 export class IsAbovePipe implements PipeTransform {
   transform(count: number, min: number): boolean {
-    if (min === 0 || !min) min = 0;
+    min = min ?? 0;
     return count > min;
   }
 }
