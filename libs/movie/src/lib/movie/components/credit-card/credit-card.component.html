@@ -1,15 +1,20 @@
-<div fxLayout="column" fxLayoutAlign="center center">
+<header class="container">
   <h5>{{ credit | displayName }}</h5>
-  <caption class="mat-caption">{{ credit.status || "-" }}</caption>
-</div>
+  <caption class="mat-caption status">{{ credit.status || "-" }}</caption>
+</header>
 <mat-tab-group headerPosition="below" mat-align-tabs="center">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon svgIcon="profile"></mat-icon>
     </ng-template>
-    <div class="tab-content">
-      <h6 class="mat-body-2">{{ credit.role }}</h6>
-      <p class="mat-caption">{{ credit.description }}</p>
+    <div class="tab-content container">
+      <h6 class="mat-body-2">
+        {{ credit.role }}
+      </h6>
+      <p class="mat-caption description">
+        {{ credit.description | maxLength: 300 }}
+      </p>
+      <button mat-button (click)="openDialog()">Read More</button>
     </div>
   </mat-tab>
   <mat-tab>
@@ -18,7 +23,7 @@
     </ng-template>
     <ng-template matTabContent>
       <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
-      <div class="tab-content">
+      <div class="tab-content container">
         <p class="mat-caption">{{ credit.filmography[0]?.title || "-"}}</p>
         <p class="mat-caption">{{ credit.filmography[1]?.title || "-"}}</p>
         <p class="mat-caption">{{ credit.filmography[2]?.title || "-"}}</p>
@@ -26,3 +31,12 @@
     </ng-template>
   </mat-tab>
 </mat-tab-group>
+
+<ng-template #dialogRef>
+  <div class="container" >
+    <h5>{{ credit | displayName }}</h5>
+    <caption class="mat-caption">{{ credit.status || "-" }}</caption>
+    <h6 class="mat-body-2">{{ credit.role }}</h6>
+    <p class="mat-caption">{{ credit.description }}</p>
+  </div>
+</ng-template>

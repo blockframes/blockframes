@@ -1,5 +1,12 @@
 :host {
   display: block;
+  text-align: center;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 .status {
   background-color: rgba(white, 0.3);
@@ -14,16 +21,15 @@ mat-tab-group {
 
 .tab-content {
   padding: 16px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  overflow: hidden;
 }
 
-p {
+.description {
   text-align: center;
   margin: 16px;
-  width: 100%;
-  overflow: hidden;
+  height: 70px;
+  max-width: 60%;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
 }
