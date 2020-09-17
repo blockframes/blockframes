@@ -1,5 +1,6 @@
 import { Firestore } from '../types';
-import { startMaintenance, endMaintenance, runChunks } from '../../';
+import { runChunks } from '../firebase-utils';
+import { startMaintenance, endMaintenance, } from '../maintenance';
 import { OldHostedMedia, createOldHostedMedia } from './old-types';
 
 const EMPTY_REF: OldHostedMedia = createOldHostedMedia();

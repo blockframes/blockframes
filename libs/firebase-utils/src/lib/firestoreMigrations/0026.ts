@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';

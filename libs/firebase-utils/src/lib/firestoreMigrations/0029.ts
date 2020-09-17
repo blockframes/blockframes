@@ -3,7 +3,7 @@ import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OldImgRef } from './old-types';
-import { getCollection } from '../../';
+import { getCollection } from '../firebase-utils';
 
 import {
   OldExternalMedia as ExternalMedia,

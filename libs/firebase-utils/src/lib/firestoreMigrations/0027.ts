@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { get } from 'https';
