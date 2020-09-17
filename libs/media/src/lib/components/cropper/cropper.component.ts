@@ -90,7 +90,7 @@ export class CropperComponent implements OnInit {
       const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
       this.previewUrl$.next(previewUrl);
       this.nextStep('show');
-    } else if (this.form.ref?.value) {
+    } else if (!!this.form.ref?.value) {
       this.ref = this.form.ref.value;
       this.goToShow();
     }
@@ -111,7 +111,11 @@ export class CropperComponent implements OnInit {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
-    this.nextStep('drop');
+    if (!!this.form.blobOrFile.value || (!!this.form.ref?.value)) {
+      this.nextStep('show');
+    } else {
+      this.nextStep('drop');
+    };
   }
 
   ///////////
