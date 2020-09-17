@@ -90,6 +90,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
   removeFile() {
     this.sheets = [];
+    this.excelForm.reset();
   }
 
   public openIntercom(): void {
