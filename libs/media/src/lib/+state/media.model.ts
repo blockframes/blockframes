@@ -65,7 +65,6 @@ function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm 
           // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
           control.patchValue({
             blobOrFile: '',
-            delete: false,
             oldRef: clearHostedMediaFormValue(control.value), 
           });
 
@@ -84,13 +83,12 @@ function isMedia(obj: any) {
     'ref' in obj &&
     'oldRef' in obj &&
     'blobOrFile' in obj &&
-    'delete' in obj &&
     'fileName' in obj
   );
 }
 
 function mediaNeedsUpdate(media: HostedMediaFormValue) {
-  return media.delete || (!!media.ref && !!media.blobOrFile);
+  return !media.ref || (!!media.ref && !!media.blobOrFile);
 }
 
 export function getFileNameFromPath(path: string) {
