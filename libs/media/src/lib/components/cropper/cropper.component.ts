@@ -111,7 +111,11 @@ export class CropperComponent implements OnInit {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
-    this.nextStep('drop');
+    if (!!this.form.blobOrFile.value || (this.form.ref?.value && !this.form.delete)) {
+      this.nextStep('show');
+    } else {
+      this.nextStep('drop');
+    };
   }
 
   ///////////
