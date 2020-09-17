@@ -1,26 +1,24 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Directive, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { scaleIn } from '@blockframes/utils/animations/fade';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-// import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'title-marketplace-shell',
   templateUrl: './shell.component.html',
   styleUrls: ['./shell.component.scss'],
-  animations: [scaleIn],
+  animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieShellComponent implements OnInit {
-  @HostBinding('@scaleIn') animPage;
   public movie$: Observable<Movie>;
 
-  // TODO add RouteDescrtipion interface from PR #3663 to routes variable
-  @Input() routes;
+  @Input() routes: RouteDescription[];
 
   public isEnoughPicturesThen(min: number) {
     return this.movieQuery.selectActive().pipe(
@@ -37,11 +35,17 @@ export class MovieShellComponent implements OnInit {
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
   }
+
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
+  }
 }
 
-@Directive({
-  selector: 'movie-header, [movieHeader]',
-  host: { class: 'movie-header' }
-})
-// tslint:disable-next-line: directive-class-suffix
-export class MovieHeader { }
+// @Directive({
+//   selector: 'movie-header, [movieHeader]',
+//   host: { 
+//     style: 'display: block; height: calc(100vh - 80px - 48px - 16px - 24px);'
+//   }
+// })
+// // tslint:disable-next-line: directive-class-suffix
+// export class MovieHeader { }

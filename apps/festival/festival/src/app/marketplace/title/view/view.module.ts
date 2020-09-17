@@ -27,23 +27,28 @@ const routes = [
       },
       {
         path: 'main',
-        loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule)
+        loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule),
+        data: { animation: '0' }
       },
       {
         path: 'artistic',
-        loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
+        loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule),
+        data: { animation: '1' }
       },
       {
         path: 'additional',
-        loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
+        loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule),
+        data: { animation: '2' }
       },
       {
         path: 'finance',
-        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule)
+        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
+        data: { animation: '3' }
       },
       {
         path: 'screenings',
-        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
+        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule),
+        data: { animation: '4' }
       }
     ]
   }
