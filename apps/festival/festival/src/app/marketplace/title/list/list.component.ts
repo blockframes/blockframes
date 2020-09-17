@@ -41,7 +41,7 @@ export class ListComponent implements OnInit {
     this.filterForm.appAccess.add('festival');
     this.movieSearchResults$ = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges.pipe(distinctUntilChanged())
+      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value), distinctUntilChanged())
     ]).pipe(
       debounceTime(300),
       switchMap(() => this.filterForm.search()),

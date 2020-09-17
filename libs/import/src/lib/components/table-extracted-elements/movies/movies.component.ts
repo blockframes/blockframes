@@ -144,8 +144,8 @@ export class TableExtractedMoviesComponent implements OnInit {
 
       // Lets try to add more info about licensor with movie producing company
       if (importState.movie.stakeholders?.productionCompany.length) {
-        const firstProducer = importState.movie.stakeholders?.coProductionCompany.pop();
-        if (firstProducer.orgId) {
+        const firstProducer = importState.movie.stakeholders?.productionCompany.pop();
+        if (firstProducer?.orgId) {
           licensor.party.orgId = firstProducer.orgId;
         } else if (firstProducer.displayName) {
           licensor.party.displayName = firstProducer.displayName;
