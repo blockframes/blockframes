@@ -17,7 +17,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, startWith } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 
 function getSteps(status: FormControl): TunnelStep[] {
@@ -84,6 +84,15 @@ function getSteps(status: FormControl): TunnelStep[] {
   }]
 }
 
+const valueByProdStatus: Record<Extract<keyof Movie, Movie['productionStatus']>, any> = {
+  development: {
+    'release.status': 'confirmed'
+  },
+  'in-production': {
+    'release.status': ''
+  }
+}
+
 @Component({
   selector: 'movie-form-shell',
   templateUrl: './shell.component.html',
@@ -110,10 +119,14 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
     this.steps = getSteps(this.form.get('productionStatus'));
+    this.form.valueChanges.subscribe(console.log)
+    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value)).subscribe(status => {
+
+    })
   }
 
   ngAfterViewInit() {
-    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
+    const routerSub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
       el?.scrollIntoView(
         {
@@ -123,6 +136,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
+    this.sub.add(routerSub);
   }
 
   ngOnDestroy() {
