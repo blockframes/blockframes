@@ -3,31 +3,6 @@
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
 
-  <title-dashboard-shell [routes]="navLinks">
-
-    <header fxLayout="row" fxLayoutAlign="start start">
-      <ng-container *ngIf="movie.poster as poster">
-        <img [ref]="poster" asset="empty_poster.webp" alt="movie poster">
-      </ng-container>
-      <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
-        <h4>
-          {{ movie.contentType | toLabel: 'contentType' }}
-          <ng-container *ngIf="movie.contentType && movie.productionStatus">|</ng-container>
-          {{ movie.productionStatus | toLabel: 'productionStatus' }}
-          <ng-container *ngIf="movie.productionStatus && movie.runningTime.time">|
-            {{ movie.runningTime.time ? movie.runningTime.time + ' min' : 'TBC' }}
-          </ng-container>
-        </h4>
-        <h1>{{ movie.title.international }}</h1>
-        <h6>{{ movie.directors | displayName }}</h6>
-        <span>{{ movie.originCountries | translateSlug: 'TERRITORIES'}}, {{ movie.releaseYear }}</span>
-        <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="pencil"></mat-icon>
-          <span>Edit</span>
-        </a>
-      </div>
-    </header>
-
-  </title-dashboard-shell>
+  <title-dashboard-shell [routes]="navLinks"></title-dashboard-shell>
 
 </ng-container>

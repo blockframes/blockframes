@@ -12,6 +12,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -35,6 +36,7 @@ const routes = [{
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
+    DashboardTitleShellModule,
     // Material
     MatButtonModule,
     MatIconModule,
