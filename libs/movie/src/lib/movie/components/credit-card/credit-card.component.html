@@ -1,6 +1,7 @@
 <header class="container">
   <h5>{{ credit | displayName }}</h5>
   <caption class="mat-caption status">{{ credit.status || "-" }}</caption>
+  <h6 class="mat-body-2">{{ credit.role }}</h6>
 </header>
 <mat-tab-group headerPosition="below" mat-align-tabs="center">
   <mat-tab>
@@ -8,9 +9,6 @@
       <mat-icon svgIcon="profile"></mat-icon>
     </ng-template>
     <div class="tab-content container">
-      <h6 class="mat-body-2">
-        {{ credit.role }}
-      </h6>
       <p class="mat-caption description">
         {{ credit.description | maxLength: 300 }}
       </p>
