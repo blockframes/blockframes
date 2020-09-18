@@ -5,6 +5,7 @@ import { NOW } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
+import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
@@ -12,9 +13,10 @@ import { FestivalDashboardHomePage, EventPage, EventEditPage, FestivalInvitation
 import { LandingPage } from '../../support/pages/landing';
 
 const TestEVENT = EVENTS[0];
-const OrgName = TestEVENT.org.name;
 const invitedUsers = TestEVENT.invitees.map(u => u.uid);
 const userFixture = new User();
+const orgsFixture = new Orgs();
+const OrgName = orgsFixture.getByID(TestEVENT.org.id).denomination.public;
 const users  =  [ userFixture.getByUID(TestEVENT.by.uid) ];
 users.push(...invitedUsers.map(uid => userFixture.getByUID(uid)));
 users.push(userFixture.getByUID(USER.Ivo));
@@ -31,7 +33,7 @@ describe('Organiser invites other users to private screening', () => {
   beforeEach(() => {
     clearDataAndPrepareTest('/');
     const p1 = new LandingPage();
-    p1.clickSignup();     
+    p1.clickSignup();
   });
 
   it('Organiser creates screening & invites 2 users to the screening', () => {
@@ -104,6 +106,7 @@ describe('Organiser invites other users to private screening', () => {
     p5.assertJoinScreeningNotExists();
 
     // Navigate with url
+    cy.log(`Should not access {${SCREENING_URL}}`);
     cy.visit(SCREENING_URL);
     // Assert the user is redirect to event page
     const p6 = new FestivalMarketplaceEventPage();
