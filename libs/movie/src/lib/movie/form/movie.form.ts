@@ -9,6 +9,8 @@ import {
   MovieRating,
   MovieLanguageSpecification,
   OtherLink,
+  MovieExpectedPremiere,
+  MovieShootingDate
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -98,6 +100,7 @@ function createMovieControls(movie: Partial<Movie>) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
+    expectedPremiere:new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
@@ -119,6 +122,8 @@ function createMovieControls(movie: Partial<Movie>) {
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
     runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
+    shootingDate: new ShootingDateForm(entity.shootingDate),
+    shootingLocation: FormList.factory(entity.shootingLocation, el => new FormStaticValue(el, 'TERRITORIES')),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
@@ -838,4 +843,68 @@ export class VersionSpecificationForm extends FormEntity<any> {
       caption: new FormControl(versionSpecifictaion.caption)
     });
   }
+}
+
+// ------------------------------
+//        EXPECTED PREMIERE
+// ------------------------------
+
+function createExpectedPremiereFormControl(entity?: Partial<MovieExpectedPremiere>) {
+  const { event, date } = createMovieExpectedPremiere(entity);
+  return {
+    date: new FormControl(date),
+    event: new FormControl(event),
+  }
+}
+
+type ExpectedPremiereFormControl = ReturnType<typeof createExpectedPremiereFormControl>;
+
+export class ExpectedPremiereForm extends FormEntity<ExpectedPremiereFormControl> {
+  constructor(expectedPremiere?: Partial<MovieExpectedPremiere>) {
+    super(createExpectedPremiereFormControl(expectedPremiere));
+  }
+}
+
+export function createMovieExpectedPremiere(
+  params: Partial<MovieExpectedPremiere> = {}
+): MovieExpectedPremiere {
+  return {
+    event: '',
+    ...params,
+    date: toDate(params.date),
+  };
+}
+
+// ------------------------------
+//        SHOOTING DATE
+// ------------------------------
+
+function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
+  const { fixed, from, period, to } = createMovieShootingDate(entity);
+  return {
+    fixed: new FormControl(fixed),
+    from: new FormControl(from),
+    period: new FormControl(period),
+    to: new FormControl(to),
+  }
+}
+
+type ShootingDateFormControl = ReturnType<typeof createShootingDateFormControl>;
+
+export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
+  constructor(shootingDate?: Partial<MovieShootingDate>) {
+    super(createShootingDateFormControl(shootingDate));
+  }
+}
+
+export function createMovieShootingDate(
+  params: Partial<MovieShootingDate> = {}
+): MovieShootingDate {
+  return {
+    period: '',
+    ...params,
+    fixed: toDate(params.fixed),
+    from: toDate(params.from),
+    to: toDate(params.to),
+  };
 }

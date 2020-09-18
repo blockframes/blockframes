@@ -52,6 +52,7 @@ interface MovieRaw<D> {
   crew?: Crew[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
+  expectedPremiere: MovieExpectedPremiereRaw<D>,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
@@ -79,12 +80,20 @@ interface MovieRaw<D> {
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
+  shootingDate: MovieShootingDateRaw<D>,
+  shootingLocation: TerritoriesSlug[],
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
   totalBudget?: Price,
+
+
+  // New Data
+  // goals: MovieGoalsAudience[],
+  // financialCurrency: string,
+  // returnInvestment: MovieReturnInvestment
 }
 
 /** Document model of a Movie */
@@ -222,6 +231,23 @@ export interface OtherLink {
   name: string;
   url: string;
 }
+
+export interface MovieShootingDateRaw<D> {
+  fixed?: D
+  from?: D,
+  period?: string,
+  to?: D,
+}
+
+export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MovieExpectedPremiereRaw<D> {
+  date?: D,
+  event?: string
+}
+
+export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
+
 
 /////////////////////
 // MOVIE ANALYTICS //
