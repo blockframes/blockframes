@@ -12,6 +12,9 @@ import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 export class AdditionalComponent implements OnInit {
 
   public movie$ = this.shell.movie$;
+  public status: Record<string, Movie['productionStatus'][]> = {
+    afterProd: ['post-production', 'finished', 'released']
+  };
   public keys = {
     additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating'],
     formats: ['format', 'formatQuality', 'color', 'soundFormat']

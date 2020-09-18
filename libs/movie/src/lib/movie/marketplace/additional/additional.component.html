@@ -48,11 +48,11 @@
 
 
 
-  <h1 *ngIf="movie | hasStatus: ['released']">
+  <h1 *ngIf="movie | hasStatus: status.afterProd">
     Technial Information
   </h1>
 
-  <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: ['released'])">
+  <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: status.afterProd)">
     <h2>Formats</h2>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>
@@ -81,7 +81,7 @@
     <article *ngIf="movie | hasKeys: 'languages'">
       <h5>Versions</h5>
       <ng-container *ngFor="let language of movie.languages | keyvalue">
-        <div fxLayout fxLayoutGap="8px">
+        <div class="version" fxLayout fxLayoutGap="8px">
           <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
           <mat-chip-list>
             <ng-container *ngFor="let version of language.value | keyvalue">
