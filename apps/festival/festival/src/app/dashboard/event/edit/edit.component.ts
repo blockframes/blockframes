@@ -86,6 +86,6 @@ export class EditComponent implements OnInit, OnDestroy {
   }
 
   get files() {
-    return (this.form.meta as MeetingForm).get('files');// :
+    return (this.form.meta as MeetingForm).get('files');
   }
 }
