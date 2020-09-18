@@ -3,6 +3,8 @@ import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { PublicUser } from '@blockframes/user/types';
 
 type Timeout = NodeJS.Timeout;
 
@@ -23,6 +25,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
+    private db: AngularFirestore,
     private functions: AngularFireFunctions,
   ) {}
 
@@ -46,19 +49,25 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  async initPlayer(watermarkUrl: string) {
-    if (!watermarkUrl) {
-      console.error('We cannot load video without watermark.');
-      return;
-    }
+  async initPlayer() {
     const { id } = this.eventQuery.getActive();
 
     const callDeploy = this.functions.httpsCallable('privateVideo');
     const { error, result } = await callDeploy({ eventId: id }).toPromise();
 
     if (!!error) {
-      console.log('ERROR');
+      console.log('ERROR', error);
+      throw new Error(error);
     } else {
+
+      const userRef = this.db.collection('users').doc(this.authQuery.userId);
+      const userSnap = await userRef.get().toPromise();
+      const userData = userSnap.data() as PublicUser;
+      const watermarkUrl = userData.watermark?.url;
+      if (!watermarkUrl) {
+        console.error('We cannot load video without watermark.');
+        throw new Error('We cannot load video without watermark.');
+      }
 
       const signedUrl = new URL(result);
       const expires = signedUrl.searchParams.get('exp');
@@ -79,9 +88,8 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    const watermarkUrl = this.authQuery.user.watermark.url;
     await this.loadScript();
-    this.initPlayer(watermarkUrl);
+    this.initPlayer();
   }
 
   ngOnDestroy() {
