@@ -1,4 +1,4 @@
-import { FormEntity, urlValidators } from '@blockframes/utils/form';
+import { FormEntity, FormList, urlValidators } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
@@ -25,6 +25,10 @@ export class EventForm extends FormEntity<EventControl, Event> {
   constructor(event?: Partial<Event>) {
     super(createEventControl(event))
   }
+
+  get meta() {
+    return this.get('meta');
+  }
 }
 
 // Meta
@@ -45,6 +49,7 @@ export function createMeetingControl(params?: Partial<Meeting>) {
     callUrl: new FormControl(meeting.callUrl, urlValidators),
     organizerId: new FormControl(meeting.organizerId),
     description: new FormControl(meeting.description),
+    files: FormList.factory(meeting.files, el => new FormControl(el)),
   }
 }
 
@@ -53,6 +58,10 @@ type MeetingControl = ReturnType<typeof createMeetingControl>;
 export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
   constructor(meeting?: Partial<Meeting>) {
     super(createMeetingControl(meeting))
+  }
+
+  get files() {
+    return this.get('files');
   }
 }
 
