@@ -16,6 +16,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { app, module, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
+import { cleanOrgMedias } from './media';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -119,6 +120,8 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
 
+  await cleanOrgMedias(before, after);
+
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
 
@@ -177,10 +180,15 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
   return Promise.resolve(true); // no-op by default
 }
 
-export function onOrganizationDelete(
-  _: FirebaseFirestore.DocumentSnapshot,
+export async function onOrganizationDelete(
+  orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
   context: functions.EventContext
 ): Promise<any> {
+
+  const org = orgSnapshot.data() as OrganizationDocument;
+
+  await cleanOrgMedias(org);
+
   // Update algolia's index
   return deleteObject(algolia.indexNameOrganizations, context.params.orgID);
 }

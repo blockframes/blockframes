@@ -24,8 +24,7 @@ const models = {
     { 'slug': 'tv-show', 'label': 'TV Show' },
     { 'slug': 'web-series', 'label': 'Web Series' },
     { 'slug': 'virtual-reality', 'label': 'Virtual Reality' },
-    { 'slug': 'family', 'label': 'Family' },
-    { 'slug': 'other', 'label': 'Other' }
+    { 'slug': 'family', 'label': 'Family' }
   ] as const,
   'PROMOTIONAL_ELEMENT_TYPES': [
     { 'slug': 'trailer', 'label': 'Trailer' },

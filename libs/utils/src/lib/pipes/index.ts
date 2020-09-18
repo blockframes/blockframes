@@ -8,3 +8,4 @@ export * from './value-by-path.pipe';
 export * from './workspace.pipe';
 export * from './deep-key.pipe';
 export * from './filmography.pipe';
+export * from './isAbove.pipe';

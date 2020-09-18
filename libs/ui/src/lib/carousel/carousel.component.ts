@@ -10,6 +10,8 @@ import {
   ChangeDetectorRef,
   NgZone,
   OnDestroy,
+  ContentChildren,
+  QueryList, Input, AfterContentInit
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/overlay';
 
@@ -17,9 +19,14 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 import { Flex } from '../layout/layout.module';
 
 // RxJs
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/operators';
 
+
+@Directive({ selector: '[carouselItem]' })
+export class CarouselItemDirective {
+  @HostBinding('style.flexShrink') shrink = 0;
+}
 
 @Component({
   selector: 'bf-carousel',
@@ -27,11 +34,14 @@ import { startWith, distinctUntilChanged, map, debounceTime, tap } from 'rxjs/op
   styleUrls: ['./carousel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CarouselComponent implements AfterViewInit, OnDestroy {
+export class CarouselComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+
+  @Input() min: number;
 
   /* Indicators to show arrow buttons */
   public showForward: boolean;
   public showBack: boolean;
+  public amount$: Observable<number>;
 
   private subRight: Subscription;
   private subLeft: Subscription;
@@ -40,6 +50,7 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild(CdkScrollable) scrollable: CdkScrollable;
   @ViewChild('container') container: ElementRef<HTMLDivElement>;
+  @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
 
   constructor(private flex: Flex, private cdr: ChangeDetectorRef, private ngZone: NgZone) { }
 
@@ -57,6 +68,10 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
       this.showForward = showForward;
       this.ngZone.run(() => this.cdr.detectChanges())
     })
+  }
+
+  ngAfterContentInit() {
+    this.amount$ = this.items.changes.pipe(startWith(this.items), map(items => items.length));
   }
 
   scrollTo(direction: 'left' | 'right') {
@@ -81,9 +96,4 @@ export class CarouselComponent implements AfterViewInit, OnDestroy {
     if (this.subLeft) this.subLeft.unsubscribe();
     if (this.subRight) this.subRight.unsubscribe();
   }
-}
-
-@Directive({ selector: '[carouselItem]' })
-export class CarouselItemDirective {
-  @HostBinding('style.flexShrink') shrink = 0;
 }

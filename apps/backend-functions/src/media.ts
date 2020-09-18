@@ -6,9 +6,10 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
 import { ImageParameters, formatParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { getDocAndPath } from '@blockframes/firebase-utils';
-import { createPublicUser } from '@blockframes/user/types';
+import { createPublicUser, PublicUser } from '@blockframes/user/types';
+import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { privacies } from '@blockframes/utils/file-sanitizer';
-import { createOrganizationBase } from '@blockframes/organization/+state/organization.firestore';
+import { MovieDocument } from './data/types';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
@@ -39,32 +40,6 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
 
   }
   return false;
-}
-
-/**
- * This function is executed on every files deleted from the storage.
- *
- * It should **only** unlink the storage file from the firestore.
- *
- */
-export async function unlinkFile(data: functions.storage.ObjectMetadata) {
-
-  // get the needed values
-  const { doc, docData, fieldToUpdate, isInTmpDir } = await getDocAndPath(data.name);
-
-  if (!isInTmpDir) {
-
-    // if firestore wasn't link to this file, we should not unlink it
-    const ref: string = get(docData, fieldToUpdate);
-    if (data.name !== ref) {
-      return;
-    }
-
-    // unlink the firestore
-    return doc.update({ [fieldToUpdate]: '' });
-  } else {
-    return false;
-  }
 }
 
 /**
@@ -99,17 +74,10 @@ export const getMediaToken = async (data: { ref: string, parametersSet: ImagePar
 
 }
 
-export const deleteMedia = async (data: { ref: string }, context: CallableContext): Promise<void> => {
-
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
-
-  const canDelete = await isAllowedToAccessMedia(data.ref, context.auth.uid);
-  if (!canDelete) {
-    throw new Error('Permission denied. User is not allowed');
-  }
+export const deleteMedia = async (ref: string): Promise<void> => {
 
   const bucket = admin.storage().bucket(getStorageBucketName());
-  const file = bucket.file(data.ref);
+  const file = bucket.file(ref);
 
   const [exists] = await file.exists();
   if (!exists) {
@@ -127,7 +95,7 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   if (!user.exists) { return false; }
   const userDoc = createPublicUser(user.data());
 
-  const blockframesAdmin = await  db.collection('blockframesAdmin').doc(uid).get();
+  const blockframesAdmin = await db.collection('blockframesAdmin').doc(uid).get();
   if (blockframesAdmin.exists) { return true; }
 
   switch (pathInfo.collection) {
@@ -158,4 +126,96 @@ function getPathInfo(ref: string) {
   pathInfo.docId = refParts.shift();
 
   return pathInfo;
+}
+
+
+export async function cleanUserMedias(before: PublicUser, after?: PublicUser): Promise<void> {
+  const mediasToDelete = [];
+  if (!!after) { // Updating
+    // Check if avatar have been changed/removed
+    if (!!before.avatar && (before.avatar !== after.avatar || after.avatar === '')) { // Avatar was previously setted and was updated or removed
+      mediasToDelete.push(before.avatar);
+    }
+  } else { // Deleting
+    if (!!before.avatar) {
+      mediasToDelete.push(before.avatar);
+    }
+
+    if (!!before.watermark) {
+      mediasToDelete.push(before.watermark);
+    }
+  }
+
+  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+}
+
+export async function cleanOrgMedias(before: OrganizationDocument, after?: OrganizationDocument): Promise<void> {
+  const mediasToDelete = [];
+  if (!!after) { // Updating
+    if (!!before.logo && (before.logo !== after.logo || after.logo === '')) {
+      mediasToDelete.push(before.logo);
+    }
+  } else { // Deleting
+    if (!!before.logo) {
+      mediasToDelete.push(before.logo);
+    }
+  }
+
+  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+}
+
+export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocument): Promise<void> {
+  const mediasToDelete = [];
+  if (!!after) { // Updating
+    if (!!before.banner && (before.banner !== after.banner || after.banner === '')) {
+      mediasToDelete.push(before.banner);
+    }
+
+    if (!!before.poster && (before.poster !== after.poster || after.poster === '')) {
+      mediasToDelete.push(before.poster);
+    }
+
+    if (!!before.promotional.presentation_deck && (before.promotional.presentation_deck !== after.promotional.presentation_deck || after.promotional.presentation_deck === '')) {
+      mediasToDelete.push(before.promotional.presentation_deck);
+    }
+
+    if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
+      mediasToDelete.push(before.promotional.scenario);
+    }
+
+    Object.keys(before.promotional.still_photo)
+      .filter(key => !!before.promotional.still_photo[key])
+      .forEach(key => {
+        const stillBefore = before.promotional.still_photo[key];
+        const stillAfter = after.promotional.still_photo[key];
+        if ((stillBefore !== stillAfter || stillAfter === '')) {
+          mediasToDelete.push(stillBefore);
+        }
+      });
+
+  } else { // Deleting
+
+    if (!!before.banner) {
+      mediasToDelete.push(before.banner);
+    }
+
+    if (!!before.poster) {
+      mediasToDelete.push(before.poster);
+    }
+
+    if (!!before.promotional.presentation_deck) {
+      mediasToDelete.push(before.promotional.presentation_deck);
+    }
+
+    if (!!before.promotional.scenario) {
+      mediasToDelete.push(before.promotional.scenario);
+    }
+
+    Object.keys(before.promotional.still_photo)
+      .filter(key => !!before.promotional.still_photo[key])
+      .forEach(key => mediasToDelete.push(before.promotional.still_photo[key]));
+  }
+
+  await Promise.all(mediasToDelete.map(m => deleteMedia(m)));
+
 }

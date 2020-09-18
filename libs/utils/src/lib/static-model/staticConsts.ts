@@ -146,6 +146,25 @@ const constants = {
   organizationStatus: {
     pending: 'Pending',
     accepted: 'Accepted'
+  },
+
+  // ------------- //
+  // FESTIVALS  //
+  // ------------- //
+  festival: {
+    cannes: 'Cannes International Film Festival',
+    venice: 'Venice International Film Festival',
+    berlinale: 'Berlin International Film Festival (The Berlinale)',
+    toronto: 'Toronto International Film Festival(TIFF)',
+    sundace: 'Sundance Film Festival',
+    locarno: 'Locarno International Film Festival',
+    rotterdam: 'International Film Festival Rotterdam',
+    triBeCa: 'TriBeCa Film Festival',
+    sxsw: 'SXSW Film Festival',
+    sanSebastian: 'San Sebastian International Film Festival',
+    oscar: 'Oscar Academy Awards',
+    goldenGlobe: 'Golden Globe Awards',
+    bfta: 'BAFTA Film Awards'
   }
 };
 

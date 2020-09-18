@@ -31,7 +31,6 @@ export class MediaService {
 
   public overlayRef: OverlayRef;
   private getMediaToken = this.functions.httpsCallable('getMediaToken');
-  private deleteMedia = this.functions.httpsCallable('deleteMedia');
 
   constructor(
     private storage: AngularFireStorage,
@@ -52,16 +51,6 @@ export class MediaService {
       .then(() => delay(5000))
       .then(() => this.detachWidget());
     this.showWidget();
-  }
-
-  /**
-   * Delete a file from the firebase storage.
-   * @note the function needs the **full** path of the file
-   * **this include the file name!**
-   * @note usually you can use `HostedMediaFormValue.oldRef` to feed the `path` param
-   */
-  async removeFile(ref: string) {
-    await this.deleteMedia({ ref }).toPromise();
   }
 
   private addTasks(tasks: AngularFireUploadTask[]) {
@@ -91,27 +80,9 @@ export class MediaService {
     }
   }
 
-  async uploadOrDeleteMedia(mediaForms: HostedMediaFormValue[]) {
+  async uploadMedias(mediaForms: HostedMediaFormValue[]) {
     const promises = mediaForms.map(async mediaForm => {
-
-      // if the file needs to be deleted and we know its path
-      if (mediaForm.delete && !!mediaForm.oldRef) {
-
-        await this.removeFile(mediaForm.oldRef);
-
-        // if we have a blob = the user created or updated the file
-      } else if (!!mediaForm.blobOrFile) {
-
-        // if the file already have a path it means that we are in an update
-        // we first need to delete the old file
-        if (mediaForm.oldRef !== '') {
-          try {
-            await this.removeFile(mediaForm.oldRef);
-          } catch (error) {
-            console.warn('Deletion of previous file failed, but new file will still be uploaded');
-          }
-        }
-
+     if (!!mediaForm.blobOrFile) {
         // upload the new file
         this.upload({
           data: mediaForm.blobOrFile,

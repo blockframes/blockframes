@@ -35,7 +35,7 @@ export class InvitationComponent implements OnInit, OnDestroy {
   }
 
   acceptAll() {
-    const invitations = this.query.getAll().filter(i => this.query.isToMe(i));
+    const invitations = this.query.getAll().filter(i => this.query.isToMe(i) && i.status === 'pending');
     for (const invitation of invitations) {
       this.service.acceptInvitation(invitation);
     }
