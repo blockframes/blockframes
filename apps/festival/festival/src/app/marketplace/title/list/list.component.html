@@ -2,12 +2,9 @@
 
   <!-- App Bar Search -->
   <ng-template titleAppBarSearch>
-    <form class="app-bar" [formGroup]="filterForm">
-      <mat-form-field appearance="outline">
-        <mat-label>Search for titles, directors, keywords, ...</mat-label>
-        <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="filterForm.query">
-      </mat-form-field>
+    <form class="app-bar" [formGroup]="filterForm" fxLayout fxLayoutAlign="center center">
+      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
+      <input type="text" formControlName="query" [value]="filterForm.query" placeholder="Search for titles, directors, keywords, ...">
     </form>
   </ng-template>
 
