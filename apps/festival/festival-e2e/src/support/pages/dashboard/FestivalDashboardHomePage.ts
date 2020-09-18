@@ -5,7 +5,7 @@ import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplace
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard-home', { timeout: 30000 })
+    cy.get('festival-dashboard-home', { timeout: 40000 })
   }
 
   goToMarket() {
