@@ -1,9 +1,9 @@
 <ng-container *ngIf="movie$ | async as movie">
-  <h1 *ngIf="movie | hasStatus: ['released'] && movie | hasKeys: keys.additional">
+  <h1 *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: keys.additional)">
     Additional Information
   </h1>
 
-  <section *ngIf="movie.originalRelease.length && movie | hasStatus: ['released']">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.originalRelease.length)">
     <h2>Release</h2>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
@@ -14,7 +14,7 @@
   </section>
 
 
-  <section *ngIf="movie | hasKeys: 'estimatedBudget' && movie | hasStatus: ['released']">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: 'estimatedBudget')">
     <h2>Budget</h2>
     <article>
       <h5>Budget Range</h5>
@@ -27,7 +27,7 @@
   </section>
 
 
-  <section *ngIf="movie.boxOffice.length && movie | hasStatus: ['released']">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.boxOffice.length)">
     <h2>Box Office</h2>
     <article *ngFor="let boxOffice of movie.boxOffice">
       <h5>{{ boxOffice.territory | translateSlug : 'TERRITORIES' }}</h5>
@@ -38,7 +38,7 @@
   </section>
 
 
-  <section *ngIf="movie.rating.length && movie | hasStatus: ['released']">
+  <section *ngIf="(movie | hasStatus: ['released']) && movie.rating.length">
     <h2>Ratings</h2>
     <article *ngFor="let rating of movie.rating">
       <h5>{{ rating.country | translateSlug : 'TERRITORIES' }}</h5>
@@ -52,7 +52,7 @@
     Technial Information
   </h1>
 
-  <section *ngIf="movie | hasKeys: keys.formats && movie | hasStatus: ['released']">
+  <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: ['released'])">
     <h2>Formats</h2>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>

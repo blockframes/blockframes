@@ -83,7 +83,7 @@
 
 
   <!-- Festival -->
-  <section *ngIf="movie.prizes.length && movie | hasStatus: ['post-production', 'finished', 'released']">
+  <section *ngIf="movie.prizes.length && (movie | hasStatus: status.afterProd)">
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
@@ -96,7 +96,7 @@
 
 
   <!-- Review -->
-  <section *ngIf="movie.review.length && movie | hasStatus: ['post-production', 'finished', 'released']">
+  <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
     <h2>Film Reviews</h2>
     <article grid>
       <ng-container *ngFor="let review of movie.review">
