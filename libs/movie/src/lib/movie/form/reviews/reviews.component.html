@@ -30,7 +30,7 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
-                <mat-error *ngIf="prizesForm.get('prize').hasError('invalidYear')">Please enter a 4 digit date (e.g. 2020)</mat-error>
+                <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
                 <mat-error *ngIf="prizesForm.hasError('required')">
                   Year is required.
                 </mat-error>
@@ -85,8 +85,8 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
-                <mat-error *ngIf="customPrizeForm.get('prize').hasError('invalidYear')">Please enter a 4 digit date (e.g.
-                  2020)</mat-error>
+                <mat-error *ngIf="customPrizeForm.get('year').hasError('invalidYear')">Please enter a valid year
+                </mat-error>
                 <mat-error *ngIf="customPrizeForm.hasError('required')">
                   Year is required.
                 </mat-error>

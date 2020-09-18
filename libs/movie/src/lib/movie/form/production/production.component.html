@@ -136,11 +136,11 @@
                 placeholder="Sales Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="salesForm.get('countries')" scope="TERRITORIES"
+            <input-autocomplete [control]="salesForm.get('countries')" scope="TERRITORIES"
               placeholder="Type and select Country" fxFlex>
               <mat-label>Sales Company's Nationality</mat-label>
               <mat-error>Please specify Sales Company's Country.</mat-error>
-            </chips-autocomplete>
+            </input-autocomplete>
 
           </article>
         </ng-template>
