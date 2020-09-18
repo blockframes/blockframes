@@ -11,6 +11,7 @@ import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
 import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
+import { cleanUserMedias } from './media';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -120,6 +121,8 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     await sendFirstConnexionEmail(after);
   }
 
+  await cleanUserMedias(before, after);
+
   const promises: Promise<any>[] = [];
 
   // if name, email or avatar has changed : update algolia record
@@ -156,13 +159,15 @@ export async function onUserDelete(
   // delete user
   admin.auth().deleteUser(user.uid);
 
+  await cleanUserMedias(user);
+
   // remove id from org array
   if (!!user.orgId) {
     const orgRef = db.doc(`orgs/${user.orgId}`);
     const orgDoc = await orgRef.get();
     const org = orgDoc.data() as OrganizationDocument
     const userIds = org.userIds.filter(userId => userId !== user.uid);
-    orgRef.update({userIds});
+    orgRef.update({ userIds });
   }
 
   // remove permissions
@@ -172,7 +177,7 @@ export async function onUserDelete(
     const permissions = permissionsDoc.data() as PermissionsDocument;
     const roles = permissions.roles;
     delete roles[user.uid];
-    permissionsRef.update({roles}); 
+    permissionsRef.update({ roles });
   }
 
   // remove all invitations related to user
@@ -181,7 +186,7 @@ export async function onUserDelete(
     .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
     .map(invitation => invitation.id)
     .map(id => db.doc(`invitations/${id}`).delete());
-  
+
   // remove all notifications related to user
   const notificationsRef = db.collection(`notifications`).where('toUserId', '==', user.uid);
   const notificationsSnap = await notificationsRef.get();
@@ -189,11 +194,6 @@ export async function onUserDelete(
 
   // delete blockframesAdmin doc
   db.doc(`blockframesAdmin/${user.uid}`).delete();
-
-  // delete media from storage
-  const bucket = admin.storage().bucket(getStorageBucketName());
-  if (!!user.avatar) bucket.file(user.avatar).delete();
-  if (!!user.watermark) bucket.file(user.watermark).delete();
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {

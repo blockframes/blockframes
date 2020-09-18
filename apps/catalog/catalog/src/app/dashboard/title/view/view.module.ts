@@ -16,9 +16,7 @@ import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
 
 // Material
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
   path: '',
@@ -64,9 +62,7 @@ const routes = [{
     DashboardTitleShellModule,
     DisplayNameModule,
     // Material
-    MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     // Routes
     RouterModule.forChild(routes)
   ]

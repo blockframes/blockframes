@@ -4,8 +4,11 @@
   <mat-error *ngIf="form.hasError('invalidValue')">
     Please select one of the country suggested.
   </mat-error>
-  <mat-hint>You can select "World" for worldwide box office.</mat-hint>
+  <mat-hint>
+    <ng-content select="mat-hint"></ng-content>
+  </mat-hint>
 </mat-form-field>
+
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
   <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country.slug">
