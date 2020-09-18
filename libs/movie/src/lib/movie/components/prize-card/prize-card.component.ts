@@ -5,11 +5,11 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Prize } from '../../+state/movie.model'
 
 @Component({
-  selector: '[prize] movie-festival-prize-card',
-  templateUrl: 'festival-prize-card.component.html',
-  styleUrls: ['./festival-prize-card.component.scss'],
+  selector: '[prize] title-prize-card',
+  templateUrl: 'prize-card.component.html',
+  styleUrls: ['./prize-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FestivalPrizeCardComponent {
+export class PrizeCardComponent {
   @Input() prize: Prize;
 }
