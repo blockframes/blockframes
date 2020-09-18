@@ -90,8 +90,8 @@ export class CropperComponent implements OnInit {
       const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
       this.previewUrl$.next(previewUrl);
       this.nextStep('show');
-    } else if (!!this.form.ref?.value) {
-      this.ref = this.form.ref.value;
+    } else if (!!this.form.oldRef?.value) {
+      this.ref = this.form.oldRef.value;
       this.goToShow();
     }
   }
@@ -180,7 +180,7 @@ export class CropperComponent implements OnInit {
     this.step.next(name);
   }
 
-  /** 
+  /**
    * Returns a promise with the download url of an image based on its reference.
    * If media is protected, this will also try to fetch a security token.
    * */

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -11,20 +11,20 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MainComponent implements OnInit {
 
-  public movie$ = this.movieQuery.selectActive();
-  public loading$ = this.movieQuery.selectLoading();
+  public movie$ = this.shell.movie$;
+  public keys: Record<string, (keyof Movie)[]> = {
+    main: ['logline', 'synopsis', 'keywords'],
+    general: ['release', 'originCountries', 'originalLanguages', 'genres', 'runningTime'],
+    prizes: ['prizes', 'review']
+  }
 
   constructor(
-    private movieQuery: MovieQuery,
+    private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');
-  }
-
-  public hasStory({ synopsis, keywords, keyAssets }: Movie): boolean {
-    return !!(synopsis || keywords.length > 0 || keyAssets);
   }
 
 }
