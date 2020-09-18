@@ -12,7 +12,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 // Material
@@ -34,17 +34,17 @@ const routes = [{
     },
     {
       path: 'main',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/main/main.module').then(m => m.MovieViewMainModule),
       data: { animation: 0 }
     },
     {
       path: 'artistic',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
       data: { animation: 1 }
     },
     {
       path: 'production',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/production/production.module').then(m => m.MovieViewProductionModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
       data: { animation: 2 }
     }
   ]
