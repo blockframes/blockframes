@@ -11,7 +11,9 @@ export default class FestivalMarketplaceHomePage {
   }
 
   goToDashboard() {
-    //cy.visit('/c/o/dashboard')
+    this.clickOnMenu();
+    //Select Dashboard menu item
+    cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 500}).click();
     return new FestivalDashboardHomePage();
   }
 
@@ -19,9 +21,9 @@ export default class FestivalMarketplaceHomePage {
     this.clickOnMenu();
     //Select Dashboard menu item
     cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 500}).click();
-    cy.wait(2000);
+    //cy.wait(2000);
     //this.clickOnMenu();
-    cy.get('aside a[routerlink="event"]', {timeout: 500}).click();
+    cy.get('aside a[routerlink="event"]', {timeout: 5000}).click();
     return new EventPage();
   }  
 

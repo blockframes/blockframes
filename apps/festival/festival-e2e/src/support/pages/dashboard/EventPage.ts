@@ -1,10 +1,17 @@
 ﻿import EventEditPage from './EventEditPage';
-import { getTomorrowDay } from '@blockframes/e2e/utils/functions';
 
 export default class EventPage {
   constructor() {
     //cy.get('festival-event-list');
     cy.get('cal-week');
+  }
+
+  waitNewUrl() {
+    return new Cypress.Promise((resolve, reject) => {
+      cy.on('url:changed', (url) => {
+        resolve(url);
+      })
+    })
   }
 
   /**
@@ -16,7 +23,7 @@ export default class EventPage {
    * @param screeningName : Title screened (what is shown)
    * @param isPublic  : true for public event, false for private
    */
-  createEvent(eventTitle: string, eventDate: Date, 
+  async createEvent(eventTitle: string, eventDate: Date, 
               screeningName: string, isPublic: boolean = false) {
     cy.log(`createEvent : {${eventTitle}}`);
     const event: EventEditPage = this.createDetailedEvent(eventDate);
@@ -24,10 +31,8 @@ export default class EventPage {
     if (isPublic) {
       event.uncheckPrivate();
     }
-    event.selectMovie(screeningName);
 
-    //TODO: Input more details for the movie..
-    //event.clickMoreDetails();
+    event.selectMovie(screeningName);
 
     event.saveEvent();
     cy.get('[svgicon="arrow_back"]').click();

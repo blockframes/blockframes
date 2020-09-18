@@ -40,7 +40,7 @@ describe('User create a screening', () => {
     p1.clickSignup();      
   });
 
-  it.only('Organiser logs in, creates 4 screening events', () => {
+  it('Organiser logs in, creates 4 screening events', () => {
   
     signIn(users[0], true);
 
@@ -48,7 +48,6 @@ describe('User create a screening', () => {
     //const marketPage = new FestivalDashboardHomePage();
     const marketPage = new FestivalMarketplaceHomePage();
     const eventPage: EventPage = marketPage.goToCalendar();
-    //return;
 
     cy.log('Navigating to calendar');
     cy.get('a[test-id="calendar"]').then($menu => {
@@ -61,9 +60,8 @@ describe('User create a screening', () => {
       cy.wait(1000);
       cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();
 
-      //[Event Index, Date of Event, Is Public]
       [[0, tomorrow, false], [1, tomorrow, true], 
-      [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
+        [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
           const [i, d, p] = x;
           const eventName = EVENTS[i].event + index;
           eventPage.createEvent(eventName, d, 
@@ -73,7 +71,7 @@ describe('User create a screening', () => {
   })  
 
   it('Invitee1, Verify screening page and created screenings', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
 
@@ -98,16 +96,16 @@ describe('User create a screening', () => {
     p4.checkEventsInMarket(eventNames);
   });
 
-  it('Organiser accepts private screening request', () => {
+  it.only('Organiser accepts private screening request', () => {
     signIn(users[0]);
-    (new FestivalMarketplaceHomePage()).goToDashboard();
-    const p1 = new FestivalDashboardHomePage();
+    const p1 = (new FestivalMarketplaceHomePage()).goToDashboard();
+    //new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
 
-  it('Invitee adds public screening to his calendar', () => {
-    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).name;
+  it.only('Invitee adds public screening to his calendar', () => {
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
@@ -115,7 +113,8 @@ describe('User create a screening', () => {
     signIn(users[1]);
 
     const p1 = new FestivalMarketplaceHomePage();
-    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
+    const pn: FestivalMarketplaceNotificationsPage = 
+                                  p1.goToNotifications();
     // Wait notifications
     cy.wait(8000);
     cy.log(`=>Test Notification from {${OrgName}} exists`);

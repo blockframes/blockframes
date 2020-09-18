@@ -4,7 +4,7 @@
 import { NOW } from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { EVENTS } from '@blockframes/e2e/utils';
-import { User } from '@blockframes/e2e/fixtures/users';
+import { User, USER } from '@blockframes/e2e/fixtures/users';
 
 // Pages
 import { FestivalMarketplaceHomePage, FestivalMarketplaceEventPage, FestivalMarketplaceScreeningPage, FestivalOrganizationListPage, FestivalMarketplaceOrganizationTitlePage, FestivalScreeningPage } from '../../support/pages/marketplace/index';
@@ -17,7 +17,7 @@ const invitedUsers = TestEVENT.invitees.map(u => u.uid);
 const userFixture = new User();
 const users  =  [ userFixture.getByUID(TestEVENT.by.uid) ];
 users.push(...invitedUsers.map(uid => userFixture.getByUID(uid)));
-users.push(userFixture.getByUID('K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2'));
+users.push(userFixture.getByUID(USER.Ivo));
 let SCREENING_URL: string;
 
 enum UserIndex {

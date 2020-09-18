@@ -5,21 +5,18 @@ const CALENDAR_LABEL = 'My Calendar';
 
 export default class FestivalScreeningPage {
   constructor() {
-    cy.get('festival-screening', {timeout: 1000});
+    cy.get('festival-screening', {timeout: 10000});
     cy.wait(1000);
   }
 
   assertScreeningsExists(screeningNames: string[]) {
-    cy.wait(1000);
-    cy.get('festival-screening event-screening-item', {timeout: 1000})
+    cy.get('festival-screening event-screening-item', {timeout: 30000})
     .then($el => {
       screeningNames.forEach(screeningName => {
         cy.log(`assertScreeningsExists: {${screeningName}}!`);
         cy.wrap($el).contains(screeningName);
       })
     })
-    /* .should('have.length', 4) */
-    //.contains(screeningName);
   }
 
   /**

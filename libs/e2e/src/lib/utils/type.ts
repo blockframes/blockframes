@@ -11,6 +11,10 @@ export interface Organization {
   name: string;
   email: string;
   address: Location;
+  denomination: {
+    full: string;
+    public: string;
+  }
   activity: string;
   fiscalNumber: string;
   bankAccount: BankAccount;
