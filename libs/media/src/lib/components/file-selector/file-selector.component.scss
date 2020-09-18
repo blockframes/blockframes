@@ -1,0 +1,18 @@
+
+mat-icon {
+  margin-right: 4px;
+}
+
+mat-expansion-panel.selector {
+  margin: 24px 0;
+  border: solid 1px #dbdce0;
+  mat-accordion {
+    mat-expansion-panel.folder {
+      margin: 0 24px;
+    }
+  }
+}
+
+button {
+  width: 100%;
+}

@@ -57,6 +57,7 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     callUrl: '',
     organizerId: '',
     description: '',
+    files: [],
     ...meeting
   }
 }
