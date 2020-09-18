@@ -49,7 +49,8 @@
     <ng-container *ngIf="!movie.customPrizes.controls.length else displayCustomFestival">
       <a [routerLink]="link" fragment="custom-festival" class="missing-control">
         Missing
-      </a>    </ng-container>
+      </a>
+    </ng-container>
     <ng-template #displayCustomFestival>
       <li *ngFor="let customPrize of movie.customPrizes.controls">
         <strong>

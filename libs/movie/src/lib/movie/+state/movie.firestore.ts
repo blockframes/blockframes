@@ -50,13 +50,12 @@ interface MovieRaw<D> {
   color?: ColorsSlug,
   contentType: ContentType; //! required
   crew?: Crew[],
-  customGenres?: string[],
-  customPrizes: Prize[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
+  customGenres?: string[],
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO we will need more visibility on the upload part to take the final decision
   // TODO we also need to consider how to differentiate full movies from trailer
@@ -72,6 +71,7 @@ interface MovieRaw<D> {
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
   prizes?: Prize[],
+  customPrizes: Prize[],
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],

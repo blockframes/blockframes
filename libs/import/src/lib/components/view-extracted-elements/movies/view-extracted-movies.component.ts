@@ -46,7 +46,7 @@ enum SpreadSheetMovie {
   genres,
   length,
   cast,
-  festivalPrizes,
+  festivalCustomPrizes,
   synopsis,
   keyAssets,
   keywords,
@@ -481,9 +481,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
 
         // PRIZES (Prizes)
-        if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
+        if (spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes]) {
           movie.customPrizes = [];
-          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
+          spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes].split(this.separator).forEach(async (p: string) => {
             const prizeParts = p.split(this.subSeparator);
             if (prizeParts.length >= 3) {
               const prize = createPrize();
@@ -1126,7 +1126,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.prizes.length === 0) {
+    if (movie.customPrizes.length === 0) {
       errors.push({
         type: 'warning',
         field: 'prizes',
