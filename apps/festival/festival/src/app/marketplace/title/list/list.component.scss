@@ -1,10 +1,13 @@
 @import '~@angular/flex-layout/mq';
-
 form.app-bar {
-  width: 100%;
-  input {
-    background-color: transparent;
-    font-size: 2rem;
+  width: 25em;
+  
+  ::ng-deep .mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  ::ng-deep .mat-form-field-subscript-wrapper {
+    position: inherit;
+    margin-top: -5px;
   }
 }
 
