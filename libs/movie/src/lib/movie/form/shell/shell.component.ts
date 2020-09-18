@@ -56,7 +56,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
+      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'development')),
     }]
   }, {
     title: 'Promotional Elements',
