@@ -86,7 +86,7 @@ function getSteps(status: FormControl): TunnelStep[] {
 }
 
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
-  financing: {
+  development: {
     'release.status': '',
     "runningTime.status": ''
   },
@@ -94,7 +94,7 @@ const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], R
     'release.status': '',
     "runningTime.status": ''
   },
-  'post-production': {
+  post_production: {
     'release.status': '',
     "runningTime.status": ''
   },
