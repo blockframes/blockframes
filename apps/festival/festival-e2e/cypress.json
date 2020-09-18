@@ -13,6 +13,5 @@
   "reporter": "junit",
   "reporterOptions": {
     "mochaFile": "../../../dist/test-reports/festival-[hash].xml"
-  },
-  "blacklistHosts": [ "google-analytics.com", "googletagmanager.com"]
+  }
 }
