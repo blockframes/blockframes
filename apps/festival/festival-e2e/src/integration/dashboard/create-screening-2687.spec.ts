@@ -44,8 +44,6 @@ describe('User create a screening', () => {
   
     signIn(users[0], true);
 
-    //(new FestivalMarketplaceHomePage()).goToDashboard();
-    //const marketPage = new FestivalDashboardHomePage();
     const marketPage = new FestivalMarketplaceHomePage();
     const eventPage: EventPage = marketPage.goToCalendar();
 

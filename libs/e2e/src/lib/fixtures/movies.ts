@@ -1,4 +1,4 @@
-﻿import { Movie as MovieType } from '../utils/type';
+﻿import { Movie } from '../utils/type';
 import { QueryInferface } from "../utils/queryinterface";
 import moviesFixture from 'tools/fixtures/movies.json';
 
@@ -8,13 +8,8 @@ export enum MOVIE {
 }
 
 export class Orgs {
-  constructor() {
-
-  }
-
-  get(query: QueryInferface) : Partial<MovieType>[] {
-    const orgSet: Partial<MovieType>[]  = (query.exist) ? 
-                                      moviesFixture : null;
+  get(query: QueryInferface) : Partial<Movie>[] {
+    const orgSet: Partial<Movie>[] = (query.exist) ? moviesFixture : null;
 
     if (query.index && query.index !== -1) {
       return [orgSet[query.index]];
@@ -31,7 +26,7 @@ export class Orgs {
    * getByID : convenience method to fetch movie by ID
    * @param ID : id of the movie
    */
-  getByID(ID: string) : Partial<MovieType> {
+  getByID(ID: string) : Partial<Movie> {
     return this.get({exist: true, key:'id', value: ID})[0];
   }
 
