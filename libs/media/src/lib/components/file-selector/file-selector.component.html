@@ -1,11 +1,12 @@
 
 <mat-expansion-panel class="selector" #fileSelector>
   <mat-expansion-panel-header>
-    <mat-icon svgIcon="document"></mat-icon>
     <ng-container *ngIf="(selectedFile$ | async) as selectedFile; else noFile">
+      <mat-icon svgIcon="document"></mat-icon>
       {{ selectedFile | fileName}}
     </ng-container>
     <ng-template #noFile>
+      <mat-icon svgIcon="folder"></mat-icon>
       Browse Files
     </ng-template>
   </mat-expansion-panel-header>
@@ -13,7 +14,7 @@
 
     <mat-accordion *ngIf="(org$ | async) as org">
 
-      <!-- TODO update to list org files -->
+      <!-- TODO update to list org files issue#3678 -->
       <mat-expansion-panel class="folder">
         <mat-expansion-panel-header>
           <mat-icon svgIcon="home"></mat-icon>
@@ -26,7 +27,7 @@
         <mat-expansion-panel
           class="folder"
           *ngFor="let movie of movies"
-          (opened)="getFilesOfMovie(movie.id)"
+          (opened)="getFilesOfMovie(movie)"
           (closed)="clearFiles()"
         >
           <mat-expansion-panel-header>
@@ -39,7 +40,7 @@
                 <ng-container *ngFor="let file of files">
                   <button mat-button (click)="select(file)">
                     <mat-icon svgIcon="document"></mat-icon>
-                    {{file.name}}
+                    {{file | fileName}}
                   </button>
                 </ng-container>
               </ng-container>

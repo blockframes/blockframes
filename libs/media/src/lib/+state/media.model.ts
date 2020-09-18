@@ -32,7 +32,7 @@ function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
 
   for (const key in document) {
 
-    if (isMedia(document[key])) {
+    if (isMediaForm(document[key])) {
 
       if (mediaNeedsUpdate(document[key])) {
         medias.push(document[key]);
@@ -58,14 +58,14 @@ function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm 
   if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];
-      if (isMedia(control.value)) {
+      if (isMediaForm(control.value)) {
         if (mediaNeedsUpdate(control.value)) {
 
           // emptying values in blobOrFile and delete to prevent redoing the action on multiple submits.
           // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
           control.patchValue({
             blobOrFile: '',
-            oldRef: clearHostedMediaFormValue(control.value), 
+            oldRef: clearHostedMediaFormValue(control.value),
           });
 
         }
@@ -76,7 +76,35 @@ function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm 
   }
 }
 
-function isMedia(obj: any) {
+export function recursivelyListFiles(document: any): string[] {
+
+  if (typeof document === 'string') {
+    return isMedia(document) ? [document] : []
+
+  } else if (Array.isArray(document)) {
+    const result = document.map(el => recursivelyListFiles(el));
+    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
+    return [].concat(...result);
+
+  } else if (!document) {
+    return [];
+
+  } else if (typeof document === 'object') {
+    const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
+    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
+    return [].concat(...result);
+
+  } else {
+    return [];
+  }
+}
+
+/** Check if a string is a media ref (i.e. if it starts with `public/` or `protected/`) */
+function isMedia(ref: string) {
+  return /^(public\/|protected\/)/gm.test(ref);
+}
+
+function isMediaForm(obj: any) {
   return (
     typeof obj === 'object' &&
     !!obj &&
