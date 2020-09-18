@@ -8,7 +8,7 @@ import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
-import { upsertWatermark } from '@blockframes/firebase-utils';
+import { deleteAndAwaitWatermark, upsertWatermark } from '@blockframes/firebase-utils';
 
 // No typing
 const JWPlayerApi = require('jwplatform');
@@ -100,10 +100,11 @@ export const getPrivateVideoUrl = async (
   const userSnap = await userRef.get();
   const user = userSnap.data() as PublicUser;
 
-  // if (!user.watermark) { // TODO use this line with the new image data model
   if (!user.watermark || !user.watermark.ref || !user.watermark.url) {
 
-    upsertWatermark(user, getStorageBucketName());
+    const bucketName =  getStorageBucketName();
+    await deleteAndAwaitWatermark(user.uid, bucketName);
+    upsertWatermark(user, bucketName);
 
     // wait for the function to update the user document after watermark creation
     const success = await new Promise(resolve => {
@@ -111,7 +112,6 @@ export const getPrivateVideoUrl = async (
       const unsubscribe = userRef.onSnapshot(snap => {
         const userData = snap.data() as PublicUser;
 
-        // if (!!userData.watermark) { // TODO use this line with the new image data model
         if (!!userData.watermark && !!userData.watermark.ref && !!userData.watermark.url) {
           unsubscribe();
           resolve(true);
