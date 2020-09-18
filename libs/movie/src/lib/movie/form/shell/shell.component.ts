@@ -17,8 +17,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map, startWith } from 'rxjs/operators';
+import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 function getSteps(status: FormControl): TunnelStep[] {
   return [{
@@ -84,12 +85,26 @@ function getSteps(status: FormControl): TunnelStep[] {
   }]
 }
 
-const valueByProdStatus: Record<Extract<keyof Movie, Movie['productionStatus']>, any> = {
-  development: {
-    'release.status': 'confirmed'
+const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
+  financing: {
+    'release.status': '',
+    "runningTime.status": ''
   },
-  'in-production': {
-    'release.status': ''
+  shooting: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  'post-production': {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  finished: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
+  },
+  released: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
   }
 }
 
@@ -119,10 +134,11 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
     this.steps = getSteps(this.form.get('productionStatus'));
-    this.form.valueChanges.subscribe(console.log)
-    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value)).subscribe(status => {
-
-    })
+    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
+      filter(status => !!status)).subscribe(status => {
+        const pathToUpdate = Object.keys(valueByProdStatus[status]);
+        pathToUpdate.forEach(path => this.form.get(path as any).setValue(valueByProdStatus[status][path]));
+      })
   }
 
   ngAfterViewInit() {
