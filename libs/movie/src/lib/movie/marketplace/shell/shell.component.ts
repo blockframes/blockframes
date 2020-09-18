@@ -15,7 +15,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces/navigatio
   animations: [routeAnimation],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieShellComponent implements OnInit {
+export class TitleMarketplaceShellComponent implements OnInit {
   public movie$: Observable<Movie>;
 
   @Input() routes: RouteDescription[];
@@ -40,12 +40,3 @@ export class MovieShellComponent implements OnInit {
     return outlet?.activatedRouteData?.animation;
   }
 }
-
-// @Directive({
-//   selector: 'movie-header, [movieHeader]',
-//   host: { 
-//     style: 'display: block; height: calc(100vh - 80px - 48px - 16px - 24px);'
-//   }
-// })
-// // tslint:disable-next-line: directive-class-suffix
-// export class MovieHeader { }

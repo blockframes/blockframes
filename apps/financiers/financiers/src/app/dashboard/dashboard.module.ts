@@ -12,6 +12,9 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 
+// Tunnel routes
+import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
+
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
@@ -25,14 +28,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDividerModule } from '@angular/material/divider';
 import { OrgAccessModule } from '@blockframes/organization/pipes/org-access.pipe';
 
-// Tunnel routes
-import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
-
 const routes: Routes = [{
   path: '',
   component: DashboardComponent,
-  children: [
-    {
+  children: [{
       path: '',
       pathMatch: 'full',
       redirectTo: 'home'
@@ -82,25 +81,24 @@ const routes: Routes = [{
     {
       path: 'privacy',
       loadChildren: () => import('@blockframes/ui/static-informations/privacy/privacy.module').then(m => m.PrivacyModule)
-    }
-  ]
-},
-{
-  path: 'tunnel',
-  canActivate: [TunnelGuard],
-  children: [{
-    path: 'movie',
-    children: [{
-      path: ':movieId',
-      canActivate: [MovieActiveGuard, MovieTunnelGuard],
-      canDeactivate: [MovieActiveGuard],
-      children: tunnelRoutes,
-      data: {
-        redirect: '/c/o/dashboard/tunnel/movie'
-      },
     }]
-  }]
-},
+  },
+  {
+    path: 'tunnel',
+    canActivate: [TunnelGuard],
+    children: [{
+      path: 'movie',
+      children: [{
+        path: ':movieId',
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
+        canDeactivate: [MovieActiveGuard],
+        children: tunnelRoutes,
+        data: {
+          redirect: '/c/o/dashboard/tunnel/movie'
+        },
+      }]
+    }]
+  },
 ];
 
 @NgModule({
@@ -114,6 +112,7 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
+
     // Material
     MatDividerModule,
     MatListModule,

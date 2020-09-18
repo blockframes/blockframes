@@ -24,6 +24,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+  private formSub: Subscription;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -65,15 +66,26 @@ export class EditComponent implements OnInit, OnDestroy {
     ).subscribe(event => {
       this.type = event.type;
       this.form = new EventForm(event);
+
+      // FormArray (used in FormList) does not mark as dirty on push,
+      // so we do it manually to enable the save button
+      // more info : https://github.com/angular/angular/issues/16370
+      if (!!this.formSub) {
+        this.formSub.unsubscribe();
+        delete this.formSub;
+      }
+      this.formSub = this.form.meta.valueChanges.subscribe(() => this.form.markAsDirty());
+
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.formSub.unsubscribe();
   }
 
-  get meta() {
-    return this.form.get('meta');
+  get files() {
+    return (this.form.meta as MeetingForm).get('files');
   }
 }

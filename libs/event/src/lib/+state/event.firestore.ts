@@ -11,6 +11,7 @@ export interface Meeting {
   callUrl: string;
   organizerId: string;
   description: string;
+  files: string[];
 }
 
 export interface Screening {
