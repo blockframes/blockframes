@@ -15,8 +15,13 @@ function hasValue(value: string | number | any[] | object) {
 @Pipe({ name: 'hasKeys' })
 export class HasKeysPipe implements PipeTransform {
   transform(base: Record<string, any>, keys: string | string[], filter: 'every' | 'some' = 'some'): boolean {
-    if (!base) return false;
+    if (!base) {
+      return false;
+    }
     keys = Array.isArray(keys) ? keys : [keys];
+    if (!keys.length) {
+      return true;
+    }
     return keys[filter](key => {
       const value = key.split('.').reduce((result, k) => result[k], base);
       return hasValue(value);

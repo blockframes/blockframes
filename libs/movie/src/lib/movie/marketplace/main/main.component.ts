@@ -10,7 +10,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MainComponent implements OnInit {
   public movie$ = this.shell.movie$;
-  public status = {
+  public status: Record<string, Movie['productionStatus'][]> = {
     afterProd: ['post-production', 'finished', 'released']
   };
   public keys: Record<string, (keyof Movie)[]> = {
