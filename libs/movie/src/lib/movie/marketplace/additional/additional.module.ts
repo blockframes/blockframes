@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdditionalComponent } from './additional.component';
 import { TranslateSlugModule, HasKeysModule } from '@blockframes/utils/pipes';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -14,6 +16,7 @@ import { MatChipsModule } from '@angular/material/chips';
     CommonModule,
     TranslateSlugModule,
     HasKeysModule,
+    HasStatusModule,
     FlexLayoutModule,
     MatDividerModule,
     MatChipsModule,
