@@ -10,7 +10,9 @@ import {
   MovieLanguageSpecification,
   OtherLink,
   MovieExpectedPremiere,
-  MovieShootingDate
+  MovieShootingDate,
+  MoviePlannedShootingDateRange,
+  MoviePlannedShooting,
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -25,6 +27,8 @@ import {
   createMoviePromotional,
   createMovieLanguageSpecification,
   createOtherLink,
+  createShootingDate,
+  createShootingPlannedObject
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -123,7 +127,7 @@ function createMovieControls(movie: Partial<Movie>) {
     runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
     shootingDate: new ShootingDateForm(entity.shootingDate),
-    shootingLocation: FormList.factory(entity.shootingLocation, el => new FormStaticValue(el, 'TERRITORIES')),
+    shootingLocations: FormList.factory(entity.shootingLocations, el => new FormStaticValue(el, 'TERRITORIES')),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
@@ -266,6 +270,14 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get estimatedBudget() {
     return this.get('estimatedBudget');
+  }
+
+  get shootingDate() {
+    return this.get('shootingDate');
+  }
+
+  get shootingLocations() {
+    return this.get('shootingLocations');
   }
 
   public removeDirector(i: number): void {
@@ -880,12 +892,11 @@ export function createMovieExpectedPremiere(
 // ------------------------------
 
 function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
-  const { fixed, from, period, to } = createMovieShootingDate(entity);
+  const { completed, progress, planned } = createShootingDate(entity);
   return {
-    fixed: new FormControl(fixed),
-    from: new FormControl(from),
-    period: new FormControl(period),
-    to: new FormControl(to),
+    completed: new FormControl(completed),
+    progress: new FormControl(progress),
+    planned: new ShootingPlannedForm(planned),
   }
 }
 
@@ -897,14 +908,51 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
   }
 }
 
-export function createMovieShootingDate(
-  params: Partial<MovieShootingDate> = {}
-): MovieShootingDate {
-  return {
-    period: '',
-    ...params,
-    fixed: toDate(params.fixed),
-    from: toDate(params.from),
-    to: toDate(params.to),
-  };
+// ---------------------------------
+//    SHOOTING DATE PLANNED RANGE
+// ---------------------------------
+
+export class ShootingPlannedForm extends FormEntity<ShootingPlannedFormControl> {
+  constructor(shootingRange?: Partial<MoviePlannedShootingDateRange>) {
+    super(createShootingRangeFormControl(shootingRange));
+  }
 }
+
+function createShootingRangeFormControl(entity?: Partial<MoviePlannedShootingDateRange>) {
+  const { from, to } = createPlannedRange(entity);
+  return {
+    from: new ShootingPlannedObjectForm(from),
+    to: new ShootingPlannedObjectForm(to)
+  }
+}
+
+type ShootingPlannedFormControl = ReturnType<typeof createShootingRangeFormControl>;
+
+function createPlannedRange(params: Partial<MoviePlannedShootingDateRange>) {
+  return {
+    from: {},
+    to: {},
+    ...params
+  }
+}
+
+// ---------------------------------
+//    SHOOTING DATE PLANNED OBJECT
+// ---------------------------------
+
+export class ShootingPlannedObjectForm extends FormEntity<MoviePlannedShootingControl> {
+  constructor(shootingPlanned?: Partial<MoviePlannedShooting>) {
+    super(createShootingPlannedFormControl(shootingPlanned));
+  }
+}
+
+function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>) {
+  const { period, month, year } = createShootingPlannedObject(entity);
+  return {
+    period: new FormControl(period),
+    month: new FormControl(month),
+    year: new FormControl(year)
+  }
+}
+
+type MoviePlannedShootingControl = ReturnType<typeof createShootingPlannedFormControl>;

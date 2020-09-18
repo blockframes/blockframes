@@ -81,7 +81,7 @@ interface MovieRaw<D> {
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
   shootingDate: MovieShootingDateRaw<D>,
-  shootingLocation: TerritoriesSlug[],
+  shootingLocations: TerritoriesSlug[],
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
@@ -233,13 +233,23 @@ export interface OtherLink {
 }
 
 export interface MovieShootingDateRaw<D> {
-  fixed?: D
-  from?: D,
-  period?: string,
-  to?: D,
+  completed?: D
+  progress?: D,
+  planned?: MoviePlannedShootingDateRange
 }
 
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MoviePlannedShootingDateRange {
+  from: MoviePlannedShooting,
+  to: MoviePlannedShooting
+}
+
+export interface MoviePlannedShooting {
+  period: string,
+  month: string,
+  year: number
+}
 
 export interface MovieExpectedPremiereRaw<D> {
   date?: D,

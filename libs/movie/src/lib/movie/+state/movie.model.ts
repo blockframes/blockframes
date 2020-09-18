@@ -19,7 +19,8 @@ import {
   MovieRunningTime,
   OtherLink,
   MovieShootingDate,
-  MovieExpectedPremiere
+  MovieExpectedPremiere,
+  MoviePlannedShooting,
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -82,7 +83,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     rating: [],
     review: [],
     scoring: null,
-    shootingLocation: [],
+    shootingLocations: [],
     soundFormat: '',
     isOriginalVersionAvailable: false,
 
@@ -273,6 +274,15 @@ export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMe
 
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
+    ...params
+  }
+}
+
+export function createShootingPlannedObject(params: Partial<MoviePlannedShooting>) {
+  return {
+    period: '',
+    month: '',
+    year: null,
     ...params
   }
 }

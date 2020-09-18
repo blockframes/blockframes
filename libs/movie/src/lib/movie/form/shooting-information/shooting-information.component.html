@@ -1,0 +1,119 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Shooting Information</h1>
+  <ng-container tunnel-form>
+    <h3>Shooting Information</h3>
+
+    <section id="shooting-information" fxLayout="column">
+      <h6 class="mat-caption">Shooting Dates</h6>
+      <!-- Shooting completed -->
+      <article fxLayout="column">
+        <mat-checkbox class="mat-body-2">Shooting completed :</mat-checkbox>
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="completedPicker" [formControl]="form.shootingDate.get('completed')">
+          <mat-datepicker-toggle matSuffix [for]="completedPicker">
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #completedPicker></mat-datepicker>
+        </mat-form-field>
+      </article>
+
+      <!-- Shooting in progress -->
+      <article fxLayout="column">
+        <mat-checkbox class="mat-body-2">Shooting in progress :</mat-checkbox>
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="progressPicker" [formControl]="form.shootingDate.get('progress')">
+          <mat-datepicker-toggle matSuffix [for]="progressPicker">
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #progressPicker></mat-datepicker>
+        </mat-form-field>
+      </article>
+
+      <!-- Shooting planned -->
+      <article fxLayout="column">
+        <mat-checkbox class="mat-body-2">Shooting planned :</mat-checkbox>
+        <div fxLayout="row" fxLayoutGap="46px" fxFlex>
+
+          <div fxLayout="column" fxFlex>
+            <span class="mat-body-2">From :</span>
+            <div fxLayout="row" fxLayoutGap="8px" fxFlex>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Period</mat-label>
+                <mat-select>
+                  <mat-option>Coucou</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Month</mat-label>
+                <mat-select>
+                  <mat-option>Avril</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <mat-select>
+                  <mat-option>2020</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="column" fxFlex>
+            <span class="mat-body-2">To :</span>
+            <div fxLayout="row" fxLayoutGap="8px" fxFlex>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Period</mat-label>
+                <mat-select>
+                  <mat-option>Coucou</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Month</mat-label>
+                <mat-select>
+                  <mat-option>Avril</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <mat-select>
+                  <mat-option>2020</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <h6 class="mat-caption">Shooting Location</h6>
+      <chips-autocomplete [form]="form.get('shootingLocations')" scope="TERRITORIES"
+      placeholder="Shooting Locations" [withoutValues]="['world']">
+        <mat-label>Shooting Locations</mat-label>
+        <mat-hint>
+          Use commas or press Enter key to separate countries.
+        </mat-hint>
+      </chips-autocomplete>
+
+      <h6 class="mat-caption">Expected Premiere</h6>
+      <article fxLayout="row" fxLayoutGap="24px">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Event</mat-label>
+          <input matInput type="text">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Approximate Date</mat-label>
+          <input matInput [matDatepicker]="eventDate">
+          <mat-datepicker-toggle matSuffix [for]="eventDate">
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #eventDate></mat-datepicker>
+        </mat-form-field>
+      </article>
+
+    </section>
+  </ng-container>
+</tunnel-page>

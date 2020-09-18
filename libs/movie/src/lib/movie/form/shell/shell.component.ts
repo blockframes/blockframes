@@ -50,6 +50,9 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'additional-information',
       label: 'Additional Information'
+    },  {
+      path: 'shooting-information',
+      label: 'Shooting Information'
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'

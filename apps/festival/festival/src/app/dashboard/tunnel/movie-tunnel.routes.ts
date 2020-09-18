@@ -42,6 +42,10 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
       },
       {
+        path: 'shooting-information',
+        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule)
+      },
+      {
         path: 'available-materials',
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
