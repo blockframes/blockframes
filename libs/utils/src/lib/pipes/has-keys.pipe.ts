@@ -16,7 +16,7 @@ export class HasKeysPipe implements PipeTransform {
   transform(base: Record<string, any>, keys: string | string[], filter: 'every' | 'some' = 'some') {
     keys = Array.isArray(keys) ? keys : [keys];
     return keys[filter](key => {
-      const value = key.split('.').reduce((result, key) => result[key], base);
+      const value = key.split('.').reduce((result, k) => result[k], base);
       return hasValue(value);
     });
   }

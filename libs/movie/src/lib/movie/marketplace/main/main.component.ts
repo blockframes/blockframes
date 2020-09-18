@@ -27,8 +27,4 @@ export class MainComponent implements OnInit {
     this.dynTitle.setPageTitle('Film Page', 'Main Info');
   }
 
-  public hasStory({ synopsis, keywords, keyAssets }: Movie): boolean {
-    return !!(synopsis || keywords.length > 0 || keyAssets);
-  }
-
 }
