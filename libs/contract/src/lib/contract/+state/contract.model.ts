@@ -164,8 +164,11 @@ export function createLegalDocument(
     media: params.media ?? '',
   }
 }
+type PartialExcept<T, K extends keyof T> = Exclude<Partial<T>, K> & Required<Pick<T, K>>;
 
-export function createContractFromFirestore(contract: Contract): Contract {
+export function createContractFromFirestore(
+  contract: PartialExcept<Contract, 'id' | 'type' | 'titleIds' | 'partyIds' | 'documents' | 'lastVersion'>
+): Contract {
   const c = {
     ...contract,
     signDate: contract.signDate ? toDate(contract.signDate) : undefined,
