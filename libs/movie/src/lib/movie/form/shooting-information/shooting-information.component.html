@@ -101,12 +101,12 @@
       <article fxLayout="row" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Event</mat-label>
-          <input matInput type="text">
+          <input matInput type="text" [formControl]="form.expectedPremiere.get('event')" placeholder="Event">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Approximate Date</mat-label>
-          <input matInput [matDatepicker]="eventDate">
+          <input matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
           </mat-datepicker-toggle>

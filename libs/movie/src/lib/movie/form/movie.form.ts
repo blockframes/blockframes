@@ -280,6 +280,10 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('shootingLocations');
   }
 
+  get expectedPremiere() {
+    return this.get('expectedPremiere');
+  }
+
   public removeDirector(i: number): void {
     this.directors.removeAt(i);
   }
