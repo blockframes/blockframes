@@ -24,8 +24,10 @@ export class CreditCardComponent {
 @Pipe({ name: 'filmography' })
 export class FilmographyPipe implements PipeTransform {
   transform(filmography?: Filmography) {
-    return filmography
-      ? `${filmography.title} (${filmography.year})`
-      : '-'
+    if (filmography?.title) {
+      return filmography.year ? `${filmography.title} (${filmography.year})` : filmography.title;
+    } else {
+      return  '-'
+    }
   }
 }
