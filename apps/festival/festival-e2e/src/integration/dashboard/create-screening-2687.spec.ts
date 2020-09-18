@@ -20,13 +20,15 @@ import { LandingPage } from '../../support/pages/landing';
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { NOW } from '../../fixtures/data';
 import { EVENTS } from '@blockframes/e2e/utils';
-import { User } from '@blockframes/e2e/fixtures/users';
+import { User, USER } from '@blockframes/e2e/fixtures/users';
+import { Orgs } from '@blockframes/e2e/fixtures/orgs';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
+const orgsFixture = new Orgs();
 const users  =  [ 
   (userFixture.getByUID(EVENTS[0].by.uid)),
-  (userFixture.getByUID('MDnN2GlVUeadIVJbzTToQQNAMWZ2'))
+  (userFixture.getByUID(USER.Vincent))
 ];
 
 describe('User create a screening', () => {
@@ -42,8 +44,7 @@ describe('User create a screening', () => {
   
     signIn(users[0], true);
 
-    (new FestivalMarketplaceHomePage()).goToDashboard();
-    const marketPage = new FestivalDashboardHomePage();
+    const marketPage = new FestivalMarketplaceHomePage();
     const eventPage: EventPage = marketPage.goToCalendar();
 
     cy.log('Navigating to calendar');
@@ -57,9 +58,8 @@ describe('User create a screening', () => {
       cy.wait(1000);
       cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();
 
-      //[Event Index, Date of Event, Is Public]
       [[0, tomorrow, false], [1, tomorrow, true], 
-      [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
+        [0, twodayslater, true], [1, twodayslater, false]].forEach((x: any, index:number) => {
           const [i, d, p] = x;
           const eventName = EVENTS[i].event + index;
           eventPage.createEvent(eventName, d, 
@@ -69,7 +69,7 @@ describe('User create a screening', () => {
   })  
 
   it('Invitee1, Verify screening page and created screenings', () => {
-    const OrgName = EVENTS[0].org.name;
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     const event1 = EVENTS[0].event;
     const event2 = EVENTS[1].event;
 
@@ -96,14 +96,13 @@ describe('User create a screening', () => {
 
   it('Organiser accepts private screening request', () => {
     signIn(users[0]);
-    (new FestivalMarketplaceHomePage()).goToDashboard();
-    const p1 = new FestivalDashboardHomePage();
+    const p1 = (new FestivalMarketplaceHomePage()).goToDashboard();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
 
   it('Invitee adds public screening to his calendar', () => {
-    const OrgName = EVENTS[0].org.name;
+    const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
     const movieTitle = EVENTS[0].movie.title.international;
