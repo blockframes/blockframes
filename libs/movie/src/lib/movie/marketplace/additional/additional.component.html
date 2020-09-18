@@ -1,5 +1,7 @@
 <ng-container *ngIf="movie$ | async as movie">
-  <h1>Additional Information</h1>
+  <h1 *ngIf="movie | hasStatus: ['released'] && movie | hasKeys: keys.additional">
+    Additional Information
+  </h1>
 
   <section *ngIf="movie.originalRelease.length && movie | hasStatus: ['released']">
     <h2>Release</h2>
@@ -46,7 +48,9 @@
 
 
 
-  <h1>Technial Information</h1>
+  <h1 *ngIf="movie | hasStatus: ['released']">
+    Technial Information
+  </h1>
 
   <section *ngIf="movie | hasKeys: keys.formats && movie | hasStatus: ['released']">
     <h2>Formats</h2>

@@ -13,6 +13,7 @@ export class AdditionalComponent implements OnInit {
 
   public movie$ = this.shell.movie$;
   public keys = {
+    additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating'],
     formats: ['format', 'formatQuality', 'color', 'soundFormat']
   };
 
@@ -22,20 +23,7 @@ export class AdditionalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Film Page', 'Financing Conditions');
-  }
-
-  public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
-  }
-
-  public hasBudget({ boxOffice, rating, certifications, review}: Movie): boolean {
-    return !!(
-      boxOffice.length ||
-      certifications.length ||
-      rating.length ||
-      review.length
-    )
+    this.dynTitle.setPageTitle('Film Page', 'Addition Information');
   }
 
 }
