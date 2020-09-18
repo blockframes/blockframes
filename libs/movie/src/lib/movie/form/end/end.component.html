@@ -1,13 +1,12 @@
-<main fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between center">
+<main fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between start">
   <section>
     <h4>END</h4>
     <h1>Thank you !</h1>
     <p class="mat-body-1">Your title has been submitted to Archipel Content.</p>
     <p class="mat-body-1">You will receive a notification and email from us when the title has been added to your catalog.</p>
-    <button mat-flat-button color="accent">
+    <button mat-flat-button color="accent" (click)="navigate()">
       <span>Back to work</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </section>
-  <img asset="congrats.png" alt="congrats picture">
 </main>

@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
 import { Subscription } from 'rxjs';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
-import { staticConsts } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -62,8 +61,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
-        const movieId = this.query.getActiveId();
-        this.router.navigate(['../../../../title', movieId, 'end'], { relativeTo: this.route })
+        this.router.navigate(['../', 'end'], { relativeTo: this.route })
       })
     } else {
       // Log the invalid forms
