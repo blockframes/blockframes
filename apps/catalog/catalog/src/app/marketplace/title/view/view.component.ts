@@ -25,6 +25,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     label: 'Additional Information'
   },
   {
+    path: 'production',
+    label: 'Production Environment'
+  },
+  {
     path: 'finance',
     label: 'Financing Conditions'
   },

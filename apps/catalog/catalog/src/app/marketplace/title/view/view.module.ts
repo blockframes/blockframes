@@ -28,6 +28,10 @@ const routes = [{
       loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
     },
     {
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/marketplace/production/production.module').then(m => m.MovieProductionModule)
+    },
+    {
       path: 'additional',
       loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
     },
