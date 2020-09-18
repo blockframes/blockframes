@@ -21,8 +21,6 @@ export default class FestivalMarketplaceHomePage {
     this.clickOnMenu();
     //Select Dashboard menu item
     cy.get('aside a[routerlink="/c/o/dashboard/home"]', {timeout: 500}).click();
-    //cy.wait(2000);
-    //this.clickOnMenu();
     cy.get('aside a[routerlink="event"]', {timeout: 5000}).click();
     return new EventPage();
   }  

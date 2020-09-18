@@ -23,7 +23,7 @@ export default class EventPage {
    * @param screeningName : Title screened (what is shown)
    * @param isPublic  : true for public event, false for private
    */
-  async createEvent(eventTitle: string, eventDate: Date, 
+  createEvent(eventTitle: string, eventDate: Date, 
               screeningName: string, isPublic: boolean = false) {
     cy.log(`createEvent : {${eventTitle}}`);
     const event: EventEditPage = this.createDetailedEvent(eventDate);

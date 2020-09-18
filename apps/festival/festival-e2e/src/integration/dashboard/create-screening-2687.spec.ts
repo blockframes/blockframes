@@ -96,15 +96,14 @@ describe('User create a screening', () => {
     p4.checkEventsInMarket(eventNames);
   });
 
-  it.only('Organiser accepts private screening request', () => {
+  it('Organiser accepts private screening request', () => {
     signIn(users[0]);
     const p1 = (new FestivalMarketplaceHomePage()).goToDashboard();
-    //new FestivalDashboardHomePage();
     const p2: FestivalInvitationsPage = p1.clickOnInvitations();
     p2.acceptInvitationScreening();
   });
 
-  it.only('Invitee adds public screening to his calendar', () => {
+  it('Invitee adds public screening to his calendar', () => {
     const OrgName = orgsFixture.getByID(EVENTS[0].org.id).denomination.public;
     //Screening event prefixed 2 created above.
     const screeningEvent = EVENTS[0].event + '2';
@@ -113,8 +112,7 @@ describe('User create a screening', () => {
     signIn(users[1]);
 
     const p1 = new FestivalMarketplaceHomePage();
-    const pn: FestivalMarketplaceNotificationsPage = 
-                                  p1.goToNotifications();
+    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
     // Wait notifications
     cy.wait(8000);
     cy.log(`=>Test Notification from {${OrgName}} exists`);
