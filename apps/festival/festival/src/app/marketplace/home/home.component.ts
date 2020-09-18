@@ -67,8 +67,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       {
         title: 'In development',
-        movieCount$: selectMovies('financing').pipe(map(movies => movies.length)),
-        movies$: selectMovies('financing')
+        movieCount$: selectMovies('development').pipe(map(movies => movies.length)),
+        movies$: selectMovies('development')
       },
     ];
 

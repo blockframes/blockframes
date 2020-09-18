@@ -92,9 +92,9 @@ const constants = {
     national: 'National',
   },
   productionStatus: {
-    financing: 'In development',
+    development: 'In development',
     shooting: 'In Production',
-    'post-production': 'In Post-production',
+    post_production: 'In Post-production',
     finished: 'Completed',
     released: 'Released'
   },
