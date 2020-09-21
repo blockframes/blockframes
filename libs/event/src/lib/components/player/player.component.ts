@@ -6,8 +6,6 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 
-type Timeout = NodeJS.Timeout;
-
 declare const jwplayer: any;
 
 @Component({
@@ -19,14 +17,14 @@ declare const jwplayer: any;
 })
 export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   private player: any;
-  private timeout: Timeout;
+  private timeout: number;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
-    private functions: AngularFireFunctions,
     private mediaService: MediaService,
+    private functions: AngularFireFunctions,
   ) {}
 
   async loadScript() {
@@ -49,19 +47,26 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  async initPlayer(watermarkUrl: string) {
-    if (!watermarkUrl) {
-      console.error('We cannot load video without watermark.');
-      return;
-    }
+  async initPlayer() {
+
     const { id } = this.eventQuery.getActive();
 
     const callDeploy = this.functions.httpsCallable('privateVideo');
     const { error, result } = await callDeploy({ eventId: id }).toPromise();
 
     if (!!error) {
-      console.log('ERROR');
+      // if error is set, result will contain the error message
+      throw new Error(result);
     } else {
+      const parameters: ImageParameters = {
+        auto: 'compress,format',
+        fit: 'crop',
+      };
+      const watermarkRef = this.authQuery.user.watermark;
+      if (!watermarkRef) {
+        throw new Error('We cannot load video without watermark.');
+      }
+      const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
 
       const signedUrl = new URL(result);
       const expires = signedUrl.searchParams.get('exp');
@@ -69,7 +74,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
       const millisecondTimestamp = timestamp * 1000; // js timestamp in milliseconds
       const refreshCountdown = millisecondTimestamp - Date.now();
 
-      this.timeout = setTimeout(() => window.location.reload(), refreshCountdown);
+      this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
       this.player = jwplayer('player');
       this.player.setup({
@@ -82,16 +87,11 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    const parameters: ImageParameters = {
-      auto: 'compress,format',
-      fit: 'crop',
-    };
-    const watermarkUrl = await this.mediaService.generateBackgroundImageUrl(this.authQuery.user.watermark, parameters);
     await this.loadScript();
-    this.initPlayer(watermarkUrl);
+    this.initPlayer();
   }
 
   ngOnDestroy() {
-    clearTimeout(this.timeout);
+    window.clearTimeout(this.timeout);
   }
 }

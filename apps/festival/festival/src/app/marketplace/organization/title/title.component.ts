@@ -4,6 +4,7 @@ import { ViewComponent } from '../view/view.component';
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 @Component({
   selector: 'festival-marketplace-organization-title',
@@ -29,6 +30,7 @@ export class TitleComponent implements OnInit {
       map(org => org.movieIds),
       switchMap(movieIds => this.service.valueChanges(movieIds)),
       map(movies => movies.filter(movie => movie.storeConfig.status === 'accepted' && movie.storeConfig.appAccess.festival)),
+      map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year')))
     ); // TODO query can be improved after issue #3498
   }
 
