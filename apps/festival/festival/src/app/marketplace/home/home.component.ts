@@ -4,6 +4,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/
 // Blockframes
 import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -53,7 +54,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       {
         title: 'New films',
         movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival })
+        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(
+          map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year'))),
+        )
       },
       {
         title: 'In production',
