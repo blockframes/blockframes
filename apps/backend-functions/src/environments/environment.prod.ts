@@ -36,3 +36,7 @@ export const jwplayerSecret = functions.config().jwplayer.secret;
 export const jwplayerKey = functions.config().jwplayer.key;
 
 export const imgixToken = functions.config().imgix.token;
+
+export const twilioSid = functions.config().twilio.sid;
+export const twilioSecret = functions.config().twilio.secret;
+export const twilioToken = functions.config().twilio.token;

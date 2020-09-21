@@ -284,18 +284,23 @@ export async function createNotificationsForEventsToStart() {
   //return triggerNotifications([notification])
 }
 
-export async function isUserInvitedToScreening(userId: string, movieId: string) {
+/**
+ * Return if the userId is invite into a event with docId param
+ * @param userId : string - Id of user
+ * @param docId : string - Id of doc (id of event in Invitation)
+ */
+export async function isUserInvitedToMeetingOrScreening(userId: string, docId: string) {
 
   const acceptedInvitations = db.collection('invitations')
-    .where('type', '==', 'attendEvent')
-    .where('docId', '==', movieId)
+    .where  ('type', '==', 'attendEvent')
+    .where('docId', '==', docId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', movieId)
+    .where('docId', '==', docId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');
@@ -305,7 +310,5 @@ export async function isUserInvitedToScreening(userId: string, movieId: string) 
     acceptedRequests.get()
   ]);
 
-  if (invitations.size === 0 && requests.size === 0) return false;
-
-  return true;
+  return !(invitations.size === 0 && requests.size === 0);
 }

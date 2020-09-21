@@ -21,6 +21,8 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 
+import * as twilio from './twilio';
+
 
 //--------------------------------
 //    Configuration             //
@@ -243,3 +245,11 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
+
+
+//--------------------------------
+//      Twilio Access           //
+//--------------------------------
+
+/** Trigger: REST call to create the access token for connection to twilio */
+export const getAccessToken = functions.https.onCall(logErrors(twilio.getAccessToken));

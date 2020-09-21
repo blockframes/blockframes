@@ -1,7 +1,7 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db, admin } from './internals/firebase';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
-import { isUserInvitedToScreening } from './internals/invitations/events';
+import { isUserInvitedToMeetingOrScreening } from './internals/invitations/events';
 import { MovieDocument } from './data/types';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
@@ -87,7 +87,7 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  if (event.isPrivate && !isUserInvitedToScreening(context.auth.uid, movie.id)){
+  if (event.isPrivate && !isUserInvitedToMeetingOrScreening(context.auth.uid, movie.id)){
     return {
       error: 'NO_INVITATION',
       result: `You have not been invited to see this movie`
