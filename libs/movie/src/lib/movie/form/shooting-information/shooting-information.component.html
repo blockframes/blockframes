@@ -6,7 +6,8 @@
 
     <section id="shooting-information" fxLayout="column">
       <h6 class="mat-caption">Shooting Dates</h6>
-      <!-- Shooting completed -->
+
+      <!-- Shooting completed
       <article fxLayout="column">
         <mat-checkbox class="mat-body-2">Shooting completed :</mat-checkbox>
         <mat-form-field appearance="outline" fxFlex>
@@ -18,8 +19,9 @@
           <mat-datepicker #completedPicker></mat-datepicker>
         </mat-form-field>
       </article>
+      <p>completed: {{ form.shootingDate.get('completed').value }}</p>
 
-      <!-- Shooting in progress -->
+      Shooting in progress
       <article fxLayout="column">
         <mat-checkbox class="mat-body-2">Shooting in progress :</mat-checkbox>
         <mat-form-field appearance="outline" fxFlex>
@@ -32,7 +34,7 @@
         </mat-form-field>
       </article>
 
-      <!-- Shooting planned -->
+      Shooting planned
       <article fxLayout="column">
         <mat-checkbox class="mat-body-2">Shooting planned :</mat-checkbox>
         <div fxLayout="row" fxLayoutGap="46px" fxFlex>
@@ -42,20 +44,26 @@
             <div fxLayout="row" fxLayoutGap="8px" fxFlex>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Period</mat-label>
-                <mat-select>
-                  <mat-option>Coucou</mat-option>
+                <mat-select [formControl]="form.shootingDate.get('planned').get('from').get('period')" placeholder="Period">
+                  <mat-option value="coucou1">Coucou1</mat-option>
+                  <mat-option value="coucou2">Coucou2</mat-option>
+                  <mat-option value="coucou3">Coucou3</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Month</mat-label>
-                <mat-select>
-                  <mat-option>Avril</mat-option>
+                <mat-select [formControl]="form.shootingDate.get('planned').get('from').get('month')" placeholder="Month">
+                  <mat-option value="Avril">Avril</mat-option>
+                  <mat-option value="Mai">Mai</mat-option>
+                  <mat-option value="Juin">Juin</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
-                <mat-select>
-                  <mat-option>2020</mat-option>
+                <mat-select [formControl]="form.shootingDate.get('planned').get('from').get('year')" placeholder="Year">
+                  <mat-option value="2020">2020</mat-option>
+                  <mat-option value="2021">2021</mat-option>
+                  <mat-option value="2022">2022</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -86,7 +94,7 @@
           </div>
 
         </div>
-      </article>
+      </article> -->
 
       <h6 class="mat-caption">Shooting Location</h6>
       <chips-autocomplete [form]="form.get('shootingLocations')" scope="TERRITORIES"
@@ -112,7 +120,10 @@
           </mat-datepicker-toggle>
           <mat-datepicker #eventDate></mat-datepicker>
         </mat-form-field>
+
+
       </article>
+      <p>date : {{ form.expectedPremiere.get('date').value }}</p>
 
     </section>
   </ng-container>

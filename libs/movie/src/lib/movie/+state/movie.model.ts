@@ -90,7 +90,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     banner: params.banner ?? '',
     estimatedBudget: createRange<number>(params.estimatedBudget),
-    expectedPremiere: createExpectedPremiere(),
+    expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
@@ -289,7 +289,9 @@ export function createShootingPlannedObject(params: Partial<MoviePlannedShooting
 
 export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = {}): MovieExpectedPremiere {
   return {
-    ...params
+    event: '',
+    ...params,
+    date: toDate(params.date)
   }
 }
 

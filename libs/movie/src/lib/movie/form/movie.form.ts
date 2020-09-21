@@ -27,8 +27,8 @@ import {
   createMoviePromotional,
   createMovieLanguageSpecification,
   createOtherLink,
-  createShootingDate,
-  createShootingPlannedObject
+  createShootingPlannedObject,
+  createExpectedPremiere
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -104,7 +104,7 @@ function createMovieControls(movie: Partial<Movie>) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
-    expectedPremiere:new ExpectedPremiereForm(entity.expectedPremiere),
+    expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
@@ -866,7 +866,7 @@ export class VersionSpecificationForm extends FormEntity<any> {
 // ------------------------------
 
 function createExpectedPremiereFormControl(entity?: Partial<MovieExpectedPremiere>) {
-  const { event, date } = createMovieExpectedPremiere(entity);
+  const { event, date } = createExpectedPremiere(entity);
   return {
     date: new FormControl(date),
     event: new FormControl(event),
@@ -881,22 +881,12 @@ export class ExpectedPremiereForm extends FormEntity<ExpectedPremiereFormControl
   }
 }
 
-export function createMovieExpectedPremiere(
-  params: Partial<MovieExpectedPremiere> = {}
-): MovieExpectedPremiere {
-  return {
-    event: '',
-    ...params,
-    date: toDate(params.date),
-  };
-}
-
 // ------------------------------
 //        SHOOTING DATE
 // ------------------------------
 
 function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
-  const { completed, progress, planned } = createShootingDate(entity);
+  const { completed, progress, planned } = createMovieShootingDate(entity);
   return {
     completed: new FormControl(completed),
     progress: new FormControl(progress),
@@ -910,6 +900,16 @@ export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
   constructor(shootingDate?: Partial<MovieShootingDate>) {
     super(createShootingDateFormControl(shootingDate));
   }
+}
+
+export function createMovieShootingDate(
+  params: Partial<MovieShootingDate> = {}
+): MovieShootingDate {
+  return {
+    ...params,
+    completed: toDate(params.completed),
+    progress: toDate(params.progress)
+  };
 }
 
 // ---------------------------------
