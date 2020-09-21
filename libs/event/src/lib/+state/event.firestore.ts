@@ -12,6 +12,7 @@ export interface Meeting {
   organizerId: string;
   description: string;
   files: string[];
+  selectedFile: string;
 }
 
 export interface Screening {

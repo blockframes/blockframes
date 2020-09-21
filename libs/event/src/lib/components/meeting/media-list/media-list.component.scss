@@ -1,0 +1,23 @@
+
+ul {
+  margin: 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  li {
+    display: inline-block;
+    button {
+      img {
+        width: 90px;
+      }
+    }
+    /* otherwise disable has no visual difference */
+    button.mat-button.mat-button-disabled.mat-button-disabled {
+      background-color: var(--background-disabled-button);
+    }
+  }
+}
+
+a {
+  color: var(--primary);
+  text-decoration: underline;
+}

@@ -1,0 +1,18 @@
+
+<mat-card>
+  <ng-container *ngIf="!!event.meta.files && event.meta.files.length > 0; else noFiles">
+    <p>Select a file to display</p>
+    <ul>
+      <li *ngFor="let file of event.meta.files" [matTooltip]="file | fileName">
+        <button mat-button (click)="select(file)" [disabled]="isSelected(file)">
+          <img asset="docx.webp" alt="file type">
+          <p>{{file | fileName | maxLength: 15}}</p>
+        </button>
+      </li>
+    </ul>
+  </ng-container>
+  <ng-template #noFiles>
+    <p>There is no files in this meeting.</p>
+  </ng-template>
+  <p>Go to the <a [routerLink]="editPage(event.id)">edit page</a> to add more files.</p>
+</mat-card>

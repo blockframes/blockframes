@@ -10,11 +10,13 @@ import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
+import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 
 @NgModule({
@@ -28,6 +30,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     EventTimeModule,
     OrgNameModule,
     EventPlayerModule,
+    MeetingMediaListModule,
+    FileNameModule,
+
     // Materials
     MatButtonModule,
     MatIconModule,
