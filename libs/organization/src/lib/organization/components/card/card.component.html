@@ -24,13 +24,11 @@
     <ng-template mat-tab-label>
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
-    <ng-template matTabContent>
       <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
-      <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
-        <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
-        <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>
-        <p class="mat-caption">{{ movies[2]?.title.international || "-"}}</p>
-      </div>
-    </ng-template>
+    <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
+      <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[2]?.title.international || "-"}}</p>
+    </div>
   </mat-tab>
 </mat-tab-group>
