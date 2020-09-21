@@ -3,10 +3,8 @@ import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { ImageParameters, getImgIxResourceUrl } from '@blockframes/media/directives/image-reference/imgix-helpers';
-import { PublicUser } from '@blockframes/user/types';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { UserQuery } from '@blockframes/user/+state';
+import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 declare const jwplayer: any;
 
@@ -25,8 +23,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
-    private userQuery: UserQuery,
-    private db: AngularFirestore,
+    private mediaService: MediaService,
     private functions: AngularFireFunctions,
   ) {}
 
@@ -61,16 +58,15 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
       // if error is set, result will contain the error message
       throw new Error(result);
     } else {
-
-      const userData = this.userQuery.getEntity(this.authQuery.userId);
       const parameters: ImageParameters = {
         auto: 'compress,format',
         fit: 'crop',
       };
-      const watermarkUrl = getImgIxResourceUrl(userData.watermark, parameters);
-      if (!watermarkUrl) {
+      const watermarkRef = this.authQuery.user.watermark;
+      if (!watermarkRef) {
         throw new Error('We cannot load video without watermark.');
       }
+      const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
 
       const signedUrl = new URL(result);
       const expires = signedUrl.searchParams.get('exp');
@@ -78,7 +74,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
       const millisecondTimestamp = timestamp * 1000; // js timestamp in milliseconds
       const refreshCountdown = millisecondTimestamp - Date.now();
 
-      this.timeout = setTimeout(() => window.location.reload(), refreshCountdown);
+      this.timeout = window.setTimeout(() => window.location.reload(), refreshCountdown);
 
       this.player = jwplayer('player');
       this.player.setup({
@@ -96,6 +92,6 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    clearTimeout(this.timeout);
+    window.clearTimeout(this.timeout);
   }
 }

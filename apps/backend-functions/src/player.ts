@@ -100,9 +100,21 @@ export const getPrivateVideoUrl = async (
   const userSnap = await userRef.get();
   const user = userSnap.data() as PublicUser;
 
-  if (!user.watermark) {
+  const bucketName = getStorageBucketName();
 
-    upsertWatermark(user, getStorageBucketName());
+  let fileExists = false;
+
+  // if we have a ref we should assert that it points to an existing file
+  if (!!user.watermark) {
+    const ref = `public/users/${user.uid}/watermark/${user.uid}.svg`;
+    const file = admin.storage().bucket(bucketName).file(ref);
+    [fileExists] = await file.exists();
+  }
+
+  // if we don't have a ref OR if the file doesn't exists : we regenerate the Watermark
+  if (!user.watermark || !fileExists) {
+
+    upsertWatermark(user, bucketName);
 
     // wait for the function to update the user document after watermark creation
     const success = await new Promise(resolve => {
