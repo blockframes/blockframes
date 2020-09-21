@@ -26,7 +26,7 @@ export default class FestivalScreeningPage {
    * @param screeningTitle : Title of event
    */
   clickRequestInvitation(screeningTitle: string) {
-    cy.get('festival-screening event-screening-item', {timeout: 3000})
+    cy.get('festival-screening event-screening-item', {timeout: 30000})
       .contains(screeningTitle)
       .parent().parent().parent()
       .find('button[test-id=invitation-request]').click();
@@ -34,8 +34,8 @@ export default class FestivalScreeningPage {
   }
 
   clickOnMenu() {
-    cy.wait(200);
-    cy.get('festival-marketplace button[test-id=menu]').click();
+    cy.get('festival-marketplace button[test-id=menu]', {timeout: 1000})
+      .first().click();
   }
 
   selectCalendar() {
@@ -48,12 +48,17 @@ export default class FestivalScreeningPage {
     return new FestivalMarketplaceEventPage();
   }
 
-  clickSpecificEvent(eventName: string) {
+  clickSpecificEvent(eventName: string, navigateToEvent: boolean = false) {
     //TODO: check : festival-screening event-screening-item h3
-    cy.get('article h3', {timeout: 10000})
-      .contains(eventName).click();
-    
-    return new FestivalMarketplaceEventPage();
+    if (!navigateToEvent) {
+      cy.get('article h3', {timeout: 30000})
+        .contains(eventName);
+    } else {
+      cy.get('article h3', {timeout: 30000})
+        .contains(eventName).click();
+      
+      return new FestivalMarketplaceEventPage();
+    }
   }
 
   /**
@@ -64,11 +69,14 @@ export default class FestivalScreeningPage {
   checkEventsInMarket(eventNames: string[]) {
     eventNames.forEach(eventName => {
       cy.log(`checkEventsInMarket : article for {${eventName}}!`);
-      const pageFestivalMarketplaceEvent = this.clickSpecificEvent(eventName);
-      cy.wait(3000);
-      pageFestivalMarketplaceEvent.assertEventNameExist(eventName);
+      this.clickSpecificEvent(eventName);
       //pageFestivalMarketplaceEvent.clickBackToEventList();
-      cy.go('back');
-    })
+      //cy.go('back');
+    });
+
+    const pageFestivalMarketplaceEvent = 
+                    this.clickSpecificEvent(eventNames[0], true);
+    cy.wait(3000);
+    pageFestivalMarketplaceEvent.assertEventNameExist(eventNames[0]);
   }
 }

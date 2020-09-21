@@ -54,13 +54,13 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]').click();
-    cy.wait(500);
+    cy.get('button[test-id=event-save]', {timeout: 1000}).click();
+    cy.wait(2000);
   }
 
   clickMoreDetails() {
-    cy.get('button[test-id=more-details]').click();
-    cy.wait(500);
+    cy.get('button[test-id=more-details]', {timeout: 1000}).click();
+    cy.wait(1000);
   }
 
   goToDashboard() {
