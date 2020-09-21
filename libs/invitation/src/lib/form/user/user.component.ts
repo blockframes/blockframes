@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationService } from '@blockframes/organization/+state';
 import { ENTER, COMMA, SEMICOLON, SPACE } from '@angular/cdk/keycodes';
 import { Validators } from '@angular/forms';
@@ -16,10 +16,15 @@ import { Validators } from '@angular/forms';
 })
 export class UserComponent {
   @Input() docId: string;
+  @Input() set invitations(invitations: Invitation[]) {
+    if (!invitations) return;
+    this.filter = invitations.map(invitation => `email:-${invitation.toUser?.email}`);
+  };
   @Input() ownerId: string;
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   sending = new BehaviorSubject(false);
+  filter: string[] = []
   constructor(
     private service: InvitationService,
     private orgService: OrganizationService,

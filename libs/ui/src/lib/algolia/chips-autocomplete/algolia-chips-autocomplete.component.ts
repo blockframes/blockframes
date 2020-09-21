@@ -6,6 +6,7 @@ import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/alg
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 const Separators = {
   [COMMA]: ',',
@@ -74,6 +75,16 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() filters: (string | string[])[] = [];
 
+  /**  
+   * Name of attribute which values shouldn't be used before.
+   * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
+  @Input()
+  get unique() { return this._unique; }
+  set unique(value: boolean) {
+    this._unique = coerceBooleanProperty(value);
+  }
+  private _unique: boolean = false;
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
@@ -112,8 +123,16 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   add(value: any) {
     if (!!value) {
       if (typeof value === 'string') {
-        splitValue(value, this.separators).forEach(v => this.form.add(v))
+        splitValue(value, this.separators).forEach(v => {
+          if (this.unique) {
+            this.filters.push(`${this.displayWithPath}:-${v}`);
+          };
+          this.form.add(v);
+        })
       } else {
+        if (this.unique && !!value[this.displayWithPath]) {
+          this.filters.push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
+        };
         this.form.add(value);
       }
       this.input.nativeElement.value = '';
