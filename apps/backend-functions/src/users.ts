@@ -141,8 +141,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.lastName !== after.lastName ||
     before.email !== after.email
   ) {
-    const bucketName = getStorageBucketName();
-    promises.push(upsertWatermark(after, bucketName));
+    promises.push(upsertWatermark(after, getStorageBucketName()));
   }
 
   return Promise.all(promises);
