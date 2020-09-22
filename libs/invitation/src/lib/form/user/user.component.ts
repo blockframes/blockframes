@@ -16,13 +16,8 @@ import { Validators } from '@angular/forms';
 })
 export class UserComponent {
   @Input() docId: string;
+  @Input() invitations: Invitation[] = [];
 
-  @Input() set invitations(inv) {
-    if (!inv) return;
-    this._invitations = inv;
-  }
-  _invitations: Invitation[] = [];
-  
   @Input() ownerId: string;
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));

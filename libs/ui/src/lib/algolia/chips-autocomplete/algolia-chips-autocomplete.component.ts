@@ -74,6 +74,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
   @Input() set filters(filters: (string | string[])[]) {
+    if (!filters) return;
     this._filters = filters.map(filter => {
       if (Array.isArray(filter)) {
         return filter.map(filter => this.getFilter(filter));

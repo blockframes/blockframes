@@ -6,7 +6,7 @@
     label="Invite guests"
     [separators]="separators"
     placeholder="Enter guest email"
-    [filters]="_invitations | mapDeepKey:'toUser.email'"
+    [filters]="invitations | deepKey:'toUser.email'"
     unique>
     <ng-template let-user>
       <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
