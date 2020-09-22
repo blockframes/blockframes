@@ -16,15 +16,17 @@ import { Validators } from '@angular/forms';
 })
 export class UserComponent {
   @Input() docId: string;
-  @Input() set invitations(invitations: Invitation[]) {
-    if (!invitations) return;
-    this.filter = invitations.map(invitation => `email:-${invitation.toUser?.email}`);
-  };
+
+  @Input() set invitations(inv) {
+    if (!inv) return;
+    this._invitations = inv;
+  }
+  _invitations: Invitation[] = [];
+  
   @Input() ownerId: string;
   separators = [ENTER, COMMA, SEMICOLON, SPACE];
   form = createAlgoliaUserForm(Validators.maxLength(50));
   sending = new BehaviorSubject(false);
-  filter: string[] = []
   constructor(
     private service: InvitationService,
     private orgService: OrganizationService,

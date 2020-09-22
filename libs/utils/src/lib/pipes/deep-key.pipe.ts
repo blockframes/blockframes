@@ -8,8 +8,15 @@ export class DeepKeyPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'mapDeepKey' })
+export class MapDeepKeyPipe implements PipeTransform {
+  transform(value: Object[], deepKey: string) {
+    return value.map(obj => deepKey.split('.').reduce((result, key) => result[key], obj));
+  }
+}
+
 @NgModule({
-  declarations: [DeepKeyPipe],
-  exports: [DeepKeyPipe]
+  declarations: [DeepKeyPipe, MapDeepKeyPipe],
+  exports: [DeepKeyPipe, MapDeepKeyPipe]
 })
 export class DeepKeyPipeModule { }

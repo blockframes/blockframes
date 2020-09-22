@@ -6,7 +6,7 @@ import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/alg
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 const Separators = {
   [COMMA]: ',',
@@ -73,17 +73,21 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
-  @Input() filters: (string | string[])[] = [];
+  @Input() set filters(filters: (string | string[])[]) {
+    filters.map(filter => {
+      if (!this.unique || filter.includes(':')) {
+        this._filters.push(filter);
+      } else {
+        this._filters.push(`${this.displayWithPath}:-${filter}`);
+      }
+    })
+  }
+  private _filters = []
 
   /**  
    * Name of attribute which values shouldn't be used before.
    * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
-  @Input()
-  get unique() { return this._unique; }
-  set unique(value: boolean) {
-    this._unique = coerceBooleanProperty(value);
-  }
-  private _unique: boolean = false;
+  @Input() @boolean unique;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
@@ -104,7 +108,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     const indexSearch = searchClient.initIndex(algoliaIndex[this.index]);
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.filters}).then(result => result.hits);
+    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this._filters}).then(result => result.hits);
     const facetSearch = (text: string) => indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
 
     // perform search
@@ -125,13 +129,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
       if (typeof value === 'string') {
         splitValue(value, this.separators).forEach(v => {
           if (this.unique) {
-            this.filters.push(`${this.displayWithPath}:-${v}`);
+            this._filters.push(`${this.displayWithPath}:-${v}`);
           };
           this.form.add(v);
         })
       } else {
         if (this.unique && !!value[this.displayWithPath]) {
-          this.filters.push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
+          this._filters.push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
         };
         this.form.add(value);
       }
