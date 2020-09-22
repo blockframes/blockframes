@@ -3,7 +3,7 @@ import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
 import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
-
+import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 
 type Timestamp = firestore.Timestamp;
 
@@ -18,6 +18,10 @@ export interface PublicOrganization {
   denomination: Denomination;
   logo: string;
 }
+
+export interface OrgMedias {
+  notes: HostedMediaWithMetadata[],
+};
 
 /** Document model of an Organization */
 interface OrganizationBase<D> extends PublicOrganization {
@@ -36,6 +40,7 @@ interface OrganizationBase<D> extends PublicOrganization {
   userIds: string[];
   status: OrganizationStatus;
   wishlist: WishlistBase<D>[];
+  documents?: OrgMedias;
 }
 
 export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
@@ -116,6 +121,13 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   return {
     full: '',
     public: '',
+    ...params
+  }
+}
+
+export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
+  return {
+    notes: [],
     ...params
   }
 }
