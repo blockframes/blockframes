@@ -138,7 +138,6 @@ export function createCredit(params: Partial<Credit> = {}) {
 export function createFilmography(params: Partial<Filmography> = {}): Filmography {
   return {
     title: '',
-    year: null,
     ...params
   }
 }

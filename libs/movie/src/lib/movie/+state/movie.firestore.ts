@@ -133,7 +133,7 @@ export interface StoreConfig {
 
 export interface Prize {
   name: string,
-  year: number,
+  year?: number,
   prize?: string,
   logo?: string,
   premiere?: PremiereType,
@@ -209,7 +209,7 @@ export interface MovieStakeholders {
 }
 
 export interface MovieRelease {
-  year: number,
+  year?: number,
   status: string,
 }
 
