@@ -9,4 +9,5 @@ import { FormGroup } from '@angular/forms';
 })
 export class DisplayNameComponent {
   @Input() form: FormGroup;
+  @Input() labelSuffix: string;
 }

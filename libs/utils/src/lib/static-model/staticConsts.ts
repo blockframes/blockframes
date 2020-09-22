@@ -155,7 +155,7 @@ const constants = {
     cannes: 'Cannes International Film Festival',
     venice: 'Venice International Film Festival',
     berlinale: 'Berlin International Film Festival (The Berlinale)',
-    toronto: 'Toronto International Film Festival(TIFF)',
+    toronto: 'Toronto International Film Festival (TIFF)',
     sundace: 'Sundance Film Festival',
     locarno: 'Locarno International Film Festival',
     rotterdam: 'International Film Festival Rotterdam',
