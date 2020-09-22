@@ -12,17 +12,9 @@ import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
 })
 export class MeetingMediaListComponent {
 
-  private _event: Event<Meeting>;
-
   editPage: string;
 
-  get event() {
-    return this._event;
-  }
-  @Input() set event(value: Event<Meeting>) {
-    this._event = value;
-    this.editPage = `/c/o/dashboard/event/${this.event.id}/edit`
-  }
+  @Input() event: Event<Meeting>;
 
   constructor(
     private eventService: EventService

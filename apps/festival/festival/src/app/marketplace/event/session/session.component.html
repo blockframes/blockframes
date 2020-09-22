@@ -42,8 +42,8 @@
       <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
           <div [fxFlex]="mediaContainerSize">
-            MEDIA<br/>
-            {{ event.meta.selectedFile | fileName }}
+            <h3>MEDIA</h3>
+            <span>{{ event.meta.selectedFile | fileName }}</span>
           </div>
           <div [fxFlex]="visioContainerSize">VIDEO CONFERENCE</div>
         </div>
