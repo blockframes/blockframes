@@ -88,7 +88,7 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  if (event.isPrivate && !isUserInvitedToMeetingOrScreening(context.auth.uid, movie.id)){
+  if (event.isPrivate &&  !await isUserInvitedToMeetingOrScreening(context.auth.uid, movie.id)){
     return {
       error: 'NO_INVITATION',
       result: `You have not been invited to see this movie`

@@ -1,16 +1,17 @@
+/**
+ * Clouds functions use to access twilio secure functions.
+ */
+
+
 import {CallableContext} from "firebase-functions/lib/providers/https";
-
-//import generic var for twilio
-import {twilioSecret, twilioSid, twilioToken} from './environments/environment';
-
-import {isUserInvitedToMeetingOrScreening} from "./internals/invitations/events";
 
 import {getDocument} from "@blockframes/firebase-utils";
 import {EventDocument, Meeting} from "@blockframes/event/+state/event.firestore";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 
-//import twilio to create the access token
-const twilio = require('twilio');
+import * as twilio from "twilio";
+import {twilioSecret, twilioSid, twilioToken} from './environments/environment';
+import {isUserInvitedToMeetingOrScreening} from "./internals/invitations/events";
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
@@ -20,9 +21,9 @@ export interface RequestAccessToken {
 }
 
 /**
- *
- * Create Twilio Access Token if access right ok
- * @param data : RequestAccessToken - identity, roomName, eventId
+ * If access right granted, create Twilio Access Token for specified room (eventId = roomName)
+ * The Twilio video room is automatically created if needed
+ * @param data : RequestAccessToken - eventId
  * @param context : CallableContext
  */
 export const getTwilioAccessToken = async (
@@ -41,9 +42,9 @@ export const getTwilioAccessToken = async (
   const userId = context.auth.uid;
   const eventId = data.eventId;
 
+  // Get meeting from firestore identify by eventId
   const event: EventDocument<Meeting> = await getDocument<EventDocument<Meeting>>(`events/${eventId}`);
 
-  //If no event find
   if (!event) {
     return {
       error: 'UNKNOWN_EVENT',
@@ -51,30 +52,43 @@ export const getTwilioAccessToken = async (
     };
   }
 
-  //If event find is not a meeting Event
   if (event.type !== 'meeting') {
+    // Event find is not a meeting Event
     return {
       error: 'NOT_A_MEETING',
       result: `The event ${eventId} is not a meeting`
     };
   }
 
-  // User need to be invite to a event or be is owner
-  if (!(event.meta.organizerId === userId || await isUserInvitedToMeetingOrScreening(context.auth.uid, eventId))){
+  if (event.start.toMillis() > Date.now()) {
     return {
-      error: 'NO_INVITATION',
-      result: `You have not been invited to see this meeting`
+      error: 'NOT_ALREADY_STARTED',
+      result: `The event ${eventId} is not already started`
     };
   }
 
-  //Creat access token with twilio global var et identity of the user as identity of token
+  if (event.end.toMillis() < Date.now()) {
+    return {
+      error: 'EVENT_FINISHED',
+      result: `The event ${eventId} is finished`
+    };
+  }
+
+  // Check if user is owner or is invited to event
+  if (!(event.meta.organizerId === userId || await isUserInvitedToMeetingOrScreening(context.auth.uid, eventId))) {
+    return {
+      error: 'NO_INVITATION',
+      result: `You are not the owner of the event or you have not been invited to see this meeting`
+    };
+  }
+
+  //Create access token with twilio global var et identity of the user as identity of token
   const token = new AccessToken(twilioSid, twilioToken, twilioSecret, {identity: userId});
   //Create VideoGrant of room. RoomName is the EventId
-  const videoGrant = new VideoGrant({ room: eventId });
+  const videoGrant = new VideoGrant({room: eventId});
   //add Grant to token
   token.addGrant(videoGrant);
 
-  //return token
   return {
     error: '',
     result: token.toJwt()
