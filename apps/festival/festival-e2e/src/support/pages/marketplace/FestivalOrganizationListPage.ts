@@ -1,4 +1,5 @@
 import FestivalMarketplaceOrganizationTitlePage from "./FestivalMarketplaceOrganizationTitlePage";
+import { TO } from '@blockframes/e2e/utils/env';
 
 export default class FestivalOrganizationListPage {
   constructor() {
@@ -8,6 +9,7 @@ export default class FestivalOrganizationListPage {
   clickOnOrganization(orgName: string) {
     cy.get('festival-organization-list org-card', { timeout: 60000 })
       .contains(orgName).parent().parent().find('a').click();
+    cy.wait(TO.WAIT_1SEC);
     return new FestivalMarketplaceOrganizationTitlePage();
   }
 }
