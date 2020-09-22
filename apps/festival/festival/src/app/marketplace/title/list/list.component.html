@@ -8,7 +8,7 @@
   </ng-template>
 
   <!-- SORT -->
-  <ng-template titleSort>
+  <!-- <ng-template titleSort> // TODO issue #3584
 
     <mat-form-field class="sort">
       <mat-label>Sort by</mat-label>
@@ -19,7 +19,7 @@
       </mat-select>
     </mat-form-field>
 
-  </ng-template>
+  </ng-template> -->
 
 
   <!-- SEARCH BAR -->
@@ -83,6 +83,19 @@
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]" size="poster">
     </movie-card>
 
+  </ng-template>
+
+  <!-- PROGRESS -->
+  <ng-template titleProgress>
+    <div fxLayout="column" fxLayoutAlign="center center">
+      <div class="progress">
+        You've viewed {{ hitsViewed }} of {{ nbHits }} titles
+        <mat-progress-bar color="primary" [value]="hitsViewed / nbHits * 100"></mat-progress-bar>
+      </div>
+      <ng-container *ngIf="hitsViewed !== nbHits">
+        <button mat-stroked-button color="primary" (click)="loadMore()">LOAD MORE</button>
+      </ng-container>
+    </div>
   </ng-template>
 
 </title-list>
