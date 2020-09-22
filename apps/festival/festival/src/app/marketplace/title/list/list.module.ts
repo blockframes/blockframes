@@ -28,7 +28,6 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatPaginatorModule } from '@angular/material/paginator';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -92,7 +91,6 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     MatSnackBarModule,
     MatTooltipModule,
     MatProgressBarModule,
-    MatPaginatorModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

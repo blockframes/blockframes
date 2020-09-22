@@ -25,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -86,6 +87,7 @@ import { ListComponent } from "./list.component";
     MatOptionModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatProgressBarModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })
