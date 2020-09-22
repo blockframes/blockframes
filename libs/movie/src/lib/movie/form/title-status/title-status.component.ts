@@ -8,7 +8,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Intercom } from 'ng-intercom';
 
-// Blockframes 
+// Blockframes
 import { staticConsts } from '@blockframes/utils/static-model'
 import { getAppName } from '@blockframes/utils/apps';
 
@@ -25,7 +25,7 @@ export class TitleStatusComponent implements OnInit {
 
   public status = [{
     name: 'In Development',
-    value: 'financing',
+    value: 'development',
     image: 'development.svg',
     disabled: false
   }, {
@@ -35,7 +35,7 @@ export class TitleStatusComponent implements OnInit {
     disabled: false
   }, {
     name: 'In Post-Production',
-    value: 'post-production',
+    value: 'post_production',
     image: 'post_production.svg',
     disabled: false
   }, {

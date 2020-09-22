@@ -12,6 +12,7 @@ import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
   query: string;
+  page: number;
 }
 
 export interface LanguagesSearch {
@@ -37,6 +38,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   return {
     appAccess: [],
     query: '',
+    page: 0,
     storeType: [],
     storeConfig: [],
     genres: [],
@@ -68,6 +70,7 @@ function createMovieSearchControl(search: MovieSearch) {
   return {
     appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
+    page: new FormControl(search.page),
     storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
     genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
@@ -94,6 +97,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
+  get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get storeType() { return this.get('storeType'); }
   get originCountries() { return this.get('originCountries'); }
@@ -127,6 +131,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     return this.movieIndex.search({
       hitsPerPage: 50,
       query: this.query.value,
+      page: this.page.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
         this.originCountries.value.map(country => `originCountries:${country}`),

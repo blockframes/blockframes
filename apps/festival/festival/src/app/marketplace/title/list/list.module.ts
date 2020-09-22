@@ -27,6 +27,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -35,6 +36,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
@@ -64,6 +66,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     LanguageFilterModule,
     BudgetFilterModule,
     StaticCheckBoxesModule,
+    ScrollingModule,
 
     // Pipe
     TranslateSlugModule,
@@ -87,6 +90,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     MatOptionModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatProgressBarModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

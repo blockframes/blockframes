@@ -74,7 +74,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     logline: '',
     originalRelease: [],
     prizes: [],
-    customPrize: [],
+    customPrizes: [],
     producers: [],
     productionStatus: null,
     rating: [],

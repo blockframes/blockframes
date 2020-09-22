@@ -17,8 +17,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 function getSteps(status: FormControl): TunnelStep[] {
   return [{
@@ -55,7 +56,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
+      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'development')),
     }]
   }, {
     title: 'Promotional Elements',
@@ -84,6 +85,29 @@ function getSteps(status: FormControl): TunnelStep[] {
   }]
 }
 
+const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
+  development: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  shooting: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  post_production: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  finished: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
+  },
+  released: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
+  }
+}
+
 @Component({
   selector: 'movie-form-shell',
   templateUrl: './shell.component.html',
@@ -110,10 +134,15 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
     this.steps = getSteps(this.form.get('productionStatus'));
+    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
+      filter(status => !!status)).subscribe(status => {
+        const pathToUpdate = Object.keys(valueByProdStatus[status]);
+        pathToUpdate.forEach(path => this.form.get(path as any).setValue(valueByProdStatus[status][path]));
+      })
   }
 
   ngAfterViewInit() {
-    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
+    const routerSub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
       el?.scrollIntoView(
         {
@@ -123,6 +152,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
+    this.sub.add(routerSub);
   }
 
   ngOnDestroy() {

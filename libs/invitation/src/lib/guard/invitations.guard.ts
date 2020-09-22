@@ -48,6 +48,9 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
           return combineLatest([
             this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid)),
             this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
+
+            this.service.syncCollection(ref => ref.where('type', '==', 'attendEvent').where('fromOrg.id', '==', orgId)),
+            this.service.syncCollection(ref => ref.where('type', '==', 'attendEvent').where('toOrg.id', '==', orgId)),
           ])
         }
       })

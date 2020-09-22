@@ -23,6 +23,7 @@ const USERS: Partial<User>[] = [
 ];
 
 const ORGANIZATION: Organization = {
+  id: 'Cy1234',
   name: `Org-${Date.now()}-Cypress`,
   email: `${Date.now()}@cypress.com`,
   address: {
@@ -46,6 +47,11 @@ const ORGANIZATION: Organization = {
     BIC: 'CCBPFRPPVER',
     bankName: 'Cypress Bank',
     holderName: 'Cypress'
+  },
+
+  denomination: {
+    full: 'Cypress & Party',
+    public: 'Cypress & Party'
   }
 };
 

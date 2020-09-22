@@ -30,7 +30,7 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
-                <mat-error *ngIf="prizesForm.get('prize').hasError('invalidYear')">Please enter a 4 digit date (e.g. 2020)</mat-error>
+                <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
                 <mat-error *ngIf="prizesForm.hasError('required')">
                   Year is required.
                 </mat-error>
@@ -61,11 +61,11 @@
     <h3>Custom Festival & Awards</h3>
     <section id="custom-festival">
 
-      <bf-form-list [form]="form.customPrize" buttonText="Add a custom Festival">
-        <ng-template itemRef let-customPrize>{{ customPrize.name }} - {{ customPrize.prize }} -
-          {{ customPrize.year }} - {{ customPrize.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
-        <ng-template formView let-customPrizeForm>
-          <article [formGroup]="customPrizeForm" fxLayout="column" fxLayoutGap="24px">
+      <bf-form-list [form]="form.customPrizes" buttonText="Add a custom Festival">
+        <ng-template itemRef let-customPrizes>{{ customPrizes.name }} - {{ customPrizes.prize }} -
+          {{ customPrizes.year }} - {{ customPrizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+        <ng-template formView let-customPrizesForm>
+          <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Custom festival name</mat-label>
@@ -76,7 +76,7 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Awards/Selections</mat-label>
                 <input test-id="prize" matInput formControlName="prize" />
-                <mat-error *ngIf="customPrizeForm.get('prize').hasError('maxlength')">
+                <mat-error *ngIf="customPrizesForm.get('prize').hasError('maxlength')">
                   Awards and selections should not exceed 200 characters.
                 </mat-error>
                 <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
@@ -85,9 +85,9 @@
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
-                <mat-error *ngIf="customPrizeForm.get('prize').hasError('invalidYear')">Please enter a 4 digit date (e.g.
-                  2020)</mat-error>
-                <mat-error *ngIf="customPrizeForm.hasError('required')">
+                <mat-error *ngIf="customPrizesForm.get('year').hasError('invalidYear')">Please enter a valid year
+                </mat-error>
+                <mat-error *ngIf="customPrizesForm.hasError('required')">
                   Year is required.
                 </mat-error>
               </mat-form-field>
@@ -95,7 +95,7 @@
 
             <h6 class="mat-caption">Premiere</h6>
             <div>
-              <mat-button-toggle-group [formControl]="customPrizeForm.get('premiere')" name="Premiere"
+              <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
                 aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
