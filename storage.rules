@@ -1,0 +1,41 @@
+rules_version = '2';
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                                               STORAGE RULES                                         ///
+///                              This document describes the storages rules                             ///
+///  Documentation @see https://www.notion.so/cascade8/Firestore-rules-7ace8177995449e4896dae672892b477 ///
+///                                                                                                     ///
+///  Globally, only file creation in "tmp" dir is allowed in the storage rules.                         ///
+///  Deletion is handled by a backend function.                                                         ///
+///  The file will then moved from "tmp" to the good path by a backend function.                        ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false; // Everyting is forbidden by default
+    }
+
+    match /tmp/{allPaths=**} {
+      allow read, update, delete: if false;
+      allow create: if request.auth != null && isValidMedia();
+    }
+    
+    function isValidMedia() {
+      return isValidImage() || isValidPdf();
+    }
+
+    function isValidImage() {
+    	// Only allow uploads of any image file that's less than 5MB
+      return request.resource.contentType.matches('image/.*') && request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    function isValidPdf() {
+    	// Only allow uploads of any image file that's less than 50MB
+      return request.resource.contentType.matches('application/pdf') && request.resource.size < 50 * 1024 * 1024;
+    }
+    
+  }
+}
+

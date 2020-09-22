@@ -4,25 +4,22 @@ import {
   Input,
   ChangeDetectionStrategy,
   Directive,
-  HostBinding,
   ViewEncapsulation
 } from '@angular/core';
 
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { getAssetPath, getImageUrl } from '@blockframes/media/+state/media.model';
 import { Location } from '@angular/common';
 
 function createMovieView(movie: Movie) {
   return {
-    directors: movie.main.directors,
+    directors: movie.directors,
     title: {
-      original: movie.main.title.original,
-      international: movie.main.title.international
+      original: movie.title.original,
+      international: movie.title.international
     },
-    banner: movie.main.banner,
-    poster: movie.main.poster,
+    banner: movie.banner,
+    poster: movie.poster,
   }
 }
 
@@ -40,17 +37,15 @@ export class HeaderComponent {
   public movieView: MovieHeaderView;
   public movie: Movie;
 
-  constructor(private sanitazier: DomSanitizer, private location: Location) { }
+  constructor(private location: Location) { }
 
-  @HostBinding('style.backgroundImage') background: SafeStyle;
+  // @HostBinding('style.backgroundImage') background: SafeStyle;
+
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {
       this.movie = movie;
       this.movieView = createMovieView(movie);
-      //TODO#2655: implement image-set directive to handle image size here
-      const url = getImageUrl(this.movieView.banner.media) || getAssetPath('empty_banner.webp', 'dark');
-      this.background = this.sanitazier.bypassSecurityTrustStyle(`url(${url})`);
     }
   }
 

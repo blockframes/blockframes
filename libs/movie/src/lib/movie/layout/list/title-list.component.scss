@@ -1,7 +1,6 @@
 header#nav {
   padding: 48px;
   padding-bottom: 0px; // Remove padding for filters
-  background-image: url('/assets/images/banner_header_page.webp');
   background-position: center center;
   background-size: cover;
 
@@ -29,7 +28,6 @@ header.pageBar {
   position: sticky;
   top: 0;
   z-index: 2;
-  background-image: url('/assets/images/banner_header_page.webp');
   background-position: center center;
   background-size: cover;
   padding: 16px 64px;
@@ -38,7 +36,7 @@ header.pageBar {
 section {
   padding: 24px;
 
-  bf-img {
+  img {
     width: 500px;
   }
 }

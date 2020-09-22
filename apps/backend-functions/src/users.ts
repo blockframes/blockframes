@@ -1,17 +1,17 @@
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
-import { db } from './internals/firebase';
+import { db, getStorageBucketName } from './internals/firebase';
 import { userResetPassword, sendDemoRequestMail, sendContactEmail, accountCreationEmail, userInvite } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser } from './data/types';
+import { RequestDemoInformations, PublicUser, PermissionsDocument, OrganizationDocument, InvitationDocument } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
-import { upsertWatermark } from './internals/watermark';
+import { upsertWatermark, getCollection } from '@blockframes/firebase-utils';
 import { getDocument, getFromEmail } from './data/internals';
 import { getSendgridFrom, applicationUrl, App } from '@blockframes/utils/apps';
-import { templateIds } from '@env';
+import { templateIds } from './templates/ids';
 import { sendFirstConnexionEmail, createUserFromEmail } from './internals/users';
-import { handleImageChange } from './internals/image';
+import { cleanUserMedias } from './media';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -102,7 +102,7 @@ export const onUserCreate = async (user: UserRecord) => {
 
   return Promise.all([
     storeSearchableUser(userData),
-    upsertWatermark(userData),
+    upsertWatermark(userData, getStorageBucketName()),
   ]);
 };
 
@@ -121,6 +121,8 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     await sendFirstConnexionEmail(after);
   }
 
+  await cleanUserMedias(before, after);
+
   const promises: Promise<any>[] = [];
 
   // if name, email or avatar has changed : update algolia record
@@ -128,7 +130,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.firstName !== after.firstName ||
     before.lastName !== after.lastName ||
     before.email !== after.email ||
-    before.avatar?.fallback?.url !== after.avatar?.fallback?.url
+    before.avatar !== after.avatar
   ) {
     promises.push(storeSearchableUser(after));
   }
@@ -139,16 +141,7 @@ export async function onUserUpdate(change: functions.Change<FirebaseFirestore.Do
     before.lastName !== after.lastName ||
     before.email !== after.email
   ) {
-    promises.push(upsertWatermark(after));
-  }
-
-  // AVATAR
-  const avatarBeforeRef = before.avatar?.original?.ref;
-  const avatarAfterRef = after.avatar?.original?.ref;
-  if (
-    avatarBeforeRef !== avatarAfterRef
-  ) {
-    await handleImageChange(after.avatar!);
+    promises.push(upsertWatermark(after, getStorageBucketName()));
   }
 
   return Promise.all(promises);
@@ -158,8 +151,49 @@ export async function onUserDelete(
   userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
 ): Promise<any> {
 
+  const user = userSnapshot.data() as PublicUser;
+
   // update Algolia index
-  return deleteObject(algolia.indexNameUsers, userSnapshot.id);
+  deleteObject(algolia.indexNameUsers, userSnapshot.id);
+
+  // delete user
+  admin.auth().deleteUser(user.uid);
+
+  await cleanUserMedias(user);
+
+  // remove id from org array
+  if (!!user.orgId) {
+    const orgRef = db.doc(`orgs/${user.orgId}`);
+    const orgDoc = await orgRef.get();
+    const org = orgDoc.data() as OrganizationDocument
+    const userIds = org.userIds.filter(userId => userId !== user.uid);
+    orgRef.update({ userIds });
+  }
+
+  // remove permissions
+  if (!!user.orgId) {
+    const permissionsRef = db.doc(`permissions/${user.orgId}`);
+    const permissionsDoc = await permissionsRef.get();
+    const permissions = permissionsDoc.data() as PermissionsDocument;
+    const roles = permissions.roles;
+    delete roles[user.uid];
+    permissionsRef.update({ roles });
+  }
+
+  // remove all invitations related to user
+  const invitations = await getCollection<InvitationDocument>(`invitations`)
+  invitations
+    .filter(invitation => invitation.fromUser?.uid === user.uid || invitation.toUser?.uid === user.uid)
+    .map(invitation => invitation.id)
+    .map(id => db.doc(`invitations/${id}`).delete());
+
+  // remove all notifications related to user
+  const notificationsRef = db.collection(`notifications`).where('toUserId', '==', user.uid);
+  const notificationsSnap = await notificationsRef.get();
+  notificationsSnap.forEach(notification => db.doc(`notifications/${notification.id}`).delete());
+
+  // delete blockframesAdmin doc
+  db.doc(`blockframesAdmin/${user.uid}`).delete();
 }
 
 export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {

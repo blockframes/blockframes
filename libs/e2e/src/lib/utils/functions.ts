@@ -1,4 +1,4 @@
-import { AuthWelcomePage, AuthLoginPage } from "../pages/auth";
+﻿import { AuthLoginPage, AuthIdentityPage } from "../pages/auth";
 import { User } from "./type";
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
@@ -12,12 +12,24 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
 }
 
 /** Start on AuthWelcomePage, on AuthLoginPage and signin. You have to create a new page depending of the app. */
-export function signIn(user: Partial<User>) {
-  const p1: AuthWelcomePage = new AuthWelcomePage();
-  const p2: AuthLoginPage = p1.clickCallToAction();
-  p2.switchMode();
-  p2.fillSignin(user);
-  p2.clickSignIn();
+export function signIn(user: Partial<User>, fillIdentity: boolean = false) {
+  const p1: AuthLoginPage = new AuthLoginPage();
+  p1.switchMode();
+  p1.fillSignin(user);
+  p1.clickSignIn();
+  cy.wait(10000);
+  //Submit Identity on demand
+  if (fillIdentity) {
+    // cy.url().then(afterLoginURL => {
+    //   if (afterLoginURL.includes('auth/identity')) {
+    //     const pIdentity = new AuthIdentityPage();
+    //     pIdentity.confirm(user);
+    //   }
+    // });
+    //return cy.url();
+  }
+
+  //return "";
 }
 
 export function uploadFile(p: string, type: string, testId: string): any {
@@ -37,7 +49,7 @@ export function assertUploadStatus(content: string, testId: string) {
 }
 
 let currentID = 0;
-export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
+export const randomID = (): string => (`${new Date().getTime()}-${currentID++}`);
 export const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
 export function getTomorrowDay(date: Date) {

@@ -1,12 +1,18 @@
 section {
   width: 100%;
-  text-align: center;
-  border: solid 1px var(--foreground-divider);
-  padding: 24px 0;
-  border-radius: 10px;
   article {
-    width: 100%;
     text-align: center;
+    border: solid 1px var(--foreground-divider);
+    border-radius: 10px;
+    background: rgba(var(--primary), 0.3);
+    image-cropper {
+      width: inherit;
+      padding: 0;
+      margin: 5px;
+    }
+  }
+  article.drop-zone {
+    border: dashed 1px var(--primary);
   }
 }
 
@@ -28,12 +34,8 @@ a {
   margin: 0;
 }
 
-.cropper,
-.show {
-  height: 100%;
-}
-
 .croppedImage {
+  margin-top: 5px;
   max-width: 500px;
   max-height: 1000px;
 }

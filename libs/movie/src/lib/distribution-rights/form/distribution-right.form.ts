@@ -5,7 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DistributionRight } from '../+state/distribution-right.model';
 import { DistributionRightTermsForm } from './terms/terms.form';
 import { DistributionRightHoldbacksForm } from './holdbacks/holdbacks.form';
-import { MovieVersionInfoForm } from '@blockframes/movie/form/version-info/version-info.form';
+import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
 
 
 function createDistributionRightControls(right: Partial<DistributionRight>) {

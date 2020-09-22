@@ -1,4 +1,4 @@
-bf-img {
+img {
   height: 40px;
   width: 40px;
   border-radius: 50%;
@@ -11,4 +11,8 @@ widget-card {
 .user-info {
   margin-left: 8px;
   margin-right: 24px;
+}
+
+a.mat-list-item, .mat-list-item {
+  padding-left: 16px;
 }

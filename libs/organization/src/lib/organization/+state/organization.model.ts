@@ -8,15 +8,14 @@ import {
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
 
 export {
-  OrganizationStatus,
   WishlistStatus,
   OrganizationDocument,
   createOrganizationDocument,
   PLACEHOLDER_LOGO
 } from './organization.firestore';
+export { OrganizationStatus } from '@blockframes/utils/static-model/types';
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
@@ -47,9 +46,9 @@ export function createOrganization(
 /** Convert an organization object into a public organization */
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {
-    id: org.id || '',
+    id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: createImgRef(org.logo)
+    logo: org.logo ?? '',
   }
 }
 

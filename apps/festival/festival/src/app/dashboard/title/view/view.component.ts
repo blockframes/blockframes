@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'festival-dashboard-title-view',
@@ -10,15 +11,24 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
 
-  navLinks = [
+  navLinks: RouteDescription[] = [
     {
-      path: 'details',
-      label: 'Film Details'
+      path: 'main',
+      label: 'Main Information'
+    },
+    {
+      path: 'artistic',
+      label: 'Artistic Information'
+    },
+    {
+      path: 'production',
+      label: 'Production Information'
     }
   ];
 
@@ -31,13 +41,5 @@ export class TitleViewComponent implements OnInit {
   private getMovie() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
-  }
-
-  public getPoster(movie: Movie) {
-    return movie.main.poster.media;
-  }
-
-  public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 }

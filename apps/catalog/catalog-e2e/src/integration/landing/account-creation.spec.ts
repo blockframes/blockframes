@@ -1,15 +1,16 @@
 /// <reference types="cypress" />
 
+import { LandingPage } from '../../support/pages/landing';
 import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { AuthWelcomePage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
 
 const USER: Partial<User> = {
-  email: `${Date.now()}@cypress.com`,
+  email: `${Date.now()}@blockfrake.com`,
   password: 'cypress',
-  firstName: 'cypress',
-  lastName: 'cypress'
+  firstName: 'Catalog',
+  lastName: 'User'
 }
 
 const WRONG_EMAIL_FORM = 'wrongform*email!com';
@@ -21,8 +22,9 @@ const LONG_PASSWORD = '123456789123456789123456789';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  const p1: AuthWelcomePage = new AuthWelcomePage();
-  p1.clickCallToAction();
+  cy.visit('/');
+  const p1 = new LandingPage();
+  p1.clickSignup();
 })
 
 describe('User can create new account', () => {
@@ -32,6 +34,7 @@ describe('User can create new account', () => {
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
     const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
+    cy.log(`{${USER.firstName} ${USER.lastName}} logged In!`);
     p2.assertMoveToOrgHomepage();
   });
 });
@@ -48,7 +51,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except name', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `name${Date.now()}@cypress.com`;
+    const newEmail = `name${Date.now()}@blockfrake.com`;
     p1.fillSignupExceptOne(USER, 'name', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -58,7 +61,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except surname', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `surname${Date.now()}@cypress.com`;
+    const newEmail = `surname${Date.now()}@blockfrake.com`;
     p1.fillSignupExceptOne(USER, 'surname', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -68,7 +71,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except password', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `pwd${Date.now()}@cypress.com`;
+    const newEmail = `pwd${Date.now()}@blockfrake.com`;
     p1.fillSignupExceptOne(USER, 'password', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -78,7 +81,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except password confirm', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`pwdC${Date.now()}@cypress.com`;
+    const newEmail =`pwdC${Date.now()}@blockfrake.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -110,7 +113,7 @@ describe('Try email address', () => {
 describe('Try password', () => {
   it('Try with different passwords in password confirm', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`wrongPwd${Date.now()}@cypress.com`;
+    const newEmail =`wrongPwd${Date.now()}@blockfrake.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.fillPasswordConfirmInSignup(WRONG_PASSWORD);
     p1.clickTermsAndCondition();
@@ -120,7 +123,7 @@ describe('Try password', () => {
   })
   it('Try with less than 6 characters', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`shortPwd${Date.now()}@cypress.com`;
+    const newEmail =`shortPwd${Date.now()}@blockfrake.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.firstName);
     p1.fillSurnameInSignup(USER.lastName);
@@ -133,7 +136,7 @@ describe('Try password', () => {
   })
   it('Try with more than 24 characters', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`longPwd${Date.now()}@cypress.com`;
+    const newEmail =`longPwd${Date.now()}@blockfrake.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.firstName);
     p1.fillSurnameInSignup(USER.lastName);

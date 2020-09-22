@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+﻿import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MarketplaceComponent } from './marketplace.component';
@@ -46,12 +46,12 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
       data: { animation: 'notifications' }
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
       data: { animation: 'invitations' }
     },
     {

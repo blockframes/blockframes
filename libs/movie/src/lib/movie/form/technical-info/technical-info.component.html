@@ -1,0 +1,24 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 title>Technical Specification</h1>
+  <ng-container tunnel-form>
+    <div fxLayout="column" fxLayoutGap="32px">
+      <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
+        <static-select type="model" [control]="format" scope="MOVIE_FORMAT" placeholder="Select Shooting Format">
+          <mat-label>Aspect Ratio</mat-label>
+        </static-select>
+        <static-select type="model" [control]="quality" scope="MOVIE_FORMAT_QUALITY" placeholder="Select Format Quality">
+          <mat-label>Resolution</mat-label>
+        </static-select>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
+        <static-select type="model" [control]="color" scope="COLORS" placeholder="Select Color/ B&W">
+          <mat-label>Color Information</mat-label>
+        </static-select>
+        <static-select type="model" [control]="soundFormat" scope="SOUND_FORMAT" placeholder="Select Sound Format">
+          <mat-label>Sound Mix</mat-label>
+        </static-select>
+      </div>
+    </div>
+  </ng-container>
+</tunnel-page>

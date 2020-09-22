@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Scope } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
-  selector: '[control] [link] missing-control',
+  selector: '[control] missing-control',
   templateUrl: './missing-control.component.html',
   styleUrls: ['./missing-control.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,6 +13,7 @@ export class MissingControlComponent implements OnInit {
   @Input() scope: Scope;
   @Input() type: string;
   @Input() link: string;
+  @Input() fragment: string;
   @Input() isLast = true;
 
   @ContentChild(TemplateRef) child: TemplateRef<any>;

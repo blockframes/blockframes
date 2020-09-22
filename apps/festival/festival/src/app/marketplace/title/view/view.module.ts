@@ -1,30 +1,24 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
-import { ViewComponent } from './view.component';
-
-// Custom Modules
-import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MarketplaceMovieViewComponent } from './view.component';
+import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
+import { RouterModule } from '@angular/router';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
-import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
+import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatChipsModule } from '@angular/material/chips';
 
 const routes = [
   {
     path: '',
-    component: ViewComponent,
+    component: MarketplaceMovieViewComponent,
     children: [
       {
         path: '',
@@ -33,34 +27,45 @@ const routes = [
       },
       {
         path: 'main',
-        loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+        loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule),
+        data: { animation: 0 }
+      },
+      {
+        path: 'artistic',
+        loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule),
+        data: { animation: 1 }
+      },
+      {
+        path: 'production',
+        loadChildren: () => import('@blockframes/movie/marketplace/production/production.module').then(m => m.MovieProductionModule),
+        data: { animation: 2 }
+      },
+      {
+        path: 'additional',
+        loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule),
+        data: { animation: 3 }
       },
       {
         path: 'screenings',
-        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
+        loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule),
+        data: { animation: 4 }
       }
     ]
   }
 ];
 
 @NgModule({
-  declarations: [ViewComponent],
+  declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    MovieViewLayoutModule,
-    ImageReferenceModule,
+    MovieShellModule,
     MovieHeaderModule,
     OrgChipModule,
     WishlistButtonModule,
     PromotionalLinksModule,
-
     // Material
-    MatChipsModule,
-    MatButtonModule,
     MatIconModule,
-    MatSnackBarModule,
-    // Routes
+    MatButtonModule,
     RouterModule.forChild(routes)
   ]
 })

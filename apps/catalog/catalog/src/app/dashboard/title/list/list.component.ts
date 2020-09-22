@@ -3,7 +3,8 @@ import { FormControl } from '@angular/forms';
 import { startWith, switchMap, map } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie, getMovieTotalViews, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
@@ -37,15 +38,15 @@ function createTitleView(
   const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
   return {
     id: movie.id,
-    title: movie.main.title.international,
+    title: movie.title.international,
     view: getMovieTotalViews(analytics, movie.id)?.toString(),
     sales: ownContracts.length,
     receipt: getMovieReceipt(ownContracts, movie.id),
-    status: movie.main.storeConfig.status
+    status: movie.storeConfig.status
   };
 }
 
-const isAcceptedInApp = (movie: Movie) => movie.main.storeConfig.appAccess.catalog === true;
+const isAcceptedInApp = (movie: Movie) => movie.storeConfig.appAccess.catalog === true;
 
 @Component({
   selector: 'catalog-title-list',
@@ -83,7 +84,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
     const movies$ = this.filter$.pipe(
       switchMap(filter =>
         this.query.selectAll({
-          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true && isAcceptedInApp(movie))
+          filterBy: movie => (filter ? movie.storeConfig.storeType === filter : true && isAcceptedInApp(movie))
         })
       )
     );
@@ -99,7 +100,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   }
 
   /** Dynamic filter of movies for each tab. */
-  applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
+  applyFilter(filter?: Movie['storeConfig']['storeType']) {
     this.filter.setValue(filter);
     filter === 'library'
       ? this.dynTitle.setPageTitle('Library titles')

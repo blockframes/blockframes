@@ -5,14 +5,14 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
 import { UserRole, PermissionsService } from '@blockframes/permissions/+state';
 import { Observable } from 'rxjs';
 import { Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { buildJoinOrgQuery } from '@blockframes/invitation/invitation-utils';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
 
 @Component({
   selector: 'admin-organization',
@@ -24,9 +24,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public organizationStatus = organizationStatus;
   public movies: any[];
-  public app = app;
   public members: any[];
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
@@ -36,28 +34,28 @@ export class OrganizationComponent implements OnInit {
 
   public versionColumnsMovies = {
     'id': 'Id',
-    'main.internalRef': 'Internal Ref',
-    'main.poster': 'Poster',
-    'main.title.original': 'Original title',
-    'main.productionYear': 'Production year',
-    'main.storeConfig.status': 'Status',
-    'main.storeConfig.storeType': 'Store type',
+    'internalRef': 'Internal Ref',
+    'poster': 'Poster',
+    'title.original': 'Original title',
+    'releaseYear': 'Release year',
+    'storeConfig.status': 'Status',
+    'storeConfig.storeType': 'Store type',
     'edit': 'Edit',
   };
 
   public initialColumnsMovies: string[] = [
     'id',
-    'main.poster',
-    'main.internalRef',
-    'main.title.original',
-    'main.productionYear',
-    'main.storeConfig.status',
-    'main.storeConfig.storeType',
+    'poster',
+    'internalRef',
+    'title.original',
+    'releaseYear',
+    'storeConfig.status',
+    'storeConfig.storeType',
     'edit',
   ];
 
   public memberColumns = {
-    userId: 'Id',
+    uid: '',
     firstName: 'First Name',
     avatar: 'Avatar',
     lastName: 'Last Name',
@@ -67,7 +65,7 @@ export class OrganizationComponent implements OnInit {
     edit: 'Edit',
   };
 
-  public memberColumnsIndex = ['userId', 'firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
+  public memberColumnsIndex = ['firstName', 'avatar', 'lastName', 'email', 'position', 'role', 'edit'];
 
   constructor(
     private organizationService: OrganizationService,
@@ -77,12 +75,12 @@ export class OrganizationComponent implements OnInit {
     private snackBar: MatSnackBar,
     private permissionService: PermissionsService,
     private invitationService: InvitationService,
+    private mediaService: MediaService
   ) { }
 
   async ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('orgId');
     this.org = await this.organizationService.getValue(this.orgId);
-    this.storagePath = `orgs/${this.orgId}/logo`;
     this.orgForm = new OrganizationAdminForm(this.org);
 
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
@@ -136,11 +134,10 @@ export class OrganizationComponent implements OnInit {
       return;
     }
 
-    const { denomination, email, addresses, activity, fiscalNumber, status, appAccess } = this.orgForm.value;
-    const update = { denomination, email, addresses, activity, fiscalNumber, status, appAccess };
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.orgForm);
+    await this.organizationService.update(this.orgId, documentToUpdate);
+    this.mediaService.uploadMedias(mediasToUpload);
 
-    // @TODO (#2987) (check org import via excel)
-    await this.organizationService.update(this.orgId, update);
     if (this.notifyCheckbox.value) {
       this.organizationService.notifyAppAccessChange(this.orgId);
     }
@@ -151,11 +148,11 @@ export class OrganizationComponent implements OnInit {
   filterPredicateMovies(data: any, filter) {
     const columnsToFilter = [
       'id',
-      'main.internalRef',
-      'main.title.original',
-      'main.productionYear',
-      'main.storeConfig.status',
-      'main.storeConfig.storeType',
+      'internalRef',
+      'title.original',
+      'releaseYear',
+      'storeConfig.status',
+      'storeConfig.storeType',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
@@ -179,7 +176,7 @@ export class OrganizationComponent implements OnInit {
 
   public async removeMember(uid: string) {
     try {
-      this.organizationService.removeMember(uid);
+      await this.organizationService.removeMember(uid);
       this.members = await this.getMembers();
       this.cdRef.markForCheck();
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });

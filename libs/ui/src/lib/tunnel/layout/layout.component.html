@@ -3,7 +3,7 @@
     <button mat-icon-button (click)="sidenav.toggle()"><mat-icon svgIcon="menu"></mat-icon></button>
   </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
-  <tunnel-exit [exitRedirect]="exitRedirect"></tunnel-exit>
+  <tunnel-exit [exitRedirect]="exitRedirect" askForConfirmation></tunnel-exit>
 </mat-toolbar>
 
 <mat-sidenav-container>
@@ -26,7 +26,7 @@
     <router-outlet></router-outlet>
 
     <!-- Previous / Next -->
-    <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center">
+    <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center" class="footnote">
       <ng-container *ngIf="previous$ | async as previous">
         <a test-id="back" mat-stroked-button color="accent" [routerLink]="previous" fxLayoutAlign="center center">
           <mat-icon svgIcon="arrow_back"></mat-icon>

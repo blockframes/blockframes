@@ -1,0 +1,137 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Artistic Team</h1>
+  <ng-container tunnel-form>
+
+    <h3>Cast Member</h3>
+    <section id="cast-member">
+
+      <bf-form-table [columns]="castColumns" [form]="cast" buttonText="Add Cast Member">
+        <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
+        </ng-template>
+        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
+        <ng-template formView let-castForm>
+          <article [formGroup]="castForm" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout="row" fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>First Name</mat-label>
+                <input test-id="cast-first-name" matInput formControlName="firstName"
+                  placeholder="Cast Member’s First Name" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Last Name</mat-label>
+                <input test-id="cast-last-name" matInput formControlName="lastName"
+                  placeholder="Cast Member’s Last Name" />
+              </mat-form-field>
+            </div>
+
+            <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="castForm.get('status')"
+              fxFlex *ngIf="form | hasStatus: ['development', 'shooting']">
+              <mat-label>Status</mat-label>
+              <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
+            </static-select>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description"
+                placeholder="e.g. Kate Winslet is the youngest person to acquire six Academy Award nominations, with seven nominations in total, and won the Academy Award for Best Actress for The Reader (2008)."></textarea>
+              <mat-hint>Additional information about the cast member.</mat-hint>
+            </mat-form-field>
+
+            <div fxLayout="column" fxLayoutAlign="start ">
+              <h6 class="mat-caption">Filmography</h6>
+              <ng-container *ngFor="let cast of castForm.get('filmography').controls">
+                <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Film Title</mat-label>
+                    <input matInput formControlName="title">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Release Year</mat-label>
+                    <input matInput formControlName="year" type="number">
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <h3>Crew Member</h3>
+    <section id="crew-member">
+
+      <bf-form-table [columns]="crewColumns" [form]="crew" buttonText="Add Crew Member">
+        <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
+        </ng-template>
+        <ng-template colRef="role" let-role>{{ role | translateSlug: 'CREW_ROLES' }}</ng-template>
+        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
+        <ng-template formView let-crewForm>
+          <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout="row" fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>First Name</mat-label>
+                <input test-id="crew-first-name" matInput formControlName="firstName"
+                  placeholder="eg: Crew Member’s First Name" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Last Name</mat-label>
+                <input test-id="crew-last-name" matInput formControlName="lastName" />
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutGap="24px">
+              <static-select test-id="crew-role" type="model" [control]="crewForm.get('role')" scope="CREW_ROLES"
+                fxFlex>
+                <mat-label>Role</mat-label>
+                <mat-hint align="start">
+                  Please specify crew member's role in your project (director of photography, score composer, writer...)
+                </mat-hint>
+              </static-select>
+
+              <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="crewForm.get('status')"
+                fxFlex *ngIf="form | hasStatus: ['development', 'shooting']">
+                <mat-label>Status</mat-label>
+                <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
+                </mat-hint>
+              </static-select>
+            </div>
+
+
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput test-id="crew-description" formControlName="description"
+                placeholder="e.g. Russell Carpenter shot the 1997 Best Picture-winning film Titanic, for which he won the Academy Award for Best Cinematography."></textarea>
+              <mat-hint>Additional information about the crew member.</mat-hint>
+            </mat-form-field>
+
+            <div fxLayout="column" fxLayoutAlign="start">
+              <h6 class="mat-caption">Filmography</h6>
+              <ng-container *ngFor="let crew of crewForm.get('filmography').controls">
+                <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Crew's Filmography</mat-label>
+                    <input matInput formControlName="title">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Crew's Filmography</mat-label>
+                    <input matInput formControlName="year" type="number">
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+
+          </article>
+        </ng-template>
+      </bf-form-table>
+    </section>
+
+  </ng-container>
+</tunnel-page>

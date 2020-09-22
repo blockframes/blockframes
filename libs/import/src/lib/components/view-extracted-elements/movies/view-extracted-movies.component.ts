@@ -2,40 +2,25 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatTableDataSource } from '@angular/material/table';
 import {
   Movie,
-  createMovieMain,
-  createMoviePromotionalDescription,
-  createMovieSalesCast,
-  createMovieSalesInfo,
-  createMovieFestivalPrizes,
-  createMovieBudget,
-  createMoviePromotionalElements,
+  MovieService,
+  createDocumentMeta,
+  createMovieRating,
+  createMovieReview,
+  createMovieOriginalRelease,
   createPrize,
   populateMovieLanguageSpecification,
-  MovieService,
-  createMovieRating,
-  createMovieOriginalRelease,
-  createMovieStory,
-  createDocumentMeta,
   createBoxOffice,
-  createMovieReview,
-  createPromotionalImage,
-  createPromotionalHostedMedia,
-  createPromotionalExternalMedia,
+  createMovie
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import {
   PremiereType,
-  storeType,
-  workType,
-  storeStatus,
-  unitBox,
-  movieLanguageTypes,
   MovieLanguageTypesValue,
   UnitBoxValue,
-  premiereType
-} from '@blockframes/movie/+state/movie.firestore';
+  staticConsts,
+} from '@blockframes/utils/static-model';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -51,7 +36,7 @@ enum SpreadSheetMovie {
   internationalTitle,
   originalTitle,
   internalRef,
-  workType,
+  contentType,
   productionStatus,
   directors,
   originCountries,
@@ -61,11 +46,10 @@ enum SpreadSheetMovie {
   genres,
   length,
   cast,
-  festivalPrizes,
+  festivalCustomPrizes,
   synopsis,
   keyAssets,
   keywords,
-  productionYear,
   producers,
   crewMembers,
   budget,
@@ -82,8 +66,8 @@ enum SpreadSheetMovie {
   // poster, TODO issue #3091
   // bannerLink, TODO issue #3091
   // stillLinks, TODO issue #3091
-  presentationDeck,
-  scenarioLink,
+  // presentationDeck, TODO issue #3091
+  // scenarioLink, TODO issue #3091
   screenerLink,
   promoReelLink,
   trailerLink,
@@ -144,19 +128,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     sheetTab.rows.forEach(async spreadSheetRow => {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle] && spreadSheetRow[SpreadSheetMovie.internalRef]) {
         const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
-        const movie = {
-          main: createMovieMain(),
-          promotionalDescription: createMoviePromotionalDescription(),
-          promotionalElements: createMoviePromotionalElements({}, false),
-          salesCast: createMovieSalesCast(),
-          salesInfo: createMovieSalesInfo(),
-          versionInfo: { languages: {} }, // TODO issue #1596
-          festivalPrizes: createMovieFestivalPrizes(),
-          budget: createMovieBudget(),
-          story: createMovieStory(),
-          ...existingMovie ? cleanModel(existingMovie) : undefined
-        } as Movie;
-
+        const movie = existingMovie ? cleanModel(existingMovie) as Movie : createMovie();
         const importErrors = { movie, errors: [] } as MovieImportState;
 
         //////////////////
@@ -164,19 +136,19 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //////////////////
 
         // INTERNAL REF (Film Code)
-        movie.main.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
+        movie.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
 
         // WORK TYPE
-        if (spreadSheetRow[SpreadSheetMovie.workType]) {
-          const key = getKeyIfExists(workType, spreadSheetRow[SpreadSheetMovie.workType]);
+        if (spreadSheetRow[SpreadSheetMovie.contentType]) {
+          const key = getKeyIfExists(staticConsts.contentType, spreadSheetRow[SpreadSheetMovie.contentType]);
           if (key) {
-            movie.main.workType = key;
+            movie.contentType = key;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.workType',
+              field: 'movie.contentType',
               name: 'Work Type',
-              reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase()}`,
+              reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.contentType].trim().toLowerCase()}`,
               hint: 'Edit corresponding sheet field.'
             });
           }
@@ -184,17 +156,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // ORIGINAL TITLE (Original Title)
         if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
-          movie.main.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
-        }
-
-        // PRODUCTION YEAR
-        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.productionYear]))) {
-          movie.main.productionYear = parseInt(spreadSheetRow[SpreadSheetMovie.productionYear], 10);
+          movie.title.original = spreadSheetRow[SpreadSheetMovie.originalTitle];
         }
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
+          movie.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
         }
 
         // TODO issue #3091
@@ -205,7 +172,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //   label: 'Poster',
         //   media: poster,
         // });
-        // movie.main.poster = moviePoster;
+        // movie.poster = moviePoster;
 
         //////////////////
         // OPTIONAL FIELDS
@@ -213,15 +180,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // INTERNATIONAL TITLE (International Title)
         if (spreadSheetRow[SpreadSheetMovie.internationalTitle]) {
-          movie.main.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
+          movie.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
         }
 
         // Total Run Time
         if (spreadSheetRow[SpreadSheetMovie.length]) {
           if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-            movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+            movie.runningTime.time = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
           } else {
-            movie.main.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
+            movie.runningTime.time = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
           }
         }
 
@@ -238,7 +205,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               } else {
                 importErrors.errors.push({
                   type: 'warning',
-                  field: 'movie.main.stakeholders',
+                  field: 'movie.stakeholders',
                   name: 'Stakeholders',
                   reason: `${stakeHolderParts[2]} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
@@ -248,35 +215,35 @@ export class ViewExtractedMoviesComponent implements OnInit {
             if (role) {
               switch (role) {
                 case 'broadcaster-coproducer':
-                  movie.main.stakeholders.broadcasterCoproducer.push(stakeHolder);
+                  movie.stakeholders.broadcasterCoproducer.push(stakeHolder);
                   break;
                 case 'financier':
-                  movie.main.stakeholders.financier.push(stakeHolder);
+                  movie.stakeholders.financier.push(stakeHolder);
                   break;
                 case 'laboratory':
-                  movie.main.stakeholders.laboratory.push(stakeHolder);
+                  movie.stakeholders.laboratory.push(stakeHolder);
                   break;
                 case 'sales-agent':
-                  movie.main.stakeholders.salesAgent.push(stakeHolder);
+                  movie.stakeholders.salesAgent.push(stakeHolder);
                   break;
                 case 'distributor':
-                  movie.main.stakeholders.distributor.push(stakeHolder);
+                  movie.stakeholders.distributor.push(stakeHolder);
                   break;
                 case 'line-producer':
-                  movie.main.stakeholders.lineProducer.push(stakeHolder);
+                  movie.stakeholders.lineProducer.push(stakeHolder);
                   break;
                 case 'co-producer':
-                  movie.main.stakeholders.coProducer.push(stakeHolder);
+                  movie.stakeholders.coProductionCompany.push(stakeHolder);
                   break;
                 case 'executive-producer':
                 default:
-                  movie.main.stakeholders.executiveProducer.push(stakeHolder);
+                  movie.stakeholders.productionCompany.push(stakeHolder);
                   break;
               }
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.stakeholders',
+                field: 'movie.stakeholders',
                 name: 'Stakeholders',
                 reason: `${stakeHolderParts[1]} not found in Stakeholders roles list`,
                 hint: 'Edit corresponding sheet field.'
@@ -289,11 +256,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.color]) {
           const color = getCodeIfExists('COLORS', spreadSheetRow[SpreadSheetMovie.color]);
           if (color) {
-            movie.salesInfo.color = color;
+            movie.color = color;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'salesInfo.color',
+              field: 'color',
               name: 'Color',
               reason: `${spreadSheetRow[SpreadSheetMovie.color]} not found in colors list`,
               hint: 'Edit corresponding sheet field.'
@@ -304,15 +271,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // ORIGIN COUNTRIES (Countries of Origin)
         if (spreadSheetRow[SpreadSheetMovie.originCountries]) {
-          movie.main.originCountries = [];
+          movie.originCountries = [];
           spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
             const country = getCodeIfExists('TERRITORIES', c);
             if (country) {
-              movie.main.originCountries.push(country);
+              movie.originCountries.push(country);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.originCountries',
+                field: 'originCountries',
                 name: 'Countries of origin',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
@@ -352,13 +319,13 @@ export class ViewExtractedMoviesComponent implements OnInit {
               movieRating.country = country;
             }
 
-            movie.salesInfo.rating.push(movieRating);
+            movie.rating.push(movieRating);
           });
         }
 
         // FILM REVIEW
         if (spreadSheetRow[SpreadSheetMovie.filmReviews]) {
-          movie.movieReview = [];
+          movie.review = [];
           spreadSheetRow[SpreadSheetMovie.filmReviews].split(this.separator).forEach(review => {
             const filmReviewParts = review.split(this.subSeparator);
             if (filmReviewParts.length >= 3) {
@@ -368,11 +335,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 criticQuote: filmReviewParts[2].trim()
               })
 
-              movie.movieReview.push(movieReview);
+              movie.review.push(movieReview);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'movie.movieReview',
+                field: 'movie.review',
                 name: 'Movie review',
                 reason: `Could not parse review : ${review}`,
                 hint: 'Edit corresponding sheet field.'
@@ -385,11 +352,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
           const shootingFormat = getCodeIfExists('MOVIE_FORMAT', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
           if (shootingFormat) {
-            movie.salesInfo.format = shootingFormat;
+            movie.format = shootingFormat;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.salesInfo.format',
+              field: 'movie.format',
               name: 'Shooting format',
               reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.shootingFormat]}`,
               hint: 'Edit corresponding sheet field.'
@@ -401,11 +368,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
           const availableFormat = getCodeIfExists('MOVIE_FORMAT_QUALITY', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
           if (availableFormat) {
-            movie.salesInfo.formatQuality = availableFormat;
+            movie.formatQuality = availableFormat;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.salesInfo.formatQuality',
+              field: 'movie.formatQuality',
               name: 'formatQuality',
               reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.availableFormat]}`,
               hint: 'Edit corresponding sheet field.'
@@ -417,11 +384,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
           const soundQuality = getCodeIfExists('SOUND_FORMAT', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
           if (soundQuality) {
-            movie.salesInfo.soundFormat = soundQuality;
+            movie.soundFormat = soundQuality;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.salesInfo.soundQuality',
+              field: 'movie.soundQuality',
               name: 'soundQuality',
               reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.soundQuality]}`,
               hint: 'Edit corresponding sheet field.'
@@ -434,11 +401,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
           spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification) {
-              movie.salesInfo.certifications.push(certification);
+              movie.certifications.push(certification);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'salesInfo.certifications',
+                field: 'certifications',
                 name: 'Certifications',
                 reason: `${c} not found in certifications list`,
                 hint: 'Edit corresponding sheet field.'
@@ -450,22 +417,22 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.salesCast.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator, '\\s+', 'CAST_ROLES');
+          movie.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator, '\\s+', 'CAST_ROLES');
         }
 
         // CREDITS (Producers)
         if (spreadSheetRow[SpreadSheetMovie.producers]) {
-          movie.salesCast.producers = formatCredits(spreadSheetRow[SpreadSheetMovie.producers], this.separator, this.subSeparator, 'PRODUCER_ROLES');
+          movie.producers = formatCredits(spreadSheetRow[SpreadSheetMovie.producers], this.separator, this.subSeparator, 'PRODUCER_ROLES');
         }
 
         // CREDITS (Crew members)
         if (spreadSheetRow[SpreadSheetMovie.crewMembers]) {
-          movie.salesCast.crew = formatCredits(spreadSheetRow[SpreadSheetMovie.crewMembers], this.separator, this.subSeparator, 'CREW_ROLES');
+          movie.crew = formatCredits(spreadSheetRow[SpreadSheetMovie.crewMembers], this.separator, this.subSeparator, 'CREW_ROLES');
         }
 
         // SYNOPSIS (Synopsis)
         if (spreadSheetRow[SpreadSheetMovie.synopsis]) {
-          movie.story.synopsis = spreadSheetRow[SpreadSheetMovie.synopsis];
+          movie.synopsis = spreadSheetRow[SpreadSheetMovie.synopsis];
         }
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
@@ -490,21 +457,21 @@ export class ViewExtractedMoviesComponent implements OnInit {
             }
 
 
-            movie.salesInfo.originalRelease.push(originalRelease);
+            movie.originalRelease.push(originalRelease);
           });
         }
 
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
-          movie.main.genres = [];
+          movie.genres = [];
           spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: ExtractCode<'GENRES'>) => {
             const genre = getCodeIfExists('GENRES', g);
             if (genre) {
-              movie.main.genres.push(genre);
+              movie.genres.push(genre);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.genres',
+                field: 'genres',
                 name: 'Genres',
                 reason: `${g} not found in genres list`,
                 hint: 'Edit corresponding sheet field.'
@@ -514,9 +481,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
 
         // PRIZES (Prizes)
-        if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
-          movie.festivalPrizes.prizes = [];
-          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes]) {
+          movie.customPrizes = [];
+          spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes].split(this.separator).forEach(async (p: string) => {
             const prizeParts = p.split(this.subSeparator);
             if (prizeParts.length >= 3) {
               const prize = createPrize();
@@ -529,45 +496,41 @@ export class ViewExtractedMoviesComponent implements OnInit {
                     prize.premiere = 'international';
                     break;
                   default:
-                    prize.premiere = getKeyIfExists(premiereType, prizeParts[3] as PremiereType);
+                    prize.premiere = getKeyIfExists(staticConsts.premiereType, prizeParts[3] as PremiereType);
                     break;
                 }
 
               }
-              // TODO issue #3091
-              // if (prizeParts.length >= 5) {
-              //   prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
-              // }
-              movie.festivalPrizes.prizes.push(prize);
+              movie.customPrizes.push(prize);
             }
           });
         }
 
         // KEY ASSETS (Key Assets)
         if (spreadSheetRow[SpreadSheetMovie.keyAssets]) {
-          movie.promotionalDescription.keyAssets = spreadSheetRow[SpreadSheetMovie.keyAssets];
+          movie.keyAssets = spreadSheetRow[SpreadSheetMovie.keyAssets];
         }
 
         // KEYWORDS
         if (spreadSheetRow[SpreadSheetMovie.keywords]) {
-          movie.promotionalDescription.keywords = [];
+          movie.keywords = [];
           spreadSheetRow[SpreadSheetMovie.keywords].split(this.separator).forEach((k: string) => {
-            movie.promotionalDescription.keywords.push(k);
+            movie.keywords.push(k);
           });
         }
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = [];
+          movie.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
-              movie.main.originalLanguages.push(language);
-              populateMovieLanguageSpecification(movie.versionInfo.languages, language, 'original', true);
+              movie.originalLanguages.push(language);
+              populateMovieLanguageSpecification(movie.languages, language, 'original', true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.originalLanguages',
+                field: 'originalLanguages',
                 name: 'Languages',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
@@ -587,9 +550,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
             const parseErrors = [];
             if (language) {
               versionParts.map(v => v.trim()).forEach((v: MovieLanguageTypesValue) => {
-                const key = getKeyIfExists(movieLanguageTypes, v);
+                const key = getKeyIfExists(staticConsts.movieLanguageTypes, v);
                 if (key) {
-                  populateMovieLanguageSpecification(movie.versionInfo.languages, language, key, true);
+                  populateMovieLanguageSpecification(movie.languages, language, key, true);
                 } else {
                   parseErrors.push(v.toLowerCase());
                 }
@@ -598,7 +561,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               if (parseErrors.length) {
                 importErrors.errors.push({
                   type: 'warning',
-                  field: 'movie.versionInfo.languages',
+                  field: 'movie.languages',
                   name: 'Available version(s)',
                   reason: `Could not parse: ${parseErrors.join(', ')}`,
                   hint: 'Edit corresponding sheet field.'
@@ -607,7 +570,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'movie.versionInfo.languages',
+                field: 'movie.languages',
                 name: 'Available version(s)',
                 reason: `${languageTemp} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
@@ -618,11 +581,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Screener link',
-            media: spreadSheetRow[SpreadSheetMovie.screenerLink],
-          });
-          movie.promotionalElements.screener_link = promotionalElement;
+          movie.promotional.screener_link = spreadSheetRow[SpreadSheetMovie.screenerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -635,12 +594,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PROMO REEL LINK
         if (spreadSheetRow[SpreadSheetMovie.promoReelLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Promo reel link',
-            media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
-          });
-
-          movie.promotionalElements.promo_reel_link = promotionalElement;
+          movie.promotional.promo_reel_link = spreadSheetRow[SpreadSheetMovie.promoReelLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -653,12 +607,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // TRAILER LINK
         if (spreadSheetRow[SpreadSheetMovie.trailerLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Trailer link',
-            media: spreadSheetRow[SpreadSheetMovie.trailerLink],
-          });
-
-          movie.promotionalElements.trailer_link = promotionalElement;
+          movie.promotional.trailer_link = spreadSheetRow[SpreadSheetMovie.trailerLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -671,12 +620,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PITCH TEASER LINK
         if (spreadSheetRow[SpreadSheetMovie.pitchTeaserLink]) {
-          const promotionalElement = createPromotionalExternalMedia({
-            label: 'Pitch teaser link',
-            media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
-          });
-
-          movie.promotionalElements.teaser_link = promotionalElement;
+          movie.promotional.teaser_link = spreadSheetRow[SpreadSheetMovie.pitchTeaserLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -687,14 +631,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
+        // TODO issue #3091
+        /*
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Scenario link',
-            media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
-          });
           // TODO issue#3091
-          movie.promotionalElements.scenario = promotionalElement;
+          movie.promotional.scenario = spreadSheetRow[SpreadSheetMovie.scenarioLink];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -703,27 +645,27 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
+          const movieStatus = staticConsts['productionStatus'][spreadSheetRow[SpreadSheetMovie.productionStatus]];
           if (movieStatus) {
-            movie.main.status = movieStatus;
+            movie.productionStatus = movieStatus;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.status',
+              field: 'movie.productionStatus',
               name: 'Production status',
               reason: 'Production status could not be parsed',
               hint: 'Edit corresponding sheet field.'
             });
           }
         } else {
-          movie.main.status = getCodeIfExists('MOVIE_STATUS', 'finished');
+          movie.productionStatus = "finished";
           importErrors.errors.push({
             type: 'warning',
-            field: 'movie.main.status',
+            field: 'movie.productionStatus',
             name: 'Production status',
             reason: 'Production status not found, assumed "Completed"',
             hint: 'Edit corresponding sheet field.'
@@ -740,30 +682,30 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD');
+                movie.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD');
                 break;
               case '€':
               default:
-                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
+                movie.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
                 break;
             }
 
-            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
+            movie.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
-            movie.budget.totalBudget = createPrice({
+            movie.totalBudget = createPrice({
               amount: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
             });
           }
         }
 
-        movie.budget.boxOffice = [];
+        movie.boxOffice = [];
         // WORLDWIDE BOX OFFICE
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
           spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
-            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as UnitBoxValue);
+            const unit = getKeyIfExists(staticConsts.unitBox, boxOfficeParts[0] as UnitBoxValue);
             if (unit) {
-              movie.budget.boxOffice.push(createBoxOffice(
+              movie.boxOffice.push(createBoxOffice(
                 {
                   unit,
                   value: boxOfficeParts[1] ? parseInt(boxOfficeParts[1], 10) : 0,
@@ -773,7 +715,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'movie.budget.boxOffice',
+                field: 'movie.boxOffice',
                 name: 'WorldWide Box office',
                 reason: `Could not parse worldwide box office UnitBox : ${boxOfficeParts[0].trim()}`,
                 hint: 'Edit corresponding sheet field.'
@@ -789,9 +731,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as UnitBoxValue);
+              const unit = getKeyIfExists(staticConsts.unitBox, boxOfficeParts[1] as UnitBoxValue);
               if (unit) {
-                movie.budget.boxOffice.push(createBoxOffice(
+                movie.boxOffice.push(createBoxOffice(
                   {
                     unit,
                     value: boxOfficeParts[2] ? parseInt(boxOfficeParts[2], 10) : 0,
@@ -801,7 +743,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               } else {
                 importErrors.errors.push({
                   type: 'warning',
-                  field: 'movie.budget.boxOffice',
+                  field: 'movie.boxOffice',
                   name: 'Box office',
                   reason: `Could not parse national box office UnitBox : ${boxOfficeParts[1].trim()}`,
                   hint: 'Edit corresponding sheet field.'
@@ -810,7 +752,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.budget.boxOffice',
+                field: 'movie.boxOffice',
                 name: 'National Box office',
                 reason: `Could not parse box office territory : ${boxOfficeParts[0].trim()}`,
                 hint: 'Edit corresponding sheet field.'
@@ -827,7 +769,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //     media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]), // @TODO (##2987)
         //     ratio: 'rectangle'
         //   });
-        //   movie.main.banner = promotionalElement;
+        //   movie.banner = promotionalElement;
         // } else {
         //   importErrors.errors.push({
         //     type: 'warning',
@@ -841,12 +783,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // TODO issue #3091
         // IMAGE STILLS LINK
         // if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
-        //   movie.promotionalElements.still_photo = {};
+        //   movie.promotional.still_photo = {};
         //   for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
         //     const media = await this.imageUploader.upload(still);
         //     const element = createPromotionalImage({ label: 'Still', media });
-        //     const stillPhotoKey = `${Object.keys(movie.promotionalElements.still_photo).length}`
-        //     movie.promotionalElements.still_photo[stillPhotoKey] = element;
+        //     const stillPhotoKey = `${Object.keys(movie.promotional.still_photo).length}`
+        //     movie.promotional.still_photo[stillPhotoKey] = element;
         //   }
         // } else {
         //   importErrors.errors.push({
@@ -859,13 +801,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // }
 
         // PRESENTATION DECK
-        if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
-          const promotionalElement = createPromotionalHostedMedia({
-            label: 'Presentation deck',
-            media: spreadSheetRow[SpreadSheetMovie.presentationDeck],
-          });
+        // TODO issue #3091
+        /*if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
           // TODO issue#3091
-          movie.promotionalElements.presentation_deck = promotionalElement;
+          movie.promotional.presentation_deck = spreadSheetRow[SpreadSheetMovie.presentationDeck];
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -874,7 +813,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         //////////////////
         // FESTIVAL FIELDS
@@ -935,11 +874,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetMovie.scoring]) {
             const scoring = getCodeIfExists('SCORING', spreadSheetRow[SpreadSheetMovie.scoring]);
             if (scoring) {
-              movie.salesInfo.scoring = scoring;
+              movie.scoring = scoring;
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'salesInfo.scoring',
+                field: 'scoring',
                 name: 'Scoring',
                 reason: `${spreadSheetRow[SpreadSheetMovie.scoring]} not found in scoring list`,
                 hint: 'Edit corresponding sheet field.'
@@ -949,50 +888,50 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
           // STORE TYPE
           if (spreadSheetRow[SpreadSheetMovie.storeType]) {
-            const key = getKeyIfExists(storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
+            const key = getKeyIfExists(staticConsts.storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
             if (key) {
-              movie.main.storeConfig.storeType = key;
+              movie.storeConfig.storeType = key;
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.storeConfig.storeType',
+                field: 'movie.storeConfig.storeType',
                 name: 'Movie store type',
                 reason: `Could not parse store type : ${spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase()}`,
                 hint: 'Edit corresponding sheet field.'
               });
             }
           } else {
-            movie.main.storeConfig.storeType = 'line_up';
+            movie.storeConfig.storeType = 'line_up';
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.storeConfig.storeType',
+              field: 'movie.storeConfig.storeType',
               name: 'Movie store type',
-              reason: `Store type not found, assumed "${storeType.line_up}"`,
+              reason: `Store type not found, assumed "${staticConsts.storeType.line_up}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
 
           // MOVIE STATUS
           if (spreadSheetRow[SpreadSheetMovie.movieStatus]) {
-            const key = getKeyIfExists(storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
+            const key = getKeyIfExists(staticConsts.storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
             if (key) {
-              movie.main.storeConfig.status = key;
+              movie.storeConfig.status = key;
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'movie.main.storeConfig.status',
+                field: 'movie.storeConfig.status',
                 name: 'Movie store status',
                 reason: `Could not parse store status : ${spreadSheetRow[SpreadSheetMovie.movieStatus].trim().toLowerCase()}`,
                 hint: 'Edit corresponding sheet field.'
               });
             }
           } else {
-            movie.main.storeConfig.status = 'draft';
+            movie.storeConfig.status = 'draft';
             importErrors.errors.push({
               type: 'warning',
-              field: 'movie.main.storeConfig.status',
+              field: 'movie.storeConfig.status',
               name: 'Movie store status',
-              reason: `Store status not found, assumed "${storeStatus.draft}"`,
+              reason: `Store status not found, assumed "${staticConsts.storeStatus.draft}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
@@ -1040,51 +979,41 @@ export class ViewExtractedMoviesComponent implements OnInit {
     // REQUIRED FIELDS
     //////////////////
 
-    if (!movie.main.internalRef) {
+    if (!movie.internalRef) {
       errors.push({
         type: 'error',
-        field: 'main.internalRef',
+        field: 'internalRef',
         name: 'Film Code ',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.main.title.original) {
+    if (!movie.title.original) {
       errors.push({
         type: 'error',
-        field: 'main.title.original',
+        field: 'title.original',
         name: 'Original title',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.main.productionYear) {
+    if (movie.directors.length === 0) {
       errors.push({
         type: 'error',
-        field: 'main.productionYear',
-        name: 'Production Year',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.main.directors.length === 0) {
-      errors.push({
-        type: 'error',
-        field: 'main.directors',
+        field: 'directors',
         name: 'Directors',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
-    
+
     // TODO issue #3091
-    // if (!movie.main.poster) {
+    // if (!movie.poster) {
     //   errors.push({
     //     type: 'error',
-    //     field: 'main.poster',
+    //     field: 'poster',
     //     name: 'Poster',
     //     reason: 'Required field is missing',
     //     hint: 'Add poster URL in corresponding column.'
@@ -1095,20 +1024,20 @@ export class ViewExtractedMoviesComponent implements OnInit {
     // OPTIONAL FIELDS
     //////////////////
 
-    if (!movie.main.title.international) {
+    if (!movie.title.international) {
       errors.push({
         type: 'warning',
-        field: 'main.title.international',
+        field: 'title.international',
         name: 'International title',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.main.totalRunTime) {
+    if (!movie.runningTime) {
       errors.push({
         type: 'warning',
-        field: 'main.totalRunTime',
+        field: 'runningTime',
         name: 'Total Run Time',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1116,141 +1045,141 @@ export class ViewExtractedMoviesComponent implements OnInit {
     }
 
     let stakeholdersCount = 0;
-    Object.keys(movie.main.stakeholders).forEach(k => { stakeholdersCount += k.length });
+    Object.keys(movie.stakeholders).forEach(k => { stakeholdersCount += k.length });
     if (stakeholdersCount === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.stakeholders',
+        field: 'stakeholders',
         name: 'Stakeholder(s)',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.salesInfo.color) {
+    if (!movie.color) {
       errors.push({
         type: 'warning',
-        field: 'salesInfo.color',
+        field: 'color',
         name: 'Color / Black & White ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.main.originCountries.length === 0) {
+    if (movie.originCountries.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.originCountries',
+        field: 'originCountries',
         name: 'Countries of origin',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (!movie.salesInfo.certifications) {
+    if (!movie.certifications) {
       errors.push({
         type: 'warning',
-        field: 'salesInfo.certifications',
+        field: 'certifications',
         name: 'Certifications',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.salesInfo.rating.length === 0) {
+    if (movie.rating.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesInfo.rating',
+        field: 'rating',
         name: 'Rating',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.salesCast.cast.length === 0) {
+    if (movie.cast.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesCast.cast',
+        field: 'cast',
         name: "Principal Cast",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
       });
     }
 
-    if (!movie.story.synopsis) {
+    if (!movie.synopsis) {
       errors.push({
         type: 'warning',
-        field: 'movie.story.synopsis',
+        field: 'movie.synopsis',
         name: 'Synopsis',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.main.genres.length === 0) {
+    if (movie.genres.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.genres',
+        field: 'genres',
         name: 'Genres',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.festivalPrizes.prizes.length === 0) {
+    if (movie.customPrizes.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'festivalPrizes.prizes',
+        field: 'prizes',
         name: 'Festival Prizes',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.promotionalDescription.keyAssets.length === 0) {
+    if (movie.keyAssets.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'promotionalDescription.keyAssets',
+        field: 'keyAssets',
         name: 'Key assets',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.promotionalDescription.keywords.length === 0) {
+    if (movie.keywords.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'promotionalDescription.keywords',
+        field: 'keywords',
         name: 'Keywords',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.main.originalLanguages.length === 0) {
+    if (movie.originalLanguages.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.originalLanguages',
+        field: 'originalLanguages',
         name: 'Languages',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.versionInfo.languages === {}) {
+    if (movie.languages === {}) {
       errors.push({
         type: 'warning',
-        field: 'versionInfo.languages',
+        field: 'languages',
         name: 'Dubbings | Subtitles | Captions ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    if (movie.budget.totalBudget === undefined) {
+    if (movie.totalBudget === undefined) {
       errors.push({
         type: 'warning',
-        field: 'budget.totalBudget',
+        field: 'totalBudget',
         name: 'Budget',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1262,10 +1191,10 @@ export class ViewExtractedMoviesComponent implements OnInit {
     //////////////////
 
     if (this.isUserBlockframesAdmin) {
-      if (!movie.salesInfo.scoring) {
+      if (!movie.scoring) {
         errors.push({
           type: 'warning',
-          field: 'salesInfo.scoring',
+          field: 'scoring',
           name: 'Scoring',
           reason: 'Optional field is missing',
           hint: 'Edit corresponding sheet field.'

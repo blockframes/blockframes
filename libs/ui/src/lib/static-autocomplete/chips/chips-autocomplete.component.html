@@ -1,18 +1,25 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" (focusout)="focusOut()">
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+    {{ required ? ' *' : '' }}
+  </mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
-        {{ getLabel(value) }}
+        {{ value | translateSlug: scope }}
         <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
-      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
       (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
   <mat-hint>
-    <ng-content></ng-content>
+    <ng-content select="mat-hint"></ng-content>
   </mat-hint>
+  <mat-error>
+    <ng-content select="mat-error"></ng-content>
+  </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
   <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item['slug']">

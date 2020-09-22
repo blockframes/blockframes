@@ -80,6 +80,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
       sheetRange = 'A10:AD100';
     }
     this.sheets = importSpreadsheet(bytes, sheetRange);
+    this.cdRef.markForCheck();
   }
 
   next(): void {
@@ -89,6 +90,7 @@ export class ImportSpreadsheetComponent implements OnInit, OnDestroy {
 
   removeFile() {
     this.sheets = [];
+    this.excelForm.reset();
   }
 
   public openIntercom(): void {

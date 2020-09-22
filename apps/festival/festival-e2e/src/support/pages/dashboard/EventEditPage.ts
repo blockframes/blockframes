@@ -1,8 +1,11 @@
-import FestivalDashboardHomePage from './FestivalDashboardHomePage';
+﻿import FestivalDashboardHomePage from './FestivalDashboardHomePage';
 
 export default class EventEditPage {
   constructor() {
-    cy.get('event-edit')
+    cy.scrollTo(0, 500, {ensureScrollable: false});
+    cy.wait(1000);
+    cy.scrollTo(0, 100, {ensureScrollable: false});
+    cy.get('event-edit', {timeout: 90000})
   }
 
   addEventTitle(title: string) {
@@ -27,7 +30,8 @@ export default class EventEditPage {
   }
 
   selectMovie(movieName: string) {
-    cy.get('event-edit mat-select[formControlName=titleId]').click();
+    cy.get('event-edit mat-select[formControlName=titleId]', {timeout: 99000})
+      .click();
     cy.get('mat-option').contains(movieName).click();
   }
 
@@ -50,8 +54,13 @@ export default class EventEditPage {
   }
 
   saveEvent() {
-    cy.get('button[test-id=event-save]').click();
-    cy.wait(500);
+    cy.get('button[test-id=event-save]', {timeout: 1000}).click();
+    cy.wait(2000);
+  }
+
+  clickMoreDetails() {
+    cy.get('button[test-id=more-details]', {timeout: 1000}).click();
+    cy.wait(1000);
   }
 
   goToDashboard() {

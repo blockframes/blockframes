@@ -1,7 +1,4 @@
 import {
-  MovieStatusSlug,
-  ResourceRatioSlug,
-  ResourceSizesSlug,
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
@@ -12,12 +9,17 @@ import {
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
-  GenresSlug
+  GenresSlug,
+  ContentType,
+  ProductionStatus,
+  StoreStatus,
+  StoreType,
+  PremiereType,
+  UnitBox,
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
-import { ImgRef, HostedMedia, ExternalMedia } from "@blockframes/media/+state/media.firestore";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
@@ -25,59 +27,205 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO issue#2582
 
+//////////////////
+// MOVIE OBJECT //
+//////////////////
+
+/** Generic interface of a Movie */
+interface MovieRaw<D> {
+  // Every field concerning the document
+  _type: 'movies';
+  _meta?: DocumentMeta;
+  id: string;
+  documents: MovieLegalDocuments;
+
+  // Only section left
+  promotional: MoviePromotionalElements;
+
+  // Every field concerning the movie
+  banner?: string;
+  boxOffice?: BoxOffice[],
+  cast?: Cast[],
+  certifications?: CertificationsSlug[],
+  color?: ColorsSlug,
+  contentType: ContentType; //! required
+  crew?: Crew[],
+  directors: Director[], //! required
+  estimatedBudget?: NumberRange,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  genres: GenresSlug[], //! required
+  customGenres?: string[],
+  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
+  // TODO we will need more visibility on the upload part to take the final decision
+  // TODO we also need to consider how to differentiate full movies from trailer
+  hostedVideo?: string;
+  internalRef?: string,
+  isOriginalVersionAvailable: boolean;
+  keyAssets?: string,
+  keywords?: string[],
+  languages?: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+  logline?: string,
+  originalLanguages: LanguagesSlug[], //! required
+  originalRelease?: MovieOriginalReleaseRaw<D>[],
+  originCountries: TerritoriesSlug[], //! required
+  poster?: string;
+  prizes?: Prize[],
+  customPrizes: Prize[],
+  producers?: Producer[],
+  productionStatus?: ProductionStatus,
+  rating?: MovieRating[],
+  release: MovieRelease, //! required
+  review?: MovieReview[],
+  runningTime?: MovieRunningTime;
+  scoring?: ScoringSlug,
+  soundFormat?: SoundFormatSlug,
+  stakeholders?: MovieStakeholders,
+  storeConfig: StoreConfig, //! required
+  synopsis: string, //! required
+  title: Title, //! required
+  totalBudget?: Price,
+}
+
+/** Document model of a Movie */
+export interface MovieDocument extends MovieRaw<Timestamp> {
+}
+
+/** Document model of a Movie with Dates (type Date) */
+export interface MovieDocumentWithDates extends MovieRaw<Date> {
+}
+
+/** Public interface of a movie (to notifications). */
+export interface PublicMovie {
+  id: string;
+  title: Title;
+}
+
+////////////////////
+// MOVIE SECTIONS //
+////////////////////
+
+export interface MoviePromotionalElements {
+  clip_link: string,
+  moodboard: string,
+  notes: string,
+  presentation_deck: string,
+  promo_reel_link: string,
+  scenario: string,
+  screener_link: string,
+  still_photo: Record<string, string>,
+  teaser_link: string,
+  trailer_link: string,
+  other_links: OtherLink[];
+}
+
+////////////////////
+// MOVIE DETAILS //
+////////////////////
+
 type Timestamp = firestore.Timestamp;
 
-export const workType = {
-  feature_film: 'Feature Film',
-  short: 'Short',
-  serie: 'Serie',
-  season: 'Season',
-  volume: 'Volume',
-  episode: 'Episode',
-  collection: 'Collection',
-  tv_film: 'TV Film',
-  flow: 'Flow'
-} as const;
+export interface StoreConfig {
+  status: StoreStatus,
+  storeType: StoreType,
+  appAccess: MovieAppAccess
+}
 
-export type WorkType = keyof typeof workType;
-export type WorkTypeValue = typeof workType[WorkType];
+export interface Prize {
+  name: string,
+  year: number,
+  prize?: string,
+  logo?: string,
+  premiere?: PremiereType,
+}
 
-export const storeType = {
-  library: 'Library',
-  line_up: 'Line-Up',
-} as const;
+export interface Title {
+  original: string;
+  international?: string;
+}
 
-export type StoreType = keyof typeof storeType;
-export type StoreTypeValue = typeof storeType[StoreType];
+export interface BoxOffice {
+  unit: UnitBox,
+  value: number,
+  territory: TerritoriesSlug,
+}
 
-export const premiereType = {
-  international: 'International',
-  world: 'World',
-  market: 'Market',
-  national: 'National',
-} as const;
+export interface MovieLanguageSpecification {
+  // The original version is a gross version of the movie, without dubbed, subtitle, etc.
+  // So for example if a movie has 2 original languages, we will hear the two languages in the movie, without dubbed for one of the language
+  // In the form, we don't care of the language for the original version parameter.
+  // If this version is available, so every languages registered in the originalLanguage field will have a `original: true` data here.
+  original: boolean;
+  dubbed: boolean;
+  subtitle: boolean;
+  caption: boolean;
+}
 
-export type PremiereType = keyof typeof premiereType;
-export type PremiereTypeValue = typeof premiereType[PremiereType];
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 
-export const unitBox = {
-  boxoffice_dollar: 'Box Office in $',
-  boxoffice_euro: 'Box Office in €',
-  admissions: 'Admissions',
-} as const;
 
-export type UnitBox = keyof typeof unitBox;
-export type UnitBoxValue = typeof unitBox[UnitBox];
+export interface MovieOriginalReleaseRaw<D> {
+  date: D;
+  country: TerritoriesSlug;
+  media?: MediasSlug
+}
 
-export const storeStatus = {
-  submitted: 'Submitted',
-  accepted: 'Accepted',
-  draft: 'Draft',
-  refused: 'Refused',
-} as const;
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 
-export type StoreStatus = keyof typeof storeStatus;
-export type StoreStatusValue = typeof storeStatus[StoreStatus];
+export interface MovieRating {
+  country: TerritoriesSlug;
+  reason?: string,
+  system?: RatingSlug,
+  value: string,
+}
+
+export interface MovieReview {
+  criticName?: string,
+  journalName?: string,
+  criticQuote?: string,
+  revueLink?: string,
+}
+
+export interface DocumentMeta {
+  createdBy: string;
+  updatedBy?: string,
+  deletedBy?: string
+}
+
+export interface MovieLegalDocuments {
+  chainOfTitles: LegalDocument[],
+}
+
+export interface MovieStakeholders {
+  productionCompany: Stakeholder[];
+  coProductionCompany: Stakeholder[];
+  broadcasterCoproducer: Stakeholder[];
+  lineProducer: Stakeholder[];
+  distributor: Stakeholder[];
+  salesAgent: Stakeholder[];
+  laboratory: Stakeholder[];
+  financier: Stakeholder[];
+}
+
+export interface MovieRelease {
+  year: number,
+  status: string,
+}
+
+export interface MovieRunningTime {
+  time: number | string,
+  status: string,
+}
+
+export interface OtherLink {
+  name: string;
+  url: string;
+}
+
+/////////////////////
+// MOVIE ANALYTICS //
+/////////////////////
 
 export interface MovieEventAnalytics {
   event_date: string,
@@ -101,246 +249,3 @@ export interface MovieAnalytics {
     past: MovieEventAnalytics[]
   }
 }
-
-export interface StoreConfig {
-  status: StoreStatus,
-  storeType: StoreType,
-  appAccess: MovieAppAccess
-}
-
-export interface MoviePromotionalDescription {
-  keyAssets: string,
-  keywords: string[],
-}
-
-export interface Prize {
-  name: string,
-  year: number,
-  prize?: string,
-  logo?: ImgRef,
-  premiere?: PremiereType,
-}
-
-export interface PromotionalElement {
-  label: string;
-}
-
-export interface PromotionalExternalMedia extends PromotionalElement {
-  media: ExternalMedia,
-}
-
-export interface PromotionalHostedMedia extends PromotionalElement {
-  media: HostedMedia,
-}
-
-export interface PromotionalImage extends PromotionalElement {
-  size?: ResourceSizesSlug,
-  ratio?: ResourceRatioSlug,
-  media: ImgRef,
-}
-
-export interface MoviePromotionalElements {
-  still_photo: Record<string, PromotionalImage>,
-
-  presentation_deck: PromotionalHostedMedia,
-  scenario: PromotionalHostedMedia,
-
-  promo_reel_link: PromotionalExternalMedia,
-  screener_link: PromotionalExternalMedia,
-  trailer_link: PromotionalExternalMedia,
-  teaser_link: PromotionalExternalMedia,
-}
-
-export interface Title {
-  original: string;
-  international?: string;
-}
-
-export interface MovieStory {
-  synopsis: string,
-  logline: string,
-}
-
-export interface MovieSalesCast {
-  producers: Producer[],
-  cast: Cast[],
-  crew: Crew[],
-}
-
-export interface MovieFestivalPrizes {
-  prizes: Prize[]
-}
-
-export interface BoxOffice {
-  unit: UnitBox,
-  value: number,
-  territory: TerritoriesSlug,
-}
-
-export interface MovieBudget {
-  /**
-   * @dev If the budget is fixed, we use totalBudget
-   */
-  totalBudget?: Price,
-  /**
-   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
-   * @see BUDGET_LIST for possible values
-   * */
-  estimatedBudget?: NumberRange,
-  /** @dev More information needed. What is this about ? */
-  boxOffice?: BoxOffice[],
-}
-
-export const movieLanguageTypes = {
-  original: 'Original',
-  dubbed: 'Dubbed',
-  subtitle: 'Subtitle',
-  caption: 'Caption',
-} as const;
-
-export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
-export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
-
-export interface MovieLanguageSpecification {
-  original: boolean;
-  dubbed: boolean;
-  subtitle: boolean;
-  caption: boolean;
-}
-
-export interface MovieOriginalReleaseRaw<D> {
-  date: D;
-  country: TerritoriesSlug;
-  media?: MediasSlug
-}
-
-export interface MovieRating {
-  country: TerritoriesSlug;
-  reason?: string,
-  system?: RatingSlug,
-  value: string,
-}
-
-export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
-
-export interface MovieOfficialIds {
-  isan: string;
-  eidr: string;
-  imdb?: string;
-  custom?: string;
-  internal?: string;
-}
-
-export interface MovieMain {
-  internalRef?: string,
-  title: Title,
-  directors?: Credit[], // TODO issue#3179
-  officialIds?: MovieOfficialIds,
-  productionYear?: number,
-  genres?: GenresSlug[],
-  customGenres?: string[],
-  originCountries?: TerritoriesSlug[],
-  originalLanguages?: LanguagesSlug[],
-  status?: MovieStatusSlug,
-  stakeholders?: MovieStakeholders,
-  shortSynopsis?: string,
-  workType?: WorkType;
-  storeConfig?: StoreConfig;
-  totalRunTime?: number | string;
-  banner: PromotionalImage;
-  poster: PromotionalImage;
-}
-
-interface MovieSalesInfoRaw<D> {
-  broadcasterCoproducers: string[],
-  certifications: CertificationsSlug[],
-  color: ColorsSlug,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
-  originalRelease: MovieOriginalReleaseRaw<D>[],
-  physicalHVRelease: D,
-  rating: MovieRating[],
-  releaseYear: number,
-  scoring: ScoringSlug,
-  soundFormat?: SoundFormatSlug,
-}
-
-export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
-}
-
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
-}
-
-export interface MovieReview {
-  criticName?: string,
-  journalName?: string,
-  criticQuote?: string,
-  revueLink?: string,
-  publicationDate?: Date;
-}
-
-export interface DocumentMeta {
-  createdBy: string;
-  updatedBy?: string,
-  deletedBy?: string
-}
-
-/** Generic interface of a Movie */
-interface MovieRaw<D> {
-  _type: 'movies';
-  _meta?: DocumentMeta;
-  id: string;
-  documents: MovieLegalDocuments;
-
-  // Sections
-  main: MovieMain;
-  story: MovieStory;
-  promotionalElements: MoviePromotionalElements;
-  promotionalDescription: MoviePromotionalDescription;
-  salesCast: MovieSalesCast;
-  salesInfo: MovieSalesInfoRaw<D>;
-  versionInfo: MovieVersionInfo;
-  festivalPrizes: MovieFestivalPrizes;
-  budget: MovieBudget;
-  movieReview: MovieReview[];
-
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
-}
-
-export interface MovieLegalDocuments {
-  chainOfTitles: LegalDocument[],
-}
-
-export interface MovieVersionInfo {
-  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
-}
-
-/** Document model of a Movie */
-export interface MovieDocument extends MovieRaw<Timestamp> {
-}
-
-/** Document model of a Movie with Dates (type Date) */
-export interface MovieDocumentWithDates extends MovieRaw<Date> {
-}
-
-/** Public interface of a movie (to notifications). */
-export interface PublicMovie {
-  id: string;
-  title: Title;
-}
-
-export interface MovieStakeholders {
-  executiveProducer: Stakeholder[];
-  coProducer: Stakeholder[];
-  broadcasterCoproducer: Stakeholder[];
-  lineProducer: Stakeholder[];
-  distributor: Stakeholder[];
-  salesAgent: Stakeholder[];
-  laboratory: Stakeholder[];
-  financier: Stakeholder[];
-}
-
-export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;

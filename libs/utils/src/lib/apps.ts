@@ -2,11 +2,11 @@
  * Apps definition
  */
 import { OrganizationDocument, OrganizationDocumentWithDates } from "@blockframes/organization/+state/organization.firestore";
-import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
-import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { StoreStatus } from "./static-model";
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 import { appUrl } from "@env";
 
-export const app = ['catalog', 'festival'] as const;
+export const app = ['catalog', 'festival', 'financiers'] as const;
 export type App = typeof app[number];
 
 export const module = ['dashboard', 'marketplace'] as const;
@@ -15,13 +15,15 @@ export type Module = typeof module[number];
 export const appName = {
   catalog: 'Archipel Content',
   festival: 'Archipel Market',
+  financiers: 'Media Financiers',
   blockframes: 'Blockframes',
   crm: 'Blockframes CRM'
 };
 
-export const sendgridEmailsFrom = {
+export const sendgridEmailsFrom: Record<App | 'default', EmailJSON> = {
   catalog: { email: 'team@archipelcontent.com', name: 'Archipel Content' },
   festival: { email: 'team@archipelmarket.com', name: 'Archipel Market' },
+  financiers: { email: 'team@mediafinanciers.com', name: 'Media Financiers' },
   default: { email: 'team@cascade8.com', name: 'Cascade 8' }
 } as const;
 
@@ -31,7 +33,8 @@ export type MovieAppAccess = Record<App, boolean>;
 
 export const applicationUrl: Record<App, string> = {
   festival: appUrl.market,
-  catalog: appUrl.content
+  catalog: appUrl.content,
+  financiers: appUrl.financiers
 }
 
 export function getCurrentApp(routerQuery: any): App {
@@ -52,7 +55,7 @@ export function getCurrentModule(path: string): Module | 'landing' {
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
-    appAccess[a] = createModuleAccess(_appAccess[a] ? _appAccess[a] : {});
+    appAccess[a] = createModuleAccess(_appAccess[a]);
   }
   return appAccess;
 }
@@ -89,7 +92,7 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
   const allowedApps = {} as Record<App, boolean>;
   for (const a of app) {
     for (const m of module) {
-      if (org.appAccess[a][m]) {
+      if (org.appAccess[a]?.[m]) {
         allowedApps[a] = true;
       }
     }
@@ -108,8 +111,8 @@ export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocument
 
 /**
  * Returns the modules an org have access to for a particular app or for all apps
- * @param org 
- * @param a 
+ * @param org
+ * @param a
  * @example
  * // we don't know in witch app the module is
  * getOrgModuleAccess(orgA); // ['dashboard', 'marketplace']
@@ -120,14 +123,14 @@ export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocum
 
   if (_a) {
     for (const m of module) {
-      if (org.appAccess[_a][m]) {
+      if (org.appAccess[_a]?.[m]) {
         allowedModules[m] = true;
       }
     }
   } else {
     for (const a of app) {
       for (const m of module) {
-        if (org.appAccess[a][m]) {
+        if (org.appAccess[a]?.[m]) {
           allowedModules[m] = true;
         }
       }
@@ -148,7 +151,7 @@ export function getMoviePublishStatus(a: App): StoreStatus {
  * Returns the "from" email that should be used depending on the current app
  * @param a
  */
-export function getSendgridFrom(a?: App): EmailData {
+export function getSendgridFrom(a?: App): EmailJSON {
   if (!a) {
     return sendgridEmailsFrom.default;
   } else {

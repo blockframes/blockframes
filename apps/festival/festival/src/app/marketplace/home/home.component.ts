@@ -2,8 +2,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 
 // Blockframes
-import { MovieQuery, MovieMain, MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 // RxJs
 import { Observable, Subscription } from 'rxjs';
@@ -11,6 +12,7 @@ import { map } from 'rxjs/operators';
 
 // env
 import { centralOrgID } from '@env';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface CarouselSection {
   title: string;
@@ -36,20 +38,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private organizationService: OrganizationService) { }
+    private organizationService: OrganizationService,
+    private dynTitle: DynamicTitleService,
+  ) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Home');
     this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
-    const selectMovies = (status: MovieMain['status']) => {
+    const selectMovies = (status: Movie['productionStatus']) => {
       return this.movieQuery.selectAll({
-        filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival && movies.main.storeConfig.status === "accepted"
+        filterBy: movies => movies.productionStatus === status && movies.storeConfig.appAccess.festival && movies.storeConfig.status === "accepted"
       });
     }
     this.sections = [
       {
         title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig?.status === 'accepted' && movie.main.storeConfig.appAccess.festival })
+        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(
+          map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year'))),
+        )
       },
       {
         title: 'In production',
@@ -63,8 +70,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       {
         title: 'In development',
-        movieCount$: selectMovies('financing').pipe(map(movies => movies.length)),
-        movies$: selectMovies('financing')
+        movieCount$: selectMovies('development').pipe(map(movies => movies.length)),
+        movies$: selectMovies('development')
       },
     ];
 
@@ -72,7 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .valueChanges(ref => ref
         .where('appAccess.festival.dashboard', '==', true)
         .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID)));
+      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
 
     this.featuredOrg$ = this.orgs$.pipe(
       map(orgs => orgs.filter(org => org.movieIds.length > 3)),

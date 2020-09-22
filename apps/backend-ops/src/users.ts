@@ -3,17 +3,33 @@
  *
  * This module provides functions to trigger a firestore restore and test user creations.
  */
-import { UserConfig, USERS } from './assets/users.fixture';
 import { differenceBy } from 'lodash';
-import { Auth, loadAdminServices, UserRecord } from './admin';
-import { sleep } from './tools';
+import { Auth, UserRecord } from './admin';
+import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
+import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
+import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
+import * as env from '@env';
+import { User } from '@blockframes/user/types';
+
+export const { storageBucket } = env.firebase;
+
+export interface UserConfig {
+  uid: string;
+  email: string;
+  password: string;
+
+  [key: string]: any;
+}
+
+export const USER_FIXTURES_PASSWORD = 'blockframes';
 
 /**
  * @param auth  Firestore Admin Auth object
  * @param userConfig
  */
-async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
+async function createUserIfNonexistent(auth: Auth, userConfig: UserConfig): Promise<UserRecord> {
   const { uid, email } = userConfig;
   try {
     console.log('trying to get user:', uid, email);
@@ -32,7 +48,7 @@ async function createUserIfItDoesntExists(auth: Auth, userConfig: UserConfig): P
  * @param auth  Firestore Admin Auth object
  */
 async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
-  const ps = users.map(user => createUserIfItDoesntExists(auth, user));
+  const ps = users.map((user) => createUserIfNonexistent(auth, user));
   return Promise.all(ps);
 }
 
@@ -42,7 +58,7 @@ async function createAllUsers(users: UserConfig[], auth: Auth): Promise<any> {
  * @param expectedUsers
  * @param auth
  */
-async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
+export async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): Promise<any> {
   let pageToken;
 
   do {
@@ -60,19 +76,48 @@ async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): P
     // This is "good enough", but do not reproduce in frontend / backend code.
     for (const user of usersToRemove) {
       console.log('removing user:', user.email, user.uid);
-      await auth.deleteUser(user.uid);
-      await sleep(100);
     }
+    await auth.deleteUsers(usersToRemove.map((user) => user.uid));
+    await sleep(100);
   } while (pageToken);
 
   return;
 }
 
-export async function syncUsers(): Promise<any> {
-  const { auth } = loadAdminServices();
-  const expectedUsers = USERS;
-  await removeUnexpectedUsers(expectedUsers, auth);
-  await createAllUsers(expectedUsers, auth);
+function readUsersFromJsonlFixture(db: JsonlDbRecord[]): UserConfig[] {
+  return db
+    .filter((doc) => doc.docPath.includes('users/'))
+    .filter((userDoc) => 'email' in userDoc.content)
+    .map((userDoc) => ({
+      uid: userDoc.content?.uid,
+      email: userDoc.content?.email,
+      password: USER_FIXTURES_PASSWORD,
+    }));
+}
+
+async function getUsersFromDb(db:FirebaseFirestore.Firestore ) {
+  const usersIterator = getCollectionInBatches<User>(db.collection('users'), 'uid', 300);
+  let output: UserConfig[] = [];
+  for await (const users of usersIterator) {
+    const password = USER_FIXTURES_PASSWORD;
+    const outputChunk = users.map(({ uid, email }) => ({ uid, email, password} ))
+    output = output.concat(outputChunk);
+  }
+  return output;
+}
+
+/**
+ * If `jsonl` param is not provided, the function will read users from local Firestore
+ * @param jsonl optional Jsonl record array (usually from local db backup) to read users from
+ */
+export async function syncUsers(jsonl?: JsonlDbRecord[]): Promise<any> {
+  const { auth, db } = loadAdminServices();
+  await startMaintenance();
+  const expectedUsers = jsonl ? readUsersFromJsonlFixture(jsonl) : await getUsersFromDb(db);
+  await deleteAllUsers(auth);
+  const createResult = await importAllUsers(auth, expectedUsers);
+  console.log(createResult);
+  await endMaintenance();
 }
 
 export async function printUsers(): Promise<any> {
@@ -85,7 +130,7 @@ export async function printUsers(): Promise<any> {
     const users = result.users;
     pageToken = result.pageToken;
 
-    users.forEach(u => {
+    users.forEach((u) => {
       console.log(JSON.stringify(u.toJSON()));
     });
   } while (pageToken);
@@ -95,14 +140,14 @@ export async function clearUsers(): Promise<any> {
   const { auth } = loadAdminServices();
 
   // clear users is equivalent to "we expect no users", we can reuse the code.
-  return removeUnexpectedUsers([], auth);
+  return deleteAllUsers(auth);
 }
 
 function readUsersFromSTDIN(): Promise<UserConfig[]> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false
+    terminal: false,
   });
 
   // We push all the users from stdin to this array.
@@ -113,7 +158,7 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
   return new Promise((resolve, reject) => {
     // read the lines sent from stdin and parse them as JSON.
     // on error, toggle the `failed' flag and ignore all lines, we're going to exit.
-    rl.on('line', line => {
+    rl.on('line', (line) => {
       if (failed || line === '') {
         return;
       }
@@ -142,6 +187,26 @@ function readUsersFromSTDIN(): Promise<UserConfig[]> {
 export async function createUsers(): Promise<any> {
   const { auth } = loadAdminServices();
   const users = await readUsersFromSTDIN();
-  const usersWithPassword = users.map(user => ({ ...user, password: 'password' }));
-  return createAllUsers(usersWithPassword, auth);
+  return createAllUsers(users, auth);
+}
+
+export async function generateWatermarks() {
+  const { db, storage } = loadAdminServices();
+  // activate maintenance to prevent cloud functions to trigger
+  let startedMaintenance = false;
+  if (!(await isInMaintenance(0))) {
+    startedMaintenance = true;
+    await startMaintenance();
+  }
+
+  const users = await db.collection('users').get();
+
+  await runChunks(
+    users.docs,
+    (user) => upsertWatermark(user.data(), storageBucket, storage),
+    env?.['heavyChunkSize'] ?? 10
+  );
+
+  // deactivate maintenance
+  if (startedMaintenance) await endMaintenance();
 }

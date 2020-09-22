@@ -1,4 +1,4 @@
-export interface User {
+﻿export interface User {
   uid: string;
   email: string;
   password: string;
@@ -7,9 +7,14 @@ export interface User {
 }
 
 export interface Organization {
+  id: string;
   name: string;
   email: string;
   address: Location;
+  denomination: {
+    full: string;
+    public: string;
+  }
   activity: string;
   fiscalNumber: string;
   bankAccount: BankAccount;
@@ -46,7 +51,17 @@ export interface Dates {
 }
 
 export interface Movie {
+  id: string;
   title: {
     international: string
   }
+}
+
+export interface Screening {
+  event: string;
+  movie: Partial<Movie>;
+  by: Partial<User>;
+  org: Partial<Organization>;
+  invitees: Partial<User>[];
+  private: boolean;
 }

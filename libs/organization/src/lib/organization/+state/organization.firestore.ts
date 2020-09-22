@@ -1,8 +1,8 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
-import { ImgRef, createImgRef } from '@blockframes/media/+state/media.firestore';
 import { OrgAppAccess, createOrgAppAccess, Module, app } from '@blockframes/utils/apps';
+import { OrgActivity, OrganizationStatus } from '@blockframes/utils/static-model/types';
 
 
 type Timestamp = firestore.Timestamp;
@@ -16,7 +16,7 @@ interface Denomination {
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
-  logo: ImgRef;
+  logo: string;
 }
 
 /** Document model of an Organization */
@@ -38,35 +38,9 @@ interface OrganizationBase<D> extends PublicOrganization {
   wishlist: WishlistBase<D>[];
 }
 
-export const orgActivity = {
-  production: 'Production',
-  intlSales: 'International Sales',
-  distribution: 'Distribution',
-  tvBroadcast: 'Television Broadcast',
-  vodPlatform: 'VOD Platform',
-  theatricalExhibition: 'Theatrical Exhibition',
-  buyersRep: 'Buyer\'s Rep',
-  filmFestival: 'Film Festival',
-  filmFund: 'Film Fund',
-  filmLibrary: 'Film Library',
-  filmCommission: 'Film Commission',
-  financialInstitution: 'Financial Institution',
-  press: 'Press',
-  inflight: 'Inflight',
-} as const;
-
-type OrgActivity = keyof typeof orgActivity | '';
-
 export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
 
 export interface OrganizationDocumentWithDates extends OrganizationBase<Date> { }
-
-/** Status of an Organization, set to pending by default when an Organization is created. */
-export const organizationStatus = {
-  pending: 'Pending',
-  accepted: 'Accepted'
-} as const;
-export type OrganizationStatus = keyof typeof organizationStatus;
 
 export interface AddressSet {
   main: Location;
@@ -124,7 +98,7 @@ export function createOrganizationBase(
     ...params,
     addresses: createAddressSet(params.addresses),
     denomination: createDenomination(params.denomination),
-    logo: createImgRef(params.logo),
+    logo: params.logo ?? '',
     appAccess: createOrgAppAccess(params.appAccess),
   };
 }
@@ -154,6 +128,6 @@ export function orgName(org: PublicOrganization, type: 'public' | 'full' = 'publ
  * This check if org have access to a specific module in at least one app
  * @param org
  */
-export function canAccessModule(module: Module, org: OrganizationDocument) {
+export function canAccessModule(module: Module, org: OrganizationBase<any>) {
   return app.some(a => org.appAccess[a]?.[module])
 }

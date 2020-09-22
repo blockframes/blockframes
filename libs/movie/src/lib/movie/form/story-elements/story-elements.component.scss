@@ -1,0 +1,25 @@
+:host {
+  display: block;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-left: 16px;
+
+  input {
+    width: 100%;
+  }
+}
+
+h3 {
+  margin-bottom: 24px;
+}
+
+mat-divider {
+  margin-top: 36px;
+  margin-bottom: 36px;
+}
+
+h4 {
+  text-transform: uppercase;
+}

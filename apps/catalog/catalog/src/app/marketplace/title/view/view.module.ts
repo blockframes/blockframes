@@ -1,24 +1,14 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { MarketplaceMovieViewComponent } from './view.component';
-
-// Custom Modules
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MovieShellModule } from '@blockframes/movie/marketplace/shell/shell.module';
+import { RouterModule } from '@angular/router';
+import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
-
-// Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 
 const routes = [{
   path: '',
@@ -31,7 +21,23 @@ const routes = [{
     },
     {
       path: 'main',
-      loadChildren: () => import('../main/main.module').then(m => m.MarketplaceMovieMainModule)
+      loadChildren: () => import('@blockframes/movie/marketplace/main/main.module').then(m => m.MovieMainModule)
+    },
+    {
+      path: 'artistic',
+      loadChildren: () => import('@blockframes/movie/marketplace/artistic/artistic.module').then(m => m.MovieArtisticModule)
+    },
+    {
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/marketplace/production/production.module').then(m => m.MovieProductionModule)
+    },
+    {
+      path: 'additional',
+      loadChildren: () => import('@blockframes/movie/marketplace/additional/additional.module').then(m => m.MovieAdditionalModule)
+    },
+    {
+      path: 'finance',
+      loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule)
     },
     {
       path: 'avails',
@@ -44,19 +50,10 @@ const routes = [{
   declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    // Custom Modules
-    ImageReferenceModule,
+    MovieShellModule,
+    MovieHeaderModule,
     WishlistButtonModule,
-    // Material
-    MatCardModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    // Routes
+    PromotionalLinksModule,
     RouterModule.forChild(routes)
   ]
 })

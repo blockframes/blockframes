@@ -1,19 +1,30 @@
 <ng-container *ngIf="steps$ | async as steps">
-  <mat-accordion *ngIf="steps.length">
-    <mat-expansion-panel *ngFor="let panel of steps">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
-          <span>{{ panel.title }}</span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <mat-nav-list dense>
-        <ng-container *ngFor="let route of panel.routes">
-          <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
-            {{ route.label }}
-          </a>
-        </ng-container>
-      </mat-nav-list>
-    </mat-expansion-panel>
-  </mat-accordion>
+  <ng-container *ngFor="let step of steps; let isLast = last">
+    <!-- if step has only one route, use a mat list -->
+    <mat-nav-list *ngIf="step.routes.length === 1; else multipleLinks">
+      <a mat-list-item [routerLink]="step.routes[0].path" routerLinkActive="active">
+        <mat-icon [svgIcon]="step.icon"></mat-icon>
+        <span class="mat-expansion-panel-header-title">{{ step.title }}</span>
+      </a>
+    </mat-nav-list>
+    <mat-divider *ngIf="!isLast"></mat-divider>
+    <ng-template #multipleLinks>
+      <mat-expansion-panel [expanded]="step | stepActive | async">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="margin-override" [svgIcon]="step.icon"></mat-icon>
+            <span>{{ step.title }}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <ng-container *ngFor="let route of step.routes">
+            <a mat-list-item [routerLink]="route.path" routerLinkActive="active" class="vertical-aligned"
+              *ngIf="!(route?.shouldDisplay | async)">
+              {{ route.label }}
+            </a>
+          </ng-container>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </ng-template>
+  </ng-container>
 </ng-container>

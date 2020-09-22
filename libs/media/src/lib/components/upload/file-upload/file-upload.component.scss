@@ -3,13 +3,14 @@
   width: 100%;
 }
 
-bf-img.picture-hover {
+img.picture-hover {
   height: 142px;
   opacity: 0.3;
 }
 
 section {
   height: 100%;
+  width: 100%;
   padding: 24px;
   display: flex;
   align-items: center;
@@ -19,6 +20,12 @@ section {
   border-radius: 5px;
   font-size: 1.5rem;
   transition: border 0.2s ease-in-out;
+  div {
+    flex: 1;
+  }
+}
+section.drop-zone {
+  border: dashed 1px var(--primary);
 }
 
 .upload-button-container {
@@ -26,7 +33,7 @@ section {
     width: 48px;
     height: 55px;
     margin-bottom: 8px;
-    bf-img {
+    img {
       width: 100%;
     }
   }
@@ -49,14 +56,20 @@ mat-progress-bar {
   margin-bottom: 8px;
 }
 
-h3 {
-  margin-bottom: 24px;
-}
-
 button.mat-button {
   margin-top: 24px;
 }
 
-a.mat-body-2 {
+a, .primary-text {
   color: var(--primary);
+  cursor: pointer;
+}
+
+img.file-uploaded {
+  width: 48px;
+  margin-bottom: 8px;
+}
+
+h3 {
+  margin: 0;
 }

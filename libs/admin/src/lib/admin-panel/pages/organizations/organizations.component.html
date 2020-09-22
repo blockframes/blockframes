@@ -3,6 +3,10 @@
 
   <article fxLayout="column" fxLayoutAlign="center center">
     <div fxLayout fxLayoutGap="16px">
+      <button mat-flat-button color="primary" (click)="createOrg()">
+        <span>Create org</span>
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
       <a mat-flat-button color="primary" [href]="'festival' | goToApp:'dashboard':'import'">
         <span>Import orgs</span>
         <mat-icon svgIcon="arrow_downward"></mat-icon>
@@ -14,11 +18,11 @@
     </div>
   </article>
 
-  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="100"
+  <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns" [pageSize]="50"
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
     <ng-template colRef="logo" let-logo>
       <ng-container *ngIf="logo; else nologo">
-        <bf-img class="logo" [ref]="logo" asset="empty_poster.webp"></bf-img>
+        <img class="logo" [ref]="logo" asset="empty_poster.webp">
       </ng-container>
       <ng-template #nologo>
         --

@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform, NgModule } from "@angular/core";
-import { ImgRef } from "@blockframes/media/+state/media.model";
 
 
 @Pipe({
@@ -7,10 +6,10 @@ import { ImgRef } from "@blockframes/media/+state/media.model";
 })
 export class EmptyImagePipe implements PipeTransform {
   transform(
-    image: ImgRef
+    image: string
   ): boolean {
     try {
-      return !image.original.url;
+      return !image;
     } catch (error) {
       console.warn(error);
       return true;

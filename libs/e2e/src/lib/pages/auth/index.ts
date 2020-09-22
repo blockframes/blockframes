@@ -1,7 +1,7 @@
-import AuthLoginPage from "./AuthLoginPage";
-import AuthWelcomePage from "./AuthWelcomePage";
+﻿import AuthLoginPage from "./AuthLoginPage";
+import AuthIdentityPage from "./AuthIdentityPage";
 
 export {
   AuthLoginPage,
-  AuthWelcomePage
+  AuthIdentityPage
 }

@@ -52,11 +52,10 @@ export class InvitationsComponent implements OnInit {
   async ngOnInit() {
     const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent'));
 
-    const orgs = invitations.map(async i => {
-      const invitation: InvitationDetailed = { ...i } as InvitationDetailed;
+    const orgs = invitations.map(async (invitation : InvitationDetailed) => {
       invitation.org = await this.getOrg(getHost(invitation, 'org').id);
       invitation.event = await this.getEvent(invitation.docId);
-      const guestOrgId = getGuest(i, 'user').orgId;
+      const guestOrgId = getGuest(invitation, 'user').orgId;
       if (guestOrgId) {
         invitation.guestOrg = await this.getOrg(guestOrgId);
       }
@@ -88,7 +87,7 @@ export class InvitationsComponent implements OnInit {
       'host organization': orgName(i.org),
       'host org id': i.org.id,
       'event type': i.event.type,
-      'title': i.movie ? i.movie.main.title.international : '--',
+      'title': i.movie ? i.movie.title.international : '--',
       'privacy status': i.event.isPrivate ? 'private' : 'public',
       'invitation date': i.date,
       'guest email': getGuest(i, 'user').email,

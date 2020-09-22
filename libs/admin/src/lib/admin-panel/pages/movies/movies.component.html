@@ -1,9 +1,14 @@
 <main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="rows.length === 0" mat-flat-button color="primary" (click)="exportTable()">
-      <span>Export to CSV</span>
-      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+      <ng-container *ngIf="exporting.$ | async else export">
+        <span>Generating CSV...</span>
+      </ng-container>
+      <ng-template #export>
+        <span>Export to CSV</span>
+        <mat-icon svgIcon="arrow_upward"></mat-icon>
+      </ng-template>
     </button>
   </article>
   <bf-table-filter
@@ -13,44 +18,25 @@
     [filterPredicate]="filterPredicate"
     showFilter
     showLoader
-    [pageSize]="100"
+    [pageSize]="50"
     showPaginator>
-    <ng-template colRef="main.poster" let-posters>
-      <ng-container *ngIf="posters && posters.media as poster;">
-        <bf-img class="poster" [ref]="poster" asset="empty_poster.webp"></bf-img>
+    <ng-template colRef="poster" let-posters>
+      <ng-container *ngIf="posters">
+        <img class="poster" [ref]="posters" asset="empty_poster.webp">
       </ng-container>
     </ng-template>
     <ng-template colRef="id" let-id>
       <span>{{ id }} </span>
       <admin-go-to type="title" [id]="id"></admin-go-to>
     </ng-template>
-    <ng-template colRef="distributionRights" let-distributionRights>
-      {{ distributionRights.length }}
-    </ng-template>
-    <ng-template colRef="distributionRightsInfo" let-distributionRightsInfo>
-      <ng-container *ngIf="distributionRightsInfo.count else noRights">
-        <a [routerLink]="distributionRightsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ distributionRightsInfo.count }})
-      </ng-container>
-      <ng-template #noRights>
-        --
-      </ng-template>
-    </ng-template>
-    <ng-template colRef="contractsInfo" let-contractsInfo>
-      <ng-container *ngIf="contractsInfo.count else noRights">
-        <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ contractsInfo.count }})
-      </ng-container>
-      <ng-template #noRights>
-        --
-      </ng-template>
-    </ng-template>
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
     </ng-template>
-    <ng-template colRef="main.storeConfig.status" let-storeStatus>
-      {{ storeStatus | toLabel: 'storeStatus' | async }}
+    <ng-template colRef="storeConfig.status" let-storeStatus>
+      {{ storeStatus | toLabel: 'storeStatus' }}
     </ng-template>
-    <ng-template colRef="main.storeConfig.storeType" let-storeType>
-      {{ storeType | toLabel: 'storeType' | async }}
+    <ng-template colRef="storeConfig.storeType" let-storeType>
+      {{ storeType | toLabel: 'storeType' }}
     </ng-template>
     <ng-template colRef="org" let-org>
       <a *ngIf="org else noOrg" [routerLink]="['/c/o/admin/panel/organization', org.id]">

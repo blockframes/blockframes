@@ -1,14 +1,16 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { startWith, map, switchMap } from 'rxjs/operators';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
+import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { startWith, map, switchMap, tap, filter } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { staticConsts } from '@blockframes/utils/static-model';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface TitleView {
   id: string; // movieId
@@ -32,14 +34,15 @@ function createTitleView(
   movie: Movie,
   analytics: MovieAnalytics[]
 ): TitleView {
-  const statusLabel = movie.main?.status ? getCodeIfExists('MOVIE_STATUS', movie.main?.status) : '';
+  const statusLabel = movie.productionStatus ? staticConsts['productionStatus'][movie.productionStatus] : '';
+
   return {
     id: movie.id,
-    title: movie.main.title.international,
+    title: movie.title.international,
     view: getMovieTotalViews(analytics, movie.id)?.toString(),
-    director: movie.main.directors,
+    director: movie.directors,
     productionStatus: statusLabel,
-    status: movie.main.storeConfig.status
+    status: movie.storeConfig.status
   };
 }
 
@@ -64,7 +67,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private service: MovieService,
     private orgQuery: OrganizationQuery,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -75,7 +79,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival))
+      filter(movies => !!movies && movies.length >= 1),
+      map(movies => movies.filter(movie => !!movie)),
+      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
+      tap(movies => {
+        !!movies.length ?
+          this.dynTitle.setPageTitle('My titles') :
+          this.dynTitle.setPageTitle('My titles', 'Empty');
+      })
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 

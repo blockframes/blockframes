@@ -6,19 +6,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 // Components
 import { TitleViewComponent } from './view.component';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 
 // Material
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
   path: '',
@@ -26,16 +24,28 @@ const routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'details',
+      redirectTo: 'main',
       pathMatch: 'full'
     },
     {
       path: 'activity',
-      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
+      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule),
+      data: { animation: 0 }
     },
     {
-      path: 'details',
-      loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
+      path: 'main',
+      loadChildren: () => import('@blockframes/movie/dashboard/main/main.module').then(m => m.MovieViewMainModule),
+      data: { animation: 1 }
+    },
+    {
+      path: 'artistic',
+      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+      data: { animation: 2 }
+    },
+    {
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
+      data: { animation: 3 }
     }
   ]
 }];
@@ -50,13 +60,11 @@ const routes = [{
     ToLabelModule,
     TranslateSlugModule,
     DurationModule,
+    DashboardTitleShellModule,
+    DisplayNameModule,
     // Material
-    MatButtonModule,
-    MatIconModule,
-    MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
-    // Routes
+    // Route
     RouterModule.forChild(routes)
   ]
 })

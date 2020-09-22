@@ -47,9 +47,6 @@
     },
     "blockframes-ci": {
       "hosting": {
-        "storybook": [
-          "blockframes-storybook"
-        ],
         "catalog": [
           "blockframes-ci"
         ],
@@ -90,12 +87,9 @@
     },
     "blockframes-francois": {
       "hosting": {
-        "catalog": [
-          "blockframes-francois"
-        ],
-        "festival": [
-          "blockframes-francois"
-        ]
+        "catalog": ["blockframes-francois"],
+        "festival": ["blockframes-francois-festival"],
+        "financiers": ["blockframes-francois-financier"]
       }
     },
     "blockframes-bruce": {
@@ -190,6 +184,9 @@
         ],
         "festival": [
           "blockframes-festival-max"
+        ],
+        "financiers": [
+          "blockframes-max-financiers"
         ]
       }
     },
@@ -203,7 +200,13 @@
     "blockframes-clelia": {
       "hosting": {
         "catalog": [
-          "blockframes-clelia"
+          "catalog-blockframes-clelia"
+        ],
+        "festival": [
+          "festival-blockframes-clelia"
+        ],
+        "crm": [
+          "crm-blockframes-clelia"
         ]
       }
     },
@@ -236,14 +239,17 @@
     },
     "blockframes-george": {
       "hosting": {
-        "storybook": [
-          "blockframes-george-storybook"
-        ],
         "catalog": [
           "blockframes-george"
         ],
         "festival": [
           "blockframes-george-festival"
+        ],
+        "financiers": [
+          "blockframes-george-financiers"
+        ],
+        "crm": [
+          "blockframes-george-crm"
         ]
       }
     },
@@ -252,11 +258,18 @@
         "catalog": [
           "blockframes-mano"
         ],
-        "storybook": [
-          "blockframes-mano-storybook"
-        ],
         "festival": [
           "blockframes-mano-festival"
+        ]
+      }
+    },
+    "blockframes-hugo-2": {
+      "hosting": {
+        "catalog": [
+          "blockframes-hugo-2"
+        ],
+        "festival": [
+          "blockframes-hugo-2"
         ]
       }
     }

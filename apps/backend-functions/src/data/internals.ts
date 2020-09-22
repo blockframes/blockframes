@@ -7,30 +7,18 @@ import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/+state/permissions.firestore';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 import { App, getOrgAppAccess, getSendgridFrom, applicationUrl } from '@blockframes/utils/apps';
-import { EmailData } from '@sendgrid/helpers/classes/email-address';
+import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
+import { getDocument } from '@blockframes/firebase-utils';
 
-export function getCollection<T>(path: string): Promise<T[]> {
-  return db
-    .collection(path)
-    .get()
-    .then(collection => collection.docs.map(doc => doc.data() as T));
-}
-
-export function getDocument<T>(path: string): Promise<T> {
-  return db
-    .doc(path)
-    .get()
-    .then(doc => doc.data() as T);
-}
+export { getDocument };
 
 export function createPublicOrganizationDocument(org: OrganizationDocument) {
   return {
-    id: org.id || '',
+    id: org.id ?? '',
     denomination: createDenomination(org.denomination),
-    logo: createImgRef(org.logo)
+    logo: org.logo ?? '',
   }
 }
 
@@ -38,10 +26,10 @@ export function createPublicUserDocument(user: any = {}) {
   return {
     uid: user.uid,
     email: user.email,
-    avatar: createImgRef(user.avatar),
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    orgId: user.orgId || ''
+    avatar: user.avatar ?? '',
+    firstName: user.firstName ?? '',
+    lastName: user.lastName ?? '',
+    orgId: user.orgId ?? ''
   }
 }
 
@@ -95,7 +83,7 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
 
 /**
  * Return the first app name that an org have access to
- * @param _org 
+ * @param _org
  */
 export async function getOrgAppKey(_org: OrganizationDocument | string): Promise<App> {
   if (typeof _org === 'string') {
@@ -108,7 +96,7 @@ export async function getOrgAppKey(_org: OrganizationDocument | string): Promise
 
 /**
  *  This guess the app from the org app access and returns the url of the app to use
- * @param _org 
+ * @param _org
  */
 export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
   const key = await getOrgAppKey(_org);
@@ -117,10 +105,9 @@ export async function getAppUrl(_org: OrganizationDocument | string): Promise<st
 
 /**
  * This guess the app from the org app access and returns the "from" email address to use
- * @param _org 
+ * @param _org
  */
-export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailData> {
+export async function getFromEmail(_org: OrganizationDocument | string): Promise<EmailJSON> {
   const key = await getOrgAppKey(_org);
   return getSendgridFrom(key);
 }
-

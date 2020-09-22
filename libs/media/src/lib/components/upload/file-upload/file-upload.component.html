@@ -2,10 +2,10 @@
   <input #fileExplorer [accept]="accept" type="file" (change)="selected($event.target.files)" />
 
   <!-- Waiting -->
-  <section *ngSwitchCase="'waiting'">
+  <section *ngSwitchCase="'waiting'" class="drop-zone">
     <label class="upload-button-container">
       <button mat-icon-button aria-label="file upload button" (click)="fileExplorer.click()">
-        <bf-img asset="add_files.webp" alt="upload image"></bf-img>
+        <img asset="add_files.webp" alt="upload image">
       </button>
 
     </label>
@@ -17,27 +17,27 @@
   </section>
 
   <!-- Hovering -->
-  <section *ngSwitchCase="'hovering'">
-    <bf-img asset="add_files.webp" alt="upload image" class="picture-hover"></bf-img>
+  <section *ngSwitchCase="'hovering'" class="drop-zone">
+    <img asset="add_files.webp" alt="upload image" class="picture-hover">
+    <h3>Drop your file here</h3>
   </section>
 
   <!-- Ready -->
   <section *ngSwitchCase="'ready'">
-    <h3>Your file is ready, it will be uploaded when you click on "Save".</h3>
-    <p class="mat-caption">{{ form.fileName.value }}</p>
-    <button mat-mini-fab color="warn">
-      <mat-icon (click)="reset(fileExplorer)" svgIcon="cross" matTooltip="Cancel"></mat-icon>
+    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
+    <h3>{{ form.fileName.value }}</h3>
+    <span class="mat-body-2">{{ localSize }}</span>
+    <button mat-mini-fab color="divider">
+      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
     </button>
   </section>
 
   <!-- File -->
   <section *ngSwitchCase="'file'">
-    <p class="mat-caption">{{ form.fileName.value }}</p>
-    <button mat-mini-fab color="primary">
-      <mat-icon (click)="fileExplorer.click()" svgIcon="document" matTooltip="Change file"></mat-icon>
-    </button>
-    <button mat-mini-fab color="warn">
-      <mat-icon (click)="delete()" svgIcon="trash" matTooltip="Delete"></mat-icon>
+    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
+    <h3>{{ form.fileName.value }}</h3>
+    <button mat-mini-fab color="divider">
+      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
     </button>
   </section>
 

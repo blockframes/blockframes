@@ -7,8 +7,8 @@ import { WishlistButtonModule } from "@blockframes/organization/components/wishl
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Pipes
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
-import { MovieFeatureModule } from '../../pipes/movie-feature.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
+import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 import { MovieImageModule } from './movie-image.pipe';
 
 // Material

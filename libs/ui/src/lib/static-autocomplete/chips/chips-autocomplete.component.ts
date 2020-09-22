@@ -1,4 +1,4 @@
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
+// Angular
 import {
   Component,
   OnInit,
@@ -9,17 +9,23 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
+// RxJs
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { FormList } from '@blockframes/utils/form';
+
+// Blockframes
 import { staticModels } from '@blockframes/utils/static-model';
+import { SlugAndLabel, Scope, getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
+import { boolean } from '@blockframes/utils/decorators/decorators';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
-  selector: '[form][model]chips-autocomplete',
+  selector: '[form][scope]chips-autocomplete',
   templateUrl: './chips-autocomplete.component.html',
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -29,16 +35,23 @@ export class ChipsAutocompleteComponent implements OnInit {
   /**
    * The static model to display
    * @example
-   * <chips-autocomplete model="TERRITORIES" ...
+   * <chips-autocomplete scope="TERRITORIES" ...
    */
-  @Input() model: string;
+  @Input() scope: Scope;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = '';
-
+  @Input() @boolean required: boolean;
+  @Input() withoutValues: string[] = []
   // The parent form to connect to
-  @Input() form: FormList<string>;
+  @Input()
+  get form(): FormList<any> { return this._form }
+  set form(form) {
+    this._form = form
+    this.values$ = form.valueChanges.pipe(startWith(this.form.value));
+  };
+  private _form
 
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
@@ -53,14 +66,14 @@ export class ChipsAutocompleteComponent implements OnInit {
   private items: SlugAndLabel[];
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
-  @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
+  @ViewChild('chipList') chipList: MatChipList;
 
   ngOnInit() {
-    this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
-    this.items = staticModels[this.model];
-
+    this.items = this.withoutValues.length
+      ? (staticModels[this.scope] as SlugAndLabel[]).filter(value => !this.withoutValues.includes(value.slug))
+      : staticModels[this.scope] as SlugAndLabel[];
     if (this.placeholder === '') {
-      this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
+      this.placeholder = `${this.scope[0].toUpperCase()}${this.scope.slice(1).toLowerCase()}`;
     }
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
@@ -78,30 +91,34 @@ export class ChipsAutocompleteComponent implements OnInit {
     });
   }
 
-  public getLabel(value: string) {
-    const item = this.items.find(i => i.slug === value);
-    return item ? item.label : '';
-  }
-
-  /** Add a chip based on the input */
-  public add({ input, value }: MatChipInputEvent) {
-    if (this.matAutocomplete.isOpen) return;
-    if ((value || '').trim()) this.form.add(value);
-    if (input) input.value = '';
+  /** Add a chip based on key code */
+  public add({ value }: MatChipInputEvent) {
+    value.trim();
+    const slugByLabel = getCodeIfExists(this.scope, value)
+    if (value && slugByLabel) {
+      this.form.add(slugByLabel);
+      this.added.emit(value);
+    }
+    this.inputEl.nativeElement.value = ''
     this.ctrl.setValue(null);
   }
 
   /** Select based on the option */
-  public selected({ option }: MatAutocompleteSelectedEvent): void {
+  public selected({ option }: MatAutocompleteSelectedEvent) {
     this.added.emit(option.viewValue);
     this.form.add(option.value);
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
+    this.focusOut();
   }
 
   /** Remove a chip */
   public remove(i: number) {
     this.form.removeAt(i);
     this.removed.emit(i);
+  }
+
+  public focusOut() {
+    this.chipList.errorState = !this.form.valid;
   }
 }

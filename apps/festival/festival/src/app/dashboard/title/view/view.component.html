@@ -2,47 +2,7 @@
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movie$ | async) as movie;">
-  <header fxLayout="row" fxLayoutAlign="start start">
-    <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
-       <ng-container *ngIf="getPoster(movie) as poster">
-        <bf-img class="movie-poster" [ref]="poster" asset="empty_poster.webp" alt="movie poster"></bf-img>
-      </ng-container>
-      <div class="movie-info" fxLayout="column" fxLayoutAlign="start start">
-        <h4>
-          {{ movie.main.workType | toLabel: 'workType' | async }}
-          <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
-          {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
-          <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|
-          {{ movie.main.totalRunTime }} min
-          </ng-container>
-        </h4>
-        <h1>{{ movie.main.title.international }}</h1>
-        <h6>{{ getDirectors(movie) }}</h6>
-        <span>
-          <ng-container *ngFor="let country of movie.main.originCountries">
-            {{ country | translateSlug: 'TERRITORIES'}},
-          </ng-container>
-          <ng-container *ngIf="movie.main.productionYear">
-            {{ movie.main.productionYear }}
-          </ng-container>
-        </span>
-        <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
-          <mat-icon svgIcon="pencil"></mat-icon>
-          <span>Edit</span>
-        </a>
-      </div>
-    </article>
-  </header>
-  <section>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-         *ngFor="let link of navLinks"
-         [routerLink]="link.path"
-         routerLinkActive #rla="routerLinkActive"
-         [active]="rla.isActive">
-        {{link.label}}
-      </a>
-    </nav>
-    <router-outlet></router-outlet>
-  </section>
+
+  <title-dashboard-shell [routes]="navLinks"></title-dashboard-shell>
+
 </ng-container>

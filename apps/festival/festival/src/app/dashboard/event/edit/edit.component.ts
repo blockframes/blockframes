@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { EventForm } from '@blockframes/event/form/event.form';
+import { EventForm, MeetingForm } from '@blockframes/event/form/event.form';
 import { EventService } from '@blockframes/event/+state';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
@@ -12,6 +12,7 @@ import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-event-edit',
@@ -23,6 +24,7 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+  private formSub: Subscription;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -38,16 +40,18 @@ export class EditComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private orgQuery: OrganizationQuery,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
+  ) {}
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Add an event', 'Screening info');
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
     this.invitations$ = eventId$.pipe(
       switchMap((eventId) => this.invitationService.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', eventId)))
     );
-      
+
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.getValue(org.movieIds))
@@ -62,15 +66,26 @@ export class EditComponent implements OnInit, OnDestroy {
     ).subscribe(event => {
       this.type = event.type;
       this.form = new EventForm(event);
+
+      // FormArray (used in FormList) does not mark as dirty on push,
+      // so we do it manually to enable the save button
+      // more info : https://github.com/angular/angular/issues/16370
+      if (!!this.formSub) {
+        this.formSub.unsubscribe();
+        delete this.formSub;
+      }
+      this.formSub = this.form.meta.valueChanges.subscribe(() => this.form.markAsDirty());
+
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.formSub.unsubscribe();
   }
 
-  get meta() {
-    return this.form.get('meta');
+  get files() {
+    return (this.form.meta as MeetingForm).get('files');
   }
 }

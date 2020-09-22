@@ -1,17 +1,18 @@
 
-import { GenresSlug, LanguagesSlug, TerritoriesSlug, MovieStatusSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
+import { GenresSlug, LanguagesSlug, TerritoriesSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus } from '../+state/movie.firestore';
+import { StoreStatus, ProductionStatus } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
   query: string;
+  page: number;
 }
 
 export interface LanguagesSearch {
@@ -28,7 +29,7 @@ export interface MovieSearch extends AlgoliaSearch {
   genres: GenresSlug[];
   originCountries: TerritoriesSlug[];
   languages: LanguagesSearch;
-  productionStatus: MovieStatusSlug[];
+  productionStatus: ProductionStatus[];
   minBudget: number;
   sellers: AlgoliaRecordOrganization[];
 }
@@ -37,6 +38,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
   return {
     appAccess: [],
     query: '',
+    page: 0,
     storeType: [],
     storeConfig: [],
     genres: [],
@@ -68,12 +70,13 @@ function createMovieSearchControl(search: MovieSearch) {
   return {
     appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
+    page: new FormControl(search.page),
     storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
     genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
     originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
-    productionStatus: FormList.factory<ExtractSlug<'MOVIE_STATUS'>>(search.productionStatus),
+    productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
   };
@@ -94,6 +97,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   get query() { return this.get('query'); }
+  get page() { return this.get('page'); }
   get genres() { return this.get('genres'); }
   get storeType() { return this.get('storeType'); }
   get originCountries() { return this.get('originCountries'); }
@@ -127,6 +131,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     return this.movieIndex.search({
       hitsPerPage: 50,
       query: this.query.value,
+      page: this.page.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
         this.originCountries.value.map(country => `originCountries:${country}`),
@@ -142,7 +147,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.storeConfig.value.map(config => `storeConfig:${config}`),
         this.appAccess.value.map(access => `appAccess:${access}`)
       ],
-      filters: `budget >= ${this.minBudget.value}`,
+      filters: `budget >= ${this.minBudget.value ?? 0}`,
     });
   }
 }

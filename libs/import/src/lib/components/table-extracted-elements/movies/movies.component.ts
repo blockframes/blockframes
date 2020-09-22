@@ -36,11 +36,10 @@ export class TableExtractedMoviesComponent implements OnInit {
   public currentApp: App;
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
-    'movie.main.internalRef',
+    'movie.internalRef',
     'select',
-    'movie.main.title.original',
-    // 'movie.main.poster', TODO issue #3091
-    'movie.main.productionYear',
+    'movie.title.original',
+    // 'movie.poster', TODO issue #3091
     'errors',
     'warnings',
     'actions',
@@ -123,7 +122,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     importState.movie = await this.movieService.create(importState.movie);
     importState.errors.push({
       type: 'error',
-      field: 'main.internalRef',
+      field: 'internalRef',
       name: 'Film Code',
       reason: 'Movie already exists',
       hint: 'Movie already saved'
@@ -141,12 +140,12 @@ export class TableExtractedMoviesComponent implements OnInit {
       // Set movie producing company as licensor
       const licensor = createContractPartyDetail();
       licensor.party.role = 'licensor';
-      licensor.party.displayName = `${importState.movie.main.internalRef}'s producer`;
+      licensor.party.displayName = `${importState.movie.internalRef}'s producer`;
 
       // Lets try to add more info about licensor with movie producing company
-      if (importState.movie.main?.stakeholders?.executiveProducer.length) {
-        const firstProducer = importState.movie.main?.stakeholders?.executiveProducer.pop();
-        if (firstProducer.orgId) {
+      if (importState.movie.stakeholders?.productionCompany.length) {
+        const firstProducer = importState.movie.stakeholders?.productionCompany.pop();
+        if (firstProducer?.orgId) {
           licensor.party.orgId = firstProducer.orgId;
         } else if (firstProducer.displayName) {
           licensor.party.displayName = firstProducer.displayName;
@@ -166,7 +165,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async publish(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    importState.movie.main.storeConfig.status = getMoviePublishStatus(this.currentApp); // @TODO (#2765)
+    importState.movie.storeConfig.status = getMoviePublishStatus(this.currentApp); // @TODO (#2765)
     await this.movieService.updateById(importState.movie.id, importState.movie);
     this.rows.data = data;
     return true;
@@ -175,8 +174,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   public isTitleValidForPublish(importState: MovieImportState): boolean {
     // Already valid or submitted
     if (
-      importState.movie.main.storeConfig.status === 'submitted' ||
-      importState.movie.main.storeConfig.status === 'accepted') {
+      importState.movie.storeConfig.status === 'submitted' ||
+      importState.movie.storeConfig.status === 'accepted') {
       return false;
     }
 
@@ -218,7 +217,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   ///////////////////
 
   displayErrors(data: MovieImportState) {
-    this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.main.title.original, errors: data.errors }, width: '50%' });
+    this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.title.original, errors: data.errors }, width: '50%' });
   }
 
   ///////////////////
@@ -265,7 +264,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Even for nested objects.
    */
   public filterPredicate(data: MovieImportState, filter: string) {
-    const dataStr = data.movie.main.internalRef + data.movie.main.title.original + data.movie.main.productionYear;
+    const dataStr = data.movie.internalRef + data.movie.title.original;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

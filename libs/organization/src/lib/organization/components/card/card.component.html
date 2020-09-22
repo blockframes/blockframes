@@ -1,9 +1,9 @@
 <a matRipple [routerLink]="org.id">
-  <bf-img [ref]="org.logo" asset="empty_organization.webp" type="logo" alt="organization logo"></bf-img>
+  <img [ref]="org.logo" asset="empty_organization.webp" type="logo" alt="organization logo">
 </a>
 <div fxLayout="column" fxLayoutAlign="center center">
   <h5>{{ org | orgName }}</h5>
-  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity' | async) || "-" }}</span>
+  <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </div>
 <mat-tab-group headerPosition="below" mat-align-tabs="center">
   <mat-tab>
@@ -24,13 +24,11 @@
     <ng-template mat-tab-label>
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
-    <ng-template matTabContent>
       <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
-      <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
-        <p class="mat-caption">{{ movies[0]?.main.title.international || "-"}}</p>
-        <p class="mat-caption">{{ movies[1]?.main.title.international || "-"}}</p>
-        <p class="mat-caption">{{ movies[2]?.main.title.international || "-"}}</p>
-      </div>
-    </ng-template>
+    <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
+      <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>
+      <p class="mat-caption">{{ movies[2]?.title.international || "-"}}</p>
+    </div>
   </mat-tab>
 </mat-tab-group>

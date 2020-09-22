@@ -1,0 +1,18 @@
+[
+  { "key": "ADMIN_PASSWORD", "msg": "Used to authenticate various admin tasks, please enter." },
+  { "key": "SENDGRID_API_KEY", "msg": "API key for Sendgrid, the emailer service, is missing." },
+  { "key": "ALGOLIA_APP_ID", "msg": "API key for Algolia is missing." },
+  { "key": "ALGOLIA_API_KEY", "msg": "API key for Algolia is missing." },
+  { "key": "ALGOLIA_SEARCH_KEY", "msg": "API key for Algolia is missing." },
+  { "key": "JWPLAYER_KEY", "msg": "API key for the video player is missing." },
+  { "key": "JWPLAYER_SECRET", "msg": "API key for the video player is missing." },
+  {
+    "key": "GOOGLE_APPLICATION_CREDENTIALS",
+    "msg": "You have missing service account keys. Please see: https://www.notion.so/cascade8/Preparing-your-Environment-e3c184db24d447c496c3241d4f16bc94"
+  },
+  {
+    "key": "FIREBASE_CI_SERVICE_ACCOUNT",
+    "msg": "You have missing service account keys. Please see: https://www.notion.so/cascade8/Preparing-your-Environment-e3c184db24d447c496c3241d4f16bc94"
+  },
+  { "key": "IMGIX_TOKEN", "msg": "API key for imgIx CDN is missing. Please see: https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a" }
+]

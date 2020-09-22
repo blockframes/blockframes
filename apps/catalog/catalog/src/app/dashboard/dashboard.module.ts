@@ -1,7 +1,18 @@
+﻿// Angular
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
-import { LayoutModule } from './layout/layout.module';
-import { LayoutComponent } from './layout/layout.component';
+
+// Component
+import { DashboardComponent } from './dashboard.component';
+
+// Blockframes
+import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
 
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
@@ -13,10 +24,19 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
+// Material
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatDividerModule } from '@angular/material/divider';
+
+// Tunnel routes
+import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
+
 const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent,
+    component: DashboardComponent,
     children: [
       {
         path: '',
@@ -31,12 +51,12 @@ const routes: Routes = [
       },
       {
         path: 'notifications',
-        loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+        loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule),
         data: { animation: 'notifications' }
       },
       {
         path: 'invitations',
-        loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+        loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule),
         data: { animation: 'invitations' }
       },
       {
@@ -52,12 +72,17 @@ const routes: Routes = [
           canActivate: [MovieOrganizationListGuard],
           canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
-        }, {
+        },
+        {
+          path: 'lobby',
+          loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
+        },
+        {
           path: ':movieId',
           canActivate: [MovieActiveGuard],
           canDeactivate: [MovieActiveGuard],
           loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
-          data: { redirect: '/c/o/dashboard/titles' }
+          data: { redirect: '/c/o/dashboard/title' }
         }]
       },
       {
@@ -98,13 +123,10 @@ const routes: Routes = [
     children: [{
       path: 'movie',
       children: [{
-        path: '',
-        loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
-      }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+        children: tunnelRoutes,
         data: {
           redirect: '/c/o/dashboard/tunnel/movie'
         },
@@ -114,7 +136,7 @@ const routes: Routes = [
       children: [{
         path: '',
         loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-      },{
+      }, {
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
@@ -128,7 +150,22 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [LayoutModule, RouterModule.forChild(routes)],
-  declarations: []
+  declarations: [DashboardComponent],
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    DashboardLayoutModule,
+    ImageReferenceModule,
+    OrgNameModule,
+    ToLabelModule,
+    MovieFormShellModule,
+
+    // Material
+    MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule,
+    RouterModule.forChild(routes)
+  ]
 })
-export class DashboardModule {}
+export class DashboardModule { }

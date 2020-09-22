@@ -1,12 +1,19 @@
+﻿// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
+import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
+
+// Tunnel routes
+import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -36,11 +43,11 @@ const routes: Routes = [{
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
+      loadChildren: () => import('@blockframes/notification/notification.module').then(m => m.NotificationModule)
     },
     {
       path: 'invitations',
-      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
+      loadChildren: () => import('@blockframes/invitation/invitation.module').then(m => m.InvitationModule)
     },
     {
       path: 'import', // Import bulk of movies
@@ -54,6 +61,9 @@ const routes: Routes = [{
         path: '',
         loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
       }, {
+        path: 'lobby',
+        loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
@@ -63,19 +73,23 @@ const routes: Routes = [{
     },
     {
       path: 'event',
-      children: [{
-        path: '',
-        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
-      }, {
-        path: ':eventId',
-        children: [{
+      children: [
+        {
           path: '',
-          loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+          loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
-          path: 'edit',
-          loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
-        }]
-      }]
+          path: ':eventId',
+          children: [
+            {
+              path: '',
+              loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
+            }, {
+              path: 'edit',
+              loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+            },
+          ],
+        },
+      ],
     },
     {
       path: 'contact',
@@ -97,13 +111,10 @@ const routes: Routes = [{
   children: [{
     path: 'movie',
     children: [{
-      path: '',
-      loadChildren: () => import('./tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
-    }, {
       path: ':movieId',
       canActivate: [MovieActiveGuard, MovieTunnelGuard],
       canDeactivate: [MovieActiveGuard],
-      loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+      children: tunnelRoutes,
       data: {
         redirect: '/c/o/dashboard/tunnel/movie'
       },
@@ -122,6 +133,8 @@ const routes: Routes = [{
     OrgNameModule,
     ToLabelModule,
     OrgAccessModule,
+    MovieFormShellModule,
+
     // Material
     MatDividerModule,
     MatListModule,

@@ -3,18 +3,15 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { createImgRef } from '@blockframes/media/+state/media.firestore';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest, of } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { MediaService } from '@blockframes/media/+state/media.service';
 import { firestore } from 'firebase/app';
 import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
@@ -27,7 +24,6 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private userService: UserService,
     private orgService: OrganizationService,
-    private mediaService: MediaService,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -43,7 +39,7 @@ export class MovieService extends CollectionService<MovieState> {
       _meta: { createdBy },
       ...movieImported
     });
-    movie.main.storeConfig = {
+    movie.storeConfig = {
       ...createStoreConfig(),
       appAccess: createMovieAppAccess({ [appName]: true })
     };
@@ -112,15 +108,6 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    // transform { media: string } into { media: ImgRef }
-    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
-      movie.promotionalElements.promotionalElements.forEach(el => {
-        if (typeof el.media === typeof 'string') {
-          el.media = createImgRef(el.media);
-        }
-      });
-    }
-
     return this.update(id, cleanModel(movie));
   }
 
@@ -129,7 +116,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param internalRef
    */
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
+    const movies = await this.getValue(ref => ref.where('internalRef', '==', internalRef))
 
     return movies.length ? createMovie(movies[0]) : undefined;
   }
@@ -150,23 +137,4 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-  /**
-   * @dev ADMIN method
-   * Https callable function to set privateConfig for a movie.
-   */
-  public async setMoviePrivateConfig(movieId: string, privateConfig: PrivateConfig): Promise<any> {
-    const f = this.functions.httpsCallable('setDocumentPrivateConfig');
-    return f({ docId: movieId, config: privateConfig }).toPromise();
-  }
-
-  /**
-   * @dev ADMIN method
-   * Https callable function to get privateConfig for a movie.
-   * @param movieId
-   * @param keys the keys to retreive
-   */
-  public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig> {
-    const f = this.functions.httpsCallable('getDocumentPrivateConfig');
-    return f({ docId: movieId, keys }).toPromise();
-  }
 }

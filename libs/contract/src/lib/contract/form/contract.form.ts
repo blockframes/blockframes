@@ -13,7 +13,7 @@ import {
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { createParty } from '@blockframes/utils/common-interfaces';
-import { ImgRefForm } from '@blockframes/media/form/image-reference.form'
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 // PARTY DETAILS
 
@@ -41,7 +41,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new ImgRefForm(media),
+    media: new HostedMediaForm(media),
     language: new FormStaticValue(language, 'LANGUAGES'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };

@@ -9,15 +9,17 @@ import {
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
-import { CollectionConfig, CollectionService, WriteOptions, Query, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { createPermissions, UserRole } from '../../permissions/+state/permissions.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { UserService, OrganizationMember, createOrganizationMember, PublicUser } from '@blockframes/user/+state';
-import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
-import { orgNameToEnsDomain, getProvider } from '@blockframes/ethers/helpers';
-import { network, baseEnsDomain } from '@env';
-import { QueryFn } from '@angular/fire/firestore/interfaces';
+import { PermissionsService } from '@blockframes/permissions/+state';
+
+const findOrgByMovieIdQuery = (movieId: string) => ({
+  path: 'orgs',
+  queryFn: ref => ref.where('movieIds', 'array-contains', movieId)
+})
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -29,7 +31,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
     private userService: UserService,
-    private permissionsQuery: PermissionsQuery,
     private permissionsService: PermissionsService,
   ) {
     super(store);
@@ -96,7 +97,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     // when user is creating organization
     // Once bug resolved move this to onCreate
     return new Promise(resolve => setTimeout(resolve, 500))
-      .then(_ => this.userService.update(user.uid, { orgId, ...user }))
+      .then(_ => this.userService.update(user.uid, { ...user, orgId }))
       .then(_ => orgId)
   }
 
@@ -131,16 +132,18 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   ////////////
 
   /** Remove a member from the organization. */
-  public removeMember(uid: string) {
-    const superAdminNumber = this.permissionsQuery.superAdminCount;
-    const role = this.permissionsQuery.getActive().roles[uid];
+  public async removeMember(uid: string) {
+    const orgId = (await this.userService.getValue(uid)).orgId
+    const permissions = await this.permissionsService.getValue(orgId);
+    const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
+    const role = permissions.roles[uid];
     if (role === 'superAdmin' && superAdminNumber <= 1) {
       throw new Error('You can\'t remove the last Super Admin.');
     }
 
-    const org = this.query.getActive();
+    const org = await this.getValue(orgId);
     const userIds = org.userIds.filter(userId => userId !== uid);
-    return this.update(org.id, { userIds });
+    return this.update(orgId, { userIds });
   }
 
   public async getMembers(orgId: string): Promise<OrganizationMember[]> {
@@ -158,14 +161,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async uniqueOrgName(orgName: string): Promise<boolean> {
-    let uniqueOnEthereum = false;
-    let uniqueOnFirestore = false;
+    return this.orgNameExist(orgName).then(exist => !exist);
+  }
 
-    const orgENS = orgNameToEnsDomain(orgName, baseEnsDomain);
-    const provider = getProvider(network);
-    const orgEthAddress = await provider.resolveName(orgENS);
-    uniqueOnEthereum = !orgEthAddress ? true : false;
-    uniqueOnFirestore = await this.orgNameExist(orgName).then(exist => !exist);
-    return uniqueOnEthereum && uniqueOnFirestore;
+  public findOrgByMovieId(id: string) {
+    return queryChanges.call(this, findOrgByMovieIdQuery(id));
   }
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue, downloadCsvFromJson } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrganizationCreateComponent } from '../../components/organization/create-organization/create.component';
 
 @Component({
   selector: 'admin-organizations',
@@ -38,6 +40,7 @@ export class OrganizationsComponent implements OnInit {
   constructor(
     private organizationService: OrganizationService,
     private cdRef: ChangeDetectorRef,
+    private dialog: MatDialog,
   ) { }
 
   async ngOnInit() {
@@ -58,6 +61,7 @@ export class OrganizationsComponent implements OnInit {
       'id',
       'denomination.full',
       'denomination.public',
+      'addresses.main.country',
       'status',
       'email',
     ];
@@ -79,4 +83,11 @@ export class OrganizationsComponent implements OnInit {
     downloadCsvFromJson(exportedRows, 'org-list');
   }
 
+  createOrg() {
+    this.dialog.open(OrganizationCreateComponent, {
+      height: '80vh',
+      width: '60vw',
+    });
+  }
+  
 }

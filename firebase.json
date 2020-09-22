@@ -1,10 +1,6 @@
 {
   "hosting": [
     {
-      "target": "storybook",
-      "public": "dist/storybook"
-    },
-    {
       "target": "catalog",
       "public": "dist/apps/catalog/",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
@@ -42,6 +38,15 @@
       ]
     },
     {
+      "target": "financiers",
+      "public": "dist/apps/festival",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [{
+        "source": "**",
+        "destination": "/index.html"
+      }]
+    },
+    {
       "target": "crm",
       "public": "dist/apps/crm/",
       "ignore": [
@@ -68,5 +73,8 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

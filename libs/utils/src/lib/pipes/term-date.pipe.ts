@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { termToPrettyDate, Terms, createTerms } from '../common-interfaces/terms';
 
 @Pipe({
@@ -10,3 +11,11 @@ export class TermDatePipe implements PipeTransform {
     return termToPrettyDate(term, type);
   }
 }
+
+
+@NgModule({
+  declarations: [TermDatePipe],
+  imports: [CommonModule],
+  exports: [TermDatePipe]
+})
+export class TermDateModule { }

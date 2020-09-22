@@ -2,10 +2,14 @@ import { Firestore } from '../admin';
 import { PublicUser } from '@blockframes/user/types';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Organization } from '@blockframes/organization/+state/organization.model';
-import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
-import { createHostedMedia, ExternalMedia } from '@blockframes/media/+state/media.model';
-import { getCollection } from 'apps/backend-functions/src/data/internals';
 import { OldImgRef } from './old-types';
+import { getCollection } from '@blockframes/firebase-utils';
+
+import {
+  OldExternalMedia as ExternalMedia,
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalHostedMedia
+} from './old-types';
 
 /**
  * Migrate old medias & images and some refactoring on the movie.
@@ -46,20 +50,9 @@ export async function upgrade(db: Firestore) {
 
 async function updateUsers(db: Firestore, users: PublicUser[]) {
   for (const user of users) {
-    let updatedUser = updateUserWatermark(user);
-    updatedUser = updateImgRef(user, 'avatar') as PublicUser;
+    const updatedUser = updateImgRef(user, 'avatar') as PublicUser;
     db.doc(`users/${user.uid}`).set(updatedUser);
   }
-}
-
-function updateUserWatermark(user: PublicUser) {
-  if (user.watermark?.url) return user; // already has new format
-  const url = user?.watermark?.['urls']?.['original'] || user.watermark?.url;
-  user.watermark = createHostedMedia({
-    ref: user.watermark?.ref || '',
-    url: url || ''
-  });
-  return user;
 }
 
 function updateOrgs(db: Firestore, orgs: Organization[]) {
@@ -69,7 +62,7 @@ function updateOrgs(db: Firestore, orgs: Organization[]) {
   }
 }
 
-async function updateMovies(db: Firestore, movies: Movie[]) {
+async function updateMovies(db: Firestore, movies) {
   const externalMediaLinks = ['promo_reel_link', 'screener_link', 'teaser_link', 'trailer_link'];
   const hostedMediaLinks = ['presentation_deck', 'scenario'];
   const legacyKeysExternalMedia = ['originalFileName', 'originalRef', 'ref'];
@@ -77,9 +70,10 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
 
   for (const movie of movies) {
     for (const link of externalMediaLinks) {
-      movie.promotionalElements[link].media = createExternalMedia(
-        movie.promotionalElements[link].media
-      );
+      const media = movie.promotionalElements[link].media;
+      movie.promotionalElements[link].media = createExternalMedia({
+        url: media.url ? media.url : media.urls && media.urls.original ? media.urls.original : '',
+      });
       // DELETE
       for (const key of legacyKeysExternalMedia) {
         delete movie.promotionalElements[link].media[key];
@@ -90,20 +84,22 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
       const media = movie.promotionalElements[link].media;
       movie.promotionalElements[link].media = createHostedMedia({
         ref: media.ref ? media.ref : media.originalRef ? media.originalRef : '',
-        url: media.url ? media.url : ''
+        url: media.url ? media.url : media.urls && media.urls.original ? media.urls.original : '',
       });
       // DELETE
       legacyKeysHostedMedia.forEach(key => delete movie.promotionalElements[link].media[key]);
     }
 
     // update and move banner to main
-    movie.main.banner = updateImgRef<PromotionalImage>(movie.promotionalElements['banner'], 'media');
-    if (movie.promotionalElements['banner']) delete movie.promotionalElements['banner'];
+    if (movie.promotionalElements['banner']) {
+      movie.main.banner = updateImgRef<PromotionalHostedMedia>(movie.promotionalElements['banner'], 'media');
+      delete movie.promotionalElements['banner'];
+    }
 
     // update and move poster to main
-    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalImage, index: number) => {
+    movie.promotionalElements?.['poster']?.forEach((poster: PromotionalHostedMedia, index: number) => {
       if (index === 0) {
-        movie.main.poster = updateImgRef(poster, 'media') as PromotionalImage;
+        movie.main.poster = updateImgRef(poster, 'media') as PromotionalHostedMedia;
         delete movie.promotionalElements['poster'];
       } else {
         delete movie.promotionalElements['poster']; // other posters shouldn't exist, but if do they are deleted
@@ -111,12 +107,14 @@ async function updateMovies(db: Firestore, movies: Movie[]) {
     });
 
     // update still photos from an array with old ImgRef to a record with new ImgRef
-    const still_photo: Record<string, PromotionalImage> = {};
-    (movie.promotionalElements.still_photo as any).forEach((still, index) => {
-      if (!!still.media?.ref || !!still.media?.urls?.original) {
-        still_photo[`${index}`] = updateImgRef<PromotionalImage>(still, 'media');
-      }
-    });
+    const still_photo: Record<string, PromotionalHostedMedia> = {};
+    if (movie.promotionalElements.still_photo && movie.promotionalElements.still_photo.length) {
+      (movie.promotionalElements.still_photo as any).forEach((still, index) => {
+        if (!!still.media?.ref || !!still.media?.urls?.original) {
+          still_photo[`${index}`] = updateImgRef<PromotionalHostedMedia>(still, 'media');
+        }
+      });
+    }
     movie.promotionalElements.still_photo = still_photo;
 
     // remove trailer
@@ -130,7 +128,13 @@ function createExternalMedia(media: Partial<ExternalMedia>): ExternalMedia {
   return { url: media?.url || '' };
 }
 
-function updateImgRef<T extends (PublicUser | Organization | PromotionalImage)>(
+/**
+ * @dev This updates the ImgRef structure on DB from {ref, urls} to : {ref, url}
+ * But references points to old structore on storage.
+ * @param element
+ * @param property
+ */
+function updateImgRef<T extends (PublicUser | Organization | PromotionalHostedMedia)>(
   element: T,
   property: 'avatar' | 'logo' | 'media'
 ) {

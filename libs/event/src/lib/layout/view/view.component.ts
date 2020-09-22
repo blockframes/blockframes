@@ -15,6 +15,7 @@ export class EventViewComponent implements OnInit {
   private _event = new BehaviorSubject<Event>(null);
   event$ = this._event.asObservable();
   invitation$: Observable<Invitation>;
+  editMeeting: string;
 
   @Input()
   get event() {
@@ -31,6 +32,9 @@ export class EventViewComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
+
     this.invitation$ = this.event$.pipe(
       switchMap(event => this.invitationQuery.selectByDocId(event.id)),
       shareReplay(1)

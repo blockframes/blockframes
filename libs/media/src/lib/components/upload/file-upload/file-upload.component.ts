@@ -7,8 +7,9 @@ import {
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getMimeType } from '@blockframes/utils/file-sanitizer';
+import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
+import { AngularFireStorage } from "@angular/fire/storage";
 
 @Component({
   selector: '[form] [storagePath] file-upload',
@@ -24,47 +25,58 @@ export class FileUploadComponent implements OnInit {
   /** firestore path */
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
+  @Input() filePrivacy : Privacy = 'public';
 
+  public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, private storage: AngularFireStorage) { }
 
   ngOnInit() {
     // show current file
-    if (!!this.form.oldRef?.value) {
+    if (!!this.form.blobOrFile.value) {
+      this.selected(this.form.blobOrFile.value);
+    } else if (!!this.form.oldRef?.value) {
       this.state = 'file';
     }
   }
 
   @HostListener('drop', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDrop($event: any) {
+  onDrop($event: DragEvent) {
     $event.preventDefault();
-    this.state = 'ready';
+    this.selected($event.dataTransfer.files);
   }
 
   @HostListener('dragover', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDragOver($event: any) {
+  onDragOver($event: DragEvent) {
     $event.preventDefault();
     this.state = 'hovering';
   }
 
   @HostListener('dragleave', ['$event'])
-  // TODO: issue#875, use DragEvent type
-  onDragLeave($event: any) {
+  onDragLeave($event: DragEvent) {
     $event.preventDefault();
     this.state = 'waiting';
   }
 
-  public selected(files: FileList) {
-    if (!files.item(0)) {
-      this.snackBar.open('No file found', 'close', { duration: 1000 });
-      this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
-      return;
-    }
+  public selected(files: FileList | File) {
 
-    const file = files.item(0);
+    let file;
+    if ('item' in files) {
+      if (!files.item(0)) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        return;
+      }
+      file = files.item(0);
+    } else {
+      if (!files) {
+        this.snackBar.open('No file found', 'close', { duration: 1000 });
+        this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+        return;
+      }
+      file = files
+    }
 
     const fileType = getMimeType(file);
 
@@ -82,20 +94,25 @@ export class FileUploadComponent implements OnInit {
       return;
     }
 
+    const size = (file.size / 1000);
+    if (size < 1000) {
+      this.localSize = `${size.toFixed(1)} KB`;
+    } else {
+      this.localSize = `${(size / 100).toFixed(1)} MB`;
+    }
     this.state = 'ready';
 
     this.form.patchValue({
-      ref: this.storagePath,
+      ref: getStoragePath(this.storagePath, this.filePrivacy),
       blobOrFile: file,
-      delete: false,
-      fileName: file.name,
+      fileName: sanitizeFileName(file.name),
     })
     this.form.markAsDirty();
   }
 
   public delete() {
     this.state = 'waiting';
-    this.form.patchValue({ delete: true });
+    this.form.patchValue({ ref: '' });
     this.form.markAsDirty();
   }
 
@@ -103,7 +120,6 @@ export class FileUploadComponent implements OnInit {
 
     this.form.patchValue({
       blobOrFile: undefined,
-      delete: false,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     })
     this.form.markAsDirty();

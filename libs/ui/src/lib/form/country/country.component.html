@@ -1,10 +1,14 @@
 <mat-form-field appearance="outline">
   <mat-label>Country</mat-label>
-  <input test-id="country" type="text" matInput [formControl]="form" [matAutocomplete]="auto" name="originCountry">
+  <input test-id="address-country" type="text" matInput [formControl]="form" [matAutocomplete]="auto" name="originCountry">
   <mat-error *ngIf="form.hasError('invalidValue')">
     Please select one of the country suggested.
   </mat-error>
+  <mat-hint>
+    <ng-content select="mat-hint"></ng-content>
+  </mat-hint>
 </mat-form-field>
+
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
   <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country.slug">

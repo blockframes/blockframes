@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { PermissionsQuery } from './permissions.query';
-import { UserRole, createDocPermissions } from './permissions.firestore';
+import { UserRole, createDocPermissions, PermissionsDocument } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { UserService } from '@blockframes/user/+state';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +12,8 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 @CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
   constructor(
-    private query: PermissionsQuery,
     private organizationQuery: OrganizationQuery,
+    private userService: UserService,
     store: PermissionsStore
   ) {
     super(store);
@@ -36,26 +35,10 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
-  /**
-   * Takes a contract, create relative permissions for each party of
-   * the contract, then add them to documentPermissions subcollection.
-   * @param contract
-   * @param write
-   */
-  public addContractPermissions(contract: Contract) {
-    this.db.firestore.runTransaction(async tx => {
-      contract.partyIds.forEach(partyId => {
-        const contractPermissions = createDocPermissions({ id: contract.id });
-        const contractPermissionsRef = this.db.doc(`permissions/${partyId}/documentPermissions/${contractPermissions.id}`).ref;
-        tx.set(contractPermissionsRef, contractPermissions)
-      })
-    })
-  }
-
   /** Ensures that there is always at least one super Admin in the organization. */
-  public hasLastSuperAdmin(uid: string, role: UserRole) {
-    if (role !== 'superAdmin' && this.query.isUserSuperAdmin(uid)) {
-      const superAdminNumber = this.query.superAdminCount;
+  public hasLastSuperAdmin(permissions: PermissionsDocument, uid: string, role: UserRole) {
+    if (role !== 'superAdmin' && permissions.roles[uid] === 'superAdmin') {
+      const superAdminNumber = Object.values(permissions.roles).filter(value => value === 'superAdmin').length;
       return superAdminNumber > 1 ? true : false;
     } else {
       return true;
@@ -64,25 +47,21 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
   /** Update user role. */
   public async updateMemberRole(uid: string, role: UserRole): Promise<string> {
-    if (this.query.hasAlreadyThisRole(uid, role)) {
+    const orgId = (await this.userService.getValue(uid)).orgId;
+    const permissions = await this.getValue(orgId);
+    if (permissions.roles[uid] === role) {
       return 'This user already has this role.';
     }
     try {
-      if (!this.hasLastSuperAdmin(uid, role)) {
+      if (!this.hasLastSuperAdmin(permissions, uid, role)) {
         throw new Error('There must be at least one Super Admin in the organization.');
       }
-      await this._updateMemberRole(uid, role);
+      /** Update role of a member of the organization */
+      permissions.roles[uid] = role;
+      await this.update(orgId, { roles: permissions.roles });
       return 'Role updated';
     } catch (error) {
       return error.message;
     }
-  }
-
-  /** Update role of a member of the organization */
-  private async _updateMemberRole(uid: string, role: UserRole) {
-    const orgId = this.query.getActiveId();
-    const permissions = await this.getValue(orgId);
-    permissions.roles[uid] = role;
-    return this.update(orgId, { roles: permissions.roles });
   }
 }

@@ -1,0 +1,106 @@
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
+
+  <h1>Main Information</h1>
+  <!-- Main Information -->
+  <section *ngIf="movie | hasKeys: keys.main">
+    <h2>Story Elements</h2>
+    <article *ngIf="movie.logline">
+      <h5>Logline</h5>
+      <p>{{ movie.logline }}</p>
+    </article>
+
+    <article *ngIf="movie.synopsis">
+      <h5>Synopsis</h5>
+      <p>{{ movie.synopsis }}</p>
+    </article>
+
+    <article *ngIf="movie.keywords.length">
+      <h5>Keywords</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let keyword of movie.keywords">
+          <mat-chip>{{ keyword }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- GENERAL INFORMATION -->
+  <section *ngIf="movie | hasKeys: keys.general ">
+    <h2>General Information</h2>
+
+    <article *ngIf="movie.release.year">
+      <h5>Release Year</h5>
+      <p>
+        <span>{{ movie.release.year }}</span>
+        <span *ngIf="movie.release.status"> ({{ movie.release.status }})</span>
+      </p>
+    </article>
+
+    <article *ngIf="movie.originCountries.length">
+      <h5>Country of origin</h5>
+      <p>{{ movie.originCountries | translateSlug: 'TERRITORIES' }}</p>
+    </article>
+
+    <article *ngIf="movie.originalLanguages.length">
+      <h5>Country of origin</h5>
+      <p>{{ movie.originalLanguages | translateSlug: 'LANGUAGES' }}</p>
+    </article>
+
+    <article *ngIf="movie.genres.length">
+      <h5>Genres</h5>
+      <p>
+        <span>{{ movie.genres | translateSlug: 'GENRES' }}</span>
+        <span *ngIf="movie.customGenres.length">, {{ movie.customGenres.join(', ') }}</span>
+      </p>
+    </article>
+
+    <article *ngIf="movie.runningTime.time || movie.runningTime.time">
+      <h5>Running time</h5>
+      <div fxLayout fxLayoutGap="8px">
+        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time }}min</span>
+        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status }}</span>
+      </div>
+    </article>
+
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- Directors -->
+  <section *ngIf="movie.directors.length">
+    <h2>Directors</h2>
+    <article grid>
+      <ng-container *ngFor="let director of movie.directors">
+        <title-credit-card [col]="3" [credit]="director"></title-credit-card>
+      </ng-container>
+    </article>
+  </section>
+
+
+  <h1 *ngIf="movie | hasKeys: keys.prizes">Selection & reviews</h1>
+
+  <!-- Festival -->
+  <section *ngIf="movie.prizes.length">
+    <h2>Festivals</h2>
+    <article grid>
+      <ng-container *ngFor="let prize of movie.prizes">
+        <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
+      </ng-container>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <!-- Review -->
+  <section *ngIf="movie.review.length">
+    <h2>Film Reviews</h2>
+    <article grid>
+      <ng-container *ngFor="let review of movie.review">
+        <title-review-card [col]="3" [review]="review"></title-review-card>
+      </ng-container>
+    </article>
+  </section>
+
+</ng-container>

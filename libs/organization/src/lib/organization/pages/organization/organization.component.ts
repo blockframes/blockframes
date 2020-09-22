@@ -34,9 +34,9 @@ export class OrganizationComponent implements OnInit {
           throw new Error('Your organization profile information are not valid');
         }
 
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm.value);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.organizationForm);
         this.service.update(this.query.getActiveId(), documentToUpdate);
-        this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+        this.mediaService.uploadMedias(mediasToUpload);
 
         this.snackBar.open('Organization profile was successfully changed', 'close', { duration: 2000 });
       }

@@ -1,0 +1,27 @@
+:host {
+  padding: 24px;
+}
+
+form {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card {
+  padding: 24px 16px;
+  margin-bottom: 24px;
+}
+
+.mat-card-header .mat-card-title {
+  margin-bottom: 16px;
+  &.title {
+    margin-bottom: 4px;
+  }
+}
+
+admin-organization-form {
+  width: 100%;
+}

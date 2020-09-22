@@ -1,27 +1,43 @@
-/**
- * Generates a random string
- */
-function uuidv4() {
-  return 'x-x-4x-yx-x'.replace(/[xy]/g, function (c) {
-    const r = Math.random() * 16 || 0, v = c === 'x' ? r : (r && 0x3 || 0x8);
-    return v.toString(16);
-  });
-}
+export const privacies = ['public', 'protected'] as const;
+export type Privacy = typeof privacies[number];
+export const tempUploadDir = 'tmp';
 
 /**
  * Cleans filename ( before firestore upload for example )
  * @param str
  */
 export function sanitizeFileName(str: string): string {
-  // generate a random filename
-  return `${uuidv4()}.${getFileExtension(str)}`;
+  const fileParts = str.split('.');
+  // removes extension
+  fileParts.pop();
+  // replace spaces by "-"
+  const fileNameWithoutExt = fileParts.join('.').split(' ').join('-');
+
+  return `${fileNameWithoutExt.substr(0, 100)}.${getFileExtension(str)}`;
+}
+
+/**
+ * Cleans and returns the storage path
+ * @dev example output: 
+ * public/users/123abc/avatar
+ */
+export function getStoragePath(path: string, privacy: Privacy = 'public'): string {
+  if(!path) return '';
+  
+  // Remove first trailing slash if any
+  path = path[0] === '/' ? path.slice(1) : path;
+
+  // Remove last trailing slash if any
+  path = path[path.length - 1] === '/' ? path.slice(0, path.length - 1) : path;
+
+  return `${privacy}/${path}`;
 }
 
 /**
  * Extract file extension
  * @param fileName
  */
-export function getFileExtension(fileName: string) {
+function getFileExtension(fileName: string) {
   // get the part after the last slash and remove url parameters like "#" and "?"
   const lastSlash = fileName.split('/').pop();
   const filePart = lastSlash !== undefined ? lastSlash.split(/\#|\?/) : [];

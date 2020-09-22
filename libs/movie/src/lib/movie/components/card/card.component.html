@@ -1,6 +1,6 @@
 <figure (mouseenter)="hasOverlay = true" (mouseleave)="hasOverlay = false">
   <ng-container *ngIf="!(ltLg$ | async) else forTouchScreen">
-    <bf-img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration"></bf-img>
+    <img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration">
     <div fxLayout="column" fxLayoutAlign="center center" class="overlay" *ngIf="hasOverlay" @scaleIn>
       <wishlist-button [movieId]="movie.id" small></wishlist-button>
       <a mat-button @scaleIn color="primary" [routerLink]="link"> View More </a>
@@ -9,13 +9,13 @@
   <!-- Mobile and tablet view -->
   <ng-template #forTouchScreen>
     <a matRipple [routerLink]="link">
-      <bf-img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration"></bf-img>
+      <img [ref]="movie | movieImage: size" [asset]="placeholderAsset" alt="Movie Illustration">
     </a>
     <wishlist-button [movieId]="movie.id" small></wishlist-button>
   </ng-template>
 </figure>
 <article [class]="size">
-  <h6>{{ movie.main.title.international }}</h6>
-  <p class="mat-caption">{{ movie.main.directors | displayName }}</p>
+  <h6>{{ movie.title.international }}</h6>
+  <p class="mat-caption">{{ movie.directors | displayName }}</p>
   <span class="mat-caption">{{ movie | movieFeature }}</span>
 </article>

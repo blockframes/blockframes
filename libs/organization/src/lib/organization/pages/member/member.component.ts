@@ -69,25 +69,15 @@ export class MemberComponent implements OnInit {
     this.invitationService.remove(invitation.id);
   }
 
-  /** Ensures that there is always at least one super Admin in the organization. */
-  public hasLastSuperAdmin(uid: string, role: UserRole) {
-    if (role !== 'superAdmin' && this.permissionQuery.isUserSuperAdmin(uid)) {
-      const superAdminNumber = this.permissionQuery.superAdminCount;
-      return superAdminNumber > 1 ? true : false;
-    } else {
-      return true;
-    }
-  }
-
   /** Update user role. */
   public async updateRole(uid: string, role: UserRole) {
     const message = await this.permissionService.updateMemberRole(uid, role);
     return this.snackBar.open(message, 'close', { duration: 2000 });
   }
 
-  public removeMember(uid: string) {
+  public async removeMember(uid: string) {
     try {
-      this.orgService.removeMember(uid);
+      await this.orgService.removeMember(uid);
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

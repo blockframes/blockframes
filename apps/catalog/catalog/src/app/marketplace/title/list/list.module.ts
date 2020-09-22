@@ -3,8 +3,8 @@ import { MovieCardModule } from "@blockframes/movie/components/card/card.module"
 import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
 
 // Pipes
-import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
-import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
+import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
+import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.pipe";
 
 
 // Material
@@ -24,6 +24,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -39,7 +41,6 @@ import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-au
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
-import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
@@ -60,7 +61,6 @@ import { ListComponent } from "./list.component";
     TitleListLayoutModule,
     WishlistButtonModule,
     TitleFilterModule,
-    MovieFormEstimatedBudgetModule,
     LanguageFilterModule,
     BudgetFilterModule,
     StaticCheckBoxesModule,
@@ -86,6 +86,8 @@ import { ListComponent } from "./list.component";
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
+    MatTooltipModule,
+    MatProgressBarModule,
     RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })

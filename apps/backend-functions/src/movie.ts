@@ -6,8 +6,7 @@ import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
-import { handleImageChange, isEmptyImage } from './internals/image';
-import { PromotionalImage } from '@blockframes/movie/+state/movie.firestore';
+import { cleanMovieMedias } from './media';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -33,6 +32,8 @@ export async function onMovieDelete(
   context: functions.EventContext
 ) {
   const movie = snap.data() as MovieDocument;
+
+  await cleanMovieMedias(movie);
 
   /**
    *  When a movie is deleted, we also delete its sub-collections and references in other collections/documents.
@@ -72,8 +73,10 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const isMovieSubmitted = isSubmitted(before.main.storeConfig, after.main.storeConfig);
-  const isMovieAccepted = isAccepted(before.main.storeConfig, after.main.storeConfig);
+  await cleanMovieMedias(before, after);
+
+  const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
+  const isMovieAccepted = isAccepted(before.storeConfig, after.storeConfig);
 
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -91,15 +94,15 @@ export async function onMovieUpdate(
   if (isMovieAccepted) { // When Archipel Content accept the movie
     const organizations = await getOrganizationsOfMovie(after.id);
     const notifications = organizations
-    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(toUserId => {
-      return createNotification({
-        toUserId,
-        type: 'movieAccepted',
-        docId: after.id
+      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map(toUserId => {
+        return createNotification({
+          toUserId,
+          type: 'movieAccepted',
+          docId: after.id
+        });
       });
-    });
 
     await triggerNotifications(notifications);
   }
@@ -112,47 +115,20 @@ export async function onMovieUpdate(
     await storeSearchableMovie(after, orgName(creatorOrg));
   }
 
-  // BANNER
-  const bannerBeforeRef = before.main?.banner?.media?.original?.ref;
-  const bannerAfterRef = after.main?.banner?.media?.original?.ref;
-  if (
-    bannerBeforeRef !== bannerAfterRef
-  ) {
-    await handleImageChange(after.main.banner.media!);
-  }
-
-  // POSTERs
-  const posterBeforeRef = before.main?.poster?.media?.original?.ref;
-  const posterAfterRef = after.main?.poster?.media?.original?.ref;
-  if (
-    posterBeforeRef !== posterAfterRef
-  ) {
-    await handleImageChange(after.main.poster.media!);
-  }
-
-  // STILL PHOTOs
-  const stillPromises = Object.keys(after.promotionalElements.still_photo).filter(key => {
-
-    const stillBeforeRef = before.promotionalElements?.still_photo[key]?.media?.original?.ref;
-    const stillAfterRef = after.promotionalElements?.still_photo[key]?.media?.original?.ref;
-
-    return stillBeforeRef !== stillAfterRef;
-  }).map(key => handleImageChange(after.promotionalElements.still_photo[key].media));
-  await Promise.all(stillPromises);
 
   // REMOVING EMPTY STILL_PHOTOs
-  const hasEmptyStills = Object.keys(after.promotionalElements.still_photo)
-    .some(key => isEmptyImage(after.promotionalElements.still_photo[key].media));
+  const hasEmptyStills = Object.keys(after.promotional.still_photo)
+    .some(key => !after.promotional.still_photo[key]);
 
   // if we found at least one empty still_photo, we update with only the none empty ones
   if (hasEmptyStills) {
-    const notEmptyStills: Record<string, PromotionalImage> = {};
+    const notEmptyStills: Record<string, string> = {};
 
-    Object.keys(after.promotionalElements.still_photo)
-      .filter(key => !isEmptyImage(after.promotionalElements.still_photo[key].media))
-      .forEach(key => notEmptyStills[key] = after.promotionalElements.still_photo[key]);
+    Object.keys(after.promotional.still_photo)
+      .filter(key => !!after.promotional.still_photo[key])
+      .forEach(key => notEmptyStills[key] = after.promotional.still_photo[key]);
 
-    change.after.ref.update({ 'promotionalElements.still_photo': notEmptyStills });
+    change.after.ref.update({ 'promotional.still_photo': notEmptyStills });
   }
 
 }

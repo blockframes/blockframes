@@ -1,15 +1,20 @@
 <main fxLayout="column">
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Users</h1>
   <article fxLayout="column" fxLayoutAlign="center center">
-    <button [disabled]="!userListLoaded" mat-flat-button color="primary" (click)="exportTable()">
-      <span>Export to CSV</span>
-      <mat-icon svgIcon="arrow_upward"></mat-icon>
+    <button [disabled]="exporting.$ | async" mat-flat-button color="primary" (click)="exportTable()">
+      <ng-container *ngIf="exporting.$ | async else export">
+        <span>Generating CSV...</span>
+      </ng-container>
+      <ng-template #export>
+        <span>Export to CSV</span>
+        <mat-icon svgIcon="arrow_upward"></mat-icon>
+      </ng-template>
     </button>
   </article>
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
-    [filterPredicate]="filterPredicate" showFilter [pageSize]="100" showLoader showPaginator>
+    [filterPredicate]="filterPredicate" showFilter [pageSize]="50" showLoader showPaginator>
     <ng-template colRef="avatar" let-avatar>
-      <bf-img class="avatar" [ref]="avatar" asset="empty_poster.webp"></bf-img>
+      <img class="avatar" [ref]="avatar" asset="empty_poster.webp">
     </ng-template>
     <ng-template colRef="edit" let-edit>
       <a [routerLink]="edit.link">
@@ -22,8 +27,9 @@
       </a>
       <ng-template #noOrg>--</ng-template>
     </ng-template>
-    <ng-template colRef="position" let-position>
-      {{ position ? position : '--' }}
+    <ng-template colRef="orgCountry" let-orgCountry>
+      <span *ngIf="orgCountry else noOrgCountry">{{ orgCountry }}</span>
+      <ng-template #noOrgCountry>--</ng-template>
     </ng-template>
     <ng-template colRef="firstConnexion" let-firstConnexion>
       {{ firstConnexion | date }}

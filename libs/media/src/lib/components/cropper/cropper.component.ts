@@ -1,13 +1,13 @@
-import { Component, Input, Renderer2, ElementRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, HostListener } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
-import { DropZoneDirective } from './drop-zone.directive';
-import { catchError } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of } from 'rxjs';
-import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
-import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
+import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
+import { getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
+import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
 
-type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
+type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
 type MediaRatio = typeof mediaRatio;
 type MediaRatioType = keyof MediaRatio;
@@ -15,7 +15,7 @@ const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
   poster: 3 / 4,
-  still: 7 / 5
+  still: 16 / 10
 };
 
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
@@ -32,24 +32,11 @@ function b64toBlob(data: string) {
   const type = metadata.split(';')[0].split(':')[1];
   return new Blob([ab], { type });
 }
-
-/** Check if the path is a file path */
-function isFile(ref: string): boolean {
-  if (!ref) {
-    return false;
-  }
-  const part = ref.split('.');
-  const last = part.pop();
-  return part.length >= 1 && !last.includes('/');
-}
-
 @Component({
   selector: 'drop-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  viewProviders: [DropZoneDirective],
-  animations: [zoom, zoomDelay, check, finalZoom]
 })
 export class CropperComponent implements OnInit {
 
@@ -57,8 +44,13 @@ export class CropperComponent implements OnInit {
   // Private Variables //
   //////////////////////
 
-  private ref: AngularFireStorageReference;
+  private ref: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
+  private parameters: ImageParameters = {
+    auto: 'compress,format',
+    fit: 'crop',
+    w: 0,
+  };
 
   ///////////////////////
   // Public Variables //
@@ -70,9 +62,7 @@ export class CropperComponent implements OnInit {
   cropRatio: number;
   parentWidth: number;
   prev: CropStep;
-  previewUrl$: Observable<string | null>;
-  percentage$: Observable<number>;
-  resizing = false;
+  previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
 
   /////////////
   // Inputs //
@@ -87,20 +77,56 @@ export class CropperComponent implements OnInit {
   /** Disable fileUploader & delete buttons in 'show' step */
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
+  @Input() filePrivacy : Privacy = 'public';
 
-  constructor(private storage: AngularFireStorage, private _renderer: Renderer2, private _elementRef: ElementRef) { }
+  constructor(
+    private mediaService: MediaService,
+    private sanitizer: DomSanitizer,
+  ) { }
 
   ngOnInit() {
-    // show current image
-    if (this.form.ref?.value) {
-      this.ref = this.storage.ref(this.form.ref.value);
+    if (!!this.form.blobOrFile.value) {
+      const blobUrl = URL.createObjectURL(this.form.blobOrFile.value);
+      const previewUrl = this.sanitizer.bypassSecurityTrustUrl(blobUrl);
+      this.previewUrl$.next(previewUrl);
+      this.nextStep('show');
+    } else if (!!this.form.oldRef?.value) {
+      this.ref = this.form.oldRef.value;
       this.goToShow();
     }
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop($event: DragEvent) {
+    $event.preventDefault();
+    this.filesSelected($event.dataTransfer.files);
+  }
+
+  @HostListener('dragover', ['$event'])
+  onDragOver($event: DragEvent) {
+    $event.preventDefault();
+    this.nextStep('hovering');
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave($event: DragEvent) {
+    $event.preventDefault();
+    if (!!this.form.blobOrFile.value || (!!this.form.ref?.value)) {
+      this.nextStep('show');
+    } else {
+      this.nextStep('drop');
+    };
   }
 
   ///////////
   // Steps //
   ///////////
+
+  async goToShow() {
+    this.previewUrl$.next(await this.getDownloadUrl(this.ref));
+    this.nextStep('show');
+  }
+
 
   // drop
   filesSelected(fileList: FileList): void {
@@ -124,12 +150,11 @@ export class CropperComponent implements OnInit {
       this.nextStep('show');
 
       // regexp selects part of string after the last . in the string (which is always the file extension) and replaces this by '.webp'
-      const fileName = this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp');
+      const fileName = sanitizeFileName(this.file.name.replace(/(\.[\w\d_-]+)$/i, '.webp'));
 
       this.form.patchValue({
-        ref: `${this.storagePath}/original/`,
+        ref: getStoragePath(this.storagePath, this.filePrivacy),
         blobOrFile: blob,
-        delete: false,
         fileName: fileName,
       })
       this.form.markAsDirty();
@@ -139,19 +164,12 @@ export class CropperComponent implements OnInit {
     }
   }
 
-  async goToShow() {
-    this.previewUrl$ = this.getDownloadUrl(this.ref);
-    this.nextStep('show');
-  }
-
   delete() {
     if (this.croppedImage) {
       this.croppedImage = '';
     }
 
-    this.form.patchValue({
-      delete: true
-    })
+    this.form.patchValue({ ref: ''});
     this.form.markAsDirty();
 
     this.nextStep('drop');
@@ -162,11 +180,11 @@ export class CropperComponent implements OnInit {
     this.step.next(name);
   }
 
-  /** Returns an observable of the download url of an image based on its reference */
-  private getDownloadUrl(ref: AngularFireStorageReference): Observable<string> {
-    return ref.getDownloadURL().pipe(
-      catchError(_ => of(''))
-    )
+  /**
+   * Returns a promise with the download url of an image based on its reference.
+   * If media is protected, this will also try to fetch a security token.
+   * */
+  private getDownloadUrl(ref: string): Promise<string> {
+    return this.mediaService.generateImgIxUrl(ref, this.parameters);
   }
-
 }

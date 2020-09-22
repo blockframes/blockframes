@@ -4,27 +4,28 @@ const ACCEPTED = 'Accepted';
 
 export default class FestivalInvitationsPage {
   constructor() {
-    cy.get('festival-invitation')
+    cy.get('invitation-view', {timeout: 30000});
   }
 
   acceptInvitationScreening() {
-    cy.get('festival-invitation [test-id=more]').first().click();
-    cy.get('[test-id=accept-invitation]').click();
+    cy.get('invitation-view [test-id=more]', {timeout: 30000})
+      .first().click();
+    cy.get('[test-id=accept-invitation]', {timeout: 3000}).click();
     cy.wait(2000);
   }
 
   refuseInvitationScreening() {
-    cy.get('festival-invitation [test-id=more]').first().click();
+    cy.get('invitation-view [test-id=more]').first().click();
     cy.get('[test-id=decline-invitation]').click();
     cy.wait(2000);
   }
 
   assertInvitationIsAccepted() {
-    cy.get('festival-invitation invitation-list invitation-item').contains(ACCEPTED);
+    cy.get('invitation-view invitation-list invitation-item').contains(ACCEPTED);
   }
 
   openMoreMenu() {
-    cy.get('festival-invitation [test-id=more]').first().click();
+    cy.get('invitation-view [test-id=more]').first().click();
   }
 
   clickGoToEvent() {

@@ -1,0 +1,158 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Selection & Reviews</h1>
+  <ng-container tunnel-form>
+    <h3>Festival & Awards</h3>
+    <section id="festival">
+      <bf-form-list [form]="form.prizes" buttonText="Add a Festival">
+        <ng-template itemRef let-prizes>{{ prizes.name | toLabel: 'festival' }} - {{ prizes.prize }} - {{ prizes.year }}
+          - {{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+        <ng-template formView let-prizesForm>
+          <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout="row" fxLayoutGap="24px">
+              <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival"
+                fxFlex required label="Festival name"
+                hint="If you can't find the festival you're looking for, go to 'Custom Festival' section.">
+              </static-select>
+            </div>
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Awards/Selections</mat-label>
+                <input test-id="prize" matInput formControlName="prize" />
+                <mat-error *ngIf="prizesForm.get('prize').hasError('maxlength')">
+                  Awards and selections should not exceed 200 characters.
+                </mat-error>
+                <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
+                <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
+                <mat-error *ngIf="prizesForm.hasError('required')">
+                  Year is required.
+                </mat-error>
+              </mat-form-field>
+
+            </div>
+
+            <h6 class="mat-caption">Premiere</h6>
+            <div>
+              <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
+                <ng-container *ngFor="let premiere of premieres">
+                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
+                    [matTooltipDisabled]="!premiere?.hint">
+                    {{ premiere.label }}
+                  </mat-button-toggle>
+                </ng-container>
+              </mat-button-toggle-group>
+            </div>
+            <span class="mat-caption">Select premiere that apply</span>
+
+          </article>
+        </ng-template>
+      </bf-form-list>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <h3>Custom Festival & Awards</h3>
+    <section id="custom-festival">
+
+      <bf-form-list [form]="form.customPrizes" buttonText="Add a custom Festival">
+        <ng-template itemRef let-customPrizes>{{ customPrizes.name }} - {{ customPrizes.prize }} -
+          {{ customPrizes.year }} - {{ customPrizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+        <ng-template formView let-customPrizesForm>
+          <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Custom festival name</mat-label>
+              <input matInput formControlName="name">
+            </mat-form-field>
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Awards/Selections</mat-label>
+                <input test-id="prize" matInput formControlName="prize" />
+                <mat-error *ngIf="customPrizesForm.get('prize').hasError('maxlength')">
+                  Awards and selections should not exceed 200 characters.
+                </mat-error>
+                <mat-hint>Please fill in your project's award(s) and/or selection(s) for this festival.</mat-hint>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Year</mat-label>
+                <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
+                <mat-error *ngIf="customPrizesForm.get('year').hasError('invalidYear')">Please enter a valid year
+                </mat-error>
+                <mat-error *ngIf="customPrizesForm.hasError('required')">
+                  Year is required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <h6 class="mat-caption">Premiere</h6>
+            <div>
+              <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
+                aria-label="Premiere">
+                <ng-container *ngFor="let premiere of premieres">
+                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
+                    [matTooltipDisabled]="!premiere?.hint">
+                    {{ premiere.label }}
+                  </mat-button-toggle>
+                </ng-container>
+              </mat-button-toggle-group>
+            </div>
+            <span class="mat-caption">Select premiere that apply</span>
+
+          </article>
+        </ng-template>
+      </bf-form-list>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <h3>Film Reviews</h3>
+    <section id="reviews">
+
+      <bf-form-list [form]="form.review" buttonText="Add a Film Review">
+        <ng-template itemRef let-review>{{ review.criticName }} - {{ review.journalName }} -
+          {{ review.revueLink | maxLength: 20 }} - {{ review.criticQuote | maxLength: 20 }} </ng-template>
+        <ng-template formView let-reviewForm>
+          <article [formGroup]="reviewForm" fxLayout="column" fxLayoutGap="24px">
+
+            <div fxLayout fxLayoutGap="24px">
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Film's Critic's Name</mat-label>
+                <input test-id="critic-name" matInput formControlName="criticName" />
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" fxFlex>
+                <mat-label>Journal Name</mat-label>
+                <input test-id="journal-name" matInput formControlName="journalName" />
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Article Link</mat-label>
+              <input test-id="link" type="url" matInput formControlName="revueLink" />
+              <mat-error *ngIf="reviewForm.get('revueLink').hasError('pattern')">
+                Please enter a valid url.
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Quote</mat-label>
+              <textarea test-id="quote" matInput formControlName="criticQuote"></textarea>
+            </mat-form-field>
+
+          </article>
+        </ng-template>
+      </bf-form-list>
+
+    </section>
+
+  </ng-container>
+</tunnel-page>

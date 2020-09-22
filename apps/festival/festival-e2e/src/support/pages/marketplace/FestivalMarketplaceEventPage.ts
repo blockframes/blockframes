@@ -1,8 +1,10 @@
-import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
+﻿import FestivalMarketplaceScreeningPage from "./FestivalMarketplaceScreeningPage";
+import FestivalScreeningPage from "./FestivalScreeningPage";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    cy.get('festival-event-view');
+    cy.wait(3000);
+    cy.get('festival-event-view', {timeout: 90000});
   }
 
   assertScreeningExist(movieTitle: string) {
@@ -15,6 +17,19 @@ export default class FestivalMarketplaceEventPage {
   }
 
   assertJoinScreeningNotExists() {
-    cy.get('festival-event-view a[test-id=event-room]').should('have.length', 0);
+    cy.log(`assertJoinScreeningNotExists : join screen should not exist!`);
+    cy.get('festival-event-view a[test-id=event-room]')
+      .should('have.length', 0);
+  }
+
+  assertEventNameExist(eventName: string) {
+    cy.log(`assertEventNameExist : header for {${eventName}}!`);
+    cy.get('festival-event-view header', {timeout: 30000})
+      .should('contain', eventName);
+  }
+
+  clickBackToEventList() {
+    cy.get('festival-event-view header a').first().click();
+    return new FestivalScreeningPage();
   }
 }

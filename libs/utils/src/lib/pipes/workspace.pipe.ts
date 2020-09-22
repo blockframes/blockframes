@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class Workspace implements PipeTransform {
   transform({ appAccess }, app: string) {
-    return appAccess[app].dashboard ? 'dashboard' : 'marketplace';
+    return appAccess[app]?.dashboard ? 'dashboard' : 'marketplace';
   }
 }
 

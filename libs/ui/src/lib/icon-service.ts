@@ -84,6 +84,7 @@ export const icons = [
   { name: 'dark_mode', url: 'assets/icons/dark_mode.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
+  { name: 'folder', url: 'assets/icons/folder.svg' },
   { name: 'excel', url: 'assets/icons/excel.svg' },
   {
     name: 'document_signed',
@@ -211,6 +212,7 @@ export const icons = [
   },
   { name: 'read', url: 'assets/icons/read.svg' },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
+  { name: 'refresh_filters', url: 'assets/icons/refresh-filters.svg'},
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
   { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
   { name: 'review', url: 'assets/icons/review.svg' },

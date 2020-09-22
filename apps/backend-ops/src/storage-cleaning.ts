@@ -1,0 +1,147 @@
+import { File as GFile } from '@google-cloud/storage';
+import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { getDocument, runChunks } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
+
+export async function cleanStorage(bucket) {
+  await startMaintenance();
+
+  const cleanMovieDirOutput = await cleanMovieDir(bucket);
+  console.log(`Cleaned ${cleanMovieDirOutput.deleted}/${cleanMovieDirOutput.total} from "public/movie" directory.`);
+  const cleanMoviesDirOutput = await cleanMoviesDir(bucket);
+  console.log(`Cleaned ${cleanMoviesDirOutput.deleted}/${cleanMoviesDirOutput.total} from "public/movies" directory.`);
+  const cleanOrgsDirOutput = await cleanOrgsDir(bucket);
+  console.log(`Cleaned ${cleanOrgsDirOutput.deleted}/${cleanOrgsDirOutput.total} from "public/orgs" directory.`);
+  const cleanUsersDirOutput = await cleanUsersDir(bucket);
+  console.log(`Cleaned ${cleanUsersDirOutput.deleted}/${cleanUsersDirOutput.total} from "public/users" directory.`);
+  const cleanWatermarkDirOutput = await cleanWatermarkDir(bucket);
+  console.log(`Cleaned ${cleanWatermarkDirOutput.deleted}/${cleanWatermarkDirOutput.total} from "public/watermark" directory.`);
+  await endMaintenance();
+
+  return true;
+}
+
+/**
+ * Movie dir should not exists
+ * @dev this should be usefull only once
+ * @param bucket 
+ */
+export async function cleanMovieDir(bucket) {
+  // Movie dir should not exists
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movie/' }))[0];
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/movie/" root
+      if (await f.delete()) { deleted++; }
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) { deleted++; }
+    } else {
+      const movieId = f.name.split('/')[2];
+      // We check if the file is used before removing it
+      const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+      if (!movie && await f.delete()) { deleted++; }
+    }
+  });
+
+  return { deleted, total: files.length };
+}
+
+export async function cleanMoviesDir(bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/movies/' }))[0];
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/movies/" root
+      if (await f.delete()) { deleted++; }
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) { deleted++; }
+    } else {
+      const movieId = f.name.split('/')[2];
+      const movie = await getDocument<MovieDocument>(`movies/${movieId}`);
+      if (!movie && await f.delete()) { deleted++; }
+    }
+  });
+
+  return { deleted, total: files.length };
+}
+
+/**
+ * Revomes files at "orgs/" root,
+ * files that have a too long name and
+ * files that belongs to deleted orgs on DB.
+ * @param bucket 
+ */
+export async function cleanOrgsDir(bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/orgs/' }))[0];
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+    if (f.name.split('/').length === 3) {
+      // Clean files at "public/orgs/" root
+      if (await f.delete()) { deleted++; }
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) { deleted++; }
+    } else {
+      const orgId = f.name.split('/')[2];
+      const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+      if (!org && await f.delete()) { deleted++; }
+    }
+  });
+
+  return { deleted, total: files.length };
+}
+
+export async function cleanUsersDir(bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/users/' }))[0];
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+    if (f.name.split('/').length === 3 || f.name.split('/').length === 4) {
+      // Clean files at "public/users/" or "public/user/{$userId}/" root
+      if (await f.delete()) { deleted++; }
+    } else if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) { deleted++; }
+    } else {
+      const userId = f.name.split('/')[2];
+      const user = await getDocument<PublicUser>(`users/${userId}`);
+      if (!user && await f.delete()) { deleted++; }
+    }
+  });
+
+  return { deleted, total: files.length };
+}
+
+/**
+ * watermark dir is not used anymore
+ * watermarks are in public/users/${userId}/${userId}.svg
+ * @param bucket 
+ */
+export async function cleanWatermarkDir(bucket) {
+  const files: GFile[] = (await bucket.getFiles({ prefix: 'public/watermark/' }))[0];
+  let deleted = 0;
+
+  await runChunks(files, async (f) => {
+    if (f.name.split('/').pop().length >= 255) {
+      // Cleaning files that have a too long name
+      if (await f.delete()) { deleted++; }
+    } else {
+      const userId = f.name.split('/')[2].replace('.svg', '');
+      const user = await getDocument<PublicUser>(`users/${userId}`);
+      if (!!user) {
+        if (user.watermark === f.name) {
+          console.log('This should not have happened if migration 29 went well..');
+        } else if (await f.delete()) { deleted++; }
+      } else if (await f.delete()) { deleted++; }
+    }
+  });
+
+  return { deleted, total: files.length };
+}

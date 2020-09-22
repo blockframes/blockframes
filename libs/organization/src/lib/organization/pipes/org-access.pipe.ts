@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { canAccessModule, OrganizationDocument } from '../+state';
+import { canAccessModule, Organization } from '../+state';
 
 @Pipe({
   name: 'canAccess',
@@ -7,7 +7,7 @@ import { canAccessModule, OrganizationDocument } from '../+state';
 })
 export class OrgAccessPipe implements PipeTransform {
 
-  transform(org: OrganizationDocument, module: 'dashboard' | 'marketplace'): boolean {
+  transform(org: Organization, module: 'dashboard' | 'marketplace'): boolean {
     return canAccessModule(module, org);
   }
 

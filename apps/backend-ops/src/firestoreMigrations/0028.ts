@@ -1,22 +1,21 @@
 import { Firestore, Storage } from '../admin';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
-import { ImgRef, createImgRef } from '@blockframes/media/+state/media.firestore';
-import { MovieDocument, PromotionalElement } from '@blockframes/movie/+state/movie.firestore';
-import { getStorageBucketName } from 'apps/backend-functions/src/internals/firebase';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';
-import { _upsertWatermark } from 'apps/backend-functions/src/internals/watermark';
-import { chunk } from 'lodash'
-import { OldImgRef, OldPublicOrganization, OldPublicUser } from './old-types';
+import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { upsertWatermark, runChunks } from '@blockframes/firebase-utils';
+import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
+
+import {
+  createOldHostedMedia as createHostedMedia,
+  OldNewPromotionalElement as PromotionalElement
+} from './old-types';
 
 const EMPTY_REF: OldImgRef = {
   ref: '',
   urls: { original: '' }
 };
-
-const rowsConcurrency = 10;
 
 /**
  * Migrate old ImgRef objects to new one.
@@ -80,9 +79,9 @@ async function updateNotifications(notifications: FirebaseFirestore.QuerySnapsho
     const notification = doc.data() as NotificationDocument;
 
     if (notification.organization) {
-      notification.organization.logo = createImgRef();
+      (notification.organization.logo as any) = createHostedMedia();
     } else if (notification.user) {
-      notification.user.avatar = createImgRef();
+      (notification.user.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(notification);
   });
@@ -93,16 +92,16 @@ async function updateInvitations(invitations: FirebaseFirestore.QuerySnapshot<Fi
     const invitation = doc.data() as InvitationDocument;
 
     if (invitation.fromOrg) {
-      invitation.fromOrg.logo = createImgRef();
+      (invitation.fromOrg.logo as any) = createHostedMedia();
     }
     if (invitation.toOrg) {
-      invitation.toOrg.logo = createImgRef();
+      (invitation.toOrg.logo as any) = createHostedMedia();
     }
     if (invitation.fromUser) {
-      invitation.fromUser.avatar = createImgRef();
+      (invitation.fromUser.avatar as any) = createHostedMedia();
     }
     if (invitation.toUser) {
-      invitation.toUser.avatar = createImgRef();
+      (invitation.toUser.avatar as any) = createHostedMedia();
     }
     await doc.ref.update(invitation);
 
@@ -124,7 +123,7 @@ async function updateMovies(
   storage: Storage
 ) {
   return runChunks(movies.docs, async (doc) => {
-    const movie = doc.data() as MovieDocument;
+    const movie = doc.data() as OldMovieImgRefDocument;
 
     const keys = ['banner', 'poster', 'still_photo'];
 
@@ -178,9 +177,7 @@ const updateUserAvatarAndWaterMark = async (user: OldPublicUser, storage: Storag
   try {
     const newImageRef = await updateImgRef(user, 'avatar', storage);
     user.avatar = newImageRef;
-    const watermark = await _upsertWatermark(user as any); // _upsertWatermark only require uid, email, firstName, lastName, witch are common between the 2 types
-    user.watermark.ref = watermark.ref;
-    user.watermark.urls.original = watermark.url;
+    await upsertWatermark(user as any, storageBucket); // upsertWatermark only require uid, email, firstName, lastName, witch are also present in OldPublicUser
   } catch (e) {
     console.log(`Error while updating user ${user.uid}. Reason: ${e.message}`);
   }
@@ -213,7 +210,7 @@ const updateImgRef = async (
   const { ref } = media as OldImgRef;
 
   // ### copy it to a new location
-  const bucket = storage.bucket(getStorageBucketName());
+  const bucket = storage.bucket(storageBucket);
 
   try {
     const from = bucket.file(ref);
@@ -243,15 +240,5 @@ const updateImgRef = async (
   } catch (e) {
     console.log('Empty ref');
     return EMPTY_REF;
-  }
-}
-
-async function runChunks(docs, cb) {
-  const chunks = chunk(docs, rowsConcurrency);
-  for (let i = 0; i < chunks.length; i++) {
-    const c = chunks[i];
-    console.log(`Processing chunk ${i + 1}/${chunks.length}`);
-    const promises = c.map(cb);
-    await Promise.all(promises);
   }
 }

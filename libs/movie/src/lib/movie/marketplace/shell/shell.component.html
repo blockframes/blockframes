@@ -1,0 +1,37 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <!-- App bar -->
+  <ng-template pageBar targetId="nav">
+    <header fxLayout fxLayoutAlign="start center">
+      <app-menu></app-menu>
+      <ng-container *ngFor="let link of routes">
+        <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive
+          #rla="routerLinkActive">
+          {{link.label}}
+        </a>
+      </ng-container>
+    </header>
+  </ng-template>
+
+  <!-- Header -->
+  <ng-content select="movie-header"></ng-content>
+
+  <!-- Content -->
+  <nav id="nav" mat-tab-nav-bar>
+    <a mat-tab-link *ngFor="let link of routes" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+  <section [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </section>
+
+  <!-- Footer -->
+  <movie-screening></movie-screening>
+  <h2 flex>Images</h2>
+  <bf-carousel flex [min]="4">
+    <ng-container *ngFor="let photo of movie.promotional.still_photo | keyvalue">
+      <img carouselItem [col]="3" [ref]="photo.value" asset="empty_poster.webp" >
+    </ng-container>
+  </bf-carousel>
+</ng-container>

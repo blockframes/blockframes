@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
-import { HostedMedia } from '@blockframes/media/+state/media.model';
 
 @Pipe({
   name: 'fileName'
 })
 export class FileNamePipe implements PipeTransform {
-  transform(file: HostedMedia | string) {
-    const arrayedRef = typeof file === 'string' ? file.split('/') : file.ref.split('/');
+  transform(file: string) {
+    if (typeof file !== 'string') {
+      console.warn('UNEXPECTED FILE', file);
+      return '';
+    }
+    const arrayedRef = file.split('/');
     return arrayedRef.pop();
   }
 }

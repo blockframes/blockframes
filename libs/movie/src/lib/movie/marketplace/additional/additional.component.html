@@ -1,0 +1,88 @@
+<ng-container *ngIf="movie$ | async as movie">
+  <h1>Additional Information</h1>
+
+  <section *ngIf="movie.originalRelease.length">
+    <h2>Release</h2>
+    <article *ngFor="let release of movie.originalRelease">
+      <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
+      <p>{{ release.media }} {{ release.date | date: 'shortDate' }}</p>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section *ngIf="movie | hasKeys: 'estimatedBudget'">
+    <h2>Budget</h2>
+    <article>
+      <h5>Budget Range</h5>
+      <p>
+        From <b>{{ movie.estimatedBudget.from }}</b> to <b>{{ movie.estimatedBudget.to }}</b>
+      </p>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section *ngIf="movie.boxOffice.length">
+    <h2>Box Office</h2>
+    <article *ngFor="let boxOffice of movie.boxOffice">
+      <h5>{{ boxOffice.territory | translateSlug : 'TERRITORIES' }}</h5>
+      <p>{{ boxOffice.value | currency: boxOffice.unit }}</p>
+    </article>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section *ngIf="movie.rating.length">
+    <h2>Ratings</h2>
+    <article *ngFor="let rating of movie.rating">
+      <h5>{{ rating.country | translateSlug : 'TERRITORIES' }}</h5>
+      <p>{{ rating.value }}</p>
+    </article>
+  </section>
+
+
+
+  <h1>Technial Information</h1>
+
+  <section *ngIf="movie | hasKeys: keys.formats">
+    <h2>Formats</h2>
+    <article *ngIf="movie.format">
+      <h5>Shooting Format</h5>
+      <p>{{ movie.format }}</p>
+    </article>
+    <article *ngIf="movie.formatQuality">
+      <h5>Format quality</h5>
+      <p>{{ movie.formatQuality }}</p>
+    </article>
+    <article *ngIf="movie.color">
+      <h5>Color information</h5>
+      <p>{{ movie.color }}</p>
+    </article>
+    <article *ngIf="movie.soundFormat">
+      <h5>Sound format</h5>
+      <p>{{ movie.soundFormat }}</p>
+    </article>
+  </section>
+
+  <section>
+    <h2>Available Versions</h2>
+    <article>
+      <h5>Original version</h5>
+      <p>{{ movie.isOriginalVersionAvailable ? 'AUTHORIZED' : 'UNAUTHORIZED' }}</p>
+    </article>
+    <article *ngIf="movie | hasKeys: 'languages'">
+      <h5>Versions</h5>
+      <ng-container *ngFor="let language of movie.languages | keyvalue">
+        <div fxLayout fxLayoutGap="8px">
+          <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
+          <mat-chip-list>
+            <ng-container *ngFor="let version of language.value | keyvalue">
+              <mat-chip *ngIf="version.value">{{ version.key }}</mat-chip>
+            </ng-container>
+          </mat-chip-list>
+        </div>
+      </ng-container>
+    </article>
+  </section>
+</ng-container>

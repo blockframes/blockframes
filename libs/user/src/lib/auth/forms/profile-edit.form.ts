@@ -1,15 +1,14 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { User } from '@blockframes/auth/+state/auth.store';
-import { createImgRef, ImgRef } from '@blockframes/media/+state/media.firestore';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { ImgRefForm } from '@blockframes/media/form/image-reference.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 export interface Profile {
   firstName: string;
   lastName: string;
   phoneNumber: string;
   position: string;
-  avatar: ImgRef;
+  avatar: string;
   email: string;
 }
 
@@ -21,7 +20,7 @@ export function createProfile(params: Partial<User> = {}): Profile {
     position: '',
     email: '',
     ...params,
-    avatar: createImgRef(params.avatar),
+    avatar: params.avatar ?? '',
   };
 }
 
@@ -32,7 +31,7 @@ function createProfileControls(entity: Partial<User>) {
     lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
-    avatar: new ImgRefForm(profile.avatar),
+    avatar: new HostedMediaForm(profile.avatar),
     email: new FormControl({ value: profile.email, disabled: true })
   };
 }

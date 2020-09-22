@@ -4,17 +4,17 @@
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
-        <mat-card [formGroup]="meta" fxLayout="column">
+        <mat-card [formGroup]="form.meta" fxLayout="column">
           <ng-container *ngIf="(titles$ | async) as titles else loading">
             <mat-form-field appearance="outline">
               <mat-label>Select the title to display</mat-label>
               <mat-select formControlName="titleId">
                 <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.hostedVideo">
                   <ng-container *ngIf="title.hostedVideo else noVideo">
-                    {{ title.main.title.international }}
+                    {{ title.title.international }}
                   </ng-container>
                   <ng-template #noVideo>
-                    <span class="text-disabled">{{ title.main.title.international }}</span>
+                    <span class="text-disabled">{{ title.title.international }}</span>
                     <span> - </span>
                     <span class="text-warn">Upload video first.</span>
                   </ng-template>
@@ -27,14 +27,17 @@
           </ng-template>
         </mat-card>
       </ng-container>
+
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
-        <mat-card [formGroup]="meta" fxLayout="column">
+        <mat-card [formGroup]="form.meta" fxLayout="column">
           <mat-form-field appearance="outline">
             <mat-label>Link to a video call</mat-label>
             <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
-            <mat-error *ngIf="form.get('meta').get('callUrl').hasError('pattern')">Please fill in a url (e.g. https://meet.google.com/xyz)</mat-error>
+            <mat-error *ngIf="form.meta.hasError('pattern', 'callUrl')">
+              Please fill in a url (e.g. https://meet.google.com/xyz)
+            </mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
@@ -48,6 +51,20 @@
             <mat-label>Description</mat-label>
             <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
           </mat-form-field>
+
+          <h6>Files</h6>
+          <p>
+            Select files you want to share during the meeting.
+            Every member of the meeting will be able to see and download the selected files.
+          </p>
+          <bf-form-list [form]="files" buttonText="Add a File" saveButtonText="Select">
+            <ng-template itemRef let-file>
+              {{file | fileName}}
+            </ng-template>
+            <ng-template formView let-fileSelectorForm>
+              <media-file-selector [form]="fileSelectorForm"></media-file-selector>
+            </ng-template>
+          </bf-form-list>
         </mat-card>
       </ng-container>
     </ng-container>

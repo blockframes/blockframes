@@ -1,10 +1,3 @@
-import {
-  RelayerConfig,
-  relayerDeployLogic,
-  relayerRegisterENSLogic,
-  relayerSendLogic,
-} from './relayer';
-import { mnemonic, relayer } from './environments/environment';
 import { functions } from './internals/firebase';
 import * as users from './users';
 import * as invitations from './invitation';
@@ -21,13 +14,12 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
-import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
-import { linkFile, unlinkFile } from './media';
+import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
-import { skipInMaintenance } from './maintenance';
+import { skipInMaintenance } from '@blockframes/firebase-utils';
 
 
 //--------------------------------
@@ -126,9 +118,12 @@ export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
 
 /** Trigger: when a permission document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
-  'permissions/{orgID}/documentPermissions/{docId}',
+  'permissions/{orgID}/documentPermissions/{docID}',
   onDocumentPermissionCreate
 );
+
+/** Trigger: when an user ask for a private media. */
+export const getMediaToken = functions.https.onCall(logErrors(_getMediaToken));
 
 //--------------------------------
 //    Invitations Management    //
@@ -177,7 +172,7 @@ export const onMovieCreateEvent = onDocumentCreate(
 /**
  * Trigger: when a movie is updated
  */
-export const onMovieUpdateEvent =  functions
+export const onMovieUpdateEvent = functions
   .runWith(heavyConfig) // movie update can potentially trigger images processing
   .firestore.document('movies/{movieId}')
   .onUpdate(skipInMaintenance(onMovieUpdate));
@@ -201,13 +196,6 @@ export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
   onContractWrite
 );
-
-//---------------------------------
-//  Private documents Management //
-//---------------------------------
-
-export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
-export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
 
 //--------------------------------
 //       Apps Management        //
@@ -251,31 +239,7 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 );
 
 //--------------------------------
-//            RELAYER           //
-//--------------------------------
-const RELAYER_CONFIG: RelayerConfig = {
-  ...relayer,
-  mnemonic
-};
-
-export const relayerDeploy = functions.runWith({ timeoutSeconds: 540 }).https
-  .onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
-
-export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
-  .onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
-
-export const relayerSend = functions.https
-  .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
-
-//--------------------------------
-//         File upload          //
+//      Files management        //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. */
-export const onFileUpload = functions.storage.object().onFinalize(data => linkFile(data))
-
-//--------------------------------
-//         File delete          //
-//--------------------------------
-
-export const onFileDelete = functions.storage.object().onDelete(data => unlinkFile(data))
+export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));

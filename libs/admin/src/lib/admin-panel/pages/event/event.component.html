@@ -7,7 +7,7 @@
       <h2>Invite people</h2>
       <mat-card>
         <mat-card-content fxLayout="column">
-          <invitation-form-user [docId]="eventId"></invitation-form-user>
+          <invitation-form-user [docId]="eventId" [ownerId]="event.ownerId"></invitation-form-user>
         </mat-card-content>
       </mat-card>
 
@@ -16,11 +16,11 @@
         <mat-card>
           <mat-card-header>
             <mat-card-title>
-              Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+              Event for : {{ movie.title.international }} ({{ movie.internalRef }})
             </mat-card-title>
             <ng-container
-              *ngIf="movie.main.poster && movie.main.poster.media as poster;">
-              <bf-img mat-card-avatar [ref]="poster" asset="empty_poster.webp"></bf-img>
+              *ngIf="movie.poster as poster;">
+              <img mat-card-avatar [ref]="poster" asset="empty_poster.webp">
             </ng-container>
           </mat-card-header>
 

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
-import { MovieStoryForm } from './story.form';
 
 
 @Component({
@@ -10,11 +9,11 @@ import { MovieStoryForm } from './story.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormStoryComponent {
-  
+
   constructor(public controlContainer: ControlContainer) { }
 
-  get story() : MovieStoryForm {
-    return this.controlContainer.control as MovieStoryForm;
+  get story() {
+    return this.controlContainer.control;
   }
 
 

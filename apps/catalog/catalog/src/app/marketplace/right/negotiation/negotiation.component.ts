@@ -11,7 +11,7 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NegotiationComponent {
-
+  panelOpenState: boolean;
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
   titles$ = this.query.titles$;
@@ -25,7 +25,7 @@ export class NegotiationComponent {
   ) { }
 
   getDirectors(movie: Movie) {
-    return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
+    return  movie.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
   }
 
   openIntercom() {

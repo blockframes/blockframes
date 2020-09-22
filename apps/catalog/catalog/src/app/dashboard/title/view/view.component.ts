@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { Router, NavigationEnd } from '@angular/router';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 @Component({
   selector: 'catalog-title-view',
@@ -19,19 +20,27 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   public getLabelBySlug = getLabelBySlug;
   private sub: Subscription;
 
-  navLinks = [
+  navLinks: RouteDescription[] = [
     {
       path: 'activity',
       label: 'Marketplace Activity'
     },
     {
-      path: 'details',
-      label: 'Film Details'
+      path: 'main',
+      label: 'Main Information'
+    },
+    {
+      path: 'artistic',
+      label: 'Artistic Information'
+    },
+    {
+      path: 'production',
+      label: 'Production Information'
     }
   ];
 
   constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService, private router: Router) {
-    const titleName = this.movieQuery.getActive().main.title.international || 'No title'
+    const titleName = this.movieQuery.getActive().title.international || 'No title'
     this.sub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         event.url.includes('details')
@@ -48,14 +57,6 @@ export class TitleViewComponent implements OnInit, OnDestroy {
   private getMovie() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
-  }
-
-  public getPoster(movie: Movie) {
-    return movie.main.poster.media;
-  }
-
-  public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 
   ngOnDestroy() {

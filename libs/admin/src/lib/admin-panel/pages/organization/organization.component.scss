@@ -4,11 +4,6 @@
   border-radius: 50%;
 }
 
-mat-card {
-  height: 380px;
-  width: 100%;
-}
-
 mat-card-content {
   margin: 0;
   width: 100%;
@@ -34,14 +29,6 @@ mat-card-content {
   width: 50px;
 }
 
-.full-width {
-  width: 100%;
-}
-
-.company-address {
-  height: 450px;
-}
-
 .company-logo {
   height: 100%;
 }
@@ -52,4 +39,13 @@ mat-card-content {
 
 section, main {
   margin: 40px;
+}
+
+drop-cropper {
+  h3, p.mat-body-2 {
+    margin-bottom: 4px;
+  }
+  p.mat-caption {
+    margin-bottom: 8px;
+  }
 }

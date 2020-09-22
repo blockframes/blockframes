@@ -1,3 +1,11 @@
+form.app-bar {
+  width: 100%;
+  input {
+    background-color: transparent;
+    font-size: 2rem;
+  }
+}
+
 mat-form-field {
   width: 100%;
 }
@@ -6,4 +14,12 @@ title-filter {
   static-check-boxes, filter-budget {
     padding: 0 16px;
   }
+}
+
+button {
+  margin-bottom: 24px;
+}
+
+.progress {
+  margin-bottom: 16px;
 }

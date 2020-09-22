@@ -13,21 +13,21 @@
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
           <span>{{ org | orgName }}</span>
-          <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
+          <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</span>
         </div>
-        <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+        <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       </div>
     </div>
   </ng-template>
 
-  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" @fade class="dark-contrast-theme">
+  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" class="dark-contrast-theme" bgAsset="profil_banner.webp">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayoutGap="20px">
-      <bf-img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo"></bf-img>
+      <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
       <article fxLayout="column" fxLayoutAlign="start start">
-        <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
+        <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
         <span class="mat-display-2">{{ org | orgName }}</span>
         <h2>
           <span>{{ org.addresses.main.street | titlecase }}</span>
@@ -47,7 +47,7 @@
       </article>
     </div>
   </header>
-  <nav id="nav" mat-tab-nav-bar @fade>
+  <nav id="nav" mat-tab-nav-bar>
     <a mat-tab-link
         *ngFor="let link of navLinks"
         [routerLink]="link.path"
@@ -56,5 +56,7 @@
       {{link.label}}
     </a>
   </nav>
-  <router-outlet></router-outlet>
+  <section [@routeAnimation]="animationOutlet(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </section>
 </ng-container>

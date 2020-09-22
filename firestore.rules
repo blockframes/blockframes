@@ -116,7 +116,7 @@ service cloud.firestore {
     ////////////////////////////////
 
     /// RULES ///
-    
+
     match /invitations/{invitationId} {
     	allow read: if isAllowedToReadInvitation();
       allow create: if isInvitationCreator()
@@ -142,8 +142,8 @@ service cloud.firestore {
 
     function isConcerned() {
       return (
-        userId() == existingData().fromUser.uid 
-        || isOrgMember(existingData().fromOrg.id) 
+        userId() == existingData().fromUser.uid
+        || isOrgMember(existingData().fromOrg.id)
         || userId() == existingData().toUser.uid
         || isOrgMember(existingData().toOrg.id)
       )
@@ -189,7 +189,7 @@ service cloud.firestore {
     ////////////////////////////////
 
     /// RULES ///
-  
+
     match /orgs/{orgId} {
       // @TODO #2650 #2692 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isSignedIn();
@@ -270,7 +270,7 @@ service cloud.firestore {
     	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg();
       allow create: if userHasValidOrg()
-        && isRequestFieldValueEqualTo(['main', 'storeConfig', 'status'], 'draft')
+        && isRequestFieldValueEqualTo(['storeConfig', 'status'], 'draft')
       	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
         && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isAllowedToUpdateMovie();
@@ -297,13 +297,13 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['_meta', '_createdBy'])
         && isNotUpdatingField(['_type'])
-        && ( isNotUpdatingField(['main', 'storeConfig','status']) 
-          || ( existingData().main.storeConfig.appAccess.festival == true && incomingData().main.storeConfig.status in ['submitted', 'accepted', 'draft'] )
-          || ( existingData().main.storeConfig.appAccess.catalog == true && incomingData().main.storeConfig.status in ['submitted', 'draft'] )
+        && ( isNotUpdatingField(['storeConfig','status'])
+          || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'accepted', 'draft'] )
+          || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
         )
-        && isNotUpdatingField(['main', 'storeConfig','storeType'])
-        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
-        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])
+        && isNotUpdatingField(['storeConfig','storeType'])
+        && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])
+        && isNotUpdatingField(['storeConfig','appAccess', 'festival'])
         && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 
@@ -342,14 +342,14 @@ service cloud.firestore {
     /// EVENTS RULES ///
     match /events/{eventId} {
     	allow read: if userHasValidOrg();
-      allow create: if userHasValidOrg() 
+      allow create: if userHasValidOrg()
         && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && ( isRequestFieldValueEqualTo(['ownerId'], userId()) || isRequestFieldValueEqualTo(['ownerId'], userOrgId()) );
-      allow update: if userHasValidOrg() 
+      allow update: if userHasValidOrg()
         && isNotUpdatingId('id', existingData().id)
         && ( existingData().ownerId == userId() || existingData().ownerId == userOrgId() );
       allow delete: if userHasValidOrg()
-        && ( 
+        && (
           existingData().ownerId == userId() // Current user is event owner
           || ( existingData().ownerId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
         );
@@ -451,7 +451,7 @@ service cloud.firestore {
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldArray) {
-			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] ) 
+			return ( !incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) ||  incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == existingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] )
         || ( !incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) ||  incomingData()[fieldArray[0]][fieldArray[1]] == existingData()[fieldArray[0]][fieldArray[1]] )
         || ( !incomingData().keys().hasAll([fieldArray[0]]) ||  incomingData()[fieldArray[0]] == existingData()[fieldArray[0]] );
     }
@@ -463,7 +463,7 @@ service cloud.firestore {
 
     // Incoming field path must be setted with a value equal to "value"
     function isRequestFieldValueEqualTo(fieldArray, value) {
-      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value) 
+      return (incomingData()[fieldArray[0]][fieldArray[1]][fieldArray[2]] == value)
         || (incomingData()[fieldArray[0]][fieldArray[1]] == value)
         || (incomingData()[fieldArray[0]] == value);
     }
@@ -472,11 +472,11 @@ service cloud.firestore {
     function isRequestFieldValueEqualToOrNotSetted(fieldArray, value) {
     	return isRequestFieldValueNotSetted(fieldArray) || isRequestFieldValueEqualTo(fieldArray, value);
     }
-    
+
     // The call doest not contain path fieldArray
     function isRequestFieldValueNotSetted(fieldArray) {
     	return (!incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
-       || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) 
+       || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]))
        || !incomingData().keys().hasAll([fieldArray[0]]);
     }
 

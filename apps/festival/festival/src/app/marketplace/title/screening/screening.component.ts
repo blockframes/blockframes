@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { ViewComponent } from '../view/view.component';
+import { TitleMarketplaceShellComponent } from '@blockframes/movie/marketplace/shell/shell.component';
 import { Event } from '@blockframes/event/+state';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'festival-screening',
@@ -15,11 +16,13 @@ export class ScreeningComponent implements OnInit {
   events$: Observable<Event[]>;
 
   constructor(
-    private parent: ViewComponent,
+    private parent: TitleMarketplaceShellComponent,
     private service: EventService,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit(): void {
+    this.dynTitle.setPageTitle('Film Page', 'Screening Schedule');
     this.events$ = this.parent.movie$.pipe(
       switchMap(movie => {
         const query = ref => ref.where('meta.titleId', '==', movie.id)

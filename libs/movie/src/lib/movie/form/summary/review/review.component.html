@@ -1,0 +1,111 @@
+<!-- FESTIVAL -->
+<article>
+  <h6>
+    Festival{ movie.prizes.controls.length, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="festival">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!movie.prizes.controls.length else displayFestivals">
+      <a [routerLink]="link" fragment="festival" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayFestivals>
+      <li *ngFor="let festivalPrize of movie.prizes.controls">
+        <strong>
+          <missing-control [control]="festivalPrize.get('name')" [link]="link" fragment="festival">
+            <ng-template #content>{{ festivalPrize.get('name').value | toLabel: 'festival' }} </ng-template>
+          </missing-control>
+        </strong>
+        <missing-control [control]="festivalPrize.get('prize')" [link]="link" fragment="festival">
+          <ng-template #content>{{ festivalPrize.get('prize').value }} </ng-template>
+        </missing-control>
+        <missing-control [control]="festivalPrize.get('year')" [link]="link" fragment="festival">
+          <ng-template #content>{{ festivalPrize.get('year').value }} </ng-template>
+        </missing-control>
+        <missing-control [control]="festivalPrize.get('premiere')" [link]="link" fragment="festival">
+          <ng-template let-premieres>
+            <ng-container *ngIf="festivalPrize.get('premiere')">
+              <span>{{ festivalPrize.get('premiere').value | titlecase }} Premiere</span>
+            </ng-container>
+          </ng-template>
+        </missing-control>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<!-- CUSTOM FESTIVAL -->
+<article>
+  <h6>
+    Custom Festival{ movie.customPrizes.controls.length, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="custom-festival">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <ng-container *ngIf="!movie.customPrizes.controls.length else displayCustomFestival">
+      <a [routerLink]="link" fragment="custom-festival" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #displayCustomFestival>
+      <li *ngFor="let customPrize of movie.customPrizes.controls">
+        <strong>
+          <missing-control [control]="customPrize.get('name')" [link]="link" fragment="custom-festival">
+            <ng-template #content>{{ customPrize.get('name').value }} </ng-template>
+          </missing-control>
+        </strong>
+        <missing-control [control]="customPrize.get('prize')" [link]="link" fragment="custom-festival">
+          <ng-template #content>{{ customPrize.get('prize').value }} </ng-template>
+        </missing-control>
+        <missing-control [control]="customPrize.get('year')" [link]="link" fragment="custom-festival">
+          <ng-template #content>{{ customPrize.get('year').value }} </ng-template>
+        </missing-control>
+        <missing-control [control]="customPrize.get('premiere')" [link]="link" fragment="custom-festival">
+          <ng-template let-premieres>
+            <ng-container *ngIf="customPrize.get('premiere')">
+              <span>{{ customPrize.get('premiere').value | titlecase }} Premiere</span>
+            </ng-container>
+          </ng-template>
+        </missing-control>
+      </li>
+    </ng-template>
+  </ul>
+</article>
+
+<!-- REVIEW -->
+<article>
+  <h6>
+    Film Review{ movie.review.controls.length, plural, =0 {} =1 {} other {s}}
+    <a mat-icon-button [routerLink]="link" fragment="reviews">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <ng-container *ngFor="let review of movie.review.controls">
+      <li>
+        <ng-container *ngIf="reviewHasNoValue(review) else displayReviews">
+          <a [routerLink]="link" class="missing-control">
+            Missing
+          </a>
+        </ng-container>
+        <ng-template #displayReviews>
+          <strong>
+            <missing-control [control]="review.get('journalName')" [link]="link" fragment="reviews"></missing-control>
+          </strong>
+          <span>&nbsp;</span>
+          <missing-control [control]="review.get('revueLink')" fragment="reviews">
+            <ng-template>
+              <a [href]="review.get('revueLink').value" class="text-primary"
+                target="_blank">{{ review.get('revueLink').value }}</a>
+            </ng-template>
+          </missing-control>
+          "<missing-control [control]="review.get('criticQuote')" [link]="link" fragment="reviews"></missing-control>"
+        </ng-template>
+      </li>
+    </ng-container>
+  </ul>
+</article>

@@ -1,14 +1,18 @@
 <main>
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
 
+  <mat-card *ngIf="movie">
+    <movie-header *ngIf="movie" [movie]="movie"></movie-header>
+  </mat-card>
+
   <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
     <mat-card>
       <h2>
-        {{ movie.main.title.international }} ({{ movie.main.internalRef || 'missing internal ref' }})
+        {{ movie.title.international }} ({{ movie.internalRef || 'missing internal ref' }})
         <admin-go-to type="title" [id]="movieId"></admin-go-to>
       </h2>
 
-      <h4>({{ movie.main.title.original }})</h4>
+      <h4>({{ movie.title.original }})</h4>
 
       <ng-container *ngIf="movieForm">
         <form [formGroup]="movieForm" fxLayout="column">
@@ -35,8 +39,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Production Status</mat-label>
             <mat-select formControlName="productionStatus" required>
-              <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
-                {{ status.label }}
+              <mat-option *ngFor="let status of staticConsts.productionStatus | keyvalue" [value]="status.key">
+                {{ status.value }}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -84,36 +88,9 @@
           <a [routerLink]="['/c/o/admin/panel/right',rightLink.id, 'm', rightLink.movieId]"><mat-icon svgIcon="pencil"></mat-icon></a>
         </ng-template>
         <ng-template colRef="status" let-status>
-          {{ status | toLabel: 'distributionRightStatus' | async }}
+          {{ status | toLabel: 'distributionRightStatus'  }}
         </ng-template>
       </bf-table-filter>
     </mat-card>
   </article>
-  <mat-card *ngIf="movie">
-    <h2>Promotional Elements :</h2>
-
-    <admin-image-sizes *ngIf="movie.main.banner.media" title="Movie banner" [imgRef]="movie.main.banner.media">
-      <h3>Movie Banner</h3>
-    </admin-image-sizes>
-    <admin-image-sizes *ngIf="movie.main.poster.media" title="Movie poster" [imgRef]="movie.main.poster.media">
-      <h3>Movie poster</h3>
-    </admin-image-sizes>
-  </mat-card>
-
-  <mat-card *ngIf="movie">
-    <h2>Movie private config :</h2>
-
-    <ng-container *ngIf="privateConfigForm">
-      <form [formGroup]="privateConfigForm" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Something private</mat-label>
-          <input matInput type="text" placeholder="Something private" formControlName="url" />
-        </mat-form-field>
-        <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
-        </mat-card-actions>
-      </form>
-    </ng-container>
-  </mat-card>
-
 </main>
