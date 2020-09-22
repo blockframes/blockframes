@@ -714,7 +714,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     scenario: new HostedMediaForm(entity.scenario),
     moodboard: new HostedMediaForm(entity.moodboard),
     notes: new HostedMediaForm(entity.notes),
-    // sales_pitch: new MovieSalesPitchForm(entity.sales_pitch),
+    sales_pitch: new MovieSalesPitchForm(entity.sales_pitch),
 
     // External Media
     clip_link: new FormControl(entity.clip_link, urlValidators),
@@ -739,11 +739,11 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
 // ------------------------------
 
 function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
-  const { description, link, salesPitch } = createSalesPitch(pitch);
+  const { description, link, pitchFile } = createSalesPitch(pitch);
   return {
     description: new FormControl(description),
     link: new FormControl(link),
-    salesPitch: new HostedMediaForm(salesPitch),
+    pitchFile: new HostedMediaForm(pitchFile),
   }
 }
 

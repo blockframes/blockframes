@@ -1,0 +1,62 @@
+<tunnel-page>
+  <h4 title>Media</h4>
+  <h1 subtitle>Sales Pitch</h1>
+  <ng-container tunnel-form>
+
+    <section id="sales-pitch">
+      <h3>Sales Pitch</h3>
+      <article fxLayout="column">
+        <p class="mat-body-2">
+          Your sales pitch video is one of the most important things to show to investors.
+          The projects that have a Sales Pitch attached will be showcased first on the platform.
+        </p>
+        <file-upload
+          [form]="salesPitch.get('pitchFile')"
+          [storagePath]="getPath()"
+          accept="['.pdf', '.docx']"
+          [types]="['application/pdf', 'application/docx']">
+            <h3 type>Sales Pitch</h3>
+            <p class="mat-caption" format>Accepted Formats: .pdf, .docx</p>
+        </file-upload>
+
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Sales Pitch Link</mat-label>
+          <input [formControl]="salesPitch.get('link')" matInput type="url" placeholder="https://...."/>
+        </mat-form-field>
+
+        <p class="mat-body-2">
+          If you don't have a Sales Pitch video to upload, or if you wish to add a description to your video, you can write a text below to enhance your project.
+        </p>
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Description</mat-label>
+          <textarea matInput [formControl]="salesPitch.get('description')" cdkTextareaAutosize cdkAutosizeMinRows="10"></textarea>
+        </mat-form-field>
+      </article>
+    </section>
+
+    <section id="goals">
+      <h3>Audiences & Goals</h3>
+      <bf-form-list [form]="form.goals" buttonText="Add a Goal and Target">
+        <ng-template itemRef let-goals>
+          {{ goals.target }} - {{ goals.goal }}
+        </ng-template>
+
+        <ng-template formView let-goalsForm>
+          <article fxLayout="row" fxLayoutGap="24px" [formGroup]="goalsForm">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Target Audience (optional)</mat-label>
+              <input matInput type="text" placeholder="Target Audience" [formControl]="goalsForm.get('target')"/>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Social Responsability Goals (optional)</mat-label>
+              <input matInput type="text" placeholder="Social Responsability Goals" [formControl]="goalsForm.get('goal')"/>
+            </mat-form-field>
+          </article>
+        </ng-template>
+      </bf-form-list>
+
+    </section>
+
+  </ng-container>
+</tunnel-page>
