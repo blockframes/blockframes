@@ -1,17 +1,10 @@
 import OrganizationAppAccessPage from './OrganizationAppAccessPage';
 import { Location, Organization, BankAccount } from '../../utils/type';
+import { setForm, FormOptions } from '../../utils/functions';
 
 const PATH = '/c/organization/create';
 
 type Entity = 'org' | 'bank';
-
-//TODO: Move this to command interface
-interface FormData {
-  name: string;
-  id: string;
-  testId: string;
-  value: string;
-}
 
 function form(entity: Entity): string {
   switch (entity) {
@@ -135,12 +128,13 @@ export default class OrganizationCreatePage {
     }
   }
 
-  private handleFormInputs<E extends HTMLElement>($formEl: JQuery<E>, keyBag: string) {
+  private fieldHandler<E extends HTMLElement>($formEl: JQuery<E>, 
+      keyBag: string): [boolean, string] {
     //For now do nothing..
-    return true;
+    console.log("Handle :", keyBag);
+    return [true, ''];
   }
 
-  // TODO: Make this as a cypress command.
   // Parameters : fieldSelectors in the form
   // Value: Object data to pass in to fill the form
   // Callback : Function to handle special testId with custom form operation 
@@ -149,48 +143,13 @@ export default class OrganizationCreatePage {
   public testOrgForm(org: Organization) {
     cy.log("OrganizationCreatePage: Test all form fields");
     const selector = 'organization-form form input, mat-select';
-    const formData:FormData[] = [];
 
-    cy.get(selector).each(($formEl) => {
-      const keyBag = $formEl.attr('test-id');
-      const formelData = {name: $formEl[0].localName, id: $formEl.attr('id'),
-                   testId: $formEl.attr('test-id'), value: 'skipped'}
-  
-      if (keyBag === undefined) {
-        formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
-                                     $formEl.attr('aria-label') || 
-                                     $formEl.attr('data-placeholder')}]`;
-        formelData.value = 'untouched';
-        cy.log(JSON.stringify(formelData));
-        formData.push(formelData);
-        return;
-      }
-      const keyBunch = keyBag.split('-');
-      //TODO: Pass this as an argument
-      let vault: any = org;
-      for (let i = 0 ; vault && (i < keyBunch.length); i++) {
-        vault = vault[keyBunch[i]];
-      }
-  
-      /* 
-       * Perform some extra handling on the input if needed..
-       * TODO: convert to callback some stuff
-       */
-      const needsHandling = this.handleFormInputs($formEl, keyBag);
-  
-      formelData.value = vault;
-      if (needsHandling && (vault !== undefined)) {
-        //Set the form field..
-        cy.wrap($formEl).click().type(vault);
-        if ($formEl.is('mat-select') || ($formEl.attr('role') === 'combobox')) {
-          cy.get('mat-option')
-            .contains(vault).click();
-        } 
-      }
-      formData.push(formelData);
-    })
-    .last().then(() => {
-      console.table(formData);
-    })    
+    const formOpt: FormOptions = {
+      inputValue: org,
+      specialIds: ['fiscalNumber', 'address-phoneNumber'],
+      fieldHandler: this.fieldHandler
+    }
+    setForm(selector, formOpt);
   }
+
 }

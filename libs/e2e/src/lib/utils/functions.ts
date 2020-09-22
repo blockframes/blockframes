@@ -56,3 +56,63 @@ export function getTomorrowDay(date: Date) {
   const tomorrowDay = date.getDay() === 6 ? 0 : date.getDay() + 1;
   return tomorrowDay;
 }
+
+export interface FormOptions {
+  inputValue: any;
+  specialIds?: string[];
+  fieldHandler? <E extends HTMLElement>($formEl: JQuery<E>, key: string): [boolean, string] 
+}
+
+interface FormData {
+  name: string;
+  id: string;
+  testId: string;
+  value: string;
+}
+
+export function setForm(selector: string, formOpt: FormOptions) {
+  const formData:FormData[] = [];
+
+  cy.get(selector).each(($formEl) => {
+    const keyBag = $formEl.attr('test-id');
+    const formelData = {name: $formEl[0].localName, id: $formEl.attr('id'),
+                 testId: $formEl.attr('test-id'), value: 'skipped'}
+
+    if (keyBag === undefined) {
+      formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
+                                   $formEl.attr('aria-label') || 
+                                   $formEl.attr('data-placeholder')}]`;
+      formelData.value = 'untouched';
+      cy.log(JSON.stringify(formelData));
+      formData.push(formelData);
+      return;
+    }
+    const keyBunch = keyBag.split('-');
+    let vault: any = formOpt.inputValue;
+    for (let i = 0 ; vault && (i < keyBunch.length); i++) {
+      vault = vault[keyBunch[i]];
+    }
+
+    /* 
+     * Perform some extra handling on the input if needed..
+     */
+    let needsHandling = true;
+    if (formOpt.specialIds.includes(keyBag)) {
+      [needsHandling, vault] = formOpt.fieldHandler($formEl, keyBag);
+    }
+    formelData.value = vault;
+    if (needsHandling && (vault !== undefined)) {
+      //Set the form field..
+      cy.wrap($formEl).click().type(vault);
+      if ($formEl.is('mat-select') || ($formEl.attr('role') === 'combobox')) {
+        cy.get('mat-option')
+          .contains(vault).click();
+      }
+    }
+    formData.push(formelData);
+  })
+  .last().then(() => {
+    console.table(formData);
+  });
+}
+
