@@ -1,11 +1,12 @@
 import OrganizationCreatePage from './OrganizationCreatePage';
 import OrganizationFindPage from './OrganizationFindPage';
+import { TO } from '../../utils/env';
 
 const PATH = '/c/organization/home';
 
 export default class OrganizationHomePage {
   constructor() {
-    cy.get('organization-home', {timeout: 10000});
+    cy.get('organization-home', {timeout: TO.VSLOW_UPDATE});
   }
 
   public assertMoveToOrgHomepage() {
