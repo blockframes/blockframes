@@ -1,0 +1,36 @@
+<mat-card>
+  <mat-card-title>Upload org notes</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form">
+      <ng-container *ngFor="let note of form.notes.controls">
+        <div [formGroup]="note" fxLayout="row" fxLayoutGap="24px">
+          <mat-form-field appearance="outline">
+            <mat-label>File title</mat-label>
+            <input matInput formControlName="title" >
+          </mat-form-field>
+          <file-upload
+            [form]="note.get('ref')"
+            [storagePath]="getPath()"
+            accept="['.pdf']"
+            [filePrivacy]= "filePrivacy"
+            [types]="['application/pdf']">
+              <h3 type>Upload Files</h3>
+              <p class="mat-caption" format>Accepted Formats: .pdf</p>
+          </file-upload>
+        </div>
+      </ng-container>
+
+      <button  mat-flat-button color="accent" (click)="uploadFiles()">
+        <span>Upload</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </button>
+
+      <button mat-flat-button color="accent" (click)="addFile()">
+        <span>Add</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </button>
+    </form>
+
+    
+  </mat-card-content>
+</mat-card>

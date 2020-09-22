@@ -19,6 +19,15 @@ export interface PublicOrganization {
   logo: string;
 }
 
+export interface OrgMediaWithMetadata {
+  ref: string,
+  title: string 
+}
+
+export interface OrgMedias {
+  notes: OrgMediaWithMetadata[],
+};
+
 /** Document model of an Organization */
 interface OrganizationBase<D> extends PublicOrganization {
   activity: OrgActivity;
@@ -36,6 +45,7 @@ interface OrganizationBase<D> extends PublicOrganization {
   userIds: string[];
   status: OrganizationStatus;
   wishlist: WishlistBase<D>[];
+  documents?: OrgMedias;
 }
 
 export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
@@ -116,6 +126,21 @@ export function createDenomination(params: Partial<Denomination> = {}): Denomina
   return {
     full: '',
     public: '',
+    ...params
+  }
+}
+
+export function createOrgMedias(params: Partial<OrgMedias> = {}): OrgMedias {
+  return {
+    notes: [],
+    ...params
+  }
+}
+
+export function createOrgMediaWithMetadata(params: Partial<OrgMediaWithMetadata> = {}): OrgMediaWithMetadata {
+  return {
+    ref: '',
+    title: '',
     ...params
   }
 }
