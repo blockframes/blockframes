@@ -14,6 +14,7 @@ import { CreditCardModule } from '../../components/credit-card/credit-card.modul
 import { ReviewCardModule } from '../../components/review-card/review-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { HasKeysModule } from '@blockframes/utils/pipes';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ import { MatDividerModule } from '@angular/material/divider';
     DisplayNameModule,
     HasKeysModule,
     ToLabelModule,
+    HasStatusModule,
     ImageReferenceModule,
     MatLayoutModule,
     PrizeCardModule,

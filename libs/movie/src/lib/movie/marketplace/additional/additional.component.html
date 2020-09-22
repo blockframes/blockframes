@@ -1,17 +1,20 @@
 <ng-container *ngIf="movie$ | async as movie">
-  <h1>Additional Information</h1>
+  <h1 *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: keys.additional)">
+    Additional Information
+  </h1>
 
-  <section *ngIf="movie.originalRelease.length">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.originalRelease.length)">
     <h2>Release</h2>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
       <p>{{ release.media }} {{ release.date | date: 'shortDate' }}</p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
-  <section *ngIf="movie | hasKeys: 'estimatedBudget'">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: 'estimatedBudget')">
     <h2>Budget</h2>
     <article>
       <h5>Budget Range</h5>
@@ -19,21 +22,23 @@
         From <b>{{ movie.estimatedBudget.from }}</b> to <b>{{ movie.estimatedBudget.to }}</b>
       </p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
-  <section *ngIf="movie.boxOffice.length">
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.boxOffice.length)">
     <h2>Box Office</h2>
     <article *ngFor="let boxOffice of movie.boxOffice">
       <h5>{{ boxOffice.territory | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ boxOffice.value | currency: boxOffice.unit }}</p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
-  <section *ngIf="movie.rating.length">
+  <section *ngIf="(movie | hasStatus: ['released']) && movie.rating.length">
     <h2>Ratings</h2>
     <article *ngFor="let rating of movie.rating">
       <h5>{{ rating.country | translateSlug : 'TERRITORIES' }}</h5>
@@ -43,29 +48,31 @@
 
 
 
-  <h1>Technial Information</h1>
+  <h1 *ngIf="movie | hasStatus: status.afterProd">
+    Technial Information
+  </h1>
 
-  <section *ngIf="movie | hasKeys: keys.formats">
+  <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: status.afterProd)">
     <h2>Formats</h2>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>
-      <p>{{ movie.format }}</p>
+      <p>{{ movie.format | translateSlug: 'MOVIE_FORMAT' }}</p>
     </article>
     <article *ngIf="movie.formatQuality">
       <h5>Format quality</h5>
-      <p>{{ movie.formatQuality }}</p>
+      <p>{{ movie.formatQuality | translateSlug: 'MOVIE_FORMAT_QUALITY' }}</p>
     </article>
     <article *ngIf="movie.color">
       <h5>Color information</h5>
-      <p>{{ movie.color }}</p>
+      <p>{{ movie.color | translateSlug: 'COLORS' }}</p>
     </article>
     <article *ngIf="movie.soundFormat">
       <h5>Sound format</h5>
-      <p>{{ movie.soundFormat }}</p>
+      <p>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</p>
     </article>
   </section>
 
-  <section>
+  <section *ngIf="movie | hasStatus: ['released']">
     <h2>Available Versions</h2>
     <article>
       <h5>Original version</h5>
@@ -74,7 +81,7 @@
     <article *ngIf="movie | hasKeys: 'languages'">
       <h5>Versions</h5>
       <ng-container *ngFor="let language of movie.languages | keyvalue">
-        <div fxLayout fxLayoutGap="8px">
+        <div class="version" fxLayout fxLayoutGap="8px">
           <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
           <mat-chip-list>
             <ng-container *ngFor="let version of language.value | keyvalue">

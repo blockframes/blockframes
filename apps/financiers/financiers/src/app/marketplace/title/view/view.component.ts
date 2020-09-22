@@ -6,6 +6,8 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
+import { RouteDescription } from '@blockframes/utils/common-interfaces';
 
 @Component({
   selector: 'financiers-movie-view',
@@ -17,23 +19,14 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
 
-  public navLinks = [
+  public navLinks: RouteDescription[] = [
+    mainRoute,
+    artisticRoute,
     {
-      path: 'main',
-      label: 'Main Information'
-    },
-    {
-      path: 'artistic',
-      label: 'Artistic Information'
-    },
-    {
-      path: 'production',
+      ...productionRoute,
       label: 'Production Environment'
     },
-    {
-      path: 'additional',
-      label: 'Additional Information'
-    },
+    additionalRoute,
     {
       path: 'finance',
       label: 'Financing Conditions'
