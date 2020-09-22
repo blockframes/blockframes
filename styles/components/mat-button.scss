@@ -1,5 +1,6 @@
 @mixin mat-bf-button-theme($theme) {
   $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -80,6 +81,10 @@
   .mat-raised-button,
   .mat-stroked-button {
     padding: 14px 32px;
+  }
+
+  .mat-button.mat-button-disabled {
+    background-color: mat-color($background, disabled-button);
   }
 
   // Center close button
