@@ -6,6 +6,11 @@ export interface HostedMediaFormValue {
   fileName: string;
 }
 
+export interface HostedMediaWithMetadata {
+  ref: string,
+  title: string 
+}
+
 export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
   if (formValue.ref === '') { return ''; }
   const ref = formValue.ref;
@@ -13,6 +18,14 @@ export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): stri
   return refParts.pop() === formValue.fileName ?
     `${formValue.ref}` :
     `${formValue.ref}/${formValue.fileName}`;
+}
+
+export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMetadata> = {}): HostedMediaWithMetadata {
+  return {
+    ref: '',
+    title: '',
+    ...params
+  }
 }
 
 export interface UploadData {
