@@ -146,7 +146,7 @@ export interface Title {
 
 export interface BoxOffice {
   unit: UnitBox,
-  value: number,
+  value?: number,
   territory: TerritoriesSlug,
 }
 

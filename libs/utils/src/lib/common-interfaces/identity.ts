@@ -55,7 +55,7 @@ export interface Credit extends Person {
 
 export interface Filmography {
   title?: string,
-  year?: number,
+  year?: number | null,
 }
 
 /**
@@ -138,7 +138,7 @@ export function createCredit(params: Partial<Credit> = {}) {
 export function createFilmography(params: Partial<Filmography> = {}): Filmography {
   return {
     title: '',
-    year: 0,
+    year: null,
     ...params
   }
 }
