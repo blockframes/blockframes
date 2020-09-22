@@ -9,7 +9,7 @@ import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rx
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, takeWhile, scan } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 // import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -33,7 +33,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public filterForm = new MovieSearchForm();
 
-  private offset: number;
+  private scrollOffsetTop: number;
 
   constructor(
     private movieService: MovieService,
@@ -87,11 +87,11 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   setScrollOffset() {
-    this.offset = this.scrollable.measureScrollOffset('top');
+    this.scrollOffsetTop = this.scrollable.measureScrollOffset('top');
   }
 
   scrollToScrollOffset() {
-    this.scrollable.scrollTo({ top: this.offset });
+    this.scrollable.scrollTo({ top: this.scrollOffsetTop });
   }
   
 }

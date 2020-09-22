@@ -129,7 +129,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
   search() {
     return this.movieIndex.search({
-      hitsPerPage: 20,
+      hitsPerPage: 50,
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
