@@ -17,6 +17,9 @@
               <h3 type>Upload Files</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>
           </file-upload>
+          <button  *ngIf="!!note.get('ref').value.ref"  mat-flat-button color="accent" (click)="download(note.get('ref').value.ref)">
+            <span>Download</span>
+          </button>
         </div>
       </ng-container>
 
@@ -31,6 +34,5 @@
       </button>
     </form>
 
-    
   </mat-card-content>
 </mat-card>
