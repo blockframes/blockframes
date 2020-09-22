@@ -13,6 +13,7 @@ import {
   MovieShootingDate,
   MoviePlannedShootingDateRange,
   MoviePlannedShooting,
+  MovieShootingLocations
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -100,7 +101,6 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
-    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
@@ -119,6 +119,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
@@ -127,7 +128,7 @@ function createMovieControls(movie: Partial<Movie>) {
     runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
     shootingDate: new ShootingDateForm(entity.shootingDate),
-    shootingLocations: FormList.factory(entity.shootingLocations, el => new FormStaticValue(el, 'TERRITORIES')),
+    shootingLocations: FormList.factory(entity.shootingLocations, el => new ShootingLocationsForm(el)),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
@@ -960,3 +961,31 @@ function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>
 }
 
 type MoviePlannedShootingControl = ReturnType<typeof createShootingPlannedFormControl>;
+
+// ---------------------------------
+//        SHOOTING LOCATIONS
+// ---------------------------------
+
+export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsControl> {
+  constructor(shootingLocations?: Partial<MovieShootingLocations>) {
+    super(createShootingLocationsFormControl(shootingLocations));
+  }
+}
+
+function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
+  const { city, country } = createShootingLocations(entity);
+  return {
+    city: new FormControl(city),
+    country: new FormControl(country)
+  }
+}
+
+type MovieShootingLocationsControl = ReturnType<typeof createShootingLocationsFormControl>;
+
+function createShootingLocations(params: Partial<MovieShootingLocations>): MovieShootingLocations {
+  return {
+    city: '',
+    country: '',
+    ...params
+  }
+}

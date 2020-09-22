@@ -81,7 +81,7 @@ interface MovieRaw<D> {
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
   shootingDate: MovieShootingDateRaw<D>,
-  shootingLocations: TerritoriesSlug[],
+  shootingLocations: MovieShootingLocations[],
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
@@ -239,6 +239,11 @@ export interface MovieShootingDateRaw<D> {
 }
 
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MovieShootingLocations {
+  city: string,
+  country: TerritoriesSlug,
+}
 
 export interface MoviePlannedShootingDateRange {
   from: MoviePlannedShooting,
