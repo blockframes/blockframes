@@ -59,8 +59,6 @@ export class OrganizationFilesComponent implements OnInit {
       notes: documentToUpdate.notes.filter(n => !!n.ref)
     };
 
-    console.log(documents);
-
     await this.organizationService.update(this.org.id, { documents });
     this.mediaService.uploadMedias(mediasToUpload);
     this.snackBar.open('Documents uploaded !', 'close', { duration: 5000 });
