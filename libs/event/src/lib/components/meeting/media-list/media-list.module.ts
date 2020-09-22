@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [ MeetingMediaListComponent ],
@@ -25,8 +26,9 @@ import { MatCardModule } from '@angular/material/card';
     MatTooltipModule,
     MatButtonModule,
     MatCardModule,
+    MatListModule,
 
-    RouterModule.forChild([]),
+    RouterModule,
   ],
   exports: [ MeetingMediaListComponent ],
 })

@@ -14,38 +14,26 @@ export class MeetingMediaListComponent {
 
   private _event: Event<Meeting>;
 
-  form: EventForm;
+  editPage: string;
 
   get event() {
     return this._event;
   }
   @Input() set event(value: Event<Meeting>) {
     this._event = value;
-    this.form = new EventForm(this._event);
+    this.editPage = `/c/o/dashboard/event/${this.event.id}/edit`
   }
 
   constructor(
     private eventService: EventService
   ) { }
 
-  editPage(eventId: string) {
-    return `/c/o/dashboard/event/${eventId}/edit`;
-  }
-
   isSelected(file: string) {
     return this.event.meta.selectedFile === file;
   }
 
   select(file: string) {
-    const meetingMetaForm = this.form.get('meta');
-
-    if ('files' in meetingMetaForm.value) {
-      (meetingMetaForm as MeetingForm).selectedFile.setValue(file);
-      if (this.form.valid) {
-        const value = this.form.value;
-        this.eventService.update(value);
-        this.form.markAsPristine();
-      }
-    }
+    this.event.meta.selectedFile = file;
+    this.eventService.update(this.event);
   }
 }

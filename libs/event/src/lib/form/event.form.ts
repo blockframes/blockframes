@@ -50,7 +50,6 @@ export function createMeetingControl(params?: Partial<Meeting>) {
     organizerId: new FormControl(meeting.organizerId),
     description: new FormControl(meeting.description),
     files: FormList.factory(meeting.files, el => new FormControl(el)),
-    selectedFile: new FormControl(meeting.selectedFile),
   }
 }
 
@@ -63,10 +62,6 @@ export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
 
   get files() {
     return this.get('files');
-  }
-
-  get selectedFile() {
-    return this.get('selectedFile');
   }
 }
 

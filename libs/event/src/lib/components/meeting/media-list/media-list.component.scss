@@ -1,18 +1,20 @@
 
-ul {
+mat-list {
   margin: 0;
+  padding: 0;
   white-space: nowrap;
   overflow-x: auto;
-  li {
+  mat-list-item {
     display: inline-block;
+    height: 100%;
+    width: auto;
     button {
       img {
         width: 90px;
       }
-    }
-    /* otherwise disable has no visual difference */
-    button.mat-button.mat-button-disabled.mat-button-disabled {
-      background-color: var(--background-disabled-button);
+      span {
+        display: block;
+      }
     }
   }
 }
