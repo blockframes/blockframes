@@ -5,7 +5,8 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { OrganizationDocumentWithDates, OrganizationService } from '@blockframes/organization/+state';
 import { OrganizationMediasForm } from '@blockframes/admin/admin-panel/forms/organization-medias.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
+import { clearHostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 
 @Component({
   selector: 'organization-files',
@@ -34,7 +35,8 @@ export class OrganizationFilesComponent implements OnInit {
     this.cdr.markForCheck();
   }
 
-  public async download(ref: string) {
+  public async download(formValue: HostedMediaForm) {
+    const ref = clearHostedMediaFormValue(formValue.value);
     const url = await this.mediaService.generateImgIxUrl(ref);
     window.open(url);
   }

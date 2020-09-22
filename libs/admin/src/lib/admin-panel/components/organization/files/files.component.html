@@ -3,7 +3,7 @@
   <mat-card-content>
     <form [formGroup]="form">
       <ng-container *ngFor="let note of form.notes.controls">
-        <div [formGroup]="note" fxLayout="row" fxLayoutGap="24px">
+        <div [formGroup]="note" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
           <mat-form-field appearance="outline">
             <mat-label>File title</mat-label>
             <input matInput formControlName="title" >
@@ -17,20 +17,21 @@
               <h3 type>Upload Files</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>
           </file-upload>
-          <button  *ngIf="!!note.get('ref').value.ref"  mat-flat-button color="accent" (click)="download(note.get('ref').value.ref)">
+          <button *ngIf="!!note.get('ref').value.ref && !note.get('ref').value.blobOrFile"  mat-flat-button color="accent" (click)="download(note.get('ref'))">
             <span>Download</span>
+            <mat-icon svgIcon="download"></mat-icon>
           </button>
         </div>
       </ng-container>
 
-      <button  mat-flat-button color="accent" (click)="uploadFiles()">
+      <button  mat-flat-button color="primary" (click)="uploadFiles()">
         <span>Upload</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </button>
 
       <button mat-flat-button color="accent" (click)="addFile()">
         <span>Add</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
     </form>
 

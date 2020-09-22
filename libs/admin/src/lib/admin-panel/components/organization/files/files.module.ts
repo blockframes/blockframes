@@ -11,6 +11,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 // Modules
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
@@ -31,10 +32,10 @@ import { OrganizationFilesComponent } from './files.component';
     MatCheckboxModule,
     MatInputModule,
     MatIconModule,
+    MatButtonModule,
     MatSnackBarModule,
 
     UploadModule,
-
   ],
   declarations: [OrganizationFilesComponent],
   exports: [OrganizationFilesComponent]
