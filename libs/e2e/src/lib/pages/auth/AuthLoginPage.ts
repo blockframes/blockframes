@@ -1,5 +1,6 @@
 import { User } from '../../utils/type';
 import { OrganizationHomePage } from '../organization';
+import { TO } from '../../utils/env';
 
 export default class AuthLoginPage {
 
@@ -93,7 +94,8 @@ export default class AuthLoginPage {
   }
 
   public clickSignupToOrgHome() {
-    cy.get('auth-signup-form button[type=submit]').click();
+    cy.get('auth-signup-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+      .click();
     cy.wait(3000);
     return new OrganizationHomePage();
   }
@@ -121,7 +123,8 @@ export default class AuthLoginPage {
   }
 
   public clickSigninToOrgHome() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: 3000}).click();
+    cy.get('auth-signin-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+      .click();
     cy.wait(3000);
     return new OrganizationHomePage();
   }
