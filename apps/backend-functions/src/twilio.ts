@@ -15,18 +15,18 @@ const twilio = require('twilio');
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
 
-export interface RequestAcessToken {
+export interface RequestAccessToken {
   eventId: string,
 }
 
 /**
  *
- * Create Twilio Access Token if right ok
- * @param data : RequestAcessToken - identity, roomName, eventId
+ * Create Twilio Access Token if access right ok
+ * @param data : RequestAccessToken - identity, roomName, eventId
  * @param context : CallableContext
  */
-export const getAccessToken = async (
-  data: RequestAcessToken,
+export const getTwilioAccessToken = async (
+  data: RequestAccessToken,
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
 
@@ -54,13 +54,13 @@ export const getAccessToken = async (
   //If event find is not a meeting Event
   if (event.type !== 'meeting') {
     return {
-      error: 'NOT_A_SCREENING',
-      result: `The event ${eventId} is not a screening`
+      error: 'NOT_A_MEETING',
+      result: `The event ${eventId} is not a meeting`
     };
   }
 
   // User need to be invite to a event or be is owner
-  if (event.meta.organizerId !== userId && !isUserInvitedToMeetingOrScreening(context.auth.uid, eventId)){
+  if (!(event.meta.organizerId === userId || await isUserInvitedToMeetingOrScreening(context.auth.uid, eventId))){
     return {
       error: 'NO_INVITATION',
       result: `You have not been invited to see this meeting`

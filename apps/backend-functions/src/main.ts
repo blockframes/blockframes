@@ -252,4 +252,4 @@ export const onFileUpload = functions.storage.object().onFinalize(skipInMaintena
 //--------------------------------
 
 /** Trigger: REST call to create the access token for connection to twilio */
-export const getAccessToken = functions.https.onCall(logErrors(twilio.getAccessToken));
+export const getTwilioAccessToken = functions.https.onCall(logErrors(twilio.getTwilioAccessToken));
