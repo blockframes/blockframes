@@ -40,4 +40,4 @@ import { OrganizationFilesComponent } from './files.component';
   declarations: [OrganizationFilesComponent],
   exports: [OrganizationFilesComponent]
 })
-export class AdminOrganizationFilesModule { }
+export class OrganizationFilesModule { }
