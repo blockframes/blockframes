@@ -5,7 +5,7 @@
       <ng-container *ngFor="let note of form.notes.controls">
         <div [formGroup]="note" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
           <mat-form-field appearance="outline">
-            <mat-label>File title</mat-label>
+            <mat-label>Note title</mat-label>
             <input matInput formControlName="title" >
           </mat-form-field>
           <file-upload
@@ -25,8 +25,8 @@
       </ng-container>
 
       <button  mat-flat-button color="primary" (click)="uploadFiles()">
-        <span>Upload</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
+        <span>Update</span>
+        <mat-icon svgIcon="send"></mat-icon>
       </button>
 
       <button mat-flat-button color="accent" (click)="addFile()">
