@@ -73,17 +73,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
-  @Input() set filters(filters: (string | string[])[]) {
+ @Input() set filters(filters: string[]) {
     if (!filters) return;
     this._filters = filters.map(filter => {
-      if (Array.isArray(filter)) {
-        return filter.map(filter => this.getFilter(filter));
-      } else {
-        return this.getFilter(filter);
-      }
-    })
+      return this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
+    });
   }
-  private _filters = []
+  private _filters = [];
 
   /**  
    * Name of attribute which values shouldn't be used before.
@@ -155,7 +151,4 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.form.removeAt(index);
   }
 
-  private getFilter(filter: string): string {
-    return this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
-  }
 }
