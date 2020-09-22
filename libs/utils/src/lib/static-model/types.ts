@@ -87,6 +87,8 @@ export type StoreStatus = keyof typeof constants.storeStatus;
 
 export type ProductionStatus = keyof typeof constants.productionStatus;
 
+export type ShootingPeriod = keyof typeof constants.shootingPeriod;
+
 export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
 export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
 

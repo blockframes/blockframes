@@ -3,6 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
+import { staticConsts } from '@blockframes/utils/static-model';
+
 
 @Component({
   selector: 'movie-shooting-information',
@@ -20,6 +22,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   public completedDisabled = true;
   public progressDisabled = true;
   public plannedDisabled = true;
+  public periods = Object.keys(staticConsts['shootingPeriod']);
 
   constructor(private shell: MovieFormShellComponent) {}
 
@@ -32,11 +35,11 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   }
 
   get shootingDateFrom() {
-    return this.form.shootingDate.get('planned').get('from');
+    return this.form.shooting.get('dates').get('planned').get('from');
   }
 
   get shootingDateTo() {
-    return this.form.shootingDate.get('planned').get('to');
+    return this.form.shooting.get('dates').get('planned').get('to');
   }
 
   enableForm() {
@@ -44,24 +47,24 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
       tap(value => {
         switch(value) {
           case 'completedDisabled': {
-            this.form.shootingDate.get('progress').reset();
-            this.form.shootingDate.get('planned').reset();
+            this.form.shooting.get('dates').get('progress').reset();
+            this.form.shooting.get('dates').get('planned').reset();
             this.completedDisabled = false;
             this.progressDisabled = true;
             this.plannedDisabled = true;
             break;
           }
           case 'progressDisabled': {
-            this.form.shootingDate.get('planned').reset();
-            this.form.shootingDate.get('completed').reset();
+            this.form.shooting.get('dates').get('planned').reset();
+            this.form.shooting.get('dates').get('completed').reset();
             this.completedDisabled = true;
             this.progressDisabled = false;
             this.plannedDisabled = true;
             break;
           }
           case 'plannedDisabled': {
-            this.form.shootingDate.get('completed').reset();
-            this.form.shootingDate.get('progress').reset();
+            this.form.shooting.get('dates').get('completed').reset();
+            this.form.shooting.get('dates').get('progress').reset();
             this.completedDisabled = true;
             this.progressDisabled = true;
             this.plannedDisabled = false;

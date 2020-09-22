@@ -14,7 +14,7 @@
           <mat-radio-button class="mat-body-2" color="primary" value="completedDisabled">Shooting completed :</mat-radio-button>
           <mat-form-field appearance="outline" fxFlex disabled>
             <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="completedPicker" [formControl]="form.shootingDate.get('completed')" [disabled]="completedDisabled">
+            <input matInput [matDatepicker]="completedPicker" [formControl]="form.shooting.get('dates').get('completed')" [disabled]="completedDisabled">
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
             </mat-datepicker-toggle>
@@ -27,7 +27,7 @@
           <mat-radio-button class="mat-body-2" color="primary" value="progressDisabled">Shooting in progress :</mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="progressPicker" [formControl]="form.shootingDate.get('progress')" [disabled]="progressDisabled">
+            <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')" [disabled]="progressDisabled">
             <mat-datepicker-toggle matSuffix [for]="progressPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
             </mat-datepicker-toggle>
@@ -47,9 +47,7 @@
                   <mat-label>Period</mat-label>
                   <mat-select [formControl]="shootingDateFrom.get('period')" placeholder="Period" [disabled]="plannedDisabled">
                     <mat-option >--</mat-option>
-                    <mat-option value="early">Early</mat-option>
-                    <mat-option value="mid">Mid</mat-option>
-                    <mat-option value="late">Late</mat-option>
+                    <mat-option *ngFor="let period of periods" value="period">{{ period | toLabel: 'shootingPeriod' }}</mat-option>
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
@@ -70,9 +68,7 @@
                   <mat-label>Period</mat-label>
                   <mat-select [formControl]="shootingDateTo.get('period')" placeholder="Period" [disabled]="plannedDisabled">
                     <mat-option >--</mat-option>
-                    <mat-option value="early">Early</mat-option>
-                    <mat-option value="mid">Mid</mat-option>
-                    <mat-option value="late">Late</mat-option>
+                    <mat-option *ngFor="let period of periods" value="period">{{ period | toLabel: 'shootingPeriod' }}</mat-option>
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
@@ -90,15 +86,15 @@
         </article>
       </mat-radio-group>
 
-      <h6 class="mat-caption">Shooting Location</h6>
-      <bf-form-list [form]="form.shootingLocations" buttonText="Add a Location">
+      <h6 class="mat-caption">Shooting Locations</h6>
+      <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
         <ng-template itemRef let-location>
           {{ location.city }} - {{ location.country | translateSlug: 'TERRITORIES' }}
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="row" fxLayoutGap="24px">
 
-            <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')" fxFlex>
+            <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')" [withoutValues]="['world']" fxFlex>
               <mat-label>Country</mat-label>
             </static-select>
 

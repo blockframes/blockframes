@@ -18,9 +18,12 @@ import {
   MovieRelease,
   MovieRunningTime,
   OtherLink,
+  MovieShooting,
   MovieShootingDate,
   MovieExpectedPremiere,
   MoviePlannedShooting,
+  MovieGoalsAudience,
+  MovieSalesPitch,
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -70,6 +73,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     customGenres: [],
     format: null,
     formatQuality: null,
+    goals: [],
     hostedVideo: '',
     internalRef: '',
     keyAssets: '',
@@ -83,7 +87,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     rating: [],
     review: [],
     scoring: null,
-    shootingLocations: [],
     soundFormat: '',
     isOriginalVersionAvailable: false,
 
@@ -96,7 +99,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
     runningTime: createRunningTime(params.runningTime),
-    shootingDate: createShootingDate(params.shootingDate),
+    shooting: createShooting(params.shooting),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
@@ -118,6 +121,7 @@ export function createMoviePromotional(
     clip_link: params.clip_link ?? '',
     moodboard: params.moodboard ?? '',
     notes: params.notes ?? '',
+    // sales_pitch: createSalesPitch(params.sales_pitch),
     still_photo: newStills,
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',
@@ -129,6 +133,15 @@ export function createMoviePromotional(
   };
 
   return elements;
+}
+
+export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
+  return {
+    description: '',
+    link: '',
+    ...params,
+    salesPitch: params.salesPitch ?? '',
+  }
 }
 
 export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
@@ -272,6 +285,14 @@ export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMe
   }
 }
 
+export function createShooting(params: Partial<MovieShooting> = {}): MovieShooting {
+  return {
+    locations: [],
+    ...params,
+    dates: createShootingDate(params.dates)
+  }
+}
+
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
     ...params
@@ -292,6 +313,14 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
     event: '',
     ...params,
     date: toDate(params.date)
+  }
+}
+
+export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): MovieGoalsAudience {
+  return {
+    target: '',
+    goal: '',
+    ...params,
   }
 }
 

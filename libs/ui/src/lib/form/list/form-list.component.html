@@ -45,7 +45,7 @@
 
 <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
-  <span>{{ buttonText }}</span>
+  <span class="mat-caption text-primary">{{ buttonText }}</span>
   <button mat-mini-fab color="primary" (click)="add()">
     <mat-icon svgIcon="add"></mat-icon>
   </button>

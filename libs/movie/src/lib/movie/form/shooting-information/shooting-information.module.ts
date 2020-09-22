@@ -9,7 +9,7 @@ import { MovieFormShootingInformationComponent } from './shooting-information.co
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes';
+import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,6 +31,7 @@ import { MatChipsModule } from '@angular/material/chips';
     StaticSelectModule,
     FormListModule,
     TranslateSlugModule,
+    ToLabelModule,
     // Material
     MatFormFieldModule,
     MatInputModule,
