@@ -14,14 +14,17 @@ import { Router, NavigationEnd } from '@angular/router';
  * @param arithmeticOperator plus or minus
  */
 function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): string {
-
   const allRoutes = steps.map(({ routes }) => routes.map(r => r.path));
   const allPath = allRoutes.flat();
-  const current = url.includes('#') ? url.split('#')[0].split('/').pop() : url.split('/').pop();
+  const current = parseUrlWithoutFragment(url)
   const index = allPath.indexOf(current);
   if (index >= 0) {
     return allPath[index + arithmeticOperator];
   }
+}
+
+function parseUrlWithoutFragment(url: string): string {
+  return url.includes('#') ? url.split('#')[0].split('/').pop() : url.split('/').pop();
 }
 
 @Component({

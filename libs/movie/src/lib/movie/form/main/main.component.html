@@ -177,8 +177,6 @@
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
         <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
-        <ng-template colRef="firstName" let-firstName>{{ firstName }}</ng-template>
-        <ng-template colRef="lastName" let-lastName>{{ lastName }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
