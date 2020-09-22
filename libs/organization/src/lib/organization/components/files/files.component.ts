@@ -31,8 +31,24 @@ export class OrganizationFilesComponent implements OnInit {
 
   async ngOnInit() {
     this.form = new OrganizationMediasForm(this.org.documents);
+
+    // Add empty upload zone
     this.form.notes.add({ ref: '' });
+
     this.cdr.markForCheck();
+
+    // Clean formArray on change
+    this.form.valueChanges.subscribe(_ => {
+      this.form.value.notes.forEach((n, i) => {
+        if (n.ref.ref === '') {
+          this.form.notes.removeAt(i);
+        }
+      });
+      if (this.form.notes.length === 0) {
+        this.form.notes.add({ ref: '' });
+      }
+      this.cdr.markForCheck();
+    });
   }
 
   public async download(formValue: HostedMediaForm) {
