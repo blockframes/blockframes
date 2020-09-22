@@ -1,6 +1,6 @@
 export default class FestivalMarketplaceNotificationsPage {
   constructor() {
-    cy.get('notification-view')
+    cy.get('notification-view', {timeout: 30000});
   }
 
   verifyNotification(message: string, accepted: boolean) {

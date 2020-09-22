@@ -6,11 +6,7 @@ import { Filmography } from '@blockframes/utils/common-interfaces/identity';
 })
 export class FilmographyPipe implements PipeTransform {
   transform(value: Filmography[]): string {
-    return value.map((filmography, index) => {
-      return index < value.length
-        ? filmography.title.concat(`(${filmography.year.toString()})`)
-        : filmography.title.concat(filmography.year.toString())
-    }).join(', ');
+    return value.map(({ title, year }) => `${title} (${year})`).join(', ');
   }
 }
 

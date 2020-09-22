@@ -13,7 +13,6 @@ import { routeAnimation } from '@blockframes/utils/animations/router-animations'
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
@@ -42,7 +41,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
-    private router: Router,
+    private router: Router
   ) { }
 
   ngOnInit() {

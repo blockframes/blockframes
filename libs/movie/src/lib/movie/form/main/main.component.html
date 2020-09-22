@@ -92,7 +92,7 @@
           </mat-error>
         </mat-form-field>
 
-        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
           <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" required fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
@@ -156,7 +156,7 @@
           </mat-error>
         </mat-form-field>
 
-        <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+        <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
           <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
             placeholder="To be determined/Estimated/Confirmed" fxFlex>
             <mat-label>Status</mat-label>
@@ -176,7 +176,8 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
-        <ng-template colRef="status" let-status>{{ status | translateSlug: 'MEMBER_STATUS' }}</ng-template>
+        <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
+        </ng-template>
         <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
@@ -202,7 +203,7 @@
 
             <div fxLayout fxLayoutGap="24px">
 
-              <ng-container *ngIf="form | hasStatus: ['financing', 'shooting', 'post-production']">
+              <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
                 <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex>
                   <mat-label>Director's Directors Status</mat-label>
                   <mat-hint>

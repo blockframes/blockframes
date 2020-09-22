@@ -5,6 +5,7 @@ import userFixture from 'tools/fixtures/users.json';
 export enum USER {
   Vincent = 'MDnN2GlVUeadIVJbzTToQQNAMWZ2',
   Jean = '2OJUZoWtTVcew27YDZa8FQQdg5q2',
+  Ivo = 'K0ZCSd8bhwcNd9Bh9xJER9eP2DQ2'
 }
 
 const newUsers: Partial<UserType>[] = [

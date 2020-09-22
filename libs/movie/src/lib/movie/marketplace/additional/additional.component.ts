@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Movie, MovieStakeholders } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-additional',
@@ -12,11 +11,13 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 })
 export class AdditionalComponent implements OnInit {
 
-  public movie$ = this.movieQuery.selectActive();
-  public loading$ = this.movieQuery.selectLoading();
+  public movie$ = this.shell.movie$;
+  public keys = {
+    formats: ['format', 'formatQuality', 'color', 'soundFormat']
+  };
 
   constructor(
-    private movieQuery: MovieQuery,
+    private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
   ) { }
 

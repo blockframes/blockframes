@@ -17,6 +17,9 @@ export class TitleCardDirective {}
 @Directive({selector: '[titleListItem]'})
 export class TitleListItemDirective {}
 
+@Directive({selector: '[titleProgress]'})
+export class TitleProgressDirective {}
+
 @Component({
   selector: '[titles] title-list',
   templateUrl: './title-list.component.html',
@@ -31,6 +34,7 @@ export class TitleListComponent implements AfterContentInit {
   @ContentChild(TitleSearchDirective, { read: TemplateRef }) titleSearchTemplate: TitleSearchDirective;
   @ContentChild(TitleCardDirective, { read: TemplateRef }) titleCardTemplate: TitleCardDirective;
   @ContentChild(TitleListItemDirective, { read: TemplateRef }) titleListItemTemplate: TitleListItemDirective;
+  @ContentChild(TitleProgressDirective, { read: TemplateRef }) titleProgressTemplate: TitleProgressDirective;
 
   @Input() titles: Movie[];
 

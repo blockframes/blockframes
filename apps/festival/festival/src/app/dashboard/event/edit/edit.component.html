@@ -4,7 +4,7 @@
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
-        <mat-card [formGroup]="meta" fxLayout="column">
+        <mat-card [formGroup]="form.meta" fxLayout="column">
           <ng-container *ngIf="(titles$ | async) as titles else loading">
             <mat-form-field appearance="outline">
               <mat-label>Select the title to display</mat-label>
@@ -31,11 +31,11 @@
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
-        <mat-card [formGroup]="meta" fxLayout="column">
+        <mat-card [formGroup]="form.meta" fxLayout="column">
           <mat-form-field appearance="outline">
             <mat-label>Link to a video call</mat-label>
             <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
-            <mat-error *ngIf="meta.hasError('pattern', 'callUrl')">
+            <mat-error *ngIf="form.meta.hasError('pattern', 'callUrl')">
               Please fill in a url (e.g. https://meet.google.com/xyz)
             </mat-error>
           </mat-form-field>
@@ -51,13 +51,20 @@
             <mat-label>Description</mat-label>
             <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
           </mat-form-field>
+
           <h6>Files</h6>
           <p>
             Select files you want to share during the meeting.
             Every member of the meeting will be able to see and download the selected files.
           </p>
-          <p>TODO FILE SELECTOR issue#3672</p>
-          <!-- TODO FILE SELECTOR COMPONENT #3672 -->
+          <bf-form-list [form]="files" buttonText="Add a File" saveButtonText="Select">
+            <ng-template itemRef let-file>
+              {{file | fileName}}
+            </ng-template>
+            <ng-template formView let-fileSelectorForm>
+              <media-file-selector [form]="fileSelectorForm"></media-file-selector>
+            </ng-template>
+          </bf-form-list>
         </mat-card>
       </ng-container>
     </ng-container>

@@ -16,6 +16,7 @@ export function getWatermark(email: string, firstName: string = '', lastName: st
   `;
 }
 
+
 /**
  * - Generate a svg file with the name & email of the user
  * - Store the watermark file in the storage bucket
