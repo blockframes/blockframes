@@ -176,11 +176,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   // Should save movie
   public async save() {
-    console.log(this.form);
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    console.log(documentToUpdate);
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-    console.log(movie);
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
 
