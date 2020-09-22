@@ -176,7 +176,6 @@ export function createMovieOriginalRelease(
 export function createPrize(prize: Partial<Prize> = {}): Prize {
   return {
     name: '',
-    year: null,
     prize: '',
     logo: '',
     ...prize
@@ -193,7 +192,6 @@ export function createTitle(title: Partial<Title> = {}): Title {
 
 export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
-    year: null,
     status: '',
     ...release
   };
@@ -219,7 +217,6 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
     unit: 'boxoffice_dollar',
-    value: 0,
     territory: null,
     ...params,
   }

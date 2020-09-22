@@ -14,10 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
 // Blockframes UI
 import { TranslateSlugModule } from '@blockframes/utils/pipes';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module'
 
 import { MovieFormProductionComponent } from './production.component';
 
@@ -30,11 +30,11 @@ import { MovieFormProductionComponent } from './production.component';
     // Other Modules
     TunnelPageModule,
     StaticSelectModule,
-    InputAutocompleteModule,
     ChipsAutocompleteModule,
     FlexLayoutModule,
     FormListModule,
     TranslateSlugModule,
+    FormDisplayNameModule,
 
     // Material
     MatFormFieldModule,

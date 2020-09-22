@@ -11,7 +11,8 @@ h3 {
 }
 
 drop-cropper {
-  h3, p.mat-body-2 {
+  h3,
+  p.mat-body-2 {
     margin-bottom: 4px;
   }
 }
@@ -25,8 +26,13 @@ mat-divider {
   margin-bottom: 36px;
 }
 
-mat-form-field, div {
+mat-form-field,
+div {
   width: 100%;
+
+  input {
+    width: 100%;
+  }
 }
 
 #images article {
