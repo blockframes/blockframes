@@ -50,6 +50,9 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'additional-information',
       label: 'Additional Information'
+    },  {
+      path: 'shooting-information',
+      label: 'Shooting Information'
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'
@@ -173,11 +176,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   // Should save movie
   public async save() {
-
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
 

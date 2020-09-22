@@ -16,6 +16,7 @@ import {
   StoreType,
   PremiereType,
   UnitBox,
+  ShootingPeriod
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
@@ -52,10 +53,12 @@ interface MovieRaw<D> {
   crew?: Crew[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
+  expectedPremiere?: MovieExpectedPremiereRaw<D>,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
   customGenres?: string[],
+  goals?: MovieGoalsAudience[],
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO we will need more visibility on the upload part to take the final decision
   // TODO we also need to consider how to differentiate full movies from trailer
@@ -71,7 +74,7 @@ interface MovieRaw<D> {
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
   prizes?: Prize[],
-  customPrizes: Prize[],
+  customPrizes?: Prize[],
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],
@@ -79,12 +82,18 @@ interface MovieRaw<D> {
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
+  shooting?: MovieShooting,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
   totalBudget?: Price,
+
+
+  // New Data
+  // financialCurrency: string,
+  // returnInvestment: MovieReturnInvestment
 }
 
 /** Document model of a Movie */
@@ -111,6 +120,7 @@ export interface MoviePromotionalElements {
   notes: string,
   presentation_deck: string,
   promo_reel_link: string,
+  // sales_pitch: MovieSalesPitch,
   scenario: string,
   screener_link: string,
   still_photo: Record<string, string>,
@@ -221,6 +231,55 @@ export interface MovieRunningTime {
 export interface OtherLink {
   name: string;
   url: string;
+}
+
+export interface MovieShootingRaw<D> {
+  dates?: MovieShootingDateRaw<D>,
+  locations?: MovieShootingLocations[]
+}
+
+export interface MovieShooting extends MovieShootingRaw<Date> {}
+
+export interface MovieShootingLocations {
+  city: string,
+  country: TerritoriesSlug,
+}
+
+export interface MovieShootingDateRaw<D> {
+  completed?: D
+  progress?: D,
+  planned?: MoviePlannedShootingDateRange
+}
+
+export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MoviePlannedShootingDateRange {
+  from: MoviePlannedShooting,
+  to: MoviePlannedShooting
+}
+
+export interface MoviePlannedShooting {
+  period: ShootingPeriod,
+  month: string,
+  year: number
+}
+
+export interface MovieExpectedPremiereRaw<D> {
+  date?: D,
+  event?: string
+}
+
+export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
+
+export interface MovieSalesPitch {
+  description: string,
+  link: string
+  salesPitch: string, // hosted media
+}
+
+export interface MovieGoalsAudience {
+  target: string,
+  goal: string
 }
 
 /////////////////////

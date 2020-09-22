@@ -103,6 +103,11 @@ const constants = {
     boxoffice_euro: 'Box Office in €',
     admissions: 'Admissions',
   },
+  shootingPeriod: {
+    early: 'Early',
+    late: 'Late',
+    mid: 'Mid',
+  },
   storeStatus: {
     submitted: 'Submitted',
     accepted: 'Accepted',

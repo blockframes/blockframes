@@ -2,7 +2,6 @@ import { firestore } from "firebase/app";
 import { BehaviorSubject, Observable } from "rxjs";
 
 /**
- * @see #483
  * This method is used before pushing data on db
  * to prevent "Unsupported field value: undefined" errors.
  * Doing JSON.parse(JSON.stringify(data)) clones object and
@@ -30,6 +29,8 @@ export function mergeDeep(target: any, source: any) {
       if (isObject(source[key])) {
         if (!(key in target))
           Object.assign(output, { [key]: source[key] });
+        else if (source[key] instanceof Date)
+          Object.assign(output, { [key]: source[key] })
         else
           output[key] = mergeDeep(target[key], source[key]);
       } else {
