@@ -130,6 +130,7 @@ export default class OrganizationCreatePage {
   /** If navigate is set to false, this doesn't return a new page. */
   public clickCreate(navigate: boolean = true) {
     cy.get('organization-create button[test-id=create]').click({ force: true });
+    cy.wait(8000);
     if (navigate) {
       return new OrganizationAppAccessPage();
     }

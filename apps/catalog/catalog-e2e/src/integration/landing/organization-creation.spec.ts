@@ -9,13 +9,13 @@ import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 // Create new users
 const USERS: Partial<User>[] = [
   {
-    email: `organization-creation-testx@cypress.com`,
+    email: `organization-creation-test-a${Date.now()}@cypress.com`,
     password: 'blockframes',
     firstName: `${Date.now()}-Cypress first name1`,
     lastName: `${Date.now()}-Cypress last name1`
   },
   {
-    email: `organization-creation-test2@cypress.com`,
+    email: `organization-creation-test-b${Date.now()}@cypress.com`,
     password: 'blockframes',
     firstName: `${Date.now()}-Cypress first name`,
     lastName: `${Date.now()}-Cypress last name`
@@ -85,8 +85,8 @@ beforeEach(() => {
 
 // FIND ORGANIZATION
 
-describe.skip('User can choose to find an organization', () => {
-  it.only('Create a user, then click on "Find your Organization"', () => {
+describe('User can choose to find an organization', () => {
+  it('Create a user, then click on "Find your Organization"', () => {
     const p1: OrganizationHomePage = createNewUserAndNavigate(USERS[0]);
     p1.clickFindOrganization();
     const p2: OrganizationFindPage = p1.clickSubmitToFind();
@@ -96,8 +96,8 @@ describe.skip('User can choose to find an organization', () => {
 
 // CREATE ORGANIZATION
 
-describe.only('Try with all fields except name', () => {
-  it.only('Fill all the fields except company name', () => {
+describe('Try with all fields except name', () => {
+  it('Fill all the fields except company name', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USERS[0]);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
