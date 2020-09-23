@@ -73,13 +73,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
- @Input() set filters(filters: string[]) {
-    if (!filters) return;
-    this._filters = filters.map(filter => {
-      return this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
-    });
-  }
-  private _filters = [];
+  @Input() filters: string[];
 
   /**  
    * Name of attribute which values shouldn't be used before.
@@ -105,7 +99,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     const indexSearch = searchClient.initIndex(algoliaIndex[this.index]);
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this._filters}).then(result => result.hits);
+    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.getFilter()}).then(result => result.hits);
     const facetSearch = (text: string) => indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
 
     // perform search
@@ -126,13 +120,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
       if (typeof value === 'string') {
         splitValue(value, this.separators).forEach(v => {
           if (this.unique) {
-            this._filters.push(`${this.displayWithPath}:-${v}`);
+          this.getFilter().push(`${this.displayWithPath}:-${v}`);
           };
           this.form.add(v);
         })
       } else {
         if (this.unique && !!value[this.displayWithPath]) {
-          this._filters.push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
+          this.getFilter().push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
         };
         this.form.add(value);
       }
@@ -149,6 +143,11 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.searchCtrl.setValue(value);
     this.input.nativeElement.value = value;
     this.form.removeAt(index);
+  }
+
+  private getFilter() {
+    const format = filter => this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
+    return this.filters?.map(format) || [];
   }
 
 }
