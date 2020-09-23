@@ -60,7 +60,7 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'notes',
-        loadChildren: () => import('@blockframes/movie/form/notes/notes.module').then(m => m.MovieFormNotesModule)
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-notes/notes.module').then(m => m.MovieFormNotesModule)
       },
       {
         path: 'media-images',
