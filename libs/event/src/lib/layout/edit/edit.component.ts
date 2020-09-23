@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
+import { MEETING_MAX_INVITATIONS_NUMBER } from '../../+state/event.firestore';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -20,6 +21,7 @@ export class EventEditComponent implements OnInit {
   progress: Observable<number>;
   sending = new BehaviorSubject(false);
   eventLink: string;
+  limit = Infinity;
 
   constructor(
     private service: EventService,
@@ -28,6 +30,9 @@ export class EventEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.form.value.type === 'meeting') {
+      this.limit = MEETING_MAX_INVITATIONS_NUMBER;
+    }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
   }
 
