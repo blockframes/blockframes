@@ -23,8 +23,8 @@ export class EventEditComponent implements OnInit {
   eventLink: string;
   limit = Infinity;
 
-  private _previousStartValue: Date;
-  private _previousEndValue: Date;
+  private previousStartValue: Date;
+  private previousEndValue: Date;
 
   constructor(
     private service: EventService,
@@ -38,8 +38,8 @@ export class EventEditComponent implements OnInit {
     }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
 
-    this._previousStartValue = new Date(this.form.get('start').value);
-    this._previousEndValue = new Date(this.form.get('end').value);
+    this.previousStartValue = new Date(this.form.get('start').value);
+    this.previousEndValue = new Date(this.form.get('end').value);
   }
 
   get meta() {
@@ -64,20 +64,20 @@ export class EventEditComponent implements OnInit {
   }
 
   onStartChange(start: Date) {
-    if (start >= this._previousEndValue) {
-      const diff = Math.abs(this._previousStartValue.getTime() - start.getTime());
-      const newDate = new Date(this._previousEndValue.getTime() + diff);
+    if (start >= this.previousEndValue) {
+      const diff = Math.abs(this.previousStartValue.getTime() - start.getTime());
+      const newDate = new Date(this.previousEndValue.getTime() + diff);
       this.form.get('end').setValue(newDate);
     }
-    this._previousStartValue = new Date(start);
+    this.previousStartValue = new Date(start);
   }
 
   onEndChange(end: Date) {
-    if (end <= this._previousStartValue) {
-      const diff = Math.abs(this._previousEndValue.getTime() - end.getTime());
-      const newDate = new Date(this._previousStartValue.getTime() - diff);
+    if (end <= this.previousStartValue) {
+      const diff = Math.abs(this.previousEndValue.getTime() - end.getTime());
+      const newDate = new Date(this.previousStartValue.getTime() - diff);
       this.form.get('start').setValue(newDate);
     }
-    this._previousEndValue = new Date(this.form.get('end').value);
+    this.previousEndValue = new Date(this.form.get('end').value);
   }
 }
