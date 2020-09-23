@@ -16,7 +16,9 @@ import {
   MovieShootingLocations,
   MovieGoalsAudience,
   MovieSalesPitch,
-  MovieShooting, MovieNote
+  MovieNote,
+  MovieShooting,
+  MovieTotalBudget
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -36,7 +38,8 @@ import {
   createAudienceGoals,
   createSalesPitch,
   createShooting,
-  createMovieNote
+  createMovieNote,
+  createTotalBudget
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -48,7 +51,6 @@ import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { yearValidators, urlValidators } from '@blockframes/utils/form/validators/validators';
-import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
@@ -141,7 +143,7 @@ function createMovieControls(movie: Partial<Movie>) {
     storeConfig: new StoreConfigForm(entity.storeConfig),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
-    totalBudget: new PriceForm(entity.totalBudget),
+    totalBudget: new TotalBudgetForm(entity.totalBudget),
   }
 }
 
@@ -525,6 +527,31 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
     super(createFilmographyFormControl(filmography));
   }
 }
+
+// ------------------------------
+//          TOTALBUDGET
+// ------------------------------
+
+function createTotalBudgetFormControl(totalBudget?: Partial<MovieTotalBudget>) {
+  const { castCost, currency, postProdCost, producerFees, shootCost, others } = createTotalBudget(totalBudget);
+  return {
+    castCost: new FormControl(castCost),
+    currency: new FormStaticValue(currency, 'MOVIE_CURRENCIES'),
+    postProdCost: new FormControl(postProdCost),
+    producerFees: new FormControl(producerFees),
+    shootCost: new FormControl(shootCost),
+    others: new FormControl(others),
+  }
+}
+
+export type TotalBudgetFormControl = ReturnType<typeof createTotalBudgetFormControl>;
+
+export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
+  constructor(totalBudget?: Partial<MovieTotalBudget>) {
+    super(createTotalBudgetFormControl(totalBudget));
+  }
+}
+
 
 // ------------------------------
 //       STAKEHOLDERS

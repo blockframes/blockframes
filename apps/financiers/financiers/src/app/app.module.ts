@@ -9,7 +9,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, persistenceSettings } from '@env';
+import { persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';

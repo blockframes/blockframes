@@ -52,11 +52,11 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Month</mat-label>
-                  <input matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month" type="text" [disabled]="plannedDisabled"/>
+                  <input matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month" type="text" [readonly]="plannedDisabled"/>
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
-                  <input matInput [formControl]="shootingDateFrom.get('year')" placeholder="Year" type="number" [disabled]="plannedDisabled"/>
+                  <input matInput [formControl]="shootingDateFrom.get('year')" placeholder="Year" type="number" [readonly]="plannedDisabled"/>
                 </mat-form-field>
               </div>
             </div>
@@ -73,11 +73,11 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Month</mat-label>
-                  <input matInput [formControl]="shootingDateTo.get('month')" placeholder="Month" type="text" [disabled]="plannedDisabled"/>
+                  <input matInput [formControl]="shootingDateTo.get('month')" placeholder="Month" type="text" [readonly]="plannedDisabled"/>
                 </mat-form-field>
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
-                  <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" [disabled]="plannedDisabled"/>
+                  <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" [readonly]="plannedDisabled"/>
                 </mat-form-field>
               </div>
             </div>

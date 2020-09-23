@@ -1,0 +1,58 @@
+<tunnel-page>
+  <h4 title>Financing Conditions</h4>
+  <h1 subtitle>Financial Details</h1>
+  <ng-container tunnel-form>
+
+    <section id="financial-details" fxLayout="column">
+      <h3>Currency</h3>
+      <span class="mat-body-2 ">Please choose the currency that will be applied to your project*</span>
+
+      <static-select scope="MOVIE_CURRENCIES" type="model" [control]="totalBudget.get('currency')" label="Currency">
+        <ng-template let-currency>
+          <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
+          <span>{{ currency.label }}</span>
+        </ng-template>
+      </static-select>
+
+      <mat-divider></mat-divider>
+
+      <h3>Estimated Budget</h3>
+      <h5>1. Please fill in the general information</h5>
+      <mat-form-field appearance="outline">
+        <mat-label>Producer's Fees</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('producerFees')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cast Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('castCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Shoot Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('shootCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Post-Production Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('postProdCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Other Charges</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('others')" placeholder=""/>
+      </mat-form-field>
+
+      <span class="mat-body-2 total-budget">
+        Your total estimated budget is :
+        <mat-icon [svgIcon]="totalBudget.get('currency').value" class="total-icon"></mat-icon>
+        {{ getTotalEstimatedBudget() | number }}
+      </span>
+
+      <h5>2. Please upload your total estimated budget</h5>
+      <span class="mat-body-2">This upload is optional but can help future investors*</span>
+    </section>
+
+
+  </ng-container>
+</tunnel-page>

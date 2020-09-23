@@ -24,12 +24,12 @@ import {
   MoviePlannedShooting,
   MovieGoalsAudience,
   MovieSalesPitch,
-  MovieNote
+  MovieNote,
+  MovieTotalBudget
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { createPrice } from '@blockframes/utils/common-interfaces';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { LanguagesSlug, MovieLanguageTypes } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
@@ -104,7 +104,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
-    totalBudget: createPrice(params.totalBudget),
+    totalBudget: createTotalBudget(params.totalBudget),
   };
 }
 
@@ -253,6 +253,13 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     laboratory: [],
     financier: [],
     ...stakeholders
+  }
+}
+
+export function createTotalBudget(totalBudget: Partial<MovieTotalBudget> = {}): MovieTotalBudget {
+  return {
+    currency: 'EUR',
+    ...totalBudget
   }
 }
 
