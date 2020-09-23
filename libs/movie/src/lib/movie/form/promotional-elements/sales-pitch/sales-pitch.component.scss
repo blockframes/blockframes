@@ -1,11 +1,18 @@
-article {
-  margin: 0 16px;
-}
-
 h4 {
   text-transform: uppercase;
 }
 
-file-upload {
-  margin-bottom: 40px;
+section {
+  *:not(h3) {
+    margin: 0 16px;
+  }
+  p, .mat-form-field {
+    margin-bottom: 16px;
+  }
+  file-upload {
+    margin-bottom: 40px;
+  }
+  bf-form-list {
+    margin: 0;
+  }
 }

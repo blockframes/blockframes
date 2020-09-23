@@ -19,7 +19,7 @@ export class MovieFormSalesPitchComponent {
   }
 
   get salesPitch() {
-    return this.form.promotional.get('sales_pitch');
+    return this.form.promotional.get('salesPitch');
   }
 
 }
