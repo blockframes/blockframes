@@ -33,6 +33,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   public algoliaSearchResults$: Observable<any[]>;
   public values$: Observable<any[]>;
   private sub: Subscription;
+  private addedFilters: string[] = [];
 
   // INPUT ----------------------------
 
@@ -116,23 +117,14 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   add(value: any) {
-    if (!!value) {
-      if (typeof value === 'string') {
-        splitValue(value, this.separators).forEach(v => {
-          if (this.unique) {
-          this.getFilter().push(`${this.displayWithPath}:-${v}`);
-          };
-          this.form.add(v);
-        })
-      } else {
-        if (this.unique && !!value[this.displayWithPath]) {
-          this.getFilter().push(`${this.displayWithPath}:-${value[this.displayWithPath]}`);
-        };
-        this.form.add(value);
-      }
-      this.input.nativeElement.value = '';
-      this.searchCtrl.setValue(null);
+    const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
+    for (const v of values) {
+      if (this.unique && !!v) this.addedFilters.push(v[this.displayWithPath]);
+      this.form.add(v);
     }
+
+    this.input.nativeElement.value = '';
+    this.searchCtrl.setValue(null);
   }
 
   edit(index: number) {
@@ -147,7 +139,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   private getFilter() {
     const format = filter => this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
-    return this.filters?.map(format) || [];
+    const allFilters = [...(this.filters || []), ...this.addedFilters]
+    return allFilters.map(format);
   }
 
 }
