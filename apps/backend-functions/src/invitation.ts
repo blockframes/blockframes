@@ -9,6 +9,7 @@ import { getOrInviteUserByMail } from './internals/users';
 import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
+import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -109,6 +110,31 @@ export const inviteUsers = (data: UserInvitation, context: CallableContext): Pro
     const promises: ErrorResultResponse[] = [];
     const invitation = createInvitation(data.invitation);
     const fromOrgId = (invitation.fromUser?.orgId || invitation.fromOrg?.id || user.orgId);
+
+    // Ensure that we are not violating invitations limit
+    if (invitation.type === 'attendEvent') {
+      const docId = invitation.docId;
+      if (!!docId) {
+
+        const event = await getDocument<EventDocument<EventMeta>>(`events/${docId}`);
+
+        // for now only meetings have a limitation
+        if (event.type === 'meeting') {
+
+          // count the number of already existing invitations
+          const query = db.collection('invitations').where('docId', '==', docId);
+          const querySnap = await query.get();
+
+          // assert that we don"t go over the limit
+          if (querySnap.size + data.emails.length > MEETING_MAX_INVITATIONS_NUMBER) {
+            throw new Error(
+`MEETING MAX INVITATIONS EXCEEDED : Meeting ${docId} has already ${querySnap.size} invitations
+and user ${user.uid} tried to add ${data.emails.length} new invitations.
+That would have exceeded the current limit witch is ${MEETING_MAX_INVITATIONS_NUMBER} invitations.`)
+          }
+        }
+      }
+    }
 
     for (const email of data.emails) {
       getOrInviteUserByMail(email, fromOrgId, invitation.type, data.app)

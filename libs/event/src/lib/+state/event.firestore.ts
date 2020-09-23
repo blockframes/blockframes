@@ -17,6 +17,9 @@ export interface Meeting {
   selectedFile: string;
 }
 
+/** Maximum number of invitations that can be sent for a given Meeting */
+export const MEETING_MAX_INVITATIONS_NUMBER = 9;
+
 export interface Screening {
   /** A screening session can have one title */
   titleId: string;
