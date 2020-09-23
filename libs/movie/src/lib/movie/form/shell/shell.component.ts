@@ -21,7 +21,8 @@ import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { staticConsts } from '@blockframes/utils/static-model';
 
-function getSteps(status: FormControl): TunnelStep[] {
+function getSteps(statusCtrl: FormControl): TunnelStep[] {
+  const prodStatus = staticConsts.productionStatus;
   return [{
     title: 'First Step',
     icon: 'home',
@@ -59,7 +60,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'development')),
+      shouldDisplay: isStatus(statusCtrl, [prodStatus.development])
     }]
   }, {
     title: 'Promotional Elements',
@@ -75,7 +76,7 @@ function getSteps(status: FormControl): TunnelStep[] {
       }, {
         path: 'notes',
         label: 'Notes & Statements',
-        shouldDisplay: status.valueChanges.pipe(map(prodStatus => !['development', 'shooting'].includes(prodStatus)))
+        shouldDisplay: isStatus(statusCtrl , [prodStatus.released, prodStatus.post_production, prodStatus.finished])
       },
       {
         path: 'media-images',
@@ -94,6 +95,13 @@ function getSteps(status: FormControl): TunnelStep[] {
       label: 'Summary & Submission'
     }]
   }]
+}
+
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: string[]) {
+  return prodStatusCtrl.valueChanges.pipe(
+    startWith(prodStatusCtrl.value),
+    map(prodStatus => acceptableStatus.includes(staticConsts.productionStatus[prodStatus]))
+  )
 }
 
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {

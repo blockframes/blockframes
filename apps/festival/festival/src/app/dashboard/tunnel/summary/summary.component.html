@@ -10,8 +10,15 @@
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
       <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
         below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
-        to fill in.</span>
+      <ng-container *ngIf="invalidFields.length">
+        <span class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
+          to fill in.</span>
+        <div fxLayout="row wrap" fxLayoutGap="8px">
+          <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
+            {{ field | titlecase }} {{ last ? '' : '-'}}
+          </span>
+        </div>
+      </ng-container>
     </div>
 
     <!-- MAIN INFORMATION -->

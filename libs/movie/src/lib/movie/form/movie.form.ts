@@ -735,7 +735,7 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   }
 }
 
-function createMovieNoteControls(note: Partial<MovieNote>) {
+function createMovieNoteControls(note?: Partial<MovieNote>) {
   const entity = createMovieNote(note)
   return {
     role: new FormControl(entity.role),
@@ -748,7 +748,7 @@ function createMovieNoteControls(note: Partial<MovieNote>) {
 export type MovieNotesControl = ReturnType<typeof createMovieNoteControls>
 
 export class MovieNotesForm extends FormEntity<MovieNotesControl> {
-  constructor(note: Partial<MovieNote>) {
+  constructor(note?: Partial<MovieNote>) {
     super(createMovieNoteControls(note));
   }
 }

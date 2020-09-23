@@ -8,7 +8,13 @@
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
       <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <div class="mandatory-control">
+        <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
+          to fill in.</span>
+          <a mat-button *ngFor="let field of invalidFields" color="warn">
+            {{ field | titlecase }}
+          </a>
+      </div>
     </div>
 
     <!-- MAIN INFORMATION -->

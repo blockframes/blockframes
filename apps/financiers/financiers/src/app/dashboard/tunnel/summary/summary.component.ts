@@ -77,6 +77,13 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
+          /* Two edge cases */
+          if (field === 'originalLanguages') {
+            field = 'Original Languages';
+          }
+          if (field === 'originCountries') {
+            field = 'Origin Countries';
+          }
           this.invalidFields.push(field);
         }
         if (!control.value) {
