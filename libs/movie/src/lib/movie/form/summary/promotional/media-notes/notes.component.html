@@ -1,0 +1,22 @@
+<h6>
+  Notes & Statements
+  <a mat-icon-button [routerLink]="link" fragment="notes">
+    <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+  </a>
+</h6>
+<ul>
+  <li>
+    <mat-icon svgIcon="eye" color="primary"></mat-icon>
+    <ng-container *ngIf="!(movie.promotional.get('notes').controls.length) else notes">
+      <a [routerLink]="link" fragment="notes" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #notes>
+      <ng-container *ngFor="let note of movie.promotional.get('notes').controls">
+        <span>{{ note.value.firstName }} {{ note.value.lastName }} - {{ note.value.role | titlecase | maxLength: 30 }} -
+          {{ note.value.note.ref | fileName }}</span>
+      </ng-container>
+    </ng-template>
+  </li>
+</ul>

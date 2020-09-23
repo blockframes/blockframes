@@ -50,7 +50,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'additional-information',
       label: 'Additional Information'
-    },  {
+    }, {
       path: 'shooting-information',
       label: 'Shooting Information'
     }, {
@@ -73,6 +73,11 @@ function getSteps(status: FormControl): TunnelStep[] {
         path: 'media-files',
         label: 'Files'
       }, {
+        path: 'notes',
+        label: 'Notes & Statements',
+        shouldDisplay: status.valueChanges.pipe(map(prodStatus => !['development', 'shooting'].includes(prodStatus)))
+      },
+      {
         path: 'media-images',
         label: 'Images'
       }, {

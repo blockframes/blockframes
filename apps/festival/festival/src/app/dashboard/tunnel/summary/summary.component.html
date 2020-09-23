@@ -3,12 +3,15 @@
     <h4 title>LAST STEP</h4>
     <h1 subtitle>Summary Page</h1>
     <p description class="mat-body-1">
-      Please verify that all the information you have entered is correct before submitting to Archipel Market for validation.
+      Please verify that all the information you have entered is correct before submitting to Archipel Market for
+      validation.
     </p>
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
+        below.</span>
+      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
+        to fill in.</span>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -59,7 +62,8 @@
 
     <section id="additional-information">
       <h3>Additional Information</h3>
-      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)"></movie-summary-additional-information>
+      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)">
+      </movie-summary-additional-information>
     </section>
 
     <mat-divider></mat-divider>
@@ -77,7 +81,8 @@
 
     <section id="available-materials">
       <h3>Available Materials</h3>
-      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)"></movie-summary-available-materials>
+      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
+      </movie-summary-available-materials>
     </section>
 
     <mat-divider></mat-divider>
@@ -89,10 +94,12 @@
       <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
       <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
       <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
-    </section >
+      <movie-summary-media-notes [movie]="form" [link]="('media-notes' | getPath)"></movie-summary-media-notes>
+    </section>
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
+    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+      [disabled]="isPublished$ | async">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
