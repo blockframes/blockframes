@@ -25,6 +25,7 @@ export class EventEditComponent implements OnInit, OnDestroy {
   sub: Subscription;
 
   private _previousStartValue: Date;
+  private _previousEndValue: Date;
 
   constructor(
     private service: EventService,
@@ -39,15 +40,25 @@ export class EventEditComponent implements OnInit, OnDestroy {
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
 
     this._previousStartValue = new Date(this.form.get('start').value);
-    this.sub = this.form.get('start').valueChanges.subscribe(start => {
-      const end = this.form.get('end').value as Date;
-      if (start >= end) {
-        var diff = Math.abs(this._previousStartValue.getTime() - start.getTime());
-        const newEndDate = new Date(end.setTime(end.getTime() + diff));
-        this.form.get('end').setValue(newEndDate);
-        this._previousStartValue = new Date(this.form.get('start').value);
+    this._previousEndValue = new Date(this.form.get('end').value);
+
+    this.sub = this.form.valueChanges.subscribe(value => {
+      if (value.start >= this._previousEndValue) {
+        const diff = Math.abs(this._previousStartValue.getTime() - value.start.getTime());
+        const movedDate = new Date(this._previousEndValue.getTime() + diff);
+        this.form.get('end').setValue(movedDate, { emitEvent: false });
       }
-    })
+
+      if (value.end <= this._previousStartValue) {
+        const diff = Math.abs(this._previousEndValue.getTime() - value.end.getTime());
+        const movedDate = new Date(this._previousStartValue.getTime() - diff);
+        this.form.get('start').setValue(movedDate, { emitEvent: false });
+      }
+
+      this._previousStartValue = new Date(this.form.get('start').value);
+      this._previousEndValue = new Date(this.form.get('end').value);
+    });
+
   }
 
   ngOnDestroy() {
