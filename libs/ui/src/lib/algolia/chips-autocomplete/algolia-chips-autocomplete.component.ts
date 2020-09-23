@@ -119,12 +119,12 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   add(value: any) {
     const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
     for (const v of values) {
-      if (this.unique && !!v) this.addedFilters.push(v[this.displayWithPath]);
+      if (this.unique && !!v && !!v[this.displayWithPath]) this.addedFilters.push(v[this.displayWithPath]);
       this.form.add(v);
     }
 
     this.input.nativeElement.value = '';
-    this.searchCtrl.setValue(null);
+    this.searchCtrl.reset();
   }
 
   edit(index: number) {
