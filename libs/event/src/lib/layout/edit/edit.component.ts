@@ -13,7 +13,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
   styleUrls: ['./edit.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
-export class EventEditComponent implements OnInit, OnDestroy {
+export class EventEditComponent implements OnInit {
 
   @Input() form = new EventForm();
   @Input() invitations: Invitation[] = [];
@@ -41,28 +41,6 @@ export class EventEditComponent implements OnInit, OnDestroy {
 
     this._previousStartValue = new Date(this.form.get('start').value);
     this._previousEndValue = new Date(this.form.get('end').value);
-
-    this.sub = this.form.valueChanges.subscribe(value => {
-      if (value.start >= this._previousEndValue) {
-        const diff = Math.abs(this._previousStartValue.getTime() - value.start.getTime());
-        const movedDate = new Date(this._previousEndValue.getTime() + diff);
-        this.form.get('end').setValue(movedDate, { emitEvent: false });
-      }
-
-      if (value.end <= this._previousStartValue) {
-        const diff = Math.abs(this._previousEndValue.getTime() - value.end.getTime());
-        const movedDate = new Date(this._previousStartValue.getTime() - diff);
-        this.form.get('start').setValue(movedDate, { emitEvent: false });
-      }
-
-      this._previousStartValue = new Date(this.form.get('start').value);
-      this._previousEndValue = new Date(this.form.get('end').value);
-    });
-
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   get meta() {
@@ -86,4 +64,21 @@ export class EventEditComponent implements OnInit, OnDestroy {
     this.service.remove(this.form.value.id);
   }
 
+  onStartChange(start: Date) {
+    if (start >= this._previousEndValue) {
+      const diff = Math.abs(this._previousStartValue.getTime() - start.getTime());
+      const newDate = new Date(this._previousEndValue.getTime() + diff);
+      this.form.get('end').setValue(newDate);
+    }
+    this._previousStartValue = new Date(start);
+  }
+
+  onEndChange(end: Date) {
+    if (end <= this._previousStartValue) {
+      const diff = Math.abs(this._previousEndValue.getTime() - end.getTime());
+      const newDate = new Date(this._previousStartValue.getTime() - diff);
+      this.form.get('start').setValue(newDate);
+    }
+    this._previousEndValue = new Date(this.form.get('end').value);
+  }
 }
