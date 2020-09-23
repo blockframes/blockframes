@@ -120,7 +120,7 @@ export interface MoviePromotionalElements {
   notes: string,
   presentation_deck: string,
   promo_reel_link: string,
-  // sales_pitch: MovieSalesPitch,
+  salesPitch: MovieSalesPitch,
   scenario: string,
   screener_link: string,
   still_photo: Record<string, string>,
@@ -259,9 +259,9 @@ export interface MoviePlannedShootingDateRange {
 }
 
 export interface MoviePlannedShooting {
-  period: ShootingPeriod,
-  month: string,
-  year: number
+  period?: ShootingPeriod,
+  month?: string,
+  year?: number
 }
 
 export interface MovieExpectedPremiereRaw<D> {
@@ -274,7 +274,7 @@ export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
 export interface MovieSalesPitch {
   description: string,
   link: string
-  salesPitch: string, // hosted media
+  file: string, // hosted media
 }
 
 export interface MovieGoalsAudience {
