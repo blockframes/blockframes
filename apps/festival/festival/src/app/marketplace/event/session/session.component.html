@@ -42,7 +42,10 @@
       <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
           <div [fxFlex]="mediaContainerSize">MEDIA</div>
-          <div [fxFlex]="visioContainerSize">VIDEO CONFERENCE</div>
+          <!-- FIXME add classe for  style="position: relative"-->
+          <div [fxFlex]="visioContainerSize" style="position: relative">
+            <event-video [event]="event"></event-video>
+          </div>
         </div>
         <ng-container *ngIf="event.isOwner">
           <div fxFlex="15%">CURRENT MEDIA CONTROL</div>

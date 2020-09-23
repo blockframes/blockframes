@@ -10,6 +10,7 @@ import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
+import {MeetingModule} from "@blockframes/event/components/meeting/meeting.module";
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +29,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     EventTimeModule,
     OrgNameModule,
     EventPlayerModule,
+    MeetingModule,
     // Materials
     MatButtonModule,
     MatIconModule,

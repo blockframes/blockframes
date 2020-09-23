@@ -136,4 +136,19 @@ export class EventService extends CollectionService<EventState> {
       }
     })))
   }
+
+
+
+  ///////////////////
+  // Partie Twilio //
+  ///////////////////
+
+  /**
+   * Get the token from firebase cloud function the connect user to twilio room
+   * @param eventId
+   */
+  public async getTwilioAccessToken(eventId: string){
+    const callDeploy = this.functions.httpsCallable('getTwilioAccessToken');
+    return await callDeploy({eventId: eventId}).toPromise();
+  }
 }
