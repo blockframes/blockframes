@@ -23,8 +23,7 @@ export class EventEditComponent implements OnInit {
   eventLink: string;
   limit = Infinity;
 
-  private previousStartValue: Date;
-  private previousEndValue: Date;
+  private duration: number;
 
   constructor(
     private service: EventService,
@@ -38,8 +37,8 @@ export class EventEditComponent implements OnInit {
     }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
 
-    this.previousStartValue = new Date(this.form.get('start').value);
-    this.previousEndValue = new Date(this.form.get('end').value);
+    const { start, end } = this.form.value;
+    this.duration = end.getTime() - start.getTime();
   }
 
   get meta() {
@@ -63,21 +62,16 @@ export class EventEditComponent implements OnInit {
     this.service.remove(this.form.value.id);
   }
 
-  onStartChange(start: Date) {
-    if (start >= this.previousEndValue) {
-      const diff = Math.abs(this.previousStartValue.getTime() - start.getTime());
-      const newDate = new Date(this.previousEndValue.getTime() + diff);
-      this.form.get('end').setValue(newDate);
+  onEventChange(key: 'start' | 'end') {
+    const { start, end } = this.form.value;
+    if (end.getTime() - start.getTime() <= 0) {
+      const keyToUpdate = key === 'start' ? 'end' : 'start';
+      const time = this.form.value[key].getTime();
+      const date = new Date(key === 'start' ? time + this.duration : time - this.duration);
+      this.form.get(keyToUpdate).setValue(date);
+    } else {
+      // Don't reuse the start & end here because value might have changed
+      this.duration = end.getTime() - start.getTime();
     }
-    this.previousStartValue = new Date(start);
-  }
-
-  onEndChange(end: Date) {
-    if (end <= this.previousStartValue) {
-      const diff = Math.abs(this.previousEndValue.getTime() - end.getTime());
-      const newDate = new Date(this.previousStartValue.getTime() - diff);
-      this.form.get('start').setValue(newDate);
-    }
-    this.previousEndValue = new Date(this.form.get('end').value);
   }
 }
