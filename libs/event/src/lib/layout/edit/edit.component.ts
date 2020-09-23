@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { MEETING_MAX_INVITATIONS_NUMBER } from '../../+state/event.firestore';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'event-edit',
@@ -22,7 +22,6 @@ export class EventEditComponent implements OnInit {
   sending = new BehaviorSubject(false);
   eventLink: string;
   limit = Infinity;
-  sub: Subscription;
 
   private _previousStartValue: Date;
   private _previousEndValue: Date;
