@@ -121,7 +121,7 @@ export function createMoviePromotional(
     clip_link: params.clip_link ?? '',
     moodboard: params.moodboard ?? '',
     notes: params.notes ?? '',
-    // sales_pitch: createSalesPitch(params.sales_pitch),
+    salesPitch: createSalesPitch(params.salesPitch),
     still_photo: newStills,
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',
@@ -139,8 +139,8 @@ export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPi
   return {
     description: '',
     link: '',
+    file: '',
     ...params,
-    salesPitch: params.salesPitch ?? '',
   }
 }
 

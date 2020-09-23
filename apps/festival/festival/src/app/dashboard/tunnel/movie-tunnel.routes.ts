@@ -55,8 +55,8 @@ export const tunnelRoutes: Routes = [
           import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
       {
-        path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        path: 'sales-pitch',
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule)
       },
       {
         path: 'media-files',

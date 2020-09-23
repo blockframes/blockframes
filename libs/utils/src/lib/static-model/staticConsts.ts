@@ -120,6 +120,20 @@ const constants = {
     subtitle: 'Subtitle',
     caption: 'Caption',
   },
+  socialGoals: {
+    no_poverty: 'No Poverty',
+    hunger: 'Zero Hunger',
+    gender_equality: 'Gender Equality',
+    sanitation: 'Clean Water / Sanitation',
+    weel_being: 'Good Health and Well-being',
+    education: 'Quality Education',
+    clean_energy: 'Affordable and CLean Energy',
+    work_and_growth: 'Decent Work and Economic Growth',
+    industry: 'Industry, innovation and infrastructure',
+    inequalities: 'Reduce inequalities',
+    communities: 'Sustainable cities and communities',
+    life_on_land: 'Life on land'
+  },
 
 
   // ------------- //
