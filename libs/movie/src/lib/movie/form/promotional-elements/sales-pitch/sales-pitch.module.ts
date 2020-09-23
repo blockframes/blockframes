@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 
 // Blockframes Media
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
@@ -29,6 +30,7 @@ import { MovieFormSalesPitchComponent } from './sales-pitch.component';
     UploadModule,
     FlexLayoutModule,
     FormListModule,
+    StaticSelectModule,
 
     // Material
     MatIconModule,
