@@ -1,9 +1,10 @@
 import NavbarPage from "./NavbarPage";
+import { TO } from "@blockframes/e2e/utils/env";
 
 export default class WishlistPage extends NavbarPage {
   constructor() {
     super();
-    cy.get('catalog-wishlist');
+    cy.get('catalog-wishlist', {timeout: TO.PAGE_LOAD});
   }
 
   public clickSendToSellers() {
@@ -18,7 +19,8 @@ export default class WishlistPage extends NavbarPage {
   }
 
   public assertMovieInCurrentWishlist(movieName: string) {
-    cy.get('catalog-wishlist td').contains(movieName);
+    cy.get('catalog-wishlist td', {timeout: TO.SLOW_OP})
+      .contains(movieName);
   }
 
   public assertNoMovieInWishlist() {

@@ -1,5 +1,6 @@
 import { WishlistPage, SearchPage } from "./index";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
+import { TO } from "@blockframes/e2e/utils/env";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -20,14 +21,17 @@ export default abstract class NavbarPage {
   }
 
   public clickWishlist() {
-    cy.get('main').scrollTo('top');
-    cy.get('catalog-marketplace a[test-id=heart-icon]').click();
+    cy.get('main', {timeout: TO.PAGE_ELEMENT}).scrollTo('top');
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.ONE_SEC);
     return new WishlistPage();
   }
 
   public checkWishListCount(count: number) {
-    cy.get('main').scrollTo('top');
-    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: 1000})
+    cy.get('main', {timeout: TO.PAGE_ELEMENT})
+      .scrollTo('top');
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
       .should('contain', count);
   }
 
