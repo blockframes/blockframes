@@ -64,7 +64,7 @@ export function formatWishlistFromFirestore(
     if (!!wish.sent) {
       return { ...wish, sent: wish.sent.toDate() };
     } else {
-      return { ...wish, sent: undefined };
+      return { ...wish, sent: null };
     }
   });
 }

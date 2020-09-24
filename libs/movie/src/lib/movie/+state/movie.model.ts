@@ -46,7 +46,7 @@ export interface SyncMovieAnalyticsOptions {
 }
 
 /** A factory function that creates Movie */
-export function createMovie(params: Partial<Movie>): Partial<Movie> {
+export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     _type: 'movies',
@@ -62,8 +62,11 @@ export function createMovie(params: Partial<Movie>): Partial<Movie> {
     boxOffice: [],
     cast: [],
     certifications: [],
+    color: null,
     crew: [],
     customGenres: [],
+    format: null,
+    formatQuality: null,
     hostedVideo: '',
     internalRef: '',
     keyAssets: '',
@@ -73,15 +76,17 @@ export function createMovie(params: Partial<Movie>): Partial<Movie> {
     prizes: [],
     customPrize: [],
     producers: [],
+    productionStatus: null,
     rating: [],
     review: [],
+    scoring: null,
     soundFormat: '',
     isOriginalVersionAvailable: false,
 
     ...params,
     banner: params.banner ?? '',
     estimatedBudget: createRange<number>(params.estimatedBudget),
-    languages: createLanguageKey(params.languages),
+    languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
@@ -120,9 +125,9 @@ export function createMoviePromotional(
   return elements;
 }
 
-export function createLanguageKey<T extends LanguagesSlug>(languages?: Partial<{ [language in T]: MovieLanguageSpecification }>): LanguageRecord {
-  const languageSpecifications: Partial<typeof languages> = {};
-  if (languages) for (const language in languages) {
+export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
+  const languageSpecifications = {}
+  for (const language in languages) {
     languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
   }
   return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
@@ -142,7 +147,7 @@ export function createMovieLanguageSpecification(
 
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
-    country: '',
+    country: null,
     value: '',
     ...params
   };
@@ -158,17 +163,20 @@ export function createMovieReview(params: Partial<MovieReview> = {}): MovieRevie
   };
 }
 
-export function createMovieOriginalRelease( params: Partial<MovieOriginalRelease> = {}): Partial<MovieOriginalRelease> {
+export function createMovieOriginalRelease(
+  params: Partial<MovieOriginalRelease> = {}
+): MovieOriginalRelease {
   return {
-    country: '',
+    country: null,
     ...params,
-    ...(params.date && { date: toDate(params.date) }),
+    date: toDate(params.date),
   };
 }
 
-export function createPrize(prize: Partial<Prize> = {}): Partial<Prize> {
+export function createPrize(prize: Partial<Prize> = {}): Prize {
   return {
     name: '',
+    year: null,
     prize: '',
     logo: '',
     ...prize
@@ -185,7 +193,7 @@ export function createTitle(title: Partial<Title> = {}): Title {
 
 export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
-    year: 0,
+    year: null,
     status: '',
     ...release
   };
@@ -193,7 +201,7 @@ export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRel
 
 export function createRunningTime(runningTime: Partial<MovieRunningTime> = {}): MovieRunningTime {
   return {
-    time: '',
+    time: null,
     status: '',
     ...runningTime
   };
@@ -212,7 +220,7 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
     unit: 'boxoffice_dollar',
     value: 0,
-    territory: '',
+    territory: null,
     ...params,
   }
 }
@@ -241,8 +249,7 @@ export function populateMovieLanguageSpecification(
     spec[slug] = createMovieLanguageSpecification();
   }
 
-  // tslint:disable-next-line: no-non-null-assertion
-  spec[slug]![type] = value;
+  spec[slug][type] = value;
   return spec;
 }
 
@@ -295,7 +302,6 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
   }
-  return 0
 }
 
 export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
