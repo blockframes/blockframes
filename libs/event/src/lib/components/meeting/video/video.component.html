@@ -1,9 +1,9 @@
 <div>
-  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async" >
-      <event-participant [participant]="participant"></event-participant>
+  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify" >
+      <event-remote-participant [participant]="participant"></event-remote-participant>
   </ng-container>
 </div>
 
 <ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">
-  <event-local-participant [localParticipant]="localParticipantConnected"></event-local-participant>
+  <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks$ | async"></event-local-participant>
 </ng-container>

@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 //Import Twilio-video
 import * as Video from 'twilio-video';
 import {BehaviorSubject} from "rxjs";
-import {InvitationQuery} from "@blockframes/invitation/+state";
-import {User, UserQuery, UserService} from "@blockframes/user/+state";
+import {User, UserService} from "@blockframes/user/+state";
 
 export enum meetingEventEnum {
   ParticipantConnected= 'participantConnected',
@@ -13,6 +12,7 @@ export enum meetingEventEnum {
   TrackUnsubscribed= 'trackUnsubscribed',
   Disconnected= 'disconnected',
   ConnectedToRoomTwilio= 'connectedToRoomTwilio',
+  LocalPreviewDone = 'localPreviewDone',
 }
 
 export interface EventRoom {
@@ -26,7 +26,6 @@ export interface EventRoom {
 })
 export class MeetingService {
 
-
   private eventRoom = new BehaviorSubject<any>({});
 
   activeRoom;
@@ -36,11 +35,17 @@ export class MeetingService {
   camDeactivate = false;
   micDeactivate = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {
+
+  }
 
 
   getEventRoom(){
     return this.eventRoom;
+  }
+
+  setLocalTrackToRoom(){
+
   }
 
   /**
@@ -55,6 +60,10 @@ export class MeetingService {
     localTracksPromise.then(
       (tracks) => {
         this.previewTracks = tracks;
+        this.eventRoom.next({
+          meetingEvent: meetingEventEnum.LocalPreviewDone,
+          data: tracks
+        });
       },
       () => {
         this.camDeactivate = true;
@@ -63,19 +72,32 @@ export class MeetingService {
     );
   }
 
+
+
+  /**
+   * Get all aprticipant already in the room.
+   * @param participants - All participants connected in the room
+   */
+  getTracksOfParticipantsAlreadyInRoom(participants) {
+    return Array.from(participants).map((
+      participant : any
+    ) => {
+      //participant[0] is the key
+      return participant[1];
+    });
+  }
+
   /**
    * Connection to twilio with the access token and option of connection
    * @param accessToken - string - access Token for twilio
    * @param options - object - option of connection for twilio
    * @param roomName - string - Nome of the room
-   * @param identity - name/id of user want to connect
    */
   connectToTwilioRoom(accessToken: string, options, roomName) {
 
-    this.createLocalPreview()
-
     const connectOptions = options;
     if (this.previewTracks) {
+      console.log('Has Preview')
       connectOptions.tracks = this.previewTracks;
     }
 
@@ -84,35 +106,50 @@ export class MeetingService {
     });
   }
 
+
+  async getFirstNameAndLastNameOfParticipant(participant){
+    const localUser: User = await this.userService.getUser(participant.identity)
+    participant.firstName = localUser.firstName
+    participant.lastName = localUser.lastName
+    return participant;
+  }
+
   /**
    * When successfully connected to room.
    * @param room - room twilio where we are connected
    */
-  roomJoined(room) {
+  async roomJoined(room) {
     //save activeRoom
     this.activeRoom = room;
 
+
     const identity = room.localParticipant.identity;
 
-    this.userService.getUser(identity)
-      .then((user: User) => {
+    if(!!room.participants) {
+      const tracksOfParticipants = this.getTracksOfParticipantsAlreadyInRoom(room.participants);
+      console.log('tracksOfParticipants  ', tracksOfParticipants)
+      if(!!tracksOfParticipants && tracksOfParticipants.length > 0) {
+        for (const indexParticipant in tracksOfParticipants) {
+          await this.getFirstNameAndLastNameOfParticipant(tracksOfParticipants[indexParticipant])
+          this.eventRoom.next({
+            meetingEvent: meetingEventEnum.ParticipantConnected,
+            data: tracksOfParticipants[indexParticipant]
+          });
+        }
+      }
+    }
 
-        // console.log("Joined as '" + this.identity + "'");
-        room.localParticipant.firstName = user.firstName
-        room.localParticipant.lastName = user.lastName
-        this.eventRoom.next({
-          meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
-          data: room
-        });
+    const localUser: User = await this.userService.getUser(identity)
 
-        this.setUpRoomEvent(room);
-      })
-      .catch(error => {
-        console.log('get user by uid on error : ', error)
-      })
-      .finally(() => {
-        console.log('get user by uid on finally : ')
-      })
+    // console.log("Joined as '" + this.identity + "'");
+    room.localParticipant.firstName = localUser.firstName
+    room.localParticipant.lastName = localUser.lastName
+    this.eventRoom.next({
+      meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
+      data: room
+    });
+
+    await this.setUpRoomEvent(room);
 
   }
 
@@ -124,28 +161,20 @@ export class MeetingService {
     console.log('setUpRoomEvent : ', {room})
 
     // When a Participant joins the Room, log the event.
-    room.on(meetingEventEnum.ParticipantConnected, (participant) => {
+    room.on(meetingEventEnum.ParticipantConnected, async (participant) => {
       console.log("Joining: '" + participant.identity + "'");
 
 
-      this.userService.getUser(participant.identity)
-        .then((user: User) => {
+      const remoteUser = await this.userService.getUser(participant.identity)
 
-          // console.log("Joined as '" + this.identity + "'");
-          participant.firstName = user.firstName
-          participant.lastName = user.lastName
+      participant.firstName = remoteUser.firstName
+      participant.lastName = remoteUser.lastName
 
-          this.eventRoom.next({
-            meetingEvent: meetingEventEnum.ParticipantConnected,
-            data: participant
-          });
-        })
-        .catch(error => {
-          console.log('get user by uid on error : ', error)
-        })
-        .finally(() => {
-          console.log('get user by uid on finally : ')
-        })
+      this.eventRoom.next({
+        meetingEvent: meetingEventEnum.ParticipantConnected,
+        data: participant
+      });
+
     });
 
     // When a Participant adds a Track, attach it to the DOM.

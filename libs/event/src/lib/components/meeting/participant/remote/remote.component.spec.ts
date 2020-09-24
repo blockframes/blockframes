@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ParticipantComponent } from './participant.component';
+import { RemoteComponent } from './remote.component';
 
-describe('ParticipantComponent', () => {
-  let component: ParticipantComponent;
-  let fixture: ComponentFixture<ParticipantComponent>;
+describe('RemoteComponent', () => {
+  let component: RemoteComponent;
+  let fixture: ComponentFixture<RemoteComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ParticipantComponent ]
+      declarations: [ RemoteComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ParticipantComponent);
+    fixture = TestBed.createComponent(RemoteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

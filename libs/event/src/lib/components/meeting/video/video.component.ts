@@ -8,7 +8,6 @@ import {
   MeetingService
 } from "@blockframes/event/components/meeting/+state/meeting.service";
 import {BehaviorSubject, Observable} from "rxjs";
-import {take} from "rxjs/operators";
 
 @Component({
   selector: 'event-video',
@@ -26,6 +25,9 @@ export class VideoComponent implements OnInit {
 
   private $localParticipantConnectedDataSource: BehaviorSubject<any> = new BehaviorSubject(null);
   localParticipantConnected$: Observable<any> = this.$localParticipantConnectedDataSource.asObservable();
+
+  private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
+  localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
 
   arrayOfParticipantConnected = []
 
@@ -56,27 +58,33 @@ export class VideoComponent implements OnInit {
         case meetingEventEnum.ConnectedToRoomTwilio:
           this.connectedToRoomTwilio(value.data);
           break;
+        case meetingEventEnum.LocalPreviewDone:
+          this.localPreviewDone(value.data);
+          break;
       }
     })
   }
 
   ngOnInit(): void {
-    console.log('before ngOnInit this.event : ', this.event)
+
+    this.meetingService.createLocalPreview();
     this.eventService.getTwilioAccessToken(this.event.id).then((value: ErrorResultResponse) => {
-      console.log('value : ', value)
       if(value.error !== ''){
-        console.log('token NOK : ', value)
       } else {
         this.accessToken = value.result;
         this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio: true}, this.event.id);
-        console.log('token OK : ')
       }
     })
   }
 
+  localPreviewDone(localTrack){
+    console.log('---------------------------localPreviewDone---------------------------');
+    console.log({localTrack});
+    this.$localPreviewTracksDataSource.next(localTrack);
+  }
+
   connectedToRoomTwilio(room){
     console.log('---------------------------connectedToRoomTwilio---------------------------');
-    // this.localParticipant = room.localParticipant;
     this.$localParticipantConnectedDataSource.next(room.localParticipant);
   }
 
@@ -90,15 +98,17 @@ export class VideoComponent implements OnInit {
     this.removeParticipantFromParticipantConnectedArr(participant);
   }
 
-  trackSubscribed(participant){
-    console.log('---------------------------trackSubscribed---------------------------')
+  trackSubscribed({track, trackPublication, participant}){
+    console.log('---------------------------trackSubscribed in video component---------------------------')
+    console.log({track, trackPublication, participant})
   }
 
-  trackUnsubscribed(participant){
-    console.log('---------------------------trackUnsubscribed---------------------------')
+  trackUnsubscribed({track, trackPublication, participant}){
+    console.log('---------------------------trackUnsubscribed in video component---------------------------')
+    console.log({track, trackPublication, participant})
   }
 
-  disconnected(participant){
+  disconnected(){
     console.log('---------------------------disconnected---------------------------')
   }
 
@@ -114,7 +124,7 @@ export class VideoComponent implements OnInit {
 
   private addParticipantFromParticipantConnectedArr(participant: any) {
     const currentValue = this.$participantConnectedDataSource.value;
-    currentValue.forEach((item, index) => {
+    currentValue.forEach((item) => {
       if (item.identity === participant.identity) {
         // Participant already in room
         return;
@@ -122,5 +132,10 @@ export class VideoComponent implements OnInit {
     });
     const updatedValue = [...currentValue, participant];
     this.$participantConnectedDataSource.next(updatedValue);
+  }
+
+
+  identify(index, item) {
+    return item.identity;
   }
 }

@@ -1,0 +1,11 @@
+<ng-container>
+  <div class="test">
+    <div *ngIf="camIsDeactived$ | async">
+      {{localParticipant.firstName}} / {{localParticipant.lastName}}
+    </div>
+
+    <div id="localVideo" #localVideo>
+
+    </div>
+  </div>
+</ng-container>
