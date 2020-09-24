@@ -7,7 +7,7 @@ type Timestamp = firestore.Timestamp;
 
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>;
-  media?: MediasSlug;
+  media: MediasSlug;
 }
 
 export interface HoldbackWithDates extends HoldbackRaw<Date> { }

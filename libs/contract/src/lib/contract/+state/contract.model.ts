@@ -165,10 +165,10 @@ export function createLegalDocument(
   }
 }
 
-export function createContractFromFirestore(contract: Contract): Contract {
+export function createContractFromFirestore(contract: any): Contract {
   const c = {
     ...contract,
-    signDate: contract.signDate ? toDate(contract.signDate) : undefined,
+    signDate: toDate(contract.signDate),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : []
@@ -220,7 +220,7 @@ export function getContractParties(contract: Contract, legalRole: LegalRolesSlug
  * @param contract
  */
 export function getContractSubLicensors(contract: Contract): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.childRoles && (p.childRoles.length > 0));
+  return contract.parties.filter(p => p.childRoles.length > 0);
 }
 
 /**
