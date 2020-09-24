@@ -5,10 +5,16 @@
   </a>
 </h6>
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-  <mat-icon svgIcon="eye" color="primary"></mat-icon>
   <missing-control [control]="stillPhoto" [link]="link">
     <ng-template let-images>
-      {{ images[0].ref | fileName | maxLength: 30 }}
+      <ng-container *ngFor="let image of images">
+        <div fxLayout>
+          <mat-icon svgIcon="eye" color="primary"></mat-icon>
+          <span>
+            {{ image.ref | fileName | maxLength: 30 }}
+          </span>
+        </div>
+      </ng-container>
     </ng-template>
   </missing-control>
 </div>

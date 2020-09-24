@@ -26,11 +26,7 @@ export class MovieFormMediaImagesComponent implements OnInit {
   }
 
   get stillPhoto() {
-    return this.promotional.get('still_photo');
-  }
-
-  get promotional() {
-    return this.form.get('promotional');
+    return this.form.promotional.get('still_photo');
   }
 
   addStill() {
@@ -41,5 +37,4 @@ export class MovieFormMediaImagesComponent implements OnInit {
   trackByFn(index: number) {
     return index;
   }
-
 }
