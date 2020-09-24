@@ -70,7 +70,6 @@ export class EventEditComponent implements OnInit {
       const date = new Date(key === 'start' ? time + this.duration : time - this.duration);
       this.form.get(keyToUpdate).setValue(date);
     } else {
-      // Don't reuse the start & end here because value might have changed
       this.duration = end.getTime() - start.getTime();
     }
   }
