@@ -16,14 +16,14 @@ import {
   StoreType,
   PremiereType,
   UnitBox,
-  ShootingPeriod
+  ShootingPeriod,
+  MovieCurrenciesSlug
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
-import { Price } from "@blockframes/utils/common-interfaces";
 import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO issue#2582
@@ -88,7 +88,7 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
-  totalBudget?: Price,
+  totalBudget?: MovieTotalBudget,
 
 
   // New Data
@@ -116,6 +116,7 @@ export interface PublicMovie {
 
 export interface MoviePromotionalElements {
   clip_link: string,
+  financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
@@ -284,6 +285,15 @@ export interface MovieSalesPitch {
 export interface MovieGoalsAudience {
   target: string,
   goal: string
+}
+
+export interface MovieTotalBudget {
+  castCost?: number,
+  currency?: MovieCurrenciesSlug,
+  others?: number,
+  postProdCost?: number,
+  producerFees?: number,
+  shootCost?: number,
 }
 
 /////////////////////

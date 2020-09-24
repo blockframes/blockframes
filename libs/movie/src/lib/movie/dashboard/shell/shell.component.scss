@@ -1,5 +1,5 @@
 nav.mat-tab-nav-bar {
-  margin: 0 24px 32px;
+  margin: 8px 24px 32px;
 }
 
 header {
@@ -8,7 +8,7 @@ header {
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
     height: 100%;
-    max-width: 12%;
+    max-height: 275px;
     margin-right: 16px;
     border-radius: 5px;
   }
