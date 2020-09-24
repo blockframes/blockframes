@@ -38,6 +38,8 @@ import { SummaryMediaFilesComponent } from './promotional/media-files/media-file
 import { SummaryMediaImagesComponent } from './promotional/media-images/media-images.component';
 import { SummaryMediaVideosComponent } from './promotional/media-videos/media-videos.component';
 import { SummaryMediaNotesComponent } from './promotional/media-notes/notes.component';
+import { SummaryShootingInformationComponent } from './shooting-information/shooting-information.component';
+
 
 @NgModule({
   declarations: [
@@ -52,7 +54,8 @@ import { SummaryMediaNotesComponent } from './promotional/media-notes/notes.comp
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
-    SummaryMediaNotesComponent
+    SummaryMediaNotesComponent,
+    SummaryShootingInformationComponent
   ],
   imports: [
     CommonModule,
@@ -90,7 +93,8 @@ import { SummaryMediaNotesComponent } from './promotional/media-notes/notes.comp
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
     SummaryMediaVideosComponent,
-    SummaryMediaNotesComponent
+    SummaryMediaNotesComponent,
+    SummaryShootingInformationComponent
   ]
 })
 export class MovieTunnelSummaryModule {}

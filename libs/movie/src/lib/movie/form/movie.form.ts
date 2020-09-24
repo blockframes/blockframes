@@ -39,7 +39,6 @@ import {
   createSalesPitch,
   createShooting,
   createMovieNote,
-  createTotalBudget
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -529,7 +528,7 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
 }
 
 // ------------------------------
-//          TOTALBUDGET
+//          TOTAL BUDGET
 // ------------------------------
 
 function createTotalBudgetFormControl(totalBudget?: Partial<MovieTotalBudget>) {
@@ -552,6 +551,9 @@ export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
   }
 }
 
+export function createTotalBudget(totalBudget: MovieTotalBudget): MovieTotalBudget {
+  return { ...totalBudget };
+}
 
 // ------------------------------
 //       STAKEHOLDERS
