@@ -15,12 +15,3 @@ describe('Test util.ts generator function getCollectionInBatches', () => {
     }
   });
 });
-
-describe('Test util.ts  function batchIteratorFactory', () => {
-  it('should return batches of the correct size', async () => {
-    const jestMock = jest.fn(() => Promise.resolve())
-    const iterator = util.batchIteratorFactory(Array(9), jestMock, 3)
-    for await (let {} of iterator) {}
-    expect(jestMock).toHaveBeenCalledTimes(9)
-  });
-});
