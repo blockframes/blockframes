@@ -117,16 +117,11 @@ export async function onMovieUpdate(
 
 
   // REMOVING EMPTY STILL_PHOTOs
-  const hasEmptyStills = Object.keys(after.promotional.still_photo)
-    .some(key => !after.promotional.still_photo[key]);
+  const hasEmptyStills = !!after.promotional.still_photo.filter(photo => !!photo).length
 
   // if we found at least one empty still_photo, we update with only the none empty ones
   if (hasEmptyStills) {
-    const notEmptyStills: Record<string, string> = {};
-
-    Object.keys(after.promotional.still_photo)
-      .filter(key => !!after.promotional.still_photo[key])
-      .forEach(key => notEmptyStills[key] = after.promotional.still_photo[key]);
+    const notEmptyStills: string[] = after.promotional.still_photo.filter(photo => photo = after.promotional.still_photo[0]);
 
     change.after.ref.update({ 'promotional.still_photo': notEmptyStills });
   }

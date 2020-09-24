@@ -205,13 +205,11 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    Object.keys(before.promotional.still_photo)
-      .filter(key => !!before.promotional.still_photo[key])
-      .forEach(key => {
-        const stillBefore = before.promotional.still_photo[key];
-        const stillAfter = after.promotional.still_photo[key];
-        if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediaToDelete.push(stillBefore);
+    before.promotional.still_photo.filter(photo => !!photo)
+      .forEach((photo, index) => {
+        const stillAfter = after.promotional.still_photo[index];
+        if ((photo !== stillAfter || stillAfter === '')) {
+          mediasToDelete.push(photo);
         }
       });
 
@@ -237,9 +235,8 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    Object.keys(before.promotional.still_photo)
-      .filter(key => !!before.promotional.still_photo[key])
-      .forEach(key => mediaToDelete.push(before.promotional.still_photo[key]));
+    before.promotional.still_photo.filter(photo => !!photo)
+      .forEach(photo => mediasToDelete.push(photo));
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

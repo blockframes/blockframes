@@ -4,7 +4,7 @@ const referencesPaths = {
     movie: {
         banner: (docId: string) => `movies/${docId}/banner`,
         poster: (docId: string) => `movies/${docId}/poster`,
-        still: (docId: string, elementId: string) => `movies/${docId}/promotional.still_photo.${elementId}`,
+        still: (docId: string) => `movies/${docId}/promotional.still_photo`,
     },
     profile: {
         avatar: (uid: string) => `users/${uid}/avatar`
