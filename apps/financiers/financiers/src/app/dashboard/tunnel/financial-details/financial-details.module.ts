@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MovieFormFinancialDetailsComponent } from './financial-details.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +27,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     TunnelPageModule,
     StaticSelectModule,
+    UploadModule,
 
     // Material
     MatIconModule,

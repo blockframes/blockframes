@@ -116,6 +116,7 @@ export interface PublicMovie {
 
 export interface MoviePromotionalElements {
   clip_link: string,
+  financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
@@ -289,10 +290,10 @@ export interface MovieGoalsAudience {
 export interface MovieTotalBudget {
   castCost?: number,
   currency: MovieCurrenciesSlug,
+  others?: number,
   postProdCost?: number,
   producerFees?: number,
   shootCost?: number,
-  others?: number,
 }
 
 /////////////////////

@@ -51,6 +51,17 @@
 
       <h5>2. Please upload your total estimated budget</h5>
       <span class="mat-body-2">This upload is optional but can help future investors*</span>
+
+      <file-upload
+      [form]="form.promotional.get('financialDetails')"
+      [storagePath]="getPath()"
+      accept="['.pdf']"
+      [types]="['application/pdf']">
+        <h3 type>Upload Files</h3>
+        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      </file-upload>
+      <span class="mat-caption">Upload a complete document.</span>
+
     </section>
 
 

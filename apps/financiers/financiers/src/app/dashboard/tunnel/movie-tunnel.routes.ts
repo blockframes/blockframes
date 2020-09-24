@@ -1,12 +1,23 @@
 import { Routes } from '@angular/router';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { TunnelStep } from '@blockframes/ui/tunnel';
+
+const appSteps: TunnelStep[] = [{
+  title: 'Financing Conditions',
+  icon: 'CAD',
+  time: 1,
+  routes: [
+    { path: 'financial-details', label: 'Financial Details' }
+  ],
+}]
 
 export const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,
     canDeactivate: [TunnelGuard],
+    data: { appSteps },
     children: [
       {
         path: '',

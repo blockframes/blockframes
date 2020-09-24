@@ -120,6 +120,7 @@ export function createMoviePromotional(
   const elements: MoviePromotionalElements = {
     ...params,
     clip_link: params.clip_link ?? '',
+    financialDetails: params.financialDetails ?? '',
     moodboard: params.moodboard ?? '',
     notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),

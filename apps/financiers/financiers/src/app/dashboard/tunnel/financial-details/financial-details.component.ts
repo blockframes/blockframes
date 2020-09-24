@@ -1,15 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
-import { TunnelStep } from '@blockframes/ui/tunnel';
-
-const steps: TunnelStep = {
-  title: 'Financing Conditions',
-  icon: 'CAD',
-  time: 1,
-  routes: [
-    { path: 'financial-details', label: 'Financial Details' }
-  ],
-}
 
 
 @Component({
@@ -21,7 +12,7 @@ const steps: TunnelStep = {
 export class MovieFormFinancialDetailsComponent {
   form = this.shell.form;
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
   get totalBudget() {
     return this.form.get('totalBudget');
@@ -35,5 +26,10 @@ export class MovieFormFinancialDetailsComponent {
     + this.totalBudget.get('others').value;
 
     return total;
+  }
+
+  public getPath() {
+    const { movieId } = this.route.snapshot.params;
+    return `movies/${movieId}/promotional.financialDetails/`;
   }
 }

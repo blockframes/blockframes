@@ -738,6 +738,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     still_photo: new MediaFormList<Record<string, HostedMediaForm>>(stillPhotoControls),
 
     // Hosted Media
+    financialDetails: new HostedMediaForm(entity.financialDetails),
     presentation_deck: new HostedMediaForm(entity.presentation_deck),
     scenario: new HostedMediaForm(entity.scenario),
     moodboard: new HostedMediaForm(entity.moodboard),
