@@ -15,7 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Blockframes Utils
-import { HasKeysModule, MaxLengthModule, ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule, ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
@@ -69,7 +69,6 @@ import { SummaryMediaNotesComponent } from './promotional/media-notes/notes.comp
     TranslateSlugModule,
     HasStatusModule,
     MaxLengthModule,
-    HasKeysModule,
 
     // Materials
     MatChipsModule,

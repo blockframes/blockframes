@@ -37,9 +37,8 @@ export class MissingControlComponent implements OnInit, OnDestroy {
       return !control.controls.length;
     } else if (control instanceof FormGroup) {
       if (Object.keys(control.controls).length) {
-        Object.values(control.controls).forEach(c => this.isMissing(c));
-      } else {
-        return true;
+        const values = Object.values(control.controls);
+        return values.length ? values.some(c => this.isMissing(c)) : true;
       }
     }
     return !control.value;

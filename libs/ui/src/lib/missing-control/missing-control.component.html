@@ -9,7 +9,7 @@
 <ng-template #notRequired>
   <ng-container *ngIf="isMissing(control) else content">
     <a [routerLink]="link" [fragment]="fragment" class="missing-control">
-      <span>Missing{{ isLast ? '' : ', ' }}</span>
+      <span>Missing {{ isLast ? '' : ', ' }}</span>
     </a>
   </ng-container>
 </ng-template>
