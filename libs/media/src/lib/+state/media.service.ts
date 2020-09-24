@@ -23,7 +23,6 @@ export class MediaService {
   private breakpoints = [600, 1024, 1440, 1920];
 
   private overlayOptions = {
-    height: '400px',
     width: '500px',
     panelClass: 'upload-widget',
     positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
