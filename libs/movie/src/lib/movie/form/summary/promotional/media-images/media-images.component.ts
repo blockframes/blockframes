@@ -14,8 +14,4 @@ export class SummaryMediaImagesComponent {
   get stillPhoto() {
     return this.movie.promotional.get('still_photo');
   }
-
-  public objectHasNoValue() {
-    return !!Object.keys(this.stillPhoto.controls).length
-  }
 }

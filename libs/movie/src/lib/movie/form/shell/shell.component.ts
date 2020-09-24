@@ -22,7 +22,6 @@ import { of, Subscription } from 'rxjs';
 import { staticConsts } from '@blockframes/utils/static-model';
 
 function getSteps(statusCtrl: FormControl): TunnelStep[] {
-  const prodStatus = staticConsts.productionStatus;
   return [{
     title: 'First Step',
     icon: 'home',
@@ -60,7 +59,7 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: isStatus(statusCtrl, [prodStatus.development])
+      shouldDisplay: isStatus(statusCtrl, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -76,7 +75,7 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
       }, {
         path: 'media-notes',
         label: 'Notes & Statements',
-        shouldDisplay: isStatus(statusCtrl , [prodStatus.released, prodStatus.post_production, prodStatus.finished])
+        shouldDisplay: isStatus(statusCtrl, ['post_production', 'finished', 'released'])
       },
       {
         path: 'media-images',
@@ -100,7 +99,7 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
 function isStatus(prodStatusCtrl: FormControl, acceptableStatus: string[]) {
   return prodStatusCtrl.valueChanges.pipe(
     startWith(prodStatusCtrl.value),
-    map(prodStatus => acceptableStatus.includes(staticConsts.productionStatus[prodStatus]))
+    map(prodStatus => acceptableStatus.includes(prodStatus))
   )
 }
 

@@ -42,7 +42,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
         return true;
       }
     }
-    return !(!!control.value);
+    return !control.value;
   }
 
   ngOnDestroy() {

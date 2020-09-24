@@ -4,10 +4,13 @@
     <mat-icon svgIcon="pencil" color="primary"></mat-icon>
   </a>
 </h6>
+<div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+  <mat-icon svgIcon="eye" color="primary"></mat-icon>
 <missing-control [control]="stillPhoto" [link]="link">
   <ng-template let-images>
-    <ng-container *ngIf="objectHasNoValue()">
-      {{ images | json }}
+    <ng-container *ngIf="stillPhoto | hasKeys: 'controls'">
+      {{ images[0].ref | fileName | maxLength: 30 }}
     </ng-container>
   </ng-template>
 </missing-control>
+</div>
