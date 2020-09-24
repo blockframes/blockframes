@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '@blockframes/firebase-utils';
 
 
 // Update the totalBudget field from the old version (Price interface) to the new one (MovieTotalBudget interface)

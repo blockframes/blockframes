@@ -1,4 +1,4 @@
-import { Firestore } from '../admin';
+import { Firestore } from '@blockframes/firebase-utils';
 
 
 export async function upgrade(db: Firestore) {

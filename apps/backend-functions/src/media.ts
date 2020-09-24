@@ -164,7 +164,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     if (before.documents?.notes.length) {
       before.documents.notes.forEach(nb => {
         if (!after.documents?.notes.length || !after.documents.notes.some(na => na.ref === nb.ref)) {
-          mediasToDelete.push(nb.ref);
+          mediaToDelete.push(nb.ref);
         }
       });
     }
@@ -175,7 +175,7 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     }
 
     if (before.documents?.notes.length) {
-      before.documents.notes.forEach(n => mediasToDelete.push(n.ref));
+      before.documents.notes.forEach(n => mediaToDelete.push(n.ref));
     }
   }
 
@@ -202,7 +202,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.promotional.moodboard && (before.promotional.moodboard !== after.promotional.moodboard || after.promotional.moodboard === '')) {
-      mediasToDelete.push(before.promotional.moodboard);
+      mediaToDelete.push(before.promotional.moodboard);
     }
 
     Object.keys(before.promotional.still_photo)
@@ -234,7 +234,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.promotional.moodboard) {
-      mediasToDelete.push(before.promotional.moodboard);
+      mediaToDelete.push(before.promotional.moodboard);
     }
 
     Object.keys(before.promotional.still_photo)
