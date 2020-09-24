@@ -24,11 +24,10 @@ export class ReferencePipe implements PipeTransform {
   transform<Type extends ReferenceType>(
       docId: string,
       type: Type,
-      key: keyof ReferencePath[Type],
-      elementId?: number
+      key: keyof ReferencePath[Type]
   ): string {
     const getRef = referencesPaths[type][key] as any
-    return getRef(docId, elementId)
+    return getRef(docId)
   }
 }
 
