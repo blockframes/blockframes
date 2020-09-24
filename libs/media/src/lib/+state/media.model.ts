@@ -3,18 +3,15 @@ import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { PublicUser } from '@blockframes/user/types';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-
+import { OrganizationMediasForm } from '@blockframes/admin/admin-panel/forms/organization-medias.form';
 /**
  * This function prepare media references in db documents before updating it in firestore.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
 export function extractMediaFromDocumentBeforeUpdate(
-  form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+  form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm | OrganizationMediasForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);
 
@@ -27,12 +24,12 @@ export function extractMediaFromDocumentBeforeUpdate(
   };
 }
 
-function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
+function extractMediaFromDocument(document: any) {
   let medias: HostedMediaFormValue[] = [];
 
   for (const key in document) {
 
-    if (isMedia(document[key])) {
+    if (isMediaForm(document[key])) {
 
       if (mediaNeedsUpdate(document[key])) {
         medias.push(document[key]);
@@ -54,19 +51,18 @@ function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
-function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm) {
+function updateMediaFormInForm(form: any) {
   if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];
-      if (isMedia(control.value)) {
+      if (isMediaForm(control.value)) {
         if (mediaNeedsUpdate(control.value)) {
 
           // emptying values in blobOrFile and delete to prevent redoing the action on multiple submits.
           // patching oldRef with the new reference. Updating this value in the form prevents emptying the reference multiple saves.
           control.patchValue({
             blobOrFile: '',
-            delete: false,
-            oldRef: clearHostedMediaFormValue(control.value), 
+            oldRef: clearHostedMediaFormValue(control.value),
           });
 
         }
@@ -77,20 +73,47 @@ function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm 
   }
 }
 
-function isMedia(obj: any) {
+export function recursivelyListFiles(document: any): string[] {
+
+  if (typeof document === 'string') {
+    return isMedia(document) ? [document] : []
+
+  } else if (Array.isArray(document)) {
+    const result = document.map(el => recursivelyListFiles(el));
+    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
+    return [].concat(...result);
+
+  } else if (!document) {
+    return [];
+
+  } else if (typeof document === 'object') {
+    const result = Object.keys(document).map(key => recursivelyListFiles(document[key]));
+    // pre-ES2019 Array flattening, with ES2019 we could use Array.prototype.flat()
+    return [].concat(...result);
+
+  } else {
+    return [];
+  }
+}
+
+/** Check if a string is a media ref (i.e. if it starts with `public/` or `protected/`) */
+function isMedia(ref: string) {
+  return /^(public\/|protected\/)/gm.test(ref);
+}
+
+function isMediaForm(obj: any) {
   return (
     typeof obj === 'object' &&
     !!obj &&
     'ref' in obj &&
     'oldRef' in obj &&
     'blobOrFile' in obj &&
-    'delete' in obj &&
     'fileName' in obj
   );
 }
 
 function mediaNeedsUpdate(media: HostedMediaFormValue) {
-  return media.delete || (!!media.ref && !!media.blobOrFile);
+  return !media.ref || (!!media.ref && !!media.blobOrFile);
 }
 
 export function getFileNameFromPath(path: string) {

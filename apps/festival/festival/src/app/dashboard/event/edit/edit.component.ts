@@ -8,8 +8,8 @@ import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { switchMap, pluck } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, pluck, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -24,6 +24,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class EditComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+  private formSub: Subscription;
   form: EventForm;
   titles$: Observable<Movie[]>;
   invitations$: Observable<Invitation[]>;
@@ -53,7 +54,9 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.getValue(org.movieIds))
+      // org.movieIds also includes movies from the catalog app but please keep it this way. This way Marie can create events for movies that are only on catalog too.
+      switchMap(org => this.movieService.getValue(org.movieIds)),
+      map(titles => titles.filter(title => title.storeConfig.status === 'accepted' || 'submitted')),
     );
 
     this.members$ = this.orgQuery.selectActive().pipe(
@@ -65,15 +68,26 @@ export class EditComponent implements OnInit, OnDestroy {
     ).subscribe(event => {
       this.type = event.type;
       this.form = new EventForm(event);
+
+      // FormArray (used in FormList) does not mark as dirty on push,
+      // so we do it manually to enable the save button
+      // more info : https://github.com/angular/angular/issues/16370
+      if (!!this.formSub) {
+        this.formSub.unsubscribe();
+        delete this.formSub;
+      }
+      this.formSub = this.form.meta.valueChanges.subscribe(() => this.form.markAsDirty());
+
       this.cdr.markForCheck();
     });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.formSub.unsubscribe();
   }
 
-  get meta() {
-    return this.form.get('meta');
+  get files() {
+    return (this.form.meta as MeetingForm).get('files');
   }
 }

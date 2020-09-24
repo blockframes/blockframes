@@ -104,7 +104,7 @@ export function storeSearchableMovie(
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
       storeConfig: movie.storeConfig?.status || '',
-      budget: movie.totalBudget?.amount || movie.estimatedBudget?.from || 0,
+      budget: movie.estimatedBudget?.from || 0,
       orgName: organizationName,
       storeType: movie.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?

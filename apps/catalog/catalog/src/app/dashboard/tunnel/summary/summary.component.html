@@ -8,7 +8,11 @@
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
       <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <div fxLayout="row wrap" fxLayoutGap="8px">
+        <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
+          {{ field | parseCamelCase | titlecase }} {{ last ? '' : '-'}}
+        </span>
+      </div>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -23,7 +27,7 @@
 
     <section id="storyline-elements">
       <h3>Storyline Elements</h3>
-      <movie-summary-synopsis [movie]="form" [link]="('synopsis' | getPath)"></movie-summary-synopsis>
+      <movie-summary-synopsis [movie]="form" [link]="('story-elements' | getPath)"></movie-summary-synopsis>
     </section>
 
     <mat-divider></mat-divider>
@@ -68,7 +72,7 @@
 
     <section id="technical-information">
       <h3>Technical Information</h3>
-      <movie-summary-technical-info [movie]="form" [link]="('technical-info' | getPath)"></movie-summary-technical-info>
+      <movie-summary-technical-info [movie]="form" [link]="('technical-spec' | getPath)"></movie-summary-technical-info>
     </section>
 
     <mat-divider></mat-divider>

@@ -1,43 +1,95 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
-</ng-template>
-<ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
+<ng-container *ngIf="movie$ | async as movie">
+  <h1 *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: keys.additional)">
+    Additional Information
+  </h1>
 
-  <mat-card *ngIf="movie.languages" class="tech-information">
-    <mat-card-header>
-      <h3>Technical Information</h3>
-    </mat-card-header>
-    <mat-card-content>
-      <ul>
-        <ng-container *ngIf="movie.format">
-          <li *ngIf="movie.format"><strong>Shooting Format </strong>
-            <span>{{ movie.format | translateSlug: 'MOVIE_FORMAT'}}</span></li>
-        </ng-container>
-        <ng-container *ngIf="movie.formatQuality">
-          <li *ngIf="movie.formatQuality"><strong>Format Quality </strong>
-          <span>{{ movie.formatQuality }}</span></li>
-        </ng-container>
-        <ng-container *ngIf="movie.color">
-          <li *ngIf="movie.color"><strong>Color / B&W </strong>
-          <span>{{ movie.color | translateSlug: 'COLORS'}}</span></li>
-        </ng-container>
-        <ng-container *ngIf="movie.soundFormat">
-          <li *ngIf="movie.soundFormat"><strong>Sound Format </strong>
-          <span>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</span></li>
-        </ng-container>
-        <li *ngIf="movie.languages"><strong>Versions </strong>
-          <ng-container *ngFor="let version of movie.languages | keyvalue; let isLast = last">
-            {{ version.key | translateSlug: 'LANGUAGES'}}:
-            <ng-container *ngFor="let info of version.value | keyvalue; let isLast = last">
-              <ng-container *ngIf="info.value">
-                {{ info.key | translateSlug: 'VERSION_INFO' }}
-              </ng-container>
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.originalRelease.length)">
+    <h2>Release</h2>
+    <article *ngFor="let release of movie.originalRelease">
+      <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
+      <p>{{ release.media }} {{ release.date | date: 'shortDate' }}</p>
+    </article>
+  
+    <mat-divider></mat-divider>
+  </section>
+
+
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie | hasKeys: 'estimatedBudget')">
+    <h2>Budget</h2>
+    <article>
+      <h5>Budget Range</h5>
+      <p>
+        From <b>{{ movie.estimatedBudget.from }}</b> to <b>{{ movie.estimatedBudget.to }}</b>
+      </p>
+    </article>
+  
+    <mat-divider></mat-divider>
+  </section>
+
+
+  <section *ngIf="(movie | hasStatus: ['released']) && (movie.boxOffice.length)">
+    <h2>Box Office</h2>
+    <article *ngFor="let boxOffice of movie.boxOffice">
+      <h5>{{ boxOffice.territory | translateSlug : 'TERRITORIES' }}</h5>
+      <p>{{ boxOffice.value | currency: boxOffice.unit }}</p>
+    </article>
+  
+    <mat-divider></mat-divider>
+  </section>
+
+
+  <section *ngIf="(movie | hasStatus: ['released']) && movie.rating.length">
+    <h2>Ratings</h2>
+    <article *ngFor="let rating of movie.rating">
+      <h5>{{ rating.country | translateSlug : 'TERRITORIES' }}</h5>
+      <p>{{ rating.value }}</p>
+    </article>
+  </section>
+
+
+
+  <h1 *ngIf="movie | hasStatus: status.afterProd">
+    Technial Information
+  </h1>
+
+  <section *ngIf="(movie | hasKeys: keys.formats) && (movie | hasStatus: status.afterProd)">
+    <h2>Formats</h2>
+    <article *ngIf="movie.format">
+      <h5>Shooting Format</h5>
+      <p>{{ movie.format | translateSlug: 'MOVIE_FORMAT' }}</p>
+    </article>
+    <article *ngIf="movie.formatQuality">
+      <h5>Format quality</h5>
+      <p>{{ movie.formatQuality | translateSlug: 'MOVIE_FORMAT_QUALITY' }}</p>
+    </article>
+    <article *ngIf="movie.color">
+      <h5>Color information</h5>
+      <p>{{ movie.color | translateSlug: 'COLORS' }}</p>
+    </article>
+    <article *ngIf="movie.soundFormat">
+      <h5>Sound format</h5>
+      <p>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</p>
+    </article>
+  </section>
+
+  <section *ngIf="movie | hasStatus: ['released']">
+    <h2>Available Versions</h2>
+    <article>
+      <h5>Original version</h5>
+      <p>{{ movie.isOriginalVersionAvailable ? 'AUTHORIZED' : 'UNAUTHORIZED' }}</p>
+    </article>
+    <article *ngIf="movie | hasKeys: 'languages'">
+      <h5>Versions</h5>
+      <ng-container *ngFor="let language of movie.languages | keyvalue">
+        <div class="version" fxLayout fxLayoutGap="8px">
+          <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
+          <mat-chip-list>
+            <ng-container *ngFor="let version of language.value | keyvalue">
+              <mat-chip *ngIf="version.value">{{ version.key }}</mat-chip>
             </ng-container>
-            {{ isLast ? '' : '| ' }}
-          </ng-container>
-        </li>
-      </ul>
-    </mat-card-content>
-  </mat-card>
-
+          </mat-chip-list>
+        </div>
+      </ng-container>
+    </article>
+  </section>
 </ng-container>

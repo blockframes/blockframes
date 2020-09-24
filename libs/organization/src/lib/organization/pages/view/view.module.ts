@@ -37,6 +37,12 @@ const routes = [{
       canDeactivate: [UserGuard],
       loadChildren: () => import('@blockframes/organization/pages/member/member.module').then(m => m.MemberModule)
     },
+    {
+      path: 'documents',
+      canActivate: [UserGuard],
+      canDeactivate: [UserGuard],
+      loadChildren: () => import('@blockframes/organization/pages/documents/documents.module').then(m => m.DocumentsModule)
+    },
   ]
 }]
 

@@ -17,6 +17,7 @@ export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Met
   // We need that to avoid type error in template
   org?: Organization;
   movie?: Movie;
+  organizedBy?: User,
 }
 export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<any, Meta>> = {}): Event<Meta> {
   const meta: any =
@@ -57,6 +58,11 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
     callUrl: '',
     organizerId: '',
     description: '',
+    files: [],
+
+    // TODO removed real-time shared state from firestore issue#3748
+    selectedFile: '',
+
     ...meeting
   }
 }

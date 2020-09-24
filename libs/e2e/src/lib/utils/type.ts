@@ -7,9 +7,14 @@
 }
 
 export interface Organization {
+  id: string;
   name: string;
   email: string;
   address: Location;
+  denomination: {
+    full: string;
+    public: string;
+  }
   activity: string;
   fiscalNumber: string;
   bankAccount: BankAccount;
@@ -46,6 +51,7 @@ export interface Dates {
 }
 
 export interface Movie {
+  id: string;
   title: {
     international: string
   }

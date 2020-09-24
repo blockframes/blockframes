@@ -17,7 +17,6 @@ export class AdminOrganizationFormComponent {
   @Input() form: OrganizationAdminForm;
   @Input() set orgId(orgId: string) {
     this.storagePath = `orgs/${orgId}/logo`;
-    console.log('storage path', this.storagePath);
   } 
 
   // TODO#2914 Re-enable the cropper here when we found a solution

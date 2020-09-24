@@ -3,17 +3,29 @@ export interface HostedMediaFormValue {
   ref: string;
   oldRef: string;
   blobOrFile: Blob | File;
-  delete: boolean;
   fileName: string;
 }
 
+export interface HostedMediaWithMetadata {
+  ref: string,
+  title: string 
+}
+
 export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
-  if (formValue.delete) { return ''; }
+  if (formValue.ref === '') { return ''; }
   const ref = formValue.ref;
   const refParts = ref.split('/');
   return refParts.pop() === formValue.fileName ?
     `${formValue.ref}` :
     `${formValue.ref}/${formValue.fileName}`;
+}
+
+export function createHostedMediaWithMetadata(params: Partial<HostedMediaWithMetadata> = {}): HostedMediaWithMetadata {
+  return {
+    ref: '',
+    title: '',
+    ...params
+  }
 }
 
 export interface UploadData {

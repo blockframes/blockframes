@@ -16,13 +16,14 @@ import {
   StoreType,
   PremiereType,
   UnitBox,
+  ShootingPeriod,
+  MovieCurrenciesSlug
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
-import { Price } from "@blockframes/utils/common-interfaces";
 import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO issue#2582
@@ -50,12 +51,14 @@ interface MovieRaw<D> {
   color?: ColorsSlug,
   contentType: ContentType; //! required
   crew?: Crew[],
-  customGenres?: string[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
+  expectedPremiere?: MovieExpectedPremiereRaw<D>,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
+  customGenres?: string[],
+  goals?: MovieGoalsAudience[],
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO we will need more visibility on the upload part to take the final decision
   // TODO we also need to consider how to differentiate full movies from trailer
@@ -71,6 +74,7 @@ interface MovieRaw<D> {
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
   prizes?: Prize[],
+  customPrizes?: Prize[],
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],
@@ -78,12 +82,18 @@ interface MovieRaw<D> {
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,
+  shooting?: MovieShooting,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
-  totalBudget?: Price,
+  totalBudget?: MovieTotalBudget,
+
+
+  // New Data
+  // financialCurrency: string,
+  // returnInvestment: MovieReturnInvestment
 }
 
 /** Document model of a Movie */
@@ -106,10 +116,12 @@ export interface PublicMovie {
 
 export interface MoviePromotionalElements {
   clip_link: string,
+  financialDetails: string,
   moodboard: string,
-  notes: string,
+  notes: MovieNote[],
   presentation_deck: string,
   promo_reel_link: string,
+  salesPitch: MovieSalesPitch,
   scenario: string,
   screener_link: string,
   still_photo: Record<string, string>,
@@ -132,7 +144,7 @@ export interface StoreConfig {
 
 export interface Prize {
   name: string,
-  year: number,
+  year?: number,
   prize?: string,
   logo?: string,
   premiere?: PremiereType,
@@ -145,7 +157,7 @@ export interface Title {
 
 export interface BoxOffice {
   unit: UnitBox,
-  value: number,
+  value?: number,
   territory: TerritoriesSlug,
 }
 
@@ -208,18 +220,80 @@ export interface MovieStakeholders {
 }
 
 export interface MovieRelease {
-  year: number,
+  year?: number,
   status: string,
 }
 
 export interface MovieRunningTime {
-  time: number,
+  time: number | string,
   status: string,
 }
 
 export interface OtherLink {
   name: string;
   url: string;
+}
+
+export interface MovieShootingRaw<D> {
+  dates?: MovieShootingDateRaw<D>,
+  locations?: MovieShootingLocations[]
+}
+
+export interface MovieShooting extends MovieShootingRaw<Date> {}
+
+export interface MovieShootingLocations {
+  city: string,
+  country: TerritoriesSlug,
+}
+
+export interface MovieShootingDateRaw<D> {
+  completed?: D
+  progress?: D,
+  planned?: MoviePlannedShootingDateRange
+}
+
+export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MovieNote extends Person {
+  ref: string,
+}
+
+export interface MoviePlannedShootingDateRange {
+  from: MoviePlannedShooting,
+  to: MoviePlannedShooting
+}
+
+export interface MoviePlannedShooting {
+  period?: ShootingPeriod,
+  month?: string,
+  year?: number
+}
+
+export interface MovieExpectedPremiereRaw<D> {
+  date?: D,
+  event?: string
+}
+
+export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
+
+export interface MovieSalesPitch {
+  description: string,
+  link: string
+  file: string, // hosted media
+}
+
+export interface MovieGoalsAudience {
+  target: string,
+  goal: string
+}
+
+export interface MovieTotalBudget {
+  castCost?: number,
+  currency?: MovieCurrenciesSlug,
+  others?: number,
+  postProdCost?: number,
+  producerFees?: number,
+  shootCost?: number,
 }
 
 /////////////////////

@@ -65,19 +65,7 @@
         <ng-template formView let-producerForm>
           <article [formGroup]="producerForm">
 
-            <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Producer's First Name</mat-label>
-                <input test-id="producer-first-name" matInput formControlName="firstName"
-                  placeholder="Producer's First Name" />
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Producer's Last Name</mat-label>
-                <input test-id="producer-last-name" matInput formControlName="lastName"
-                  placeholder="Producer's Last Name" />
-              </mat-form-field>
-            </div>
+            <form-display-name [form]="producerForm" labelSuffix="Producer's"></form-display-name>
 
             <static-select type="model" [control]="producerForm.get('role')" scope="PRODUCER_ROLES">
               <mat-label>Role</mat-label>
@@ -137,7 +125,7 @@
             </mat-form-field>
 
             <chips-autocomplete [form]="salesForm.get('countries')" scope="TERRITORIES"
-              placeholder="Type and select Country" fxFlex>
+              placeholder="Type and select Country" fxFlex type="model">
               <mat-label>Sales Company's Nationality</mat-label>
               <mat-error>Please specify Sales Company's Country.</mat-error>
             </chips-autocomplete>

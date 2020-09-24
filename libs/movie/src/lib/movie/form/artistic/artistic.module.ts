@@ -17,6 +17,7 @@ import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/s
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe'
+import { FilmographyPipeModule} from '@blockframes/movie/pipes/filmography.pipe';
 import { TranslateSlugModule } from '@blockframes/utils/pipes';
 
 import { MovieFormArtisticComponent } from './artistic.component';
@@ -36,6 +37,7 @@ import { MovieFormArtisticComponent } from './artistic.component';
     FlexLayoutModule,
     HasStatusModule,
     TranslateSlugModule,
+    FilmographyPipeModule,
 
     // Material
     MatFormFieldModule,

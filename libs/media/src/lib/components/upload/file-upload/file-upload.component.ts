@@ -9,8 +9,6 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { AngularFireStorage } from "@angular/fire/storage";
-
 @Component({
   selector: '[form] [storagePath] file-upload',
   templateUrl: './file-upload.component.html',
@@ -30,7 +28,7 @@ export class FileUploadComponent implements OnInit {
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
-  constructor(private snackBar: MatSnackBar, private storage: AngularFireStorage) { }
+  constructor(private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     // show current file
@@ -105,7 +103,6 @@ export class FileUploadComponent implements OnInit {
     this.form.patchValue({
       ref: getStoragePath(this.storagePath, this.filePrivacy),
       blobOrFile: file,
-      delete: false,
       fileName: sanitizeFileName(file.name),
     })
     this.form.markAsDirty();
@@ -113,7 +110,7 @@ export class FileUploadComponent implements OnInit {
 
   public delete() {
     this.state = 'waiting';
-    this.form.patchValue({ delete: true });
+    this.form.patchValue({ ref: '' });
     this.form.markAsDirty();
   }
 
@@ -121,7 +118,6 @@ export class FileUploadComponent implements OnInit {
 
     this.form.patchValue({
       blobOrFile: undefined,
-      delete: false,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     })
     this.form.markAsDirty();

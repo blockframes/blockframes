@@ -1,6 +1,8 @@
+// @ts-nocheck
 import { Firestore, Storage } from '../types';
 import { File as GFile } from '@google-cloud/storage';
-import { startMaintenance, endMaintenance, getDocument, runChunks } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance } from '../maintenance';
+import { getDocument, runChunks } from '../firebase-utils';
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 

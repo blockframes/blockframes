@@ -3,8 +3,8 @@ import FestivalScreeningPage from "./FestivalScreeningPage";
 
 export default class FestivalMarketplaceEventPage {
   constructor() {
-    cy.get('festival-event-view', {timeout: 10000});
     cy.wait(3000);
+    cy.get('festival-event-view', {timeout: 90000});
   }
 
   assertScreeningExist(movieTitle: string) {
@@ -17,7 +17,9 @@ export default class FestivalMarketplaceEventPage {
   }
 
   assertJoinScreeningNotExists() {
-    cy.get('festival-event-view a[test-id=event-room]').should('have.length', 0);
+    cy.log(`assertJoinScreeningNotExists : join screen should not exist!`);
+    cy.get('festival-event-view a[test-id=event-room]')
+      .should('have.length', 0);
   }
 
   assertEventNameExist(eventName: string) {

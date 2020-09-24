@@ -1,6 +1,7 @@
 import { Firestore } from '../types';
 import { File as GFile } from '@google-cloud/storage';
-import { startMaintenance, endMaintenance, runChunks, getDocAndPath } from '@blockframes/firebase-utils';
+import { startMaintenance, endMaintenance } from '../maintenance';
+import { runChunks, getDocAndPath } from '../firebase-utils';
 import { firebase } from '@env';
 import { has, get } from 'lodash';
 import { privacies } from '@blockframes/utils/file-sanitizer';

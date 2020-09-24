@@ -4,13 +4,14 @@ import {
   Movie,
   MovieService,
   createDocumentMeta,
-  createMoviePromotional,
   createMovieRating,
   createMovieReview,
   createMovieOriginalRelease,
   createPrize,
   populateMovieLanguageSpecification,
-  createBoxOffice
+  createBoxOffice,
+  createMovie,
+  createTotalBudget
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -46,7 +47,7 @@ enum SpreadSheetMovie {
   genres,
   length,
   cast,
-  festivalPrizes,
+  festivalCustomPrizes,
   synopsis,
   keyAssets,
   keywords,
@@ -66,8 +67,8 @@ enum SpreadSheetMovie {
   // poster, TODO issue #3091
   // bannerLink, TODO issue #3091
   // stillLinks, TODO issue #3091
-  presentationDeck,
-  scenarioLink,
+  // presentationDeck, TODO issue #3091
+  // scenarioLink, TODO issue #3091
   screenerLink,
   promoReelLink,
   trailerLink,
@@ -128,12 +129,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
     sheetTab.rows.forEach(async spreadSheetRow => {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle] && spreadSheetRow[SpreadSheetMovie.internalRef]) {
         const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
-        const movie = {
-          promotional: createMoviePromotional({}),
-          languages: { languages: {} }, // TODO issue #1596
-          ...existingMovie ? cleanModel(existingMovie) : undefined
-        } as Movie;
-
+        const movie = existingMovie ? cleanModel(existingMovie) as Movie : createMovie();
         const importErrors = { movie, errors: [] } as MovieImportState;
 
         //////////////////
@@ -486,9 +482,9 @@ export class ViewExtractedMoviesComponent implements OnInit {
         }
 
         // PRIZES (Prizes)
-        if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
-          movie.prizes = [];
-          spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
+        if (spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes]) {
+          movie.customPrizes = [];
+          spreadSheetRow[SpreadSheetMovie.festivalCustomPrizes].split(this.separator).forEach(async (p: string) => {
             const prizeParts = p.split(this.subSeparator);
             if (prizeParts.length >= 3) {
               const prize = createPrize();
@@ -506,11 +502,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 }
 
               }
-              // TODO issue #3091
-              // if (prizeParts.length >= 5) {
-              //   prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
-              // }
-              movie.prizes.push(prize);
+              movie.customPrizes.push(prize);
             }
           });
         }
@@ -640,6 +632,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
+        // TODO issue #3091
+        /*
         // SCENARIO LINK
         if (spreadSheetRow[SpreadSheetMovie.scenarioLink]) {
           // TODO issue#3091
@@ -652,7 +646,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
@@ -699,8 +693,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             movie.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
-            movie.totalBudget = createPrice({
-              amount: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
+            movie.totalBudget = createTotalBudget({
+              others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
             });
           }
         }
@@ -808,7 +802,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // }
 
         // PRESENTATION DECK
-        if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
+        // TODO issue #3091
+        /*if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
           // TODO issue#3091
           movie.promotional.presentation_deck = spreadSheetRow[SpreadSheetMovie.presentationDeck];
         } else {
@@ -819,7 +814,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
-        }
+        }*/
 
         //////////////////
         // FESTIVAL FIELDS
@@ -1132,7 +1127,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
       });
     }
 
-    if (movie.prizes.length === 0) {
+    if (movie.customPrizes.length === 0) {
       errors.push({
         type: 'warning',
         field: 'prizes',

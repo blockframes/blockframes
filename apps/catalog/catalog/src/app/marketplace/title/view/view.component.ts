@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -12,18 +13,11 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
 
-  public navLinks = [{
-    path: 'main',
-    label: 'Main Information'
-  },
-  {
-    path: 'artistic',
-    label: 'Artistic Information'
-  },
-  {
-    path: 'additional',
-    label: 'Additional Information'
-  },
+  public navLinks = [
+    mainRoute,
+    artisticRoute,
+    productionRoute,
+    additionalRoute,
   {
     path: 'finance',
     label: 'Financing Conditions'

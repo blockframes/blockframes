@@ -2,20 +2,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdditionalComponent } from './additional.component';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
+import { TranslateSlugModule, HasKeysModule } from '@blockframes/utils/pipes';
+import { HasStatusModule } from '../../pipes/has-status.pipe';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [AdditionalComponent],
   imports: [
     CommonModule,
     TranslateSlugModule,
-    // Material
-    MatProgressSpinnerModule,
-    MatCardModule,
+    HasKeysModule,
+    HasStatusModule,
+    FlexLayoutModule,
+    MatDividerModule,
+    MatChipsModule,
     RouterModule.forChild([{ path: '', component: AdditionalComponent }])
   ]
 })

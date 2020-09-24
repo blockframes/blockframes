@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Firestore } from '../types';
 import { omit } from 'lodash';
 /**
@@ -33,7 +34,7 @@ export async function upgrade(db: Firestore) {
       if (!newData) {
         console.error(doc.ref.path, invitation, newData);
       }
-      
+
       return batch.update(doc.ref, newData);
     }
   });

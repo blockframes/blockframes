@@ -3,12 +3,22 @@
     <h4 title>LAST STEP</h4>
     <h1 subtitle>Summary Page</h1>
     <p description class="mat-body-1">
-      Please verify that all the information you have entered is correct before submitting to Archipel Market for validation.
+      Please verify that all the information you have entered is correct before submitting to Archipel Market for
+      validation.
     </p>
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
+        below.</span>
+      <ng-container *ngIf="invalidFields.length">
+        <span class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
+          to fill in.</span>
+          <div fxLayout="row wrap" fxLayoutGap="8px">
+            <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
+              {{ field | parseCamelCase | titlecase }} {{ last ? '' : '-'}}
+            </span>
+          </div>
+      </ng-container>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -23,7 +33,7 @@
 
     <section id="storyline-elements">
       <h3>Storyline Elements</h3>
-      <movie-summary-synopsis [movie]="form" [link]="('synopsis' | getPath)"></movie-summary-synopsis>
+      <movie-summary-synopsis [movie]="form" [link]="('story-elements' | getPath)"></movie-summary-synopsis>
     </section>
 
     <mat-divider></mat-divider>
@@ -50,7 +60,7 @@
 
     <section id="reviews">
       <h3>Selections and Reviews</h3>
-      <movie-summary-review [movie]="form" [link]="('artistic' | getPath)"></movie-summary-review>
+      <movie-summary-review [movie]="form" [link]="('reviews' | getPath)"></movie-summary-review>
     </section>
 
     <mat-divider></mat-divider>
@@ -59,7 +69,8 @@
 
     <section id="additional-information">
       <h3>Additional Information</h3>
-      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)"></movie-summary-additional-information>
+      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)">
+      </movie-summary-additional-information>
     </section>
 
     <mat-divider></mat-divider>
@@ -68,7 +79,7 @@
 
     <section id="technical-information">
       <h3>Technical Information</h3>
-      <movie-summary-technical-info [movie]="form" [link]="('technical-info' | getPath)"></movie-summary-technical-info>
+      <movie-summary-technical-info [movie]="form" [link]="('technical-spec' | getPath)"></movie-summary-technical-info>
     </section>
 
     <mat-divider></mat-divider>
@@ -77,7 +88,8 @@
 
     <section id="available-materials">
       <h3>Available Materials</h3>
-      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)"></movie-summary-available-materials>
+      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
+      </movie-summary-available-materials>
     </section>
 
     <mat-divider></mat-divider>
@@ -89,10 +101,12 @@
       <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
       <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
       <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
-    </section >
+      <movie-summary-media-notes [movie]="form" [link]="('media-notes' | getPath)"></movie-summary-media-notes>
+    </section>
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
+    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+      [disabled]="isPublished$ | async">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

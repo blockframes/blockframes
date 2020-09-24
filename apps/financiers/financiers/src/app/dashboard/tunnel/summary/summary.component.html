@@ -1,99 +1,112 @@
-<!-- <tunnel-page>
-  <h4 title>END</h4>
-  <h1 subtitle>Summary & Submission</h1>
-  <p description class="mat-body-1">
-    Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
-  </p>
+<tunnel-page>
+  <ng-container tunnel-form>
+    <h4 title>LAST STEP</h4>
+    <h1 subtitle>Summary Page</h1>
+    <p description class="mat-body-1">
+      Please verify that all the information you have entered is correct before submitting to Archipel Market for
+      validation.
+    </p>
 
-  <ng-container tunnel-form> -->
-    <!-- Main card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Main Information</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-main [movie]="form" [link]="getPath('main')"></movie-summary-main>
-        <movie-summary-country [movie]="form" [main]="form.main" [link]="getPath('main')"></movie-summary-country>
-        <movie-summary-information [movie]="form" [link]="getPath('main')"></movie-summary-information>
-        <movie-summary-sales-cast [movie]="form" [link]="getPath('main')"></movie-summary-sales-cast>
-        <movie-summary-festival-prizes [movie]="form" [link]="getPath('main')"></movie-summary-festival-prizes>
-      </mat-card-content>
-    </mat-card>
- -->
-    <!-- Story card -->
-   <!--  <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Storyline Elements</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-story [movie]="form" [link]="getPath('synopsis')"></movie-summary-story>
-      </mat-card-content>
-    </mat-card> -->
+    <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
+      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
+        below.</span>
+      <div class="mandatory-control">
+        <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
+          to fill in.</span>
+        <a mat-button *ngFor="let field of invalidFields" color="warn">
+          {{ field | parseCamelCase | titlecase }}
+        </a>
+      </div>
+    </div>
 
-    <!-- Credit card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Credits</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-credit [movie]="form" [link]="getPath('credits')"></movie-summary-credit>
-      </mat-card-content>
-    </mat-card>
- -->
-    <!-- Budget card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Budget, Quota & Critics</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-budget [movie]="form" [review]="form.review" [link]="getPath('budget')"></movie-summary-budget>
-      </mat-card-content>
-    </mat-card> -->
+    <!-- MAIN INFORMATION -->
+    <section id="main-information">
+      <h3>Main Information</h3>
+      <movie-summary-main [movie]="form" [link]="('main' | getPath)"></movie-summary-main>
+    </section>
 
-    <!-- Technical Information card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Technical Information</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-technical-information [movie]="form" [link]="getPath('technical-info')"></movie-summary-technical-information>
-      </mat-card-content>
-    </mat-card> -->
+    <mat-divider></mat-divider>
 
-    <!-- Images card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Promotional Images</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-image [movie]="movie" [link]="getPath('images')"></movie-summary-image>
-      </mat-card-content>
-    </mat-card> -->
+    <!-- STORYLINE ELEMENTS -->
 
-    <!-- Files card -->
-<!--     <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Files & Links</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-file [promotional]="form.promotional" [link]="getPath('files&links')"></movie-summary-file>
-      </mat-card-content>
-    </mat-card>
- -->
+    <section id="storyline-elements">
+      <h3>Storyline Elements</h3>
+      <movie-summary-synopsis [movie]="form" [link]="('synopsis' | getPath)"></movie-summary-synopsis>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- PRODUCTION INFORMATION -->
+
+    <section id="production-information">
+      <h3>Production Information</h3>
+      <movie-summary-production [movie]="form" [link]="('production' | getPath)"></movie-summary-production>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- ARTISTIC TEAM -->
+
+    <section id="artistic-team">
+      <h3>Artistic Team</h3>
+      <movie-summary-artistic [movie]="form" [link]="('artistic' | getPath)"></movie-summary-artistic>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- SELECTION AND REVIEWS -->
+
+    <section id="reviews">
+      <h3>Selections and Reviews</h3>
+      <movie-summary-review [movie]="form" [link]="('artistic' | getPath)"></movie-summary-review>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- ADDITIONAL INFORMATION -->
+
+    <section id="additional-information">
+      <h3>Additional Information</h3>
+      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)">
+      </movie-summary-additional-information>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- TECHNICAL INFORMATION -->
+
+    <section id="technical-information">
+      <h3>Technical Information</h3>
+      <movie-summary-technical-info [movie]="form" [link]="('technical-info' | getPath)"></movie-summary-technical-info>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- AVAILABLE MATERIALS -->
+
+    <section id="available-materials">
+      <h3>Available Materials</h3>
+      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
+      </movie-summary-available-materials>
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- PROMOTIONAL ELEMENTS -->
+
+    <section id="promotional-elements">
+      <h3>Promotional Elements</h3>
+      <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
+      <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
+      <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
+    </section>
 
     <!-- Submit -->
-  <!--   <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
+    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+      [disabled]="isPublished$ | async">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </ng-container>
 
 </tunnel-page>
- -->

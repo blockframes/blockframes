@@ -11,7 +11,14 @@ export interface Meeting {
   callUrl: string;
   organizerId: string;
   description: string;
+  files: string[];
+
+  // TODO removed real-time shared state from firestore issue#3748
+  selectedFile: string;
 }
+
+/** Maximum number of invitations that can be sent for a given Meeting */
+export const MEETING_MAX_INVITATIONS_NUMBER = 9;
 
 export interface Screening {
   /** A screening session can have one title */

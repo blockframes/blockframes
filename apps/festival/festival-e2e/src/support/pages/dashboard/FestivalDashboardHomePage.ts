@@ -5,7 +5,7 @@ import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplace
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard-home', { timeout: 30000 })
+    cy.get('festival-dashboard-home', { timeout: 40000 })
   }
 
   goToMarket() {
@@ -22,7 +22,8 @@ export default class FestivalDashboardHomePage {
   }
 
   clickOnInvitations() {
-    cy.get('festival-dashboard a[test-id=invitations-link]').click();
+    cy.get('festival-dashboard a[test-id=invitations-link]', {timeout: 10000})
+      .click();
     return new FestivalInvitationsPage();
   }
 
@@ -38,8 +39,9 @@ export default class FestivalDashboardHomePage {
       if ($menu.length) {
         cy.wrap($menu).click();
       } else {
-        cy.get('button[test-id=menu]').click();
-        cy.get('a[test-id="calendar"]').click();
+        cy.get('button[test-id=menu]', {timeout: 1000})
+          .first().click();
+        cy.get('a[test-id="calendar"]', {timeout: 1000}).click();
       }
       cy.wait(1000);
       cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();

@@ -13,12 +13,10 @@ import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 
 // Components
 import { TitleViewComponent } from './view.component';
-import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/components/view/shell/shell.module';
+import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
 
 // Material
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
   path: '',
@@ -36,17 +34,17 @@ const routes = [{
     },
     {
       path: 'main',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/main/main.module').then(m => m.MovieViewMainModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/main/main.module').then(m => m.MovieViewMainModule),
       data: { animation: 1 }
     },
     {
       path: 'artistic',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
       data: { animation: 2 }
     },
     {
       path: 'production',
-      loadChildren: () => import('@blockframes/movie/dashboard/components/view/production/production.module').then(m => m.MovieViewProductionModule),
+      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
       data: { animation: 3 }
     }
   ]
@@ -64,9 +62,7 @@ const routes = [{
     DashboardTitleShellModule,
     DisplayNameModule,
     // Material
-    MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     // Routes
     RouterModule.forChild(routes)
   ]

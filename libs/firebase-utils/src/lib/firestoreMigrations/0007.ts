@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Firestore } from '../types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import admin from 'firebase-admin';

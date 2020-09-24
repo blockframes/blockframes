@@ -17,10 +17,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
-function getSteps(status: FormControl): TunnelStep[] {
+function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -50,12 +51,15 @@ function getSteps(status: FormControl): TunnelStep[] {
       path: 'additional-information',
       label: 'Additional Information'
     }, {
-      path: 'technical-info',
-      label: 'Technical Information'
+      path: 'shooting-information',
+      label: 'Shooting Information'
+    }, {
+      path: 'technical-spec',
+      label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
+      shouldDisplay: isStatus(statusCtrl, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -63,9 +67,17 @@ function getSteps(status: FormControl): TunnelStep[] {
     time: 10,
     routes: [
       {
+        path: 'sales-pitch',
+        label: 'Sales Pitch'
+      }, {
         path: 'media-files',
         label: 'Files'
       }, {
+        path: 'media-notes',
+        label: 'Notes & Statements',
+        shouldDisplay: isStatus(statusCtrl, ['post_production', 'finished', 'released'])
+      },
+      {
         path: 'media-images',
         label: 'Images'
       }, {
@@ -73,7 +85,9 @@ function getSteps(status: FormControl): TunnelStep[] {
         label: 'Videos'
       }
     ]
-  }, {
+  },
+  ...appSteps,
+  {
     title: 'Summary',
     icon: 'send',
     time: 3,
@@ -84,6 +98,36 @@ function getSteps(status: FormControl): TunnelStep[] {
   }]
 }
 
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
+  return prodStatusCtrl.valueChanges.pipe(
+    startWith(prodStatusCtrl.value),
+    map(prodStatus => acceptableStatus.includes(prodStatus))
+  )
+}
+
+const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
+  development: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  shooting: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  post_production: {
+    'release.status': '',
+    "runningTime.status": ''
+  },
+  finished: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
+  },
+  released: {
+    'release.status': 'confirmed',
+    "runningTime.status": 'confirmed'
+  }
+}
+
 @Component({
   selector: 'movie-form-shell',
   templateUrl: './shell.component.html',
@@ -91,8 +135,8 @@ function getSteps(status: FormControl): TunnelStep[] {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps: TunnelStep[];
+  form = new MovieForm(this.query.getActive());
+  steps: TunnelStep[];
 
   public exitRoute: string;
   private sub: Subscription;
@@ -105,15 +149,21 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private dialog: MatDialog,
     private mediaService: MediaService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-    this.steps = getSteps(this.form.get('productionStatus'));
+    const appSteps = this.route.snapshot.data.appSteps;
+    this.steps = getSteps(this.form.get('productionStatus'),appSteps);
+    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
+      filter(status => !!status)).subscribe(status => {
+        const pathToUpdate = Object.keys(valueByProdStatus[status]);
+        pathToUpdate.forEach(path => this.form.get(path as any).setValue(valueByProdStatus[status][path]));
+      })
   }
 
   ngAfterViewInit() {
-    this.sub = this.route.fragment.subscribe(async (fragment: string) => {
+    const routerSub = this.route.fragment.subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
       el?.scrollIntoView(
         {
@@ -123,6 +173,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         }
       );
     });
+    this.sub.add(routerSub);
   }
 
   ngOnDestroy() {
@@ -137,19 +188,16 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
       new MutationObserver((_, observer) => {
         resolve(this.doc.getElementById(id));
-      }).observe(this.doc.documentElement, {childList: true, subtree: true});
+      }).observe(this.doc.documentElement, { childList: true, subtree: true });
     })
   }
 
   // Should save movie
   public async save() {
-
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-
     await this.service.update(movie.id, movie);
-    this.mediaService.uploadOrDeleteMedia(mediasToUpload);
+    this.mediaService.uploadMedias(mediasToUpload);
 
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
@@ -168,7 +216,13 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       }
     });
     return dialogRef.afterClosed().pipe(
-      switchMap(shouldSave => shouldSave ? this.save() : of(false))
+      switchMap(shouldSave => {
+        /* Undefined means, user clicked on the backdrop, meaning just close the modal */
+        if (typeof shouldSave === 'undefined') {
+          return of(false)
+        }
+        return shouldSave ? this.save() : of(true)
+      })
     );
   }
 }

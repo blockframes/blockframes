@@ -16,7 +16,7 @@
           <!-- Request to attendEvent -->
           <ng-template #request>
             {{ invitation.fromUser | displayName }} would like to attend event 
-            <a [routerLink]="['/c/o/marketplace/event', invitation.id]" id="link">{{ event.title }}</a>.
+            <a [routerLink]="['/c/o/marketplace/event', invitation.docId]" id="link">{{ event.title }}</a>.
             {{ event | eventRange }}
           </ng-template>
         </ng-container>

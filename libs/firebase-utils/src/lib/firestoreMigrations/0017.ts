@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Firestore } from '../types';
 
 /**

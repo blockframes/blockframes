@@ -5,8 +5,9 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { TunnelSummaryComponent } from './summary.component';
 
-// Summary components
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
+import { ParseCamelCasePipeModule } from '@blockframes/utils/pipes/parse-camel-calse.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -21,8 +22,9 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-    // Summary components
     MovieTunnelSummaryModule,
+    GetPathModule,
+    ParseCamelCasePipeModule,
     // Materials
     MatCardModule,
     MatIconModule,

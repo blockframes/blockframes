@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Movie, MovieStakeholders } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { TitleMarketplaceShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-additional',
@@ -12,29 +11,22 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 })
 export class AdditionalComponent implements OnInit {
 
-  public movie$ = this.movieQuery.selectActive();
-  public loading$ = this.movieQuery.selectLoading();
+  public movie$ = this.shell.movie$;
+  public status: Record<string, Movie['productionStatus'][]> = {
+    afterProd: ['post_production', 'finished', 'released']
+  };
+  public keys = {
+    additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating'],
+    formats: ['format', 'formatQuality', 'color', 'soundFormat']
+  };
 
   constructor(
-    private movieQuery: MovieQuery,
+    private shell: TitleMarketplaceShellComponent,
     private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Film Page', 'Financing Conditions');
-  }
-
-  public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
-  }
-
-  public hasBudget({ boxOffice, rating, certifications, review}: Movie): boolean {
-    return !!(
-      boxOffice.length ||
-      certifications.length ||
-      rating.length ||
-      review.length
-    )
+    this.dynTitle.setPageTitle('Film Page', 'Addition Information');
   }
 
 }

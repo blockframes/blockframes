@@ -23,14 +23,15 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
+import { FormDisplayNameModule } from '@blockframes/ui/form';
 
 // Component
 import { MovieFormMainComponent } from './main.component';
 
 // Pipe
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { TranslateSlugModule } from '@blockframes/utils/pipes';
-import { FilmographyPipeModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
 
 @NgModule({
   declarations: [MovieFormMainComponent],
@@ -50,6 +51,8 @@ import { FilmographyPipeModule } from '@blockframes/utils/pipes';
     HasStatusModule,
     TranslateSlugModule,
     FilmographyPipeModule,
+    FormDisplayNameModule,
+    MaxLengthModule,
 
     // Material
     MatDividerModule,

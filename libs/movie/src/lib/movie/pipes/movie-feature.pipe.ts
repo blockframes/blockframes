@@ -1,6 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug, } from '@blockframes/utils/static-model/staticModels';
 
 @Pipe({
   name: 'movieFeature',
@@ -29,3 +29,9 @@ export class MovieFeaturePipe implements PipeTransform {
     ].filter(v => !!v).join(' | ');
   }
 }
+
+@NgModule({
+  declarations: [MovieFeaturePipe],
+  exports: [MovieFeaturePipe]
+})
+export class MovieFeatureModule { }

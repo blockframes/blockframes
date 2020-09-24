@@ -15,6 +15,7 @@ import {
   TitleSortDirective,
   TitleSearchDirective,
   TitleAppBarSearchDirective,
+  TitleProgressDirective,
 } from './title-list.component'
 
 // Material
@@ -38,6 +39,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleSortDirective,
     TitleSearchDirective,
     TitleAppBarSearchDirective,
+    TitleProgressDirective
   ],
   exports: [
     TitleListComponent,
@@ -55,6 +58,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     TitleSortDirective,
     TitleSearchDirective,
     TitleAppBarSearchDirective,
+    TitleProgressDirective
   ],
   imports: [
     CommonModule,
@@ -86,7 +90,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatSnackBarModule,
     MatToolbarModule,
     MatTabsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ]
 })
 export class TitleListLayoutModule { }
