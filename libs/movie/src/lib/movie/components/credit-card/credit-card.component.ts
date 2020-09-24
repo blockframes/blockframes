@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Credit, Filmography } from '@blockframes/utils/common-interfaces';
+import { Credit, Director } from '@blockframes/utils/common-interfaces';
 
 @Component({
   selector: 'title-credit-card',
@@ -9,7 +9,9 @@ import { Credit, Filmography } from '@blockframes/utils/common-interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreditCardComponent {
-  @Input() credit: Credit;
+  icon = 'check';
+  @Input() credit: Credit | Director;
+  @Input() type: 'director' | 'crew' | 'cast';
   @ViewChild("dialogRef") dialogRef: TemplateRef<any>;
 
   constructor(private dialog: MatDialog) { }
@@ -20,14 +22,12 @@ export class CreditCardComponent {
 
 }
 
-
-@Pipe({ name: 'filmography' })
-export class FilmographyPipe implements PipeTransform {
-  transform(filmography?: Filmography) {
-    if (filmography?.title) {
-      return filmography.year ? `${filmography.title} (${filmography.year})` : filmography.title;
-    } else {
-      return  '-'
+@Pipe({ name: 'roleIcon' })
+export class RoleIconPipe implements PipeTransform {
+  transform(role?: Credit['role']) {
+    switch(role) {
+      case '': return 'check';
+      default: return 'check';
     }
   }
 }

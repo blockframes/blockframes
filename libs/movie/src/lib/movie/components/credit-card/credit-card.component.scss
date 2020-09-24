@@ -1,39 +1,31 @@
 :host {
   display: block;
-  text-align: center;
 }
-p {
-  text-align: center;
-}
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.status {
-  background-color: rgba(white, 0.3);
-  padding: 4px;
-  margin: 16px;
+
+header {
+  padding: 0 16px;
 }
 
 mat-tab-group {
   width: 100%;
-  padding: 0 50px;
+  padding: 0 32px;
 }
 
-.tab-content {
-  padding: 16px 0;
+article {
+  padding: 24px 0;
   height: 200px;
   overflow: hidden;
 }
 
 .description {
   text-align: center;
-  margin: 16px;
-  height: 70px;
-  max-width: 60%;
+  max-width: 100%;
   text-overflow: ellipsis;
   overflow-wrap: break-word;
-  overflow: hidden;
+  overflow: auto;
+}
+
+.description:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
