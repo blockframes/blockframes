@@ -25,6 +25,7 @@ export default class OrganizationAppAccessPage {
   }
 
   public clickSubmit() {
+    cy.wait(TO.SLOW_OP); // let the time to this.query.getActiveId() to get populated
     cy.get('organization-app-access button[test-id=submit]')
       .click({ force: true });
     cy.wait(TO.WAIT_1SEC);
