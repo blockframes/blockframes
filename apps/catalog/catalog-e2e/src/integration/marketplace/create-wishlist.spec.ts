@@ -64,6 +64,7 @@ describe('Test wishlist features from library, detail page',  () => {
       p4.checkWishListCount(movieList1.length);
 
       //TODO : Need to refactor this to remove wait issues.
+      //Issue #3089
       /*
       //4. let movieList2 = []
       cy.go('back');
@@ -90,6 +91,7 @@ describe('Test wishlist features from library, detail page',  () => {
       cy.log(`C: Dropping from WishList: [${movieList2[1]}]`);
       p3.clickWishlistButton(movieList2[1]);
       //TODO : need correction for step 4.
+      //Issue #3089
       //likedCount -= 1;
       likedCount =  BINGE_WATCH_COUNT - 1;
 
