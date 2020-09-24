@@ -8,7 +8,7 @@ import { ImageParameters, formatParameters } from '@blockframes/media/directives
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
-import { privacies } from '@blockframes/utils/file-sanitizer';
+import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
 
 /**
@@ -119,16 +119,28 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   }
 }
 
+interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
+
 function getPathInfo(ref: string) {
   const refParts = ref.split('/');
 
-  const pathInfo: Record<string, string | undefined> = {};
-  if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift();
+  // if ref starts with `/` refParts[0] will be ""
+  if (ref.startsWith('/')) {
+    refParts.shift();
   }
 
-  pathInfo.collection = refParts.shift();
-  pathInfo.docId = refParts.shift();
+  const pathInfo: PathInfo = {
+    securityLevel: 'protected', // protected by default
+    collection: '',
+    docId: '',
+  };
+
+  if (privacies.includes(refParts[0] as any)) {
+    pathInfo.securityLevel = refParts.shift()! as Privacy;
+  }
+
+  pathInfo.collection = refParts.shift()!;
+  pathInfo.docId = refParts.shift()!;
 
   return pathInfo;
 }
