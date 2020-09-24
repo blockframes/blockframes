@@ -23,7 +23,7 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
     let savedRef: string | Array<{ ref: string }> = get(docData, fieldToUpdate);
 
     if (Array.isArray(savedRef)) {
-      savedRef = savedRef.map(e => e.ref).find(ref => ref === filePath) || '';
+      savedRef = savedRef.map(e => e.ref ?? e).find(ref => ref === filePath) || '';
     }
 
     const bucket = admin.storage().bucket(getStorageBucketName());
