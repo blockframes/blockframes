@@ -8,3 +8,7 @@
   bottom: 0;
   left: 0;
 }
+
+::ng-deep .localVideo {
+  width: 100%;
+}
