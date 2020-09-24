@@ -289,7 +289,7 @@ export interface MovieGoalsAudience {
 
 export interface MovieTotalBudget {
   castCost?: number,
-  currency: MovieCurrenciesSlug,
+  currency?: MovieCurrenciesSlug,
   others?: number,
   postProdCost?: number,
   producerFees?: number,

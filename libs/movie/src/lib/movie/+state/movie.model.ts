@@ -90,6 +90,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     scoring: null,
     soundFormat: '',
     isOriginalVersionAvailable: false,
+    totalBudget: {},
 
     ...params,
     banner: params.banner ?? '',
@@ -104,7 +105,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
-    totalBudget: createTotalBudget(params.totalBudget),
   };
 }
 

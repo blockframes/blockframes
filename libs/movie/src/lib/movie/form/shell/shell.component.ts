@@ -22,7 +22,6 @@ import { of, Subscription } from 'rxjs';
 import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
 function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
-  console.log(appSteps);
   return [{
     title: 'First Step',
     icon: 'home',
@@ -155,7 +154,6 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
     const appSteps = this.route.snapshot.data.appSteps;
-    console.log(appSteps);
     this.steps = getSteps(this.form.get('productionStatus'),appSteps);
     this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
       filter(status => !!status)).subscribe(status => {

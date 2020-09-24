@@ -5,7 +5,7 @@
 
     <section id="financial-details" fxLayout="column">
       <h3>Currency</h3>
-      <span class="mat-body-2 ">Please choose the currency that will be applied to your project*</span>
+      <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
 
       <static-select scope="MOVIE_CURRENCIES" type="model" [control]="totalBudget.get('currency')" label="Currency">
         <ng-template let-currency>
@@ -15,7 +15,7 @@
       </static-select>
 
       <mat-divider></mat-divider>
-
+      <!-- TODO 3788 update hint, error, etc -->
       <h3>Estimated Budget</h3>
       <h5>1. Please fill in the general information</h5>
       <mat-form-field appearance="outline">
@@ -41,16 +41,15 @@
       <mat-form-field appearance="outline">
         <mat-label>Other Charges</mat-label>
         <input matInput type="number" [formControl]="totalBudget.get('others')" placeholder=""/>
+        <mat-hint>Other charges include insurance, research screenings, general expense...</mat-hint>
       </mat-form-field>
 
-      <span class="mat-body-2 total-budget">
-        Your total estimated budget is :
-        <mat-icon [svgIcon]="totalBudget.get('currency').value" class="total-icon"></mat-icon>
-        {{ getTotalEstimatedBudget() | number }}
-      </span>
+      <p class="mat-body-2 total-budget">
+        Your total estimated budget is : {{ totalBudget | budget | async | currency: totalBudget.get('currency').value }}
+      </p>
 
       <h5>2. Please upload your total estimated budget</h5>
-      <span class="mat-body-2">This upload is optional but can help future investors*</span>
+      <p class="mat-body-2">This upload is optional but can help future investors*</p>
 
       <file-upload
       [form]="form.promotional.get('financialDetails')"

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { MovieFormFinancialDetailsComponent } from './financial-details.component';
+import { MovieFormFinancialDetailsComponent, BudgetPipe } from './financial-details.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
@@ -19,7 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [MovieFormFinancialDetailsComponent],
+  declarations: [MovieFormFinancialDetailsComponent, BudgetPipe],
   exports: [MovieFormFinancialDetailsComponent],
   imports: [
     CommonModule,

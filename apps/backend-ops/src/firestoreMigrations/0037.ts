@@ -16,7 +16,7 @@ export async function upgrade(db: Firestore) {
       ...movie,
       totalBudget: {
         castCost: null,
-        currency: 'EUR',
+        currency: null,
         others: null,
         postProdCost: null,
         producerFees: null,

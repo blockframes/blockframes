@@ -68,7 +68,7 @@
 <article>
   <h6>
     General Information
-    <a mat-icon-button [routerLink]="link" fragment="general-inmovieation"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="general-information"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
   </h6>
   <ul>
     <li>
@@ -78,7 +78,7 @@
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
       <ng-container *ngIf="!movie.originCountries.controls.length else showListOfCountries">
-        <a [routerLink]="link" fragment="general-inmovieation" class="missing-control">
+        <a [routerLink]="link" fragment="general-information" class="missing-control">
           <span>Missing</span>
         </a>
       </ng-container>
@@ -92,7 +92,7 @@
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
       <ng-container *ngIf="!movie.originalLanguages.controls.length else showListOfLanguages">
-        <a [routerLink]="link" fragment="general-inmovieation" class="missing-control">
+        <a [routerLink]="link" fragment="general-information" class="missing-control">
           <span>Missing</span>
         </a>
       </ng-container>
@@ -106,7 +106,7 @@
     <li>
       <strong>Genre{ movie.genres.controls.length, plural, =0 {} =1 {} other {s}} </strong>
       <ng-container *ngIf="!movie.genres.controls.length else showListOfGenres">
-        <a [routerLink]="link" fragment="general-inmovieation" class="missing-control">
+        <a [routerLink]="link" fragment="general-information" class="missing-control">
           <span>Missing</span>
         </a>
       </ng-container>
