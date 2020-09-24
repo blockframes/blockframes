@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieFormShellComponent } from '../../shell/shell.component';
+import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

@@ -23,6 +23,8 @@ export class EventEditComponent implements OnInit {
   eventLink: string;
   limit = Infinity;
 
+  private duration: number;
+
   constructor(
     private service: EventService,
     private router: Router,
@@ -34,6 +36,9 @@ export class EventEditComponent implements OnInit {
       this.limit = MEETING_MAX_INVITATIONS_NUMBER;
     }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
+
+    const { start, end } = this.form.value;
+    this.duration = end.getTime() - start.getTime();
   }
 
   get meta() {
@@ -57,4 +62,15 @@ export class EventEditComponent implements OnInit {
     this.service.remove(this.form.value.id);
   }
 
+  onEventChange(key: 'start' | 'end') {
+    const { start, end } = this.form.value;
+    if (end.getTime() - start.getTime() <= 0) {
+      const keyToUpdate = key === 'start' ? 'end' : 'start';
+      const time = this.form.value[key].getTime();
+      const date = new Date(key === 'start' ? time + this.duration : time - this.duration);
+      this.form.get(keyToUpdate).setValue(date);
+    } else {
+      this.duration = end.getTime() - start.getTime();
+    }
+  }
 }

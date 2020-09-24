@@ -34,6 +34,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public filterForm = new MovieSearchForm();
 
   private scrollOffsetTop: number;
+  private loadingMore = true;
 
   constructor(
     private movieService: MovieService,
@@ -63,7 +64,12 @@ export class ListComponent implements OnInit, OnDestroy {
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
       // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
-      tap(movies => this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies))),
+      tap(movies => {
+        if (this.loadingMore) {
+          this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies));
+          this.loadingMore = false;
+        }
+      }),
       tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))
     ).subscribe();
   }
@@ -81,6 +87,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   async loadMore() {
+    this.loadingMore = true;
     this.setScrollOffset();
     this.filterForm.page.setValue(this.filterForm.page.value + 1);
     await this.filterForm.search();
