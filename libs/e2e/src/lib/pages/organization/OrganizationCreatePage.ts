@@ -31,11 +31,7 @@ export default class OrganizationCreatePage {
     }
   }
 
-  // Parameters : fieldSelectors in the form
-  // Value: Object data to pass in to fill the form
-  // Callback : Function to handle special testId with custom form operation 
-  // Logs : cy.log = fields that did not have test IDs set.
-  // Debug output console.table() all the selectors and values filled.  
+  // Set the organization create form
   public testOrgForm(org: Organization) {
     cy.log("OrganizationCreatePage: Test all form fields");
     const selector = 'organization-form form input, mat-select';

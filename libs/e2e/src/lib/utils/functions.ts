@@ -70,6 +70,17 @@ interface FormData {
   value: string;
 }
 
+/**
+ * setForm : helper function to set the form with given values
+ * @param selector : string to identify the form set
+ * @param formOpt : object having input values, callback for spl ids.
+ * @example
+ *   //set org details in org form
+ *   const formOpt: FormOptions = {
+ *     inputValue: organizationDetails
+ *   }
+ *   setForm('organization-form form input', formOpt);
+ */
 export function setForm(selector: string, formOpt: FormOptions) {
   const formData:FormData[] = [];
 
