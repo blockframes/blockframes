@@ -19,9 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RxJs
 import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
-function getSteps(status: FormControl): TunnelStep[] {
+function getSteps(statusCtrl: FormControl): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -50,7 +50,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'additional-information',
       label: 'Additional Information'
-    },  {
+    }, {
       path: 'shooting-information',
       label: 'Shooting Information'
     }, {
@@ -59,7 +59,7 @@ function getSteps(status: FormControl): TunnelStep[] {
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'development')),
+      shouldDisplay: isStatus(statusCtrl, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -73,6 +73,11 @@ function getSteps(status: FormControl): TunnelStep[] {
         path: 'media-files',
         label: 'Files'
       }, {
+        path: 'media-notes',
+        label: 'Notes & Statements',
+        shouldDisplay: isStatus(statusCtrl, ['post_production', 'finished', 'released'])
+      },
+      {
         path: 'media-images',
         label: 'Images'
       }, {
@@ -89,6 +94,13 @@ function getSteps(status: FormControl): TunnelStep[] {
       label: 'Summary & Submission'
     }]
   }]
+}
+
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
+  return prodStatusCtrl.valueChanges.pipe(
+    startWith(prodStatusCtrl.value),
+    map(prodStatus => acceptableStatus.includes(prodStatus))
+  )
 }
 
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {

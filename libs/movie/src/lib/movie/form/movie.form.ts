@@ -16,7 +16,7 @@ import {
   MovieShootingLocations,
   MovieGoalsAudience,
   MovieSalesPitch,
-  MovieShooting
+  MovieShooting, MovieNote
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -35,7 +35,8 @@ import {
   createExpectedPremiere,
   createAudienceGoals,
   createSalesPitch,
-  createShooting
+  createShooting,
+  createMovieNote
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -713,7 +714,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     presentation_deck: new HostedMediaForm(entity.presentation_deck),
     scenario: new HostedMediaForm(entity.scenario),
     moodboard: new HostedMediaForm(entity.moodboard),
-    notes: new HostedMediaForm(entity.notes),
+    notes: FormList.factory(entity.notes, el => new MovieNotesForm(el)),
     salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
     // External Media
@@ -731,6 +732,24 @@ export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromo
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
+  }
+}
+
+function createMovieNoteControls(note?: Partial<MovieNote>) {
+  const entity = createMovieNote(note)
+  return {
+    role: new FormControl(entity.role),
+    firstName: new FormControl(entity.firstName),
+    lastName: new FormControl(entity.lastName),
+    ref: new HostedMediaForm(entity.ref)
+  }
+}
+
+export type MovieNotesControl = ReturnType<typeof createMovieNoteControls>
+
+export class MovieNotesForm extends FormEntity<MovieNotesControl> {
+  constructor(note?: Partial<MovieNote>) {
+    super(createMovieNoteControls(note));
   }
 }
 

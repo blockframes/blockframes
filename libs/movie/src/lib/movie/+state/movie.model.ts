@@ -24,6 +24,7 @@ import {
   MoviePlannedShooting,
   MovieGoalsAudience,
   MovieSalesPitch,
+  MovieNote
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -120,7 +121,7 @@ export function createMoviePromotional(
     ...params,
     clip_link: params.clip_link ?? '',
     moodboard: params.moodboard ?? '',
-    notes: params.notes ?? '',
+    notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
     still_photo: newStills,
     presentation_deck: params.presentation_deck ?? '',
@@ -363,5 +364,12 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
   return {
     name: otherLink.name ?? '',
     url: otherLink.url ?? '',
+  }
+}
+
+export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
+  return {
+    ref: '',
+    ...note
   }
 }

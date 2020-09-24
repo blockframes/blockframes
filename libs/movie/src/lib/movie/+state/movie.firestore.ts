@@ -19,7 +19,7 @@ import {
   ShootingPeriod
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Producer, Crew, Cast, Stakeholder, Director } from "@blockframes/utils/common-interfaces/identity";
+import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
@@ -117,7 +117,7 @@ export interface PublicMovie {
 export interface MoviePromotionalElements {
   clip_link: string,
   moodboard: string,
-  notes: string,
+  notes: MovieNote[],
   presentation_deck: string,
   promo_reel_link: string,
   salesPitch: MovieSalesPitch,
@@ -252,6 +252,10 @@ export interface MovieShootingDateRaw<D> {
 }
 
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+
+export interface MovieNote extends Person {
+  ref: string,
+}
 
 export interface MoviePlannedShootingDateRange {
   from: MoviePlannedShooting,

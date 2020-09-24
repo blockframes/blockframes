@@ -61,19 +61,19 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'sales-pitch',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule)
+        loadChildren: () => import('@blockframes/movie/form/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule)
       },
       {
         path: 'media-files',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
+        loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
       },
       {
         path: 'media-images',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-videos',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
+        loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
       {
         path: 'summary',
