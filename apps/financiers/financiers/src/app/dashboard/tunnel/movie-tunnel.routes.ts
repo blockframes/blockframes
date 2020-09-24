@@ -52,23 +52,23 @@ export const tunnelRoutes: Routes = [
       },
       {
         path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-files',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
+        loadChildren: () => import('@blockframes/movie/form/media-files/media-files.module').then(m => m.MovieFormMediaFilesModule)
       },
       {
-        path: 'notes',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-notes/notes.module').then(m => m.MovieFormNotesModule)
+        path: 'media-notes',
+        loadChildren: () => import('@blockframes/movie/form/media-notes/notes.module').then(m => m.MovieFormNotesModule)
       },
       {
         path: 'media-images',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        loadChildren: () => import('@blockframes/movie/form/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
       },
       {
         path: 'media-videos',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
+        loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
       {
         path: 'summary',

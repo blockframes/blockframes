@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Component
-import { MovieFormShellComponent } from '../../shell/shell.component';
+import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
   selector: 'movie-form-media-notes',

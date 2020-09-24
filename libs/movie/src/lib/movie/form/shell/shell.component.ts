@@ -74,7 +74,7 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
         path: 'media-files',
         label: 'Files'
       }, {
-        path: 'notes',
+        path: 'media-notes',
         label: 'Notes & Statements',
         shouldDisplay: isStatus(statusCtrl , [prodStatus.released, prodStatus.post_production, prodStatus.finished])
       },

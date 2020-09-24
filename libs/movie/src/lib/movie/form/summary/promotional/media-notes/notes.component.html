@@ -6,9 +6,7 @@
 </h6>
 <mat-icon svgIcon="eye" color="primary"></mat-icon>
 <ng-container *ngIf="!(movie.promotional.get('notes').controls.length) else notes">
-  <a [routerLink]="link" fragment="notes" class="missing-control">
-    Missing
-  </a>
+  <missing-control [control]="movie.promotional.get('notes')" [link]="link"></missing-control>
 </ng-container>
 <ul>
   <li>
