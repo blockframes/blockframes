@@ -28,12 +28,12 @@
       <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
         <mat-form-field fxFlex appearance="outline" test-id="event-start">
           <mat-label>Start</mat-label>
-          <time-picker formControlName="start" [allDay]="form.value.allDay"></time-picker>
+          <time-picker formControlName="start" [allDay]="form.value.allDay" (change)="onEventChange('start')"></time-picker>
         </mat-form-field>
         <span>to</span>
         <mat-form-field fxFlex  appearance="outline" test-id="event-end">
           <mat-label>End</mat-label>
-          <time-picker formControlName="end" [allDay]="form.value.allDay"></time-picker>
+          <time-picker formControlName="end" [allDay]="form.value.allDay" (change)="onEventChange('end')"></time-picker>
         </mat-form-field>
       </div>
 
@@ -48,7 +48,7 @@
 
     <h2>Invitations</h2>
     <mat-card class="invitations" fxLayout="column"  fxFlex="35">
-      <invitation-form-user [docId]="form.value.id"></invitation-form-user>
+      <invitation-form-user [docId]="form.value.id" [invitations]="invitations" [limit]="limit"></invitation-form-user>
       <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
     </mat-card>
   </section>

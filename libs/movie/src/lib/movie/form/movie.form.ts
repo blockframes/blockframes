@@ -9,6 +9,14 @@ import {
   MovieRating,
   MovieLanguageSpecification,
   OtherLink,
+  MovieExpectedPremiere,
+  MovieShootingDate,
+  MoviePlannedShootingDateRange,
+  MoviePlannedShooting,
+  MovieShootingLocations,
+  MovieGoalsAudience,
+  MovieSalesPitch,
+  MovieShooting
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -23,6 +31,11 @@ import {
   createMoviePromotional,
   createMovieLanguageSpecification,
   createOtherLink,
+  createShootingPlannedObject,
+  createExpectedPremiere,
+  createAudienceGoals,
+  createSalesPitch,
+  createShooting
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -94,13 +107,14 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
-    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
+    expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
+    goals: FormList.factory(entity.goals, el => new AudienceAndGoalsForm(el)),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
@@ -112,6 +126,7 @@ function createMovieControls(movie: Partial<Movie>) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
+    customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
     producers: FormList.factory(entity.producers, el => new CreditForm(el)),
     productionStatus: new FormControl(entity.productionStatus),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
@@ -119,6 +134,7 @@ function createMovieControls(movie: Partial<Movie>) {
     review: FormList.factory(entity.review, el => new MovieReviewForm(el)),
     runningTime: new RunningTimeForm(entity.runningTime),
     scoring: new FormControl(entity.scoring),
+    shooting: new MovieShootingForm(entity.shooting),
     soundFormat: new FormControl(entity.soundFormat),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     storeConfig: new StoreConfigForm(entity.storeConfig),
@@ -261,6 +277,18 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
 
   get estimatedBudget() {
     return this.get('estimatedBudget');
+  }
+
+  get shooting() {
+    return this.get('shooting');
+  }
+
+  get expectedPremiere() {
+    return this.get('expectedPremiere');
+  }
+
+  get goals() {
+    return this.get('goals');
   }
 
   public removeDirector(i: number): void {
@@ -686,6 +714,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     scenario: new HostedMediaForm(entity.scenario),
     moodboard: new HostedMediaForm(entity.moodboard),
     notes: new HostedMediaForm(entity.notes),
+    salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
     // External Media
     clip_link: new FormControl(entity.clip_link, urlValidators),
@@ -702,6 +731,27 @@ export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromo
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
+  }
+}
+
+// ------------------------------
+//         SALES PITCH
+// ------------------------------
+
+function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
+  const { description, link, file } = createSalesPitch(pitch);
+  return {
+    description: new FormControl(description),
+    link: new FormControl(link),
+    file: new HostedMediaForm(file),
+  }
+}
+
+export type MovieSalesPitchControls = ReturnType<typeof createMovieSalesPitchControl>;
+
+export class MovieSalesPitchForm extends FormEntity<MovieSalesPitchControls, MovieSalesPitch> {
+  constructor(review?: Partial<MovieSalesPitch>) {
+    super(createMovieSalesPitchControl(review));
   }
 }
 
@@ -839,3 +889,171 @@ export class VersionSpecificationForm extends FormEntity<any> {
     });
   }
 }
+
+// ------------------------------
+//        EXPECTED PREMIERE
+// ------------------------------
+
+function createExpectedPremiereFormControl(entity?: Partial<MovieExpectedPremiere>) {
+  const { event, date } = createExpectedPremiere(entity);
+  return {
+    date: new FormControl(date),
+    event: new FormControl(event),
+  }
+}
+
+type ExpectedPremiereFormControl = ReturnType<typeof createExpectedPremiereFormControl>;
+
+export class ExpectedPremiereForm extends FormEntity<ExpectedPremiereFormControl> {
+  constructor(expectedPremiere?: Partial<MovieExpectedPremiere>) {
+    super(createExpectedPremiereFormControl(expectedPremiere));
+  }
+}
+
+// ---------------------------------
+//       SHOOTING INFORMATION
+// ---------------------------------
+
+export class MovieShootingForm extends FormEntity<MovieShootingControl> {
+  constructor(shooting?: Partial<MovieShooting>) {
+    super(createShootingFormControl(shooting));
+  }
+}
+
+type MovieShootingControl = ReturnType<typeof createShootingFormControl>;
+
+function createShootingFormControl(entity?: Partial<MovieShooting>) {
+  const { locations, dates } = createShooting(entity);
+  return {
+    dates: new ShootingDateForm(dates),
+    locations: FormList.factory(locations, el => new ShootingLocationsForm(el)),
+  }
+}
+
+// ------------------------------
+//        SHOOTING DATE
+// ------------------------------
+
+function createShootingDateFormControl(entity?: Partial<MovieShootingDate>) {
+  const { completed, progress, planned } = createMovieShootingDate(entity);
+  return {
+    completed: new FormControl(completed),
+    progress: new FormControl(progress),
+    planned: new ShootingPlannedForm(planned),
+  }
+}
+
+type ShootingDateFormControl = ReturnType<typeof createShootingDateFormControl>;
+
+export class ShootingDateForm extends FormEntity<ShootingDateFormControl> {
+  constructor(shootingDate?: Partial<MovieShootingDate>) {
+    super(createShootingDateFormControl(shootingDate));
+  }
+}
+
+export function createMovieShootingDate(
+  params: Partial<MovieShootingDate> = {}
+): MovieShootingDate {
+  return {
+    ...params,
+    completed: toDate(params.completed),
+    progress: toDate(params.progress)
+  };
+}
+
+// ---------------------------------
+//    SHOOTING DATE PLANNED RANGE
+// ---------------------------------
+
+export class ShootingPlannedForm extends FormEntity<ShootingPlannedFormControl> {
+  constructor(shootingRange?: Partial<MoviePlannedShootingDateRange>) {
+    super(createShootingRangeFormControl(shootingRange));
+  }
+}
+
+function createShootingRangeFormControl(entity?: Partial<MoviePlannedShootingDateRange>) {
+  const { from, to } = createPlannedRange(entity);
+  return {
+    from: new ShootingPlannedObjectForm(from),
+    to: new ShootingPlannedObjectForm(to)
+  }
+}
+
+type ShootingPlannedFormControl = ReturnType<typeof createShootingRangeFormControl>;
+
+function createPlannedRange(params: Partial<MoviePlannedShootingDateRange>) {
+  return {
+    from: {},
+    to: {},
+    ...params
+  }
+}
+
+// ---------------------------------
+//    SHOOTING DATE PLANNED OBJECT
+// ---------------------------------
+
+export class ShootingPlannedObjectForm extends FormEntity<MoviePlannedShootingControl> {
+  constructor(shootingPlanned?: Partial<MoviePlannedShooting>) {
+    super(createShootingPlannedFormControl(shootingPlanned));
+  }
+}
+
+function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>) {
+  const { period, month, year } = createShootingPlannedObject(entity);
+  return {
+    period: new FormControl(period),
+    month: new FormControl(month),
+    year: new FormControl(year)
+  }
+}
+
+type MoviePlannedShootingControl = ReturnType<typeof createShootingPlannedFormControl>;
+
+// ---------------------------------
+//        SHOOTING LOCATIONS
+// ---------------------------------
+
+export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsControl> {
+  constructor(shootingLocations?: Partial<MovieShootingLocations>) {
+    super(createShootingLocationsFormControl(shootingLocations));
+  }
+}
+
+function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
+  const { city, country } = createShootingLocations(entity);
+  return {
+    city: new FormControl(city),
+    country: new FormControl(country)
+  }
+}
+
+type MovieShootingLocationsControl = ReturnType<typeof createShootingLocationsFormControl>;
+
+function createShootingLocations(params: Partial<MovieShootingLocations>): MovieShootingLocations {
+  return {
+    city: '',
+    country: '',
+    ...params
+  }
+}
+
+// ---------------------------------
+//        AUDIENCE AND GOALS
+// ---------------------------------
+
+export class AudienceAndGoalsForm extends FormEntity<MovieAudianceAndGoalsControl> {
+  constructor(goals?: Partial<MovieGoalsAudience>) {
+    super(createAudianceAndGoalsFormControl(goals));
+  }
+}
+
+function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
+  const { target, goal } = createAudienceGoals(entity);
+  return {
+    target: new FormControl(target),
+    goal: new FormControl(goal)
+  }
+}
+
+type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsFormControl>;

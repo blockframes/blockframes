@@ -19,6 +19,7 @@ export async function upgradeAlgoliaOrgs() {
     attributesForFaceting: [
       'appAccess',
       'appModule',
+      'name'
     ],
   };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
@@ -114,6 +115,9 @@ export async function upgradeAlgoliaUsers() {
       'email',
       'firstName',
       'lastName',
+    ],
+    attributesForFaceting: [
+      'email'
     ],
   };
 

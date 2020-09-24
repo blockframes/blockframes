@@ -3,18 +3,15 @@ import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { PublicUser } from '@blockframes/user/types';
-import { Movie } from '@blockframes/movie/+state/movie.model';
-
+import { OrganizationMediasForm } from '@blockframes/admin/admin-panel/forms/organization-medias.form';
 /**
  * This function prepare media references in db documents before updating it in firestore.
  * The function also return an array of media to upload, we can then pass this array to the media service.
  */
 export function extractMediaFromDocumentBeforeUpdate(
-  form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+  form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm | OrganizationMediasForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);
 
@@ -27,7 +24,7 @@ export function extractMediaFromDocumentBeforeUpdate(
   };
 }
 
-function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
+function extractMediaFromDocument(document: any) {
   let medias: HostedMediaFormValue[] = [];
 
   for (const key in document) {
@@ -54,7 +51,7 @@ function extractMediaFromDocument(document: Organization | PublicUser | Movie) {
 /**
  * Loops over form looking for mediaForms that need to be updated and then resets that form.
  */
-function updateMediaFormInForm(form: MovieForm | ProfileForm | OrganizationForm | OrganizationAdminForm) {
+function updateMediaFormInForm(form: any) {
   if ('controls' in form) {
     for (const key in form.controls) {
       const control = form.controls[key];

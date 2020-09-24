@@ -42,6 +42,10 @@ export const tunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/additional-information/additional-information.module').then(m => m.MovieFormAdditionalInformationModule)
       },
       {
+        path: 'shooting-information',
+        loadChildren: () => import('@blockframes/movie/form/shooting-information/shooting-information.module').then(m => m.MovieFormShootingInformationModule)
+      },
+      {
         path: 'available-materials',
         loadChildren: () => import('@blockframes/movie/form/available-materials/available-materials.module').then(m => m.MovieFormAvailableMaterialsModule)
       },
@@ -51,8 +55,8 @@ export const tunnelRoutes: Routes = [
           import('@blockframes/movie/form/technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
       {
-        path: 'images',
-        loadChildren: () => import('@blockframes/movie/form/promotional-elements/media-images/media-images.module').then(m => m.MovieFormMediaImagesModule)
+        path: 'sales-pitch',
+        loadChildren: () => import('@blockframes/movie/form/promotional-elements/sales-pitch/sales-pitch.module').then(m => m.MovieFormSalesPitchModule)
       },
       {
         path: 'media-files',

@@ -16,7 +16,7 @@ export class PromotionalLinksPipe implements PipeTransform {
   async transform(links: string[], movie: Movie): Promise<any[]> {
     const _links = await Promise.all(links.map(async link => {
       const ref = (movie.promotional[link] as string);
-      const useImgIx = ['scenario', 'presentation_deck'].includes(link);
+      const useImgIx = ['scenario', 'presentation_deck', 'moodboard'].includes(link);
       if (!!ref) {
         const url = useImgIx ? await this.mediaService.generateImgIxUrl(ref) : ref;
         if (!!url) {

@@ -8,7 +8,7 @@ import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap, pluck } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';

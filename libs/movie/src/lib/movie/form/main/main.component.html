@@ -56,7 +56,7 @@
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
-          <p class="mat-body-2" dimensions>Ratio: 3 / 4</p>
+          <p class="mat-body-2" dimensions>Ratio: 3:4</p>
           <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
       </article>
@@ -176,30 +176,19 @@
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
+        <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
         </ng-template>
         <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
         </ng-template>
-        <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
+        <ng-template colRef="filmography" let-filmography>
+          <ng-container *ngFor="let film of filmography">{{ film | filmography }}
+          </ng-container>
+        </ng-template>
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">
 
-            <div fxLayout fxLayoutGap="24px">
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Director's First Name</mat-label>
-                <input test-id="first-name" matInput formControlName="firstName" required />
-                <mat-error *ngIf="directorForm.get('firstName').hasError('required')">
-                  Please specify Director's First Name.
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline" fxFlex>
-                <mat-label>Director's Last Name</mat-label>
-                <input test-id="last-name" matInput formControlName="lastName" required />
-                <mat-error *ngIf="directorForm.get('lastName').hasError('required')">
-                  Please specify Director's Last Name.
-                </mat-error>
-              </mat-form-field>
-            </div>
+            <form-display-name [form]="directorForm" labelSuffix="Directors"></form-display-name>
 
             <div fxLayout fxLayoutGap="24px">
 

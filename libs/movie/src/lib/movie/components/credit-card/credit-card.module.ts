@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreditCardComponent } from './credit-card.component';
+import { CreditCardComponent, FilmographyPipe } from './credit-card.component';
 
 import { DisplayNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -13,7 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
-  declarations: [CreditCardComponent],
+  declarations: [CreditCardComponent, FilmographyPipe],
   exports: [CreditCardComponent],
   imports: [
     CommonModule,
