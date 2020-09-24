@@ -21,7 +21,7 @@ import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
-function getSteps(statusCtrl: FormControl): TunnelStep[] {
+function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -85,7 +85,9 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
         label: 'Videos'
       }
     ]
-  }, {
+  },
+  ...appSteps,
+  {
     title: 'Summary',
     icon: 'send',
     time: 3,
@@ -133,8 +135,8 @@ const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], R
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps: TunnelStep[];
+  form = new MovieForm(this.query.getActive());
+  steps: TunnelStep[];
 
   public exitRoute: string;
   private sub: Subscription;
@@ -151,7 +153,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-    this.steps = getSteps(this.form.get('productionStatus'));
+    const appSteps = this.route.snapshot.data.appSteps;
+    this.steps = getSteps(this.form.get('productionStatus'),appSteps);
     this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
       filter(status => !!status)).subscribe(status => {
         const pathToUpdate = Object.keys(valueByProdStatus[status]);
