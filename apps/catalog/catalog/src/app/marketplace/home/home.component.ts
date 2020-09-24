@@ -30,7 +30,7 @@ export class MarketplaceHomeComponent implements OnInit {
       filterBy: movies => movies.release.year >= 2018 && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
     const postProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.productionStatus === 'post-production' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
+      filterBy: movies => movies.productionStatus === 'post_production' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
     });
     const completed$ = this.movieQuery.selectAll({
       filterBy: movies => movies.productionStatus === 'finished' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"

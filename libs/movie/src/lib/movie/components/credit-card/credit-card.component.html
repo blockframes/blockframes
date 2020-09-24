@@ -22,9 +22,9 @@
     <ng-template matTabContent>
       <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
       <div class="tab-content container">
-        <p class="mat-caption">{{ credit.filmography[0]?.title || "-"}}</p>
-        <p class="mat-caption">{{ credit.filmography[1]?.title || "-"}}</p>
-        <p class="mat-caption">{{ credit.filmography[2]?.title || "-"}}</p>
+        <p class="mat-caption">{{ credit.filmography[0] | filmography }}</p>
+        <p class="mat-caption">{{ credit.filmography[1] | filmography }}</p>
+        <p class="mat-caption">{{ credit.filmography[2] | filmography }}</p>
       </div>
     </ng-template>
   </mat-tab>

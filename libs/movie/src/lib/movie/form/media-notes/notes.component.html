@@ -1,0 +1,33 @@
+<tunnel-page>
+  <h4 title>MEDIA</h4>
+  <h1 subtitle>Notes and Statements</h1>
+  <ng-container tunnel-form>
+    <h3>Note / Statement</h3>
+    <section id="notes">
+      <bf-form-list [form]="form.promotional.get('notes')" buttonText="Add a Person">
+        <ng-template itemRef let-note>{{ note.firstName }} - {{ note.lastName }} - {{ note.role | titlecase }} -
+          {{ note.ref.ref | fileName | maxLength: 30 }}</ng-template>
+        <ng-template formView let-noteForm>
+          <article fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="24px">
+            <form-display-name [form]="noteForm"></form-display-name>
+            <mat-form-field appearance="outline">
+              <mat-label>Role</mat-label>
+              <mat-select [formControl]="noteForm.get('role')">
+                <mat-option *ngFor="let role of roles" [value]="role">
+                  {{ role | titlecase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <file-upload [form]="noteForm.get('ref')" [storagePath]="getPath()" accept="['.pdf']"
+              [types]="['application/pdf']">
+              <h3 type>Upload Files</h3>
+              <p class="mat-caption" format>Accepted Formats: .pdf</p>
+            </file-upload>
+            <caption class="mat-caption">Attach a note / statement of intent from your project's director or
+              producer.</caption>
+          </article>
+        </ng-template>
+      </bf-form-list>
+    </section>
+  </ng-container>
+</tunnel-page>

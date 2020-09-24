@@ -41,12 +41,15 @@
       <!-- WORK IN PROGRESS -->
       <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
-          <div [fxFlex]="mediaContainerSize">MEDIA</div>
+          <div [fxFlex]="mediaContainerSize">
+            <h3>MEDIA</h3>
+            <span>{{ event.meta.selectedFile | fileName }}</span>
+          </div>
           <div [fxFlex]="visioContainerSize">VIDEO CONFERENCE</div>
         </div>
         <ng-container *ngIf="event.isOwner">
           <div fxFlex="15%">CURRENT MEDIA CONTROL</div>
-          <div fxFlex="35%">MEDIA LIST</div>
+          <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
       </article>
 

@@ -9,8 +9,6 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
-import { AngularFireStorage } from "@angular/fire/storage";
-
 @Component({
   selector: '[form] [storagePath] file-upload',
   templateUrl: './file-upload.component.html',
@@ -30,7 +28,7 @@ export class FileUploadComponent implements OnInit {
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
-  constructor(private snackBar: MatSnackBar, private storage: AngularFireStorage) { }
+  constructor(private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     // show current file

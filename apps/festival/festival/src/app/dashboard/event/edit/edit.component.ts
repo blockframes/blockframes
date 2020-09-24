@@ -8,8 +8,8 @@ import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { switchMap, pluck } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, pluck, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -54,7 +54,9 @@ export class EditComponent implements OnInit, OnDestroy {
 
     // will be executed only if "screening" as Observable are lazy
     this.titles$ = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.getValue(org.movieIds))
+      // org.movieIds also includes movies from the catalog app but please keep it this way. This way Marie can create events for movies that are only on catalog too.
+      switchMap(org => this.movieService.getValue(org.movieIds)),
+      map(titles => titles.filter(title => title.storeConfig.status === 'accepted' || 'submitted')),
     );
 
     this.members$ = this.orgQuery.selectActive().pipe(

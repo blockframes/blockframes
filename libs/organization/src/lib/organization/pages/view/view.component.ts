@@ -16,6 +16,9 @@ const navLinks = [{
 }, {
   path: 'members',
   label: 'Members'
+}, {
+  path: 'documents',
+  label: 'Documents'
 }];
 
 @Component({
@@ -42,10 +45,13 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
     this.sub = this.routerQuery.select('state').subscribe(data => {
       if (data.url.includes('members')) {
         this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`,
-         { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+      } else if (data.url.includes('documents')) {
+        this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`,
+          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
       } else {
         this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`,
-         { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
       }
     })
   }

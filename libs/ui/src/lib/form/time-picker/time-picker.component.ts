@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self, ElementRef, OnDestroy } from '@angular/core';
+import { Component, Input, Optional, Self, ElementRef, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, NgControl, ControlValueAccessor } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
@@ -114,6 +114,8 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     }
   }
 
+  @Output() change = new EventEmitter()
+
   get empty() {
     const {value: {day, time}} = this.form;
     return !day && !time;
@@ -185,6 +187,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   setDate() {
     const value = createDate(this.form.getRawValue());
     this.onChange(value)
+    this.change.emit(value);
   }
 
 }

@@ -7,7 +7,7 @@ import EventPage from '../dashboard/EventPage';
 
 export default class FestivalMarketplaceHomePage {
   constructor() {
-    cy.get('festival-marketplace-home', { timeout: 30000 });
+    cy.get('festival-marketplace-home', { timeout: 60000 });
   }
 
   goToDashboard() {
@@ -26,7 +26,8 @@ export default class FestivalMarketplaceHomePage {
   }  
 
   clickOnMenu() {
-    cy.get('festival-marketplace button[test-id=menu]').click();
+    cy.get('festival-marketplace button[test-id=menu]', {timeout: 1000})
+      .first().click();
   }
 
   selectSalesAgents() {

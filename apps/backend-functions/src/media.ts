@@ -20,7 +20,12 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
   const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
 
   if (isInTmpDir && data.name) {
-    const savedRef: string = get(docData, fieldToUpdate);
+    let savedRef: string | Array<{ ref: string }> = get(docData, fieldToUpdate);
+
+    if (Array.isArray(savedRef)) {
+      savedRef = savedRef.map(e => e.ref).find(ref => ref === filePath) || '';
+    }
+
     const bucket = admin.storage().bucket(getStorageBucketName());
     const from = bucket.file(data.name);
     if (filePath === savedRef) {
@@ -155,9 +160,22 @@ export async function cleanOrgMedias(before: OrganizationDocument, after?: Organ
     if (!!before.logo && (before.logo !== after.logo || after.logo === '')) {
       mediaToDelete.push(before.logo);
     }
+
+    if (before.documents?.notes.length) {
+      before.documents.notes.forEach(nb => {
+        if (!after.documents?.notes.length || !after.documents.notes.some(na => na.ref === nb.ref)) {
+          mediasToDelete.push(nb.ref);
+        }
+      });
+    }
+
   } else { // Deleting
     if (!!before.logo) {
       mediaToDelete.push(before.logo);
+    }
+
+    if (before.documents?.notes.length) {
+      before.documents.notes.forEach(n => mediasToDelete.push(n.ref));
     }
   }
 
@@ -181,6 +199,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
     if (!!before.promotional.scenario && (before.promotional.scenario !== after.promotional.scenario || after.promotional.scenario === '')) {
       mediaToDelete.push(before.promotional.scenario);
+    }
+
+    if (!!before.promotional.moodboard && (before.promotional.moodboard !== after.promotional.moodboard || after.promotional.moodboard === '')) {
+      mediasToDelete.push(before.promotional.moodboard);
     }
 
     Object.keys(before.promotional.still_photo)
@@ -209,6 +231,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
     if (!!before.promotional.scenario) {
       mediaToDelete.push(before.promotional.scenario);
+    }
+
+    if (!!before.promotional.moodboard) {
+      mediasToDelete.push(before.promotional.moodboard);
     }
 
     Object.keys(before.promotional.still_photo)

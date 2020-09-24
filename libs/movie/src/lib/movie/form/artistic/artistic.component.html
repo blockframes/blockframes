@@ -28,7 +28,7 @@
             </div>
 
             <static-select test-id="cast-status" scope="MEMBER_STATUS" type="model" [control]="castForm.get('status')"
-              fxFlex *ngIf="form | hasStatus: ['financing', 'shooting']">
+              fxFlex *ngIf="form | hasStatus: ['development', 'shooting']">
               <mat-label>Status</mat-label>
               <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
             </static-select>
@@ -97,7 +97,7 @@
               </static-select>
 
               <static-select test-id="crew-status" scope="MEMBER_STATUS" type="model" [control]="crewForm.get('status')"
-                fxFlex *ngIf="form | hasStatus: ['financing', 'shooting']">
+                fxFlex *ngIf="form | hasStatus: ['development', 'shooting']">
                 <mat-label>Status</mat-label>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
                 </mat-hint>

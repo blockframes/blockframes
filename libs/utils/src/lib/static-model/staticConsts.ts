@@ -92,9 +92,9 @@ const constants = {
     national: 'National',
   },
   productionStatus: {
-    financing: 'In development',
+    development: 'In development',
     shooting: 'In Production',
-    'post-production': 'In Post-production',
+    post_production: 'In Post-production',
     finished: 'Completed',
     released: 'Released'
   },
@@ -102,6 +102,11 @@ const constants = {
     boxoffice_dollar: 'Box Office in $',
     boxoffice_euro: 'Box Office in €',
     admissions: 'Admissions',
+  },
+  shootingPeriod: {
+    early: 'Early',
+    late: 'Late',
+    mid: 'Mid',
   },
   storeStatus: {
     submitted: 'Submitted',
@@ -114,6 +119,20 @@ const constants = {
     dubbed: 'Dubbed',
     subtitle: 'Subtitle',
     caption: 'Caption',
+  },
+  socialGoals: {
+    no_poverty: 'No Poverty',
+    hunger: 'Zero Hunger',
+    gender_equality: 'Gender Equality',
+    sanitation: 'Clean Water / Sanitation',
+    weel_being: 'Good Health and Well-being',
+    education: 'Quality Education',
+    clean_energy: 'Affordable and CLean Energy',
+    work_and_growth: 'Decent Work and Economic Growth',
+    industry: 'Industry, innovation and infrastructure',
+    inequalities: 'Reduce inequalities',
+    communities: 'Sustainable cities and communities',
+    life_on_land: 'Life on land'
   },
 
 
@@ -155,7 +174,7 @@ const constants = {
     cannes: 'Cannes International Film Festival',
     venice: 'Venice International Film Festival',
     berlinale: 'Berlin International Film Festival (The Berlinale)',
-    toronto: 'Toronto International Film Festival(TIFF)',
+    toronto: 'Toronto International Film Festival (TIFF)',
     sundace: 'Sundance Film Festival',
     locarno: 'Locarno International Film Festival',
     rotterdam: 'International Film Festival Rotterdam',

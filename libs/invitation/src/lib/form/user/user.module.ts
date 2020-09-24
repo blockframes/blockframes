@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { UserComponent } from './user.component';
+
+// Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
+import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -17,9 +20,12 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    // Blockframes
     ImageReferenceModule,
     AlgoliaChipsAutocompleteModule,
     DisplayNameModule,
+    DeepKeyPipeModule,
+    // Material
     MatProgressBarModule,
     MatIconModule,
     MatButtonModule

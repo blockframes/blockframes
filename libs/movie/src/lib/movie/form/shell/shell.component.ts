@@ -19,9 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RxJs
 import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
-function getSteps(status: FormControl): TunnelStep[] {
+function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -51,12 +51,15 @@ function getSteps(status: FormControl): TunnelStep[] {
       path: 'additional-information',
       label: 'Additional Information'
     }, {
+      path: 'shooting-information',
+      label: 'Shooting Information'
+    }, {
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: status.valueChanges.pipe(map(prodStatus => prodStatus === 'financing')),
+      shouldDisplay: isStatus(statusCtrl, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -64,9 +67,17 @@ function getSteps(status: FormControl): TunnelStep[] {
     time: 10,
     routes: [
       {
+        path: 'sales-pitch',
+        label: 'Sales Pitch'
+      }, {
         path: 'media-files',
         label: 'Files'
       }, {
+        path: 'media-notes',
+        label: 'Notes & Statements',
+        shouldDisplay: isStatus(statusCtrl, ['post_production', 'finished', 'released'])
+      },
+      {
         path: 'media-images',
         label: 'Images'
       }, {
@@ -74,7 +85,9 @@ function getSteps(status: FormControl): TunnelStep[] {
         label: 'Videos'
       }
     ]
-  }, {
+  },
+  ...appSteps,
+  {
     title: 'Summary',
     icon: 'send',
     time: 3,
@@ -85,8 +98,15 @@ function getSteps(status: FormControl): TunnelStep[] {
   }]
 }
 
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
+  return prodStatusCtrl.valueChanges.pipe(
+    startWith(prodStatusCtrl.value),
+    map(prodStatus => acceptableStatus.includes(prodStatus))
+  )
+}
+
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
-  financing: {
+  development: {
     'release.status': '',
     "runningTime.status": ''
   },
@@ -94,7 +114,7 @@ const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], R
     'release.status': '',
     "runningTime.status": ''
   },
-  'post-production': {
+  post_production: {
     'release.status': '',
     "runningTime.status": ''
   },
@@ -115,8 +135,8 @@ const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], R
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  @Input() form = new MovieForm(this.query.getActive());
-  @Input() steps: TunnelStep[];
+  form = new MovieForm(this.query.getActive());
+  steps: TunnelStep[];
 
   public exitRoute: string;
   private sub: Subscription;
@@ -133,7 +153,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-    this.steps = getSteps(this.form.get('productionStatus'));
+    const appSteps = this.route.snapshot.data.appSteps;
+    this.steps = getSteps(this.form.get('productionStatus'),appSteps);
     this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
       filter(status => !!status)).subscribe(status => {
         const pathToUpdate = Object.keys(valueByProdStatus[status]);
@@ -173,11 +194,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   // Should save movie
   public async save() {
-
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
 

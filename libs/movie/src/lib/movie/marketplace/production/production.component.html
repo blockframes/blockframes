@@ -7,9 +7,10 @@
       <h5>{{ company.countries | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ company.displayName }}</p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <section *ngIf="movie.stakeholders.coProductionCompany.length">
     <h2>Co-Production Companies</h2>
@@ -17,9 +18,10 @@
       <h5>{{ company.countries | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ company.displayName }}</p>
     </article>
+
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <section *ngIf="movie.producers.length">
     <h2>Producers</h2>
@@ -27,19 +29,21 @@
       <h5>{{ producer.role }}</h5>
       <p>{{ producer | displayName }}</p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <section *ngIf="movie.stakeholders.distributor.length">
-    <h2>Producers</h2>
+    <h2>Distributors</h2>
     <article *ngFor="let distributor of movie.stakeholders.distributor">
       <h5>{{ distributor.displayName }}</h5>
       <p>{{ distributor.countries | translateSlug : 'TERRITORIES' }}</p>
     </article>
+  
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <section *ngIf="movie.stakeholders.salesAgent.length">
     <h2>International Sales</h2>

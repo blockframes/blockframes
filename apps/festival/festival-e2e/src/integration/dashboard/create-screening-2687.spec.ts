@@ -118,6 +118,7 @@ describe('User create a screening', () => {
 
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
+    cy.wait(5000);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
     const p4: FestivalScreeningPage = p3.clickOnScreeningSchedule();

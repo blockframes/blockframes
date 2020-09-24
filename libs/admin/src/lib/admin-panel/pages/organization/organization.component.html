@@ -95,5 +95,10 @@
         </ng-template>
       </bf-table-filter>
     </article>
+    <article fxLayout="column" fxLayoutAlign="space-between start" *ngIf="org">
+      <organization-files [org]="org" ></organization-files>
+    </article>
+
+    
   </section>
 </main>

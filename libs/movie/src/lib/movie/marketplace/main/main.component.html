@@ -22,9 +22,9 @@
         </ng-container>
       </mat-chip-list>
     </article>
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <!-- GENERAL INFORMATION -->
   <section *ngIf="movie | hasKeys: keys.general ">
@@ -64,9 +64,9 @@
       </div>
     </article>
 
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <!-- Directors -->
   <section *ngIf="movie.directors.length">
@@ -81,20 +81,22 @@
 
   <h1 *ngIf="movie | hasKeys: keys.prizes">Selection & reviews</h1>
 
+
   <!-- Festival -->
-  <section *ngIf="movie.prizes.length">
+  <section *ngIf="movie.prizes.length && (movie | hasStatus: status.afterProd)">
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
         <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
       </ng-container>
     </article>
+
+    <mat-divider></mat-divider>
   </section>
 
-  <mat-divider></mat-divider>
 
   <!-- Review -->
-  <section *ngIf="movie.review.length">
+  <section *ngIf="movie.review.length && (movie | hasStatus: status.afterProd)">
     <h2>Film Reviews</h2>
     <article grid>
       <ng-container *ngFor="let review of movie.review">

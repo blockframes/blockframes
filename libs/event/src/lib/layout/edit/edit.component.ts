@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
+import { MEETING_MAX_INVITATIONS_NUMBER } from '../../+state/event.firestore';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -20,6 +21,9 @@ export class EventEditComponent implements OnInit {
   progress: Observable<number>;
   sending = new BehaviorSubject(false);
   eventLink: string;
+  limit = Infinity;
+
+  private duration: number;
 
   constructor(
     private service: EventService,
@@ -28,7 +32,13 @@ export class EventEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.form.value.type === 'meeting') {
+      this.limit = MEETING_MAX_INVITATIONS_NUMBER;
+    }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
+
+    const { start, end } = this.form.value;
+    this.duration = end.getTime() - start.getTime();
   }
 
   get meta() {
@@ -52,4 +62,15 @@ export class EventEditComponent implements OnInit {
     this.service.remove(this.form.value.id);
   }
 
+  onEventChange(key: 'start' | 'end') {
+    const { start, end } = this.form.value;
+    if (end.getTime() - start.getTime() <= 0) {
+      const keyToUpdate = key === 'start' ? 'end' : 'start';
+      const time = this.form.value[key].getTime();
+      const date = new Date(key === 'start' ? time + this.duration : time - this.duration);
+      this.form.get(keyToUpdate).setValue(date);
+    } else {
+      this.duration = end.getTime() - start.getTime();
+    }
+  }
 }
