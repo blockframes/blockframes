@@ -6,7 +6,7 @@
     <section id="notes">
       <bf-form-list [form]="form.promotional.get('notes')" buttonText="Add a Person">
         <ng-template itemRef let-note>{{ note.firstName }} - {{ note.lastName }} - {{ note.role | titlecase }} -
-          {{ note.note.ref | fileName | maxLength: 30 }}</ng-template>
+          {{ note.ref.ref | fileName | maxLength: 30 }}</ng-template>
         <ng-template formView let-noteForm>
           <article fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="24px">
             <form-display-name [form]="noteForm"></form-display-name>
@@ -18,7 +18,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <file-upload [form]="noteForm.get('note')" [storagePath]="getPath()" accept="['.pdf']"
+            <file-upload [form]="noteForm.get('ref')" [storagePath]="getPath()" accept="['.pdf']"
               [types]="['application/pdf']">
               <h3 type>Upload Files</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>

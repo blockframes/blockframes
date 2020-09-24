@@ -369,7 +369,7 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
 
 export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
   return {
-    note: '',
+    ref: '',
     ...note
   }
 }

@@ -254,7 +254,7 @@ export interface MovieShootingDateRaw<D> {
 export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
 
 export interface MovieNote extends Person {
-  note: string,
+  ref: string,
 }
 
 export interface MoviePlannedShootingDateRange {

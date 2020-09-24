@@ -10,7 +10,7 @@
     <ng-template let-notes>
       <ng-container *ngFor="let note of notes">
         <span>{{ note.firstName }} {{ note.lastName }} - {{ note.role | titlecase }} -
-          {{ note.note.ref | fileName | maxLength: 30}}</span>
+          {{ note.ref.ref | fileName | maxLength: 30}}</span>
         </ng-container>
       </ng-template>
     </missing-control>

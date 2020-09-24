@@ -741,7 +741,7 @@ function createMovieNoteControls(note?: Partial<MovieNote>) {
     role: new FormControl(entity.role),
     firstName: new FormControl(entity.firstName),
     lastName: new FormControl(entity.lastName),
-    note: new HostedMediaForm(entity.note)
+    ref: new HostedMediaForm(entity.ref)
   }
 }
 

@@ -19,7 +19,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RxJs
 import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 
 function getSteps(statusCtrl: FormControl): TunnelStep[] {
   return [{
@@ -96,7 +96,7 @@ function getSteps(statusCtrl: FormControl): TunnelStep[] {
   }]
 }
 
-function isStatus(prodStatusCtrl: FormControl, acceptableStatus: string[]) {
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
   return prodStatusCtrl.valueChanges.pipe(
     startWith(prodStatusCtrl.value),
     map(prodStatus => acceptableStatus.includes(prodStatus))
