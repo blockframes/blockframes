@@ -75,7 +75,7 @@ interface MovieRaw<D> {
   producers?: Producer[],
   productionStatus?: ProductionStatus,
   rating?: MovieRating[],
-  release: Partial<MovieRelease>, //! required
+  release: MovieRelease, //! required
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
   scoring?: ScoringSlug,

@@ -183,8 +183,9 @@ export function createTitle(title: Partial<Title> = {}): Title {
   };
 }
 
-export function createReleaseYear(release: Partial<MovieRelease> = {}): Partial<MovieRelease> {
+export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
+    year: 0,
     status: '',
     ...release
   };
