@@ -96,9 +96,9 @@ export function setForm(selector: string, formOpt: FormOptions) {
     /* 
      * Perform some extra handling on the input if needed..
      */
-    let needsHandling = true;
-    if (formOpt.specialIds.includes(keyBag)) {
-      [needsHandling, vault] = formOpt.fieldHandler($formEl, keyBag);
+    let needsHandling = true, setValue;
+    if (formOpt.specialIds?.includes(keyBag) && formOpt.fieldHandler) {
+      [needsHandling, setValue] = formOpt.fieldHandler($formEl, keyBag);
     }
     formelData.value = vault;
     if (needsHandling && (vault !== undefined)) {
