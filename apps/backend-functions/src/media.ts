@@ -1,6 +1,6 @@
 import { functions, getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { createHash } from 'crypto';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
@@ -205,6 +205,21 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
+    before.promotional.still_photo.forEach((photo, index) => {
+      const stillBefore = photo
+      const stillAfter = after.promotional.still_photo[index];
+      if ((stillBefore !== stillAfter || stillAfter === '')) {
+        mediaToDelete.push(stillBefore);
+      }
+    });
+    before.promotional.notes.forEach((note, index) => {
+      const noteBefore = note;
+      const noteAfter = after.promotional.notes[index];
+      if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
+        mediaToDelete.push(noteBefore.ref);
+      }
+    })
+
   } else { // Deleting
 
     if (!!before.banner) {
@@ -227,8 +242,8 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    before.promotional.still_photo.filter(photo => !!photo)
-      .forEach(photo => mediaToDelete.push(photo));
+    before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+    before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

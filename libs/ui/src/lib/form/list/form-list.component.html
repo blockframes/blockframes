@@ -29,7 +29,7 @@
 <!-- VIEW -->
 <!---------->
 
-​<form *ngIf="formItem">
+​<div *ngIf="formItem">
   <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
   </ng-template>
   <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -41,7 +41,7 @@
       <span>{{ saveButtonText }}</span>
     </button>
   </div>
-</form>
+</div>
 
 <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>

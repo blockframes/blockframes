@@ -230,7 +230,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     return {
       ...promotional,
       still_photo: promotional.still_photo.filter(photo => !!photo),
-      notes: promotional.notes.filter(note => !!note)
+      notes: promotional.notes.filter(note => !!note.ref)
     }
   }
 }
