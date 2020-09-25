@@ -206,7 +206,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.screening?.video && (before.screening?.video !== after.screening?.video || after.screening?.video === '')) {
-      mediasToDelete.push(before.screening.video);
+      mediaToDelete.push(before.screening.video);
     }
 
     Object.keys(before.promotional.still_photo)
@@ -242,7 +242,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     if (!!before.screening?.video) {
-      mediasToDelete.push(before.screening.video);
+      mediaToDelete.push(before.screening.video);
     }
 
     Object.keys(before.promotional.still_photo)
