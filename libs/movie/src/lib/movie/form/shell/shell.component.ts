@@ -198,7 +198,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
-
+    console.log(movie)
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
