@@ -5,7 +5,8 @@ import { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { OrganizationMediasForm } from '@blockframes/admin/admin-panel/forms/organization-medias.form';
+import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
+
 /**
  * This function prepare media references in db documents before updating it in firestore.
  * The function also return an array of media to upload, we can then pass this array to the media service.

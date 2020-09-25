@@ -12,7 +12,7 @@ function createOrgMediasControl(orgDocs: OrgMedias) {
 
 type OrgMediasControl = ReturnType<typeof createOrgMediasControl>;
 
-export class OrganizationMediasForm extends FormEntity<OrgMediasControl> { // @TODO #2586 include it to main orgform
+export class OrganizationMediasForm extends FormEntity<OrgMediasControl> {
   constructor(data?: OrgMedias) {
     super(createOrgMediasControl(data));
   }
