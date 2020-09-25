@@ -11,7 +11,17 @@ export async function upgrade(db: Firestore) {
 
     delete movie.totalBudget;
 
-    // Initialize the new totalBudget used in the financial details page
+    const transformedStillPhotos = []
+
+    if (!Array.isArray(movie.promotional.still_photo) && typeof movie.promotional.still_photo === 'object') {
+      Object.keys(movie.promotional.still_photo).forEach(key => {
+        transformedStillPhotos.push(movie.promotional.still_photo[key])
+      })
+    }
+
+    movie.promotional.still_photo = transformedStillPhotos
+
+    // Initialize the new totalBudget used in the financial details page and update still photos
     const newData = {
       ...movie,
       totalBudget: {
@@ -21,6 +31,10 @@ export async function upgrade(db: Firestore) {
         postProdCost: null,
         producerFees: null,
         shootCost: null
+      },
+      promotional: {
+        ...movie.promotional,
+        still_photo: transformedStillPhotos
       }
     };
 

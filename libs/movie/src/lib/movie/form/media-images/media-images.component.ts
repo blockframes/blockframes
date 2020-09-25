@@ -9,10 +9,9 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
   styleUrls: ['./media-images.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaImagesComponent implements OnInit {
+export class MovieFormMediaImagesComponent {
   form = this.shell.form;
   public movieId = this.route.snapshot.params.movieId;
-
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -20,26 +19,20 @@ export class MovieFormMediaImagesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (Object.keys(this.stillPhoto.value).length === 0) {
+    if (!this.stillPhoto.controls.length) {
       this.addStill();
     }
   }
 
   get stillPhoto() {
-    return this.promotional.get('still_photo');
-  }
-
-  get promotional() {
-    return this.form.get('promotional');
+    return this.form.promotional.get('still_photo');
   }
 
   addStill() {
-    this.stillPhoto
-      .push(new HostedMediaForm());
+    this.stillPhoto.push(new HostedMediaForm());
   }
 
   trackByFn(index: number) {
     return index;
   }
-
 }
