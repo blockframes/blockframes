@@ -3,7 +3,7 @@
     <h4 title>LAST STEP</h4>
     <h1 subtitle>Summary Page</h1>
     <p description class="mat-body-1">
-      Please verify that all the information you have entered is correct before submitting to Archipel Market for
+      Please verify that all the information you have entered is correct before submitting to Media Financiers for
       validation.
     </p>
 
@@ -74,22 +74,27 @@
     <mat-divider></mat-divider>
 
     <!-- SHOOTING INFORMATION -->
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
 
-    <section id="shooting-information">
-      <h3>Shooting Information</h3>
-      <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
-    </section>
+      <section id="shooting-information">
+        <h3>Shooting Information</h3>
+        <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
+      </section>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- SALES PITCH -->
 
-    <section id="sales-pitch">
-      <h3>Sales Pitch</h3>
-      <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
-    </section>
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
 
-    <mat-divider></mat-divider>
+      <section id="sales-pitch">
+        <h3>Sales Pitch</h3>
+        <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
+      </section>
+
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- TECHNICAL INFORMATION -->
 
