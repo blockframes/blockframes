@@ -1,16 +1,15 @@
-// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 
 // Components
-import { MovieFormFinancialDetailsComponent } from './financial-details.component';
-import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { SummaryFinancialDetailsComponent } from './financial-details.component';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 import { BudgetPipeModule } from '@blockframes/movie/pipes/budget.pipe';
+import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -20,16 +19,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [MovieFormFinancialDetailsComponent],
-  exports: [MovieFormFinancialDetailsComponent],
+  declarations: [SummaryFinancialDetailsComponent],
+  exports: [SummaryFinancialDetailsComponent],
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     FlexLayoutModule,
     TunnelPageModule,
-    StaticSelectModule,
-    UploadModule,
+    GetPathModule,
+    MissingControlModule,
     BudgetPipeModule,
+    EmptyImagePipeModule,
 
     // Material
     MatIconModule,
@@ -37,8 +36,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
-    RouterModule.forChild([{ path: '', component: MovieFormFinancialDetailsComponent }])
-
+    RouterModule.forChild([])
   ],
 })
-export class MovieFormFinancialDetailsModule { }
+export class SummaryFinancialDetailsModule { }
