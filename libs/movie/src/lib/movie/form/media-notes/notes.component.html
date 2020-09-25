@@ -19,7 +19,7 @@
               </mat-select>
             </mat-form-field>
             <file-upload [form]="noteForm.get('ref')" [storagePath]="getPath()" accept="['.pdf']"
-              [types]="['application/pdf']">
+              [types]="['application/pdf']" filePrivacy="protected">
               <h3 type>Upload Files</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>
             </file-upload>
