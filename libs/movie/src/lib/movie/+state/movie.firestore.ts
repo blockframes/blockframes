@@ -138,7 +138,7 @@ export interface MoviePromotionalElements {
   salesPitch: MovieSalesPitch,
   scenario: string,
   screener_link: string, // @TODO 2586 remove or move ?
-  still_photo: Record<string, string>,
+  still_photo: string[],
   teaser_link: string, // @TODO 2586 remove or move ?
   trailer_link: string, // @TODO 2586 remove or move ?
   other_links: OtherLink[]; // @TODO 2586 remove or move ?

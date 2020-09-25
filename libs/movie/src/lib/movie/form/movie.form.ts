@@ -731,15 +731,9 @@ type OtherLinkControl = ReturnType<typeof createOtherLinkFormControl>;
 
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotional(promotionalElements);
-
-  const stillPhotoControls: Record<string, HostedMediaForm> = {};
-  for (const key in entity.still_photo) {
-    stillPhotoControls[key] = new HostedMediaForm(entity.still_photo[key]);
-  }
-
   return {
     // Images
-    still_photo: new MediaFormList<Record<string, HostedMediaForm>>(stillPhotoControls),
+    still_photo: FormList.factory(entity.still_photo, el => new HostedMediaForm(el)),
 
     // Hosted Media
     financialDetails: new HostedMediaForm(entity.financialDetails),

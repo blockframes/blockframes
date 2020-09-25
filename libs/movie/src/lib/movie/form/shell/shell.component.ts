@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { MovieService, MovieQuery, Movie } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie, MoviePromotionalElements } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
@@ -154,7 +154,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnInit() {
     this.exitRoute = `../../../title/${this.query.getActiveId()}`;
     const appSteps = this.route.snapshot.data.appSteps;
-    this.steps = getSteps(this.form.get('productionStatus'),appSteps);
+    this.steps = getSteps(this.form.get('productionStatus'), appSteps);
     this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
       filter(status => !!status)).subscribe(status => {
         const pathToUpdate = Object.keys(valueByProdStatus[status]);
@@ -195,10 +195,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   // Should save movie
   public async save() {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional)
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
-
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
@@ -224,5 +224,13 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         return shouldSave ? this.save() : of(true)
       })
     );
+  }
+
+  cleanPromotionalMedia(promotional: MoviePromotionalElements): MoviePromotionalElements {
+    return {
+      ...promotional,
+      still_photo: promotional.still_photo.filter(photo => !!photo),
+      notes: promotional.notes.filter(note => !!note.ref)
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { functions, getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { createHash } from 'crypto';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { imgixToken } from './environments/environment';
@@ -220,15 +220,21 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       });
     }
 
-    Object.keys(before.promotional.still_photo)
-      .filter(key => !!before.promotional.still_photo[key])
-      .forEach(key => {
-        const stillBefore = before.promotional.still_photo[key];
-        const stillAfter = after.promotional.still_photo[key];
-        if ((stillBefore !== stillAfter || stillAfter === '')) {
-          mediaToDelete.push(stillBefore);
-        }
-      });
+    before.promotional.still_photo.forEach((photo, index) => {
+      const stillBefore = photo
+      const stillAfter = after.promotional.still_photo[index];
+      if ((stillBefore !== stillAfter || stillAfter === '')) {
+        mediaToDelete.push(stillBefore);
+      }
+    });
+
+    before.promotional.notes.forEach((note, index) => {
+      const noteBefore = note;
+      const noteAfter = after.promotional.notes[index];
+      if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
+        mediaToDelete.push(noteBefore.ref);
+      }
+    })
 
   } else { // Deleting
 
@@ -260,9 +266,9 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
     }
 
-    Object.keys(before.promotional.still_photo)
-      .filter(key => !!before.promotional.still_photo[key])
-      .forEach(key => mediaToDelete.push(before.promotional.still_photo[key]));
+    before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+
+    before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
