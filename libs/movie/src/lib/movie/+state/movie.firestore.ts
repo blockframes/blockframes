@@ -121,7 +121,7 @@ export interface HostedVideo {
   jwPlayerId: string,
   title?: string,
   description?: string,
-  type?: 'trailer' | 'teaser' | 'reel' | 'clip' // @TODO 2586 create type ?
+  type?: 'trailer' | 'teaser' | 'reel' | 'clip' // @TODO #2586 create type ?
 }
 
 ////////////////////
@@ -129,19 +129,19 @@ export interface HostedVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-  clip_link: string,  // @TODO 2586 remove or move ?
+  clip_link: string,  // @TODO #2586 remove or move ?
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
-  promo_reel_link: string, // @TODO 2586 remove or move ?
+  promo_reel_link: string, // @TODO #2586 remove or move ?
   salesPitch: MovieSalesPitch,
   scenario: string,
-  screener_link: string, // @TODO 2586 remove or move ?
+  screener_link: string, // @TODO #2586 remove or move ?
   still_photo: string[],
-  teaser_link: string, // @TODO 2586 remove or move ?
-  trailer_link: string, // @TODO 2586 remove or move ?
-  other_links: OtherLink[]; // @TODO 2586 remove or move ?
+  teaser_link: string, // @TODO #2586 remove or move ?
+  trailer_link: string, // @TODO #2586 remove or move ?
+  other_links: OtherLink[]; // @TODO #2586 remove or move ?
 
   videos?: HostedVideos;
 
