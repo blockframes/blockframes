@@ -17,17 +17,33 @@ export class CreditCardComponent {
   constructor(private dialog: MatDialog) { }
 
   openDialog() {
-    this.dialog.open(this.dialogRef, { maxWidth: 400 });
+    if (this.credit.description.length >= 125) {
+      this.dialog.open(this.dialogRef, { maxWidth: 400 });
+    }
   }
 
 }
 
-@Pipe({ name: 'roleIcon' })
-export class RoleIconPipe implements PipeTransform {
+@Pipe({ name: 'statusIcon' })
+export class StatusIconPipe implements PipeTransform {
   transform(role?: Credit['role']) {
     switch(role) {
-      case '': return 'check';
-      default: return 'check';
+      case 'confirmed': return 'check_circle';
+      case 'target':
+      case 'loosely-attached':
+        return 'estimated';
+      default: return 'empty_status';
+    }
+  }
+}
+
+@Pipe({ name: 'emptyImg' })
+export class EmptyImgPipe implements PipeTransform {
+  transform(type: 'director' | 'crew' | 'cast') {
+    switch(type) {
+      case 'director': return 'empty_director_description.svg';
+      case 'crew': return 'empty_crew_description.svg';
+      case 'cast': return 'empty_cast_description.svg';
     }
   }
 }

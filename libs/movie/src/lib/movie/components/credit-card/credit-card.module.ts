@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreditCardComponent, RoleIconPipe } from './credit-card.component';
+import { CreditCardComponent, StatusIconPipe, EmptyImgPipe } from './credit-card.component';
 
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, MaxLengthModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '../../pipes/filmography.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -16,10 +17,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
-  declarations: [CreditCardComponent, RoleIconPipe],
+  declarations: [CreditCardComponent, StatusIconPipe, EmptyImgPipe],
   exports: [CreditCardComponent],
   imports: [
     CommonModule,
+    ImageReferenceModule,
     FilmographyPipeModule,
     TranslateSlugModule,
     DisplayNameModule,
