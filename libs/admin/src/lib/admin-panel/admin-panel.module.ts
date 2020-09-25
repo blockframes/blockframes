@@ -33,6 +33,7 @@ import { EventModule } from './pages/event/event.module';
 import { GoToModule } from './components/go-to/go-to.module';
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 import { AdminOrganizationFormModule } from './components/organization/forms/organization-form/organization-form.module';
+import { MovieVideoUploadModule } from '@blockframes/movie/components/video-upload/video-upload.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -112,7 +113,8 @@ export const panelRoutes: Routes = [
     InvitationsModule,
     GoToModule,
     ConfirmModule,
-    AdminOrganizationFormModule
+    AdminOrganizationFormModule,
+    MovieVideoUploadModule,
   ],
   declarations: [
     MoviesComponent,

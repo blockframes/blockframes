@@ -2,10 +2,10 @@
   <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
 
   <mat-card *ngIf="movie">
-    <movie-header *ngIf="movie" [movie]="movie"></movie-header>
+    <movie-header [movie]="movie"></movie-header>
   </mat-card>
 
-  <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
+  <article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
     <mat-card>
       <h2>
         {{ movie.title.international }} ({{ movie.internalRef || 'missing internal ref' }})
@@ -66,7 +66,8 @@
         </mat-card-actions>
       </form>
     </mat-card>
-
+  </article>
+  <article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
     <mat-card>
       <h2>Rights :</h2>
 
@@ -91,6 +92,11 @@
           {{ status | toLabel: 'distributionRightStatus'  }}
         </ng-template>
       </bf-table-filter>
+    </mat-card>
+
+    <mat-card>
+      <h2>Movie's resources :</h2>
+      <movie-video-upload [movie]="movie"></movie-video-upload>
     </mat-card>
   </article>
 </main>

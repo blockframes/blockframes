@@ -205,6 +205,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediasToDelete.push(before.promotional.moodboard);
     }
 
+    if (!!before.screening?.video && (before.screening?.video !== after.screening?.video || after.screening?.video === '')) {
+      mediasToDelete.push(before.screening.video);
+    }
+
     Object.keys(before.promotional.still_photo)
       .filter(key => !!before.promotional.still_photo[key])
       .forEach(key => {
@@ -235,6 +239,10 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
 
     if (!!before.promotional.moodboard) {
       mediasToDelete.push(before.promotional.moodboard);
+    }
+
+    if (!!before.screening?.video) {
+      mediasToDelete.push(before.screening.video);
     }
 
     Object.keys(before.promotional.still_photo)
