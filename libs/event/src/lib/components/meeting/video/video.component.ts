@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AngularFireFunctions} from "@angular/fire/functions";
 import {Event, EventService} from "@blockframes/event/+state";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
@@ -12,9 +12,10 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss']
+  styleUrls: ['./video.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoComponent implements OnInit {
+export class VideoComponent implements OnInit, OnDestroy {
 
   @Input() event: Event;
 
@@ -75,6 +76,14 @@ export class VideoComponent implements OnInit {
         this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio: true}, this.event.id);
       }
     })
+  }
+
+  getCamLocalDeactived(){
+    return this.meetingService.camDeactivate
+  }
+
+  getMicLocalDeactived(){
+    return this.meetingService.micDeactivate
   }
 
   /**
@@ -140,8 +149,7 @@ export class VideoComponent implements OnInit {
    */
   disconnected(){
     console.log('---------------------------disconnected---------------------------')
-    const te = this.$localParticipantConnectedDataSource.getValue();
-    console.log('te : ', te)
+    this.meetingService.disconnected();
   }
 
   /**
@@ -192,5 +200,10 @@ export class VideoComponent implements OnInit {
    */
   identify(index, item) {
     return item.identity;
+  }
+
+  ngOnDestroy() {
+    console.log('ngOnDestroy ::: ')
+    this.disconnected()
   }
 }

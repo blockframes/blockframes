@@ -1,6 +1,6 @@
-<div>
-  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify" >
-      <event-remote-participant [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)"></event-remote-participant>
+<div class="continer-remote-participant">
+  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
+      <event-remote-participant [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
   </ng-container>
 </div>
 

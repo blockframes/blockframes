@@ -1,6 +1,7 @@
 <ng-container>
-  <div class="local-video-container test">
-    <div *ngIf="camIsDeactived$ | async" class="round-div-initial-name-participant">
+  <div class="local-video-container container-round-div-initial-name-participant">
+
+    <div *ngIf="localCamIsDeactived$ | async" class="round-div-initial-name-participant">
       <span>
         {{getInitialFromParticipant(localParticipant)}}
       </span>

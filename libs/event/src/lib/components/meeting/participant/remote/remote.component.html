@@ -1,10 +1,10 @@
 <ng-container>
-  <div class="remote-participant" id="remote-participant" >
-    <div *ngIf="camIsDeactived$ | async" class="round-div-initial-name-participant">
+  <div class="remote-participant container-round-div-initial-name-participant" id="remote-participant" >
+    <div *ngIf="remoteCamIsDeactived$ | async" class="round-div-initial-name-participant">
       {{getInitialFromParticipant(participant)}}
     </div>
 
-    <div *ngIf="!(camIsDeactived$ | async)" class="name-participant">
+    <div *ngIf="!(remoteCamIsDeactived$ | async)" class="name-participant">
       {{participant.firstName}} / {{participant.lastName}}
     </div>
   </div>

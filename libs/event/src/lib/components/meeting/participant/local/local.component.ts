@@ -1,13 +1,13 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
-import {trackByEventId} from "angular-calendar/modules/common/util";
 
 @Component({
   selector: 'event-local-participant',
   templateUrl: './local.component.html',
-  styleUrls: ['./local.component.scss']
+  styleUrls: ['./local.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
@@ -18,23 +18,23 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
   @ViewChild('localVideo') containerLocalVideo;
 
-  private $camIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  camIsDeactived$: Observable<any> = this.$camIsDeactivedDataSource.asObservable();
+  private $localCamIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  localCamIsDeactived$: Observable<boolean> = this.$localCamIsDeactivedDataSource.asObservable();
 
-  private $micIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  micIsDeactived$: Observable<any> = this.$micIsDeactivedDataSource.asObservable();
+  private $localMicIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  localMicIsDeactived$: Observable<boolean> = this.$localMicIsDeactivedDataSource.asObservable();
 
   constructor() {
     super();
   }
 
   ngOnInit(): void {
+    this.setUpLocalParticipantEvent(this.localParticipant);
+
   }
 
   ngAfterViewInit() {
     this.makeLocalTrack(this.localPreviewTracks);
-    this.setUpLocalParticipantEvent(this.localParticipant);
-
   }
 
   /**
@@ -47,45 +47,45 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
     localParticipant.on(meetingEventEnum.TrackSubscribed, (track) => {
       console.log('============================== trackSubscribed in local component============================')
       if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(false)
+        this.$localCamIsDeactivedDataSource.next(false)
       } else {
-        this.$micIsDeactivedDataSource.next(false)
+        this.$localMicIsDeactivedDataSource.next(false)
       }
     })
 
     localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       console.log('============================== trackUnsubscribed in local component============================')
       if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(true)
+        this.$localCamIsDeactivedDataSource.next(true)
       } else {
-        this.$micIsDeactivedDataSource.next(true)
+        this.$localMicIsDeactivedDataSource.next(true)
       }
     })
 
     localParticipant.on('trackDisabled', (track) => {
       console.log('============================== trackDisabled in local component============================')
       if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(true)
+        this.$localCamIsDeactivedDataSource.next(true)
       } else {
-        this.$micIsDeactivedDataSource.next(true)
+        this.$localMicIsDeactivedDataSource.next(true)
       }
     })
 
     localParticipant.on('trackEnabled', (track) => {
       console.log('============================== trackEnabled in local component============================')
       if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(false)
+        this.$localCamIsDeactivedDataSource.next(false)
       } else {
-        this.$micIsDeactivedDataSource.next(false)
+        this.$localMicIsDeactivedDataSource.next(false)
       }
     })
 
     localParticipant.on('trackStopped', (track) => {
       console.log('============================== trackStopped in local component============================')
       if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(true)
+        this.$localCamIsDeactivedDataSource.next(true)
       } else {
-        this.$micIsDeactivedDataSource.next(true)
+        this.$localMicIsDeactivedDataSource.next(true)
       }
     })
   }
@@ -95,13 +95,26 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    * @param localPreviewTracks
    */
   makeLocalTrack(localPreviewTracks: Array<any>){
+    let camOK = false;
+    let micOK = false;
     localPreviewTracks.forEach(track => {
-      if(track.kind === 'video'){
-        this.$camIsDeactivedDataSource.next(false)
+      if(track.kind === 'video') {
+        camOK = true;
+        this.$localCamIsDeactivedDataSource.next(false);
       } else {
-        this.$micIsDeactivedDataSource.next(false)
+        micOK = true;
+        this.$localMicIsDeactivedDataSource.next(false);
       }
     })
+
+    if(!camOK) {
+      this.$localCamIsDeactivedDataSource.next(true);
+    }
+
+    if(!camOK) {
+      this.$localMicIsDeactivedDataSource.next(true);
+    }
+
     this.attachTracks(localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
   }
 

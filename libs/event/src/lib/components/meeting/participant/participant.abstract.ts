@@ -1,3 +1,4 @@
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 export abstract class AbstractParticipant{
 

@@ -44,6 +44,14 @@ export class MeetingService {
     return this.eventRoom;
   }
 
+  getCamDeactivate(){
+    return this.camDeactivate;
+  }
+
+  getMicDeactivate(){
+    return this.micDeactivate;
+  }
+
   setLocalTrackToRoom(){
 
   }
@@ -60,6 +68,8 @@ export class MeetingService {
     localTracksPromise.then(
       (tracks) => {
         this.previewTracks = tracks;
+        this.camDeactivate = false;
+        this.micDeactivate = false;
         this.eventRoom.next({
           meetingEvent: meetingEventEnum.LocalPreviewDone,
           data: tracks
@@ -224,6 +234,10 @@ export class MeetingService {
       // this.detachParticipantTracks(room.localParticipant);
       // this.activeRoom = null;
     });
+  }
+
+  disconnected(){
+    this.activeRoom.disconnect()
   }
 
 
