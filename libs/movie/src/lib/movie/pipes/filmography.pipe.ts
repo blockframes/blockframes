@@ -6,8 +6,6 @@ export class FilmographyPipe implements PipeTransform {
   transform(filmography?: Filmography) {
     if (filmography?.title) {
       return filmography.year ? `${filmography.title} (${filmography.year})` : filmography.title;
-    } else {
-      return '-'
     }
   }
 }

@@ -43,6 +43,9 @@ import { intercomId } from '@env';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 
+import { MatNativeDateModule } from '@angular/material/core';
+
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -85,7 +88,8 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       paramsInheritanceStrategy: 'always',
       relativeLinkResolution: 'corrected',
       scrollPositionRestoration: 'enabled'
-    })
+    }),
+    MatNativeDateModule
   ],
   providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
   bootstrap: [AppComponent]

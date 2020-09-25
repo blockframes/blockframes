@@ -10,7 +10,8 @@ import {
   createPrize,
   populateMovieLanguageSpecification,
   createBoxOffice,
-  createMovie
+  createMovie,
+  createTotalBudget
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -692,8 +693,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             movie.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
-            movie.totalBudget = createPrice({
-              amount: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
+            movie.totalBudget = createTotalBudget({
+              others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
             });
           }
         }

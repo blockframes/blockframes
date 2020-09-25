@@ -4,10 +4,9 @@
  * This module provides functions to trigger a firestore restore and test user creations.
  */
 import { differenceBy } from 'lodash';
-import { Auth, UserRecord } from './admin';
 import { loadAdminServices, getCollectionInBatches, sleep } from '@blockframes/firebase-utils';
 import readline from 'readline';
-import { upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
+import { Auth, UserRecord, upsertWatermark, runChunks, JsonlDbRecord } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance, isInMaintenance } from '@blockframes/firebase-utils';
 import { deleteAllUsers, importAllUsers } from '@blockframes/testing/firebase';
 import * as env from '@env';

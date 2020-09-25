@@ -1,22 +1,24 @@
 import ViewPage from "./ViewPage";
 import NavbarPage from "./NavbarPage";
 import { Dates, Availabilities } from "@blockframes/e2e/utils/type";
+import { TO } from "@blockframes/e2e/utils/env";
 
 export default class SearchPage extends NavbarPage {
 
   constructor() {
     super();
-    cy.get('catalog-marketplace-title-list');
+    cy.get('catalog-marketplace-title-list', {timeout: TO.PAGE_LOAD});
   }
 
   public clearAllFilters(optionSortBy: string) {
-    cy.get('mat-select').click();
-    cy.get('mat-option')
-      .contains(optionSortBy)
+    // TODO: After Issue #3584 is fixed this may be needed back.
+    // cy.get('mat-select').click();
+    // cy.get('mat-option')
+    //   .contains(optionSortBy)
+    //   .click();
+    cy.get('[mattooltip="Clear all filters"]', {timeout: TO.PAGE_ELEMENT})
       .click();
-    cy.get('[mattooltip="Clear all filters"]')
-      .click();      
-
+    cy.wait(TO.THREE_SEC);
   }
 
   public fillProductionYear(years: Dates) {
@@ -83,7 +85,7 @@ export default class SearchPage extends NavbarPage {
 
   public  getAllMovies(movieCount: number) {
     const movies = [];
-    cy.get('movie-card article h6', {timeout: 10000}).then((m) => {
+    cy.get('movie-card article h6', {timeout: TO.THIRTY_SEC}).then((m) => {
       for (let i =0; i < movieCount; i++) {
         movies.push(m[i].firstChild.textContent);
       }
