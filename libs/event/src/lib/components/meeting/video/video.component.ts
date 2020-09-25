@@ -12,7 +12,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.css']
+  styleUrls: ['./video.component.scss']
 })
 export class VideoComponent implements OnInit {
 
@@ -53,7 +53,7 @@ export class VideoComponent implements OnInit {
           this.trackUnsubscribed(value.data);
           break;
         case meetingEventEnum.Disconnected:
-          this.disconnected(value.data);
+          this.disconnected();
           break;
         case meetingEventEnum.ConnectedToRoomTwilio:
           this.connectedToRoomTwilio(value.data);
@@ -77,41 +77,78 @@ export class VideoComponent implements OnInit {
     })
   }
 
+  /**
+   *
+   * @param localTrack
+   */
   localPreviewDone(localTrack){
     console.log('---------------------------localPreviewDone---------------------------');
-    console.log({localTrack});
     this.$localPreviewTracksDataSource.next(localTrack);
   }
 
+  /**
+   *
+   * @param room
+   */
   connectedToRoomTwilio(room){
     console.log('---------------------------connectedToRoomTwilio---------------------------');
     this.$localParticipantConnectedDataSource.next(room.localParticipant);
   }
 
+  /**
+   *
+   * @param participant
+   */
   participantConnected(participant){
     console.log('---------------------------participantConnected---------------------------')
     this.addParticipantFromParticipantConnectedArr(participant)
   }
 
+  /**
+   *
+   * @param participant
+   */
   participantDisconnected(participant){
     console.log('---------------------------participantDisconnected---------------------------')
     this.removeParticipantFromParticipantConnectedArr(participant);
   }
 
+  /**
+   *
+   * @param track
+   * @param trackPublication
+   * @param participant
+   */
   trackSubscribed({track, trackPublication, participant}){
     console.log('---------------------------trackSubscribed in video component---------------------------')
     console.log({track, trackPublication, participant})
   }
 
+  /**
+   *
+   * @param track
+   * @param trackPublication
+   * @param participant
+   */
   trackUnsubscribed({track, trackPublication, participant}){
     console.log('---------------------------trackUnsubscribed in video component---------------------------')
     console.log({track, trackPublication, participant})
   }
 
+  /**
+   *
+   */
   disconnected(){
     console.log('---------------------------disconnected---------------------------')
+    const te = this.$localParticipantConnectedDataSource.getValue();
+    console.log('te : ', te)
   }
 
+  /**
+   *
+   * @param participant
+   * @private
+   */
   private removeParticipantFromParticipantConnectedArr(participant: any) {
     const roomArr: any[] = this.$participantConnectedDataSource.getValue();
 
@@ -122,6 +159,11 @@ export class VideoComponent implements OnInit {
     this.$participantConnectedDataSource.next(roomArr);
   }
 
+  /**
+   *
+   * @param participant
+   * @private
+   */
   private addParticipantFromParticipantConnectedArr(participant: any) {
     const currentValue = this.$participantConnectedDataSource.value;
     currentValue.forEach((item) => {
@@ -135,6 +177,19 @@ export class VideoComponent implements OnInit {
   }
 
 
+  /**
+   *
+   * @param participant
+   */
+  eventParticipantDeconected(participant){
+    this.removeParticipantFromParticipantConnectedArr(participant);
+  }
+
+  /**
+   *
+   * @param index
+   * @param item
+   */
   identify(index, item) {
     return item.identity;
   }

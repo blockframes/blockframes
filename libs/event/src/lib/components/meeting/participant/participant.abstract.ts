@@ -63,4 +63,11 @@ export abstract class AbstractParticipant{
     // this.detachTracks(tracks);
   }
 
+  /**
+   *
+   * @param participant
+   */
+  getInitialFromParticipant(participant){
+    return `${participant.firstName.charAt(0).toUpperCase()}${participant.lastName.charAt(0).toUpperCase()}`
+  }
 }

@@ -1,0 +1,20 @@
+::ng-deep .test {
+  background-color: #1C1F2E !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .round-div-initial-name-participant {
+    background-color: white;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    text-align: center;
+
+    span {
+      vertical-align: middle;
+      display: inline-flex;
+    }
+  }
+}

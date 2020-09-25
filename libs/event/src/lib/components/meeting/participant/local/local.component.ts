@@ -2,11 +2,12 @@ import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core'
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
+import {trackByEventId} from "angular-calendar/modules/common/util";
 
 @Component({
   selector: 'event-local-participant',
   templateUrl: './local.component.html',
-  styleUrls: ['./local.component.css']
+  styleUrls: ['./local.component.scss']
 })
 export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
@@ -31,12 +32,16 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   }
 
   ngAfterViewInit() {
-    this.makeLocalTrack(this.localPreviewTracks, this.localParticipant);
-    this.testEventLocalParticipant(this.localParticipant);
+    this.makeLocalTrack(this.localPreviewTracks);
+    this.setUpLocalParticipantEvent(this.localParticipant);
 
   }
 
-  testEventLocalParticipant(localParticipant){
+  /**
+   *
+   * @param localParticipant
+   */
+  setUpLocalParticipantEvent(localParticipant){
     console.log('localParticipant : ', localParticipant)
 
     localParticipant.on(meetingEventEnum.TrackSubscribed, (track) => {
@@ -85,10 +90,18 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
     })
   }
 
-  makeLocalTrack(localPreviewTracks){
-    console.log('this.containerLocalVideo.nativeElement : ', this.containerLocalVideo.nativeElement)
-
-    // this.renderer.appendChild(this.containerLocalVideo.nativeElement, )
+  /**
+   *
+   * @param localPreviewTracks
+   */
+  makeLocalTrack(localPreviewTracks: Array<any>){
+    localPreviewTracks.forEach(track => {
+      if(track.kind === 'video'){
+        this.$camIsDeactivedDataSource.next(false)
+      } else {
+        this.$micIsDeactivedDataSource.next(false)
+      }
+    })
     this.attachTracks(localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
   }
 

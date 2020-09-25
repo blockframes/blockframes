@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
@@ -6,13 +6,15 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-remote-participant',
   templateUrl: './remote.component.html',
-  styleUrls: ['./remote.component.css']
+  styleUrls: ['./remote.component.scss']
 })
 export class RemoteComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
   // FIXME
   // Make Participant interfce !!
   @Input() participant: any
+
+  @Output() eventParticipantDeconected = new EventEmitter();
 
   private $camIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
   camIsDeactived$: Observable<any> = this.$camIsDeactivedDataSource.asObservable();
@@ -29,13 +31,13 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
   ngOnInit(): void {
     console.log('ParticipantComponent ngOnInit participant : ', this.participant)
     this.mocDivVideo(this.participant);
-    this.testEventParticipant(this.participant);
+    this.setUpRemoteParticipantEvent(this.participant);
   }
 
   ngAfterViewInit() {
   }
 
-  testEventParticipant(participant){
+  setUpRemoteParticipantEvent(participant){
     console.log('/////////////////////////////////////////')
     console.log('participant : ', participant.lastName)
     console.log('/////////////////////////////////////////')
@@ -63,6 +65,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('disconnected', () => {
       console.log('============================== disconnected in remote component============================')
+      this.eventParticipantDeconected.emit(this.participant)
     })
 
     participant.on('reconnected', () => {
@@ -71,10 +74,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('reconnecting', () => {
       console.log('============================== reconnecting in remote component============================')
-    })
-
-    participant.on('trackDimensionsChanged', () => {
-      console.log('============================== trackDimensionsChanged in remote component============================')
     })
 
     participant.on('trackDisabled', (track) => {
@@ -93,14 +92,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
       } else {
         this.$micIsDeactivedDataSource.next(false)
       }
-    })
-
-    participant.on('trackMessage', () => {
-      console.log('============================== trackMessage in remote component============================')
-    })
-
-    participant.on('trackPublishPriorityChanged', () => {
-      console.log('============================== trackPublishPriorityChanged in remote component============================')
     })
 
     participant.on('trackPublished', () => {
