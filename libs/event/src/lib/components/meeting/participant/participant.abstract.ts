@@ -56,12 +56,12 @@ export abstract class AbstractParticipant{
    */
   detachParticipantTracks(participant) {
     console.log('detachParticipantTracks : ', {participant})
-    // const tracks = Array.from(participant.tracks.values()).map((
-    //   trackPublication : any
-    // ) => {
-    //   return trackPublication.track;
-    // });
-    // this.detachTracks(tracks);
+    const tracks = Array.from(participant.tracks.values()).map((
+      trackPublication : any
+    ) => {
+      return trackPublication.track;
+    });
+    this.detachTracks(tracks);
   }
 
   /**

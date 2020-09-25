@@ -118,6 +118,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    */
   disconnected(){
     console.log('---------------------------disconnected---------------------------')
+    this.deactiveLocalTracks();
     this.meetingService.disconnected();
   }
 
@@ -174,6 +175,22 @@ export class VideoComponent implements OnInit, OnDestroy {
   numOfCols(){
     const lengththisParticipantConnected = this.$participantConnectedDataSource.getValue().length;
     return (lengththisParticipantConnected < 2) ? 1 : (lengththisParticipantConnected > 4) ? 3 : 2
+  }
+
+  /**
+   *
+   */
+  deactiveLocalTracks() {
+    const localParticipant = this.meetingService.getLocalParticipant();
+    console.log('localParticipant : ', localParticipant)
+    localParticipant.audioTracks.forEach((publication) => {
+      publication.track.stop()
+      publication.track.disable()
+    })
+    localParticipant.videoTracks.forEach((publication) => {
+      publication.track.stop()
+      publication.track.disable()
+    })
   }
 
   ngOnDestroy() {

@@ -33,6 +33,8 @@ export class MeetingService {
 
   previewTracks;
 
+  localParticipant;
+
   camDeactivate = false;
   micDeactivate = false;
 
@@ -51,6 +53,10 @@ export class MeetingService {
 
   getMicDeactivate(){
     return this.micDeactivate;
+  }
+
+  getLocalParticipant(){
+    return this.localParticipant;
   }
 
   setLocalTrackToRoom(){
@@ -84,10 +90,24 @@ export class MeetingService {
 
 
   /**
-   * Get all aprticipant already in the room.
+   * Get all participant already in the room.
+   * @param participant - All participants connected in the room
+   */
+  getTracksOfParticipant(participant) {
+    return Array.from(participant.tracks).map((
+      track : any
+    ) => {
+      console.log('getTracksOfParticipant track : ', track)
+      //participant[0] is the key
+      return track[1];
+    });
+  }
+
+  /**
+   * Get all participant already in the room.
    * @param participants - All participants connected in the room
    */
-  getTracksOfParticipantsAlreadyInRoom(participants) {
+  getParticipantOfParticipantsMapAlreadyInRoom(participants) {
     return Array.from(participants).map((
       participant : any
     ) => {
@@ -135,7 +155,7 @@ export class MeetingService {
     const identity = room.localParticipant.identity;
 
     if(!!room.participants) {
-      const tracksOfParticipants = this.getTracksOfParticipantsAlreadyInRoom(room.participants);
+      const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
       console.log('tracksOfParticipants  ', tracksOfParticipants)
       if(!!tracksOfParticipants && tracksOfParticipants.length > 0) {
         for (const indexParticipant in tracksOfParticipants) {
@@ -157,6 +177,7 @@ export class MeetingService {
       meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
       data: room
     });
+    this.localParticipant = room.localParticipant;
 
     await this.setUpRoomEvent(room);
 
@@ -235,6 +256,9 @@ export class MeetingService {
     });
   }
 
+  /**
+   *
+   */
   disconnected(){
     this.activeRoom.disconnect()
   }
