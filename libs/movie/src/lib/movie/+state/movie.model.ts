@@ -25,7 +25,9 @@ import {
   MovieGoalsAudience,
   MovieSalesPitch,
   MovieNote,
-  MovieTotalBudget
+  MovieTotalBudget,
+  HostedVideos,
+  HostedVideo
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -379,5 +381,20 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
   return {
     ref: '',
     ...note
+  }
+}
+
+
+export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
+  return {
+    ...params,
+  }
+}
+
+export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
+  return {
+    ref: '',
+    jwPlayerId: '',
+    ...params,
   }
 }

@@ -1,20 +1,51 @@
 <mat-card>
   <mat-card-title>Upload screening</mat-card-title>
   <mat-card-content>
+
     <form [formGroup]="form">
-      <file-upload
-        [form]="form"
-        [storagePath]="getPath()"
-        accept="['.avi', '.mkv', '.mp4']"
-        [filePrivacy]= "filePrivacy"
-        [types]="['video/x-msvideo']">
-        <h3 type>Upload Files</h3>
-        <p class="mat-caption" format>Accepted Formats: .avi, .mkv, .mp4</p>
-      </file-upload>
+
+      <div [formGroup]="form.screener" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Screener title</mat-label>
+          <input matInput formControlName="title" >
+        </mat-form-field>
+        <file-upload
+          [form]="form.screener.get('ref')"
+          [storagePath]="getPath('screener')"
+          accept="['.avi', '.mkv', '.mp4']"
+          [filePrivacy]= "filePrivacy"
+          [types]="['video/x-msvideo']">
+            <h3 type>Upload Files</h3>
+            <p class="mat-caption" format>Accepted Formats: .avi, .mkv, .mp4</p>
+        </file-upload>
+
+      </div>
+
+      <ng-container *ngFor="let otherVideo of form.otherVideos.controls">
+        <div [formGroup]="otherVideo" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
+          <mat-form-field appearance="outline">
+            <mat-label>Video title</mat-label>
+            <input matInput formControlName="title" >
+          </mat-form-field>
+          <file-upload
+            [form]="otherVideo.get('ref')"
+            [storagePath]="getPath('otherVideos')"
+            accept="['.avi', '.mkv', '.mp4']"
+            [filePrivacy]= "filePrivacy"
+            [types]="['video/x-msvideo']">
+              <h3 type>Upload Files</h3>
+              <p class="mat-caption" format>Accepted Formats: .avi, .mkv, .mp4</p>
+          </file-upload>
+
+        </div>
+      </ng-container>
+
       <button  mat-flat-button color="primary" (click)="uploadVideo()">
         <span>Update</span>
         <mat-icon svgIcon="send"></mat-icon>
       </button>
     </form>
+
+
   </mat-card-content>
 </mat-card>

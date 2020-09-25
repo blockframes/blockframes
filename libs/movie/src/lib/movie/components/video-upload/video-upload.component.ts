@@ -2,10 +2,10 @@ import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } 
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { HostedVideos } from '@blockframes/movie/+state/movie.firestore';
 import { Movie, MovieService } from '@blockframes/movie/+state';
-import { mergeDeep } from '@blockframes/utils/helpers';
+import { MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'movie-video-upload',
@@ -15,9 +15,9 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 })
 export class MovieVideoUploadComponent implements OnInit {
 
-  public form: HostedMediaForm;
+  public form: MovieHostedVideosForm;
   public filePrivacy: Privacy = 'protected';
-  @Input() movie: MovieDocument;
+  @Input() movie: Movie;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -25,32 +25,39 @@ export class MovieVideoUploadComponent implements OnInit {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef
   ) {
-    this.form = new HostedMediaForm();
+    this.form = new MovieHostedVideosForm();
   }
 
   async ngOnInit() {
-    this.form = new HostedMediaForm(this.movie.screening.video);
+    this.form = new MovieHostedVideosForm(this.movie.promotional.videos);
+
+    // Add empty upload zone
+    this.form.otherVideos.add({ ref: '' });
     this.cdr.markForCheck();
   }
 
-  public getPath() {
-    return `movies/${this.movie.id}/screening/video`;
+  public getPath(pathPart: string) {
+    return `movies/${this.movie.id}/promotional.videos/${pathPart}`;
   }
 
-  public async uploadVideo() {
+  public async uploadVideo() { // @TODO #2586 should be done by shell component
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
     }
 
-    const screening = { video: `${this.form.value.ref}/${this.form.value.fileName}`, jwPlayerId: ''};
-    const movie: Movie = mergeDeep(this.movie, { screening });
-    console.log(movie);
-    await this.movieService.update(movie.id, movie);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
 
+    const videos : HostedVideos = {
+      ...documentToUpdate,
+      otherVideos: documentToUpdate.otherVideos.filter(n => !!n.ref)
+    };
 
-    this.mediaService.uploadMedias([this.form.value]);
-    this.snackBar.open('Video uploaded !', 'close', { duration: 5000 });
+    this.movie.promotional.videos = videos;
+    await this.movieService.update(this.movie.id, this.movie);
+
+    this.mediaService.uploadMedias(mediasToUpload);
+    this.snackBar.open('Videos updated !', 'close', { duration: 5000 });
   }
 
 }

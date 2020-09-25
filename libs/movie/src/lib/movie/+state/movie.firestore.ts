@@ -62,9 +62,8 @@ interface MovieRaw<D> {
   // TODO #2586 discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO #2586 we will need more visibility on the upload part to take the final decision
   // TODO #2586 we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
+  hostedVideo?: string; // migration => promotionnal.screening.jwPlayerId
 
-  screening?: { video: string, jwPlayerId: string};
   internalRef?: string,
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
@@ -112,24 +111,40 @@ export interface PublicMovie {
   title: Title;
 }
 
+export interface HostedVideos {
+  screener?: HostedVideo; // Main screener
+  otherVideos?: HostedVideo[]; // Other videos
+}
+
+export interface HostedVideo {
+  ref: string,
+  jwPlayerId: string,
+  title?: string,
+  description?: string,
+  type?: 'trailer' | 'teaser' | 'reel' | 'clip' // @TODO 2586 create type ?
+}
+
 ////////////////////
 // MOVIE SECTIONS //
 ////////////////////
 
 export interface MoviePromotionalElements {
-  clip_link: string,
+  clip_link: string,  // @TODO 2586 remove or move ?
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
-  promo_reel_link: string,
+  promo_reel_link: string, // @TODO 2586 remove or move ?
   salesPitch: MovieSalesPitch,
   scenario: string,
-  screener_link: string,
+  screener_link: string, // @TODO 2586 remove or move ?
   still_photo: Record<string, string>,
-  teaser_link: string,
-  trailer_link: string,
-  other_links: OtherLink[];
+  teaser_link: string, // @TODO 2586 remove or move ?
+  trailer_link: string, // @TODO 2586 remove or move ?
+  other_links: OtherLink[]; // @TODO 2586 remove or move ?
+
+  videos?: HostedVideos;
+
 }
 
 ////////////////////

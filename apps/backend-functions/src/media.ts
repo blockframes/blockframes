@@ -20,10 +20,12 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
   const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
 
   if (isInTmpDir && data.name) {
-    let savedRef: string | Array<{ ref: string }> = get(docData, fieldToUpdate);
+    let savedRef: any = get(docData, fieldToUpdate);
 
     if (Array.isArray(savedRef)) {
-      savedRef = savedRef.map(e => e.ref).find(ref => ref === filePath) || '';
+      savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
+    } else if (!!savedRef.ref) {
+      savedRef = savedRef.ref;
     }
 
     const bucket = admin.storage().bucket(getStorageBucketName());
@@ -205,8 +207,17 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.screening?.video && (before.screening?.video !== after.screening?.video || after.screening?.video === '')) {
-      mediaToDelete.push(before.screening.video);
+    if (!!before.promotional.videos?.screener?.ref &&
+      (before.promotional.videos.screener?.ref !== after.promotional.videos?.screener?.ref || after.promotional.videos?.screener?.ref === '')) {
+      mediaToDelete.push(before.promotional.videos.screener.ref);
+    }
+
+    if (before.promotional.videos?.otherVideos?.length) {
+      before.promotional.videos.otherVideos.forEach(vb => {
+        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.ref === vb.ref)) {
+          mediaToDelete.push(vb.ref);
+        }
+      });
     }
 
     Object.keys(before.promotional.still_photo)
@@ -241,8 +252,12 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    if (!!before.screening?.video) {
-      mediaToDelete.push(before.screening.video);
+    if (!!before.promotional.videos?.screener?.ref) {
+      mediaToDelete.push(before.promotional.videos.screener.ref);
+    }
+
+    if (before.promotional.videos?.otherVideos?.length) {
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
     }
 
     Object.keys(before.promotional.still_photo)
