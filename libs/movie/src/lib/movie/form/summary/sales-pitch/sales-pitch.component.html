@@ -24,23 +24,19 @@
   </h6>
   <ul>
     <li>
-      <strong>Target Audiance </strong>
-        <ng-container *ngFor="let target of movie.goals.controls; let last = last">
-          <missing-control [control]="target.get('target')" [link]="link" fragment="audience-goals"></missing-control>
-          <span>{{ last ? '' : ', ' }}</span>
-        </ng-container>
-      </li>
-      <li>
-        <strong>Social Responsability Goals </strong>
-        <ng-container *ngFor="let goal of movie.goals.controls; let last = last">
-          <missing-control [control]="goal.get('goal')" [link]="link" fragment="audience-goals">
-            <ng-template #content>
-              {{ goal.get('goal').value | toLabel: 'socialGoals' | titlecase }}
-            </ng-template>
-          </missing-control>
-          <span>{{ last ? '' : ', ' }}</span>
-
-        </ng-container>
-      </li>
+      <missing-control [control]="movie.goals" [link]="link" fragment="audience-goals">
+        <ng-template let-audienceGoals>
+          <strong>Target Audiance </strong>
+          <ng-container *ngFor="let goal of audienceGoals; let last = last">
+            <span>{{ goal.target | titlecase }}{{ last ? '' : ', ' }}</span>
+          </ng-container>
+          <br/>
+          <strong>Social Responsability Goals </strong>
+          <ng-container *ngFor="let goal of audienceGoals; let last = last">
+            <span>{{ goal.goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+          </ng-container>
+        </ng-template>
+      </missing-control>
+    </li>
   </ul>
 </article>

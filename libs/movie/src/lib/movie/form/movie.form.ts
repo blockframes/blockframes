@@ -531,7 +531,7 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
 //          TOTAL BUDGET
 // ------------------------------
 
-function createTotalBudgetFormControl(totalBudget?: Partial<MovieTotalBudget>) {
+function createTotalBudgetFormControl(totalBudget: Partial<MovieTotalBudget> = {}) {
   return {
     castCost: new FormControl(totalBudget.castCost),
     currency: new FormStaticValue(totalBudget.currency, 'MOVIE_CURRENCIES'),

@@ -1,10 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: '[movie][link] movie-summary-shooting-information',
   templateUrl: './shooting-information.component.html',
-  styleUrls: ['./shooting-information.component.scss']
+  styleUrls: ['./shooting-information.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SummaryShootingInformationComponent {
 
@@ -24,12 +25,10 @@ export class SummaryShootingInformationComponent {
   }
 
   isThereShootingPlanned() {
-    const shootingFrom = this.shootingPlanned.get('from');
-    const shootingTo = this.shootingPlanned.get('to');
-
-    const noFrom = !!shootingFrom.get('period').value || !!shootingFrom.get('month').value || !!shootingFrom.get('year').value;
-    const noTo = !!shootingTo.get('period').value || !!shootingTo.get('month').value || !!shootingTo.get('year').value;
-
-    return noFrom || noTo;
+    const exists = (key) => {
+      const { period, month, year } = this.shootingPlanned.get(key).value;
+      return period || month || year;
+    }
+    return exists('from') || exists('to');
   }
 }

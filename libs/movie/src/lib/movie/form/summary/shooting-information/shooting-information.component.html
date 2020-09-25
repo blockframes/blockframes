@@ -14,16 +14,16 @@
     <li *ngIf="movie.shooting.get('dates').get('completed').value">
       <strong>Shooting Completed </strong>
       <missing-control [control]="movie.shooting.get('dates').get('completed')" [link]="link" fragment="shooting-dates">
-        <ng-template #content>
-          {{ movie.shooting.get('dates').get('completed').value | date: 'shortDate' }}
+        <ng-template let-completed>
+          {{ completed | date: 'shortDate' }}
         </ng-template>
       </missing-control>
     </li>
     <li *ngIf="movie.shooting.get('dates').get('progress').value">
       <strong>Shooting In Progress </strong>
       <missing-control [control]="movie.shooting.get('dates').get('progress')" [link]="link" fragment="shooting-dates">
-        <ng-template #content>
-          {{ movie.shooting.get('dates').get('progress').value | date: 'shortDate' }}
+        <ng-template let-progress>
+          {{ progress | date: 'shortDate' }}
         </ng-template>
       </missing-control>
     </li>
@@ -31,34 +31,34 @@
       <strong>Shooting Planned </strong>
       <span>From
         <missing-control [control]="shootingPlanned.get('from').get('period')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('from').get('period').value | toLabel: 'shootingPeriod' }} </span>
+          <ng-template let-planned>
+            <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('from').get('month')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('from').get('month').value | titlecase }} </span>
+          <ng-template let-planned>
+            <span>{{ planned | titlecase }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('from').get('year')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('from').get('year').value }}</span>
+          <ng-template let-planned>
+            <span>{{ planned }}</span>
           </ng-template>
         </missing-control>
         to
         <missing-control [control]="shootingPlanned.get('to').get('period')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('to').get('period').value | toLabel: 'shootingPeriod' }} </span>
+          <ng-template let-planned>
+            <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('to').get('month')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('to').get('month').value | titlecase }} </span>
+          <ng-template let-planned>
+            <span>{{ planned | titlecase }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('to').get('year')" [link]="link" fragment="shooting-dates">
-          <ng-template #content>
-            <span>{{ shootingPlanned.get('to').get('year').value }}</span>
+          <ng-template let-planned>
+            <span>{{ planned }}</span>
           </ng-template>
         </missing-control>
       </span>
@@ -72,32 +72,30 @@
       </ng-container>
 
       <ng-template #showShootingLocations>
-        <ng-container *ngFor="let location of movie.shooting.get('locations').controls; let isLast = last">
-          <missing-control [control]="location.get('city')" [link]="link" fragment="shooting-locations">
-            <ng-template #content>
-              <span>{{ location.get('city').value }}, </span>
-            </ng-template>
-          </missing-control>
-          <missing-control [control]="location.get('country')" [link]="link" fragment="shooting-locations">
-            <ng-template #content>
-              <span>{{ location.get('country').value | translateSlug: 'TERRITORIES' }}</span>
-            </ng-template>
-          </missing-control>
-          <span>{{ isLast ? '': ' - ' }}</span>
-        </ng-container>
+        <missing-control [control]="movie.shooting.get('locations')" [link]="link" fragment="shooting-locations">
+          <ng-template let-locations>
+            <ng-container *ngFor="let location of locations; let isLast = last">
+              <span>
+                {{ location.city }},
+                {{ location.country | translateSlug: 'TERRITORIES' }}
+              </span>
+              <span>{{ isLast ? '': ' - ' }}</span>
+            </ng-container>
+          </ng-template>
+        </missing-control>
       </ng-template>
     </li>
     <li>
       <strong>Expected Premiere </strong>
       <missing-control [control]="movie.expectedPremiere.get('event')" [link]="link" fragment="expected-premiere">
-        <ng-template #content>
-          {{ movie.expectedPremiere.get('event').value }}
+        <ng-template let-event>
+          {{ event }}
         </ng-template>
       </missing-control>
       <span> - </span>
       <missing-control [control]="movie.expectedPremiere.get('date')" [link]="link" fragment="expected-premiere">
-        <ng-template #content>
-          {{ movie.expectedPremiere.get('date').value | date: 'MMMM y' }}
+        <ng-template let-date>
+          {{ date | date: 'MMMM y' }}
         </ng-template>
       </missing-control>
     </li>
