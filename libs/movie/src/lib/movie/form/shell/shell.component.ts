@@ -52,7 +52,8 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
       label: 'Additional Information'
     }, {
       path: 'shooting-information',
-      label: 'Shooting Information'
+      label: 'Shooting Information',
+      shouldDisplay: isStatus(statusCtrl, ['released'])
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'
@@ -68,7 +69,8 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
     routes: [
       {
         path: 'sales-pitch',
-        label: 'Sales Pitch'
+        label: 'Sales Pitch',
+        shouldDisplay: isStatus(statusCtrl, ['released'])
       }, {
         path: 'media-files',
         label: 'Files'
