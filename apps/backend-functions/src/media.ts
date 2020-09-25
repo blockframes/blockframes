@@ -20,10 +20,10 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
   const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
 
   if (isInTmpDir && data.name) {
-    let savedRef: string | Array<{ ref: string }> = get(docData, fieldToUpdate);
+    let savedRef: any = get(docData, fieldToUpdate);
 
     if (Array.isArray(savedRef)) {
-      savedRef = savedRef.map(e => e.ref ?? e).find(ref => ref === filePath) || '';
+      savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
     }
 
     const bucket = admin.storage().bucket(getStorageBucketName());
@@ -205,14 +205,6 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    before.promotional.still_photo.filter(photo => !!photo)
-      .forEach((photo, index) => {
-        const stillAfter = after.promotional.still_photo[index];
-        if ((photo !== stillAfter || stillAfter === '')) {
-          mediasToDelete.push(photo);
-        }
-      });
-
   } else { // Deleting
 
     if (!!before.banner) {
@@ -236,7 +228,7 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
     }
 
     before.promotional.still_photo.filter(photo => !!photo)
-      .forEach(photo => mediasToDelete.push(photo));
+      .forEach(photo => mediaToDelete.push(photo));
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));
