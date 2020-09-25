@@ -18,11 +18,14 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
   @ViewChild('localVideo') containerLocalVideo;
 
-  private $localCamIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  localCamIsDeactived$: Observable<boolean> = this.$localCamIsDeactivedDataSource.asObservable();
+  private $localCamIsOnDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  localCamIsOn$: Observable<boolean> = this.$localCamIsOnDataSource.asObservable();
 
-  private $localMicIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  localMicIsDeactived$: Observable<boolean> = this.$localMicIsDeactivedDataSource.asObservable();
+  private $localMicIsOnDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
+  localMicIsOn$: Observable<boolean> = this.$localMicIsOnDataSource.asObservable();
+
+  localCamIsOn = false;
+  localMicIsOn = false;
 
   constructor() {
     super();
@@ -46,47 +49,32 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
     localParticipant.on(meetingEventEnum.TrackSubscribed, (track) => {
       console.log('============================== trackSubscribed in local component============================')
-      if(track.kind === 'video'){
-        this.$localCamIsDeactivedDataSource.next(false)
-      } else {
-        this.$localMicIsDeactivedDataSource.next(false)
-      }
+      this.setUpCamAndMic([track], true);
+
     })
 
     localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       console.log('============================== trackUnsubscribed in local component============================')
-      if(track.kind === 'video'){
-        this.$localCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$localMicIsDeactivedDataSource.next(true)
-      }
+      this.setUpCamAndMic([track], false);
+
     })
 
     localParticipant.on('trackDisabled', (track) => {
       console.log('============================== trackDisabled in local component============================')
-      if(track.kind === 'video'){
-        this.$localCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$localMicIsDeactivedDataSource.next(true)
-      }
+      this.setUpCamAndMic([track], false);
+
     })
 
     localParticipant.on('trackEnabled', (track) => {
       console.log('============================== trackEnabled in local component============================')
-      if(track.kind === 'video'){
-        this.$localCamIsDeactivedDataSource.next(false)
-      } else {
-        this.$localMicIsDeactivedDataSource.next(false)
-      }
+      this.setUpCamAndMic([track], true);
+
     })
 
     localParticipant.on('trackStopped', (track) => {
       console.log('============================== trackStopped in local component============================')
-      if(track.kind === 'video'){
-        this.$localCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$localMicIsDeactivedDataSource.next(true)
-      }
+      this.setUpCamAndMic([track], false);
+
     })
   }
 
@@ -95,27 +83,24 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    * @param localPreviewTracks
    */
   makeLocalTrack(localPreviewTracks: Array<any>){
-    let camOK = false;
-    let micOK = false;
-    localPreviewTracks.forEach(track => {
-      if(track.kind === 'video') {
-        camOK = true;
-        this.$localCamIsDeactivedDataSource.next(false);
-      } else {
-        micOK = true;
-        this.$localMicIsDeactivedDataSource.next(false);
-      }
-    })
-
-    if(!camOK) {
-      this.$localCamIsDeactivedDataSource.next(true);
-    }
-
-    if(!camOK) {
-      this.$localMicIsDeactivedDataSource.next(true);
-    }
-
+    this.setUpCamAndMic(localPreviewTracks, true);
     this.attachTracks(localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
+  }
+
+  setUpCamAndMic(tracks, boolToChange){
+    if(tracks.length < 1){
+      this.$localCamIsOnDataSource.next(false);
+      this.$localMicIsOnDataSource.next(false);
+    } else {
+      tracks.forEach((track) => {
+        if(track.kind === 'video'){
+          console.log('track.kind : ', track.kind)
+          this.$localCamIsOnDataSource.next(boolToChange);
+        } else {
+          this.$localMicIsOnDataSource.next(boolToChange);
+        }
+      })
+    }
   }
 
 }

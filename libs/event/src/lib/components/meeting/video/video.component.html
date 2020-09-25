@@ -1,7 +1,9 @@
 <div class="continer-remote-participant">
-  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
+  <mat-grid-list [cols]="numOfCols()">
+    <mat-grid-tile *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
       <event-remote-participant [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
-  </ng-container>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>
 
 <ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">

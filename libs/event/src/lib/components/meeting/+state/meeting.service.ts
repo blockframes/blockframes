@@ -13,6 +13,7 @@ export enum meetingEventEnum {
   Disconnected= 'disconnected',
   ConnectedToRoomTwilio= 'connectedToRoomTwilio',
   LocalPreviewDone = 'localPreviewDone',
+  TrackDisabled = 'trackDisabled',
 }
 
 export interface EventRoom {
@@ -68,8 +69,6 @@ export class MeetingService {
     localTracksPromise.then(
       (tracks) => {
         this.previewTracks = tracks;
-        this.camDeactivate = false;
-        this.micDeactivate = false;
         this.eventRoom.next({
           meetingEvent: meetingEventEnum.LocalPreviewDone,
           data: tracks

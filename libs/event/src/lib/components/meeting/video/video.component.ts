@@ -1,5 +1,8 @@
+//Angular
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AngularFireFunctions} from "@angular/fire/functions";
+
+//Blockframes
 import {Event, EventService} from "@blockframes/event/+state";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 import {
@@ -7,6 +10,7 @@ import {
   meetingEventEnum,
   MeetingService
 } from "@blockframes/event/components/meeting/+state/meeting.service";
+
 import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
@@ -17,28 +21,29 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 export class VideoComponent implements OnInit, OnDestroy {
 
+  //Input event meeting
   @Input() event: Event;
 
   accessToken: string = null;
 
+  //Array of participant connected to the room
   private $participantConnectedDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   arrayOfParticipantConnected$: Observable<any> = this.$participantConnectedDataSource.asObservable();
 
+  //Participant local in the room
   private $localParticipantConnectedDataSource: BehaviorSubject<any> = new BehaviorSubject(null);
   localParticipantConnected$: Observable<any> = this.$localParticipantConnectedDataSource.asObservable();
 
+
   private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
-
-  arrayOfParticipantConnected = []
-
-  localParticipant = null;
 
   constructor(private functions: AngularFireFunctions,
               private eventService: EventService,
               private meetingService: MeetingService) {
 
 
+    //construct listener to the meetingEvent
     this.meetingService.getEventRoom().subscribe((value: EventRoom) => {
       switch (value.meetingEvent){
         case meetingEventEnum.ParticipantConnected:
@@ -46,12 +51,6 @@ export class VideoComponent implements OnInit, OnDestroy {
           break;
         case meetingEventEnum.ParticipantDisconnected:
           this.participantDisconnected(value.data);
-          break;
-        case meetingEventEnum.TrackSubscribed:
-          this.trackSubscribed(value.data);
-          break;
-        case meetingEventEnum.TrackUnsubscribed:
-          this.trackUnsubscribed(value.data);
           break;
         case meetingEventEnum.Disconnected:
           this.disconnected();
@@ -78,17 +77,9 @@ export class VideoComponent implements OnInit, OnDestroy {
     })
   }
 
-  getCamLocalDeactived(){
-    return this.meetingService.camDeactivate
-  }
-
-  getMicLocalDeactived(){
-    return this.meetingService.micDeactivate
-  }
-
   /**
-   *
-   * @param localTrack
+   * Function call when event localPreview is done and past to the observable localPreviewTracks$
+   * @param localTrack : Array of tracks - all tracks of the local (audio or/and video)
    */
   localPreviewDone(localTrack){
     console.log('---------------------------localPreviewDone---------------------------');
@@ -96,8 +87,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param room
+   * Function call when event connectedToRoomTwilio
+   * @param room: Room (object twilio)
    */
   connectedToRoomTwilio(room){
     console.log('---------------------------connectedToRoomTwilio---------------------------');
@@ -105,8 +96,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param participant
+   * Function call when participant conncted to the room
+   * @param participant: Participant (object twilio)
    */
   participantConnected(participant){
     console.log('---------------------------participantConnected---------------------------')
@@ -114,8 +105,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param participant
+   * Function call when participant disconnected to the room
+   * @param participant: Participant (object twilio)
    */
   participantDisconnected(participant){
     console.log('---------------------------participantDisconnected---------------------------')
@@ -123,29 +114,7 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param track
-   * @param trackPublication
-   * @param participant
-   */
-  trackSubscribed({track, trackPublication, participant}){
-    console.log('---------------------------trackSubscribed in video component---------------------------')
-    console.log({track, trackPublication, participant})
-  }
-
-  /**
-   *
-   * @param track
-   * @param trackPublication
-   * @param participant
-   */
-  trackUnsubscribed({track, trackPublication, participant}){
-    console.log('---------------------------trackUnsubscribed in video component---------------------------')
-    console.log({track, trackPublication, participant})
-  }
-
-  /**
-   *
+   * Function call when local participant leave the room
    */
   disconnected(){
     console.log('---------------------------disconnected---------------------------')
@@ -153,8 +122,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param participant
+   * function to remove a specific participant to the array of participant connected (participantConnected$)
+   * @param participant: Participant (object twilio) : Participant to remove
    * @private
    */
   private removeParticipantFromParticipantConnectedArr(participant: any) {
@@ -168,8 +137,8 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   *
-   * @param participant
+   * function to add a specific participant to the array of participant connected (participantConnected$)
+   * @param participant: Participant (object twilio) : Participant to add
    * @private
    */
   private addParticipantFromParticipantConnectedArr(participant: any) {
@@ -200,6 +169,11 @@ export class VideoComponent implements OnInit, OnDestroy {
    */
   identify(index, item) {
     return item.identity;
+  }
+
+  numOfCols(){
+    const lengththisParticipantConnected = this.$participantConnectedDataSource.getValue().length;
+    return (lengththisParticipantConnected < 2) ? 1 : (lengththisParticipantConnected > 4) ? 3 : 2
   }
 
   ngOnDestroy() {
