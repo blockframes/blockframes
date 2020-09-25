@@ -4,95 +4,86 @@
   <article>
     <h6>
       Release
-      <a mat-icon-button [routerLink]="link" fragment="release"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+      <a mat-icon-button [routerLink]="link" fragment="release">
+        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      </a>
     </h6>
-    <ul>
-      <ng-container *ngIf="!movie.originalRelease.controls.length else displayRelease">
-        <a [routerLink]="link" fragment="release"class="missing-control">
-          Missing
-        </a>
-      </ng-container>
-      <ng-template #displayRelease>
-        <li *ngFor="let release of movie.originalRelease.controls; let isLast = last">
-          <ng-container *ngIf="!release.value else displayRelease">
-            <a [routerLink]="link" fragment="release" class="missing-control">
-              Missing
-            </a>
-          </ng-container>
-          <ng-template #displayRelease>
-            <div>
-              <strong><missing-control [control]="release.get('country')" [link]="link" fragment="release" scope="TERRITORIES"></missing-control></strong>
-              <span>&nbsp;</span>
-              <missing-control [control]="release.get('media')" [link]="link" fragment="release" scope="MEDIAS"></missing-control>
-              <span>&nbsp; on&nbsp;</span>
-              <missing-control [control]="release.get('date')" [link]="link" fragment="release">
-                <ng-template>
-                  {{ release.get('date').value | date: 'dd/MM/yyyy' }}
-                </ng-template>
-              </missing-control>
-            </div>
+    <ng-container *ngIf="movie.originalRelease.controls.length; else emptyReleases">
+      <ng-container *ngFor="let release of movie.originalRelease.controls">
+        <missing-control [control]="release.get('country')" [link]="link" scope="TERRITORIES"></missing-control> -
+        <missing-control [control]="release.get('media')" [link]="link" scope="MEDIAS"></missing-control> -
+        <missing-control [control]="release.get('date')" [link]="link">
+          <ng-template let-date>
+            {{ date | date: 'dd/MM/yyyy' }}
           </ng-template>
-        </li>
-      </ng-template>
-    </ul>
+        </missing-control>
+      </ng-container>
+    </ng-container>
+    <ng-template #emptyReleases>
+      <missing-control [control]="movie.originalRelease" [link]="link"></missing-control>
+    </ng-template>
   </article>
 
   <!-- BOX OFFICE -->
   <article>
     <h6>
       Box Office
-      <a mat-icon-button [routerLink]="link" fragment="box-office"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+      <a mat-icon-button [routerLink]="link" fragment="box-office">
+        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      </a>
     </h6>
-    <ul>
-      <ng-container *ngIf="!movie.boxOffice.controls.length else displayBoxOffice">
-        <a [routerLink]="link" fragment="box-office"class="missing-control">
-          Missing
-        </a>
-      </ng-container>
-      <ng-template #displayBoxOffice>
-        <li fxLayout="row" fxFlexAlign="start center" *ngFor="let boxOffice of movie.boxOffice.controls">
-          <ng-container *ngIf="boxOffice.get('territory').value">
-            <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}&nbsp;</strong>
-          </ng-container>
-          <ng-container *ngIf="boxOffice.get('unit').value!== 'admissions'">
-            <mat-icon [svgIcon]="boxOffice.get('unit').value | toLabel: 'unitBox'" id="currency-icon"></mat-icon>
-          </ng-container>
-          <missing-control [control]="boxOffice.get('value')">
+    <ng-container *ngIf="movie.boxOffice.controls.length; else emptyBoxes">
+      <ng-container *ngFor="let office of movie.boxOffice.controls">
+        <div fxLayout fxLayoutGap="8px">
+          <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
+          <missing-control [control]="office.get('unit')" [link]="link">
+            <ng-template let-unit>
+              <ng-container *ngIf="unit === 'boxoffice_dollar'">
+                <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
+              </ng-container>
+              <ng-container *ngIf="unit === 'boxoffice_euro'">
+                <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
+              </ng-container>
+            </ng-template>
+          </missing-control>
+          <missing-control [control]="office.get('value')">
             <ng-template let-value>{{ value | number }}</ng-template>
           </missing-control>
           <span>&nbsp;</span>
-          <ng-container *ngIf="boxOffice.get('unit').value === 'admissions'">
-            <span>admissions</span>
+          <ng-container *ngIf="office.get('unit').value === 'admissions'">
+            <span>Admissions</span>
             <span>&nbsp;</span>
           </ng-container>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #emptyBoxes>
+      <missing-control [control]="movie.boxOffice" [link]="link"></missing-control>
+    </ng-template>
 
-        </li>
-      </ng-template>
-    </ul>
   </article>
 
   <!-- RATING -->
   <article>
     <h6>
       Rating
-      <a mat-icon-button [routerLink]="link" fragment="rating"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+      <a mat-icon-button [routerLink]="link" fragment="rating">
+        <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+      </a>
     </h6>
-    <ul>
-      <ng-container *ngIf="!movie.boxOffice.controls.length else displayRating">
-        <a [routerLink]="link" fragment="rating"class="missing-control">
-          Missing
-        </a>
+
+    <ng-container *ngIf="movie.rating.controls.length; else emptyRatings">
+      <ng-container *ngFor="let rating of movie.rating.controls">
+        <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
+        <span>&nbsp;</span>
+        <missing-control [control]="rating.get('country')" [link]="link" fragment="rating" scope="TERRITORIES">
+        </missing-control>
       </ng-container>
-      <ng-template #displayRating>
-        <li *ngFor="let rating of movie.rating.controls; let isLast = last">
-          <strong>
-            <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
-          </strong>
-          <span>&nbsp;</span>
-          <missing-control [control]="rating.get('country')" [link]="link" fragment="rating" scope="TERRITORIES"></missing-control>
-        </li>
-      </ng-template>
-    </ul>
+    </ng-container>
+    <ng-template #emptyRatings>
+      <missing-control [control]="movie.rating" [link]="link"></missing-control>
+    </ng-template>
+
   </article>
 </ng-container>
 
@@ -100,18 +91,15 @@
 <article>
   <h6>
     Qualification{ movie.certifications.value.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="qualifications"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="qualifications">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
-  <ul>
-    <ng-container *ngIf="!movie.certifications.value.length else displayQualifications">
-      <a [routerLink]="link" fragment="qualifications"class="missing-control">
-        Missing
-      </a>
-    </ng-container>
-    <ng-template #displayQualifications>
-      <li *ngFor="let value of movie.certifications.value; let isLast = last">
-        {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
-      </li>
+  <missing-control [control]="movie.certifications" [link]="link">
+    <ng-template let-certs>
+      <ng-container *ngFor="let cert of certs; let last = last">
+        {{ cert | translateSlug: 'CERTIFICATIONS' }}{{ last ? '' : ', '}}
+      </ng-container>
     </ng-template>
-  </ul>
+  </missing-control>
 </article>
