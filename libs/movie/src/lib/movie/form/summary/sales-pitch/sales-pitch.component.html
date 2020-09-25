@@ -1,0 +1,46 @@
+<!-- SALES PITCH -->
+<article>
+  <h6>
+    Sales Pitch
+    <a mat-icon-button [routerLink]="link" fragment="sales-pitch"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <strong>Video Link </strong>
+      <missing-control [control]="salesPitch.get('link')" [link]="link" fragment="sales-pitch"></missing-control>
+    </li>
+    <li>
+      <strong>Description </strong>
+      <missing-control [control]="salesPitch.get('description')" [link]="link" fragment="sales-pitch"></missing-control>
+    </li>
+  </ul>
+</article>
+
+<!-- AUDIENCE AND GOALS -->
+<article>
+  <h6>
+    Audience & Goals
+    <a mat-icon-button [routerLink]="link" fragment="audience-goals"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  </h6>
+  <ul>
+    <li>
+      <strong>Target Audiance </strong>
+        <ng-container *ngFor="let target of movie.goals.controls; let last = last">
+          <missing-control [control]="target.get('target')" [link]="link" fragment="audience-goals"></missing-control>
+          <span>{{ last ? '' : ', ' }}</span>
+        </ng-container>
+      </li>
+      <li>
+        <strong>Social Responsability Goals </strong>
+        <ng-container *ngFor="let goal of movie.goals.controls; let last = last">
+          <missing-control [control]="goal.get('goal')" [link]="link" fragment="audience-goals">
+            <ng-template #content>
+              {{ goal.get('goal').value | toLabel: 'socialGoals' | titlecase }}
+            </ng-template>
+          </missing-control>
+          <span>{{ last ? '' : ', ' }}</span>
+
+        </ng-container>
+      </li>
+  </ul>
+</article>

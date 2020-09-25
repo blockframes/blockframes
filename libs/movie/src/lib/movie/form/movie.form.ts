@@ -532,14 +532,13 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
 // ------------------------------
 
 function createTotalBudgetFormControl(totalBudget?: Partial<MovieTotalBudget>) {
-  const { castCost, currency, postProdCost, producerFees, shootCost, others } = createTotalBudget(totalBudget);
   return {
-    castCost: new FormControl(castCost),
-    currency: new FormStaticValue(currency, 'MOVIE_CURRENCIES'),
-    postProdCost: new FormControl(postProdCost),
-    producerFees: new FormControl(producerFees),
-    shootCost: new FormControl(shootCost),
-    others: new FormControl(others),
+    castCost: new FormControl(totalBudget.castCost),
+    currency: new FormStaticValue(totalBudget.currency, 'MOVIE_CURRENCIES'),
+    postProdCost: new FormControl(totalBudget.postProdCost),
+    producerFees: new FormControl(totalBudget.producerFees),
+    shootCost: new FormControl(totalBudget.shootCost),
+    others: new FormControl(totalBudget.others),
   }
 }
 
@@ -549,10 +548,6 @@ export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
   constructor(totalBudget?: Partial<MovieTotalBudget>) {
     super(createTotalBudgetFormControl(totalBudget));
   }
-}
-
-export function createTotalBudget(totalBudget: MovieTotalBudget): MovieTotalBudget {
-  return { ...totalBudget };
 }
 
 // ------------------------------
