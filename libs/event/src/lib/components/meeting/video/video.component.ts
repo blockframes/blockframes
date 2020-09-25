@@ -1,6 +1,5 @@
 //Angular
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AngularFireFunctions} from "@angular/fire/functions";
 
 //Blockframes
 import {Event, EventService} from "@blockframes/event/+state";
@@ -38,8 +37,7 @@ export class VideoComponent implements OnInit, OnDestroy {
   private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
 
-  constructor(private functions: AngularFireFunctions,
-              private eventService: EventService,
+  constructor(private eventService: EventService,
               private meetingService: MeetingService) {
 
 
