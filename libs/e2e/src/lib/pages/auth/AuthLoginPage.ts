@@ -5,7 +5,7 @@ import { TO } from '../../utils/env';
 export default class AuthLoginPage {
 
   constructor() {
-    cy.get('auth-login-view');
+    cy.get('auth-login-view', {timeout: TO.PAGE_LOAD});
   }
 
   public switchMode() {
