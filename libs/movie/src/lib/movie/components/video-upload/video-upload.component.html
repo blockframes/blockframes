@@ -12,11 +12,11 @@
         <file-upload
           [form]="form.screener.get('ref')"
           [storagePath]="getPath('screener')"
-          accept="['.avi', '.mkv', '.mp4']"
-          [filePrivacy]= "filePrivacy"
-          [types]="['video/x-msvideo']">
+          [accept]="allowedFilesExtensions"
+          [filePrivacy]="filePrivacy"
+          [types]="allowedFilesTypes">
             <h3 type>Upload Files</h3>
-            <p class="mat-caption" format>Accepted Formats: .avi, .mkv, .mp4</p>
+            <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
         </file-upload>
 
       </div>
@@ -30,11 +30,11 @@
           <file-upload
             [form]="otherVideo.get('ref')"
             [storagePath]="getPath('otherVideos')"
-            accept="['.avi', '.mkv', '.mp4']"
-            [filePrivacy]= "filePrivacy"
-            [types]="['video/x-msvideo']">
+            [accept]="allowedFilesExtensions"
+            [filePrivacy]="filePrivacy"
+            [types]="allowedFilesTypes">
               <h3 type>Upload Files</h3>
-              <p class="mat-caption" format>Accepted Formats: .avi, .mkv, .mp4</p>
+              <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
           </file-upload>
 
         </div>
@@ -43,6 +43,11 @@
       <button  mat-flat-button color="primary" (click)="uploadVideo()">
         <span>Update</span>
         <mat-icon svgIcon="send"></mat-icon>
+      </button>
+
+      <button mat-flat-button color="accent" (click)="addOtherVideo()">
+        <span>Add</span>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
     </form>
 

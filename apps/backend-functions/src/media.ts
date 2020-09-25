@@ -220,21 +220,25 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       });
     }
 
-    before.promotional.still_photo.forEach((photo, index) => {
-      const stillBefore = photo
-      const stillAfter = after.promotional.still_photo[index];
-      if ((stillBefore !== stillAfter || stillAfter === '')) {
-        mediaToDelete.push(stillBefore);
-      }
-    });
+    if (before.promotional.still_photo?.length) {
+      before.promotional.still_photo.forEach((photo, index) => {
+        const stillBefore = photo
+        const stillAfter = after.promotional.still_photo[index];
+        if ((stillBefore !== stillAfter || stillAfter === '')) {
+          mediaToDelete.push(stillBefore);
+        }
+      });
+    }
 
-    before.promotional.notes.forEach((note, index) => {
-      const noteBefore = note;
-      const noteAfter = after.promotional.notes[index];
-      if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-        mediaToDelete.push(noteBefore.ref);
-      }
-    })
+    if (before.promotional.notes?.length) {
+      before.promotional.notes.forEach((note, index) => {
+        const noteBefore = note;
+        const noteAfter = after.promotional.notes[index];
+        if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
+          mediaToDelete.push(noteBefore.ref);
+        }
+      });
+    }
 
   } else { // Deleting
 
@@ -266,9 +270,13 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
     }
 
-    before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+    if (before.promotional.still_photo?.length) {
+      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+    }
 
-    before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+    if (before.promotional.notes?.length) {
+      before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+    }
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

@@ -18,6 +18,8 @@ export class MovieVideoUploadComponent implements OnInit {
   public form: MovieHostedVideosForm;
   public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
+  public allowedFilesTypes = ['video/x-msvideo', 'video/x-matroska', 'video/mp4'];
+  public allowedFilesExtensions =  ['.avi', '.mkv', '.mp4'];
 
   constructor(
     private snackBar: MatSnackBar,
@@ -40,6 +42,12 @@ export class MovieVideoUploadComponent implements OnInit {
     return `movies/${this.movie.id}/promotional.videos/${pathPart}`;
   }
 
+  public addOtherVideo() {
+    this.form.otherVideos.add({ ref: '' });
+    this.cdr.markForCheck();
+  }
+
+
   public async uploadVideo() { // @TODO #2586 should be done by shell component
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
@@ -57,7 +65,7 @@ export class MovieVideoUploadComponent implements OnInit {
     await this.movieService.update(this.movie.id, this.movie);
 
     this.mediaService.uploadMedias(mediasToUpload);
-    this.snackBar.open('Videos updated !', 'close', { duration: 5000 });
+    this.snackBar.open('Videos upload started !', 'close', { duration: 5000 });
   }
 
 }
