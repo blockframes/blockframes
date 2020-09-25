@@ -111,20 +111,14 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
 export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
-
-  const newStills: Record<string, string> = {};
-  for (const key in params.still_photo) {
-    newStills[key] = params.still_photo[key];
-  }
-
-  const elements: MoviePromotionalElements = {
+  return {
     ...params,
     clip_link: params.clip_link ?? '',
     financialDetails: params.financialDetails ?? '',
     moodboard: params.moodboard ?? '',
     notes: params.notes ?? [],
     salesPitch: createSalesPitch(params.salesPitch),
-    still_photo: newStills,
+    still_photo: params.still_photo ?? [],
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
@@ -133,8 +127,6 @@ export function createMoviePromotional(
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
   };
-
-  return elements;
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
@@ -254,13 +246,6 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     laboratory: [],
     financier: [],
     ...stakeholders
-  }
-}
-
-export function createTotalBudget(totalBudget: Partial<MovieTotalBudget> = {}): MovieTotalBudget {
-  return {
-    currency: 'EUR',
-    ...totalBudget
   }
 }
 
