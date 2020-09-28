@@ -5,12 +5,17 @@ export function showHelp() {
   console.log('TODO: write a documentation');
 }
 
-export async function isMaintenanceRequired() {
+export async function isMigrationRequired() {
   const { db } = loadAdminServices();
-  const currentVersion = Object.keys(MIGRATIONS).length
-  const localVersion = await loadDBVersion(db);
-  console.log('Detecting if maintenance is required:')
-  console.log('Latest DB version:', currentVersion)
-  console.log('Current DB version:', localVersion)
-  process.exit(localVersion < currentVersion ? 0 : 1)
+  const latestVersion = Object.keys(MIGRATIONS).length
+  const currentVersion = await loadDBVersion(db);
+  console.log('Detecting if Firestore migration is required:')
+  console.log('Latest DB version:', latestVersion)
+  console.log('Current DB version:', currentVersion)
+  return currentVersion < latestVersion;
+}
+
+export function disableMaintenanceMode() {
+  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
+  console.warn('Maintenance mode is disabled!')
 }
