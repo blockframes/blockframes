@@ -39,21 +39,12 @@
             <mat-label>Target Audience (optional)</mat-label>
             <input matInput type="text" placeholder="Target Audience" [formControl]="targetForm"/>
           </mat-form-field>
-
-            <!-- <static-select
-            scope="socialGoals"
-            type="constant"
-            [control]="goalsForm.get('goal')"
-            label="Social Responsability Goals (optional)"
-            [withoutValues]="[]"
-            fxFlex>
-            </static-select> -->
         </ng-template>
       </bf-form-list>
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Social Responsability Goals (optional)</mat-label>
-        <mat-select [formControl]="goalForm" multiple>
+        <mat-select [formControl]="goals.get('goal')" multiple>
           <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
         </mat-select>
       </mat-form-field>

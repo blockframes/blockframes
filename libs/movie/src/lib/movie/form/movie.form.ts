@@ -1090,7 +1090,7 @@ function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
   const { target, goal } = createAudienceGoals(entity);
   return {
     target: FormList.factory(target, el => new FormControl(el)),
-    goal: FormList.factory(goal, el => new FormControl(el)),
+    goal: new FormControl(goal)
   }
 }
 
