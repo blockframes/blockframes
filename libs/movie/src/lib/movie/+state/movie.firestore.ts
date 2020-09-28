@@ -58,7 +58,7 @@ interface MovieRaw<D> {
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
   customGenres?: string[],
-  goals?: MovieGoalsAudience[],
+  goals?: MovieGoalsAudience,
   // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
   // TODO we will need more visibility on the upload part to take the final decision
   // TODO we also need to consider how to differentiate full movies from trailer
@@ -283,8 +283,8 @@ export interface MovieSalesPitch {
 }
 
 export interface MovieGoalsAudience {
-  target: string,
-  goal: string
+  target: string[],
+  goal: string[]
 }
 
 export interface MovieTotalBudget {

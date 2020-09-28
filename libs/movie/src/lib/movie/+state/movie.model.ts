@@ -74,7 +74,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     customGenres: [],
     format: null,
     formatQuality: null,
-    goals: [],
     hostedVideo: '',
     internalRef: '',
     keyAssets: '',
@@ -96,6 +95,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     banner: params.banner ?? '',
     estimatedBudget: createRange<number>(params.estimatedBudget),
     expectedPremiere: createExpectedPremiere(params.expectedPremiere),
+    goals: createAudienceGoals(params.goals),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
@@ -312,8 +312,8 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
 
 export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): MovieGoalsAudience {
   return {
-    target: '',
-    goal: '',
+    target: [],
+    goal: [],
     ...params,
   }
 }

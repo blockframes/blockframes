@@ -116,7 +116,7 @@ function createMovieControls(movie: Partial<Movie>) {
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
-    goals: FormList.factory(entity.goals, el => new AudienceAndGoalsForm(el)),
+    goals: new AudienceAndGoalsForm(entity.goals),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
@@ -1089,8 +1089,8 @@ export class AudienceAndGoalsForm extends FormEntity<MovieAudianceAndGoalsContro
 function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
   const { target, goal } = createAudienceGoals(entity);
   return {
-    target: new FormControl(target),
-    goal: new FormControl(goal)
+    target: FormList.factory(target, el => new FormControl(el)),
+    goal: FormList.factory(goal, el => new FormControl(el)),
   }
 }
 
