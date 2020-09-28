@@ -29,7 +29,7 @@ function hasValue(value: any): boolean {
 /** A list of FormField */
 export class FormList<T, Control extends AbstractControl = any> extends FormArray {
   private _value: T[];
-  createControl: (value: Partial<T>) => Control = createControlForm;
+  createControl: (value?: Partial<T>) => Control = createControlForm;
   controls: Control[];
   valueChanges: Observable<T[]>;
 

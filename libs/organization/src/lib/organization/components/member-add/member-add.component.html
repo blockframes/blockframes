@@ -2,8 +2,11 @@
   <mat-card-title>Invite Members</mat-card-title>
   <p class="mat-caption">Invite your co-workers to join your company so that they can use the application.</p>
 
-  <ng-container *ngFor="let control of form.controls; let i = index; let last = last; let first = first">
-    <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center" fxLayoutGap="16px">
+  <bf-form-list [form]="form" buttonText="Add email">
+    <ng-template let-email itemRef>
+      {{ email }}
+    </ng-template>
+    <ng-template let-control formView>
       <mat-form-field appearance="outline" class="email">
         <mat-label>Email Address</mat-label>
         <input matInput type="email" placeholder="name@example.com" aria-label="Email" [formControl]="control" />
@@ -12,19 +15,9 @@
           Please enter a <strong>valid</strong> email address.
         </mat-error>
       </mat-form-field>
-      <!-- Add / Delete -->
-      <button
-        *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)"
-        matTooltip="Remove a Member" aria-label="Remove a Member" class="action">
-        Remove email
-      </button>
-      <button
-        *ngIf="last" mat-flat-button color="primary" (click)="form.add()"
-        matTooltip="Add a Member" aria-label="Add a Member" class="action">
-        Add email
-      </button>
-    </mat-card-content>
-  </ng-container>
+    </ng-template>
+  </bf-form-list>
+
   <div fxLayout="row" fxLayoutAlign="center">
     <ng-container *ngIf="!(isSending$ | async); else sendingInvitations">
       <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
