@@ -76,7 +76,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() filters: string[];
 
-  /**  
+  /**
    * Name of attribute which values shouldn't be used before.
    * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
   @Input() @boolean unique;
