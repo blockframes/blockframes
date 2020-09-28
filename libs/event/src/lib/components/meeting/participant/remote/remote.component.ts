@@ -63,13 +63,11 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
       console.log(`============================== trackSubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      this.changeRemoteCamMicIsOnDataSource(track.kind, true)
       this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       console.log(`============================== trackUnsubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      this.changeRemoteCamMicIsOnDataSource(track.kind, false)
       this.detachTracks([track])
     })
 
@@ -88,6 +86,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('trackDisabled', (track) => {
       console.log(`============================== trackDisabled in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
+      this.changeRemoteCamMicIsOnDataSource(track.kind, false)
     })
 
     participant.on('trackEnabled', (track) => {
@@ -100,6 +99,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('trackStarted', (track) => {
       console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
+      this.changeRemoteCamMicIsOnDataSource(track.kind, true)
     })
 
     participant.on('trackSubscriptionFailed', () => {
@@ -120,13 +120,14 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     })
   }
 
+
   /**
    *
    * @param participant
    */
   mocDivVideo(participant){
 
-    const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-participant');
+    const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-video-participant');
 
     //Cretion div name/lastName participant
     const containerNameParticipant = this.renderer.createElement('div');

@@ -1,7 +1,10 @@
 <ng-container>
   <div *ngIf="remoteCamMicIsOn$ | async as remoteCamMicIsOn" class="remote-participant container-round-div-initial-name-participant" id="remote-participant" >
-    <div *ngIf="!!!remoteCamMicIsOn" class="round-div-initial-name-participant">
+    <div *ngIf="!!!remoteCamMicIsOn.cam === true" class="round-div-initial-name-participant">
       {{getInitialFromParticipant(participant)}}
+    </div>
+    <div [hidden]="!!!remoteCamMicIsOn.cam" id="remote-video-participant" >
+
     </div>
   </div>
 </ng-container>
