@@ -1,10 +1,11 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
-import { createAddMemberFormList } from '../../forms/member.form';
 import { BehaviorSubject } from 'rxjs';
 import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/organization/+state';
+import { FormControl, Validators } from '@angular/forms';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: '[org] member-add',
@@ -15,7 +16,7 @@ import { Organization } from '@blockframes/organization/+state';
 })
 export class MemberAddComponent {
   @Input() org: Organization;
-  public form = createAddMemberFormList();
+  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
   private _isSending = new BehaviorSubject<boolean>(false);
   public isSending$ = this._isSending.asObservable();
 
