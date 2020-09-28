@@ -8,20 +8,19 @@
         <mat-icon svgIcon="pencil" color="primary"></mat-icon>
       </a>
     </h6>
-    <ng-container *ngIf="movie.originalRelease.controls.length; else emptyReleases">
-      <ng-container *ngFor="let release of movie.originalRelease.controls">
-        <missing-control [control]="release.get('country')" [link]="link" scope="TERRITORIES"></missing-control> -
-        <missing-control [control]="release.get('media')" [link]="link" scope="MEDIAS"></missing-control> -
-        <missing-control [control]="release.get('date')" [link]="link">
-          <ng-template let-date>
-            {{ date | date: 'dd/MM/yyyy' }}
-          </ng-template>
-        </missing-control>
-      </ng-container>
-    </ng-container>
-    <ng-template #emptyReleases>
-      <missing-control [control]="movie.originalRelease" [link]="link"></missing-control>
-    </ng-template>
+    <missing-control [control]="movie.originalRelease" [link]="link">
+      <ng-template let-releases>
+        <ng-container *ngFor="let release of releases.controls">
+          <missing-control [control]="release.get('country')" [link]="link" scope="TERRITORIES"></missing-control> -
+          <missing-control [control]="release.get('media')" [link]="link" scope="MEDIAS"></missing-control> -
+          <missing-control [control]="release.get('date')" [link]="link">
+            <ng-template let-date>
+              {{ date.value | date: 'dd/MM/yyyy' }}
+            </ng-template>
+          </missing-control>
+        </ng-container>
+        </ng-template>
+    </missing-control>
   </article>
 
   <!-- BOX OFFICE -->
@@ -34,7 +33,7 @@
     </h6>
     <ng-container *ngIf="movie.boxOffice.controls.length; else emptyBoxes">
       <ng-container *ngFor="let office of movie.boxOffice.controls">
-        <div fxLayout fxLayoutGap="8px">
+        <!--  <div fxLayout fxLayoutGap="8px">
           <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
           <missing-control [control]="office.get('unit')" [link]="link">
             <ng-template let-unit>
@@ -54,7 +53,7 @@
             <span>Admissions</span>
             <span>&nbsp;</span>
           </ng-container>
-        </div>
+        </div> -->
       </ng-container>
     </ng-container>
     <ng-template #emptyBoxes>
@@ -71,7 +70,7 @@
         <mat-icon svgIcon="pencil" color="primary"></mat-icon>
       </a>
     </h6>
-
+    <!-- 
     <ng-container *ngIf="movie.rating.controls.length; else emptyRatings">
       <ng-container *ngFor="let rating of movie.rating.controls">
         <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
@@ -82,7 +81,7 @@
     </ng-container>
     <ng-template #emptyRatings>
       <missing-control [control]="movie.rating" [link]="link"></missing-control>
-    </ng-template>
+    </ng-template> -->
 
   </article>
 </ng-container>
@@ -95,11 +94,11 @@
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
   </h6>
-  <missing-control [control]="movie.certifications" [link]="link">
+  <!--   <missing-control [control]="movie.certifications" [link]="link">
     <ng-template let-certs>
       <ng-container *ngFor="let cert of certs; let last = last">
         {{ cert | translateSlug: 'CERTIFICATIONS' }}{{ last ? '' : ', '}}
       </ng-container>
     </ng-template>
-  </missing-control>
+  </missing-control> -->
 </article>

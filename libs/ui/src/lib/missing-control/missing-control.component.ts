@@ -41,7 +41,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
         return values.length ? values.some(c => this.isMissing(c)) : true;
       }
     }
-    return !control.value;
+    return !control?.value;
   }
 
   ngOnDestroy() {

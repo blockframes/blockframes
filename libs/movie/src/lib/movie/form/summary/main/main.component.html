@@ -2,7 +2,9 @@
 <article>
   <h6>
     Reference
-    <a mat-icon-button [routerLink]="link" fragment="reference"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="reference">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
@@ -32,34 +34,28 @@
 <article>
   <h6>
     Images
-    <a mat-icon-button [routerLink]="link" fragment="images" reference="images"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="images" reference="images">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
-      <a [routerLink]="link" fragment="images">
-        <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Film Page Banner Image </strong>
-        <ng-container *ngIf="(movie.banner.value.url | isEmptyImgRef) else banner">
-          <a [routerLink]="link" reference="images" class="missing-control">
-            Missing
-          </a>
-        </ng-container>
-        <ng-template #banner>
-          {{ movie.banner.value.oldRef | fileName }}
+      <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Film Page Banner Image </strong>
+      <missing-control [control]="movie.banner" [link]="link" fragments="images">
+        <ng-template let-test>
+          {{ '' }}
+          <!-- THINK OF A BETTER SOLUTION -->
         </ng-template>
-      </a>
+      </missing-control>
     </li>
     <li>
-      <a [routerLink]="link" fragment="images">
-        <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Poster Image </strong>
-        <ng-container *ngIf="(movie.poster.value.oldRef | isEmptyImgRef) else poster">
-          <a [routerLink]="link" reference="images" class="missing-control">
-            Missing
-          </a>
-        </ng-container>
-        <ng-template #poster>
-          {{ movie.poster.value.oldRef | fileName }}
+      <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Poster Image </strong>
+      <missing-control [control]="movie.poster" [link]="link">
+        <ng-template let-test>
+          {{ '' }}
+          <!-- THINK OF A BETTER SOLUTION -->
         </ng-template>
-      </a>
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -68,7 +64,9 @@
 <article>
   <h6>
     General Information
-    <a mat-icon-button [routerLink]="link" fragment="general-information"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="general-information">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
@@ -77,54 +75,29 @@
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
-      <ng-container *ngIf="!movie.originCountries.controls.length else showListOfCountries">
-        <a [routerLink]="link" fragment="general-information" class="missing-control">
-          <span>Missing</span>
-        </a>
-      </ng-container>
-      <ng-template #showListOfCountries>
-        <ng-container *ngFor="let country of movie.originCountries.controls; let isLast = last">
-          <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
-          <span>{{ isLast ? '': ', ' }}</span>
-        </ng-container>
-      </ng-template>
+      <missing-control [control]="movie.originCountries" [link]="link" fragment="general-information">
+        <ng-template let-countries>
+          <ng-container *ngFor="let country of countries.controls; let isLast = last">
+            <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
+          </ng-container>
+        </ng-template>
+      </missing-control>
     </li>
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
-      <ng-container *ngIf="!movie.originalLanguages.controls.length else showListOfLanguages">
-        <a [routerLink]="link" fragment="general-information" class="missing-control">
-          <span>Missing</span>
-        </a>
-      </ng-container>
-      <ng-template #showListOfLanguages>
-        <ng-container *ngFor="let language of movie.originalLanguages.controls; let isLast = last">
-          <missing-control [control]="language" scope="LANGUAGES" [isLast]="isLast"></missing-control>
-          <span>{{ isLast ? '' : ', '}}</span>
-        </ng-container>
-      </ng-template>
+      <missing-control [control]="movie.originalLanguages" [link]="link" fragment="general-information"
+        scope="LANGUAGES">
+      </missing-control>
     </li>
     <li>
       <strong>Genre{ movie.genres.controls.length, plural, =0 {} =1 {} other {s}} </strong>
-      <ng-container *ngIf="!movie.genres.controls.length else showListOfGenres">
-        <a [routerLink]="link" fragment="general-information" class="missing-control">
-          <span>Missing</span>
-        </a>
-      </ng-container>
-      <ng-template #showListOfGenres>
-        <ng-container *ngFor="let genre of genres; let isLast = last">
-          <ng-container *ngIf="!isLast else last">
-            <missing-control [control]="genre" scope="GENRES" [isLast]="isLast"></missing-control>
-          </ng-container>
-          <ng-template #last>
-            {{ genre.value }}
-          </ng-template>
-        </ng-container>
-      </ng-template>
+      <missing-control [control]="movie.genres" [link]="link" fragment="general-information" scope="GENRES">
+      </missing-control>
     </li>
     <li>
       <strong>Running Time </strong>
       <missing-control [control]="movie.runningTime">
-        <ng-template #content>{{ movie.runningTime.get('time').value | duration }}</ng-template>
+        <ng-template let-runningTime>{{ runningTime.get('time').value | duration }}</ng-template>
       </missing-control>
     </li>
   </ul>
@@ -134,38 +107,26 @@
 <article>
   <h6>
     Director{ movie.directors.controls.length, plural, =0 {} =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="directors"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="directors">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
-    <ng-container *ngIf="!movie.directors.controls.length else showDirectors">
-      <a [routerLink]="link" fragment="directors" class="missing-control">
-        <span>Missing</span>
-      </a>
-    </ng-container>
-    <ng-template #showDirectors>
-      <li *ngFor="let director of movie.directors.controls">
-        <ng-container *ngIf="!director.valid else display">
-          <a [routerLink]="link" fragment="directors" class="mandatory-control">
-            Mandatory
-          </a>
-        </ng-container>
-        <ng-template #display>
+    <missing-control [control]="movie.directors" [link]="link" fragment="directors">
+      <ng-template let-directors>
+        <li *ngFor="let director of directors.controls">
           <strong>
-            <missing-control [control]="director.get('firstName')" isLast=false></missing-control>
+            <missing-control [control]="director.get('firstName')" [isLast]="false"></missing-control>
             <span>&nbsp;</span>
             <missing-control [control]="director.get('lastName')"></missing-control>
             (<missing-control [control]="director.get('category')" scope="DIRECTOR_CATEGORY"></missing-control>)
           </strong>
-        </ng-template>
-        <ng-container *ngFor="let film of director.filmography.controls; let isLast = last">
-          <span *ngIf="film.get('title').value">
-            {{ film.get('title').value }} ({{ film.get('year').value }})&nbsp;
-          </span>
-        </ng-container>
-        <ng-container *ngIf="director.get('description')">
-          <p>{{ director.get('description').value }}</p>
-        </ng-container>
-      </li>
-    </ng-template>
+          <ng-container *ngFor="let film of director.filmography.controls">
+            <span>{{ film | filmography }}</span>
+          </ng-container>
+          <missing-control [control]="director.get('description')"></missing-control>
+        </li>
+      </ng-template>
+    </missing-control>
   </ul>
 </article>
