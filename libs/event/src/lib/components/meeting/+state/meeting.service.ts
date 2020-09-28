@@ -204,7 +204,6 @@ export class MeetingService {
         meetingEvent: meetingEventEnum.ParticipantConnected,
         data: participant
       });
-
     });
 
     // When a Participant adds a Track, attach it to the DOM.

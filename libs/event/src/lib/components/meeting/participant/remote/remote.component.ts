@@ -16,10 +16,9 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-remote-participant',
   templateUrl: './remote.component.html',
-  styleUrls: ['./remote.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./remote.component.scss']
 })
-export class RemoteComponent extends AbstractParticipant implements OnInit {
+export class RemoteComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
   // FIXME
   // Make Participant interfce !!
@@ -27,11 +26,8 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
   @Output() eventParticipantDeconected = new EventEmitter();
 
-  private $remoteCamIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  remoteCamIsDeactived$: Observable<any> = this.$remoteCamIsDeactivedDataSource.asObservable();
-
-  private $remoteMicIsDeactivedDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  remoteMicIsDeactived$: Observable<any> = this.$remoteMicIsDeactivedDataSource.asObservable();
+  private $remoteCamMicIsOnDataSource: BehaviorSubject<any> = new BehaviorSubject({cam: false, mic: false});
+  remoteCamMicIsOn$: Observable<any> = this.$remoteCamMicIsOnDataSource.asObservable();
 
   containerOfVideo;
 
@@ -41,9 +37,22 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
   ngOnInit(): void {
     console.log('ParticipantComponent ngOnInit participant : ', this.participant)
+  }
+
+  ngAfterViewInit() {
     this.mocDivVideo(this.participant);
     this.setUpRemoteParticipantEvent(this.participant);
   }
+
+  changeRemoteCamMicIsOnDataSource(kind, boolToChange){
+    console.log('changeRemoteCamMicIsOnDataSource : ', {kind, boolToChange})
+    if(kind === 'video'){
+      this.$remoteCamMicIsOnDataSource.next( {...this.$remoteCamMicIsOnDataSource.getValue(), cam: boolToChange});
+    } else {
+      this.$remoteCamMicIsOnDataSource.next( {...this.$remoteCamMicIsOnDataSource.getValue(), audio: boolToChange});
+    }
+  }
+
 
   /**
    *
@@ -54,21 +63,13 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
       console.log(`============================== trackSubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(false)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(false)
-      }
+      this.changeRemoteCamMicIsOnDataSource(track.kind, true)
       this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       console.log(`============================== trackUnsubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(true)
-      }
+      this.changeRemoteCamMicIsOnDataSource(track.kind, false)
       this.detachTracks([track])
     })
 
@@ -87,20 +88,10 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
     participant.on('trackDisabled', (track) => {
       console.log(`============================== trackDisabled in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(true)
-      }
     })
 
     participant.on('trackEnabled', (track) => {
       console.log(`============================== trackEnabled in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(false)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(false)
-      }
     })
 
     participant.on('trackPublished', () => {
@@ -109,11 +100,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
     participant.on('trackStarted', (track) => {
       console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(false)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(false)
-      }
     })
 
     participant.on('trackSubscriptionFailed', () => {
@@ -122,11 +108,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
     participant.on('trackSwitchedOff', (track) => {
       console.log(`============================== trackSwitchedOff in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      if(track.kind === 'video'){
-        this.$remoteCamIsDeactivedDataSource.next(true)
-      } else {
-        this.$remoteMicIsDeactivedDataSource.next(true)
-      }
+      this.changeRemoteCamMicIsOnDataSource(track.kind, false)
     })
 
     participant.on('trackSwitchedOn', () => {
@@ -146,12 +128,27 @@ export class RemoteComponent extends AbstractParticipant implements OnInit {
 
     const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-participant');
 
+    //Cretion div name/lastName participant
+    const containerNameParticipant = this.renderer.createElement('div');
+    const text = this.renderer.createText(`${participant.firstName} / ${participant.lastName}`);
+    this.renderer.appendChild(containerNameParticipant, text);
+    this.renderer.setProperty(containerNameParticipant, 'id', `nameParticipant`);
+
     this.containerOfVideo = this.renderer.createElement('div');
 
     this.renderer.setProperty(this.containerOfVideo, 'id', `container-video-${participant.identity}`);
-    this.renderer.setProperty(this.containerOfVideo, 'class', `remoteVideo`);
+    this.renderer.addClass(this.containerOfVideo, `remoteVideo`);
     this.renderer.appendChild(containerRemotParticipant, this.containerOfVideo);
-    this.attachParticipantTracks(participant, containerRemotParticipant, 'remoteParticipant');
+    this.renderer.appendChild(this.containerOfVideo, containerNameParticipant);
+    this.attachParticipantTracks(participant, this.containerOfVideo, 'remoteParticipant');
 
   }
+
+  /**
+   *
+   *
+   <div *ngIf="!!remoteCamMicIsOn" class="name-participant">
+   {{participant.firstName}} / {{participant.lastName}}
+   </div>
+   */
 }

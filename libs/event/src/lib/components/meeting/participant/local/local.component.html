@@ -1,14 +1,12 @@
 <ng-container>
-  <div class="local-video-container container-round-div-initial-name-participant">
+  <div *ngIf="localCamMicIsOn$ | async as localCamMicIsOn" class="local-video-container container-round-div-initial-name-participant">
+      <div *ngIf="!!!localCamMicIsOn.cam" class="round-div-initial-name-participant">
+        <span>
+          {{getInitialFromParticipant(localParticipant)}}
+        </span>
+      </div>
+      <div [hidden]="!!!localCamMicIsOn.cam" id="localVideo" #localVideo>
 
-    <div *ngIf="!(localCamIsOn$ | async)" class="round-div-initial-name-participant">
-      <span>
-        {{getInitialFromParticipant(localParticipant)}}
-      </span>
-    </div>
-
-    <div id="localVideo" #localVideo>
-
-    </div>
+      </div>
   </div>
 </ng-container>

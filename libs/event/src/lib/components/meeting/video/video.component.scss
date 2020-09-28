@@ -1,8 +1,11 @@
 :host {
   display: flex;
+  height: 100%;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  //background-color: var(--background);
+  background-color: black;
 }
 
 ::ng-deep .container-round-div-initial-name-participant {
@@ -29,9 +32,7 @@
 
 .continer-remote-participant {
   width: 100%;
-  height: 100%;
   .event-remote-participant {
     width: 100%;
-    height: 100%;
   }
 }

@@ -70,7 +70,7 @@ export class VideoComponent implements OnInit, OnDestroy {
       if(value.error !== ''){
       } else {
         this.accessToken = value.result;
-        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio: true}, this.event.id);
+        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio: false, video: false}, this.event.id);
       }
     })
   }

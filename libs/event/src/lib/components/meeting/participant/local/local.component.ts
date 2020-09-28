@@ -6,24 +6,18 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-local-participant',
   templateUrl: './local.component.html',
-  styleUrls: ['./local.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./local.component.scss']
 })
 export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
-  // FIXME
-  // make interface for participant
+  // FIXME make interface for participant
   @Input() localParticipant: any;
   @Input() localPreviewTracks: any;
 
   @ViewChild('localVideo') containerLocalVideo;
 
-  private $localCamIsOnDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  localCamIsOn$: Observable<boolean> = this.$localCamIsOnDataSource.asObservable();
-
-  private $localMicIsOnDataSource: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  localMicIsOn$: Observable<boolean> = this.$localMicIsOnDataSource.asObservable();
-
+  private $localCamMicIsOnDataSource: BehaviorSubject<any> = new BehaviorSubject({cam: false, mic: false});
+  localCamMicIsOn$: Observable<any> = this.$localCamMicIsOnDataSource.asObservable();
   localCamIsOn = false;
   localMicIsOn = false;
 
@@ -88,16 +82,16 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   }
 
   setUpCamAndMic(tracks, boolToChange){
+    console.log({tracks, boolToChange})
     if(tracks.length < 1){
-      this.$localCamIsOnDataSource.next(false);
-      this.$localMicIsOnDataSource.next(false);
+      this.$localCamMicIsOnDataSource.next({cam:false, mic:false});
     } else {
       tracks.forEach((track) => {
         if(track.kind === 'video'){
           console.log('track.kind : ', track.kind)
-          this.$localCamIsOnDataSource.next(boolToChange);
+          this.$localCamMicIsOnDataSource.next( {...this.$localCamMicIsOnDataSource.getValue(), cam: boolToChange});
         } else {
-          this.$localMicIsOnDataSource.next(boolToChange);
+          this.$localCamMicIsOnDataSource.next( {...this.$localCamMicIsOnDataSource.getValue(), audio: boolToChange});
         }
       })
     }
