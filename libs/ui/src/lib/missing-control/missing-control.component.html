@@ -15,7 +15,7 @@
 </ng-template>
 
 <!-- Display projected content if provided -->
-<ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control }">
+<ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
 </ng-template>
 
 <!-- Display value if no projected content -->

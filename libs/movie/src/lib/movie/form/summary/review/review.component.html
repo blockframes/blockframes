@@ -8,7 +8,7 @@
   </h6>
   <ul>
     <missing-control [control]="movie.prizes" [link]="link" fragment="festival">
-      <ng-template let-prizes>
+      <ng-template let-prizes="control">
         <li *ngFor="let festivalPrize of movie.prizes.controls">
           <strong>
             <missing-control [control]="festivalPrize.get('name')" [link]="link" fragment="festival">
@@ -44,7 +44,7 @@
   </h6>
   <ul>
     <missing-control [control]="movie.customPrizes" [link]="link" fragment="custom-festival">
-      <ng-template let-customPrizes>
+      <ng-template let-customPrizes="control">
         <li *ngFor="let customPrize of customPrizes.controls">
           <strong>
             <missing-control [control]="customPrize.get('name')" [link]="link" fragment="custom-festival">
@@ -80,8 +80,7 @@
   </h6>
   <ul>
     <missing-control [control]="movie.review" [link]="link" fragment="reviews">
-
-      <ng-template let-reviews>
+      <ng-template let-reviews="control">
         <ng-container *ngFor="let review of reviews.controls">
 
           <li>

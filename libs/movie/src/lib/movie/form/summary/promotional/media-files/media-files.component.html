@@ -7,25 +7,25 @@
 <ul>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
-    <missing-control [control]="movie.promotional.get('presentation_deck')" [link]="link" fragment="files">
+    <missing-control [control]="movie.promotional.get('presentation_deck').get('ref')" [link]="link" fragment="files">
       <ng-template let-deck>
-        {{ deck.value.ref | fileName | maxLength: 30  }}
+        {{ deck | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Scenario </strong>
-    <missing-control [control]="movie.promotional.get('scenario')" fragment="files" [link]="link">
+    <missing-control [control]="movie.promotional.get('scenario').get('ref')" fragment="files" [link]="link">
       <ng-template let-scenario>
-        {{ scenario.value.ref | fileName | maxLength: 30  }}
+        {{ scenario | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Moodboard / Artistic Deck </strong>
-    <missing-control [control]="movie.promotional.get('moodboard')" fragment="files" [link]="link">
+    <missing-control [control]="movie.promotional.get('moodboard').get('ref')" fragment="files" [link]="link">
       <ng-template let-moodboard>
-        {{ moodboard.value.ref | fileName | maxLength: 30  }}
+        {{ moodboard | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>

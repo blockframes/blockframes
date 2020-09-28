@@ -55,8 +55,8 @@
     <li>
       <missing-control [control]="movie.get('keywords')" [link]="link" fragment="keywords">
         <ng-template let-keywords>
-          <ng-container *ngFor="let keyword of keywords.controls">
-            <span>{{ keyword.value }}</span>
+          <ng-container *ngFor="let keyword of keywords">
+            <span>{{ keyword }}</span>
           </ng-container>
         </ng-template>
       </missing-control>

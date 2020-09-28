@@ -28,8 +28,8 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.audience" [link]="link" fragment="audience-goals">
-        <ng-template let-audienceGoals>
+      <missing-control [control]="movie.goals" [link]="link" fragment="audience-goals">
+        <ng-template let-audienceGoals="control">
           <strong>Target Audiance </strong>
           <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
             <span>{{ goal.value.target | titlecase }}{{ last ? '' : ', ' }}</span>

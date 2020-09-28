@@ -22,7 +22,7 @@
   </h6>
   <ul>
     <missing-control [control]="movie.languages" [link]="link" fragment="available-versions">
-      <ng-template let-languages>
+      <ng-template let-languages="control">
         <li *ngFor="let language of languages.controls | keyvalue; let isLast = last">
           <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
           <span>{{ language.value.value | versionPipe }}</span>

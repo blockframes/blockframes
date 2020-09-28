@@ -9,16 +9,16 @@
       </a>
     </h6>
     <missing-control [control]="movie.originalRelease" [link]="link">
-      <ng-template let-releases>
-        <ng-container *ngFor="let release of releases.controls">
+      <ng-template let-release="control">
+        <ng-container *ngFor="let release of release.controls">
           <missing-control [control]="release.get('country')" [link]="link" scope="TERRITORIES"></missing-control> -
           <missing-control [control]="release.get('media')" [link]="link" scope="MEDIAS"></missing-control> -
           <missing-control [control]="release.get('date')" [link]="link">
             <ng-template let-date>
-              {{ date.value | date: 'dd/MM/yyyy' }}
+              {{ date | date: 'dd/MM/yyyy' }}
             </ng-template>
           </missing-control>
-        </ng-container>
+        </ng-container> -
       </ng-template>
     </missing-control>
   </article>
@@ -31,31 +31,32 @@
         <mat-icon svgIcon="pencil" color="primary"></mat-icon>
       </a>
     </h6>
-    <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range"></missing-control>
+    <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range">
+      <ng-template let-budget>{{ budget.label }}</ng-template>
+    </missing-control>
     <missing-control [control]="movie.boxOffice" [link]="link" fragment="box-office">
-      <ng-template let-boxOffice>
+      <ng-template let-boxOffice="control">
         <ng-container *ngFor="let office of boxOffice.controls">
           <div fxLayout fxLayoutGap="8px">
             <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
             <missing-control [control]="office.get('unit')" [link]="link">
               <ng-template let-unit>
-                <ng-container *ngIf="unit.value === 'boxoffice_dollar'">
+                <ng-container *ngIf="unit === 'boxoffice_dollar'">
                   <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
                 </ng-container>
-                <ng-container *ngIf="unit.value === 'boxoffice_euro'">
+                <ng-container *ngIf="unit === 'boxoffice_euro'">
                   <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
                 </ng-container>
-                <ng-container *ngIf="office.get('unit').value === 'admissions'">
+                <ng-container *ngIf="office.get('unit') === 'admissions'">
                   <span>Admissions</span>
                   <span>&nbsp;</span>
                 </ng-container>
               </ng-template>
             </missing-control>
             <missing-control [control]="office.get('value')">
-              <ng-template let-value>{{ value.value | number }}</ng-template>
+              <ng-template let-value>{{ value | number }}</ng-template>
             </missing-control>
             <span>&nbsp;</span>
-
           </div>
         </ng-container>
       </ng-template>
@@ -71,7 +72,7 @@
       </a>
     </h6>
     <missing-control [control]="movie.rating" [link]="link" fragment="rating">
-      <ng-template let-ratings>
+      <ng-template let-ratings="control">
         <ng-container *ngFor="let rating of ratings.controls">
           <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
           <span>&nbsp;</span>
@@ -94,7 +95,7 @@
   </h6>
   <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications">
     <ng-template let-certs>
-      <ng-container *ngFor="let cert of certs.controls">
+      <ng-container *ngFor="let cert of certs">
         {{ cert | translateSlug: 'CERTIFICATIONS' }}
       </ng-container>
     </ng-template>

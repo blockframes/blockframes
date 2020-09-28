@@ -6,7 +6,7 @@
 </h6>
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
   <missing-control [control]="stillPhoto" [link]="link">
-    <ng-template let-images>
+    <ng-template let-images="control">
       <ng-container *ngFor="let image of images.control">
         <div fxLayout>
           <mat-icon svgIcon="eye" color="primary"></mat-icon>

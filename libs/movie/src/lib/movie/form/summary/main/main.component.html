@@ -18,8 +18,8 @@
     <li>
       <strong>Content Type </strong>
       <missing-control [control]="movie.get('contentType')" [link]="link" fragment="reference">
-        <ng-template #content>
-          {{ movie.get('contentType').value | toLabel: 'contentType' | titlecase }}
+        <ng-template let-content>
+          {{ content | toLabel: 'contentType' }}
         </ng-template>
       </missing-control>
     </li>
@@ -41,19 +41,17 @@
   <ul>
     <li>
       <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Film Page Banner Image </strong>
-      <missing-control [control]="movie.banner" [link]="link" fragments="images">
-        <ng-template let-test>
-          {{ '' }}
-          <!-- THINK OF A BETTER SOLUTION -->
+      <missing-control [control]="movie.banner.ref" [link]="link" fragments="images">
+        <ng-template let-banner>
+          {{ banner | fileName | maxLength: 30 }}
         </ng-template>
       </missing-control>
     </li>
     <li>
       <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Poster Image </strong>
-      <missing-control [control]="movie.poster" [link]="link">
-        <ng-template let-test>
-          {{ '' }}
-          <!-- THINK OF A BETTER SOLUTION -->
+      <missing-control [control]="movie.poster.ref" [link]="link">
+        <ng-template let-poster>
+          {{poster | fileName | maxLength: 30 }}
         </ng-template>
       </missing-control>
     </li>
@@ -76,7 +74,7 @@
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
       <missing-control [control]="movie.originCountries" [link]="link" fragment="general-information">
-        <ng-template let-countries>
+        <ng-template let-countries="control">
           <ng-container *ngFor="let country of countries.controls; let isLast = last">
             <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
           </ng-container>
@@ -97,7 +95,7 @@
     <li>
       <strong>Running Time </strong>
       <missing-control [control]="movie.runningTime">
-        <ng-template let-runningTime>{{ runningTime.get('time').value | duration }}</ng-template>
+        <ng-template let-runningTime="control">{{ runningTime.get('time').value | duration }}</ng-template>
       </missing-control>
     </li>
   </ul>
@@ -113,7 +111,7 @@
   </h6>
   <ul>
     <missing-control [control]="movie.directors" [link]="link" fragment="directors">
-      <ng-template let-directors>
+      <ng-template let-directors="control">
         <li *ngFor="let director of directors.controls">
           <strong>
             <missing-control [control]="director.get('firstName')" [isLast]="false"></missing-control>
