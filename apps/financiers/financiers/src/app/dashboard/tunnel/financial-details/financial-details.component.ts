@@ -1,9 +1,6 @@
-import { Component, ChangeDetectionStrategy, Pipe, PipeTransform } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TotalBudgetForm } from '@blockframes/movie/form/movie.form';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 
 
 @Component({
@@ -24,16 +21,5 @@ export class MovieFormFinancialDetailsComponent {
   public getPath() {
     const { movieId } = this.route.snapshot.params;
     return `movies/${movieId}/promotional.financialDetails/`;
-  }
-}
-
-
-@Pipe({ name: 'budget' })
-export class BudgetPipe implements PipeTransform {
-  transform(budget: TotalBudgetForm): Observable<number> {
-    return budget.valueChanges.pipe(
-      startWith(budget.value),
-      map(({ castCost, others, postProdCost, producerFees, shootCost }) => castCost + others + postProdCost + producerFees + shootCost)
-    );
   }
 }

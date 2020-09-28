@@ -28,6 +28,10 @@ export class TitleViewComponent implements OnInit {
     {
       path: 'production',
       label: 'Production Information'
+    },
+    {
+      path: 'financial-details',
+      label: 'Financial Details'
     }
   ];
 
