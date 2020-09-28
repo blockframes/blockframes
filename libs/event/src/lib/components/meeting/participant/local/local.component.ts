@@ -6,7 +6,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 @Component({
   selector: 'event-local-participant',
   templateUrl: './local.component.html',
-  styleUrls: ['./local.component.scss']
+  styleUrls: ['./local.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
@@ -16,21 +17,23 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
   @ViewChild('localVideo') containerLocalVideo;
 
-  private $localCamMicIsOnDataSource: BehaviorSubject<any> = new BehaviorSubject({cam: false, mic: false});
-  localCamMicIsOn$: Observable<any> = this.$localCamMicIsOnDataSource.asObservable();
-  localCamIsOn = false;
-  localMicIsOn = false;
+  videoIsOn: boolean;
+  audioIsOn: boolean;
 
   constructor() {
     super();
+    this.camMicIsOn$.subscribe((value: any) => {
+      this.videoIsOn = value.video;
+      this.audioIsOn = value.audio;
+    })
   }
 
   ngOnInit(): void {
-    this.setUpLocalParticipantEvent(this.localParticipant);
 
   }
 
   ngAfterViewInit() {
+    this.setUpLocalParticipantEvent(this.localParticipant);
     this.makeLocalTrack(this.localPreviewTracks);
   }
 
@@ -82,17 +85,11 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   }
 
   setUpCamAndMic(tracks, boolToChange){
-    console.log({tracks, boolToChange})
     if(tracks.length < 1){
-      this.$localCamMicIsOnDataSource.next({cam:false, mic:false});
+      this.$camMicIsOnDataSource.next({video:false, mic:false});
     } else {
       tracks.forEach((track) => {
-        if(track.kind === 'video'){
-          console.log('track.kind : ', track.kind)
-          this.$localCamMicIsOnDataSource.next( {...this.$localCamMicIsOnDataSource.getValue(), cam: boolToChange});
-        } else {
-          this.$localCamMicIsOnDataSource.next( {...this.$localCamMicIsOnDataSource.getValue(), audio: boolToChange});
-        }
+        this.setUpVideoAndAudio(track.kind, boolToChange)
       })
     }
   }

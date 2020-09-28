@@ -1,4 +1,4 @@
-<div class="continer-remote-participant">
+<div *ngIf="isOwner" class="continer-remote-participant-Owner">
   <mat-grid-list [cols]="numOfCols()">
     <mat-grid-tile *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
       <event-remote-participant [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
@@ -6,6 +6,12 @@
   </mat-grid-list>
 </div>
 
+<div *ngIf="!isOwner" class="continer-remote-participant">
+    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
+      <event-remote-participant [isBuyer]="!isOwner" [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
+    </div>
+</div>
+
 <ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">
-  <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks$ | async"></event-local-participant>
+  <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks$ | async" ></event-local-participant>
 </ng-container>

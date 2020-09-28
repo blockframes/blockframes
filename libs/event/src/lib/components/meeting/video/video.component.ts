@@ -22,6 +22,7 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   //Input event meeting
   @Input() event: Event;
+  @Input() isOwner: Boolean;
 
   accessToken: string = null;
 
@@ -63,14 +64,17 @@ export class VideoComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
 
-    this.meetingService.createLocalPreview();
+    const audio = await this.meetingService.getIfAudioIsAvailable();
+    const video = await this.meetingService.getIfVideoIsAvailable();
+    await this.meetingService.createLocalPreview();
+
     this.eventService.getTwilioAccessToken(this.event.id).then((value: ErrorResultResponse) => {
       if(value.error !== ''){
       } else {
         this.accessToken = value.result;
-        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio: false, video: false}, this.event.id);
+        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio, video}, this.event.id);
       }
     })
   }
@@ -141,7 +145,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    * @private
    */
   private addParticipantFromParticipantConnectedArr(participant: any) {
-    const currentValue = this.$participantConnectedDataSource.value;
+    const currentValue = this.$participantConnectedDataSource.getValue();
     currentValue.forEach((item) => {
       if (item.identity === participant.identity) {
         // Participant already in room
@@ -176,12 +180,18 @@ export class VideoComponent implements OnInit, OnDestroy {
     return (lengththisParticipantConnected < 2) ? 1 : (lengththisParticipantConnected > 4) ? 3 : 2
   }
 
+  getIfLocalIsAlone(){
+    return this.$participantConnectedDataSource.getValue().length < 0;
+  }
+
   /**
    *
    */
   deactiveLocalTracks() {
     const localParticipant = this.meetingService.getLocalParticipant();
-    console.log('localParticipant : ', localParticipant)
+    if(!!!localParticipant){
+      return ;
+    }
     localParticipant.audioTracks.forEach((publication) => {
       publication.track.stop()
       publication.track.disable()
@@ -193,7 +203,6 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('ngOnDestroy ::: ')
     this.disconnected()
   }
 }

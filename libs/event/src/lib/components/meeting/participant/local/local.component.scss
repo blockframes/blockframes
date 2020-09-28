@@ -1,3 +1,14 @@
+.local-video-container-when-solo {
+  width: 80%;
+  height: 80%;
+  margin: 10%;
+  word-break: break-word;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+}
+
 .local-video-container {
   width: 150px;
   height: 150px;

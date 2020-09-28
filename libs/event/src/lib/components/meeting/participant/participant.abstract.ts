@@ -1,8 +1,18 @@
-import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {
+  EventRoom,
+  meetingEventEnum,
+  MeetingService
+} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {BehaviorSubject, Observable} from "rxjs";
 
 export abstract class AbstractParticipant{
 
-  protected constructor() {}
+  protected $camMicIsOnDataSource: BehaviorSubject<any> = new BehaviorSubject({video: false, audio: false});
+  public camMicIsOn$: Observable<any> = this.$camMicIsOnDataSource.asObservable();
+
+  protected constructor() {
+
+  }
 
   /**
    * Attach the Tracks to the DOM.
@@ -14,6 +24,7 @@ export abstract class AbstractParticipant{
     console.log('attachTracks : ', {tracks, container})
     tracks.forEach((track) => {
       if (track) {
+        this.setUpVideoAndAudio(track.kind, true);
         container.appendChild(track.attach()).className = className;
       }
     });
@@ -43,6 +54,7 @@ export abstract class AbstractParticipant{
     console.log('detachTracks : ', {tracks})
     tracks.forEach((track) => {
       if (track) {
+        this.setUpVideoAndAudio(track.kind, false);
         track.detach().forEach((detachedElement) => {
           detachedElement.remove();
         });
@@ -70,5 +82,13 @@ export abstract class AbstractParticipant{
    */
   getInitialFromParticipant(participant){
     return `${participant.firstName.charAt(0).toUpperCase()}${participant.lastName.charAt(0).toUpperCase()}`
+  }
+
+  setUpVideoAndAudio(kind, boolToChange){
+    if(kind === 'video'){
+      this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), video: boolToChange});
+    } else {
+      this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
+    }
   }
 }

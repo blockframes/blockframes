@@ -63,10 +63,32 @@ export class MeetingService {
 
   }
 
+  getIfAudioIsAvailable(){
+    return navigator.mediaDevices.getUserMedia({ audio: true})
+      .then(value => {
+        return true;
+      })
+      .catch(reason => {
+        return false;
+      })
+  }
+
+  getIfVideoIsAvailable(){
+    return navigator.mediaDevices.getUserMedia({ video: true})
+    .then(value => {
+      return true;
+    })
+    .catch(reason => {
+      console.log('reason : ', reason)
+      return false;
+    })
+  }
+
   /**
    * Create LocalParticipant's Tracks and send it Twilio;
    */
-  createLocalPreview() {
+  async createLocalPreview() {
+
     //get local track if here or recreate local track for twilio
     const localTracksPromise = this.previewTracks
       ? Promise.resolve(this.previewTracks)
@@ -81,8 +103,7 @@ export class MeetingService {
         });
       },
       () => {
-        this.camDeactivate = true;
-        this.micDeactivate = true;
+
       }
     );
   }
@@ -90,7 +111,7 @@ export class MeetingService {
 
 
   /**
-   * Get all participant already in the room.
+   * Get track of one participant
    * @param participant - All participants connected in the room
    */
   getTracksOfParticipant(participant) {
@@ -128,6 +149,7 @@ export class MeetingService {
     if (this.previewTracks) {
       console.log('Has Preview')
       connectOptions.tracks = this.previewTracks;
+      connectOptions.enableDominantSpeaker = true;
     }
 
     Video.connect(accessToken, connectOptions).then((r) => this.roomJoined(r), (error) => {
@@ -256,7 +278,7 @@ export class MeetingService {
   }
 
   /**
-   *
+   *v For disconnect from twilio Room
    */
   disconnected(){
     this.activeRoom.disconnect()
