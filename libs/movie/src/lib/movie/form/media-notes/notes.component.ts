@@ -20,6 +20,6 @@ export class MovieFormMediaNotesComponent {
 
   public getPath() {
     const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.media-notes/`;
+    return `movies/${movieId}/promotional.notes/`;
   }
 }

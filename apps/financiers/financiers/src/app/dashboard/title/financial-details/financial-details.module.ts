@@ -5,16 +5,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Components
-import { MovieViewMainComponent } from './main.component';
+import { MovieViewFinancialDetailComponent } from './financial-details.component';
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
+import { SummaryFinancialDetailsModule } from '../../tunnel/summary/financial-details/financial-details.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [MovieViewMainComponent],
+  declarations: [MovieViewFinancialDetailComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -22,8 +23,9 @@ import { MatDividerModule } from '@angular/material/divider';
     MatDividerModule,
     GetPathModule,
     HasStatusModule,
-    RouterModule.forChild([{ path: '', component: MovieViewMainComponent }])
+    SummaryFinancialDetailsModule,
+    RouterModule.forChild([{ path: '', component: MovieViewFinancialDetailComponent }])
   ],
-  exports: [MovieViewMainComponent]
+  exports: [MovieViewFinancialDetailComponent]
 })
-export class MovieViewMainModule { }
+export class MovieViewFinancialDetailModule { }

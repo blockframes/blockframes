@@ -124,7 +124,7 @@ export interface MoviePromotionalElements {
   salesPitch: MovieSalesPitch,
   scenario: string,
   screener_link: string,
-  still_photo: Record<string, string>,
+  still_photo: string[],
   teaser_link: string,
   trailer_link: string,
   other_links: OtherLink[];

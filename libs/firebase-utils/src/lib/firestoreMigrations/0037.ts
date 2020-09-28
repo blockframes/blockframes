@@ -1,7 +1,7 @@
 import { Firestore } from '@blockframes/firebase-utils';
 
 
-// Update the totalBudget field from the old version (Price interface) to the new one (MovieTotalBudget interface)
+// Update the totalBudget field
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
   const batch = db.batch();
@@ -11,16 +11,23 @@ export async function upgrade(db: Firestore) {
 
     delete movie.totalBudget;
 
-    // Initialize the new totalBudget used in the financial details page
+    const transformedStillPhotos = []
+
+    if (!Array.isArray(movie.promotional.still_photo) && typeof movie.promotional.still_photo === 'object') {
+      Object.keys(movie.promotional.still_photo).forEach(key => {
+        transformedStillPhotos.push(movie.promotional.still_photo[key])
+      })
+    }
+
+    movie.promotional.still_photo = transformedStillPhotos
+
+    // Initialize the new totalBudget used in the financial details page and update still photos
     const newData = {
       ...movie,
-      totalBudget: {
-        castCost: null,
-        currency: null,
-        others: null,
-        postProdCost: null,
-        producerFees: null,
-        shootCost: null
+      totalBudget: {},
+      promotional: {
+        ...movie.promotional,
+        still_photo: transformedStillPhotos
       }
     };
 

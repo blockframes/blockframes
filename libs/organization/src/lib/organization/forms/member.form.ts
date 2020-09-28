@@ -13,15 +13,6 @@ function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   });
 }
 
-function createAddMemberFormGroup() {
-  return new FormControl('', [Validators.required, Validators.email]);
-
-}
-
 export function createMemberFormList() {
   return FormList.factory([], createMemberFormGroup);
-}
-
-export function createAddMemberFormList() {
-  return FormList.factory([], createAddMemberFormGroup);
 }
