@@ -159,6 +159,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    */
   eventParticipantDeconected(participant){
     this.removeParticipantFromParticipantConnectedArr(participant);
+    this.disconnected();
   }
 
   /**

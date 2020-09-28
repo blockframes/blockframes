@@ -144,12 +144,4 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     this.attachParticipantTracks(participant, this.containerOfVideo, 'remoteParticipant');
 
   }
-
-  /**
-   *
-   *
-   <div *ngIf="!!remoteCamMicIsOn" class="name-participant">
-   {{participant.firstName}} / {{participant.lastName}}
-   </div>
-   */
 }
