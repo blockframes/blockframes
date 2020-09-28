@@ -2,20 +2,22 @@
 <article>
   <h6>
     Shooting Dates
-    <a mat-icon-button [routerLink]="link" fragment="shooting-dates"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="shooting-dates">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
-    <li *ngIf="!shootingDates.get('completed').value && !shootingDates.get('progress').value && !isThereShootingPlanned()">
+    <li
+      *ngIf="!shootingDates.get('completed').value && !shootingDates.get('progress').value && !isThereShootingPlanned()">
       <strong>Shooting Dates </strong>
-      <a [routerLink]="link" fragment="shooting-dates" class="missing-control">
-        <span>Missing</span>
-      </a>
+      <missing-control [control]="shootingDates.get('completed')" [link]="link" fragment="shooting-dates">
+      </missing-control>
     </li>
     <li *ngIf="movie.shooting.get('dates').get('completed').value">
       <strong>Shooting Completed </strong>
       <missing-control [control]="movie.shooting.get('dates').get('completed')" [link]="link" fragment="shooting-dates">
         <ng-template let-completed>
-          {{ completed | date: 'shortDate' }}
+          {{ completed.value | date: 'shortDate' }}
         </ng-template>
       </missing-control>
     </li>
@@ -23,7 +25,7 @@
       <strong>Shooting In Progress </strong>
       <missing-control [control]="movie.shooting.get('dates').get('progress')" [link]="link" fragment="shooting-dates">
         <ng-template let-progress>
-          {{ progress | date: 'shortDate' }}
+          {{ progress.value | date: 'shortDate' }}
         </ng-template>
       </missing-control>
     </li>
@@ -32,70 +34,66 @@
       <span>From
         <missing-control [control]="shootingPlanned.get('from').get('period')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
+            <span>{{ planned.value | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('from').get('month')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned | titlecase }} </span>
+            <span>{{ planned.value | titlecase }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('from').get('year')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned }}</span>
+            <span>{{ planned.value }}</span>
           </ng-template>
         </missing-control>
         to
         <missing-control [control]="shootingPlanned.get('to').get('period')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned | toLabel: 'shootingPeriod' }} </span>
+            <span>{{ planned.value | toLabel: 'shootingPeriod' }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('to').get('month')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned | titlecase }} </span>
+            <span>{{ planned.value | titlecase }} </span>
           </ng-template>
         </missing-control>
         <missing-control [control]="shootingPlanned.get('to').get('year')" [link]="link" fragment="shooting-dates">
           <ng-template let-planned>
-            <span>{{ planned }}</span>
+            <span>{{ planned.value }}</span>
           </ng-template>
         </missing-control>
       </span>
     </li>
     <li>
       <strong>Shooting Locations </strong>
-      <ng-container *ngIf="!shootingLocations.controls.length else showShootingLocations">
-        <a [routerLink]="link" fragment="shooting-locations" class="missing-control">
-          <span>Missing</span>
-        </a>
-      </ng-container>
-
-      <ng-template #showShootingLocations>
-        <missing-control [control]="movie.shooting.get('locations')" [link]="link" fragment="shooting-locations">
-          <ng-template let-locations>
-            <ng-container *ngFor="let location of locations; let isLast = last">
-              <span>
-                {{ location.city }},
-                {{ location.country | translateSlug: 'TERRITORIES' }}
-              </span>
-              <span>{{ isLast ? '': ' - ' }}</span>
-            </ng-container>
-          </ng-template>
-        </missing-control>
-      </ng-template>
+      <missing-control [control]="shootingLocations" [link]="link" fragment="shooting-locations">
+        <ng-template let-shooting>
+          <missing-control [control]="shooting.get('locations')" [link]="link" fragment="shooting-locations">
+            <ng-template let-locations>
+              <ng-container *ngFor="let location of locations?.controls; let isLast = last">
+                <span>
+                  {{ location.city.value }},
+                  {{ location.country.value | translateSlug: 'TERRITORIES' }}
+                </span>
+                <span>{{ isLast ? '': ' - ' }}</span>
+              </ng-container>
+            </ng-template>
+          </missing-control>
+        </ng-template>
+      </missing-control>
     </li>
     <li>
       <strong>Expected Premiere </strong>
       <missing-control [control]="movie.expectedPremiere.get('event')" [link]="link" fragment="expected-premiere">
         <ng-template let-event>
-          {{ event }}
+          {{ event.value }}
         </ng-template>
       </missing-control>
       <span> - </span>
       <missing-control [control]="movie.expectedPremiere.get('date')" [link]="link" fragment="expected-premiere">
         <ng-template let-date>
-          {{ date | date: 'MMMM y' }}
+          {{ date.value | date: 'MMMM y' }}
         </ng-template>
       </missing-control>
     </li>

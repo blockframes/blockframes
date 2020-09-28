@@ -2,7 +2,9 @@
 <article>
   <h6>
     Sales Pitch
-    <a mat-icon-button [routerLink]="link" fragment="sales-pitch"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="sales-pitch">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
@@ -20,20 +22,22 @@
 <article>
   <h6>
     Audience & Goals
-    <a mat-icon-button [routerLink]="link" fragment="audience-goals"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="audience-goals">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
       <missing-control [control]="movie.audience" [link]="link" fragment="audience-goals">
         <ng-template let-audienceGoals>
-          <strong>Target Audience </strong>
-          <ng-container *ngFor="let target of audienceGoals.targets; let last = last">
-            <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
+          <strong>Target Audiance </strong>
+          <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
+            <span>{{ goal.value.target | titlecase }}{{ last ? '' : ', ' }}</span>
           </ng-container>
-          <br/>
+          <br />
           <strong>Social Responsability Goals </strong>
-          <ng-container *ngFor="let goal of audienceGoals.goals; let last = last">
-            <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+          <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
+            <span>{{ goal.value.goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
           </ng-container>
         </ng-template>
       </missing-control>

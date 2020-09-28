@@ -29,7 +29,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.sub = this.control.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.sub = this.control?.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   isMissing(control: AbstractControl) {

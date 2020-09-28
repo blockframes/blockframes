@@ -7,11 +7,11 @@
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
   <missing-control [control]="stillPhoto" [link]="link">
     <ng-template let-images>
-      <ng-container *ngFor="let image of images">
+      <ng-container *ngFor="let image of images.control">
         <div fxLayout>
           <mat-icon svgIcon="eye" color="primary"></mat-icon>
           <span>
-            {{ image.ref | fileName | maxLength: 30 }}
+            {{ image.value.ref | fileName | maxLength: 30 }}
           </span>
         </div>
       </ng-container>
