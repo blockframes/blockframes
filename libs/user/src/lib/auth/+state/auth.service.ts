@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { User as FireBaseUser } from 'firebase';
+import { Timestamp } from '@firebase/firestore-types';
+import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
@@ -14,6 +17,7 @@ import { PublicUser } from '@blockframes/user/types';
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
+    private http: HttpClient,
     private query: AuthQuery,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
@@ -112,4 +116,11 @@ export class AuthService extends FireAuthService<AuthState> {
     return createUser(user);
   }
 
+  public async getPrivacyPolicyConfirmationStamp() {
+    const ip = await this.http.get(`http://api.ipify.org/?format=json`).pipe(map(res => res['ip'])).toPromise();
+    return {
+      date: firebase.firestore.FieldValue.serverTimestamp() as Timestamp,
+      IP: ip
+    }
+  }
 }

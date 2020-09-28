@@ -1,3 +1,4 @@
+import { Timestamp } from '@firebase/firestore-types';
 
 export interface User {
   uid: string;
@@ -12,6 +13,10 @@ export interface User {
   orgId: string;
   avatar: string;
   watermark: string;
+  privacyPolicy: {
+    date: Timestamp;
+    IP: string;
+  }
 }
 
 
