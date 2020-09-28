@@ -6,8 +6,7 @@
       Please verify that all the information you have entered is correct before submitting to Archipel Market for validation.
     </p>
 
-    <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
+    <div *ngIf="invalidFields.length" class="mat-body">
       <div fxLayout="row wrap" fxLayoutGap="8px">
         <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
           {{ field | parseCamelCase | titlecase }} {{ last ? '' : '-'}}

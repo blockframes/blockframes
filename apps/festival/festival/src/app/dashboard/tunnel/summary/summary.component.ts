@@ -71,14 +71,10 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
   public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray) {
-    this.invalidFields = [];
     this.missingFields = [];
     const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
-        if (control.invalid) {
-          this.invalidFields.push(field);
-        }
         if (!control.value) {
           this.missingFields.push(field);
         }

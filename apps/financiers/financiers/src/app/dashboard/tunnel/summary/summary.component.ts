@@ -76,9 +76,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
-        if (control.invalid) {
-          this.invalidFields.push(field);
-        }
         if (!control.value) {
           this.missingFields.push(field);
         }
