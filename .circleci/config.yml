@@ -276,15 +276,14 @@ jobs:
       - run:
           command: |
             npx firebase use demo1 &&
-            cp firestore.rules firestore.rules.regular &&
-            cp firestore.maintenance.rules firestore.rules &&
+            npm run backend-ops prepareFirestoreRulesPreDeploy &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force && 
+            npx firebase deploy --only firestore --force &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
-            cp firestore.rules.regular firestore.rules &&
+            npm run backend-ops restoreFirestoreRulesPostDeploy &&
             npx firebase use demo1 &&
             npx firebase deploy --only firestore:rules
           when: always
