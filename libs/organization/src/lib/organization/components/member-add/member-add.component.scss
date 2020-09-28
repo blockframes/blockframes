@@ -1,7 +1,9 @@
 @import '~@angular/flex-layout/mq';
 
-.email {
-  width: 100%;
+bf-form-list {
+  mat-form-field {
+    width: 100%;
+  }
 }
 
 .send {
@@ -9,19 +11,6 @@
   margin-bottom: 20px;
 }
 
-mat-card-content {
-  margin-bottom: 0;
-  .action {
-    margin-bottom: 24px;
-  }
-}
-
 p.mat-caption {
   margin-bottom: 24px;
-}
-
-@include layout-bp(xs) {
-  .email {
-    width: 100%;
-  }
 }
