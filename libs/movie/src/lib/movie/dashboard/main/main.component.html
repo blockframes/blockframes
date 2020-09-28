@@ -19,9 +19,27 @@
 
 <mat-divider></mat-divider>
 
+<ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
+
+  <article>
+    <h3>Shooting Information</h3>
+    <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
+  </article>
+
+  <mat-divider></mat-divider>
+
+  <article>
+    <h3>Sales Pitch</h3>
+    <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
+  </article>
+
+  <mat-divider></mat-divider>
+
+</ng-container>
+
 <article>
   <h3>Files & Links</h3>
   <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
-  <!-- <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images> -->
+  <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
   <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
 </article>
