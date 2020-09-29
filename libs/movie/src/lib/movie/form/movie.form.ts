@@ -1041,7 +1041,7 @@ function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>
   return {
     period: new FormControl(period),
     month: new FormControl(month),
-    year: new FormControl(year)
+    year: new FormControl(year, yearValidators)
   }
 }
 

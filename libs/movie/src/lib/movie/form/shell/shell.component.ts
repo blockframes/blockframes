@@ -199,6 +199,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional)
     const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
+
+    /* These values needs to be replaced by the form values */
+     ['languages', 'shooting'].forEach(key => {
+       movie[key] = documentToUpdate[key]
+     })
+ 
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
