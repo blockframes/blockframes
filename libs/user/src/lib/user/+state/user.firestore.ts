@@ -15,7 +15,7 @@ export interface User {
   watermark: string;
   privacyPolicy: {
     date: Timestamp;
-    IP: string;
+    ip: string;
   }
 }
 

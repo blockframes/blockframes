@@ -57,11 +57,11 @@ export class IdentityComponent implements OnInit {
         this.form.get('generatedPassword').value,
         this.form.get('newPassword').value
       );
-      const privacyPolicyConfirmationStamp = await this.service.getPrivacyPolicyConfirmationStamp();
+      const privacyPolicy = await this.service.getPrivacyPolicy();
       await this.service.update({
         firstName: this.form.get('firstName').value,
         lastName: this.form.get('lastName').value,
-        privacyPolicy: privacyPolicyConfirmationStamp
+        privacyPolicy: privacyPolicy
       });
 
       // Accept the invitation from the organization.

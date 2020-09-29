@@ -116,11 +116,11 @@ export class AuthService extends FireAuthService<AuthState> {
     return createUser(user);
   }
 
-  public async getPrivacyPolicyConfirmationStamp() {
-    const ip = await this.http.get(`http://api.ipify.org/?format=json`).pipe(map(res => res['ip'])).toPromise();
+  public async getPrivacyPolicy() {
+    const { ip } = await this.http.get<{ip: string}>(`http://api.ipify.org/?format=json`).toPromise();
     return {
       date: firebase.firestore.FieldValue.serverTimestamp() as Timestamp,
-      IP: ip
+      ip: ip
     }
   }
 }
