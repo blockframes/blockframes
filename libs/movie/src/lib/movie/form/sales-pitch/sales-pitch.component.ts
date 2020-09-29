@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'movie-form-sales-pitch',
@@ -10,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class MovieFormSalesPitchComponent {
   form = this.shell.form;
+  public staticGoals = Object.keys(staticConsts['socialGoals']);
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 
@@ -22,4 +24,7 @@ export class MovieFormSalesPitchComponent {
     return this.form.promotional.get('salesPitch');
   }
 
+  get audience() {
+    return this.form.get('audience');
+  }
 }

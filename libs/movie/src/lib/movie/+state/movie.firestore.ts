@@ -44,6 +44,7 @@ interface MovieRaw<D> {
   promotional: MoviePromotionalElements;
 
   // Every field concerning the movie
+  audience?: MovieGoalsAudience,
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
@@ -58,12 +59,6 @@ interface MovieRaw<D> {
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
   customGenres?: string[],
-  goals?: MovieGoalsAudience[],
-  // TODO #2586 discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO #2586 we will need more visibility on the upload part to take the final decision
-  // TODO #2586 we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string; // migration => promotionnal.screening.jwPlayerId
-
   internalRef?: string,
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
@@ -300,8 +295,8 @@ export interface MovieSalesPitch {
 }
 
 export interface MovieGoalsAudience {
-  target: string,
-  goal: string
+  targets: string[],
+  goals: string[]
 }
 
 export interface MovieTotalBudget {
