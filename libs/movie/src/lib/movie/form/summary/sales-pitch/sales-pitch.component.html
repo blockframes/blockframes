@@ -28,9 +28,9 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.goals" [link]="link" fragment="audience-goals">
+      <strong>Target Audiance </strong>
+      <missing-control [control]="movie.goals" [link]="link">
         <ng-template let-audienceGoals="control">
-          <strong>Target Audiance </strong>
           <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
             <missing-control [control]="goal.get('target')" [link]="link">
               <ng-template let-target>
@@ -38,8 +38,12 @@
               </ng-template>
             </missing-control>
           </ng-container>
-          <br />
-          <strong>Social Responsability Goals </strong>
+        </ng-template>
+      </missing-control>
+      <br />
+      <strong>Social Responsability Goals </strong>
+      <missing-control [control]="movie.goals" [link]="link">
+        <ng-template let-audienceGoals="control">
           <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
             <missing-control [control]="goal.get('goal')" [link]="link">
               <ng-template let-goal>

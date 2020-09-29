@@ -40,6 +40,8 @@ export class MissingControlComponent implements OnInit, OnDestroy {
       if (Object.keys(control.controls).length) {
         const values = Object.values(control.controls);
         return values.length ? values.some(c => this.isMissing(c)) : true;
+      } else {
+        return true
       }
     }
     if (Array.isArray(control?.value)) {
