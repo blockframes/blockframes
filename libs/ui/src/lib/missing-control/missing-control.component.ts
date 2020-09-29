@@ -1,6 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 // Blockframes
 import { Scope } from '@blockframes/utils/static-model/staticModels';
@@ -41,7 +42,11 @@ export class MissingControlComponent implements OnInit, OnDestroy {
         return values.length ? values.some(c => this.isMissing(c)) : true;
       }
     }
-    return !control?.value;
+    if(Array.isArray(control?.value)) {
+      return !control?.value.length
+    } else {
+      return !control?.value;
+    }
   }
 
   ngOnDestroy() {

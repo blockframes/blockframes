@@ -7,7 +7,7 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.isOriginalVersionAvailable" [link]="link"></missing-control>
+      {{ movie.isOriginalVersionAvailable.value ? 'Available' : 'Not available' }}
     </li>
   </ul>
 </article>

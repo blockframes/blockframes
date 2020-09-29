@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators'
+import { startWith, tap } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 
@@ -21,10 +21,9 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   public completedDisabled = true;
   public progressDisabled = true;
-  public plannedDisabled = true;
   public periods = Object.keys(staticConsts['shootingPeriod']);
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
     this.enableForm();
@@ -44,30 +43,55 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   enableForm() {
     this.sub = this.disabledForm.valueChanges.pipe(
+      startWith(this.disabledForm.value),
       tap(value => {
-        switch(value) {
+        switch (value) {
           case 'completedDisabled': {
             this.form.shooting.get('dates').get('progress').reset();
             this.form.shooting.get('dates').get('planned').reset();
+            this.shootingDateFrom.get('period').disable();
+            this.shootingDateTo.get('period').disable();
+            this.shootingDateFrom.get('month').disable();
+            this.shootingDateFrom.get('year').disable();
+            this.shootingDateTo.get('month').disable();
+            this.shootingDateTo.get('year').disable();
             this.completedDisabled = false;
             this.progressDisabled = true;
-            this.plannedDisabled = true;
             break;
           }
           case 'progressDisabled': {
             this.form.shooting.get('dates').get('planned').reset();
             this.form.shooting.get('dates').get('completed').reset();
+            this.shootingDateFrom.get('period').disable();
+            this.shootingDateTo.get('period').disable();
+            this.shootingDateFrom.get('month').disable();
+            this.shootingDateFrom.get('year').disable();
+            this.shootingDateTo.get('month').disable();
+            this.shootingDateTo.get('year').disable();
             this.completedDisabled = true;
             this.progressDisabled = false;
-            this.plannedDisabled = true;
             break;
           }
           case 'plannedDisabled': {
             this.form.shooting.get('dates').get('completed').reset();
             this.form.shooting.get('dates').get('progress').reset();
+            this.shootingDateFrom.get('period').enable();
+            this.shootingDateTo.get('period').enable();
+            this.shootingDateFrom.get('month').enable();
+            this.shootingDateFrom.get('year').enable();
+            this.shootingDateTo.get('month').enable();
+            this.shootingDateTo.get('year').enable();
             this.completedDisabled = true;
             this.progressDisabled = true;
-            this.plannedDisabled = false;
+            break;
+          }
+          case null: {
+            this.shootingDateFrom.get('period').disable();
+            this.shootingDateFrom.get('month').disable();
+            this.shootingDateFrom.get('year').disable();
+            this.shootingDateTo.get('month').disable();
+            this.shootingDateTo.get('year').disable();
+            this.shootingDateTo.get('period').disable();
             break;
           }
         }

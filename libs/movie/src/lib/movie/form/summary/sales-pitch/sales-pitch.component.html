@@ -32,12 +32,20 @@
         <ng-template let-audienceGoals="control">
           <strong>Target Audiance </strong>
           <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
-            <span>{{ goal.value.target | titlecase }}{{ last ? '' : ', ' }}</span>
+            <missing-control [control]="goal.get('target')" [link]="link">
+              <ng-template let-target>
+                <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
+              </ng-template>
+            </missing-control>
           </ng-container>
           <br />
           <strong>Social Responsability Goals </strong>
           <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
-            <span>{{ goal.value.goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+            <missing-control [control]="goal.get('goal')" [link]="link">
+              <ng-template let-goal>
+                <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+              </ng-template>
+            </missing-control>
           </ng-container>
         </ng-template>
       </missing-control>
