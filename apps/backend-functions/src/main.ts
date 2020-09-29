@@ -15,7 +15,7 @@ import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
-import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
+import { getPrivateVideoUrl } from './player';
 import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
@@ -100,9 +100,7 @@ export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery
 //      Player  Management      //
 //--------------------------------
 
-export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
-
-export const uploadVideo = functions.https.onCall(logErrors(uploadToJWPlayer));
+export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl)); // @TODO #2586 update
 
 /**
  * Trigger: REST call to the /admin app

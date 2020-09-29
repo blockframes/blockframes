@@ -10,6 +10,8 @@ import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
 import { privacies } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
+import { uploadToJWPlayer } from './player';
+import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
@@ -17,7 +19,7 @@ import { MovieDocument } from './data/types';
  */
 export async function linkFile(data: functions.storage.ObjectMetadata) {
   // get the needed values
-  const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
+  const { filePath, fieldToUpdate, isInTmpDir, docData, collection, doc } = await getDocAndPath(data.name);
 
   if (isInTmpDir && data.name) {
     let savedRef: any = get(docData, fieldToUpdate);
@@ -38,6 +40,41 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
         await from.copy(to);
         // Remove previous
         await from.delete();
+
+        // If file is a video
+        const [fileMetaData] = await to.getMetadata();
+        if (fileMetaData.contentType.indexOf('video/') === 0 && collection === 'movies') {
+
+          const uploadResult = await uploadToJWPlayer(to);
+
+          const hostedVideos: HostedVideo | HostedVideo[] = get(docData, fieldToUpdate);
+
+          let update: HostedVideo | HostedVideo[] | {};
+          if (uploadResult.status) {
+            if (Array.isArray(hostedVideos)) {
+              update = hostedVideos.map(video => {
+                if (video.ref === savedRef) { video.jwPlayerId = uploadResult.key };
+                return video;
+              });
+            } else {
+              hostedVideos.jwPlayerId = uploadResult.key;
+              update = hostedVideos;
+            }
+          } else {
+            // There was an error when uploading file to jwPlayer
+
+            if (uploadResult.message) {
+              console.log(`An error occured when uploading video to JwPlayer: ${uploadResult.message}`);
+            }
+
+            if (Array.isArray(hostedVideos)) {
+              update = hostedVideos.filter(video => video.ref !== savedRef);
+            } else {
+              update = {};
+            }
+          }
+          await doc.update({ [fieldToUpdate]: update });
+        }
       }
       return true;
     } else {
