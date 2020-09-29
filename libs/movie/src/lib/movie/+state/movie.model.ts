@@ -251,13 +251,6 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
   }
 }
 
-export function createTotalBudget(totalBudget: Partial<MovieTotalBudget> = {}): MovieTotalBudget {
-  return {
-    currency: 'EUR',
-    ...totalBudget
-  }
-}
-
 export function populateMovieLanguageSpecification(
   spec: Partial<MovieLanguageSpecificationContainer>,
   slug: LanguagesSlug,

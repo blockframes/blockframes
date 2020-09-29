@@ -41,7 +41,6 @@ import {
   createSalesPitch,
   createShooting,
   createMovieNote,
-  createTotalBudget,
   createHostedVideos,
   createHostedVideo
 } from '../+state/movie.model';
@@ -533,18 +532,17 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
 }
 
 // ------------------------------
-//          TOTALBUDGET
+//          TOTAL BUDGET
 // ------------------------------
 
-function createTotalBudgetFormControl(totalBudget?: Partial<MovieTotalBudget>) {
-  const { castCost, currency, postProdCost, producerFees, shootCost, others } = createTotalBudget(totalBudget);
+function createTotalBudgetFormControl(totalBudget: Partial<MovieTotalBudget> = {}) {
   return {
-    castCost: new FormControl(castCost),
-    currency: new FormStaticValue(currency, 'MOVIE_CURRENCIES'),
-    postProdCost: new FormControl(postProdCost),
-    producerFees: new FormControl(producerFees),
-    shootCost: new FormControl(shootCost),
-    others: new FormControl(others),
+    castCost: new FormControl(totalBudget.castCost),
+    currency: new FormStaticValue(totalBudget.currency, 'MOVIE_CURRENCIES'),
+    postProdCost: new FormControl(totalBudget.postProdCost),
+    producerFees: new FormControl(totalBudget.producerFees),
+    shootCost: new FormControl(totalBudget.shootCost),
+    others: new FormControl(totalBudget.others),
   }
 }
 
@@ -555,7 +553,6 @@ export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
     super(createTotalBudgetFormControl(totalBudget));
   }
 }
-
 
 // ------------------------------
 //       STAKEHOLDERS

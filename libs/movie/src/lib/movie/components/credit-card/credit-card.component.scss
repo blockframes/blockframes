@@ -1,14 +1,13 @@
 :host {
   display: block;
-}
-
-header {
-  padding: 0 16px;
+  border-radius: 4px;
+  background-color: var(--background-card);
+  border: solid 1px var(--foreground-divider);
+  padding: 16px;
 }
 
 mat-tab-group {
   width: 100%;
-  padding: 0 32px;
 }
 
 article {
@@ -25,7 +24,7 @@ article {
   overflow: auto;
 }
 
-.description:hover {
+.hoverable:hover {
   cursor: pointer;
   text-decoration: underline;
 }
