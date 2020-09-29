@@ -99,8 +99,8 @@ const constants = {
     released: 'Released'
   },
   unitBox: {
-    boxoffice_dollar: 'Box Office in $',
-    boxoffice_euro: 'Box Office in €',
+    usDollar: 'USD', // ex boxoffice_dollar
+    euro: 'EUR', // ex boxoffice_euro
     admissions: 'Admissions',
   },
   shootingPeriod: {

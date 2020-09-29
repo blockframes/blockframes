@@ -229,7 +229,7 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: 'boxoffice_dollar',
+    unit: 'usDollar',
     territory: null,
     ...params,
   }
