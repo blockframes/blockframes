@@ -85,6 +85,7 @@ export const icons = [
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
   { name: 'folder', url: 'assets/icons/folder.svg' },
+  { name: 'empty_status', url: 'assets/icons/empty_status.svg' },
   { name: 'excel', url: 'assets/icons/excel.svg' },
   {
     name: 'document_signed',
@@ -98,6 +99,7 @@ export const icons = [
   { name: 'dot_menu', url: 'assets/icons/dot_menu.svg' },
   { name: 'download', url: 'assets/icons/download.svg' },
   { name: 'EUR', url: 'assets/icons/EUR.svg' },
+  { name: 'estimated', url: 'assets/icons/estimated.svg' },
   { name: 'eye', url: 'assets/icons/eye.svg' },
   { name: 'facebook', url: 'assets/icons/facebook.svg' },
   { name: 'film', url: 'assets/icons/film.svg' },

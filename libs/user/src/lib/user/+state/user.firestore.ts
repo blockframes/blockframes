@@ -1,4 +1,3 @@
-
 export interface User {
   uid: string;
   financing: {
@@ -12,6 +11,10 @@ export interface User {
   orgId: string;
   avatar: string;
   watermark: string;
+  privacyPolicy: {
+    date: Date;
+    ip: string;
+  }
 }
 
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -14,6 +15,7 @@ import { PublicUser } from '@blockframes/user/types';
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
+    private http: HttpClient,
     private query: AuthQuery,
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
@@ -112,4 +114,11 @@ export class AuthService extends FireAuthService<AuthState> {
     return createUser(user);
   }
 
+  public async getPrivacyPolicy() {
+    const { ip } = await this.http.get<{ip: string}>(`http://api.ipify.org/?format=json`).toPromise();
+    return {
+      date: new Date(),
+      ip: ip
+    }
+  }
 }
