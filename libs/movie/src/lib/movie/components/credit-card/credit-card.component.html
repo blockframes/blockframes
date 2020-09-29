@@ -46,9 +46,15 @@
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
-      <ng-container *ngFor="let filmography of credit.filmography">
-        <p class="mat-caption">{{ filmography | filmography }}</p>
+      <ng-container *ngIf="credit.filmography | hasFilmography; else emptyFilmography">
+        <ng-container *ngFor="let filmography of credit.filmography">
+          <p class="mat-caption">{{ filmography | filmography }}</p>
+        </ng-container>
       </ng-container>
+      <ng-template #emptyFilmography>
+        <img asset="empty_filmography.svg" alt="no filmography">
+        <caption class="mat-caption">No filmography provided</caption>
+      </ng-template>
     </article>
   </mat-tab>
 </mat-tab-group>

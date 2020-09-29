@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, Pipe, PipeTransform, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Credit, Director } from '@blockframes/utils/common-interfaces';
+import { Credit, Director, Filmography } from '@blockframes/utils/common-interfaces';
 
 @Component({
   selector: 'title-credit-card',
@@ -45,5 +45,13 @@ export class EmptyImgPipe implements PipeTransform {
       case 'crew': return 'empty_crew_description.svg';
       case 'cast': return 'empty_cast_description.svg';
     }
+  }
+}
+
+// there are always 3 films so we need to verify if at lease one has a title
+@Pipe({ name: 'hasFilmography' })
+export class HasFilmographyPipe implements PipeTransform {
+  transform(filmography: Filmography[]) {
+    return filmography.some(film => film.title);
   }
 }

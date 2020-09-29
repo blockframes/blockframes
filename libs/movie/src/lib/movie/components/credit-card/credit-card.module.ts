@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CreditCardComponent, StatusIconPipe, EmptyImgPipe } from './credit-card.component';
+import { CreditCardComponent, StatusIconPipe, EmptyImgPipe, HasFilmographyPipe } from './credit-card.component';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, MaxLengthModule, TranslateSlugModule } from '@blockframes/utils/pipes';
@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
-  declarations: [CreditCardComponent, StatusIconPipe, EmptyImgPipe],
+  declarations: [CreditCardComponent, StatusIconPipe, EmptyImgPipe, HasFilmographyPipe],
   exports: [CreditCardComponent],
   imports: [
     CommonModule,
