@@ -42,11 +42,10 @@ export class MissingControlComponent implements OnInit, OnDestroy {
         return values.length ? values.some(c => this.isMissing(c)) : true;
       }
     }
-    if(Array.isArray(control?.value)) {
+    if (Array.isArray(control?.value)) {
       return !control?.value.length
-    } else {
-      return !control?.value;
     }
+    return !control?.value;
   }
 
   ngOnDestroy() {
