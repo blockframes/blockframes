@@ -5,8 +5,6 @@ import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { User as FireBaseUser } from 'firebase';
-import { Timestamp } from '@firebase/firestore-types';
-import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
@@ -119,7 +117,7 @@ export class AuthService extends FireAuthService<AuthState> {
   public async getPrivacyPolicy() {
     const { ip } = await this.http.get<{ip: string}>(`http://api.ipify.org/?format=json`).toPromise();
     return {
-      date: firebase.firestore.FieldValue.serverTimestamp() as Timestamp,
+      date: new Date(),
       ip: ip
     }
   }

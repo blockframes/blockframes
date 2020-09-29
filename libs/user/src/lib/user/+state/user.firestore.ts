@@ -1,5 +1,3 @@
-import { Timestamp } from '@firebase/firestore-types';
-
 export interface User {
   uid: string;
   financing: {
@@ -14,7 +12,7 @@ export interface User {
   avatar: string;
   watermark: string;
   privacyPolicy: {
-    date: Timestamp;
+    date: Date;
     ip: string;
   }
 }
