@@ -1,4 +1,4 @@
-<header fxLayout fxLayoutAlign="space-between center">
+<header fxLayout fxLayoutAlign="space-between start">
   <!-- Title -->
   <div fxLayout="column">
     <h5>{{ credit | displayName }}</h5>
@@ -17,7 +17,7 @@
     </p>
   </div>
   <!-- Icon -->
-  <mat-icon [svgIcon]="icon | roleIcon" [matTooltip]="credit.status | translateSlug:'MEMBER_STATUS'"></mat-icon>
+  <mat-icon [svgIcon]="credit.status | statusIcon" [matTooltip]="credit.status | translateSlug:'MEMBER_STATUS'"></mat-icon>
 </header>
 
 <mat-divider></mat-divider>
@@ -29,9 +29,15 @@
       <mat-icon svgIcon="profile"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
-      <p class="mat-caption description" (click)="openDialog()">
-        {{ credit.description | maxLength: 125 }}
-      </p>
+      <ng-container *ngIf="credit.description; else empty">
+        <p class="mat-caption description" (click)="openDialog()" [ngClass]="{ hoverable: credit.description.length >= 125 }" >
+          {{ credit.description | maxLength: 125 }}
+        </p>
+      </ng-container>
+      <ng-template #empty>
+        <img [asset]="type | emptyImg" alt="no description"/>
+        <caption class="mat-caption">No description provided</caption>
+      </ng-template>
     </article>
   </mat-tab>
   <!-- Filmography -->
@@ -40,9 +46,15 @@
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
     <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="8px">
-      <ng-container *ngFor="let filmography of credit.filmography">
-        <p class="mat-caption">{{ filmography | filmography }}</p>
+      <ng-container *ngIf="credit.filmography | hasFilmography; else emptyFilmography">
+        <ng-container *ngFor="let filmography of credit.filmography">
+          <p class="mat-caption">{{ filmography | filmography }}</p>
+        </ng-container>
       </ng-container>
+      <ng-template #emptyFilmography>
+        <img asset="empty_filmography.svg" alt="no filmography">
+        <caption class="mat-caption">No filmography provided</caption>
+      </ng-template>
     </article>
   </mat-tab>
 </mat-tab-group>

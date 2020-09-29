@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>empty-status</title>
+    <g id="Component" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="credit-cards" transform="translate(-1231.000000, -79.000000)">
+            <g id="absent-status" transform="translate(1231.000000, 79.000000)">
+                <circle id="Oval" fill="#43455A" opacity="0.3" cx="12" cy="12" r="12"></circle>
+                <path d="M12,0 C5.376,0 0,5.376 0,12 C0,18.624 5.376,24 12,24 C18.624,24 24,18.624 24,12 C24,5.376 18.624,0 12,0 Z M12,21.6 C6.696,21.6 2.4,17.304 2.4,12 C2.4,9.78 3.156,7.74 4.428,6.12 L17.88,19.572 C16.26,20.844 14.22,21.6 12,21.6 Z M19.572,17.88 L6.12,4.428 C7.74,3.156 9.78,2.4 12,2.4 C17.304,2.4 21.6,6.696 21.6,12 C21.6,14.22 20.844,16.26 19.572,17.88 Z" id="Shape" fill="#9EB1FF" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>
