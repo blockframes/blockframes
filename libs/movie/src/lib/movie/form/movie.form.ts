@@ -101,6 +101,7 @@ function createMovieControls(movie: Partial<Movie>) {
     documents: new MovieLegalDocumentsForm(entity.documents),
 
     // Root data
+    audience: new AudienceAndGoalsForm(entity.audience),
     banner: new HostedMediaForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
@@ -116,7 +117,6 @@ function createMovieControls(movie: Partial<Movie>) {
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
-    goals: new AudienceAndGoalsForm(entity.goals),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
@@ -289,8 +289,8 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('expectedPremiere');
   }
 
-  get goals() {
-    return this.get('goals');
+  get audience() {
+    return this.get('audience');
   }
 
   public removeDirector(i: number): void {
@@ -1081,16 +1081,16 @@ function createShootingLocations(params: Partial<MovieShootingLocations>): Movie
 // ---------------------------------
 
 export class AudienceAndGoalsForm extends FormEntity<MovieAudianceAndGoalsControl> {
-  constructor(goals?: Partial<MovieGoalsAudience>) {
-    super(createAudianceAndGoalsFormControl(goals));
+  constructor(audience?: Partial<MovieGoalsAudience>) {
+    super(createAudianceAndGoalsFormControl(audience));
   }
 }
 
 function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
-  const { target, goal } = createAudienceGoals(entity);
+  const { targets, goals } = createAudienceGoals(entity);
   return {
-    target: FormList.factory(target, el => new FormControl(el)),
-    goal: new FormControl(goal)
+    targets: FormList.factory(targets, el => new FormControl(el)),
+    goals: new FormControl(goals)
   }
 }
 

@@ -24,7 +24,7 @@ export class MovieFormSalesPitchComponent {
     return this.form.promotional.get('salesPitch');
   }
 
-  get goals() {
-    return this.form.get('goals');
+  get audience() {
+    return this.form.get('audience');
   }
 }

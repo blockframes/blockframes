@@ -24,15 +24,15 @@
   </h6>
   <ul>
     <li>
-      <missing-control [control]="movie.goals" [link]="link" fragment="audience-goals">
+      <missing-control [control]="movie.audience" [link]="link" fragment="audience-goals">
         <ng-template let-audienceGoals>
-          <strong>Target Audiance </strong>
-          <ng-container *ngFor="let target of audienceGoals.target; let last = last">
+          <strong>Target Audience </strong>
+          <ng-container *ngFor="let target of audienceGoals.targets; let last = last">
             <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
           </ng-container>
           <br/>
           <strong>Social Responsability Goals </strong>
-          <ng-container *ngFor="let goal of audienceGoals.goal; let last = last">
+          <ng-container *ngFor="let goal of audienceGoals.goals; let last = last">
             <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
           </ng-container>
         </ng-template>

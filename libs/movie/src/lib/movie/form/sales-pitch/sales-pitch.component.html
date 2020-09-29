@@ -29,7 +29,7 @@
 
     <section id="audience-goals" fxLayout="column">
       <h3>Audiences & Goals</h3>
-      <bf-form-list [form]="goals.get('target')" buttonText="Add a Target">
+      <bf-form-list [form]="audience.get('targets')" buttonText="Add a Target">
         <ng-template itemRef let-target>
           {{ target }}
         </ng-template>
@@ -44,7 +44,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Social Responsability Goals (optional)</mat-label>
-        <mat-select [formControl]="goals.get('goal')" multiple>
+        <mat-select [formControl]="audience.get('goals')" multiple>
           <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
         </mat-select>
       </mat-form-field>
