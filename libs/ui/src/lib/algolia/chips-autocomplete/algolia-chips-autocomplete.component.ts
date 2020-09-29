@@ -6,6 +6,7 @@ import { searchClient, algoliaIndex, AlgoliaIndex } from '@blockframes/utils/alg
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 const Separators = {
   [COMMA]: ',',
@@ -32,6 +33,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   public algoliaSearchResults$: Observable<any[]>;
   public values$: Observable<any[]>;
   private sub: Subscription;
+  private addedFilters: string[] = [];
 
   // INPUT ----------------------------
 
@@ -72,7 +74,12 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   @Input() separators = [ENTER, COMMA, SEMICOLON];
 
-  @Input() filters: (string | string[])[] = [];
+  @Input() filters: string[];
+
+  /**  
+   * Name of attribute which values shouldn't be used before.
+   * Using an attribute that hasnt been used before? make sure to add it to Facets on Algolia */
+  @Input() @boolean unique;
 
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
@@ -93,7 +100,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     const indexSearch = searchClient.initIndex(algoliaIndex[this.index]);
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.filters}).then(result => result.hits);
+    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.getFilter()}).then(result => result.hits);
     const facetSearch = (text: string) => indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
 
     // perform search
@@ -110,15 +117,14 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   add(value: any) {
-    if (!!value) {
-      if (typeof value === 'string') {
-        splitValue(value, this.separators).forEach(v => this.form.add(v))
-      } else {
-        this.form.add(value);
-      }
-      this.input.nativeElement.value = '';
-      this.searchCtrl.setValue(null);
+    const values = typeof value === 'string' ? splitValue(value, this.separators) : [value];
+    for (const v of values) {
+      if (this.unique && !!v && !!v[this.displayWithPath]) this.addedFilters.push(v[this.displayWithPath]);
+      this.form.add(v);
     }
+
+    this.input.nativeElement.value = '';
+    this.searchCtrl.reset();
   }
 
   edit(index: number) {
@@ -130,4 +136,11 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     this.input.nativeElement.value = value;
     this.form.removeAt(index);
   }
+
+  private getFilter() {
+    const format = filter => this.unique && !filter.includes(':') ? `${this.displayWithPath}:-${filter}` : filter;
+    const allFilters = [...(this.filters || []), ...this.addedFilters]
+    return allFilters.map(format);
+  }
+
 }

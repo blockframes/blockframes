@@ -13,6 +13,6 @@ export class MovieFormEndComponent {
 
   navigate() {
     const movieId = this.movieQuery.getActiveId();
-    this.router.navigate(['/c/o/dashboard/title/', movieId])
+    this.router.navigate(['/c/o/dashboard/title/', movieId, 'main'])
   }
 }

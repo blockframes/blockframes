@@ -1,10 +1,11 @@
 import { User } from '../../utils/type';
 import { OrganizationHomePage } from '../organization';
+import { TO } from '../../utils/env';
 
 export default class AuthLoginPage {
 
   constructor() {
-    cy.get('auth-login-view');
+    cy.get('auth-login-view', {timeout: TO.PAGE_LOAD});
   }
 
   public switchMode() {
@@ -93,8 +94,9 @@ export default class AuthLoginPage {
   }
 
   public clickSignupToOrgHome() {
-    cy.get('auth-signup-form button[type=submit]').click();
-    cy.wait(3000);
+    cy.get('auth-signup-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.THREE_SEC);
     return new OrganizationHomePage();
   }
 
@@ -117,12 +119,15 @@ export default class AuthLoginPage {
 
   /** Connection returns to the home page of the application in which you are. You have to create it. */
   public clickSignIn() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: 3000}).click();
+    cy.get('auth-signin-form button[type=submit]', {timeout: 3000})
+      .click();
+    cy.wait(TO.THREE_SEC);
   }
 
   public clickSigninToOrgHome() {
-    cy.get('auth-signin-form button[type=submit]', {timeout: 3000}).click();
-    cy.wait(3000);
+    cy.get('auth-signin-form button[type=submit]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.WAIT_1SEC);
     return new OrganizationHomePage();
   }
 }

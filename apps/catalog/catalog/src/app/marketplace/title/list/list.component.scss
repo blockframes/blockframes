@@ -1,8 +1,25 @@
 form.app-bar {
-  width: 100%;
+  width: 24em;
+  padding: 0 12px;
+  margin-left: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+
   input {
+    height: 50px;
+    width: 24em;
+    margin-left: 12px;
     background-color: transparent;
-    font-size: 2rem;
+    border: none;
+    font: inherit;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
@@ -22,4 +39,8 @@ button {
 
 .progress {
   margin-bottom: 16px;
+}
+
+mat-icon[matPrefix] {
+  margin-right: 12px;
 }

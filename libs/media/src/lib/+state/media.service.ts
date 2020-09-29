@@ -23,7 +23,6 @@ export class MediaService {
   private breakpoints = [600, 1024, 1440, 1920];
 
   private overlayOptions = {
-    height: '400px',
     width: '500px',
     panelClass: 'upload-widget',
     positionStrategy: this.overlay.position().global().bottom('16px').left('16px')
@@ -135,6 +134,8 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
+    ref = encodeURI(ref); // For accentuated files names
+
     const refParts = ref.split('/');
     const privacy = refParts.shift() as Privacy;
 

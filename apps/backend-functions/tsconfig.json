@@ -3,10 +3,8 @@
   "compilerOptions": {
     "types": ["node", "jest", "express"],
     "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
     "sourceMap": true,
-    "strict": true,
+    "noImplicitAny": false,
     "target": "es2015",
     "typeRoots": ["../../node_modules/@types"]
   },

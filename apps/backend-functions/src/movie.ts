@@ -114,23 +114,6 @@ export async function onMovieUpdate(
   if (creatorOrg.denomination?.full) {
     await storeSearchableMovie(after, orgName(creatorOrg));
   }
-
-
-  // REMOVING EMPTY STILL_PHOTOs
-  const hasEmptyStills = Object.keys(after.promotional.still_photo)
-    .some(key => !after.promotional.still_photo[key]);
-
-  // if we found at least one empty still_photo, we update with only the none empty ones
-  if (hasEmptyStills) {
-    const notEmptyStills: Record<string, string> = {};
-
-    Object.keys(after.promotional.still_photo)
-      .filter(key => !!after.promotional.still_photo[key])
-      .forEach(key => notEmptyStills[key] = after.promotional.still_photo[key]);
-
-    change.after.ref.update({ 'promotional.still_photo': notEmptyStills });
-  }
-
 }
 
 /** Checks if the store status is going from draft to submitted. */

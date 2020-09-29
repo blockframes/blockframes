@@ -14,13 +14,22 @@
 
     <mat-accordion *ngIf="(org$ | async) as org">
 
-      <!-- TODO update to list org files issue#3678 -->
       <mat-expansion-panel class="folder">
         <mat-expansion-panel-header>
           <mat-icon svgIcon="home"></mat-icon>
           {{org.denomination.public}}
         </mat-expansion-panel-header>
-        <p>No Files</p>
+        <ng-template matExpansionPanelContent>
+          <ng-container *ngIf="org.documents?.notes.length > 0; else noOrgFiles">
+            <ng-container *ngFor="let note of org.documents.notes">
+              <button mat-button (click)="select(note.ref)">
+                <mat-icon svgIcon="document"></mat-icon>
+                {{note.ref | fileName}}
+              </button>
+            </ng-container>
+          </ng-container>
+          <ng-template #noOrgFiles>No Files</ng-template>
+        </ng-template>
       </mat-expansion-panel>
 
       <ng-container *ngIf="(movies$ | async) as movies">
@@ -36,7 +45,7 @@
           </mat-expansion-panel-header>
           <ng-template matExpansionPanelContent>
             <ng-container *ngIf="movieFiles$ | async as files; else loading">
-              <ng-container *ngIf="files.length > 0; else noFiles">
+              <ng-container *ngIf="files.length > 0; else noMovieFiles">
                 <ng-container *ngFor="let file of files">
                   <button mat-button (click)="select(file)">
                     <mat-icon svgIcon="document"></mat-icon>
@@ -44,7 +53,7 @@
                   </button>
                 </ng-container>
               </ng-container>
-              <ng-template #noFiles>No Files</ng-template>
+              <ng-template #noMovieFiles>No Files</ng-template>
             </ng-container>
             <ng-template #loading>
               <mat-progress-bar mode="indeterminate"></mat-progress-bar>

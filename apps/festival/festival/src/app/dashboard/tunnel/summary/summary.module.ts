@@ -7,6 +7,8 @@ import { TunnelSummaryComponent } from './summary.component';
 
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
+import { ParseCamelCasePipeModule } from '@blockframes/utils/pipes/parse-camel-calse.pipe';
+import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +25,8 @@ import { MatDividerModule } from '@angular/material/divider';
     TunnelPageModule,
     MovieTunnelSummaryModule,
     GetPathModule,
+    ParseCamelCasePipeModule,
+    HasStatusModule,
     // Materials
     MatCardModule,
     MatIconModule,

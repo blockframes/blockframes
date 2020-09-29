@@ -11,3 +11,7 @@
 .sending p {
   text-align: center;
 }
+
+p.warning {
+  color: var(--warn)
+}

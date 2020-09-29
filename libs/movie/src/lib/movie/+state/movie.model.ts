@@ -18,11 +18,18 @@ import {
   MovieRelease,
   MovieRunningTime,
   OtherLink,
+  MovieShooting,
+  MovieShootingDate,
+  MovieExpectedPremiere,
+  MoviePlannedShooting,
+  MovieGoalsAudience,
+  MovieSalesPitch,
+  MovieNote,
+  MovieTotalBudget
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { createPrice } from '@blockframes/utils/common-interfaces';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { LanguagesSlug, MovieLanguageTypes } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
@@ -67,6 +74,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     customGenres: [],
     format: null,
     formatQuality: null,
+    goals: [],
     hostedVideo: '',
     internalRef: '',
     keyAssets: '',
@@ -82,37 +90,35 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     scoring: null,
     soundFormat: '',
     isOriginalVersionAvailable: false,
+    totalBudget: {},
 
     ...params,
     banner: params.banner ?? '',
     estimatedBudget: createRange<number>(params.estimatedBudget),
+    expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
     release: createReleaseYear(params.release),
     runningTime: createRunningTime(params.runningTime),
+    shooting: createShooting(params.shooting),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
-    totalBudget: createPrice(params.totalBudget),
   };
 }
 
 export function createMoviePromotional(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
-
-  const newStills: Record<string, string> = {};
-  for (const key in params.still_photo) {
-    newStills[key] = params.still_photo[key];
-  }
-
-  const elements: MoviePromotionalElements = {
+  return {
     ...params,
     clip_link: params.clip_link ?? '',
+    financialDetails: params.financialDetails ?? '',
     moodboard: params.moodboard ?? '',
-    notes: params.notes ?? '',
-    still_photo: newStills,
+    notes: params.notes ?? [],
+    salesPitch: createSalesPitch(params.salesPitch),
+    still_photo: params.still_photo ?? [],
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',
     promo_reel_link: params.promo_reel_link ?? '',
@@ -121,8 +127,15 @@ export function createMoviePromotional(
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
   };
+}
 
-  return elements;
+export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
+  return {
+    description: '',
+    link: '',
+    file: '',
+    ...params,
+  }
 }
 
 export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
@@ -176,7 +189,6 @@ export function createMovieOriginalRelease(
 export function createPrize(prize: Partial<Prize> = {}): Prize {
   return {
     name: '',
-    year: null,
     prize: '',
     logo: '',
     ...prize
@@ -193,7 +205,6 @@ export function createTitle(title: Partial<Title> = {}): Title {
 
 export function createReleaseYear(release: Partial<MovieRelease> = {}): MovieRelease {
   return {
-    year: null,
     status: '',
     ...release
   };
@@ -219,7 +230,6 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
     unit: 'boxoffice_dollar',
-    value: 0,
     territory: null,
     ...params,
   }
@@ -269,6 +279,45 @@ export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMe
   }
 }
 
+export function createShooting(params: Partial<MovieShooting> = {}): MovieShooting {
+  return {
+    locations: [],
+    ...params,
+    dates: createShootingDate(params.dates)
+  }
+}
+
+export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
+  return {
+    ...params
+  }
+}
+
+export function createShootingPlannedObject(params: Partial<MoviePlannedShooting>) {
+  return {
+    period: '',
+    month: '',
+    year: null,
+    ...params
+  }
+}
+
+export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = {}): MovieExpectedPremiere {
+  return {
+    event: '',
+    ...params,
+    date: toDate(params.date)
+  }
+}
+
+export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): MovieGoalsAudience {
+  return {
+    target: '',
+    goal: '',
+    ...params,
+  }
+}
+
 /**
  * Takes an array of movies and returns a list of their titles.
  * @param movies
@@ -308,5 +357,12 @@ export function createOtherLink(otherLink: Partial<OtherLink> = {}): OtherLink {
   return {
     name: otherLink.name ?? '',
     url: otherLink.url ?? '',
+  }
+}
+
+export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
+  return {
+    ref: '',
+    ...note
   }
 }

@@ -1,59 +1,74 @@
-import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
+﻿import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
+import { TO } from "@blockframes/e2e/utils/env";
 
 export default class TunnelContractPage {
   constructor() {
-    cy.get('contract-details-sale');
+    cy.get('contract-details-sale', {timeout: TO.PAGE_LOAD});
   }
 
   // Party Name
 
   public fillFirstPartyName(partialName: string) {
-    cy.get('contract-details-sale contract-form-party input').first().type(partialName);
+    cy.get('contract-details-sale contract-form-party input', {timeout: TO.PAGE_ELEMENT})
+      .first().type(partialName);
   }
 
   public selectFirstPartyName(name: string) {
-    cy.get('mat-option').contains(name).first().click();
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(name).first().click();
   }
 
   public assertFirstPartyNameExists(name: string) {
-    cy.get('contract-details-sale contract-form-party input').first().should('have.value', name);
+    cy.get('contract-details-sale contract-form-party input', {timeout: TO.PAGE_ELEMENT})
+      .first().should('have.value', name);
   }
 
   public selectFirstRole(role: string) {
-    cy.get('contract-details-sale contract-form-party mat-select').first().click();
-    cy.get('mat-option').contains(role).click();
+    cy.get('contract-details-sale contract-form-party mat-select', {timeout: TO.PAGE_ELEMENT})
+      .first().click();
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(role).click();
   }
 
   public assertFirstRoleIsSelected(role: string) {
-    cy.get('contract-details-sale contract-form-party mat-select').first().contains(role);
+    cy.get('contract-details-sale contract-form-party mat-select', {timeout: TO.PAGE_ELEMENT})
+      .first().contains(role);
   }
 
   public fillLastPartyName(partialName: string) {
-    cy.get('contract-details-sale contract-form-party input').last().type(partialName);
+    cy.get('contract-details-sale contract-form-party input', {timeout: TO.PAGE_ELEMENT})
+      .last().type(partialName);
   }
 
   public selectLastPartyName(name: string) {
-    cy.get('mat-option').contains(name).last().click();
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(name).last().click();
   }
 
   public assertLastPartyNameExists(name: string) {
-    cy.get('contract-details-sale contract-form-party input').last().should('have.value', name);
+    cy.get('contract-details-sale contract-form-party input', {timeout: TO.PAGE_ELEMENT})
+      .last().should('have.value', name);
   }
 
   public selectLastRole(role: string) {
-    cy.get('contract-details-sale contract-form-party mat-select').last().click();
-    cy.get('mat-option').contains(role).click();
+    cy.get('contract-details-sale contract-form-party mat-select', {timeout: TO.PAGE_ELEMENT})
+      .last().click();
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(role).click();
   }
 
   public assertLastRoleIsSelected(role: string) {
-    cy.get('contract-details-sale contract-form-party mat-select').last().contains(role);
+    cy.get('contract-details-sale contract-form-party mat-select', {timeout: TO.PAGE_ELEMENT})
+      .last().contains(role);
   }
 
   // Terms distribution-form-terms
 
   public selectEvent(event: string) {
-    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=event]').click();
-    cy.get('mat-option').contains(event).click();
+    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=event]', 
+      {timeout: TO.PAGE_ELEMENT}).click();
+    cy.get('mat-option', {timeout: TO.PAGE_ELEMENT})
+      .contains(event).click();
   }
 
   public assertEventIsSelected(event: string) {
@@ -159,11 +174,15 @@ export default class TunnelContractPage {
 
   // Save
   public clickSave() {
-    cy.get('[test-id=save]').click();
+    cy.get('[test-id=save]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.ONE_SEC);
   }
 
   public clickNext() {
-    cy.get('[test-id=next]').click();
+    cy.get('[test-id=next]', {timeout: TO.PAGE_ELEMENT})
+      .click();
+    cy.wait(TO.THREE_SEC);
     return new TunnelContractSummaryPage();
   }
 }

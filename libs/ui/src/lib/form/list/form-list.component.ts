@@ -59,7 +59,7 @@ export class FormListComponent<T> implements OnInit {
 
   // Add a clean form
   add() {
-    this.formItem = this.form.createControl({});
+    this.formItem = this.form.createControl();
   }
 
   save() {

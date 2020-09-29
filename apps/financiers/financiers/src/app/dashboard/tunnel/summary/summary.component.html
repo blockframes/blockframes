@@ -3,12 +3,20 @@
     <h4 title>LAST STEP</h4>
     <h1 subtitle>Summary Page</h1>
     <p description class="mat-body-1">
-      Please verify that all the information you have entered is correct before submitting to Archipel Market for validation.
+      Please verify that all the information you have entered is correct before submitting to Media Financiers for
+      validation.
     </p>
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
+        below.</span>
+      <div class="mandatory-control">
+        <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
+          to fill in.</span>
+        <a mat-button *ngFor="let field of invalidFields" color="warn">
+          {{ field | parseCamelCase | titlecase }}
+        </a>
+      </div>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -59,10 +67,34 @@
 
     <section id="additional-information">
       <h3>Additional Information</h3>
-      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)"></movie-summary-additional-information>
+      <movie-summary-additional-information [movie]="form" [link]="('additional-information' | getPath)">
+      </movie-summary-additional-information>
     </section>
 
     <mat-divider></mat-divider>
+
+    <!-- SHOOTING INFORMATION -->
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
+
+      <section id="shooting-information">
+        <h3>Shooting Information</h3>
+        <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
+      </section>
+
+      <mat-divider></mat-divider>
+    </ng-container>
+
+    <!-- SALES PITCH -->
+
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
+
+      <section id="sales-pitch">
+        <h3>Sales Pitch</h3>
+        <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
+      </section>
+
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- TECHNICAL INFORMATION -->
 
@@ -77,7 +109,8 @@
 
     <section id="available-materials">
       <h3>Available Materials</h3>
-      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)"></movie-summary-available-materials>
+      <movie-summary-available-materials [movie]="form" [link]="('available-materials' | getPath)">
+      </movie-summary-available-materials>
     </section>
 
     <mat-divider></mat-divider>
@@ -89,10 +122,20 @@
       <movie-summary-media-files [movie]="form" [link]="('media-files' | getPath)"></movie-summary-media-files>
       <movie-summary-media-images [movie]="form" [link]="('media-images' | getPath)"></movie-summary-media-images>
       <movie-summary-media-videos [movie]="form" [link]="('media-videos' | getPath)"></movie-summary-media-videos>
-    </section >
+    </section>
+
+    <mat-divider></mat-divider>
+
+    <!-- FINANCING DETAILS -->
+
+    <section id="promotional-elements">
+      <h3>Financing Details</h3>
+      <financiers-movie-summary-financial-details [movie]="form" [link]="('financial-details' | getPath)"></financiers-movie-summary-financial-details>
+    </section>
 
     <!-- Submit -->
-    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()" [disabled]="isPublished$ | async">
+    <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()"
+      [disabled]="isPublished$ | async">
       <span>Publish to Marketplace</span>
       <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>

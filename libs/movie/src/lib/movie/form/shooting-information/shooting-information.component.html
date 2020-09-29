@@ -1,0 +1,133 @@
+<tunnel-page>
+  <h4 title>Title Information</h4>
+  <h1 subtitle>Shooting Information</h1>
+  <ng-container tunnel-form>
+    <h3>Shooting Information</h3>
+
+    <section id="shooting-dates" fxLayout="column">
+      <h6 class="mat-caption">Shooting Dates</h6>
+      <!-- TODO 3788 update hint, error, etc -->
+
+      <mat-radio-group [formControl]="disabledForm" name="shootingStatus">
+
+        <!-- Shooting completed -->
+        <article fxLayout="column">
+          <mat-radio-button class="mat-body-2" color="primary" value="completedDisabled">Shooting completed :</mat-radio-button>
+          <mat-form-field appearance="outline" fxFlex disabled>
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="completedPicker" [formControl]="form.shooting.get('dates').get('completed')" [disabled]="completedDisabled">
+            <mat-datepicker-toggle matSuffix [for]="completedPicker">
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #completedPicker></mat-datepicker>
+          </mat-form-field>
+        </article>
+
+        <!-- Shooting in progress -->
+        <article fxLayout="column">
+          <mat-radio-button class="mat-body-2" color="primary" value="progressDisabled">Shooting in progress :</mat-radio-button>
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')" [disabled]="progressDisabled">
+            <mat-datepicker-toggle matSuffix [for]="progressPicker">
+              <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #progressPicker></mat-datepicker>
+          </mat-form-field>
+        </article>
+
+        <!-- Shooting planned -->
+        <article fxLayout="column">
+          <mat-radio-button class="mat-body-2" color="primary" value="plannedDisabled">Shooting planned :</mat-radio-button>
+          <div fxLayout="row" fxLayoutGap="46px" fxFlex>
+
+            <div fxLayout="column" fxFlex>
+              <span class="mat-body-2">From :</span>
+              <div fxLayout="row" fxLayoutGap="8px" fxFlex>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Period</mat-label>
+                  <mat-select [formControl]="shootingDateFrom.get('period')" placeholder="Period" [disabled]="plannedDisabled">
+                    <mat-option >--</mat-option>
+                    <mat-option *ngFor="let period of periods" [value]="period">{{ period | toLabel: 'shootingPeriod' }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Month</mat-label>
+                  <input matInput [formControl]="shootingDateFrom.get('month')" placeholder="Month" type="text" [readonly]="plannedDisabled"/>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Year</mat-label>
+                  <input matInput [formControl]="shootingDateFrom.get('year')" placeholder="Year" type="number" [readonly]="plannedDisabled"/>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="column" fxFlex>
+              <span class="mat-body-2">To :</span>
+              <div fxLayout="row" fxLayoutGap="8px" fxFlex>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Period</mat-label>
+                  <mat-select [formControl]="shootingDateTo.get('period')" placeholder="Period" [disabled]="plannedDisabled">
+                    <mat-option >--</mat-option>
+                    <mat-option *ngFor="let period of periods" [value]="period">{{ period | toLabel: 'shootingPeriod' }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Month</mat-label>
+                  <input matInput [formControl]="shootingDateTo.get('month')" placeholder="Month" type="text" [readonly]="plannedDisabled"/>
+                </mat-form-field>
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Year</mat-label>
+                  <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" [readonly]="plannedDisabled"/>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+        </article>
+      </mat-radio-group>
+    </section>
+
+    <section id="shooting-locations" fxLayout="column">
+      <h6 class="mat-caption">Shooting Locations</h6>
+      <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
+        <ng-template itemRef let-location>
+          {{ location.city }} - {{ location.country | translateSlug: 'TERRITORIES' }}
+        </ng-template>
+        <ng-template formView let-locationForm>
+          <article [formGroup]="locationForm" fxLayout="row" fxLayoutGap="24px">
+
+            <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')" [withoutValues]="['world']" fxFlex>
+              <mat-label>Country</mat-label>
+            </static-select>
+
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>City</mat-label>
+              <input matInput type="text" [formControl]="locationForm.get('city')" placeholder="City"/>
+            </mat-form-field>
+          </article>
+        </ng-template>
+      </bf-form-list>
+    </section>
+
+    <section id="expected-premiere" fxLayout="column">
+      <h6 class="mat-caption">Expected Premiere</h6>
+      <article fxLayout="row" fxLayoutGap="24px">
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Event</mat-label>
+          <input matInput type="text" [formControl]="form.expectedPremiere.get('event')" placeholder="Event">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex>
+          <mat-label>Approximate Date</mat-label>
+          <input matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')">
+          <mat-datepicker-toggle matSuffix [for]="eventDate">
+            <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+          </mat-datepicker-toggle>
+          <mat-datepicker #eventDate></mat-datepicker>
+        </mat-form-field>
+      </article>
+    </section>
+
+  </ng-container>
+</tunnel-page>

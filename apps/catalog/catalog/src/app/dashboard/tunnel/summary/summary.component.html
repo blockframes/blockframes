@@ -8,7 +8,11 @@
 
     <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
       <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields below.</span>
-      <span *ngIf="invalidFields.length" class="mandatory-control">You have {{ invalidFields.length }} mandatory fields to fill in.</span>
+      <div fxLayout="row wrap" fxLayoutGap="8px">
+        <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
+          {{ field | parseCamelCase | titlecase }} {{ last ? '' : '-'}}
+        </span>
+      </div>
     </div>
 
     <!-- MAIN INFORMATION -->
@@ -63,6 +67,29 @@
     </section>
 
     <mat-divider></mat-divider>
+
+    <!-- SHOOTING INFORMATION -->
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
+
+      <section id="shooting-information">
+        <h3>Shooting Information</h3>
+        <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
+      </section>
+
+      <mat-divider></mat-divider>
+    </ng-container>
+
+    <!-- SALES PITCH -->
+
+    <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production', 'finished']">
+
+      <section id="sales-pitch">
+        <h3>Sales Pitch</h3>
+        <movie-summary-sales-pitch [movie]="form" [link]="('sales-pitch' | getPath)"></movie-summary-sales-pitch>
+      </section>
+
+      <mat-divider></mat-divider>
+    </ng-container>
 
     <!-- TECHNICAL INFORMATION -->
 

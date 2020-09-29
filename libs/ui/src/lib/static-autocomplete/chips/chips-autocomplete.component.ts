@@ -8,6 +8,7 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
+  OnDestroy
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
@@ -15,8 +16,8 @@ import { MatChipInputEvent, MatChipList } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 // RxJs
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
 import { staticModels } from '@blockframes/utils/static-model';
@@ -30,7 +31,7 @@ import { FormList } from '@blockframes/utils/form';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit {
+export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * The static model to display
@@ -62,9 +63,9 @@ export class ChipsAutocompleteComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredItems$: Observable<any[]>;
   public values$: Observable<any[]>;
+  private sub: Subscription;
 
   private items: SlugAndLabel[];
-
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('chipList') chipList: MatChipList;
 
@@ -80,6 +81,15 @@ export class ChipsAutocompleteComponent implements OnInit {
       startWith(''),
       map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
+
+    this.sub = this.form.valueChanges.pipe(
+      map(res => !!res.length),
+      distinctUntilChanged()
+    ).subscribe(isDirty => isDirty ? this.form.markAsDirty() : this.form.markAsPristine());
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   /** Filter the items */

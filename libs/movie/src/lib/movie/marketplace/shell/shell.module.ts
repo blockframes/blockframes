@@ -17,6 +17,7 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { UpcomingScreeningsModule } from '@blockframes/movie/components/upcoming-screenings/upcoming-screenings.module';
+import { HasKeysModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -40,7 +41,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     UpcomingScreeningsModule,
     CarouselModule,
     MatLayoutModule,
-
+    HasKeysModule,
+    
     // Material
     MatChipsModule,
     MatButtonModule,

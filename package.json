@@ -167,7 +167,7 @@
     "codelyzer": "^6.0.0",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",
-    "cypress": "^4.4.0",
+    "cypress": "^5.2.0",
     "dotenv": "8.2.0",
     "faker": "^5.1.0",
     "firebase-functions-test": "^0.2.1",

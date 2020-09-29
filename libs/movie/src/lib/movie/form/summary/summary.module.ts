@@ -1,3 +1,4 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -14,7 +15,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Blockframes Utils
-import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule, ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
@@ -36,6 +37,10 @@ import { SummaryAvailableMaterialsComponent } from './available-materials/availa
 import { SummaryMediaFilesComponent } from './promotional/media-files/media-files.component';
 import { SummaryMediaImagesComponent } from './promotional/media-images/media-images.component';
 import { SummaryMediaVideosComponent } from './promotional/media-videos/media-videos.component';
+import { SummaryMediaNotesComponent } from './promotional/media-notes/notes.component';
+import { SummaryShootingInformationComponent } from './shooting-information/shooting-information.component';
+import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component';
+
 
 @NgModule({
   declarations: [
@@ -49,14 +54,16 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
     SummaryAvailableMaterialsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
-    SummaryMediaVideosComponent
+    SummaryMediaVideosComponent,
+    SummaryMediaNotesComponent,
+    SummaryShootingInformationComponent,
+    SummarySalesPitchComponent,
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
 
-    // Summary components
     MissingControlModule,
     ToLabelModule,
     EmptyImagePipeModule,
@@ -66,6 +73,7 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
     DurationModule,
     TranslateSlugModule,
     HasStatusModule,
+    MaxLengthModule,
 
     // Materials
     MatChipsModule,
@@ -86,7 +94,10 @@ import { SummaryMediaVideosComponent } from './promotional/media-videos/media-vi
     SummaryAvailableMaterialsComponent,
     SummaryMediaFilesComponent,
     SummaryMediaImagesComponent,
-    SummaryMediaVideosComponent
+    SummaryMediaVideosComponent,
+    SummaryMediaNotesComponent,
+    SummaryShootingInformationComponent,
+    SummarySalesPitchComponent,
   ]
 })
 export class MovieTunnelSummaryModule {}

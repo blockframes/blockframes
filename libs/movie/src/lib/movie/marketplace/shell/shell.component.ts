@@ -20,12 +20,6 @@ export class TitleMarketplaceShellComponent implements OnInit {
 
   @Input() routes: RouteDescription[];
 
-  public isEnoughPicturesThen(min: number) {
-    return this.movieQuery.selectActive().pipe(
-      map(movie => Object.values(movie.promotional.still_photo).length > min)
-    );
-  }
-
   constructor(
     private movieQuery: MovieQuery,
     public router: Router,
