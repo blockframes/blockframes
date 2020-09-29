@@ -6,10 +6,11 @@ warnMissingVars()
 
 import { prepareForTesting, restoreShortcut, upgrade, prepareDb, prepareStorage } from './firebaseSetup';
 import { migrate } from './migrations';
-import { showHelp } from './tools';
+import { disableMaintenanceMode, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
+import { prepareFirestoreRulesPreDeploy, restoreFirestoreRulesPostDeploy } from './firestore-rules';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -17,6 +18,10 @@ const [cmd, ...flags] = args;
 async function runCommand() {
   if (cmd === 'prepareForTesting') {
     return prepareForTesting();
+  } else if (cmd === 'prepareFirestoreRulesPreDeploy') {
+    return prepareFirestoreRulesPreDeploy();
+  } else if (cmd === 'restoreFirestoreRulesPostDeploy') {
+    return restoreFirestoreRulesPostDeploy();
   } else if (cmd === 'prepareDb') {
     return prepareDb();
   } else if (cmd === 'prepareStorage') {
@@ -56,8 +61,8 @@ function hasFlag(compare: string) {
 }
 
 if (hasFlag('skipMaintenance')) {
-  process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
-  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true, meaning maintenance mode is disabled!')
+  console.warn('WARNING! BLOCKFRAMES_MAINTENANCE_DISABLED is set to true')
+  disableMaintenanceMode()
 }
 
 const consoleMsg = `Time running command "${cmd}"`;

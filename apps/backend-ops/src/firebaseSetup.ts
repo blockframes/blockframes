@@ -14,6 +14,7 @@ import { cleanStorage } from './storage-cleaning';
 import { copyDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
+import { isMigrationRequired } from './tools';
 export const { storageBucket } = firebase;
 
 export async function prepareForTesting() {
@@ -101,6 +102,11 @@ export async function restoreShortcut() {
 }
 
 export async function upgrade() {
+  if (!await isMigrationRequired()) {
+    console.log('Skipping upgrade because migration is not required...');
+    return;
+  }
+
   console.info('Preparing the database...');
   await migrate(true);
   console.info('Database ready for deploy!');
