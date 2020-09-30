@@ -100,17 +100,10 @@ export class AppModule {
   ) {
 
     const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
-    if (!googleAnalytics) {
-      analytics.analytics.setAnalyticsCollectionEnabled(false);
-    }
+    if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
+    !intercom ? intercomService.disable() : intercomService.enable();
+    if (yandex) yandexService.insertMetrika(ymConfig);
 
-    if (!intercom) {
-      intercomService.disable();
-    }
-
-    if (yandex) {
-      yandexService.insertMetrika(ymConfig);
-    }
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
