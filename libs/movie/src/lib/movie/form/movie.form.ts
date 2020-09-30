@@ -416,7 +416,7 @@ export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: 'boxoffice_dollar',
+    unit: 'usd',
     value: 0,
     territory: null,
     ...params,

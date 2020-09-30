@@ -73,6 +73,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     color: null,
     crew: [],
     customGenres: [],
+    expectedPremiere: {},
     format: null,
     formatQuality: null,
     internalRef: '',
@@ -95,7 +96,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
     estimatedBudget: createRange<number>(params.estimatedBudget),
-    expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
@@ -230,7 +230,7 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: 'boxoffice_dollar',
+    unit: 'usd',
     territory: null,
     ...params,
   }
