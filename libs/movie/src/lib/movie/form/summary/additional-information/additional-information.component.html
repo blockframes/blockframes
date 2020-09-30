@@ -37,27 +37,22 @@
     <missing-control [control]="movie.boxOffice" [link]="link" fragment="box-office">
       <ng-template let-boxOffice="control">
         <ng-container *ngFor="let office of boxOffice.controls">
-          <div fxLayout fxLayoutGap="8px">
-            <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
-            <missing-control [control]="office.get('unit')" [link]="link">
-              <ng-template let-unit>
-                <ng-container *ngIf="unit === 'boxoffice_dollar'">
-                  <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
-                </ng-container>
-                <ng-container *ngIf="unit === 'boxoffice_euro'">
-                  <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
-                </ng-container>
-                <ng-container *ngIf="office.get('unit') === 'admissions'">
-                  <span>Admissions</span>
-                  <span>&nbsp;</span>
-                </ng-container>
+          <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
+          &nbsp;
+          <missing-control [control]="office.get('unit')" [link]="link">
+            <ng-template let-unit>
+              <ng-container *ngIf="unit === ('eur' || 'usd'); else admissions">
+                <mat-icon [svgIcon]="unit | uppercase" id="currency-icon"></mat-icon>
+              </ng-container>
+              <ng-template #admissions>
+                <span>Admissions</span>
               </ng-template>
-            </missing-control>
-            <missing-control [control]="office.get('value')">
-              <ng-template let-value>{{ value | number }}</ng-template>
-            </missing-control>
-            <span>&nbsp;</span>
-          </div>
+            </ng-template>
+          </missing-control>
+          &nbsp;
+          <missing-control [control]="office.get('value')">
+            <ng-template let-value>{{ value | number }}</ng-template>
+          </missing-control>
         </ng-container>
       </ng-template>
     </missing-control>

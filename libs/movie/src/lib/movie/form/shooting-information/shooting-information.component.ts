@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, tap } from 'rxjs/operators'
+import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
@@ -61,24 +61,6 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
         this.form.shooting.get('dates').get(key).disable();
         this.form.shooting.get('dates').get(key).reset();
       }
-    }
-  }
-
-
-  private handleStateOfShootingDateForm(state: 'disable' | 'enable') {
-    this.shootingDateFrom.get('period')[state]();
-    this.shootingDateFrom.get('month')[state]();
-    this.shootingDateFrom.get('year')[state]();
-    this.shootingDateTo.get('month')[state]();
-    this.shootingDateTo.get('year')[state]();
-    this.shootingDateTo.get('period')[state]();
-    if (state === 'disable') {
-      this.shootingDateFrom.get('period').reset();
-      this.shootingDateFrom.get('month').reset();
-      this.shootingDateFrom.get('year').reset();
-      this.shootingDateTo.get('month').reset();
-      this.shootingDateTo.get('year').reset();
-      this.shootingDateTo.get('period').reset();
     }
   }
 }
