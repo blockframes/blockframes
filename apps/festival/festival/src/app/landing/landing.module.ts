@@ -12,6 +12,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+
+
 @NgModule({
   declarations: [LandingComponent],
   imports: [
@@ -19,12 +21,11 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     LandingModule,
     ImageReferenceModule,
-
     // Material
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: LandingComponent }]),
+    RouterModule.forChild([{ path: '', component: LandingComponent }])
   ]
 })
 export class FestivalLandingModule { }
