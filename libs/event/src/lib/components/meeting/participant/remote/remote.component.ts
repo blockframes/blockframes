@@ -38,6 +38,14 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     this.setUpRemoteParticipantEvent(this.participant);
   }
 
+  setTrackEvent(track){
+    console.log('setTrackEvent : ', track)
+    track.on('dimensionsChanged', (dd)=> {
+      console.log('dimensionsChanged : ')
+      console.log({dd})
+    })
+  }
+
 
   /**
    *
@@ -48,6 +56,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
       console.log(`============================== trackSubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
+
       this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
     })
 
@@ -84,6 +93,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('trackStarted', (track) => {
       console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
+      this.setTrackEvent(track);
       this.setUpVideoAndAudio(track.kind, true)
     })
 
@@ -116,7 +126,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     //Cretion div name/lastName participant
     const containerNameParticipant = this.renderer.createElement('div');
-    const text = this.renderer.createText(`${participant.firstName} / ${participant.lastName}`);
+    const text = this.renderer.createText(`${participant.firstName} ${participant.lastName}`);
     this.renderer.appendChild(containerNameParticipant, text);
     this.renderer.setProperty(containerNameParticipant, 'id', `nameParticipant`);
 

@@ -1,9 +1,9 @@
-<div *ngIf="event.isOwner" class="continer-remote-participant-Owner">
-  <mat-grid-list [cols]="numOfCols()">
-    <mat-grid-tile *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
+<div *ngIf="event.isOwner" class="container-remote-participant-Owner">
+  <div *ngFor="let col of numOfCols()" class="container-remote-col">
+    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify" class="container-remote-row">
       <event-remote-participant [participant]="participant" class="event-remote-participant"></event-remote-participant>
-    </mat-grid-tile>
-  </mat-grid-list>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="!event.isOwner" class="continer-remote-participant-Buyer">

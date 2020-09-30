@@ -1,7 +1,6 @@
 :host {
   display: flex;
   height: 100%;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
   //background-color: var(--background);
@@ -29,12 +28,24 @@
   }
 }
 
-.continer-remote-participant-Owner {
+.container-remote-participant-Owner {
   width: 100%;
-  .event-remote-participant {
-    width: 100%;
-    height: 100%;
+  .container-remote-col {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .container-remote-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .event-remote-participant {
+        flex: 1;
+        background-color: #5c5b5b;
+      }
+    }
   }
 }
 

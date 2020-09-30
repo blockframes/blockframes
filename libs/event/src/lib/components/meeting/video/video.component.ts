@@ -85,7 +85,33 @@ export class VideoComponent implements OnInit, OnDestroy {
       if(value.error !== ''){
       } else {
         this.accessToken = value.result;
-        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, dominantSpeaker: true, audio, video}, this.event);
+        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, dominantSpeaker: true, audio, video,
+          bandwidthProfile: {
+            video: {
+              renderDimensions: {
+                low: { width: 640, height: 480 },
+                standard: { width: 640, height: 480 },
+                high: { width: 640, height: 480 },
+              }
+            },
+          },
+          networkQuality: { local: 1, remote: 1 },
+          preferredVideoCodecs: [{ codec: 'VP8', simulcast: true }],
+          width: 640, height: 480}, this.event);
+
+
+        // let t = {
+        //   bandwidthProfile: {
+        //     video: {
+        //       mode: settings.bandwidthProfileMode,
+        //       renderDimensions: {
+        //         low: getResolution(settings.renderDimensionLow),
+        //         standard: getResolution(settings.renderDimensionStandard),
+        //         high: getResolution(settings.renderDimensionHigh),
+        //       }
+        //     },
+        //   },
+        // }
       }
     })
   }
@@ -260,13 +286,28 @@ export class VideoComponent implements OnInit, OnDestroy {
     return item.identity;
   }
 
+
+  //FIXME Change name
   numOfCols(){
-    const lengththisParticipantConnected = this.$participantConnectedDataSource.getValue().length;
-    return (lengththisParticipantConnected < 2) ? 1 : (lengththisParticipantConnected > 4) ? 3 : 2
+    const lengthParticipantConnected = this.$participantConnectedDataSource.getValue().length;
+    const arrayParticipantConnected = this.$participantConnectedDataSource.getValue();
+    const numCol = (lengthParticipantConnected < 2) ? 1 : (lengthParticipantConnected > 4) ? 3 : 2;
+
+    const arr = [];
+
+    for(let i=0; i < numCol; i++){
+      const arrLine = [];
+      for(let j=0; j < (lengthParticipantConnected)/numCol; j++){
+        arrLine.push(arrayParticipantConnected[(j+i * (lengthParticipantConnected)/numCol)])
+      }
+      arr.push(arrLine)
+    }
+    console.log('arr : ', arr);
+    return arr
   }
 
   getIfLocalIsAlone(){
-    return this.$participantConnectedDataSource.getValue().length < 0;
+    return this.$participantConnectedDataSource.getValue().length < 1;
   }
 
   /**

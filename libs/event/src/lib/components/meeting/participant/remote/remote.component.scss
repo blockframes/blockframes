@@ -1,8 +1,6 @@
 .remote-participant {
-
   position: relative;
   width: 100%;
-  display: flex;
 
 }
 
@@ -14,8 +12,8 @@
   .remoteParticipant {
     background-position: center center;
     background-size: cover;
-    height: 100%;
-    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
   }
 
   #nameParticipant {
