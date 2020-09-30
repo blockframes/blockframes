@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators'
+import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
-
+import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 
 @Component({
   selector: 'movie-shooting-information',
@@ -19,19 +19,20 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   form = this.shell.form;
   disabledForm = new FormControl()
 
-  public completedDisabled = true;
-  public progressDisabled = true;
-  public plannedDisabled = true;
   public periods = Object.keys(staticConsts['shootingPeriod']);
 
-  constructor(private shell: MovieFormShellComponent) {}
+  public months = Object.keys(staticConsts['months']);
+
+  private keys = ['completed', 'planned', 'progress'] as const;
+
+  constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
     this.enableForm();
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 
   get shootingDateFrom() {
@@ -44,35 +45,22 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   enableForm() {
     this.sub = this.disabledForm.valueChanges.pipe(
-      tap(value => {
-        switch(value) {
-          case 'completedDisabled': {
-            this.form.shooting.get('dates').get('progress').reset();
-            this.form.shooting.get('dates').get('planned').reset();
-            this.completedDisabled = false;
-            this.progressDisabled = true;
-            this.plannedDisabled = true;
-            break;
-          }
-          case 'progressDisabled': {
-            this.form.shooting.get('dates').get('planned').reset();
-            this.form.shooting.get('dates').get('completed').reset();
-            this.completedDisabled = true;
-            this.progressDisabled = false;
-            this.plannedDisabled = true;
-            break;
-          }
-          case 'plannedDisabled': {
-            this.form.shooting.get('dates').get('completed').reset();
-            this.form.shooting.get('dates').get('progress').reset();
-            this.completedDisabled = true;
-            this.progressDisabled = true;
-            this.plannedDisabled = false;
-            break;
-          }
-        }
-      })
-    ).subscribe();
+      distinctUntilChanged(),
+      filter(value => !!value),
+    ).subscribe(value => this.activate(value));
+
+    const active = this.keys.find(key => hasValue(this.form.shooting.value.dates[key]));
+    this.disabledForm.setValue(active);
   }
 
+  private activate(activeKey: 'completed' | 'planned' | 'progress') {
+    for (const key of this.keys) {
+      if (key === activeKey) {
+        this.form.shooting.get('dates').get(key).enable();
+      } else {
+        this.form.shooting.get('dates').get(key).disable();
+        this.form.shooting.get('dates').get(key).reset();
+      }
+    }
+  }
 }

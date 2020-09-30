@@ -191,6 +191,20 @@ const constants = {
     oscar: 'Oscar Academy Awards',
     goldenGlobe: 'Golden Globe Awards',
     bfta: 'BAFTA Film Awards'
+  },
+  months: {
+    january: 'January',
+    february: 'February',
+    march: 'March',
+    april: 'April',
+    may: 'May',
+    june: 'June',
+    july: 'July',
+    august: 'August',
+    september: 'September',
+    october: 'October',
+    november: 'November',
+    december: 'December'
   }
 };
 

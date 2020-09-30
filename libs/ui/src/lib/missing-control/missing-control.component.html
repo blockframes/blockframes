@@ -1,5 +1,5 @@
 <!-- Check if required -->
-<ng-container *ngIf="control.hasError('required') else notRequired">
+<ng-container *ngIf="control?.hasError('required') else notRequired">
   <a [routerLink]="link" [fragment]="fragment" class="mandatory-control">
     Mandatory{{ isLast ? '' : ', ' }}
   </a>
@@ -15,7 +15,7 @@
 </ng-template>
 
 <!-- Display projected content if provided -->
-<ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control.value }">
+<ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
 </ng-template>
 
 <!-- Display value if no projected content -->

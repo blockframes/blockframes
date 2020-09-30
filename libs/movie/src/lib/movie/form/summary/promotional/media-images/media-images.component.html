@@ -8,11 +8,9 @@
   <missing-control [control]="stillPhoto" [link]="link">
     <ng-template let-images>
       <ng-container *ngFor="let image of images">
-        <div fxLayout>
+        <div fxLayout *ngFor="let image of images">
           <mat-icon svgIcon="eye" color="primary"></mat-icon>
-          <span>
-            {{ image.ref | fileName | maxLength: 30 }}
-          </span>
+          <span>{{ image.ref | fileName | maxLength: 30 }}</span>
         </div>
       </ng-container>
     </ng-template>

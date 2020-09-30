@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ProductionComponent } from './production.component';
 
+import { ShootingModule } from '../../pipes/shooting.pipe';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { HasKeysModule, DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
@@ -15,6 +16,7 @@ import { MatDividerModule } from '@angular/material/divider';
     CommonModule,
     CreditCardModule,
     MatLayoutModule,
+    ShootingModule,
     HasKeysModule,
     TranslateSlugModule,
     DisplayNameModule,
