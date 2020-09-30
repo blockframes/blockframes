@@ -95,7 +95,7 @@
     <li>
       <strong>Running Time </strong>
       <missing-control [control]="movie.runningTime">
-        <ng-template let-runningTime="control">{{ runningTime.get('time').value | duration }}</ng-template>
+        <ng-template let-runningTime>{{ runningTime.time | duration }}</ng-template>
       </missing-control>
     </li>
   </ul>

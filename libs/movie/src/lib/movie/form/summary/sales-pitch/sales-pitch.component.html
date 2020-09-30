@@ -29,27 +29,23 @@
   <ul>
     <li>
       <strong>Target Audience </strong>
-      <missing-control [control]="goals" [link]="link">
-        <ng-template let-audienceGoals="control">
-          <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
-            <missing-control [control]="goal.get('target')" [link]="link">
-              <ng-template let-target>
-                <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
-              </ng-template>
-            </missing-control>
+      <missing-control [control]="goals.get('targets')" [link]="link">
+        <ng-template let-targets>
+          <ng-container *ngFor="let goal of targets; let last = last">
+            <ng-template let-target>
+              <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
+            </ng-template>
           </ng-container>
         </ng-template>
       </missing-control>
       <br />
       <strong>Social Responsibility Goals </strong>
-      <missing-control [control]="goals" [link]="link">
-        <ng-template let-audienceGoals="control">
-          <ng-container *ngFor="let goal of audienceGoals.controls; let last = last">
-            <missing-control [control]="goal.get('goal')" [link]="link">
-              <ng-template let-goal>
-                <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
-              </ng-template>
-            </missing-control>
+      <missing-control [control]="goals.get('goals')" [link]="link">
+        <ng-template let-goals>
+          <ng-container *ngFor="let goal of goals; let last = last">
+            <ng-template let-goal>
+              <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+            </ng-template>
           </ng-container>
         </ng-template>
       </missing-control>

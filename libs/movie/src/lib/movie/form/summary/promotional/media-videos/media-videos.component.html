@@ -26,9 +26,9 @@
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Other Links </strong>
     <missing-control [control]="movie.promotional.get('other_links')" [link]="link">
-      <ng-template let-links="control">
-        <ng-container *ngFor="let link of links.controls">
-          {{ link.value.name }} - {{ link.value.url }}
+      <ng-template let-links>
+        <ng-container *ngFor="let link of links">
+          {{ link.name }} - {{ link.url }}
         </ng-container>
       </ng-template>
     </missing-control>

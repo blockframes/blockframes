@@ -7,10 +7,10 @@
 <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
   <mat-icon svgIcon="eye" color="primary"></mat-icon>
   <missing-control [control]="movie.promotional.get('notes')" [link]="link">
-    <ng-template let-notes="control">
-      <ng-container *ngFor="let note of notes.controls">
-        <span>{{ note.value.firstName }} {{ note.value.lastName }} - {{ note.value.role | titlecase }} -
-          {{ note.value.ref.ref | fileName | maxLength: 30}}</span>
+    <ng-template let-notes>
+      <ng-container *ngFor="let note of notes">
+        <span>{{ note.firstName }} {{ note.lastName }} - {{ note.role | titlecase }} -
+          {{ note.ref.ref | fileName | maxLength: 30}}</span>
       </ng-container>
     </ng-template>
   </missing-control>

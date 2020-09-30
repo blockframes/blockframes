@@ -11,8 +11,8 @@
       <span class="mandatory-control">You have {{ invalidFields.length }} mandatory fields
         to fill in.</span>
       <div fxLayout="row wrap" fxLayoutGap="8px">
-        <span *ngFor="let field of invalidFields; let last = last" class="mandatory-control">
-          {{ field | parseCamelCase | titlecase }} {{ last ? '' : '-'}}
+        <span class="mandatory-control">
+          {{ invalidFields | fromCamelCase | titlecase }}
         </span>
       </div>
     </div>
@@ -100,7 +100,7 @@
     <section id="technical-information">
       <h3>Technical Information</h3>
       <movie-summary-technical-info [movie]="form" [link]="('technical-spec' | getPath)"></movie-summary-technical-info>
-    </section>
+    </section> -
 
     <mat-divider></mat-divider>
 

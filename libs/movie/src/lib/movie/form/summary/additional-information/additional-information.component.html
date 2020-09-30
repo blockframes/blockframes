@@ -94,10 +94,6 @@
     </a>
   </h6>
   <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications">
-    <ng-template let-certs>
-      <ng-container *ngFor="let cert of certs">
-        {{ cert | translateSlug: 'CERTIFICATIONS' }}
-      </ng-container>
-    </ng-template>
+    <ng-template let-certs>{{ certs | translateSlug: 'CERTIFICATIONS' }}</ng-template>
   </missing-control>
 </article>

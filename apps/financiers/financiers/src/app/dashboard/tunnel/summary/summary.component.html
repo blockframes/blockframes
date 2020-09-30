@@ -11,9 +11,9 @@
       <div class="mandatory-control">
         <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
           to fill in.</span>
-        <a mat-button *ngFor="let field of invalidFields" color="warn">
-          {{ field | parseCamelCase | titlecase }}
-        </a>
+        <span class="mandatory-control">
+          {{ invalidFields | fromCamelCase | titlecase }}
+        </span>
       </div>
     </div>
 

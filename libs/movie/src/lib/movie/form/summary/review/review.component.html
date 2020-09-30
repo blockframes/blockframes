@@ -12,19 +12,19 @@
         <li *ngFor="let festivalPrize of movie.prizes.controls">
           <strong>
             <missing-control [control]="festivalPrize.get('name')" [link]="link" fragment="festival">
-              <ng-template #content>{{ festivalPrize.get('name').value | toLabel: 'festival' }} </ng-template>
+              <ng-template>{{ festivalPrize.get('name').value | toLabel: 'festival' }} </ng-template>
             </missing-control>
           </strong>
           <missing-control [control]="festivalPrize.get('prize')" [link]="link" fragment="festival">
-            <ng-template #content>{{ festivalPrize.get('prize').value }} </ng-template>
+            <ng-template>{{ festivalPrize.get('prize').value }} </ng-template>
           </missing-control>
           <missing-control [control]="festivalPrize.get('year')" [link]="link" fragment="festival">
-            <ng-template #content>{{ festivalPrize.get('year').value }} </ng-template>
+            <ng-template>{{ festivalPrize.get('year').value }} </ng-template>
           </missing-control>
           <missing-control [control]="festivalPrize.get('premiere')" [link]="link" fragment="festival">
-            <ng-template let-premieres>
-              <ng-container *ngIf="festivalPrize.get('premiere')">
-                <span>{{ festivalPrize.get('premiere').value | titlecase }} Premiere</span>
+            <ng-template let-premiere>
+              <ng-container *ngIf="premiere">
+                <span>{{ premiere | titlecase }} Premiere</span>
               </ng-container>
             </ng-template>
           </missing-control>
@@ -48,19 +48,19 @@
         <li *ngFor="let customPrize of customPrizes.controls">
           <strong>
             <missing-control [control]="customPrize.get('name')" [link]="link" fragment="custom-festival">
-              <ng-template #content>{{ customPrize.get('name').value }} </ng-template>
+              <ng-template>{{ customPrize.get('name').value }} </ng-template>
             </missing-control>
           </strong>
           <missing-control [control]="customPrize.get('prize')" [link]="link" fragment="custom-festival">
-            <ng-template #content>{{ customPrize.get('prize').value }} </ng-template>
+            <ng-template>{{ customPrize.get('prize').value }} </ng-template>
           </missing-control>
           <missing-control [control]="customPrize.get('year')" [link]="link" fragment="custom-festival">
-            <ng-template #content>{{ customPrize.get('year').value }} </ng-template>
+            <ng-template>{{ customPrize.get('year').value }} </ng-template>
           </missing-control>
           <missing-control [control]="customPrize.get('premiere')" [link]="link" fragment="custom-festival">
-            <ng-template let-premieres>
-              <ng-container *ngIf="customPrize.get('premiere')">
-                <span>{{ customPrize.get('premiere').value | titlecase }} Premiere</span>
+            <ng-template let-premiere>
+              <ng-container *ngIf="premiere">
+                <span>{{ premiere | titlecase }} Premiere</span>
               </ng-container>
             </ng-template>
           </missing-control>
@@ -88,12 +88,7 @@
               <missing-control [control]="review.get('journalName')" [link]="link" fragment="reviews"></missing-control>
             </strong>
             <span>&nbsp;</span>
-            <missing-control [control]="review.get('revueLink')" fragment="reviews">
-              <ng-template>
-                <a [href]="review.get('revueLink').value" class="text-primary"
-                  target="_blank">{{ review.get('revueLink').value }}</a>
-              </ng-template>
-            </missing-control>
+            <missing-control [control]="review.get('revueLink')" fragment="reviews"></missing-control>
             "<missing-control [control]="review.get('criticQuote')" [link]="link" fragment="reviews"></missing-control>"
           </li>
         </ng-container>

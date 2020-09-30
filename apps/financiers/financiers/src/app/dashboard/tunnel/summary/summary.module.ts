@@ -7,7 +7,7 @@ import { TunnelSummaryComponent } from './summary.component';
 
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
-import { ParseCamelCasePipeModule } from '@blockframes/utils/pipes/parse-camel-calse.pipe';
+import { FromCamelCasePipeModule } from '@blockframes/utils/pipes/from-camel-calse.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 import { SummaryFinancialDetailsModule } from './financial-details/financial-details.module'
 
@@ -26,7 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     TunnelPageModule,
     MovieTunnelSummaryModule,
     GetPathModule,
-    ParseCamelCasePipeModule,
+    FromCamelCasePipeModule,
     HasStatusModule,
     SummaryFinancialDetailsModule,
     // Materials
