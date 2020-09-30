@@ -1,16 +1,13 @@
 <!-- ORIGINAL VERSION -->
 <article>
   <h6>Original Version
-    <a mat-icon-button [routerLink]="link" fragment="original-version"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="original-version">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
     <li>
-      <ng-container *ngIf="!movie.isOriginalVersionAvailable.value else originalVersionAvailable">
-        Not Available
-      </ng-container>
-      <ng-template #originalVersionAvailable>
-        Available
-      </ng-template>
+      {{ movie.isOriginalVersionAvailable.value ? 'Available' : 'Not available' }}
     </li>
   </ul>
 </article>
@@ -19,19 +16,18 @@
 <article>
   <h6>
     Available Version{ movie.languages.controls.length, plural, =1 {} other {s}}
-    <a mat-icon-button [routerLink]="link" fragment="available-versions"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="available-versions">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
-    <ng-container *ngIf="objectHasNoValue(movie.languages) else displayAvailableLanguages">
-      <a [routerLink]="link" fragment="available-versions"class="missing-control">
-        Missing
-      </a>
-    </ng-container>
-    <ng-template #displayAvailableLanguages>
-      <li *ngFor="let language of movie.languages.controls | keyvalue; let isLast = last">
-        <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
-        <span>{{ language.value.value | versionPipe }}</span>
-      </li>
-    </ng-template>
+    <missing-control [control]="movie.languages" [link]="link" fragment="available-versions">
+      <ng-template let-languages="control">
+        <li *ngFor="let language of languages.controls | keyvalue; let isLast = last">
+          <strong>{{ language.key | translateSlug: 'LANGUAGES' }}</strong>&nbsp;
+          <span>{{ language.value.value | versionPipe }}</span>
+        </li>
+      </ng-template>
+    </missing-control>
   </ul>
 </article>

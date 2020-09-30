@@ -15,4 +15,8 @@ export class SummarySalesPitchComponent {
   get salesPitch() {
     return this.movie.get('promotional').get('salesPitch');
   }
+
+  get goals() {
+    return this.movie.get('audience')
+  }
 }

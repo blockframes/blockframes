@@ -7,15 +7,13 @@
       validation.
     </p>
 
-    <div *ngIf="missingFields.length || invalidFields.length" class="mat-body">
-      <span *ngIf="missingFields.length" class="missing-control">You have {{ missingFields.length }} missing fields
-        below.</span>
+    <div *ngIf="invalidFields.length" class="mat-body">
       <div class="mandatory-control">
         <span *ngIf="invalidFields.length">You have {{ invalidFields.length }} mandatory fields
           to fill in.</span>
-        <a mat-button *ngFor="let field of invalidFields" color="warn">
-          {{ field | parseCamelCase | titlecase }}
-        </a>
+        <span class="mandatory-control">
+          {{ invalidFields | fromCamelCase | titlecase }}
+        </span>
       </div>
     </div>
 
@@ -78,7 +76,8 @@
 
       <section id="shooting-information">
         <h3>Shooting Information</h3>
-        <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)"></movie-summary-shooting-information>
+        <movie-summary-shooting-information [movie]="form" [link]="('shooting-information' | getPath)">
+        </movie-summary-shooting-information>
       </section>
 
       <mat-divider></mat-divider>
@@ -130,7 +129,8 @@
 
     <section id="promotional-elements">
       <h3>Financing Details</h3>
-      <financiers-movie-summary-financial-details [movie]="form" [link]="('financial-details' | getPath)"></financiers-movie-summary-financial-details>
+      <financiers-movie-summary-financial-details [movie]="form" [link]="('financial-details' | getPath)">
+      </financiers-movie-summary-financial-details>
     </section>
 
     <!-- Submit -->

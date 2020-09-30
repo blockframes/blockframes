@@ -53,7 +53,6 @@ import { yearValidators, urlValidators } from '@blockframes/utils/form/validator
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 
@@ -1042,7 +1041,7 @@ function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>
   return {
     period: new FormControl(period),
     month: new FormControl(month),
-    year: new FormControl(year)
+    year: new FormControl(year, yearValidators)
   }
 }
 

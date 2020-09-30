@@ -1,39 +1,32 @@
 <h6>
   Files
-  <a mat-icon-button [routerLink]="link" fragment="files"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+  <a mat-icon-button [routerLink]="link" fragment="files">
+    <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+  </a>
 </h6>
 <ul>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
-    <ng-container *ngIf="(movie.promotional.get('presentation_deck').value.ref | isEmptyImgRef) else presentationDeck">
-      <a [routerLink]="link" fragment="files" class="missing-control">
-        Missing
-      </a>
-    </ng-container>
-    <ng-template #presentationDeck>
-      {{ movie.promotional.get('presentation_deck').value.fileName }}
-    </ng-template>
+    <missing-control [control]="movie.promotional.get('presentation_deck').get('ref')" [link]="link" fragment="files">
+      <ng-template let-deck>
+        {{ deck | fileName | maxLength: 30  }}
+      </ng-template>
+    </missing-control>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Scenario </strong>
-    <ng-container *ngIf="(movie.promotional.get('scenario').value.ref | isEmptyImgRef) else scenario">
-      <a [routerLink]="link" fragment="files" class="missing-control">
-        Missing
-      </a>
-    </ng-container>
-    <ng-template #scenario>
-      {{ movie.promotional.get('scenario').value.fileName }}
-    </ng-template>
+    <missing-control [control]="movie.promotional.get('scenario').get('ref')" fragment="files" [link]="link">
+      <ng-template let-scenario>
+        {{ scenario | fileName | maxLength: 30  }}
+      </ng-template>
+    </missing-control>
   </li>
   <li>
     <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Moodboard / Artistic Deck </strong>
-    <ng-container *ngIf="(movie.promotional.get('moodboard').value.ref | isEmptyImgRef) else moodboard">
-      <a [routerLink]="link" fragment="files" class="missing-control">
-        Missing
-      </a>
-    </ng-container>
-    <ng-template #moodboard>
-      {{ movie.promotional.get('moodboard').value.fileName }}
-    </ng-template>
+    <missing-control [control]="movie.promotional.get('moodboard').get('ref')" fragment="files" [link]="link">
+      <ng-template let-moodboard>
+        {{ moodboard | fileName | maxLength: 30  }}
+      </ng-template>
+    </missing-control>
   </li>
 </ul>

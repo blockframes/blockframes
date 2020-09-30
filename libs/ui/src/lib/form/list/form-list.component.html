@@ -46,7 +46,7 @@
 <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span class="mat-caption text-primary">{{ buttonText }}</span>
-  <button mat-mini-fab color="primary" (click)="add()">
+  <button mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>
