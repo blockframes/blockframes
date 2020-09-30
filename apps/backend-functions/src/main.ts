@@ -100,7 +100,7 @@ export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery
 //      Player  Management      //
 //--------------------------------
 
-export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl)); // @TODO #2586 update
+export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
 /**
  * Trigger: REST call to the /admin app

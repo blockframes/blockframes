@@ -124,22 +124,24 @@ export interface HostedVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-  clip_link: string,  // @TODO #2586 remove or move ?
+  
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
-  promo_reel_link: string, // @TODO #2586 remove or move ?
   salesPitch: MovieSalesPitch,
   scenario: string,
-  screener_link: string, // @TODO #2586 remove or move ?
   still_photo: string[],
-  teaser_link: string, // @TODO #2586 remove or move ?
-  trailer_link: string, // @TODO #2586 remove or move ?
-  other_links: OtherLink[]; // @TODO #2586 remove or move ?
+  videos?: HostedVideos,
 
-  videos?: HostedVideos;
-
+  // @TODO #2586 remove this when we can upload 
+  // videos trhough movie tunnel and remove the component for external links
+  clip_link: string,  
+  promo_reel_link: string,
+  screener_link: string,
+  teaser_link: string,
+  trailer_link: string,
+  other_links: OtherLink[],
 }
 
 ////////////////////

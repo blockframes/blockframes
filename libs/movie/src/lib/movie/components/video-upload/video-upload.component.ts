@@ -48,7 +48,7 @@ export class MovieVideoUploadComponent implements OnInit {
   }
 
 
-  public async uploadVideo() { // @TODO #2586 should be done by shell component
+  public async uploadVideo() { // @TODO #2586 should be done by shell component if component is not called from admin
     if (!this.form.valid) {
       this.snackBar.open('Form invalid, please check error messages', 'close', { duration: 2000 });
       return;
