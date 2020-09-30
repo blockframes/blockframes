@@ -134,6 +134,13 @@ const constants = {
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
   },
+  hostedVideoTypes: {
+    tailer: 'Trailer',
+    teaser: 'Teaser',
+    reel: 'Reel',
+    clip: 'Clip',
+    pitch: 'Pitch',
+  },
 
 
   // ------------- //

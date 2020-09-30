@@ -1,13 +1,15 @@
 <mat-card>
-  <mat-card-title>Upload screening</mat-card-title>
   <mat-card-content>
-
     <form [formGroup]="form">
-
+      <h2>Upload screening</h2>
       <div [formGroup]="form.screener" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
         <mat-form-field appearance="outline">
           <mat-label>Screener title</mat-label>
           <input matInput formControlName="title" >
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Screener description</mat-label>
+          <input matInput formControlName="description" >
         </mat-form-field>
         <file-upload
           [form]="form.screener.get('ref')"
@@ -20,12 +22,22 @@
         </file-upload>
 
       </div>
-
+      <h2>Upload other videos</h2>
       <ng-container *ngFor="let otherVideo of form.otherVideos.controls">
         <div [formGroup]="otherVideo" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
           <mat-form-field appearance="outline">
             <mat-label>Video title</mat-label>
             <input matInput formControlName="title" >
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Video description</mat-label>
+            <input matInput formControlName="description" >
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex>
+            <mat-label>Video type</mat-label>
+            <mat-select [formControl]="otherVideo.get('type')">
+              <mat-option *ngFor="let type of hostedVideoTypes" [value]="type">{{ type | toLabel: 'hostedVideoTypes' }}</mat-option>
+            </mat-select>
           </mat-form-field>
           <file-upload
             [form]="otherVideo.get('ref')"

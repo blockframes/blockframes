@@ -101,3 +101,5 @@ export type ContractType = keyof typeof constants.contractType;
 export type CartStatus = keyof typeof constants.cartStatus;
 export type OrgActivity = keyof typeof constants.orgActivity | '';
 export type OrganizationStatus = keyof typeof constants.organizationStatus;
+
+export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;

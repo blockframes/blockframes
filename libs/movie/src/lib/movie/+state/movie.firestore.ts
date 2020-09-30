@@ -17,7 +17,8 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrenciesSlug
+  MovieCurrenciesSlug,
+  HostedVideoTypes
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -116,7 +117,7 @@ export interface HostedVideo {
   jwPlayerId: string,
   title?: string,
   description?: string,
-  type?: 'trailer' | 'teaser' | 'reel' | 'clip' // @TODO #2586 create type ?
+  type?: HostedVideoTypes
 }
 
 ////////////////////
@@ -135,7 +136,8 @@ export interface MoviePromotionalElements {
   videos?: HostedVideos,
 
   // @TODO #2586 remove this when we can upload 
-  // videos trhough movie tunnel and remove the component for external links
+  // videos through movie tunnel and remove the component for external links
+  // + migration for cleaning
   clip_link: string,  
   promo_reel_link: string,
   screener_link: string,

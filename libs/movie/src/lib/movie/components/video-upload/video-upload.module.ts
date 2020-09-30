@@ -12,9 +12,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 
 // Modules
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components 
 import { MovieVideoUploadComponent } from './video-upload.component';
@@ -34,9 +36,11 @@ import { MovieVideoUploadComponent } from './video-upload.component';
     MatIconModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatSelectModule,
 
     // Modules
     UploadModule,
+    ToLabelModule,
   ],
   declarations: [MovieVideoUploadComponent],
   exports: [MovieVideoUploadComponent]
