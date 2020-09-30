@@ -20,6 +20,27 @@
         <title-credit-card [col]="3" [credit]="crew" type="crew"></title-credit-card>
       </ng-container>
     </article>
+
+    <mat-divider></mat-divider>
+  </section>
+
+  <section *ngIf="movie.promotional.notes.length">
+    <h2>Notes and Statements</h2>
+    <article fxLayout>
+      <ng-container *ngFor="let note of movie.promotional.notes">
+        <div fxLayout fxLayoutAlign="space-between center">
+          <p>{{ note | noteName }}</p>
+          <div fxLayout fxLayoutGap="24px">
+            <a mat-icon-button target="_blank" [href]="note.ref | downloadUrl | async">
+              <mat-icon svgIcon="eye"></mat-icon>
+            </a>
+            <a mat-icon-button download [href]="note.ref | downloadUrl | async">
+              <mat-icon svgIcon="download"></mat-icon>
+            </a>
+          </div>
+        </div>
+      </ng-container>
+    </article>
   </section>
 
 </ng-container>
