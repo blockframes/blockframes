@@ -120,6 +120,7 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
 }
 
 function getPathInfo(ref: string) {
+  ref = ref.startsWith('/') ? ref.slice(1) : ref;
   const refParts = ref.split('/');
 
   const pathInfo: Record<string, string | undefined> = {};
