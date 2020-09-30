@@ -5,13 +5,16 @@
 }
 
 .div-remote-no-cam {
-  padding: 25px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 ::ng-deep #remote-participant {
   .remoteParticipant {
-    background-position: center center;
-    background-size: cover;
+    //background-position: center center;
+    //background-size: cover;
     max-height: 100%;
     max-width: 100%;
   }

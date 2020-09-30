@@ -1,4 +1,13 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {Participant as IParticipantMeeting, Track as ITrack} from 'twilio-video';
@@ -21,8 +30,8 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   videoIsOn: boolean;
   audioIsOn: boolean;
 
-  constructor() {
-    super();
+  constructor(protected cd: ChangeDetectorRef) {
+    super(cd);
     this.camMicIsOn$.subscribe((value: any) => {
       this.videoIsOn = value.video;
       this.audioIsOn = value.audio;

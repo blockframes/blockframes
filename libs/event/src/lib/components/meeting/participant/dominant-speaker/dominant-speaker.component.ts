@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import { Participant as IParticipantMeeting } from 'twilio-video';
 
@@ -13,8 +13,8 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
 
   @ViewChild('dominantSpeakerVideo') containerDominantSpeakerVideo;
 
-  constructor() {
-    super();
+  constructor(protected cd: ChangeDetectorRef) {
+    super(cd);
   }
 
   ngOnInit(): void {

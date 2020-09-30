@@ -1,5 +1,5 @@
 //Angular
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 //Blockframes
 import {Event, EventService} from "@blockframes/event/+state";
@@ -43,7 +43,7 @@ export class VideoComponent implements OnInit, OnDestroy {
   localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
 
   constructor(private eventService: EventService,
-              private meetingService: MeetingService) {
+              private meetingService: MeetingService, private cd: ChangeDetectorRef) {
 
 
     //construct listener to the meetingEvent
@@ -136,6 +136,7 @@ export class VideoComponent implements OnInit, OnDestroy {
   connectedToRoomTwilio(room){
     console.log('---------------------------connectedToRoomTwilio---------------------------');
     this.$localParticipantConnectedDataSource.next(room.localParticipant);
+    this.cd.detectChanges();
   }
 
   /**
@@ -287,11 +288,14 @@ export class VideoComponent implements OnInit, OnDestroy {
   }
 
 
+  noParticipantConnecte(){
+    return this.$participantConnectedDataSource.getValue().length < 1
+  }
+
   //FIXME Change name
   numOfCols(){
-    const arrayParticipantConnected = this.$participantConnectedDataSource.getValue();
+    const arrayParticipantConnected = this.$participantConnectedDataSource.getValue().slice() ;
     const lengthParticipantConnected = arrayParticipantConnected.length;
-    const numCol = (lengthParticipantConnected < 2) ? 1 : (lengthParticipantConnected > 4) ? 3 : 2;
     let num = 1;
     if (arrayParticipantConnected.length > 1 && arrayParticipantConnected.length <= 4) {
       num = 2;

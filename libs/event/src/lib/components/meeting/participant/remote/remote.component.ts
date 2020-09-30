@@ -1,4 +1,13 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  Renderer2
+} from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {Participant as IIParticipantMeeting} from 'twilio-video';
@@ -21,8 +30,8 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
   containerOfVideo;
 
-  constructor(private renderer: Renderer2, private elm: ElementRef) {
-    super();
+  constructor(private renderer: Renderer2, private elm: ElementRef, protected cd: ChangeDetectorRef) {
+    super(cd);
     this.camMicIsOn$.subscribe((value: any) => {
       this.videoIsOn = value.video;
       this.audioIsOn = value.audio;
@@ -34,8 +43,8 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
   }
 
   ngAfterViewInit() {
-    this.mocDivVideo(this.participant);
     this.setUpRemoteParticipantEvent(this.participant);
+    this.mocDivVideo(this.participant);
   }
 
   setTrackEvent(track){
@@ -93,8 +102,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('trackStarted', (track) => {
       console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      this.setTrackEvent(track);
-      this.setUpVideoAndAudio(track.kind, true)
+      // this.setTrackEvent(track);
     })
 
     participant.on('trackSubscriptionFailed', () => {
@@ -103,7 +111,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
     participant.on('trackSwitchedOff', (track) => {
       console.log(`============================== trackSwitchedOff in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
-      this.setUpVideoAndAudio(track.kind, false)
     })
 
     participant.on('trackSwitchedOn', () => {
@@ -122,6 +129,9 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    */
   mocDivVideo(participant: IIParticipantMeeting){
 
+    console.log('mocDivVideo : '  )
+    console.log('participant : ', participant)
+
     const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-video-participant');
 
     //Cretion div name/lastName participant
@@ -138,5 +148,9 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     this.renderer.appendChild(this.containerOfVideo, containerNameParticipant);
     this.attachParticipantTracks(participant, this.containerOfVideo, 'remoteParticipant');
 
+  }
+
+  test() {
+    console.log('test : ', this.$camMicIsOnDataSource.getValue())
   }
 }
