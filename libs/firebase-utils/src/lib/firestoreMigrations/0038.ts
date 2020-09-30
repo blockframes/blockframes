@@ -14,12 +14,12 @@ export async function upgrade(db: Firestore) {
         if(box.unit === 'boxoffice_dollar') {
           return {
             ...box,
-            unit: 'usDollar'
+            unit: 'usd'
           }
         } else if (box.unit === 'boxoffice_euro') {
           return {
             ...box,
-            unit: 'euro'
+            unit: 'eur'
           }
         } else {
           return {...box}
