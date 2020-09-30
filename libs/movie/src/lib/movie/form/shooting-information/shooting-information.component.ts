@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
+import { Subscription, Observable } from 'rxjs';
+import { tap, startWith } from 'rxjs/operators'
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+
 
 @Component({
   selector: 'movie-shooting-information',
@@ -15,13 +19,15 @@ import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 export class MovieFormShootingInformationComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
+  values$: Observable<string[]>;
 
   form = this.shell.form;
+  city = new FormControl();
   disabledForm = new FormControl()
 
   public periods = Object.keys(staticConsts['shootingPeriod']);
-
   public months = Object.keys(staticConsts['months']);
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private keys = ['completed', 'planned', 'progress'] as const;
 
@@ -29,6 +35,9 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.enableForm();
+    // this.values$ = this.form.shooting.controls['locations'].controls['cities'].valueChanges.pipe(
+    //   startWith(this.form.shooting.controls['locations'].controls['cities'].value)
+    // );
   }
 
   ngOnDestroy() {
@@ -63,4 +72,16 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
       }
     }
   }
+
+  public add(event: MatChipInputEvent): void {
+    const { value = '' } = event;
+
+    this.form.shooting.controls['locations'].controls['cities'].add(value);
+    this.city.reset();
+  }
+
+  public remove(i: number): void {
+    this.form.shooting.controls['locations'].controls['cities'].removeAt(i);
+  }
+
 }

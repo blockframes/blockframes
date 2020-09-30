@@ -95,13 +95,13 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
-    estimatedBudget: createRange<number>(params.estimatedBudget),
+    estimatedBudget: createRange<number>(params.estimatedBudget ? params.estimatedBudget : {}),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
-    release: createReleaseYear(params.release),
-    runningTime: createRunningTime(params.runningTime),
-    shooting: createShooting(params.shooting),
+    release: createReleaseYear(params.release ? params.release : {}),
+    runningTime: createRunningTime(params.runningTime ? params.runningTime : {}),
+    shooting: createShooting(params.shooting ? params.shooting : {}),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
@@ -117,7 +117,7 @@ export function createMoviePromotional(
     financialDetails: params.financialDetails ?? '',
     moodboard: params.moodboard ?? '',
     notes: params.notes ?? [],
-    salesPitch: createSalesPitch(params.salesPitch),
+    salesPitch: params.salesPitch ? createSalesPitch(params.salesPitch) : {},
     still_photo: params.still_photo ?? [],
     presentation_deck: params.presentation_deck ?? '',
     scenario: params.scenario ?? '',
@@ -130,7 +130,7 @@ export function createMoviePromotional(
   };
 }
 
-export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
+export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
   return {
     description: '',
     file: '',
@@ -289,6 +289,9 @@ export function createShooting(params: Partial<MovieShooting> = {}): MovieShooti
 
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
+    completed: null,
+    progress: null,
+    planned: {},
     ...params
   }
 }

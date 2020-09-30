@@ -760,6 +760,10 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   }
 }
 
+// ------------------------------
+//              NOTES
+// ------------------------------
+
 function createMovieNoteControls(note?: Partial<MovieNote>) {
   const entity = createMovieNote(note)
   return {
@@ -1024,7 +1028,7 @@ function createShootingRangeFormControl(entity?: Partial<MoviePlannedShootingDat
 
 type ShootingPlannedFormControl = ReturnType<typeof createShootingRangeFormControl>;
 
-function createPlannedRange(params: Partial<MoviePlannedShootingDateRange>) {
+function createPlannedRange(params: Partial<MoviePlannedShootingDateRange> = {}) {
   return {
     from: {},
     to: {},
@@ -1042,7 +1046,7 @@ export class ShootingPlannedObjectForm extends FormEntity<MoviePlannedShootingCo
   }
 }
 
-function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>) {
+function createShootingPlannedFormControl(entity: Partial<MoviePlannedShooting> = {}) {
   const { period, month, year } = createShootingPlannedObject(entity);
   return {
     period: new FormControl(period),
@@ -1064,9 +1068,9 @@ export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsCont
 }
 
 function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
-  const { city, country } = createShootingLocations(entity);
+  const { cities, country } = createShootingLocations(entity);
   return {
-    city: new FormControl(city),
+    cities: FormList.factory(cities, el => new FormControl(el)),
     country: new FormControl(country)
   }
 }
@@ -1075,7 +1079,7 @@ type MovieShootingLocationsControl = ReturnType<typeof createShootingLocationsFo
 
 function createShootingLocations(params: Partial<MovieShootingLocations>): MovieShootingLocations {
   return {
-    city: '',
+    cities: [],
     country: '',
     ...params
   }
