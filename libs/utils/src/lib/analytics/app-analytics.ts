@@ -16,10 +16,6 @@ export class FireAnalytics extends GDPRService {
 
   public event(name: AnalyticsEvents, params: Record<string, any>) {
 
-    if (!this.gdprIsEnabled) return;
-
-    console.log('GA', name);
-
     const { user, orgId, isBlockframesAdmin } = this.authQuery;
     const isOperator = isBlockframesAdmin || orgId === centralOrgID;
     if (user && orgId && isOperator) {

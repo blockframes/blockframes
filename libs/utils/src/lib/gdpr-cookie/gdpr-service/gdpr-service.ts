@@ -1,24 +1,6 @@
-import { coerceBooleanProperty } from "@angular/cdk/coercion";
-
 export class GDPRService {
 
-  constructor(
-    private storageConsentKey: string,
-  ) { }
-
-  private assertKeyExists() {
-    const consent = localStorage.getItem(this.storageConsentKey);
-
-    // if the key doesn't exists we set it to true
-    if (consent === null || consent === undefined) {
-      localStorage.setItem(this.storageConsentKey, `${true}`);
-    }
-  }
-
-  get gdprIsEnabled() {
-    this.assertKeyExists();
-    return coerceBooleanProperty(localStorage.getItem(this.storageConsentKey));
-  }
+  constructor(private storageConsentKey: string) { }
 
   gdprEnable() {
     localStorage.setItem(this.storageConsentKey, `${true}`);
@@ -27,5 +9,4 @@ export class GDPRService {
   gdprDisable() {
     localStorage.setItem(this.storageConsentKey, `${false}`);
   }
-
 }
