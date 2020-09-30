@@ -17,9 +17,13 @@ export class PdfControlComponent {
   private _event: Event<Meeting>;
   get event() { return this._event; }
   @Input() set event(value: Event<Meeting>) {
+
+    const needUpdate = !this.event || !this.event.meta.selectedFile || this.event.meta.selectedFile !== value.meta.selectedFile;
+
     // ensure the event object is correct
     this._event = createEvent(value);
-    this.update();
+
+    if (needUpdate) this.update();
   }
 
   loading$ = new BehaviorSubject(true);
@@ -52,7 +56,11 @@ export class PdfControlComponent {
 
     } else {
 
-      const control = this.event.meta.controls[this.event.meta.selectedFile];
+      const control = this.event.meta.controls[this.event.meta.selectedFile] as MeetingPdfControl;
+
+      if (control.type !== 'pdf') {
+        throw new Error(`WRONG CONTROL : received ${control.type} control where a pdf control was expected`);
+      }
 
       if (control.currentPage === 1) this.previousDisable$.next(true);
       else this.previousDisable$.next(false);

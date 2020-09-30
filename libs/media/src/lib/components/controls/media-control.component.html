@@ -4,7 +4,7 @@
     <media-pdf-control [event]="event"></media-pdf-control>
   </ng-container>
   <ng-container *ngSwitchCase="'video'">
-    VIDEO CONTROL <!-- TODO issue#3686 -->
+    <media-video-control [event]="event"></media-video-control>
   </ng-container>
   <ng-container *ngSwitchDefault>
     <!-- No controls to display -->
