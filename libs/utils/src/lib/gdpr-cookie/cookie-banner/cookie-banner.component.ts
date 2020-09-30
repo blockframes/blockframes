@@ -1,9 +1,16 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-
-import { MatDialog } from '@angular/material/dialog';
-
-import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 import { DOCUMENT } from '@angular/common';
+// Material
+import { MatDialog } from '@angular/material/dialog';
+// Blockframes
+import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
+import { CookieFormComponent } from '../cookie-form/cookie-form.component';
+// Intercom
+import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
+// Analytics
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+// Yandex
+import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Component({
   selector: 'cookie-banner',
@@ -17,7 +24,11 @@ export class CookieBannerComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    @Inject(DOCUMENT) private document: Document,
+    private analytics: FireAnalytics,
+    private intercom: IntercomService,
+    private yandex: YandexMetricaService,
+    @Inject(YM_CONFIG) private ymConfig: number,
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   ngOnInit() {
@@ -33,7 +44,42 @@ export class CookieBannerComponent implements OnInit {
   }
 
   public userAcceptedCookies() {
-    this.document.cookie = 'archipel=true';
+    this.confirmCookies();
+    this.enableIntercom();
+    this.enableAnalytics();
+    this.enableYandex();
+  }
+
+  public changePreferences() {
+    const dialogRef = this.dialog.open(CookieFormComponent, { maxHeight: '80vh' });
+    dialogRef.afterClosed().subscribe(settings => {
+      if (!!settings) {
+        this.confirmCookies();
+        if (settings.google) this.enableAnalytics();
+        if (settings.intercom) this.enableIntercom();
+        if (settings.yandex) this.enableYandex();
+      }
+    })
+  }
+
+  confirmCookies() {
+    this.document.cookie = 'archipel=';
     this.hasAccepted = true;
   }
+
+  enableIntercom() {
+    this.intercom.gdprEnable();
+    this.intercom.enable();
+  }
+
+  enableAnalytics() {
+    this.analytics.gdprEnable();
+    this.analytics.analytics.setAnalyticsCollectionEnabled(true);
+  }
+
+  enableYandex() {
+    this.yandex.gdprEnable();
+    this.yandex.insertMetrika(this.ymConfig);
+  }
+
 }

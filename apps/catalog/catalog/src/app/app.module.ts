@@ -36,7 +36,7 @@ import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-me
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom.module';
+import { IntercomAppModule } from '@blockframes/utils/intercom/intercom.module';
 import { intercomId } from '@env';
 
 // Analytics

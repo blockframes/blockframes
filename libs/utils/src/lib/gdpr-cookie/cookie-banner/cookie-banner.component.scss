@@ -1,8 +1,7 @@
 :host {
   position: fixed;
   bottom: 0;
-  /* intercom set it's z-index to 2147483000, so we need to put an even bigger number to stay on top */
-  z-index: 3000000000;
+  z-index: 1;
   a {
     text-decoration: underline;
   }

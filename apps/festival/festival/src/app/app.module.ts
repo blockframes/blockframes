@@ -1,6 +1,6 @@
 ﻿// Angular
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,10 +29,12 @@ import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
+import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom.module';
+import { IntercomAppModule } from '@blockframes/utils/intercom/intercom.module';
+import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { intercomId } from '@env';
 
 // Analytics
@@ -87,16 +89,38 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 })
 export class AppModule {
 
-  constructor(private router: Router, private analytics: FireAnalytics) {
-    const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+  constructor(
+    router: Router,
+    analytics: FireAnalytics,
+    intercom: IntercomService,
+    yandex: YandexMetricaService,
+    @Inject(YM_CONFIG) ymConfig: number
+  ) {
+
+    const googleCookieAccepted = localStorage.getItem('c8-gdpr-google-analytics');
+    if (googleCookieAccepted !== 'false') {
+      analytics.analytics.setAnalyticsCollectionEnabled(false);
+    }
+
+    const intercomCookieAccepted = localStorage.getItem('c8-gdpr-intercom');
+    if (intercomCookieAccepted !== 'false') {
+      intercom.disable();
+    }
+
+    const yandexCookieAccepted = localStorage.getItem('c8-gdpr-yandex');
+    if (yandexCookieAccepted === 'true') {
+      yandex.insertMetrika(ymConfig);
+    }
+
+    const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
       try {
-        this.analytics.event('pageView', {
+        analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });
       } catch {
-        this.analytics.event('pageView', {
+        analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });

@@ -12,9 +12,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-// TODO REMOVE THAT
-import { CookieFormModule } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie-form.module';
-
 @NgModule({
   declarations: [LandingComponent],
   imports: [
@@ -22,15 +19,12 @@ import { CookieFormModule } from '@blockframes/utils/gdpr-cookie/cookie-form/coo
     FlexLayoutModule,
     LandingModule,
     ImageReferenceModule,
-    CookieFormModule,
 
     // Material
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     RouterModule.forChild([{ path: '', component: LandingComponent }]),
-
-    CookieFormModule,
   ]
 })
 export class FestivalLandingModule { }

@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatDividerModule,
     MatSlideToggleModule,
     MatButtonModule,
+    MatDialogModule
   ],
   declarations: [
     CookieFormComponent,
