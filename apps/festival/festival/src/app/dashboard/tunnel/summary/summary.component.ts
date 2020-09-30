@@ -5,11 +5,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { mergeDeep } from '@blockframes/utils/helpers';
-import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie/+state';
 import { Subscription } from 'rxjs';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
@@ -35,8 +31,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService,
-    private routerQuery: RouterQuery
+    private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
@@ -52,12 +47,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      this.updateFormArraysByProdStatus();
-      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
-      const currentApp = getCurrentApp(this.routerQuery);
-      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      movie.storeConfig.appAccess.festival = true;
-      await this.service.update(movie.id, movie);
+      await this.service.configureMovieAndUpsert(this.query.getActiveId(), this.query.getActive(), this.form);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
