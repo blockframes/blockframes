@@ -51,6 +51,24 @@
       <h5>{{ salesAgent.countries | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ salesAgent.displayName }}</p>
     </article>
+
+    <mat-divider></mat-divider>
+  </section>
+
+  <section *ngIf="movie | hasKeys: 'shooting'">
+    <h2>Shooting Information</h2>
+    <article>
+      <h5>Shooting date</h5>
+      <p>{{ movie.shooting | shootingDates }}</p>
+    </article>
+    <article>
+      <h5>Shooting locations</h5>
+      <p>{{ movie.shooting | shootingLocations }}</p>
+    </article>
+    <article *ngIf="movie.expectedPremiere.date">
+      <h5>Expected premiere</h5>
+      <p>{{ movie.expectedPremiere.event }} - {{ movie.expectedPremiere.date }}</p>
+    </article>
   </section>
 
 
