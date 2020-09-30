@@ -289,20 +289,20 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   //FIXME Change name
   numOfCols(){
-    const lengthParticipantConnected = this.$participantConnectedDataSource.getValue().length;
     const arrayParticipantConnected = this.$participantConnectedDataSource.getValue();
+    const lengthParticipantConnected = arrayParticipantConnected.length;
     const numCol = (lengthParticipantConnected < 2) ? 1 : (lengthParticipantConnected > 4) ? 3 : 2;
-
-    const arr = [];
-
-    for(let i=0; i < numCol; i++){
-      const arrLine = [];
-      for(let j=0; j < (lengthParticipantConnected)/numCol; j++){
-        arrLine.push(arrayParticipantConnected[(j+i * (lengthParticipantConnected)/numCol)])
-      }
-      arr.push(arrLine)
+    let num = 1;
+    if (arrayParticipantConnected.length > 1 && arrayParticipantConnected.length <= 4) {
+      num = 2;
+    } else if (arrayParticipantConnected.length > 4) {
+      num = 3;
     }
-    console.log('arr : ', arr);
+    const arr = [];
+    while(arrayParticipantConnected.length) {
+      arr.push(arrayParticipantConnected.splice(0,num));
+    }
+    console.log('arr : ', arr)
     return arr
   }
 
