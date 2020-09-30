@@ -8,6 +8,7 @@ export const productionRoute: RouteDescription = {
     'stakeholders.coProductionCompany',
     'stakeholders.distributor',
     'stakeholders.saleAgent',
-    'producers'
+    'producers',
+    'shooting'
   ],
 }

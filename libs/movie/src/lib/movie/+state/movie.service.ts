@@ -32,6 +32,10 @@ export class MovieService extends CollectionService<MovieState> {
     super(store);
   }
 
+  formatFromFirestore(movie: any) {
+    return createMovie(movie);
+  }
+
   async create(movieImported?: Movie): Promise<Movie> {
     const createdBy = this.authQuery.userId;
     const appName = getCurrentApp(this.routerQuery);
