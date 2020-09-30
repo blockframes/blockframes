@@ -23,6 +23,8 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   public months = Object.keys(staticConsts['months']);
 
+  private keys = ['completed', 'planned', 'progress'] as const;
+
   constructor(private shell: MovieFormShellComponent) { }
 
   ngOnInit() {
@@ -45,41 +47,21 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     this.sub = this.disabledForm.valueChanges.pipe(
       distinctUntilChanged(),
       filter(value => !!value),
-      tap(value => {
-        switch (value) {
-          case 'completed': {
-            this.form.shooting.get('dates').get('completed').enable();
-            this.form.shooting.get('dates').get('progress').reset();
-            this.form.shooting.get('dates').get('progress').disable();
-            this.handleStateOfShootingDateForm('disable');
-            break;
-          }
-          case 'progress': {
-            this.form.shooting.get('dates').get('progress').enable();
-            this.form.shooting.get('dates').get('completed').disable();
-            this.form.shooting.get('dates').get('completed').reset();
-            this.handleStateOfShootingDateForm('disable')
-            break;
-          }
-          case 'planned': {
-            this.form.shooting.get('dates').get('completed').disable();
-            this.form.shooting.get('dates').get('completed').reset();
-            this.form.shooting.get('dates').get('progress').disable();
-            this.form.shooting.get('dates').get('progress').reset();
-            this.handleStateOfShootingDateForm('enable')
-            break;
-          }
-          case null || undefined: {
-            this.form.shooting.get('dates').get('completed').disable();
-            this.form.shooting.get('dates').get('progress').disable();
-            this.handleStateOfShootingDateForm('disable');
-            break;
-          }
-        }
-      })
-    ).subscribe();
-    const active = ['completed', 'planned', 'progress'].find(key => hasValue(this.form.shooting.value.dates[key]));
+    ).subscribe(value => this.activate(value));
+
+    const active = this.keys.find(key => hasValue(this.form.shooting.value.dates[key]));
     this.disabledForm.setValue(active);
+  }
+
+  private activate(activeKey: 'completed' | 'planned' | 'progress') {
+    for (const key of this.keys) {
+      if (key === activeKey) {
+        this.form.shooting.get('dates').get(key).enable();
+      } else {
+        this.form.shooting.get('dates').get(key).disable();
+        this.form.shooting.get('dates').get(key).reset();
+      }
+    }
   }
 
 
