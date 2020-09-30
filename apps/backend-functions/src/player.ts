@@ -15,7 +15,8 @@ import { File as GFile } from '@google-cloud/storage';
 const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
-  eventId: string;
+  eventId: string,
+  jwPlayerId?: string;
 }
 
 export const getPrivateVideoUrl = async (
@@ -77,10 +78,20 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  if (!movie.hostedVideo) {
+  if (!data.jwPlayerId) {
+    // no jwPlayerId in request, we assume user want to see the main video (screener)
+    if (!movie.promotional.videos?.screener?.jwPlayerId) {
+      return {
+        error: 'NO_VIDEO',
+        result: 'The creator of the movie hasn\'t uploaded any video for you to watch'
+      };
+    } else {
+      data.jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
+    }
+  } else if (!isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
     return {
       error: 'NO_VIDEO',
-      result: `The creator of the movie hasn't uploaded any video for you to watch`
+      result: 'The video you are looking for doest not exists'
     };
   }
 
@@ -144,17 +155,32 @@ export const getPrivateVideoUrl = async (
   // we then add the duration in seconds to get the final expiry date
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `manifests/${movie.hostedVideo}.m3u8:${expires}:${jwplayerSecret}`;
+  const toSign = `manifests/${data.jwPlayerId}.m3u8:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${expires}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/manifests/${data.jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
 
   return {
     error: '',
     result: signedUrl
   };
+}
+
+const isJwplayerIdBelongingToMovie = async (jwPlayerId: string, movie: MovieDocument) => {
+  // jwPlayerId is the screener
+  if (movie.promotional.videos?.screener?.jwPlayerId === jwPlayerId) {
+    return true;
+  }
+
+  // jwPlayerId is in otherVideos array
+  if (movie.promotional.videos?.otherVideos?.length) {
+    return movie.promotional.videos.otherVideos.some(ov => ov.jwPlayerId === jwPlayerId);
+  }
+
+  // not found
+  return false;
 }
 
 /**

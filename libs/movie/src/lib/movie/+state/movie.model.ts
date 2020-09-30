@@ -25,7 +25,6 @@ import {
   MovieGoalsAudience,
   MovieSalesPitch,
   MovieNote,
-  MovieTotalBudget,
   HostedVideos,
   HostedVideo
 } from './movie.firestore';
@@ -76,7 +75,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     customGenres: [],
     format: null,
     formatQuality: null,
-    hostedVideo: '',
     internalRef: '',
     keyAssets: '',
     keywords: [],
@@ -128,6 +126,7 @@ export function createMoviePromotional(
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
+    videos: createHostedVideos(params.videos),
   };
 }
 
