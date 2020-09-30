@@ -1,7 +1,8 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Participant as IParticipantMeeting, Track as ITrack} from 'twilio-video';
+
 
 @Component({
   selector: 'event-local-participant',
@@ -11,8 +12,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
-  // FIXME make interface for participant
-  @Input() localParticipant: any;
+  @Input() localParticipant: IParticipantMeeting;
+  // FIXME make interface for localPreviewTracks
   @Input() localPreviewTracks: any;
 
   @ViewChild('localVideo') containerLocalVideo;
@@ -41,34 +42,34 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    *
    * @param localParticipant
    */
-  setUpLocalParticipantEvent(localParticipant){
+  setUpLocalParticipantEvent(localParticipant: IParticipantMeeting){
     console.log('localParticipant : ', localParticipant)
 
-    localParticipant.on(meetingEventEnum.TrackSubscribed, (track) => {
+    localParticipant.on(meetingEventEnum.TrackSubscribed, (track: ITrack) => {
       console.log('============================== trackSubscribed in local component============================')
       this.setUpCamAndMic([track], true);
 
     })
 
-    localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
+    localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track: ITrack) => {
       console.log('============================== trackUnsubscribed in local component============================')
       this.setUpCamAndMic([track], false);
 
     })
 
-    localParticipant.on('trackDisabled', (track) => {
+    localParticipant.on('trackDisabled', (track: ITrack) => {
       console.log('============================== trackDisabled in local component============================')
       this.setUpCamAndMic([track], false);
 
     })
 
-    localParticipant.on('trackEnabled', (track) => {
+    localParticipant.on('trackEnabled', (track: ITrack) => {
       console.log('============================== trackEnabled in local component============================')
       this.setUpCamAndMic([track], true);
 
     })
 
-    localParticipant.on('trackStopped', (track) => {
+    localParticipant.on('trackStopped', (track: ITrack) => {
       console.log('============================== trackStopped in local component============================')
       this.setUpCamAndMic([track], false);
 
@@ -79,7 +80,7 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    *
    * @param localPreviewTracks
    */
-  makeLocalTrack(localPreviewTracks: Array<any>){
+  makeLocalTrack(localPreviewTracks: ITrack[]){
     this.setUpCamAndMic(localPreviewTracks, true);
     this.attachTracks(localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
   }

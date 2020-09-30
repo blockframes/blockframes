@@ -1,0 +1,17 @@
+<ng-container>
+
+  <div *ngIf="!!participant" class="dominant-speaker-video-container container-round-div-initial-name-participant">
+    <ng-container *ngIf="camMicIsOn$ | async as camMicIsOn">
+      <div *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
+        <span>
+          {{getInitialFromParticipant(participant)}}
+        </span>
+      </div>
+    </ng-container>
+    <div [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
+    </div>
+  </div>
+  <div *ngIf="!participant" class="dominant-waiting-screen">
+    Waiting for connection of the seller
+  </div>
+</ng-container>

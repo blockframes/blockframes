@@ -1,7 +1,9 @@
 <ng-container>
   <div class="remote-participant container-round-div-initial-name-participant" id="remote-participant" >
-    <div *ngIf="!((camMicIsOn$ | async).video)" class="round-div-initial-name-participant">
-      {{getInitialFromParticipant(participant)}}
+    <div *ngIf="!((camMicIsOn$ | async).video)" class="div-remote-no-cam">
+      <div class="round-div-initial-name-participant">
+        {{getInitialFromParticipant(participant)}}
+      </div>
     </div>
     <div [hidden]="!!!(camMicIsOn$ | async).video" id="remote-video-participant" >
 

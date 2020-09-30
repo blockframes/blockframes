@@ -3,7 +3,10 @@ import {Injectable} from '@angular/core';
 //Import Twilio-video
 import * as Video from 'twilio-video';
 import {BehaviorSubject} from "rxjs";
-import {User, UserService} from "@blockframes/user/+state";
+import {OrganizationMember, User, UserQuery, UserService} from "@blockframes/user/+state";
+import {Event} from "@blockframes/event/+state";
+import { Participant as IIParticipantMeeting } from 'twilio-video';
+
 
 export enum meetingEventEnum {
   ParticipantConnected= 'participantConnected',
@@ -14,6 +17,7 @@ export enum meetingEventEnum {
   ConnectedToRoomTwilio= 'connectedToRoomTwilio',
   LocalPreviewDone = 'localPreviewDone',
   TrackDisabled = 'trackDisabled',
+  DominantSpeakerChanged = 'dominantSpeakerChanged',
 }
 
 export interface EventRoom {
@@ -38,10 +42,12 @@ export class MeetingService {
   camDeactivate = false;
   micDeactivate = false;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private userQuery: UserQuery,
+    ) {
 
   }
-
 
   getEventRoom(){
     return this.eventRoom;
@@ -61,6 +67,11 @@ export class MeetingService {
 
   setLocalTrackToRoom(){
 
+  }
+
+  getIfIsReelOwner(event){
+    const userIdActive = this.userQuery.getActiveId();
+    return userIdActive === event.organizedBy.uid;
   }
 
   getIfAudioIsAvailable(){
@@ -114,7 +125,7 @@ export class MeetingService {
    * Get track of one participant
    * @param participant - All participants connected in the room
    */
-  getTracksOfParticipant(participant) {
+  getTracksOfParticipant(participant: IIParticipantMeeting) {
     return Array.from(participant.tracks).map((
       track : any
     ) => {
@@ -128,7 +139,7 @@ export class MeetingService {
    * Get all participant already in the room.
    * @param participants - All participants connected in the room
    */
-  getParticipantOfParticipantsMapAlreadyInRoom(participants) {
+  getParticipantOfParticipantsMapAlreadyInRoom(participants: IIParticipantMeeting[]) {
     return Array.from(participants).map((
       participant : any
     ) => {
@@ -141,9 +152,9 @@ export class MeetingService {
    * Connection to twilio with the access token and option of connection
    * @param accessToken - string - access Token for twilio
    * @param options - object - option of connection for twilio
-   * @param roomName - string - Nome of the room
+   * @param event - string - All event we come from
    */
-  connectToTwilioRoom(accessToken: string, options, roomName) {
+  connectToTwilioRoom(accessToken: string, options, event: Event) {
 
     const connectOptions = options;
     if (this.previewTracks) {
@@ -152,13 +163,13 @@ export class MeetingService {
       connectOptions.enableDominantSpeaker = true;
     }
 
-    Video.connect(accessToken, connectOptions).then((r) => this.roomJoined(r), (error) => {
+    Video.connect(accessToken, connectOptions).then((r) => this.roomJoined(r, event), (error) => {
       console.log('Could not connect to Twilio: ' + error.message);
     });
   }
 
 
-  async getFirstNameAndLastNameOfParticipant(participant){
+  async getFirstNameAndLastNameOfParticipant(participant: IIParticipantMeeting){
     const localUser: User = await this.userService.getUser(participant.identity)
     participant.firstName = localUser.firstName
     participant.lastName = localUser.lastName
@@ -168,11 +179,13 @@ export class MeetingService {
   /**
    * When successfully connected to room.
    * @param room - room twilio where we are connected
+   * @param event - event when we com from / cascade8
    */
-  async roomJoined(room) {
+  async roomJoined(room, event) {
     //save activeRoom
     this.activeRoom = room;
 
+    console.log('room : ', room)
 
     const identity = room.localParticipant.identity;
 
@@ -195,11 +208,17 @@ export class MeetingService {
     // console.log("Joined as '" + this.identity + "'");
     room.localParticipant.firstName = localUser.firstName
     room.localParticipant.lastName = localUser.lastName
+    room.localParticipant.isDominantSpeaker = false
     this.eventRoom.next({
       meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
       data: room
     });
     this.localParticipant = room.localParticipant;
+
+    this.eventRoom.next({
+      meetingEvent: meetingEventEnum.DominantSpeakerChanged,
+      data: null
+    });
 
     await this.setUpRoomEvent(room);
 
@@ -213,7 +232,7 @@ export class MeetingService {
     console.log('setUpRoomEvent : ', {room})
 
     // When a Participant joins the Room, log the event.
-    room.on(meetingEventEnum.ParticipantConnected, async (participant) => {
+    room.on(meetingEventEnum.ParticipantConnected, async (participant: IIParticipantMeeting) => {
       console.log("Joining: '" + participant.identity + "'");
 
 
@@ -221,6 +240,7 @@ export class MeetingService {
 
       participant.firstName = remoteUser.firstName
       participant.lastName = remoteUser.lastName
+      participant.isDominantSpeaker = false;
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.ParticipantConnected,
@@ -229,7 +249,7 @@ export class MeetingService {
     });
 
     // When a Participant adds a Track, attach it to the DOM.
-    room.on(meetingEventEnum.TrackSubscribed, (track, trackPublication, participant) => {
+    room.on(meetingEventEnum.TrackSubscribed, (track, trackPublication, participant: IIParticipantMeeting) => {
       // this.attachTracks([track], participantContainer, 'participantContainer');
 
       this.eventRoom.next({
@@ -239,7 +259,7 @@ export class MeetingService {
     });
 
     // When a Participant removes a Track, detach it from the DOM.
-    room.on(meetingEventEnum.TrackUnsubscribed, (track, trackPublication, participant) => {
+    room.on(meetingEventEnum.TrackUnsubscribed, (track, trackPublication, participant: IIParticipantMeeting) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.TrackUnsubscribed,
@@ -249,13 +269,22 @@ export class MeetingService {
     });
 
     // When a Participant leaves the Room, detach its Tracks.
-    room.on(meetingEventEnum.ParticipantDisconnected, (participant) => {
+    room.on(meetingEventEnum.ParticipantDisconnected, (participant: IIParticipantMeeting) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.ParticipantDisconnected,
         data: participant
       });
     });
+
+    // To catch the dominant speaker change
+    // room.on(meetingEventEnum.DominantSpeakerChanged, (participant: IIParticipantMeeting) => {
+    //
+    //   this.eventRoom.next({
+    //     meetingEvent: meetingEventEnum.DominantSpeakerChanged,
+    //     data: participant
+    //   });
+    // });
 
     // Once the LocalParticipant leaves the room, detach the Tracks
     // of all Participants, including that of the LocalParticipant.
@@ -281,7 +310,9 @@ export class MeetingService {
    *v For disconnect from twilio Room
    */
   disconnected(){
-    this.activeRoom.disconnect()
+    if(!!this.activeRoom){
+      this.activeRoom.disconnect()
+    }
   }
 
 

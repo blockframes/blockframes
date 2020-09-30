@@ -11,6 +11,7 @@ import {
 } from "@blockframes/event/components/meeting/+state/meeting.service";
 
 import {BehaviorSubject, Observable} from "rxjs";
+import { Participant as IParticipantMeeting } from 'twilio-video';
 
 @Component({
   selector: 'event-video',
@@ -22,17 +23,20 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   //Input event meeting
   @Input() event: Event;
-  @Input() isOwner: Boolean;
 
   accessToken: string = null;
 
   //Array of participant connected to the room
-  private $participantConnectedDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
-  arrayOfParticipantConnected$: Observable<any> = this.$participantConnectedDataSource.asObservable();
+  private $participantConnectedDataSource: BehaviorSubject<IParticipantMeeting[]> = new BehaviorSubject([]);
+  arrayOfParticipantConnected$: Observable<IParticipantMeeting[]> = this.$participantConnectedDataSource.asObservable();
 
   //Participant local in the room
-  private $localParticipantConnectedDataSource: BehaviorSubject<any> = new BehaviorSubject(null);
-  localParticipantConnected$: Observable<any> = this.$localParticipantConnectedDataSource.asObservable();
+  private $localParticipantConnectedDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
+  localParticipantConnected$: Observable<IParticipantMeeting> = this.$localParticipantConnectedDataSource.asObservable();
+
+  //Dominant Participant for Buyer
+  private $dominantParticipantForBuyerDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
+  dominantParticipantForBuyer$: Observable<IParticipantMeeting> = this.$dominantParticipantForBuyerDataSource.asObservable();
 
 
   private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
@@ -60,23 +64,34 @@ export class VideoComponent implements OnInit, OnDestroy {
         case meetingEventEnum.LocalPreviewDone:
           this.localPreviewDone(value.data);
           break;
+        case meetingEventEnum.DominantSpeakerChanged:
+          this.dominantSpeakerChanged(value.data);
+          break;
       }
     })
   }
 
   async ngOnInit() {
 
+
+
     const audio = await this.meetingService.getIfAudioIsAvailable();
     const video = await this.meetingService.getIfVideoIsAvailable();
     await this.meetingService.createLocalPreview();
+
+    this.$dominantParticipantForBuyerDataSource.next(null);
 
     this.eventService.getTwilioAccessToken(this.event.id).then((value: ErrorResultResponse) => {
       if(value.error !== ''){
       } else {
         this.accessToken = value.result;
-        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, audio, video}, this.event.id);
+        this.meetingService.connectToTwilioRoom(this.accessToken, { name: this.event.id, dominantSpeaker: true, audio, video}, this.event);
       }
     })
+  }
+
+  getIfIsReelOwner(){
+    return this.meetingService.getIfIsReelOwner(this.event);
   }
 
   /**
@@ -101,7 +116,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    * Function call when participant conncted to the room
    * @param participant: Participant (object twilio)
    */
-  participantConnected(participant){
+  participantConnected(participant: IParticipantMeeting){
     console.log('---------------------------participantConnected---------------------------')
     this.addParticipantFromParticipantConnectedArr(participant)
   }
@@ -110,8 +125,9 @@ export class VideoComponent implements OnInit, OnDestroy {
    * Function call when participant disconnected to the room
    * @param participant: Participant (object twilio)
    */
-  participantDisconnected(participant){
+  participantDisconnected(participant: IParticipantMeeting){
     console.log('---------------------------participantDisconnected---------------------------')
+    this.removeParticipantDominantSpeaker(participant);
     this.removeParticipantFromParticipantConnectedArr(participant);
   }
 
@@ -129,7 +145,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    * @param participant: Participant (object twilio) : Participant to remove
    * @private
    */
-  private removeParticipantFromParticipantConnectedArr(participant: any) {
+  private removeParticipantFromParticipantConnectedArr(participant: IParticipantMeeting) {
     const roomArr: any[] = this.$participantConnectedDataSource.getValue();
 
     roomArr.forEach((item, index) => {
@@ -144,7 +160,7 @@ export class VideoComponent implements OnInit, OnDestroy {
    * @param participant: Participant (object twilio) : Participant to add
    * @private
    */
-  private addParticipantFromParticipantConnectedArr(participant: any) {
+  private addParticipantFromParticipantConnectedArr(participant: IParticipantMeeting) {
     const currentValue = this.$participantConnectedDataSource.getValue();
     currentValue.forEach((item) => {
       if (item.identity === participant.identity) {
@@ -154,14 +170,83 @@ export class VideoComponent implements OnInit, OnDestroy {
     });
     const updatedValue = [...currentValue, participant];
     this.$participantConnectedDataSource.next(updatedValue);
+    this.setParticipantDominantSpeaker(participant)
   }
 
+  /**
+   *
+   */
+  dominantSpeakerChanged(participant: IParticipantMeeting){
+    console.log('---------------------------dominantSpeakerChanged---------------------------')
+    console.log({participant})
+    this.setParticipantDominantSpeaker(participant);
+
+  }
+
+  setParticipantDominantSpeaker(participant: IParticipantMeeting){
+    const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
+    console.log('getParticipantDominantSpeaker allParticipantAlreadyInTheRoom : ', allParticipantAlreadyInTheRoom)
+    // const participantWasDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.isDominantSpeaker)
+    // console.log('participantWasDominantSpeaker : ', participantWasDominantSpeaker)
+    //
+    // if(!!participant){
+    //
+    //   //New dominant speaker
+    //   const newParticipantDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.identity === participant.identity)
+    //   console.log('newParticipantDominantSpeaker : ', newParticipantDominantSpeaker)
+    //   if(!!participantWasDominantSpeaker){
+    //     participantWasDominantSpeaker.isDominantSpeaker = false;
+    //   }
+    //   if(!!newParticipantDominantSpeaker){
+    //     newParticipantDominantSpeaker.isDominantSpeaker = true;
+    //   }
+    // } else {
+    //   //No dominant speaker or is the local participant the dominant speaker Or Buyer
+
+    const identityOfOwner = this.event.organizedBy.uid;
+
+    const newParticipantDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.identity === identityOfOwner)
+    if(!!newParticipantDominantSpeaker){
+        newParticipantDominantSpeaker.isDominantSpeaker = true;
+        this.$dominantParticipantForBuyerDataSource.next(newParticipantDominantSpeaker);
+        // this.$participantConnectedDataSource.next(allParticipantAlreadyInTheRoom);
+      } else {
+        this.$dominantParticipantForBuyerDataSource.next(null);
+      }
+    // }
+  }
+
+  removeParticipantDominantSpeaker(participant: IParticipantMeeting){
+    if(!participant){
+      //Participant is required
+      return;
+    }
+    const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
+    const participantWasDominantSpeaker = this.$dominantParticipantForBuyerDataSource.getValue();
+    console.log('removeParticipantDominantSpeaker allParticipantAlreadyInTheRoom : ', allParticipantAlreadyInTheRoom)
+    const identityOfOwner = this.event.organizedBy.uid;
+
+    const newParticipantDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.identity === identityOfOwner)
+    if(!!participantWasDominantSpeaker){
+      if(participant.identity === participantWasDominantSpeaker.identity){
+        newParticipantDominantSpeaker.isDominantSpeaker = false;
+        this.$dominantParticipantForBuyerDataSource.next(null);
+        // this.$participantConnectedDataSource.next(allParticipantAlreadyInTheRoom);
+      }
+    }
+    // }
+  }
+
+
+  gg(){
+    return this.$dominantParticipantForBuyerDataSource.getValue();
+  }
 
   /**
    *
    * @param participant
    */
-  eventParticipantDeconected(participant){
+  eventParticipantDeconected(participant: IParticipantMeeting){
     this.removeParticipantFromParticipantConnectedArr(participant);
     this.disconnected();
   }
@@ -204,5 +289,10 @@ export class VideoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.disconnected()
+  }
+
+
+  test(){
+    console.log('this.$participantConnectedDataSource.getValue() : ', this.$participantConnectedDataSource.getValue())
   }
 }

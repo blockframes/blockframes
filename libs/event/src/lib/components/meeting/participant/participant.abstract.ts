@@ -1,9 +1,5 @@
-import {
-  EventRoom,
-  meetingEventEnum,
-  MeetingService
-} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {BehaviorSubject, Observable} from "rxjs";
+import {Participant as IParticipantMeeting} from 'twilio-video';
 
 export abstract class AbstractParticipant{
 
@@ -66,7 +62,7 @@ export abstract class AbstractParticipant{
    * Detach the Participant's Tracks from the DOM.
    * @param participant - participant to detach track of the DOM
    */
-  detachParticipantTracks(participant) {
+  detachParticipantTracks(participant: IParticipantMeeting) {
     console.log('detachParticipantTracks : ', {participant})
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
@@ -80,7 +76,7 @@ export abstract class AbstractParticipant{
    *
    * @param participant
    */
-  getInitialFromParticipant(participant){
+  getInitialFromParticipant(participant: IParticipantMeeting){
     return `${participant.firstName.charAt(0).toUpperCase()}${participant.lastName.charAt(0).toUpperCase()}`
   }
 

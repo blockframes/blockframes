@@ -1,15 +1,26 @@
-<div *ngIf="isOwner" class="continer-remote-participant-Owner">
+<div *ngIf="event.isOwner" class="continer-remote-participant-Owner">
   <mat-grid-list [cols]="numOfCols()">
     <mat-grid-tile *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-      <event-remote-participant [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
+      <event-remote-participant [participant]="participant" class="event-remote-participant"></event-remote-participant>
     </mat-grid-tile>
   </mat-grid-list>
 </div>
 
-<div *ngIf="!isOwner" class="continer-remote-participant">
-    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-      <event-remote-participant [isBuyer]="!isOwner" [participant]="participant" (eventParticipantDeconected)="eventParticipantDeconected($event)" class="event-remote-participant"></event-remote-participant>
+<div *ngIf="!event.isOwner" class="continer-remote-participant-Buyer">
+  <div class="continer-remote-participant-dominant-speaker">
+<!--    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
+    <div>
+        <event-dominant-speaker [participant]="dominantParticipantForBuyer$ | async" class="event-remote-participant"></event-dominant-speaker>
     </div>
+<!--    </div>-->
+  </div>
+  <div class="continer-remote-participant-not-dominant-speaker">
+    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
+      <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
+        <event-remote-participant [isBuyer]="!event.isOwner" [participant]="participant" class="event-remote-participant"></event-remote-participant>
+      </ng-container>
+    </div>
+  </div>
 </div>
 
 <ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">

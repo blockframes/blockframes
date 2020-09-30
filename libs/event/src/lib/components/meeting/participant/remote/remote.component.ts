@@ -1,18 +1,7 @@
-import {
-  AfterContentInit,
-  AfterViewChecked,
-  AfterViewInit, ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  Renderer2
-} from '@angular/core';
-import {EventRoom, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2} from '@angular/core';
+import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Participant as IIParticipantMeeting} from 'twilio-video';
 
 @Component({
   selector: 'event-remote-participant',
@@ -22,13 +11,10 @@ import {BehaviorSubject, Observable} from "rxjs";
 })
 export class RemoteComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
-  // FIXME
-  // Make Participant interfce !!
-  @Input() participant: any
+
+  @Input() participant: IIParticipantMeeting
 
   @Input() isBuyer = true;
-
-  @Output() eventParticipantDeconected = new EventEmitter();
 
   videoIsOn: boolean;
   audioIsOn: boolean;
@@ -57,7 +43,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    *
    * @param participant
    */
-  setUpRemoteParticipantEvent(participant){
+  setUpRemoteParticipantEvent(participant: IIParticipantMeeting){
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
@@ -124,7 +110,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    *
    * @param participant
    */
-  mocDivVideo(participant){
+  mocDivVideo(participant: IIParticipantMeeting){
 
     const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-video-participant');
 
