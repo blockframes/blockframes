@@ -83,7 +83,7 @@ export const getPrivateVideoUrl = async (
     if (!movie.promotional.videos?.screener?.jwPlayerId) {
       return {
         error: 'NO_VIDEO',
-        result: 'The creator of the movie hasn\'t uploaded any video for you to watch'
+        result: `The requested screening doesn't exist on movie ${movie.id}`
       };
     } else {
       data.jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
@@ -91,7 +91,7 @@ export const getPrivateVideoUrl = async (
   } else if (!isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
     return {
       error: 'NO_VIDEO',
-      result: 'The video you are looking for doest not exists'
+      result: `The requested media doesn't exist on movie ${movie.id}`
     };
   }
 
