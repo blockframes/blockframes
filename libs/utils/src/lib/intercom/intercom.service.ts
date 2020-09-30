@@ -7,22 +7,22 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import { User } from '@blockframes/user/types';
 
 @Injectable({ providedIn: 'root' })
-export class IntercomService extends GDPRService {
+export class IntercomService {
 
   constructor(
     private query: AuthQuery,
-    public intercom: Intercom
-    ) {
-    super('c8-gdpr-intercom');
+    public gdpr: GDPRService,
+    public intercomService: Intercom
+  ) {
     if (intercomId) {
       query.user$.pipe(
         distinctUntilChanged((oldUser, newUser) => !!oldUser === !!newUser) // Trigger only when the user login/logout
         ).subscribe(user => {
-          intercom.shutdown();  // Stop listening to the current session
+          intercomService.shutdown();  // Stop listening to the current session
 
-          const intercomCookieAccepted = localStorage.getItem('c8-gdpr-intercom')
-          if (intercomCookieAccepted === 'true') {
-            intercom.boot(this.getIntercomOptions(user));
+          const { intercom } = this.gdpr.cookieConsent;
+          if (intercom) {
+            intercomService.boot(this.getIntercomOptions(user));
           }
         }
       )
@@ -31,11 +31,11 @@ export class IntercomService extends GDPRService {
 
   enable() {
     const user = this.query.user;
-    this.intercom.boot(this.getIntercomOptions(user));
+    this.intercomService.boot(this.getIntercomOptions(user));
   }
 
   disable() {
-    this.intercom.shutdown();
+    this.intercomService.shutdown();
   }
 
   private getIntercomOptions(user: User) {

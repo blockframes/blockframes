@@ -1,12 +1,16 @@
+import { Injectable } from "@angular/core";
+import { CookiesConsent } from "../cookie-form/cookie.form";
+
+@Injectable({ providedIn: 'root' })
 export class GDPRService {
 
-  constructor(private storageConsentKey: string) { }
-
-  gdprEnable() {
-    localStorage.setItem(this.storageConsentKey, `${true}`);
+  get cookieConsent(): CookiesConsent {
+    return JSON.parse(localStorage.getItem('gdpr')) ?? {};
   }
 
-  gdprDisable() {
-    localStorage.setItem(this.storageConsentKey, `${false}`);
+  enable(service: 'googleAnalytics' | 'intercom' | 'yandex', enabled: boolean) {
+    const cookieConsent = this.cookieConsent;
+    cookieConsent[service] = enabled;
+    localStorage.setItem('gdpr', JSON.stringify(cookieConsent));
   }
 }

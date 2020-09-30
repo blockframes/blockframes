@@ -5,10 +5,11 @@ import { GDPRService } from '../gdpr-cookie/gdpr-service/gdpr-service';
 export const YM_CONFIG = new InjectionToken('ngx-metrika Config');
 
 @Injectable()
-export class YandexMetricaService extends GDPRService {
-  constructor(@Inject(DOCUMENT) private document: Document) {
-    super('c8-gdpr-yandex');
-  }
+export class YandexMetricaService {
+  constructor(
+    public gdpr: GDPRService,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
   public insertMetrika(config: number) {
     if (!isPlatformBrowser(PLATFORM_ID)) {

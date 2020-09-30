@@ -6,13 +6,12 @@ import { centralOrgID } from '@env';
 import { GDPRService } from '../gdpr-cookie/gdpr-service/gdpr-service';
 
 @Injectable({ providedIn: 'root' })
-export class FireAnalytics extends GDPRService {
+export class FireAnalytics {
   constructor(
     public analytics: AngularFireAnalytics,
     private authQuery: AuthQuery,
-  ) {
-    super('c8-gdpr-google-analytics');
-  }
+    public gdpr: GDPRService
+  ) {}
 
   public event(name: AnalyticsEvents, params: Record<string, any>) {
 

@@ -47,6 +47,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 
 import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
 import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
+import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr-service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -92,24 +93,23 @@ export class AppModule {
   constructor(
     router: Router,
     analytics: FireAnalytics,
-    intercom: IntercomService,
-    yandex: YandexMetricaService,
+    intercomService: IntercomService,
+    yandexService: YandexMetricaService,
+    gdprService: GDPRService,
     @Inject(YM_CONFIG) ymConfig: number
   ) {
 
-    const googleCookieAccepted = localStorage.getItem('c8-gdpr-google-analytics');
-    if (googleCookieAccepted !== 'false') {
+    const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
+    if (!googleAnalytics) {
       analytics.analytics.setAnalyticsCollectionEnabled(false);
     }
 
-    const intercomCookieAccepted = localStorage.getItem('c8-gdpr-intercom');
-    if (intercomCookieAccepted !== 'false') {
-      intercom.disable();
+    if (!intercom) {
+      intercomService.disable();
     }
 
-    const yandexCookieAccepted = localStorage.getItem('c8-gdpr-yandex');
-    if (yandexCookieAccepted === 'true') {
-      yandex.insertMetrika(ymConfig);
+    if (yandex) {
+      yandexService.insertMetrika(ymConfig);
     }
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));

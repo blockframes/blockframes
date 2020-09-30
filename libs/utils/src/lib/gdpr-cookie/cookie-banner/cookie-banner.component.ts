@@ -34,8 +34,8 @@ export class CookieBannerComponent implements OnInit {
   ngOnInit() {
     const cookieString = this.document.cookie;
     const cookies = cookieString.split(';');
-    const cookieNames = cookies.map(cookie => cookie.split('=')[0].trim());
-    this.hasAccepted = cookieNames.some(cookieName => cookieName === 'archipel');
+    const cookieNames = cookies.map(cookie => cookie.split('=').shift()?.trim());
+    this.hasAccepted = cookieNames.some(cookieName => cookieName === 'blockframes');
   }
 
   /** Opens a dialog with terms of use and privacy policy given by the parent. */
@@ -43,7 +43,7 @@ export class CookieBannerComponent implements OnInit {
     this.dialog.open(PrivacyPolicyComponent, { maxHeight: '80vh' })
   }
 
-  public userAcceptedCookies() {
+  public acceptCookies() {
     this.confirmCookies();
     this.enableIntercom();
     this.enableAnalytics();
@@ -51,7 +51,7 @@ export class CookieBannerComponent implements OnInit {
   }
 
   public changePreferences() {
-    const dialogRef = this.dialog.open(CookieFormComponent, { maxHeight: '80vh' });
+    const dialogRef = this.dialog.open(CookieFormComponent, { maxHeight: '80vh', maxWidth: '80vw' });
     dialogRef.afterClosed().subscribe(settings => {
       if (!!settings) {
         this.confirmCookies();
@@ -63,22 +63,22 @@ export class CookieBannerComponent implements OnInit {
   }
 
   confirmCookies() {
-    this.document.cookie = 'archipel=';
+    this.document.cookie = 'blockframes=';
     this.hasAccepted = true;
   }
 
   enableIntercom() {
-    this.intercom.gdprEnable();
+    this.intercom.gdpr.enable('intercom', true);
     this.intercom.enable();
   }
 
   enableAnalytics() {
-    this.analytics.gdprEnable();
+    this.analytics.gdpr.enable('googleAnalytics', true);
     this.analytics.analytics.setAnalyticsCollectionEnabled(true);
   }
 
   enableYandex() {
-    this.yandex.gdprEnable();
+    this.yandex.gdpr.enable('yandex', true);
     this.yandex.insertMetrika(this.ymConfig);
   }
 
