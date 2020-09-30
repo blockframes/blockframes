@@ -54,11 +54,8 @@
           <ng-container *ngIf="boxOffice.get('territory').value">
             <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }}&nbsp;</strong>
           </ng-container>
-          <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_dollar'">
-            <mat-icon [svgIcon]="'USD'" id="currency-icon"></mat-icon>
-          </ng-container>
-          <ng-container *ngIf="boxOffice.get('unit').value === 'boxoffice_euro'">
-            <mat-icon [svgIcon]="'EUR'" id="currency-icon"></mat-icon>
+          <ng-container *ngIf="boxOffice.get('unit').value!== 'admissions'">
+            <mat-icon [svgIcon]="boxOffice.get('unit').value | toLabel: 'unitBox'" id="currency-icon"></mat-icon>
           </ng-container>
           <missing-control [control]="boxOffice.get('value')">
             <ng-template let-value>{{ value | number }}</ng-template>
