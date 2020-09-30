@@ -4,10 +4,7 @@ import { intercomId } from '@env';
 
 @NgModule({
   imports: [
-    IntercomModule.forRoot({
-      appId: intercomId,
-      updateOnRouterChange: true // will automatically run `update` on router event changes. Default: `false`
-    })
+    IntercomModule.forRoot({ appId: intercomId })
   ],
 })
 export class IntercomAppModule {}
