@@ -24,7 +24,14 @@ export interface MeetingPdfControl {
   totalPages: number;
 }
 
-type MeetingMediaControl = MeetingPdfControl;
+export interface MeetingVideoControl {
+  type: 'video';
+  isPlaying: boolean;
+  position: number;
+  duration: number;
+}
+
+type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
 
 /** Maximum number of invitations that can be sent for a given Meeting */
 export const MEETING_MAX_INVITATIONS_NUMBER = 9;
