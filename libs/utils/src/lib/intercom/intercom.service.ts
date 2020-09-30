@@ -12,17 +12,17 @@ export class IntercomService {
   constructor(
     private query: AuthQuery,
     public gdpr: GDPRService,
-    public intercomService: Intercom
+    public ngIntercom: Intercom
   ) {
     if (intercomId) {
       query.user$.pipe(
         distinctUntilChanged((oldUser, newUser) => !!oldUser === !!newUser) // Trigger only when the user login/logout
         ).subscribe(user => {
-          intercomService.shutdown();  // Stop listening to the current session
+          ngIntercom.shutdown();  // Stop listening to the current session
 
           const { intercom } = this.gdpr.cookieConsent;
           if (intercom) {
-            intercomService.boot(this.getIntercomOptions(user));
+            ngIntercom.boot(this.getIntercomOptions(user));
           }
         }
       )
@@ -31,27 +31,19 @@ export class IntercomService {
 
   enable() {
     const user = this.query.user;
-    this.intercomService.boot(this.getIntercomOptions(user));
+    this.ngIntercom.boot(this.getIntercomOptions(user));
   }
 
   disable() {
-    this.intercomService.shutdown();
+    this.ngIntercom.shutdown();
   }
 
   private getIntercomOptions(user: User) {
-    return user
-    ?  {
-          email: user.email,
-          user_id: user.uid,
-          name: user.firstName,
-          widget: {
-            "activator": "#intercom"
-          }
-        }
-    :  {
-          widget: {
-            "activator": "#intercom"
-          }
-        };
+    const widget = { activator: '#intercom' }
+    if (user) {
+      const { email, uid, firstName } = user;
+      return { email, widget, user_id: uid, name: firstName }
+    }
+    return widget;
   }
 }

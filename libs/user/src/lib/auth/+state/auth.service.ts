@@ -64,9 +64,14 @@ export class AuthService extends FireAuthService<AuthState> {
    * AuthService.signOut is called
    */
   async onSignout() {
+    // Keep cookieConsent in localStorage
+    const gdpr = localStorage.getItem('gdpr');
+
     localStorage.clear();
     sessionStorage.clear();
     window.location.reload();
+
+    localStorage.setItem('gdpr', gdpr);
   }
 
   /**
