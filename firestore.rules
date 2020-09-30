@@ -300,6 +300,7 @@ service cloud.firestore {
         && ( isNotUpdatingField(['storeConfig','status'])
           || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'accepted', 'draft'] )
           || ( existingData().storeConfig.appAccess.catalog == true && incomingData().storeConfig.status in ['submitted', 'draft'] )
+          || ( existingData().storeConfig.appAccess.financiers == true && incomingData().storeConfig.status in ['submitted','draft'] )
         )
         && isNotUpdatingField(['storeConfig','storeType'])
         && isNotUpdatingField(['storeConfig','appAccess', 'catalog'])

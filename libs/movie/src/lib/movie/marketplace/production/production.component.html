@@ -67,7 +67,7 @@
     </article>
     <article *ngIf="movie.expectedPremiere.date">
       <h5>Expected premiere</h5>
-      <p>{{ movie.expectedPremiere.event }} - {{ movie.expectedPremiere.date }}</p>
+      <p>{{ movie.expectedPremiere.event }} - {{ movie.expectedPremiere.date | date: 'longDate' }}</p>
     </article>
   </section>
 
