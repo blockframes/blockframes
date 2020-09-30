@@ -11,5 +11,4 @@ export * from './isAbove.pipe';
 export * from './max-length.pipe';
 export * from './has-keys.pipe';
 export * from './fileName.pipe';
-export * from './download-url.pipe';
 export * from './sanitize.pipe';

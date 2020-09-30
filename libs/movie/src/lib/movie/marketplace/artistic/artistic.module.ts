@@ -6,8 +6,8 @@ import { ArtisticComponent, NoteNamePipe } from './artistic.component';
 
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
-import { HasKeysModule, DisplayNameModule, DownloadUrlModule, FileNameModule } from '@blockframes/utils/pipes';
-
+import { HasKeysModule, DisplayNameModule, FileNameModule } from '@blockframes/utils/pipes';
+import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -18,7 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
     FileNameModule,
     DisplayNameModule,
-    DownloadUrlModule,
+    DownloadModule,
     CreditCardModule,
     MatLayoutModule,
     HasKeysModule,
