@@ -129,25 +129,15 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    */
   mocDivVideo(participant: IIParticipantMeeting){
 
-    console.log('mocDivVideo : '  )
-    console.log('participant : ', participant)
+    const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
-    const containerRemotParticipant = this.elm.nativeElement.querySelector('#remote-video-participant');
+    this.renderer.addClass(containerRemotParticipant, `remoteVideo`);
+    this.attachParticipantTracks(participant, containerRemotParticipant, 'remoteParticipant');
 
-    //Cretion div name/lastName participant
-    const containerNameParticipant = this.renderer.createElement('div');
-    const text = this.renderer.createText(`${participant.firstName} ${participant.lastName}`);
-    this.renderer.appendChild(containerNameParticipant, text);
-    this.renderer.setProperty(containerNameParticipant, 'id', `nameParticipant`);
+  }
 
-    this.containerOfVideo = this.renderer.createElement('div');
-
-    this.renderer.setProperty(this.containerOfVideo, 'id', `container-video-${participant.identity}`);
-    this.renderer.addClass(this.containerOfVideo, `remoteVideo`);
-    this.renderer.appendChild(containerRemotParticipant, this.containerOfVideo);
-    this.renderer.appendChild(this.containerOfVideo, containerNameParticipant);
-    this.attachParticipantTracks(participant, this.containerOfVideo, 'remoteParticipant');
-
+  getFirstAndLastNameOfParticipant(participant){
+    return `${participant.firstName} ${participant.lastName}`
   }
 
   test() {

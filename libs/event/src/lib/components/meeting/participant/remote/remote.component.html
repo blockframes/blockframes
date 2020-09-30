@@ -5,8 +5,10 @@
         {{getInitialFromParticipant(participant)}}
       </div>
     </div>
-    <div [hidden]="!!!(camMicIsOn$ | async).video" id="remote-video-participant" >
-
+    <div [id]="'container-video-' + participant.identity" >
+      <div class="nameParticipant">
+        {{getFirstAndLastNameOfParticipant(participant)}}
+      </div>
     </div>
   </div>
 </ng-container>
