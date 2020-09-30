@@ -55,7 +55,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      movie.storeConfig.appAccess.festival = true;
+      movie.storeConfig.appAccess.financiers = true;
       await this.service.update(movie.id, movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
