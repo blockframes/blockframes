@@ -47,7 +47,6 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
     this.meetingService.getEventRoom().subscribe((value: EventRoom) => {
       switch (value.meetingEvent){
         case meetingEventEnum.ParticipantConnected:
-          console.log('value : ', value)
           this.participantConnected(value.data);
           break;
         case meetingEventEnum.ParticipantDisconnected:
@@ -198,7 +197,6 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
     });
     // const updatedValue = [...currentValue, participant];
     currentValue.push(participant);
-    console.log('currentValue : ', currentValue)
     this.$participantConnectedDataSource.next(currentValue);
     this.setParticipantDominantSpeaker(participant)
   }
