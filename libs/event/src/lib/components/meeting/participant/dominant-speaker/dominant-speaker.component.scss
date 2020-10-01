@@ -13,3 +13,8 @@
   align-items: center;
   justify-content: center;
 }
+
+::ng-deep .dominantSpeakerVideo {
+  width: 100%;
+  max-width: 100%;
+}

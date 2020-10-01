@@ -1,8 +1,10 @@
 <event-participants-nav [participants]="arrayOfParticipantConnected$ | async">
   <event-video
+    [arrayOfParticipantConnected$]="arrayOfParticipantConnected$"
+    [$participantConnectedDataSource]="$participantConnectedDataSource"
+    [localParticipantConnected$]="localParticipantConnected$"
+    [localPreviewTracks$]="localPreviewTracks$"
+    [dominantParticipantForBuyer$]="dominantParticipantForBuyer$"
     [event]="event"
-    [arrayOfParticipantConnected]="arrayOfParticipantConnected$ | async"
-    [localParticipantConnected]="localParticipantConnected$ | async"
-    [localPreviewTracks]="localPreviewTracks$ | async"
-    [dominantParticipantForBuyer]="dominantParticipantForBuyer$ | async"></event-video>
+    ></event-video>
 </event-participants-nav>

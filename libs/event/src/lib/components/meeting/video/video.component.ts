@@ -4,6 +4,7 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 //Blockframes
 import {Event} from "@blockframes/event/+state";
 import {Participant as IParticipantMeeting} from 'twilio-video';
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
   selector: 'event-video',
@@ -14,10 +15,11 @@ import {Participant as IParticipantMeeting} from 'twilio-video';
 export class VideoComponent implements OnInit {
 
   //Input event meeting
-  @Input() arrayOfParticipantConnected: IParticipantMeeting[];
-  @Input() localParticipantConnected: IParticipantMeeting;
-  @Input() dominantParticipantForBuyer: IParticipantMeeting;
-  @Input() localPreviewTracks: any;
+  @Input() $participantConnectedDataSource: BehaviorSubject<IParticipantMeeting[]>;
+  @Input() arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
+  @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
+  @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
+  @Input() localPreviewTracks$: Observable<any>;
   @Input() event: Event;
 
   constructor() {
@@ -28,7 +30,7 @@ export class VideoComponent implements OnInit {
 
 
   getIfLocalIsAlone(){
-    return this.arrayOfParticipantConnected.length < 1;
+    return this.$participantConnectedDataSource.getValue().length < 1;
   }
 
   /**
