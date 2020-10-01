@@ -13,32 +13,28 @@
       </p>
       <upload-form></upload-form> -->
 
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Sales Pitch Link</mat-label>
-        <input [formControl]="salesPitch.get('link')" matInput type="url" placeholder="https://...."/>
-      </mat-form-field>
-
       <p class="mat-body-2">
-        If you don't have a Sales Pitch video to upload, or if you wish to add a description to your video, you can write a text below to enhance your project.
+        If you don't have a Sales Pitch video to upload, or if you wish to add a description to your video, you can
+        write a text below to enhance your project.
       </p>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Description</mat-label>
-        <textarea matInput [formControl]="salesPitch.get('description')" cdkTextareaAutosize cdkAutosizeMinRows="10"></textarea>
+        <textarea matInput [formControl]="salesPitch.get('description')" cdkTextareaAutosize
+          cdkAutosizeMinRows="10"></textarea>
       </mat-form-field>
     </section>
 
     <section id="audience-goals" fxLayout="column">
       <h3>Audiences & Goals</h3>
       <bf-form-list [form]="audience.get('targets')" buttonText="Add a Target">
-        <ng-template itemRef let-target>
-          {{ target }}
-        </ng-template>
-
+        <ng-template itemRef let-target>{{ target }}</ng-template>
         <ng-template formView let-targetForm>
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Target Audience (optional)</mat-label>
-            <input matInput type="text" placeholder="Target Audience" [formControl]="targetForm"/>
-          </mat-form-field>
+          <div fxLayout>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Target Audience (optional)</mat-label>
+              <input matInput type="text" placeholder="Target Audience" [formControl]="targetForm" />
+            </mat-form-field>
+          </div>
         </ng-template>
       </bf-form-list>
 
