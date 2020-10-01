@@ -12,7 +12,7 @@ export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
   const batch = db.batch();
 
-  const updates = movies.docs.map(movieDoc => {
+  movies.docs.map(movieDoc => {
     const data = movieDoc.data();
 
     const jwPlayerId = data.hostedVideo;
@@ -41,9 +41,9 @@ export async function upgrade(db: Firestore) {
           return { ...box }
         }
       }),
-      cast: data.cast.length ? newCast : data.cast,
-      crew: updateMember(data.crew),
-      directors: updateMember(data.directors),
+      cast: newCast,
+      crew: updateMembers(data.crew),
+      directors: updateMembers(data.directors),
     } as MovieDocument;
 
     if (jwPlayerId) {
@@ -57,28 +57,20 @@ export async function upgrade(db: Firestore) {
   })
 
   console.log('Movie updated.')
-  await Promise.all(updates);
   await batch.commit();
 }
 
 
 
 // Update the status of directors and crew
-function updateMember(member: Credit[]) {
-  if (member.length) {
-    member.forEach(person => {
-      person.status = !!person.status ? updateMemberStatus(person.status) : '';
-    })
-  }
-  return member;
+function updateMembers(members: Credit[]) {
+  return members.map(person => {
+    person.status = !!person.status ? updateMemberStatus(person.status) : '';
+    return person;
+  })
 }
 
 // Correct typo from the old static model
 function updateMemberStatus(status: string) {
-  if (status === 'loosely-attached') {
-    return 'looselyAttached';
-  }
-  else {
-    return status
-  };
+  return status === 'loosely-attached' ? 'looselyAttached' : status
 }

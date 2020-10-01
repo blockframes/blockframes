@@ -73,7 +73,7 @@ export interface Director extends Credit {
 };
 
 /**
- * @dev interface to represent a cast credit
+ * @dev type to represent a cast credit
  */
 export type Cast = Credit;
 
