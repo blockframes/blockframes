@@ -3,14 +3,12 @@ import { Injectable } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AnalyticsEvents } from './analyticsEvents';
 import { centralOrgID } from '@env';
-import { GDPRService } from '../gdpr-cookie/gdpr-service/gdpr-service';
 
 @Injectable({ providedIn: 'root' })
 export class FireAnalytics {
   constructor(
     public analytics: AngularFireAnalytics,
     private authQuery: AuthQuery,
-    public gdpr: GDPRService
   ) {}
 
   public event(name: AnalyticsEvents, params: Record<string, any>) {

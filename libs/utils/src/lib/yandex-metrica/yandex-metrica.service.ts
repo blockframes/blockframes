@@ -1,13 +1,11 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { Injectable, Inject, InjectionToken, PLATFORM_ID } from '@angular/core';
-import { GDPRService } from '../gdpr-cookie/gdpr-service/gdpr-service';
 
 export const YM_CONFIG = new InjectionToken('ngx-metrika Config');
 
 @Injectable()
 export class YandexMetricaService {
   constructor(
-    public gdpr: GDPRService,
     @Inject(DOCUMENT) private document: Document
   ) {}
 

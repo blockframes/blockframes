@@ -12,7 +12,7 @@ import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
 import { Intercom } from 'ng-intercom';
 import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
-import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr-service';
+import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 import { intercomId } from '@env';
 
 @Injectable({ providedIn: 'root' })

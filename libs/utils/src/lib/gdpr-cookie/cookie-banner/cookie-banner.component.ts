@@ -5,11 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 // Blockframes
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 import { CookieFormComponent } from '../cookie-form/cookie-form.component';
-// Intercom
+import { GDPRService } from '../gdpr-service/gdpr.service'
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-// Analytics
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-// Yandex
 import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Component({
@@ -24,6 +22,7 @@ export class CookieBannerComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private gdpr: GDPRService,
     private analytics: FireAnalytics,
     private intercom: IntercomService,
     private yandex: YandexMetricaService,
@@ -68,17 +67,17 @@ export class CookieBannerComponent implements OnInit {
   }
 
   enableIntercom() {
-    this.intercom.gdpr.enable('intercom', true);
+    this.gdpr.enable('intercom', true);
     this.intercom.enable();
   }
 
   enableAnalytics() {
-    this.analytics.gdpr.enable('googleAnalytics', true);
+    this.gdpr.enable('googleAnalytics', true);
     this.analytics.analytics.setAnalyticsCollectionEnabled(true);
   }
 
   enableYandex() {
-    this.yandex.gdpr.enable('yandex', true);
+    this.gdpr.enable('yandex', true);
     this.yandex.insertMetrika(this.ymConfig);
   }
 

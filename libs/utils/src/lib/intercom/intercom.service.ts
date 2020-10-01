@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { GDPRService } from '../gdpr-cookie/gdpr-service/gdpr-service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Intercom } from 'ng-intercom';
 import { User } from '@blockframes/user/types';
@@ -9,7 +8,6 @@ export class IntercomService {
 
   constructor(
     private query: AuthQuery,
-    public gdpr: GDPRService,
     public ngIntercom: Intercom
   ) {}
 
