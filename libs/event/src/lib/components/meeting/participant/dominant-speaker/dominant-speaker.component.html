@@ -6,6 +6,9 @@
           {{getInitialFromParticipant(participant)}}
         </span>
       </div>
+      <div class="nameParticipant">
+        {{getFirstAndLastNameOfParticipant(participant)}}
+      </div>
     </ng-container>
     <div [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
     </div>

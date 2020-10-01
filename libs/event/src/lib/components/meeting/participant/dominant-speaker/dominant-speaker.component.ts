@@ -5,7 +5,7 @@ import { Participant as IParticipantMeeting } from 'twilio-video';
 @Component({
   selector: 'event-dominant-speaker',
   templateUrl: './dominant-speaker.component.html',
-  styleUrls: ['./dominant-speaker.component.css']
+  styleUrls: ['./dominant-speaker.component.scss']
 })
 export class DominantSpeakerComponent extends AbstractParticipant implements OnInit {
 

@@ -1,6 +1,5 @@
 .remote-participant {
   position: relative;
-  width: 100%;
 
 }
 
@@ -9,14 +8,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px 0;
+  background: #75768B;
 }
 
 ::ng-deep #remote-participant {
   .remoteParticipant {
-    //background-position: center center;
-    //background-size: cover;
+    background-position: center center;
+    background-size: cover;
     max-height: 100%;
     max-width: 100%;
+    width: 100%;
   }
 
   .nameParticipant {

@@ -1,5 +1,14 @@
 //Angular
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 
 //Blockframes
 import {Event, EventService} from "@blockframes/event/+state";
@@ -19,7 +28,7 @@ import { Participant as IParticipantMeeting } from 'twilio-video';
   styleUrls: ['./video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoComponent implements OnInit, OnDestroy {
+export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   //Input event meeting
   @Input() event: Event;
@@ -37,7 +46,7 @@ export class VideoComponent implements OnInit, OnDestroy {
   //Dominant Participant for Buyer
   private $dominantParticipantForBuyerDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
   dominantParticipantForBuyer$: Observable<IParticipantMeeting> = this.$dominantParticipantForBuyerDataSource.asObservable();
-
+  tt = 1;
 
   private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
@@ -114,6 +123,21 @@ export class VideoComponent implements OnInit, OnDestroy {
         // }
       }
     })
+  }
+
+  ngAfterViewInit() {
+
+    const img = document.querySelector("#contener-event-meeting");
+    const width = img.clientWidth;
+    const height = img.clientHeight;
+    console.log('==============================================================================')
+    console.log('==============================================================================')
+    console.log('==============================================================================')
+    console.log({width, height})
+    console.log('==============================================================================')
+    console.log('==============================================================================')
+    console.log('==============================================================================')
+
   }
 
   getIfIsReelOwner(){
@@ -195,8 +219,9 @@ export class VideoComponent implements OnInit, OnDestroy {
         return;
       }
     });
-    const updatedValue = [...currentValue, participant];
-    this.$participantConnectedDataSource.next(updatedValue);
+    // const updatedValue = [...currentValue, participant];
+    currentValue.push(participant);
+    this.$participantConnectedDataSource.next(currentValue);
     this.setParticipantDominantSpeaker(participant)
   }
 
@@ -213,22 +238,6 @@ export class VideoComponent implements OnInit, OnDestroy {
   setParticipantDominantSpeaker(participant: IParticipantMeeting){
     const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
     console.log('getParticipantDominantSpeaker allParticipantAlreadyInTheRoom : ', allParticipantAlreadyInTheRoom)
-    // const participantWasDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.isDominantSpeaker)
-    // console.log('participantWasDominantSpeaker : ', participantWasDominantSpeaker)
-    //
-    // if(!!participant){
-    //
-    //   //New dominant speaker
-    //   const newParticipantDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.identity === participant.identity)
-    //   console.log('newParticipantDominantSpeaker : ', newParticipantDominantSpeaker)
-    //   if(!!participantWasDominantSpeaker){
-    //     participantWasDominantSpeaker.isDominantSpeaker = false;
-    //   }
-    //   if(!!newParticipantDominantSpeaker){
-    //     newParticipantDominantSpeaker.isDominantSpeaker = true;
-    //   }
-    // } else {
-    //   //No dominant speaker or is the local participant the dominant speaker Or Buyer
 
     const identityOfOwner = this.event.organizedBy.uid;
 
@@ -236,12 +245,12 @@ export class VideoComponent implements OnInit, OnDestroy {
     if(!!newParticipantDominantSpeaker){
         newParticipantDominantSpeaker.isDominantSpeaker = true;
         this.$dominantParticipantForBuyerDataSource.next(newParticipantDominantSpeaker);
-        // this.$participantConnectedDataSource.next(allParticipantAlreadyInTheRoom);
       } else {
         this.$dominantParticipantForBuyerDataSource.next(null);
       }
     // }
   }
+
 
   removeParticipantDominantSpeaker(participant: IParticipantMeeting){
     if(!participant){
@@ -292,22 +301,9 @@ export class VideoComponent implements OnInit, OnDestroy {
     return this.$participantConnectedDataSource.getValue().length < 1
   }
 
-  //FIXME Change name
   numOfCols(){
-    const arrayParticipantConnected = this.$participantConnectedDataSource.getValue().slice() ;
-    const lengthParticipantConnected = arrayParticipantConnected.length;
-    let num = 1;
-    if (arrayParticipantConnected.length > 1 && arrayParticipantConnected.length <= 4) {
-      num = 2;
-    } else if (arrayParticipantConnected.length > 4) {
-      num = 3;
-    }
-    const arr = [];
-    while(arrayParticipantConnected.length) {
-      arr.push(arrayParticipantConnected.splice(0,num));
-    }
-    console.log('arr : ', arr)
-    return arr
+    const lengththisParticipantConnected = this.$participantConnectedDataSource.getValue().length;
+    return (lengththisParticipantConnected < 2) ? 1 : (lengththisParticipantConnected > 4) ? 3 : 2
   }
 
   getIfLocalIsAlone(){

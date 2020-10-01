@@ -10,7 +10,8 @@ import {
 } from '@angular/core';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {Participant as IIParticipantMeeting} from 'twilio-video';
+import {Participant as IParticipantMeeting} from 'twilio-video';
+import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
   selector: 'event-remote-participant',
@@ -21,7 +22,10 @@ import {Participant as IIParticipantMeeting} from 'twilio-video';
 export class RemoteComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
 
-  @Input() participant: IIParticipantMeeting
+  protected $camMicIsOnRemoteDataSource: BehaviorSubject<any> = new BehaviorSubject({video: false, audio: false});
+  public camMicIsOnRemote$: Observable<any> = this.$camMicIsOnRemoteDataSource.asObservable();
+
+  @Input() participant: IParticipantMeeting
 
   @Input() isBuyer = true;
 
@@ -60,7 +64,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    *
    * @param participant
    */
-  setUpRemoteParticipantEvent(participant: IIParticipantMeeting){
+  setUpRemoteParticipantEvent(participant: IParticipantMeeting){
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
@@ -103,6 +107,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     participant.on('trackStarted', (track) => {
       console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
       // this.setTrackEvent(track);
+      this.setUpVideoAndAudio(track.kind, true)
     })
 
     participant.on('trackSubscriptionFailed', () => {
@@ -127,7 +132,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
    *
    * @param participant
    */
-  mocDivVideo(participant: IIParticipantMeeting){
+  mocDivVideo(participant: IParticipantMeeting){
 
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
@@ -136,11 +141,13 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
   }
 
-  getFirstAndLastNameOfParticipant(participant){
-    return `${participant.firstName} ${participant.lastName}`
-  }
-
-  test() {
-    console.log('test : ', this.$camMicIsOnDataSource.getValue())
+  setUpVideoAndAudio(kind, boolToChange){
+    if(kind === 'video'){
+      console.log('...this.$camMicIsOnDataSource.getValue() : ', this.$camMicIsOnDataSource.getValue())
+      this.$camMicIsOnRemoteDataSource.next( {...this.$camMicIsOnRemoteDataSource.getValue(), video: boolToChange});
+    } else {
+      this.$camMicIsOnRemoteDataSource.next( {...this.$camMicIsOnRemoteDataSource.getValue(), audio: boolToChange});
+    }
+    this.cd.detectChanges();
   }
 }

@@ -21,7 +21,6 @@ export abstract class AbstractParticipant{
     tracks.forEach((track) => {
       if (track) {
         console.log('track.kind : ', track.kind)
-        this.setUpVideoAndAudio(track.kind, true);
         container.appendChild(track.attach()).className = className;
       }
     });
@@ -90,5 +89,14 @@ export abstract class AbstractParticipant{
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
     }
     this.cd.detectChanges();
+  }
+
+
+  /**
+   *
+   * @param participant
+   */
+  getFirstAndLastNameOfParticipant(participant){
+    return `${participant.firstName} ${participant.lastName}`
   }
 }
