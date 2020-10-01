@@ -36,7 +36,7 @@ import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-me
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom.module';
+import { IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
 
 // Analytics
@@ -58,7 +58,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     OverlayModule,
 
     // Intercom
-    intercomId ? IntercomAppModule : [],
+    intercomId ? IntercomModule.forRoot({ appId: intercomId }) : [],
 
     // Firebase
     AngularFireModule.initializeApp(firebase),
