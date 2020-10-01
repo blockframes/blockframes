@@ -52,16 +52,17 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
+      const movie = await this.shell.update();
+      // const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess.financiers = true;
       await this.service.update(movie.id, movie);
-      this.form.markAsPristine();
+      // this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         const movieId = this.query.getActiveId();
-        this.router.navigate(['../../../../title', movieId], { relativeTo: this.route })
+        this.router.navigate(['c/o/dashboard/title', movieId])
       })
     } else {
       // Log the invalid forms

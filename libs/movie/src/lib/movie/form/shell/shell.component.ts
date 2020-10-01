@@ -194,21 +194,25 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     })
   }
 
-  // Should save movie
-  public async save() {
+  /** Update the movie. Used by summaries */
+  public async update() {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional)
-    const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
+    const movie = mergeDeep(this.query.getActive(), documentToUpdate);
 
     /* These values needs to be replaced by the form values and not merged by the mergedDeep function.
       Since the mergeDeep function can't distinguish if a object should be merged or replaced */
-     ['languages', 'shooting'].forEach(key => {
-       movie[key] = documentToUpdate[key]
-     })
+     ['languages', 'shooting'].forEach(key => movie[key] = documentToUpdate[key]);
  
     await this.service.update(movie.id, movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
+    return movie;
+  }
+
+  /** Save the form and display feedback to user */
+  public async save() {
+    await this.update();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }
