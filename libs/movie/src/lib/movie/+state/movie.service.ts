@@ -14,7 +14,15 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
 import { App, createMovieAppAccess, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
-import { MovieForm } from '../form/movie.form';
+
+
+/** Prepare the movie before publishing */
+export function preareForPublishing(movie: Movie) {
+  const currentApp: App = getCurrentApp(this.routerQuery);
+  movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+  movie.storeConfig.appAccess[currentApp] = true;
+  return movie;
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -142,38 +150,27 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-  private updateFormArraysByProdStatus(formValue: any) {
-    const prodStatusValue = formValue.productionStatus;
-    const prodStatus = ['finished', 'released'];
 
-    /* Directors */
-    /* Cast Member */
-    /* Crew Member */
-    if (prodStatus.includes(prodStatusValue)) {
-      formValue.directors.forEach(director => director.status = 'confirmed')
-      formValue.cast.forEach(cast => cast.status = 'confirmed')
-      formValue.crew.forEach(crew => crew.status = 'confiremd');
-    }
-    return formValue;
-  }
-
-  async updateMovie(movie: Movie, formValue: Movie) {
+  async save(base: Movie, updates: Movie) {
     try {
-      const mergedMovie: Movie = mergeDeep(movie, formValue);
-      const updatedForm = this.updateFormArraysByProdStatus(formValue)
+      const movie: Movie = mergeDeep(base, updates);
 
-      const currentApp: App = getCurrentApp(this.routerQuery);
-      mergedMovie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      mergedMovie.storeConfig.appAccess[currentApp] = true;
+      // Specific updates based on production status
+      const prodStatus = ['finished', 'released'];
+      if (prodStatus.includes(updates.productionStatus)) {
+        updates.directors.forEach(director => director.status = 'confirmed')
+        updates.cast.forEach(cast => cast.status = 'confirmed')
+        updates.crew.forEach(crew => crew.status = 'confiremd');
+      }
 
-      /* These values needs to be replaced by the form values and not merged by the mergedDeep function.
-        Since the mergeDeep function can't distinguish if a object should be merged or replaced */
-      ['languages', 'shooting'].forEach(key => {
-        mergedMovie[key] = updatedForm[key]
-      })
-      return this.update(movie.id, mergedMovie)
+      // Update fields with dynamic keys
+      const dynamicKeyFields = ['languages', 'shooting'];
+      dynamicKeyFields.forEach(key => movie[key] = updates[key])
+
+      return this.update(movie.id, movie)
     } catch (error) {
       console.error(error)
     }
   }
+
 }

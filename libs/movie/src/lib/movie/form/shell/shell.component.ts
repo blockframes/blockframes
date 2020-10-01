@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { MovieService, MovieQuery, Movie, MoviePromotionalElements } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, Movie, MoviePromotionalElements, preareForPublishing } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
@@ -195,19 +195,20 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   /** Update the movie. Used by summaries */
-  public async update() {
+  public async update({ publishing }: { publishing: boolean }) {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional)
-    const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-    await this.service.updateMovie(movie, documentToUpdate);
+    documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional);
+    if (publishing) {
+      preareForPublishing(documentToUpdate);
+    }
+    await this.service.save(this.query.getActive(), documentToUpdate);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
-    return movie;
   }
 
   /** Save the form and display feedback to user */
   public async save() {
-    await this.update();
+    await this.update({ publishing: false });
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }
