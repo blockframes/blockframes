@@ -1,7 +1,12 @@
 <ng-container *ngIf="(invitation | guest: 'user') as user">
   <mat-list-item>
     <div matListAvatar class="avatar-status">
-      <img [ref]="user.avatar" asset="profil_user.webp">
+      <ng-container *ngIf="!!user.avatar else noprofiluser">
+        <img [ref]="user.avatar" [delay]="0" asset="profil_user.webp">
+      </ng-container>
+      <ng-template #noprofiluser>
+        <img asset="profil_user.webp">
+      </ng-template>
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
     <span *ngIf="user.firstName" matLine>{{ user | displayName }}</span>
