@@ -1,0 +1,15 @@
+mat-card {
+  mat-card-content {
+    a {
+      text-decoration: underline;
+    }
+    mat-radio-button {
+      margin: 16px;
+    }
+    mat-divider {
+      margin: 16px;
+      position: inherit;
+      width: auto;
+    }
+  }
+}

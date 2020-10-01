@@ -6,7 +6,10 @@ import { centralOrgID } from '@env';
 
 @Injectable({ providedIn: 'root' })
 export class FireAnalytics {
-  constructor(public analytics: AngularFireAnalytics, private authQuery: AuthQuery) { }
+  constructor(
+    public analytics: AngularFireAnalytics,
+    private authQuery: AuthQuery,
+  ) {}
 
   public event(name: AnalyticsEvents, params: Record<string, any>) {
 
@@ -14,7 +17,7 @@ export class FireAnalytics {
     const isOperator = isBlockframesAdmin || orgId === centralOrgID;
     if (user && orgId && isOperator) {
       /**
-       * @dev We do not want to log centralOrg operators nor blockframes 
+       * @dev We do not want to log centralOrg operators nor blockframes
        * admins actions on the platform.
        */
       return false;
