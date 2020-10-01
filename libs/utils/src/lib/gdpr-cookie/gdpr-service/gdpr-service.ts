@@ -5,7 +5,7 @@ import { CookiesConsent } from "../cookie-form/cookie.form";
 export class GDPRService {
 
   get cookieConsent(): CookiesConsent {
-    return JSON.parse(localStorage.getItem('gdpr')) ?? {};
+    return JSON.parse(localStorage.getItem('gdpr') ?? '{}');
   }
 
   enable(service: 'googleAnalytics' | 'intercom' | 'yandex', enabled: boolean) {

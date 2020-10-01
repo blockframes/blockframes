@@ -33,7 +33,7 @@ import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metri
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom/intercom.module';
+import { IntercomModule } from 'ng-intercom';
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { intercomId } from '@env';
 
@@ -60,7 +60,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr-se
     MatNativeDateModule,  // Required for Datepicker
 
     // Intercom
-    intercomId ? IntercomAppModule : [],
+    intercomId ? IntercomModule.forRoot({ appId: intercomId }) : [],
 
     // Firebase
     AngularFireModule.initializeApp(firebase),
@@ -101,9 +101,8 @@ export class AppModule {
 
     const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
     if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
-    !intercom ? intercomService.disable() : intercomService.enable();
     if (yandex) yandexService.insertMetrika(ymConfig);
-
+    intercom ? intercomService.enable() : intercomService.disable(); 
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {

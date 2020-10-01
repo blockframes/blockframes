@@ -32,7 +32,7 @@ import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-me
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom/intercom.module';
+import { IntercomModule } from 'ng-intercom';
 import { intercomId } from '@env';
 
 // Analytics
@@ -58,7 +58,7 @@ import { environment } from '../environments/environment';
     MatNativeDateModule,  // Required for Datepicker
 
     // Intercom
-    intercomId ? IntercomAppModule : [],
+    intercomId ? IntercomModule.forRoot({ appId: intercomId }) : [],
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),

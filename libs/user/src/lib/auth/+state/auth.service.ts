@@ -81,14 +81,12 @@ export class AuthService extends FireAuthService<AuthState> {
   async onSignout() {
     // Keep cookieConsent in localStorage
     const gdpr = localStorage.getItem('gdpr');
+    localStorage.clear();
+    localStorage.setItem('gdpr', gdpr);
 
     this.ngIntercom.shutdown();
-
-    localStorage.clear();
     sessionStorage.clear();
     window.location.reload();
-
-    localStorage.setItem('gdpr', gdpr);
   }
 
   /**
