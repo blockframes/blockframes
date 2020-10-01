@@ -52,6 +52,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
+      this.updateFormArraysByProdStatus();
       const movie = await this.shell.update();
       // const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
@@ -86,5 +87,20 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
+  }
+
+
+  private updateFormArraysByProdStatus() {
+    const prodStatusValue = this.form.productionStatus.value;
+    const prodStatus = ['finished', 'released'];
+
+    /* Directors */
+    /* Cast Member */
+    /* Crew Member */
+    if (prodStatus.includes(prodStatusValue)) {
+      this.form.directors.controls.forEach(director => director.get('status').setValue('confirmed'))
+      this.form.cast.controls.forEach(cast => cast.get('status').setValue('confirmed'))
+      this.form.crew.controls.forEach(crew => crew.get('status').setValue('confiremd'));
+    }
   }
 }

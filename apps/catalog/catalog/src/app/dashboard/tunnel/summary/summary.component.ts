@@ -53,7 +53,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   public async submit() {
     if (this.form.valid) {
       this.updateFormArraysByProdStatus()
-      const movie: Movie = mergeDeep(this.query.getActive(), this.form.value);
+      const movie = await this.shell.update();
       const currentApp = getCurrentApp(this.routerQuery);
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess.catalog = true;
