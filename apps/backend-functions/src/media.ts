@@ -159,7 +159,7 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
 }
 
 function getPathInfo(ref: string) {
-  const refParts = ref.split('/');
+  const refParts = ref.split('/').filter(v => !!v);
 
   const pathInfo: Record<string, string | undefined> = {};
   if (privacies.includes(refParts[0] as any)) {
