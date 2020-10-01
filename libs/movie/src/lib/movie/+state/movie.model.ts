@@ -25,7 +25,8 @@ import {
   MovieGoalsAudience,
   MovieSalesPitch,
   MovieNote,
-  MovieTotalBudget
+  HostedVideos,
+  HostedVideo
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -75,7 +76,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     expectedPremiere: {},
     format: null,
     formatQuality: null,
-    hostedVideo: '',
     internalRef: '',
     keyAssets: '',
     keywords: [],
@@ -126,13 +126,13 @@ export function createMoviePromotional(
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
+    videos: createHostedVideos(params.videos),
   };
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
   return {
     description: '',
-    link: '',
     file: '',
     ...params,
   }
@@ -364,5 +364,20 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
   return {
     ref: '',
     ...note
+  }
+}
+
+
+export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
+  return {
+    ...params,
+  }
+}
+
+export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
+  return {
+    ref: '',
+    jwPlayerId: '',
+    ...params,
   }
 }

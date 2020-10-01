@@ -93,6 +93,7 @@
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
                   <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" />
+                  <mat-error *ngIf="shootingDateTo.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
                 </mat-form-field>
               </div>
             </div>

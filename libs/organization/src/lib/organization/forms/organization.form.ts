@@ -5,6 +5,7 @@ import { AddressSet, createAddressSet } from "@blockframes/organization/+state/o
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
 import { HostedMediaForm } from "@blockframes/media/form/media.form";
+import { OrganizationMediasForm } from './medias.form';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
@@ -47,6 +48,7 @@ function createOrganizationFormControl(params?: Organization) {
     logo: new HostedMediaForm(organization.logo),
     // ISSUE#2692
     // bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
+    documents: new OrganizationMediasForm(organization.documents),
   }
 }
 
