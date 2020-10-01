@@ -63,7 +63,7 @@ import { environment } from '../environments/environment';
     MatNativeDateModule,  // Required for Datepicker
 
     // Intercom
-    intercomId ? IntercomModule.forRoot({ appId: intercomId }) : [],
+    IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
@@ -106,7 +106,7 @@ export class AppModule {
     const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
     if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
     if (yandex) yandexService.insertMetrika(ymConfig);
-    intercom ? intercomService.enable() : intercomService.disable(); 
+    intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
