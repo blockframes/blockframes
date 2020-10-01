@@ -82,9 +82,16 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
+  hostedVideoTypes: {
+    tailer: 'Trailer',
+    teaser: 'Teaser',
+    reel: 'Reel',
+    clip: 'Clip',
+    pitch: 'Pitch',
+  },
   memberStatus: {
     confirmed: 'Confirmed',
-    looselyAttached: 'Loosely Attached', // 'loosely-attached'
+    looselyAttached: 'Loosely Attached',
     target: 'Target'
   },
   movieLanguageTypes: {
@@ -124,13 +131,6 @@ const constants = {
     inequalities: 'Reduce inequalities',
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
-  },
-  hostedVideoTypes: {
-    tailer: 'Trailer',
-    teaser: 'Teaser',
-    reel: 'Reel',
-    clip: 'Clip',
-    pitch: 'Pitch',
   },
   storeStatus: {
     submitted: 'Submitted',

@@ -125,31 +125,6 @@ const models = {
       'label': 'Prestige'
     }
   ],
-  'MEMBER_STATUS': [
-    {
-      'slug': 'confirmed',
-      'label': 'Confirmed'
-    },
-    {
-      'slug': 'loosely-attached',
-      'label': 'Loosely Attached'
-    },
-    {
-      'slug': 'target',
-      'label': 'Target'
-    }
-  ],
-  // TODO #2306
-  'CAST_ROLES': [
-    {
-      'slug': 'lead-role',
-      'label': 'Lead Role'
-    },
-    {
-      'slug': 'secondary-role',
-      'label': 'Secondary Role'
-    }
-  ],
   'CREW_ROLES': [
     {
       'slug': 'writer',

@@ -28,9 +28,6 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
         case 'PRODUCER_ROLES':
           role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'PRODUCER_ROLES'>);
           break;
-        case 'CAST_ROLES':
-          role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'CAST_ROLES'>);
-          break;
         case 'CREW_ROLES':
           role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'CREW_ROLES'>);
           break;

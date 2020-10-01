@@ -1,17 +1,28 @@
 import { Firestore } from '@blockframes/firebase-utils';
-import { createHostedVideo } from '@blockframes/movie/+state/movie.model';
+import { createHostedVideo, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieDocument } from 'apps/backend-functions/src/data/types';
 
-// Replace the old value for unitBox in box office
+
+/**
+ * Replace the old value for unitBox in box office
+ * Update the status for cast, crew and director
+ * Update the screener with video uploaded
+*/
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
   const batch = db.batch();
 
-  movies.docs.map(movieDoc => {
+  const updates = movies.docs.map(movieDoc => {
     const data = movieDoc.data();
 
     const jwPlayerId = data.hostedVideo;
     delete data.hostedVideo;
+
+    const newCast = data.cast.map(person => {
+      delete person.role;
+      person.status = !!person.status ? updateMemberStatus(person.status) : '';
+      return person;
+    })
 
     const newData = {
       ...data,
@@ -29,7 +40,10 @@ export async function upgrade(db: Firestore) {
         } else {
           return { ...box }
         }
-      })
+      }),
+      cast: data.cast.length ? newCast : data.cast,
+      crew: updateMember(data.crew),
+      directors: updateMember(data.directors),
     } as MovieDocument;
 
     if (jwPlayerId) {
@@ -43,5 +57,28 @@ export async function upgrade(db: Firestore) {
   })
 
   console.log('Movie updated.')
+  await Promise.all(updates);
   await batch.commit();
+}
+
+
+
+// Update the status of directors and crew
+function updateMember(member: Credit[]) {
+  if (member.length) {
+    member.forEach(person => {
+      person.status = !!person.status ? updateMemberStatus(person.status) : '';
+    })
+  }
+  return member;
+}
+
+// Correct typo from the old static model
+function updateMemberStatus(status: string) {
+  if (status === 'loosely-attached') {
+    return 'looselyAttached';
+  }
+  else {
+    return status
+  };
 }

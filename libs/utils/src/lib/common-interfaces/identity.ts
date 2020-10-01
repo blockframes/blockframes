@@ -69,7 +69,7 @@ export interface Producer extends Credit {
  * @dev interface to represent a director credit
  */
 export interface Director extends Credit {
-  category?: string, // TODO Do a static when we have predefined value for category
+  category?: string,
 };
 
 /**
