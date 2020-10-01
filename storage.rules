@@ -23,7 +23,7 @@ service firebase.storage {
     }
     
     function isValidMedia() {
-      return isValidImage() || isValidPdf();
+      return isValidImage() || isValidPdf() || isValidVideo();
     }
 
     function isValidImage() {
@@ -34,6 +34,16 @@ service firebase.storage {
     function isValidPdf() {
     	// Only allow uploads of any image file that's less than 50MB
       return request.resource.contentType.matches('application/pdf') && request.resource.size < 50 * 1024 * 1024;
+    }
+
+    function isValidVideo() {
+    	// Only allow uploads of any video file that's less than 50GB
+      return (
+          request.resource.contentType.matches('video/x-msvideo') || 
+          request.resource.contentType.matches('video/x-matroska') || 
+          request.resource.contentType.matches('video/mp4')
+        ) 
+        && request.resource.size < 50 * 1024 * 1024 * 1024;
     }
     
   }

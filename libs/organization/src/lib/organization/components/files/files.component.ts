@@ -3,7 +3,7 @@ import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { OrganizationDocumentWithDates, OrganizationService } from '@blockframes/organization/+state';
-import { OrganizationMediasForm } from '@blockframes/admin/admin-panel/forms/organization-medias.form';
+import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { clearHostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';

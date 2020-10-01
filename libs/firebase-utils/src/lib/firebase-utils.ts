@@ -84,7 +84,8 @@ export async function getDocAndPath(filePath: string | undefined) {
     filePath,
     doc,
     docData,
-    fieldToUpdate
+    fieldToUpdate,
+    collection
   }
 }
 

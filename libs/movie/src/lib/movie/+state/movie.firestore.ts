@@ -17,7 +17,8 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrenciesSlug
+  MovieCurrenciesSlug,
+  HostedVideoTypes
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -59,10 +60,6 @@ interface MovieRaw<D> {
   formatQuality?: FormatQualitySlug,
   genres: GenresSlug[], //! required
   customGenres?: string[],
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
   internalRef?: string,
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
@@ -110,24 +107,43 @@ export interface PublicMovie {
   title: Title;
 }
 
+export interface HostedVideos {
+  screener?: HostedVideo; // Main screener
+  otherVideos?: HostedVideo[]; // Other videos
+}
+
+export interface HostedVideo {
+  ref: string,
+  jwPlayerId: string,
+  title?: string,
+  description?: string,
+  type?: HostedVideoTypes
+}
+
 ////////////////////
 // MOVIE SECTIONS //
 ////////////////////
 
 export interface MoviePromotionalElements {
-  clip_link: string,
+  
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
-  promo_reel_link: string,
   salesPitch: MovieSalesPitch,
   scenario: string,
-  screener_link: string,
   still_photo: string[],
+  videos?: HostedVideos,
+
+  // @TODO #2586 remove this when we can upload 
+  // videos through movie tunnel and remove the component for external links
+  // + migration for cleaning
+  clip_link: string,  
+  promo_reel_link: string,
+  screener_link: string,
   teaser_link: string,
   trailer_link: string,
-  other_links: OtherLink[];
+  other_links: OtherLink[],
 }
 
 ////////////////////
