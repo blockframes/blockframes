@@ -92,8 +92,9 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       map(([local, global]) => local || global)
     );
 
-    // Adds a 5 sec delay on image loading except for the first one
-    // This is to prevent imgIx to load the image before it is even uploaded or moved to good directory
+    // Adds a 5 sec delay on image loading except for the first one.
+    // This is to prevent imgIx to load the image before it is even uploaded or moved to good directory.
+    // This variable will be updated on the fly inside the `subscribe` to update next observable's behaviour.
     let delay = 0;
 
     // apply latest changes
