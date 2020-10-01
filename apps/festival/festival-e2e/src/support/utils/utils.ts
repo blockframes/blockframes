@@ -1,5 +1,4 @@
 import { LandingPage } from '../../support/pages/landing';
-import { HomePage } from '../pages/marketplace';
 import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../pages/dashboard';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { signIn } from '@blockframes/e2e/utils/functions';
