@@ -18,7 +18,9 @@ import {
   MovieSalesPitch,
   MovieNote,
   MovieShooting,
-  MovieTotalBudget
+  MovieTotalBudget,
+  HostedVideo,
+  HostedVideos
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -39,6 +41,8 @@ import {
   createSalesPitch,
   createShooting,
   createMovieNote,
+  createHostedVideos,
+  createHostedVideo
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -735,6 +739,9 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     notes: FormList.factory(entity.notes, el => new MovieNotesForm(el)),
     salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
+    // Hosted Videos
+    videos: new MovieHostedVideosForm(entity.videos),
+
     // External Media
     clip_link: new FormControl(entity.clip_link, urlValidators),
     promo_reel_link: new FormControl(entity.promo_reel_link, urlValidators),
@@ -1094,3 +1101,52 @@ function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
 }
 
 type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsFormControl>;
+
+
+// ------------------------------
+//         HOSTED VIDEOS
+// ------------------------------
+
+function createMovieHostedVideoControl(hostedVideo: Partial<HostedVideo> = {}) {
+  const { ref, jwPlayerId, title, description, type } = createHostedVideo(hostedVideo);
+  return {
+    ref: new HostedMediaForm(ref),
+    jwPlayerId: new FormControl(jwPlayerId),
+    title: new FormControl(title),
+    description: new FormControl(description),
+    type: new FormControl(type),
+  }
+}
+
+export type MovieHostedVideoControls = ReturnType<typeof createMovieHostedVideoControl>;
+
+export class MovieHostedVideoForm extends FormEntity<MovieHostedVideoControls, HostedVideo> {
+  constructor(video?: Partial<HostedVideo>) {
+    super(createMovieHostedVideoControl(video));
+  }
+}
+
+function createMovieHostedVideosControl(videos: Partial<HostedVideos> = {}) {
+  const { screener, otherVideos } = createHostedVideos(videos);
+  return {
+    screener: new MovieHostedVideoForm(screener),
+    otherVideos: FormList.factory(otherVideos, otherVideo => new MovieHostedVideoForm(otherVideo)),
+  }
+}
+
+export type MovieHostedVideosControls = ReturnType<typeof createMovieHostedVideosControl>;
+
+export class MovieHostedVideosForm extends FormEntity<MovieHostedVideosControls, HostedVideos> {
+  constructor(videos?: Partial<HostedVideos>) {
+    super(createMovieHostedVideosControl(videos));
+  }
+
+
+  get otherVideos() {
+    return this.get('otherVideos');
+  }
+
+  get screener() {
+    return this.get('screener');
+  }
+}
