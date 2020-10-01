@@ -1,4 +1,4 @@
-import { functions, getStorageBucketName } from './internals/firebase';
+import { getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get, isEqual } from 'lodash';
 import { createHash } from 'crypto';
@@ -12,12 +12,13 @@ import { privacies } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
 import { uploadToJWPlayer } from './player';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+import { storage } from 'firebase-functions';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
  * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
  */
-export async function linkFile(data: functions.storage.ObjectMetadata) {
+export async function linkFile(data: storage.ObjectMetadata) {
   // get the needed values
   const { filePath, fieldToUpdate, isInTmpDir, docData, collection, doc } = await getDocAndPath(data.name);
 

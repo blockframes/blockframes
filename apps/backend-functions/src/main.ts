@@ -20,6 +20,7 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
+import { RuntimeOptions } from 'firebase-functions';
 
 
 //--------------------------------
@@ -33,7 +34,7 @@ import { skipInMaintenance } from '@blockframes/firebase-utils';
 const heavyConfig = {
   timeoutSeconds: 300,
   memory: '1GB'
-} as functions.RuntimeOptions
+} as RuntimeOptions
 
 
 //--------------------------------

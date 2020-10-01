@@ -1,12 +1,14 @@
-import * as functions from 'firebase-functions';
+import * as firebaseFunctions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+
+export const functions = firebaseFunctions.region('us-central1', 'europe-west1')
 
 export type DocumentReference = admin.firestore.DocumentReference;
 
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp(firebaseFunctions.config().firebase);
 export const db = admin.firestore();
 export const auth = admin.auth();
 
@@ -16,7 +18,7 @@ export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 export const getBackupBucketName = (): string => backupBucket;
 export const getStorageBucketName = (): string => storageBucket;
 
-export { admin, functions };
+export { admin };
 
 /**
  * Gets the user email for the user corresponding to a given `uid`.
