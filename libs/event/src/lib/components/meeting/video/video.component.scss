@@ -27,6 +27,19 @@
       display: inline-flex;
     }
   }
+
+
+  .nameParticipant {
+
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 100%;
+  }
 }
 
 
@@ -69,6 +82,10 @@
   }
 }
 
+.waiting-container {
+  color: white;
+}
+
 .container-remote-participant-Buyer {
   width: 100%;
 
@@ -86,18 +103,11 @@
   }
 
   .container-remote-participant-not-dominant-speaker{
+
       display: flex;
       align-items: center;
       justify-content: start;
-      padding: 0 5px;
       overflow-x: scroll;
-      flex-basis: 0;
-      flex-grow: 1;
-
-    * {
-      flex: 0 1 calc(33.3% - 32px);
-      margin: 5px;
-    }
 
     .participant-not-dominant-speaker {
 
@@ -107,6 +117,11 @@
       flex-wrap: nowrap
 
     }
+  }
+
+  .container-remote-participant-not-dominant-speaker > * {
+    flex: 0 1 calc(33.3% - 32px);
+    margin: 5px;
   }
 
   .event-remote-participant {

@@ -1,33 +1,38 @@
-<div *ngIf="event.isOwner" class="container-remote-participant-Owner">
 
-  <div class="cardList" *ngIf="arrayOfParticipantConnected$ | async as arrayOfParticipantConnected">
-    <ng-container *ngIf="getIfLocalIsAlone()">
-      <div>
-        Waiting For Buyer
-      </div>
-    </ng-container>
-    <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-      <event-remote-participant [participant]="participant" [fxFlexOrder]="participant.order" [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-remote-participant>
-    </ng-container>
-  </div>
-</div>
+<ng-container>
+  <div *ngIf="event.isOwner" class="container-remote-participant-Owner">
 
-
-<div *ngIf="!event.isOwner" class="container-remote-participant-Buyer">
-  <div class="container-remote-participant-dominant-speaker">
-<!--    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
-      <event-dominant-speaker [participant]="dominantParticipantForBuyer$ | async" class="event-remote-participant"></event-dominant-speaker>
-<!--    </div>-->
-  </div>
-  <div class="container-remote-participant-not-dominant-speaker">
-    <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-      <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
-        <event-remote-participant [isBuyer]="!event.isOwner" [participant]="participant" class="event-remote-participant"></event-remote-participant>
+    <div class="cardList" *ngIf="arrayOfParticipantConnected">
+      <ng-container *ngIf="getIfLocalIsAlone()">
+        <div class="waiting-container">
+          Waiting for the organizer
+        </div>
       </ng-container>
-    </ng-container>
+      <ng-container *ngFor="let participant of arrayOfParticipantConnected; trackBy: identify">
+        <event-remote-participant [participant]="participant" [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-remote-participant>
+      </ng-container>
+    </div>
   </div>
-</div>
 
-<ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">
-  <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks$ | async" ></event-local-participant>
+
+  <div *ngIf="!event.isOwner" class="container-remote-participant-Buyer">
+    <div class="container-remote-participant-dominant-speaker">
+      <!--    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
+      <event-dominant-speaker [participant]="dominantParticipantForBuyer" class="event-remote-participant"></event-dominant-speaker>
+      <!--    </div>-->
+    </div>
+    <div class="container-remote-participant-not-dominant-speaker">
+      <ng-container *ngFor="let participant of arrayOfParticipantConnected; trackBy: identify">
+        <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
+          <event-remote-participant [isBuyer]="!event.isOwner" [participant]="participant" class="event-remote-participant"></event-remote-participant>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container *ngIf="localParticipantConnected">
+    <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks" ></event-local-participant>
+  </ng-container>
 </ng-container>
+
+

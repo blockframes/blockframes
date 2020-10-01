@@ -48,7 +48,7 @@
 
           <!-- FIXME add classe for  style="position: relative"-->
           <div [fxFlex]="visioContainerSize" style="position: relative; background-color: black" id="contener-event-meeting">
-            <event-video [event]="event"></event-video>
+              <event-container-video [event]="event"></event-container-video>
           </div>
         </div>
         <ng-container *ngIf="event.isOwner">

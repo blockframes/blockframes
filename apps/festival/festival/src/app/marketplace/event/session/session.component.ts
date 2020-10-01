@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class SessionComponent implements OnInit {
 
+
   public event$: Observable<Event>;
   public showSession = true;
   public mediaContainerSize: string;
