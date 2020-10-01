@@ -125,7 +125,7 @@ export interface HostedVideo {
 ////////////////////
 
 export interface MoviePromotionalElements {
-  
+
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
@@ -135,10 +135,10 @@ export interface MoviePromotionalElements {
   still_photo: string[],
   videos?: HostedVideos,
 
-  // @TODO #2586 remove this when we can upload 
+  // @TODO #2586 remove this when we can upload
   // videos through movie tunnel and remove the component for external links
   // + migration for cleaning
-  clip_link: string,  
+  clip_link: string,
   promo_reel_link: string,
   screener_link: string,
   teaser_link: string,
@@ -275,8 +275,8 @@ export interface MovieNote extends Person {
 }
 
 export interface MoviePlannedShootingDateRange {
-  from: MoviePlannedShooting,
-  to: MoviePlannedShooting
+  from?: MoviePlannedShooting,
+  to?: MoviePlannedShooting
 }
 
 export interface MoviePlannedShooting {

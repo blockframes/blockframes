@@ -12,7 +12,7 @@
 
             <div fxLayout="row" fxLayoutGap="24px">
               <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival"
-                fxFlex required label="Festival name"
+                fxFlex label="Festival name"
                 hint="If you can't find the festival you're looking for, go to 'Custom Festival' section.">
               </static-select>
             </div>
@@ -31,9 +31,6 @@
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
                 <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
-                <mat-error *ngIf="prizesForm.hasError('required')">
-                  Year is required.
-                </mat-error>
               </mat-form-field>
 
             </div>
@@ -86,9 +83,6 @@
                 <mat-label>Year</mat-label>
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
                 <mat-error *ngIf="customPrizesForm.get('year').hasError('invalidYear')">Please enter a valid year
-                </mat-error>
-                <mat-error *ngIf="customPrizesForm.hasError('required')">
-                  Year is required.
                 </mat-error>
               </mat-form-field>
             </div>
