@@ -90,7 +90,6 @@ export class MeetingService {
       return true;
     })
     .catch(reason => {
-      console.log('reason : ', reason)
       return false;
     })
   }
@@ -129,7 +128,6 @@ export class MeetingService {
     return Array.from(participant.tracks).map((
       track : any
     ) => {
-      console.log('getTracksOfParticipant track : ', track)
       //participant[0] is the key
       return track[1];
     });
@@ -158,13 +156,11 @@ export class MeetingService {
 
     const connectOptions = options;
     if (this.previewTracks) {
-      console.log('Has Preview')
       connectOptions.tracks = this.previewTracks;
       connectOptions.enableDominantSpeaker = true;
     }
 
     Video.connect(accessToken, connectOptions).then((r) => this.roomJoined(r, event), (error) => {
-      console.log('Could not connect to Twilio: ' + error.message);
     });
   }
 
@@ -185,13 +181,11 @@ export class MeetingService {
     //save activeRoom
     this.activeRoom = room;
 
-    console.log('room : ', room)
 
     const identity = room.localParticipant.identity;
 
     if(!!room.participants) {
       const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
-      console.log('tracksOfParticipants  ', tracksOfParticipants)
       if(!!tracksOfParticipants && tracksOfParticipants.length > 0) {
         for (const indexParticipant in tracksOfParticipants) {
           await this.getFirstNameAndLastNameOfParticipant(tracksOfParticipants[indexParticipant])
@@ -205,7 +199,6 @@ export class MeetingService {
 
     const localUser: User = await this.userService.getUser(identity)
 
-    // console.log("Joined as '" + this.identity + "'");
     room.localParticipant.firstName = localUser.firstName
     room.localParticipant.lastName = localUser.lastName
     room.localParticipant.isDominantSpeaker = false
@@ -229,11 +222,9 @@ export class MeetingService {
    * @param room - Room connected
    */
   setUpRoomEvent(room){
-    console.log('setUpRoomEvent : ', {room})
 
     // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected, async (participant: IIParticipantMeeting) => {
-      console.log("Joining: '" + participant.identity + "'");
 
 
       const remoteUser = await this.userService.getUser(participant.identity)
@@ -294,7 +285,6 @@ export class MeetingService {
         meetingEvent: meetingEventEnum.Disconnected,
         data: s
       });
-      console.log('Left');
 
       // if (this.previewTracks) {
       //   this.previewTracks.forEach((track) => {

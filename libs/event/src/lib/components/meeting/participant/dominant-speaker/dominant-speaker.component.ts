@@ -18,9 +18,6 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
   }
 
   ngOnInit(): void {
-    console.log('=====================================')
-    console.log('Dominant participant : ', this.participant)
-    console.log('=====================================')
   }
 
 

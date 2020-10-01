@@ -130,13 +130,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
     const img = document.querySelector("#contener-event-meeting");
     const width = img.clientWidth;
     const height = img.clientHeight;
-    console.log('==============================================================================')
-    console.log('==============================================================================')
-    console.log('==============================================================================')
-    console.log({width, height})
-    console.log('==============================================================================')
-    console.log('==============================================================================')
-    console.log('==============================================================================')
 
   }
 
@@ -149,7 +142,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param localTrack : Array of tracks - all tracks of the local (audio or/and video)
    */
   localPreviewDone(localTrack){
-    console.log('---------------------------localPreviewDone---------------------------');
     this.$localPreviewTracksDataSource.next(localTrack);
   }
 
@@ -158,7 +150,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param room: Room (object twilio)
    */
   connectedToRoomTwilio(room){
-    console.log('---------------------------connectedToRoomTwilio---------------------------');
     this.$localParticipantConnectedDataSource.next(room.localParticipant);
     this.cd.detectChanges();
   }
@@ -168,7 +159,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param participant: Participant (object twilio)
    */
   participantConnected(participant: IParticipantMeeting){
-    console.log('---------------------------participantConnected---------------------------')
     this.addParticipantFromParticipantConnectedArr(participant)
   }
 
@@ -177,7 +167,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param participant: Participant (object twilio)
    */
   participantDisconnected(participant: IParticipantMeeting){
-    console.log('---------------------------participantDisconnected---------------------------')
     this.removeParticipantDominantSpeaker(participant);
     this.removeParticipantFromParticipantConnectedArr(participant);
   }
@@ -186,7 +175,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Function call when local participant leave the room
    */
   disconnected(){
-    console.log('---------------------------disconnected---------------------------')
     this.deactiveLocalTracks();
     this.meetingService.disconnected();
   }
@@ -229,15 +217,12 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    */
   dominantSpeakerChanged(participant: IParticipantMeeting){
-    console.log('---------------------------dominantSpeakerChanged---------------------------')
-    console.log({participant})
     this.setParticipantDominantSpeaker(participant);
 
   }
 
   setParticipantDominantSpeaker(participant: IParticipantMeeting){
     const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
-    console.log('getParticipantDominantSpeaker allParticipantAlreadyInTheRoom : ', allParticipantAlreadyInTheRoom)
 
     const identityOfOwner = this.event.organizedBy.uid;
 
@@ -259,7 +244,6 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
     const participantWasDominantSpeaker = this.$dominantParticipantForBuyerDataSource.getValue();
-    console.log('removeParticipantDominantSpeaker allParticipantAlreadyInTheRoom : ', allParticipantAlreadyInTheRoom)
     const identityOfOwner = this.event.organizedBy.uid;
 
     const newParticipantDominantSpeaker = allParticipantAlreadyInTheRoom.find(tt => tt.identity === identityOfOwner)
@@ -330,10 +314,5 @@ export class VideoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.disconnected()
-  }
-
-
-  test(){
-    console.log('this.$participantConnectedDataSource.getValue() : ', this.$participantConnectedDataSource.getValue())
   }
 }

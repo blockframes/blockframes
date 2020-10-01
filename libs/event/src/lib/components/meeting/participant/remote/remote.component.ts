@@ -43,7 +43,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
   }
 
   ngOnInit(): void {
-    console.log('ParticipantComponent ngOnInit participant : ', this.participant)
   }
 
   ngAfterViewInit() {
@@ -52,7 +51,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
   }
 
   setTrackEvent(track){
-    console.log('setTrackEvent : ', track)
     track.on('dimensionsChanged', (dd)=> {
       console.log('dimensionsChanged : ')
       console.log({dd})
@@ -68,62 +66,49 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
-      console.log(`============================== trackSubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
 
       this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
-      console.log(`============================== trackUnsubscribed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
       this.detachTracks([track])
     })
 
     participant.on('disconnected', () => {
-      console.log(`============================== disconnected in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
       this.detachParticipantTracks(this.participant);
     })
 
     participant.on('reconnected', () => {
-      console.log(`============================== reconnected in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('reconnecting', () => {
-      console.log(`============================== reconnecting in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackDisabled', (track) => {
-      console.log(`============================== trackDisabled in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
       this.setUpVideoAndAudio(track.kind, false)
     })
 
     participant.on('trackEnabled', (track) => {
-      console.log(`============================== trackEnabled in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackPublished', () => {
-      console.log(`============================== trackPublished in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackStarted', (track) => {
-      console.log(`============================== trackStarted in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
       // this.setTrackEvent(track);
       this.setUpVideoAndAudio(track.kind, true)
     })
 
     participant.on('trackSubscriptionFailed', () => {
-      console.log(`============================== trackSubscriptionFailed in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackSwitchedOff', (track) => {
-      console.log(`============================== trackSwitchedOff in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackSwitchedOn', () => {
-      console.log(`============================== trackSwitchedOn in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
 
     participant.on('trackUnpublished', () => {
-      console.log(`============================== trackUnpublished in remote component for participant ${participant.firstName}/${participant.lastName} : ${participant.identity}============================`)
     })
   }
 
@@ -143,7 +128,6 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
 
   setUpVideoAndAudio(kind, boolToChange){
     if(kind === 'video'){
-      console.log('...this.$camMicIsOnDataSource.getValue() : ', this.$camMicIsOnDataSource.getValue())
       this.$camMicIsOnRemoteDataSource.next( {...this.$camMicIsOnRemoteDataSource.getValue(), video: boolToChange});
     } else {
       this.$camMicIsOnRemoteDataSource.next( {...this.$camMicIsOnRemoteDataSource.getValue(), audio: boolToChange});

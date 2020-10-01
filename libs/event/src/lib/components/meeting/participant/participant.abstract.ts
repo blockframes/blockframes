@@ -20,7 +20,6 @@ export abstract class AbstractParticipant{
   attachTracks(tracks, container, className) {
     tracks.forEach((track) => {
       if (track) {
-        console.log('track.kind : ', track.kind)
         container.appendChild(track.attach()).className = className;
       }
     });
@@ -33,13 +32,11 @@ export abstract class AbstractParticipant{
    * @param nameClass - name of class css
    */
   attachParticipantTracks(participant, container, nameClass) {
-    console.log('attachParticipantTracks : ', {participant})
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {
       return trackPublication.track;
     });
-    console.log({tracks, container, nameClass})
     this.attachTracks(tracks, container, nameClass);
   }
 
@@ -48,7 +45,6 @@ export abstract class AbstractParticipant{
    * @param tracks - track to detach of the DOM
    */
   detachTracks(tracks) {
-    console.log('detachTracks : ', {tracks})
     tracks.forEach((track) => {
       if (track) {
         this.setUpVideoAndAudio(track.kind, false);
@@ -64,7 +60,6 @@ export abstract class AbstractParticipant{
    * @param participant - participant to detach track of the DOM
    */
   detachParticipantTracks(participant: IParticipantMeeting) {
-    console.log('detachParticipantTracks : ', {participant})
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {
@@ -83,7 +78,6 @@ export abstract class AbstractParticipant{
 
   setUpVideoAndAudio(kind, boolToChange){
     if(kind === 'video'){
-      console.log('...this.$camMicIsOnDataSource.getValue() : ', this.$camMicIsOnDataSource.getValue())
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), video: boolToChange});
     } else {
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});

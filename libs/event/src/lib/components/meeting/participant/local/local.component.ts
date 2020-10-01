@@ -52,34 +52,28 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    * @param localParticipant
    */
   setUpLocalParticipantEvent(localParticipant: IParticipantMeeting){
-    console.log('localParticipant : ', localParticipant)
 
     localParticipant.on(meetingEventEnum.TrackSubscribed, (track: ITrack) => {
-      console.log('============================== trackSubscribed in local component============================')
       this.setUpCamAndMic([track], true);
 
     })
 
     localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track: ITrack) => {
-      console.log('============================== trackUnsubscribed in local component============================')
       this.setUpCamAndMic([track], false);
 
     })
 
     localParticipant.on('trackDisabled', (track: ITrack) => {
-      console.log('============================== trackDisabled in local component============================')
       this.setUpCamAndMic([track], false);
 
     })
 
     localParticipant.on('trackEnabled', (track: ITrack) => {
-      console.log('============================== trackEnabled in local component============================')
       this.setUpCamAndMic([track], true);
 
     })
 
     localParticipant.on('trackStopped', (track: ITrack) => {
-      console.log('============================== trackStopped in local component============================')
       this.setUpCamAndMic([track], false);
 
     })
