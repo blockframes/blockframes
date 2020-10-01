@@ -1,8 +1,5 @@
-<section grid>
-  <ng-container *ngIf="(orgs$ | async) as orgs; else loading">
-    <org-card *ngFor="let org of orgs" [col]="3" [org]="org"></org-card>
-  </ng-container>
-</section>
-<ng-template #loading>
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</ng-template>
+<list-page [items]="(orgs$ | async)" itemType="organization" titleText="Our partners">
+  <ng-template pageSearchTemplate>
+    test
+  </ng-template>
+</list-page>

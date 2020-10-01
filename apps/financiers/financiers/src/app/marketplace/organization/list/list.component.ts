@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { centralOrgID } from '@env';
-import { Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -19,7 +18,6 @@ export class ListComponent implements OnInit {
 
   @HostBinding('@scaleOut') animation = true;
   orgs$: Observable<Organization[]>;
-  public movies: Movie[] = [];
 
   constructor(
     private service: OrganizationService,
