@@ -20,9 +20,9 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 // ========
 
 export const appUrl = {
-  content: 'https://demo1.archipelcontent.com',
-  market: 'https://demo1.archipelmarket.com',
-  crm: 'https://demo1.crm.blockframes.io',
+  content: 'https://blockframes-demo-1.web.app',
+  market: 'https://festival-demo1-blockframes.web.app',
+  crm: 'https://crm-demo1-blockframes.web.app',
   financiers: 'https://blockframes-demo1-financiers.web.app',
 }
 
@@ -87,7 +87,8 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'demo1-backups';
+// export const backupBucket = 'demo1-backups';
+export const backupBucket = 'blockframes-demo-1-db-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
 
 // Yandex Metrika Id
