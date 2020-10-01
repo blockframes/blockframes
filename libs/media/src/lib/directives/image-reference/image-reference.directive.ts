@@ -95,12 +95,11 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
     // Adds a 5 sec delay on image loading except for the first one
     // This is to prevent imgIx to load the image before it is even uploaded or moved to good directory
     let delay = 0;
-    const delayBeforeReloadingImage = () => timer(delay);
 
     // apply latest changes
     this.sub = combineLatest([
       this.asset$,
-      this.ref$.pipe(delayWhen(delayBeforeReloadingImage)),
+      this.ref$.pipe(delayWhen(() => timer(delay))),
       theme$,
     ]).subscribe(async ([asset, ref, theme]) => {
 
