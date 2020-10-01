@@ -47,7 +47,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      await this.service.configureMovieAndUpsert(this.query.getActiveId(), this.query.getActive(), this.form);
+      await this.service.updateMovie(this.query.getActive(), this.form.value);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
@@ -74,19 +74,5 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       });
     }
     recursiveFunc(formToInvestigate);
-  }
-
-  private updateFormArraysByProdStatus() {
-    const prodStatusValue = this.form.productionStatus.value;
-    const prodStatus = ['finished', 'released'];
-
-    /* Directors */
-    /* Cast Member */
-    /* Crew Member */
-    if (prodStatus.includes(prodStatusValue)) {
-      this.form.directors.controls.forEach(director => director.get('status').setValue('confirmed'))
-      this.form.cast.controls.forEach(cast => cast.get('status').setValue('confirmed'))
-      this.form.crew.controls.forEach(crew => crew.get('status').setValue('confiremd'));
-    }
   }
 }

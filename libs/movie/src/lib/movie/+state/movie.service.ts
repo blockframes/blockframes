@@ -13,7 +13,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
-import { createMovieAppAccess, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { App, createMovieAppAccess, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { MovieForm } from '../form/movie.form';
 
 @Injectable({ providedIn: 'root' })
@@ -142,41 +142,6 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-  async configureMovieAndUpsert(id: string, movie: Movie, formValue: any) {
-    try {
-      const mergedMovie: Movie = mergeDeep(movie, formValue);
-      const updatedForm = this.updateFormArraysByProdStatus(formValue)
-      const currentApp = getCurrentApp(this.routerQuery);
-
-      switch (currentApp) {
-        case 'catalog': {
-          mergedMovie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-          mergedMovie.storeConfig.appAccess.catalog = true;
-        }
-          break;
-        case 'festival': {
-          mergedMovie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-          mergedMovie.storeConfig.appAccess.festival = true;
-        }
-          break;
-        case 'financiers': {
-          mergedMovie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-          mergedMovie.storeConfig.appAccess.financiers = true;
-        }
-          break;
-      }
-
-      /* These values needs to be replaced by the form values and not merged by the mergedDeep function.
-        Since the mergeDeep function can't distinguish if a object should be merged or replaced */
-      ['languages', 'shooting'].forEach(key => {
-        mergedMovie[key] = updatedForm.value[key]
-      })
-      return this.update(id, mergedMovie)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   private updateFormArraysByProdStatus(formValue: any) {
     const prodStatusValue = formValue.productionStatus;
     const prodStatus = ['finished', 'released'];
@@ -190,5 +155,25 @@ export class MovieService extends CollectionService<MovieState> {
       formValue.crew.forEach(crew => crew.status = 'confiremd');
     }
     return formValue;
+  }
+
+  async updateMovie(movie: Movie, formValue: Movie) {
+    try {
+      const mergedMovie: Movie = mergeDeep(movie, formValue);
+      const updatedForm = this.updateFormArraysByProdStatus(formValue)
+
+      const currentApp: App = getCurrentApp(this.routerQuery);
+      mergedMovie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      mergedMovie.storeConfig.appAccess[currentApp] = true;
+
+      /* These values needs to be replaced by the form values and not merged by the mergedDeep function.
+        Since the mergeDeep function can't distinguish if a object should be merged or replaced */
+      ['languages', 'shooting'].forEach(key => {
+        mergedMovie[key] = updatedForm[key]
+      })
+      return this.update(movie.id, mergedMovie)
+    } catch (error) {
+      console.error(error)
+    }
   }
 }

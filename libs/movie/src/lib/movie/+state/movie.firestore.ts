@@ -294,7 +294,6 @@ export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
 
 export interface MovieSalesPitch {
   description: string,
-  link: string
   file: string, // hosted media
 }
 

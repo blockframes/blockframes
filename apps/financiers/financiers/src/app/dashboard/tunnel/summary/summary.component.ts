@@ -47,7 +47,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      await this.service.configureMovieAndUpsert(this.query.getActiveId(), this.query.getActive(), this.form);
+      await this.service.updateMovie(this.query.getActive(), this.form.value);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
