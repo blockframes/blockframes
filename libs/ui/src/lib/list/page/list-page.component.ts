@@ -7,7 +7,7 @@ import {
   TemplateRef,
   ContentChild,
   Input,
-  AfterContentInit
+  AfterContentInit, Output, EventEmitter
 } from '@angular/core';
 
 // Blockframes
@@ -19,17 +19,17 @@ export class PageSortDirective { }
 @Directive({ selector: '[pageSearch]' })
 export class PageSearchDirective { }
 
-@Directive({ selector: '[PageCard]' })
+@Directive({ selector: '[pageCard]' })
 export class PageCardDirective { }
 
-@Directive({ selector: '[PageListItem]' })
+@Directive({ selector: '[pageListItem]' })
 export class PageListItemDirective { }
 
-@Directive({ selector: '[PageProgress]' })
+@Directive({ selector: '[pageProgress]' })
 export class PageProgressDirective { }
 
 @Component({
-  selector: '[items]list-page',
+  selector: '[items][itemType]list-page',
   templateUrl: 'list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
   animations: [fadeList('.card')],
@@ -38,7 +38,7 @@ export class PageProgressDirective { }
 export class ListPageComponent implements AfterContentInit {
 
   @ContentChild(PageSortDirective, { read: TemplateRef }) pageSortTemplate: PageSortDirective;
-  @ContentChild(PageSortDirective, { read: TemplateRef }) pageSearchTemplate: PageSortDirective;
+  @ContentChild(PageSearchDirective, { read: TemplateRef }) pageSearchTemplate: PageSearchDirective;
   @ContentChild(PageCardDirective, { read: TemplateRef }) pageCardTemplate: PageCardDirective;
   @ContentChild(PageListItemDirective, { read: TemplateRef }) pageListItemTemplate: PageListItemDirective;
   @ContentChild(PageProgressDirective, { read: TemplateRef }) pageProgressTemplate: PageProgressDirective;
@@ -48,6 +48,12 @@ export class ListPageComponent implements AfterContentInit {
   @Input() titleText: string;
 
   @Input() itemType = 'title'; // only for display purpose
+
+  @Input() hitsViewed: number;
+
+  @Input() nbHits: number
+
+  @Output() loadMore = new EventEmitter()
 
   public listView = false;
   public canToggle = false;

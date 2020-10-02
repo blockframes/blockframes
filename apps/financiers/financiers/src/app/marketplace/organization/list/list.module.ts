@@ -8,26 +8,31 @@ import { ListComponent } from './list.component';
 
 // Blockframes
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
-import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
+import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
 
 // Material
 import { MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @NgModule({
   declarations: [ListComponent],
   imports: [
     CommonModule,
-    MatLayoutModule,
     OrganizationCardModule,
     ListPageModule,
     ReactiveFormsModule,
+    RouterModule.forChild([{ path: '', component: ListComponent }]),
+    TitleFilterModule,
 
+    // Material
     MatRippleModule,
     MatProgressSpinnerModule,
-    RouterModule.forChild([{ path: '', component: ListComponent }]),
+    MatFormFieldModule,
+    MatInputModule
   ]
 })
 export class OrganizationListModule { }

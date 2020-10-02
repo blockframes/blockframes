@@ -1,5 +1,15 @@
-<list-page [items]="(orgs$ | async)" itemType="organization" titleText="Our partners">
-  <ng-template pageSearchTemplate>
-    test
+<list-page [items]="(orgs$ | async)" itemType="organization" titleText="Our partners" >
+  <ng-template pageSearch>
+    <mat-form-field appearance="outline">
+      <mat-label>Try searching for our partners...</mat-label>
+      <input matInput type="text">
+    </mat-form-field>
+  </ng-template>
+
+  <title-filter>
+  </title-filter>
+
+  <ng-template pageCard let-org>
+    <org-card [org]="org"></org-card>
   </ng-template>
 </list-page>
