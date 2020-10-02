@@ -10,6 +10,7 @@ import { ListComponent } from './list.component';
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
+import { FormCountryModule } from '@blockframes/ui/form';
 
 // Material
 import { MatRippleModule } from '@angular/material/core';
@@ -27,6 +28,7 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: ListComponent }]),
     TitleFilterModule,
+    FormCountryModule,
 
     // Material
     MatRippleModule,

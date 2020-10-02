@@ -43,7 +43,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageListItemDirective, { read: TemplateRef }) pageListItemTemplate: PageListItemDirective;
   @ContentChild(PageProgressDirective, { read: TemplateRef }) pageProgressTemplate: PageProgressDirective;
 
-  @Input() items: any[];
+  @Input() items: unknown[];
 
   @Input() titleText: string;
 

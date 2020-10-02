@@ -1,12 +1,16 @@
-<list-page [items]="(orgs$ | async)" itemType="organization" titleText="Our partners" >
+<list-page [items]="orgs$ | async" itemType="organization" titleText="Our partners" (loadMore)="loadMore()"
+  [nbHits]="nbHits" [hitsViewed]="hitsViewed">
   <ng-template pageSearch>
     <mat-form-field appearance="outline">
       <mat-label>Try searching for our partners...</mat-label>
-      <input matInput type="text">
+      <input matInput type="text" [formControl]="orgSearchForm.get('query')">
     </mat-form-field>
   </ng-template>
 
   <title-filter>
+    <ng-template filter label="Partner Country" [form]="orgSearchForm.country">
+      <form-country [form]="orgSearchForm.country"></form-country>
+    </ng-template>
   </title-filter>
 
   <ng-template pageCard let-org>

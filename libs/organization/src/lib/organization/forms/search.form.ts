@@ -31,10 +31,12 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
     query: new FormControl(search.query),
     page: new FormControl(search.page),
     country: new FormControl(search.country),
+    appAccess: new FormControl(search.appAccess),
+    appModule: new FormControl(search.appModule)
   };
 }
 
-export type OrganizationSearchControl = ReturnType<typeof createOrganizationSearch>;
+export type OrganizationSearchControl = ReturnType<typeof createOrganizationSearchControl>;
 
 export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl> {
 
@@ -51,6 +53,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get query() { return this.get('query'); }
   get page() { return this.get('page'); }
   get country() { return this.get('country'); }
+  get appAccess() { return this.get('appAccess') }
+  get appModule() { return this.get('appModule') }
 
 
   isEmpty() {
@@ -63,7 +67,9 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
-        `country:${this.country.value}`
+        `country:${this.country.value}`,
+        `appAccess:${this.appAccess.value}`,
+        `appModule:${this.appModule.value}`
       ]
     });
   }
