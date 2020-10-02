@@ -71,6 +71,18 @@ const constants = {
   // ------ //
   // MOVIE  //
   // ------ //
+  certifications: {
+    artEssai: 'Art & Essai', // art-essai
+    eof: 'EOF',
+    awardedFilm: 'Awarded Film', // awarded-film
+    aListCast: 'A-list Cast', // a-list-cast
+    europeanQualification: 'European Qualification' // european-qualification
+  },
+  colors: {
+    c: 'Color',
+    b: 'Black & white',
+    colorBW: 'Color & Black & White' // color-black-white
+  },
   contentType: {
     feature_film: 'Feature Film',
     short: 'Short Film',
@@ -141,6 +153,17 @@ const constants = {
     finished: 'Completed',
     released: 'Released'
   },
+  rating: {
+    pegi: 'PEGI',
+    csa: 'CSA',
+    cnc: 'CNC'
+  },
+  scoring: {
+    a: 'A',
+    b: 'B',
+    c: 'C',
+    d: 'D'
+  },
   shootingPeriod: {
     early: 'Early',
     late: 'Late',
@@ -209,7 +232,7 @@ const constants = {
   },
 
   // ------------- //
-  // FESTIVALS  //
+  //   FESTIVALS   //
   // ------------- //
   festival: {
     cannes: 'Cannes International Film Festival',
@@ -243,3 +266,13 @@ const constants = {
 };
 
 export default constants;
+export type Scope = keyof typeof constants;
+
+export function getKeyFromValue(scope: Scope, targetValue: any) {
+  for (const [key, value] of Object.entries(constants[scope])) {
+    if (value.toLowerCase() === targetValue.toLowerCase()) {
+      return key;
+    }
+  }
+  return null;
+}

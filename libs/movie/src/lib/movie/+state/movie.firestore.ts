@@ -2,10 +2,10 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
-  ScoringSlug,
-  CertificationsSlug,
-  ColorsSlug,
-  RatingSlug,
+  ScoringValues,
+  CertificationsValues,
+  ColorsValues,
+  RatingValues,
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
@@ -49,8 +49,8 @@ interface MovieRaw<D> {
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
-  certifications?: CertificationsSlug[],
-  color?: ColorsSlug,
+  certifications?: CertificationsValues[],
+  color?: ColorsValues,
   contentType: ContentType; //! required
   crew?: Crew[],
   directors: Director[], //! required
@@ -78,7 +78,7 @@ interface MovieRaw<D> {
   release: MovieRelease, //! required
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
-  scoring?: ScoringSlug,
+  scoring?: ScoringValues,
   shooting?: MovieShooting,
   soundFormat?: SoundFormatSlug,
   stakeholders?: MovieStakeholders,
@@ -203,7 +203,7 @@ export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 export interface MovieRating {
   country: TerritoriesSlug;
   reason?: string,
-  system?: RatingSlug,
+  system?: RatingValues,
   value: string,
 }
 

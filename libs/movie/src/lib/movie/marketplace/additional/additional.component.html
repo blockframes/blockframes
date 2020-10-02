@@ -9,7 +9,7 @@
       <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
       <p>{{ release.media }} {{ release.date | date: 'shortDate' }}</p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -22,7 +22,7 @@
         From <b>{{ movie.estimatedBudget.from }}</b> to <b>{{ movie.estimatedBudget.to }}</b>
       </p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -33,7 +33,7 @@
       <h5>{{ boxOffice.territory | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ boxOffice.value | currency: boxOffice.unit }}</p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -64,7 +64,7 @@
     </article>
     <article *ngIf="movie.color">
       <h5>Color information</h5>
-      <p>{{ movie.color | translateSlug: 'COLORS' }}</p>
+      <p>{{ movie.color | toLabel: 'colors' }}</p>
     </article>
     <article *ngIf="movie.soundFormat">
       <h5>Sound format</h5>

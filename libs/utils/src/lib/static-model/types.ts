@@ -14,20 +14,6 @@ export type LanguagesSlug = typeof LANGUAGES_SLUG[number];
 export const MOVIE_CURRENCIES_SLUG = models['MOVIE_CURRENCIES'].map(key => key.slug);
 export type MovieCurrenciesSlug = typeof MOVIE_CURRENCIES_SLUG[number];
 
-export const SCORING_SLUG = models['SCORING'].map(key => key.slug);
-export type ScoringSlug = typeof SCORING_SLUG[number];
-
-export const RATING_SLUG = models['RATING'].map(key => key.slug);
-export type RatingSlug = typeof RATING_SLUG[number];
-
-export const COLORS_SLUG = models['COLORS'].map(key => key.slug);
-export type ColorsSlug = typeof COLORS_SLUG[number];
-
-export const CERTIFICATIONS_LABEL = models['CERTIFICATIONS'].map(key => key.label);
-export const CERTIFICATIONS_SLUG = models['CERTIFICATIONS'].map(key => key.slug);
-export type CertificationsLabel = typeof CERTIFICATIONS_LABEL[number];
-export type CertificationsSlug = typeof CERTIFICATIONS_SLUG[number];
-
 export const TERRITORIES_LABEL = models['TERRITORIES'].map(key => key.label);
 export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
@@ -79,6 +65,18 @@ export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
 
 export type CrewRoles = keyof typeof constants.crewRoles;
 export type CrewRolesValues = typeof constants.crewRoles[CrewRoles];
+
+export type Scoring = keyof typeof constants.scoring;
+export type ScoringValues = typeof constants.scoring[Scoring];
+
+export type Rating = keyof typeof constants.rating;
+export type RatingValues = typeof constants.rating[Rating];
+
+export type Colors = keyof typeof constants.colors;
+export type ColorsValues = typeof constants.colors[Colors];
+
+export type Certifications = keyof typeof constants.certifications;
+export type CertificationsValues = typeof constants.certifications[Certifications];
 
 export type StoreStatus = keyof typeof constants.storeStatus;
 

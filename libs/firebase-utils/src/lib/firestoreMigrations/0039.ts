@@ -2,7 +2,7 @@ import { Firestore } from '@blockframes/firebase-utils';
 
 
 /**
- * Update the producer role and the crew role with the new value from the static constant
+ * Update the producer role, the crew role and director's category with the new value from the static constant
 */
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();

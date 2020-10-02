@@ -131,9 +131,9 @@
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications">
-            <mat-button-toggle [value]="certification.slug" [matTooltip]="certification?.hint"
+            <mat-button-toggle [value]="certification" [matTooltip]="certification?.hint"
               [matTooltipDisabled]="!certification?.hint">
-              {{ certification.label }}
+              {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
           </ng-container>
         </mat-button-toggle-group>
