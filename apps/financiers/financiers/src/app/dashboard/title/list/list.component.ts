@@ -1,22 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { StoreStatus } from '@blockframes/utils/static-model/types';
 import { startWith, map, switchMap, tap, filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { Movie, Credit } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-
-interface TitleView {
-  id: string; // movieId
-  title: string;
-  view: string;
-  director: Credit[];
-  productionStatus: string;
-  status: StoreStatus;
-}
 
 const columns = {
   title: 'Title',
@@ -70,7 +60,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: TitleView) {
+  public goToTitle(title: Movie) {
     this.router.navigate([title.id], { relativeTo: this.route });
   }
 
