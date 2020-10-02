@@ -2,7 +2,13 @@ import { Firestore } from '@blockframes/firebase-utils';
 
 
 /**
- * Update the producer role, the crew role and director's category with the new value from the static constant
+ * Update
+ * - producer role
+ * - the crew role
+ * - director's category
+ * - certifications
+ * - colors
+ * with the new value from the static constant
 */
 export async function upgrade(db: Firestore) {
   const movies = await db.collection('movies').get();
@@ -32,9 +38,20 @@ export async function upgrade(db: Firestore) {
       return person;
     });
 
+    const newCertifications = data.certifications.map(certification => {
+      return updateCertifications(certification);
+    })
+
+    const updateColor = (color) => {
+      if (color === 'color-black-white') {
+        return 'colorBW'
+      } else return color;
+    }
 
     const newMovie = {
       ...data,
+      certifications: newCertifications,
+      color: updateColor(data.color),
       crew: newCrew,
       directors: newDirectors,
       producers: newProducers
@@ -102,5 +119,20 @@ function updateCrewRole(role: string) {
       return 'originalAuthor';
     default:
       return role;
+  }
+}
+
+function updateCertifications(certification: string) {
+  switch(certification) {
+    case 'art-essai':
+      return 'artEssai';
+    case 'awarded-film' :
+      return 'awardedFilm';
+    case 'a-list-cast' :
+      return 'aListCast';
+    case 'european-qualification' :
+      return 'europeanQualification';
+    default:
+      return certification;
   }
 }

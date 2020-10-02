@@ -72,16 +72,16 @@ const constants = {
   // MOVIE  //
   // ------ //
   certifications: {
-    artEssai: 'Art & Essai', // art-essai
+    artEssai: 'Art & Essai',
     eof: 'EOF',
-    awardedFilm: 'Awarded Film', // awarded-film
-    aListCast: 'A-list Cast', // a-list-cast
-    europeanQualification: 'European Qualification' // european-qualification
+    awardedFilm: 'Awarded Film',
+    aListCast: 'A-list Cast',
+    europeanQualification: 'European Qualification'
   },
   colors: {
     c: 'Color',
     b: 'Black & white',
-    colorBW: 'Color & Black & White' // color-black-white
+    colorBW: 'Color & Black & White'
   },
   contentType: {
     feature_film: 'Feature Film',
