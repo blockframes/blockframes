@@ -21,6 +21,7 @@ export class VideoComponent implements OnInit {
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
   @Input() localPreviewTracks$: Observable<any>;
   @Input() event: Event;
+  @Input() isOwner: boolean;
 
   @Output() eventSetUpLocalVideoAndAudio = new EventEmitter;
 

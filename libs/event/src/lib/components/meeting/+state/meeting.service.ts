@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 
 //Import Twilio-video
 import * as Video from 'twilio-video';
+import {Participant, Room, RemoteVideoTrack, RemoteAudioTrack, RemoteTrackPublication} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
 import {OrganizationMember, User, UserQuery, UserService} from "@blockframes/user/+state";
 import {Event} from "@blockframes/event/+state";
-import { Participant as IIParticipantMeeting } from 'twilio-video';
+import {AuthQuery} from "@blockframes/auth/+state";
 
 
 export enum meetingEventEnum {
@@ -37,7 +38,10 @@ export interface StatusVideoMic {
 })
 export class MeetingService {
 
-  private eventRoom = new BehaviorSubject<any>({});
+  private eventRoom = new BehaviorSubject<EventRoom>({
+    meetingEvent : null,
+    data: null
+  });
 
 
   protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
@@ -54,7 +58,7 @@ export class MeetingService {
 
   constructor(
     private userService: UserService,
-    private userQuery: UserQuery,
+    private query: AuthQuery
     ) {
 
   }
@@ -82,9 +86,12 @@ export class MeetingService {
     return this.localVideoMicStatus$;
   }
 
-  getIfIsReelOwner(event){
-    const userIdActive = this.userQuery.getActiveId();
-    return userIdActive === event.organizedBy.uid;
+  getActiveUser(){
+    return this.query.user;
+  }
+
+  getIfIsReelOwner(event:Event){
+    return this.query.userId === event.organizedBy.uid;
   }
 
   getIfAudioIsAvailable(){
@@ -137,7 +144,7 @@ export class MeetingService {
    * Get track of one participant
    * @param participant - All participants connected in the room
    */
-  getTracksOfParticipant(participant: IIParticipantMeeting) {
+  getTracksOfParticipant(participant: Participant) {
     return Array.from(participant.tracks).map((
       track : any
     ) => {
@@ -150,7 +157,7 @@ export class MeetingService {
    * Get all participant already in the room.
    * @param participants - All participants connected in the room
    */
-  getParticipantOfParticipantsMapAlreadyInRoom(participants: IIParticipantMeeting[]) {
+  getParticipantOfParticipantsMapAlreadyInRoom(participants: Participant[]) {
     return Array.from(participants).map((
       participant : any
     ) => {
@@ -173,12 +180,13 @@ export class MeetingService {
       connectOptions.enableDominantSpeaker = true;
     }
 
-    Video.connect(accessToken, connectOptions).then((r) => this.roomJoined(r, event), (error) => {
+    Video.connect(accessToken, connectOptions).then((r: Room) => this.roomJoined(r, event), (error) => {
+      console.log('error : ', error)
     });
   }
 
 
-  async getFirstNameAndLastNameOfParticipant(participant: IIParticipantMeeting){
+  async getFirstNameAndLastNameOfParticipant(participant: Participant){
     const localUser: User = await this.userService.getUser(participant.identity)
     participant.firstName = localUser.firstName
     participant.lastName = localUser.lastName
@@ -190,7 +198,7 @@ export class MeetingService {
    * @param room - room twilio where we are connected
    * @param event - event when we com from / cascade8
    */
-  async roomJoined(room, event) {
+  async roomJoined(room:Room, event:Event) {
     //save activeRoom
     this.activeRoom = room;
 
@@ -234,10 +242,10 @@ export class MeetingService {
    * SetUp all event of the Room went we are connected
    * @param room - Room connected
    */
-  setUpRoomEvent(room){
+  setUpRoomEvent(room:Room){
 
     // When a Participant joins the Room, log the event.
-    room.on(meetingEventEnum.ParticipantConnected, async (participant: IIParticipantMeeting) => {
+    room.on(meetingEventEnum.ParticipantConnected, async (participant: Participant) => {
 
 
       const remoteUser = await this.userService.getUser(participant.identity)
@@ -253,7 +261,7 @@ export class MeetingService {
     });
 
     // When a Participant adds a Track, attach it to the DOM.
-    room.on(meetingEventEnum.TrackSubscribed, (track, trackPublication, participant: IIParticipantMeeting) => {
+    room.on(meetingEventEnum.TrackSubscribed, (track: RemoteVideoTrack|RemoteAudioTrack, trackPublication:RemoteTrackPublication, participant: Participant) => {
       // this.attachTracks([track], participantContainer, 'participantContainer');
 
       this.eventRoom.next({
@@ -263,7 +271,7 @@ export class MeetingService {
     });
 
     // When a Participant removes a Track, detach it from the DOM.
-    room.on(meetingEventEnum.TrackUnsubscribed, (track, trackPublication, participant: IIParticipantMeeting) => {
+    room.on(meetingEventEnum.TrackUnsubscribed, (track:RemoteVideoTrack|RemoteAudioTrack, trackPublication:RemoteTrackPublication, participant: Participant) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.TrackUnsubscribed,
@@ -273,7 +281,7 @@ export class MeetingService {
     });
 
     // When a Participant leaves the Room, detach its Tracks.
-    room.on(meetingEventEnum.ParticipantDisconnected, (participant: IIParticipantMeeting) => {
+    room.on(meetingEventEnum.ParticipantDisconnected, (participant: Participant) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.ParticipantDisconnected,
@@ -282,7 +290,7 @@ export class MeetingService {
     });
 
     // To catch the dominant speaker change
-    // room.on(meetingEventEnum.DominantSpeakerChanged, (participant: IIParticipantMeeting) => {
+    // room.on(meetingEventEnum.DominantSpeakerChanged, (participant: Participant) => {
     //
     //   this.eventRoom.next({
     //     meetingEvent: meetingEventEnum.DominantSpeakerChanged,
@@ -292,11 +300,11 @@ export class MeetingService {
 
     // Once the LocalParticipant leaves the room, detach the Tracks
     // of all Participants, including that of the LocalParticipant.
-    room.on(meetingEventEnum.Disconnected, (s) => {
+    room.on(meetingEventEnum.Disconnected, (room: Room) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.Disconnected,
-        data: s
+        data: room
       });
 
       // if (this.previewTracks) {
@@ -345,7 +353,7 @@ export class MeetingService {
    * @param kind
    * @param boolToChange
    */
-  setUpLocalVideoAndAudio(kind, boolToChange){
+  setUpLocalVideoAndAudio(kind:string, boolToChange:boolean){
     if(kind === 'video'){
       this.$localVideoMicStatusDataSource.next( {...this.$localVideoMicStatusDataSource.getValue(), video: boolToChange});
     } else {

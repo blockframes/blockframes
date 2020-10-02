@@ -1,6 +1,6 @@
 
 <ng-container>
-  <div *ngIf="event.isOwner" class="container-remote-participant-Owner">
+  <div *ngIf="isOwner" class="container-remote-participant-Owner">
 
     <div class="cardList" *ngIf="arrayOfParticipantConnected$ | async as arrayOfParticipantConnected">
       <ng-container *ngIf="getIfLocalIsAlone()">
@@ -15,7 +15,7 @@
   </div>
 
 
-  <div *ngIf="!event.isOwner" class="container-remote-participant-Buyer">
+  <div *ngIf="!isOwner" class="container-remote-participant-Buyer">
     <div class="container-remote-participant-dominant-speaker">
       <!--    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
       <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">
@@ -31,7 +31,7 @@
     <div class="container-remote-participant-not-dominant-speaker">
       <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
         <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
-          <event-remote-participant [isBuyer]="!event.isOwner" [participant]="participant" class="event-remote-participant"></event-remote-participant>
+          <event-remote-participant [isBuyer]="!isOwner" [participant]="participant" class="event-remote-participant"></event-remote-participant>
         </ng-container>
       </ng-container>
     </div>

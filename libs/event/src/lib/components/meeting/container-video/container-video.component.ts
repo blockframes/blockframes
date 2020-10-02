@@ -7,7 +7,8 @@ import {
   MeetingService
 } from "@blockframes/event/components/meeting/+state/meeting.service";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
-import { Participant as IParticipantMeeting } from 'twilio-video';
+import { Participant, LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
+import {User} from "@blockframes/auth/+state";
 
 @Component({
   selector: 'event-container-video',
@@ -22,22 +23,22 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   accessToken: string = null;
 
   //Array of participant connected to the room
-  public $participantConnectedDataSource: BehaviorSubject<IParticipantMeeting[]> = new BehaviorSubject([]);
-  arrayOfParticipantConnected$: Observable<IParticipantMeeting[]> = this.$participantConnectedDataSource.asObservable();
+  public $participantConnectedDataSource: BehaviorSubject<Participant[]> = new BehaviorSubject([]);
+  arrayOfParticipantConnected$: Observable<Participant[]> = this.$participantConnectedDataSource.asObservable();
 
   //Participant local in the room
-  private $localParticipantConnectedDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
-  localParticipantConnected$: Observable<IParticipantMeeting> = this.$localParticipantConnectedDataSource.asObservable();
+  private $localParticipantConnectedDataSource: BehaviorSubject<Participant> = new BehaviorSubject(null);
+  localParticipantConnected$: Observable<Participant> = this.$localParticipantConnectedDataSource.asObservable();
 
   //Dominant Participant for Buyer
-  private $dominantParticipantForBuyerDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
-  dominantParticipantForBuyer$: Observable<IParticipantMeeting> = this.$dominantParticipantForBuyerDataSource.asObservable();
+  private $dominantParticipantForBuyerDataSource: BehaviorSubject<Participant> = new BehaviorSubject(null);
+  dominantParticipantForBuyer$: Observable<Participant> = this.$dominantParticipantForBuyerDataSource.asObservable();
   tt = 1;
 
-  private $localPreviewTracksDataSource: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
-  localPreviewTracks$: Observable<any> = this.$localPreviewTracksDataSource.asObservable();
+  private $localPreviewTracksDataSource: BehaviorSubject<Array<LocalAudioTrack|LocalVideoTrack>> = new BehaviorSubject([]);
+  localPreviewTracks$: Observable<LocalAudioTrack|LocalVideoTrack> = this.$localPreviewTracksDataSource.asObservable();
 
-  testArray = []
+  user: User;
 
   constructor(private eventService: EventService,
               private meetingService: MeetingService, private cd: ChangeDetectorRef) {
@@ -71,6 +72,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   async ngOnInit() {
 
 
+    this.user = this.meetingService.getActiveUser();
 
     const audio = await this.meetingService.getIfAudioIsAvailable();
     const video = await this.meetingService.getIfVideoIsAvailable();
@@ -121,6 +123,9 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
 
   }
 
+  /**
+   * Get the user connected is the reel Owner of the room (event.organizedBy.uid)
+   */
   getIfIsReelOwner(){
     return this.meetingService.getIfIsReelOwner(this.event);
   }
@@ -146,7 +151,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
    * Function call when participant conncted to the room
    * @param participant: Participant (object twilio)
    */
-  participantConnected(participant: IParticipantMeeting){
+  participantConnected(participant: Participant){
     this.addParticipantFromParticipantConnectedArr(participant)
   }
 
@@ -154,7 +159,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
    * Function call when participant disconnected to the room
    * @param participant: Participant (object twilio)
    */
-  participantDisconnected(participant: IParticipantMeeting){
+  participantDisconnected(participant: Participant){
     this.removeParticipantDominantSpeaker(participant);
     this.removeParticipantFromParticipantConnectedArr(participant);
   }
@@ -172,7 +177,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
    * @param participant: Participant (object twilio) : Participant to remove
    * @private
    */
-  private removeParticipantFromParticipantConnectedArr(participant: IParticipantMeeting) {
+  private removeParticipantFromParticipantConnectedArr(participant: Participant) {
     const roomArr: any[] = this.$participantConnectedDataSource.getValue();
 
     roomArr.forEach((item, index) => {
@@ -187,7 +192,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
    * @param participant: Participant (object twilio) : Participant to add
    * @private
    */
-  private addParticipantFromParticipantConnectedArr(participant: IParticipantMeeting) {
+  private addParticipantFromParticipantConnectedArr(participant: Participant) {
     const currentValue = this.$participantConnectedDataSource.getValue();
     currentValue.forEach((item) => {
       if (item.identity === participant.identity) {
@@ -204,12 +209,12 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   /**
    *
    */
-  dominantSpeakerChanged(participant: IParticipantMeeting){
+  dominantSpeakerChanged(participant: Participant){
     this.setParticipantDominantSpeaker(participant);
 
   }
 
-  setParticipantDominantSpeaker(participant: IParticipantMeeting){
+  setParticipantDominantSpeaker(participant: Participant){
     const allParticipantAlreadyInTheRoom = this.$participantConnectedDataSource.getValue();
 
     const identityOfOwner = this.event.organizedBy.uid;
@@ -225,7 +230,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
 
-  removeParticipantDominantSpeaker(participant: IParticipantMeeting){
+  removeParticipantDominantSpeaker(participant: Participant){
     if(!participant){
       //Participant is required
       return;
@@ -254,7 +259,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
    *
    * @param participant
    */
-  eventParticipantDeconected(participant: IParticipantMeeting){
+  eventParticipantDeconected(participant: Participant){
     this.removeParticipantFromParticipantConnectedArr(participant);
     this.disconnected();
   }

@@ -38,7 +38,7 @@
     background: rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     padding: 5px;
-    font-size: 100%;
+    font-size: 60%;
   }
 }
 
@@ -111,23 +111,27 @@
 
     .participant-not-dominant-speaker {
 
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      flex-wrap: nowrap
-
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
     }
   }
 
   .container-remote-participant-not-dominant-speaker > * {
-    flex: 0 1 calc(33.3% - 32px);
+    flex: 1 0 calc(33.3% - 32px);
     margin: 5px;
+    //flex-grow: 4;
+    background-color: #5c5b5b;
+  }
+
+  .container-remote-participant-not-dominant-speaker::-webkit-scrollbar {
+    display: block;
   }
 
   .event-remote-participant {
-    width: 100%;
-    height: 100%;
-    background-color: #5c5b5b;
   }
 }
 
