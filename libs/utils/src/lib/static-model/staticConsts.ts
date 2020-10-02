@@ -84,19 +84,19 @@ const constants = {
   },
   crewRoles: {
     writer: 'Writer',
-    scoreComposer: 'Score Composer', // score-composer
-    dialogueWriter: 'Dialogue Writer', // dialogue-writer
-    photographyDirector: 'Director of Photography', // director-of-photography
+    scoreComposer: 'Score Composer',
+    dialogueWriter: 'Dialogue Writer',
+    photographyDirector: 'Director of Photography',
     editor: 'Editor',
-    castingDirector: 'Casting Director', // casting-director
-    artisticDirector: 'Artistic Director', // artistic-director
-    costumeDesigner: 'Costume Designer', // costume-designer
-    makeUpArtist: 'Make-Up Artist', // make-up-artist
-    productionDesigner: 'Production Designer', // production-designer
-    firstAssistantDirector: '1st Assistant Director', // first-assistant-director
-    secondAssistantDirector: '2nd Assistant Director', // second-assistant-director
-    postProductionDirector: 'Post-Production Director', // post-production-director
-    originalAuthor: 'Original Author' // original-author
+    castingDirector: 'Casting Director',
+    artisticDirector: 'Artistic Director',
+    costumeDesigner: 'Costume Designer',
+    makeUpArtist: 'Make-Up Artist',
+    productionDesigner: 'Production Designer',
+    firstAssistantDirector: '1st Assistant Director',
+    secondAssistantDirector: '2nd Assistant Director',
+    postProductionDirector: 'Post-Production Director',
+    originalAuthor: 'Original Author'
   },
   directorCategory: {
     firstFeature: 'First Feature',
@@ -129,10 +129,10 @@ const constants = {
     national: 'National',
   },
   producerRoles: {
-    executiveProducer: 'Executive Producer', // executive-producer
-    lineProducer: 'Line Producer', //line-producer
-    associateProducer: 'Associate Producer', // associate-producer
-    productionManager: 'Production Manager' // production-manager
+    executiveProducer: 'Executive Producer',
+    lineProducer: 'Line Producer',
+    associateProducer: 'Associate Producer',
+    productionManager: 'Production Manager'
   },
   productionStatus: {
     development: 'In development',

@@ -25,10 +25,18 @@ export async function upgrade(db: Firestore) {
       return person;
     });
 
+    const newDirectors = data.directors.map(person => {
+      if (!!person.category) {
+        person.category = updateDirectorCategory(person.category)
+      }
+      return person;
+    });
+
 
     const newMovie = {
       ...data,
       crew: newCrew,
+      directors: newDirectors,
       producers: newProducers
     };
 
@@ -39,6 +47,17 @@ export async function upgrade(db: Firestore) {
   await batch.commit();
 }
 
+
+function updateDirectorCategory(category: string) {
+  switch(category) {
+    case 'first-feature':
+      return 'firstFeature';
+    case 'rising-talent' :
+      return 'risingTalent';
+    default:
+      return category;
+  }
+}
 
 function updateProducerRole(role: string) {
   switch(role) {
