@@ -23,7 +23,9 @@
 
 <ng-container *ngIf="type === 'constant'">
   <mat-form-field [appearance]="mode">
-    <mat-label>{{ label }}</mat-label>
+    <mat-label>
+      <ng-content select="mat-label"></ng-content>
+    </mat-label>
     <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
       <ng-container *ngFor="let value of staticValue">
         <mat-option [value]="value">
@@ -31,7 +33,9 @@
         </mat-option>
       </ng-container>
     </mat-select>
-    <mat-hint>{{hint}}</mat-hint>
+    <mat-hint>
+      <ng-content select="mat-hint"></ng-content>
+    </mat-hint>
     <mat-error>
       <ng-content select="mat-error"></ng-content>
     </mat-error>

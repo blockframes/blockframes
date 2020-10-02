@@ -152,7 +152,7 @@ export class MovieService extends CollectionService<MovieState> {
     if (prodStatus.includes(prodStatusValue)) {
       formValue.directors.forEach(director => director.status = 'confirmed')
       formValue.cast.forEach(cast => cast.status = 'confirmed')
-      formValue.crew.forEach(crew => crew.status = 'confiremd');
+      formValue.crew.forEach(crew => crew.status = 'confirmed');
     }
     return formValue;
   }
