@@ -12,7 +12,7 @@
       label="Invite guests"
       [separators]="separators"
       placeholder="Enter guest email"
-      [filters]="invitations | deepKey:'toUser.email'"
+      [filters]="invitations | deepKey:'toUser.email || fromUser.email'"
       unique
     >
       <ng-template let-user>
