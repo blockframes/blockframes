@@ -1,18 +1,20 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, HostBinding } from '@angular/core';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 
 // Blockframes
 import { BehaviorStore } from '@blockframes/utils/helpers';
+import { slideUp } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'bf-upload-widget',
   templateUrl: 'upload-widget.component.html',
   styleUrls: ['./upload-widget.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [slideUp]
 })
 export class UploadWidgetComponent {
-
+  @HostBinding('@slideUp') animation = true;
 
   constructor(
     @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
