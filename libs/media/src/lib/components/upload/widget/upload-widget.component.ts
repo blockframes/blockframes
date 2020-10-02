@@ -21,11 +21,15 @@ export class UploadWidgetComponent {
   getFileType(file: string) {
     const type = file.split('.').pop();
     switch (type) {
-      case 'docx' || 'doc':
+      case 'docx':
+      case 'doc':
         return '/assets/images/dark/docx.webp';
-      case 'xls' || 'xlsx':
+      case 'xls':
+      case 'xlsx':
         return '/assets/images/dark/xls.webp';
       case 'png':
+      case 'webp':
+      case 'jpg':
         return '/assets/images/dark/image.webp';
       case 'pdf':
         return '/assets/images/dark/pdf.webp';
