@@ -1,5 +1,5 @@
 //Angular
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 //Blockframes
 import {Event} from "@blockframes/event/+state";
@@ -22,6 +22,8 @@ export class VideoComponent implements OnInit {
   @Input() localPreviewTracks$: Observable<any>;
   @Input() event: Event;
 
+  @Output() eventSetUpLocalVideoAndAudio = new EventEmitter;
+
   constructor() {
   }
 
@@ -31,6 +33,10 @@ export class VideoComponent implements OnInit {
 
   getIfLocalIsAlone(){
     return this.$participantConnectedDataSource.getValue().length < 1;
+  }
+
+  setUpLocalVideoAndAudio({kind, boolToChange}){
+    this.eventSetUpLocalVideoAndAudio.emit({kind, boolToChange})
   }
 
   /**

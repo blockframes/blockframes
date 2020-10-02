@@ -1,11 +1,12 @@
 import {BehaviorSubject, Observable} from "rxjs";
-import {Participant as IParticipantMeeting} from 'twilio-video';
 import {ChangeDetectorRef} from "@angular/core";
+import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import {StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 export abstract class AbstractParticipant{
 
-  protected $camMicIsOnDataSource: BehaviorSubject<any> = new BehaviorSubject({video: false, audio: false});
-  public camMicIsOn$: Observable<any> = this.$camMicIsOnDataSource.asObservable();
+  protected $camMicIsOnDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
+  public camMicIsOn$: Observable<StatusVideoMic> = this.$camMicIsOnDataSource.asObservable();
 
   protected constructor(protected cd: ChangeDetectorRef) {
     this.$camMicIsOnDataSource.next({video: false, audio: false})
@@ -53,6 +54,14 @@ export abstract class AbstractParticipant{
         });
       }
     });
+  }
+
+  /**
+   *
+   * @param trackPublication
+   */
+  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack {
+    return trackPublication.track;
   }
 
   /**

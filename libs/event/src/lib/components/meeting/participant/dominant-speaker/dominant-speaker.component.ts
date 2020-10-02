@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import { Participant as IParticipantMeeting } from 'twilio-video';
+import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
@@ -53,14 +53,17 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
     participant.on('reconnecting', () => {
     })
 
-    participant.on('trackDisabled', (track) => {
+    participant.on('trackDisabled', (track:RemoteTrackPublication) => {
+      this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
       this.setUpVideoAndAudio(track.kind, false)
     })
 
-    participant.on('trackEnabled', (track) => {
+    participant.on('trackEnabled', (track:RemoteTrackPublication) => {
+      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant, 'dominantSpeakerVideo')
+      this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.on('trackPublished', () => {
+    participant.on('trackPublished', (track) => {
     })
 
     participant.on('trackStarted', (track) => {
@@ -68,17 +71,21 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.on('trackSubscriptionFailed', () => {
+    participant.on('trackSubscriptionFailed', (track) => {
     })
 
     participant.on('trackSwitchedOff', (track) => {
     })
 
-    participant.on('trackSwitchedOn', () => {
+    participant.on('trackSwitchedOn', (track) => {
     })
 
-    participant.on('trackUnpublished', () => {
+    participant.on('trackUnpublished', (track) => {
     })
+  }
+
+  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack {
+    return trackPublication.track;
   }
 
   /**
@@ -91,7 +98,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
 
   setUpCamAndMic(tracks, boolToChange){
     if(tracks.length < 1){
-      this.$camMicIsOnDataSource.next({video:false, mic:false});
+      this.$camMicIsOnDataSource.next({video:false, audio:false});
     } else {
       tracks.forEach((track) => {
         this.setUpVideoAndAudio(track.kind, boolToChange)

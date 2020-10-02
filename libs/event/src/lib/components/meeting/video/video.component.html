@@ -9,7 +9,7 @@
         </div>
       </ng-container>
       <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-        <event-remote-participant [participant]="participant" [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-remote-participant>
+        <event-remote-participant [participant]="participant"  [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-remote-participant>
       </ng-container>
     </div>
   </div>
@@ -38,7 +38,7 @@
   </div>
 
   <ng-container *ngIf="localParticipantConnected$ | async as localParticipantConnected">
-    <event-local-participant [localParticipant]="localParticipantConnected" [localPreviewTracks]="localPreviewTracks$ | async" ></event-local-participant>
+    <event-local-participant [localParticipant]="localParticipantConnected" (eventSetUpLocalVideoAndAudio)="setUpLocalVideoAndAudio($event)" [localPreviewTracks]="localPreviewTracks$ | async" ></event-local-participant>
   </ng-container>
 </ng-container>
 

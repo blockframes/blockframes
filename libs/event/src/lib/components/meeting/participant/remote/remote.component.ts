@@ -8,10 +8,10 @@ import {
   OnInit,
   Renderer2
 } from '@angular/core';
-import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {meetingEventEnum, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {Participant as IParticipantMeeting} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
+import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
 @Component({
   selector: 'event-remote-participant',
@@ -22,8 +22,8 @@ import {BehaviorSubject, Observable} from "rxjs";
 export class RemoteComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
 
-  protected $camMicIsOnRemoteDataSource: BehaviorSubject<any> = new BehaviorSubject({video: false, audio: false});
-  public camMicIsOnRemote$: Observable<any> = this.$camMicIsOnRemoteDataSource.asObservable();
+  protected $camMicIsOnRemoteDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
+  public camMicIsOnRemote$: Observable<StatusVideoMic> = this.$camMicIsOnRemoteDataSource.asObservable();
 
   @Input() participant: IParticipantMeeting
 
@@ -84,11 +84,14 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     participant.on('reconnecting', () => {
     })
 
-    participant.on('trackDisabled', (track) => {
+    participant.on('trackDisabled', (track:RemoteTrackPublication) => {
+      this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
       this.setUpVideoAndAudio(track.kind, false)
     })
 
-    participant.on('trackEnabled', (track) => {
+    participant.on('trackEnabled', (track:RemoteTrackPublication) => {
+      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant, 'dominantSpeakerVideo')
+      this.setUpVideoAndAudio(track.kind, true)
     })
 
     participant.on('trackPublished', () => {

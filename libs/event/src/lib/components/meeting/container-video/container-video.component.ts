@@ -288,6 +288,10 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
     })
   }
 
+  setUpLocalVideoAndAudio({kind, boolToChange}){
+    this.meetingService.setUpLocalVideoAndAudio(kind, boolToChange)
+  }
+
   ngOnDestroy() {
     this.disconnected()
   }

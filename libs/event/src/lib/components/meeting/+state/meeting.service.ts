@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 //Import Twilio-video
 import * as Video from 'twilio-video';
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {OrganizationMember, User, UserQuery, UserService} from "@blockframes/user/+state";
 import {Event} from "@blockframes/event/+state";
 import { Participant as IIParticipantMeeting } from 'twilio-video';
@@ -26,12 +26,22 @@ export interface EventRoom {
 }
 
 
+export interface StatusVideoMic {
+  video: boolean,
+  audio: boolean
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class MeetingService {
 
   private eventRoom = new BehaviorSubject<any>({});
+
+
+  protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
+  public localVideoMicStatus$: Observable<StatusVideoMic> = this.$localVideoMicStatusDataSource.asObservable();
 
   activeRoom;
 
@@ -65,8 +75,11 @@ export class MeetingService {
     return this.localParticipant;
   }
 
-  setLocalTrackToRoom(){
-
+  /**
+   *
+   */
+  getLocalVideoMicStatus(): Observable<StatusVideoMic>{
+    return this.localVideoMicStatus$;
   }
 
   getIfIsReelOwner(event){
@@ -295,6 +308,52 @@ export class MeetingService {
       // this.activeRoom = null;
     });
   }
+
+
+
+
+  /**
+   * Mute/unmute your local media.
+   * @param kind - The type of media you want to mute/unmute
+   * @param mute - bool - mute/unmute
+   */
+  muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
+    //get local track
+    const localTrack = this.getTracksOfParticipant(this.localParticipant);
+    this.setUpLocalVideoAndAudio(kind, mute);
+
+    let track: any = [];
+    //get audio or video track
+    if(kind === localTrack[0].kind){
+      track = localTrack[0].track
+    } else {
+      track = localTrack[1].track
+    }
+
+    if (mute) {
+      track.stop();
+      track.disable();
+    } else {
+      track.restart();
+      track.enable();
+    }
+  }
+
+
+  /**
+   *
+   * @param kind
+   * @param boolToChange
+   */
+  setUpLocalVideoAndAudio(kind, boolToChange){
+    if(kind === 'video'){
+      this.$localVideoMicStatusDataSource.next( {...this.$localVideoMicStatusDataSource.getValue(), video: boolToChange});
+    } else {
+      this.$localVideoMicStatusDataSource.next( {...this.$localVideoMicStatusDataSource.getValue(), audio: boolToChange});
+    }
+    // this.cd.detectChanges();
+  }
+
 
   /**
    *v For disconnect from twilio Room
