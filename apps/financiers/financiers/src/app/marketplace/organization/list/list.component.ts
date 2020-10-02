@@ -6,6 +6,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { map } from 'rxjs/operators';
 import { centralOrgID } from '@env';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { OrganizationSearchForm } from '@blockframes/organization/forms/search.form';
 
 @Component({
   selector: 'financiers-organization-list',
@@ -18,9 +19,10 @@ export class ListComponent implements OnInit {
 
   @HostBinding('@scaleOut') animation = true;
   orgs$: Observable<Organization[]>;
-  private movieSearchResultsState = new BehaviorSubject<Organization[]>([]);
+  
+  private organizationSearchResultsState = new BehaviorSubject<Organization[]>([]);
 
-  public organizationSearchForm = new OrganizationSearchForm
+  public organizationSearchForm = new OrganizationSearchForm()
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -39,23 +41,23 @@ export class ListComponent implements OnInit {
       .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
   }
 
- /*  clear() {
-    const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
-    this.filterForm.reset(initial);
-    this.cdr.markForCheck();
-  }
-
-  async loadMore() {
-    this.setScrollOffset();
-    this.filterForm.page.setValue(this.filterForm.page.value + 1);
-    await this.filterForm.search();
-  }
-
-  setScrollOffset() {
-    this.scrollOffsetTop = this.scrollable.measureScrollOffset('top');
-  }
-
-  scrollToScrollOffset() {
-    this.scrollable.scrollTo({ top: this.scrollOffsetTop });
-  } */
+  /*  clear() {
+     const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
+     this.filterForm.reset(initial);
+     this.cdr.markForCheck();
+   }
+ 
+   async loadMore() {
+     this.setScrollOffset();
+     this.filterForm.page.setValue(this.filterForm.page.value + 1);
+     await this.filterForm.search();
+   }
+ 
+   setScrollOffset() {
+     this.scrollOffsetTop = this.scrollable.measureScrollOffset('top');
+   }
+ 
+   scrollToScrollOffset() {
+     this.scrollable.scrollTo({ top: this.scrollOffsetTop });
+   } */
 }
