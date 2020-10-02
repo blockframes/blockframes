@@ -21,7 +21,9 @@ import {
   PageListItemDirective,
   PageProgressDirective,
   PageSearchDirective,
-  PageSortDirective
+  PageSortDirective,
+  PageTitleDirective,
+  PageResultDescriptionDirective
 } from './list-page.component';
 
 @NgModule({
@@ -44,7 +46,9 @@ import {
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,
-    PageProgressDirective
+    PageProgressDirective,
+    PageTitleDirective,
+    PageResultDescriptionDirective
   ],
   exports: [
     ListPageComponent,
@@ -52,7 +56,9 @@ import {
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,
-    PageProgressDirective
+    PageProgressDirective,
+    PageTitleDirective,
+    PageResultDescriptionDirective
   ]
 })
 export class ListPageModule { }

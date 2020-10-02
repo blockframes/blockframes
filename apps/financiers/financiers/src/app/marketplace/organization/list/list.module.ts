@@ -9,8 +9,9 @@ import { ListComponent } from './list.component';
 // Blockframes
 import { OrganizationCardModule } from '@blockframes/organization/components/card/card.module';
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
-import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
+import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { FormCountryModule } from '@blockframes/ui/form';
+import { LoadMoreButtonModule } from '@blockframes/ui/load-more-button/load-more-button.module';
 
 // Material
 import { MatRippleModule } from '@angular/material/core';
@@ -27,8 +28,9 @@ import { MatInputModule } from '@angular/material/input';
     ListPageModule,
     ReactiveFormsModule,
     RouterModule.forChild([{ path: '', component: ListComponent }]),
-    TitleFilterModule,
+    ListFilterModule,
     FormCountryModule,
+    LoadMoreButtonModule,
 
     // Material
     MatRippleModule,

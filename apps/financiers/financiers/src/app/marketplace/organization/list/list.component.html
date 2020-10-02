@@ -1,5 +1,8 @@
-<list-page [items]="orgs$ | async" itemType="organization" titleText="Our partners" (loadMore)="loadMore()"
-  [nbHits]="nbHits" [hitsViewed]="hitsViewed">
+<list-page [items]="orgs$ | async">
+  <ng-template pageTitle>
+    <h1 class="mat-display-2 page-title">Our partners</h1>
+  </ng-template>
+
   <ng-template pageSearch>
     <mat-form-field appearance="outline">
       <mat-label>Try searching for our partners...</mat-label>
@@ -7,13 +10,20 @@
     </mat-form-field>
   </ng-template>
 
-  <title-filter>
+  <ng-template pageResultDescription><span class="mat-body-2">Shitload of items</span></ng-template>
+
+  <list-filter>
     <ng-template filter label="Partner Country" [form]="orgSearchForm.country">
       <form-country [form]="orgSearchForm.country"></form-country>
     </ng-template>
-  </title-filter>
+  </list-filter>
 
   <ng-template pageCard let-org>
     <org-card [org]="org"></org-card>
+  </ng-template>
+  <ng-template pageProgress>
+    <bf-load-more-button [progressValue]="50" (buttonClicked)="loadMore()">
+      <ng-template buttonText><span>TEST</span></ng-template>
+    </bf-load-more-button>
   </ng-template>
 </list-page>

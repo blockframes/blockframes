@@ -56,11 +56,6 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get appAccess() { return this.get('appAccess') }
   get appModule() { return this.get('appModule') }
 
-
-  isEmpty() {
-    return !this.query.value?.trim();
-  }
-
   search() {
     return this.organizationIndex.search({
       hitsPerPage: 8,

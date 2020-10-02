@@ -40,7 +40,7 @@ import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
-import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
+import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
@@ -60,7 +60,7 @@ import { ListComponent } from "./list.component";
     AlgoliaChipsAutocompleteModule,
     TitleListLayoutModule,
     WishlistButtonModule,
-    TitleFilterModule,
+    ListFilterModule,
     LanguageFilterModule,
     BudgetFilterModule,
     StaticCheckBoxesModule,

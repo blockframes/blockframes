@@ -7,11 +7,17 @@ import {
   TemplateRef,
   ContentChild,
   Input,
-  AfterContentInit, Output, EventEmitter
+  AfterContentInit
 } from '@angular/core';
 
 // Blockframes
 import { fadeList } from '@blockframes/utils/animations/fade';
+
+@Directive({ selector: '[pageTitle]' })
+export class PageTitleDirective { }
+
+@Directive({ selector: '[pageResultDescription]' })
+export class PageResultDescriptionDirective { }
 
 @Directive({ selector: '[pageSort]' })
 export class PageSortDirective { }
@@ -29,7 +35,7 @@ export class PageListItemDirective { }
 export class PageProgressDirective { }
 
 @Component({
-  selector: '[items][itemType]list-page',
+  selector: '[items]list-page',
   templateUrl: 'list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
   animations: [fadeList('.card')],
@@ -42,18 +48,10 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageCardDirective, { read: TemplateRef }) pageCardTemplate: PageCardDirective;
   @ContentChild(PageListItemDirective, { read: TemplateRef }) pageListItemTemplate: PageListItemDirective;
   @ContentChild(PageProgressDirective, { read: TemplateRef }) pageProgressTemplate: PageProgressDirective;
+  @ContentChild(PageTitleDirective, { read: TemplateRef }) pageTitleTemplate: PageTitleDirective;
+  @ContentChild(PageResultDescriptionDirective, { read: TemplateRef }) pageResultDescriptionTemplate: PageResultDescriptionDirective
 
   @Input() items: unknown[];
-
-  @Input() titleText: string;
-
-  @Input() itemType = 'title'; // only for display purpose
-
-  @Input() hitsViewed: number;
-
-  @Input() nbHits: number
-
-  @Output() loadMore = new EventEmitter()
 
   public listView = false;
   public canToggle = false;

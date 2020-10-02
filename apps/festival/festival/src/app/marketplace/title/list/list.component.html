@@ -38,7 +38,7 @@
 
 
   <!-- FILTERS (ng-content) -->
-  <title-filter>
+  <list-filter>
 
     <!-- TODO issue#2576 -->
     <ng-template filter label="Sales Agents" [form]="filterForm.sellers">
@@ -73,7 +73,7 @@
       <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
     </ng-template>
 
-  </title-filter>
+  </list-filter>
 
   <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
     <mat-icon svgIcon="refresh_filters"></mat-icon>
