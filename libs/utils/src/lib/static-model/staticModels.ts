@@ -2,6 +2,17 @@ import { IsoTerritoriesToSlugAndLabel } from "./territories-ISO-3166";
 
 // TODO issue#2582
 const models = {
+  // TODO #2306 Cast_role is used now only in the import code, we need to rework the import to delete it completely
+  'CAST_ROLES': [
+    {
+      'slug': 'lead-role',
+      'label': 'Lead Role'
+    },
+    {
+      'slug': 'secondary-role',
+      'label': 'Secondary Role'
+    }
+  ],
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
     { 'slug': 'drama', 'label': 'Drama' },

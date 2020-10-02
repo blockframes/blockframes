@@ -417,7 +417,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator, '\\s+');
+          movie.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator, '\\s+', 'CAST_ROLES');
         }
 
         // CREDITS (Producers)
