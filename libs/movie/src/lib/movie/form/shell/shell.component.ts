@@ -21,6 +21,7 @@ import { of, Subscription } from 'rxjs';
 import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
 import { App, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { mergeDeep } from '@blockframes/utils/helpers';
 
 function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
@@ -198,17 +199,44 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   /** Update the movie. Used by summaries */
   public async update({ publishing }: { publishing: boolean }) {
-    const { documentToUpdate: movie, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    const base = this.query.getActive();
+    const movie = mergeDeep(base, documentToUpdate);
+
+    // -- Post merge operations -- //
+
+    // Remove empty file ref
     movie.promotional = this.cleanPromotionalMedia(movie.promotional);
+
+    // Specific updates based on production status
+    const prodStatus = ['finished', 'released'];
+    if (prodStatus.includes(movie.productionStatus)) {
+      movie.directors.forEach(director => director.status = 'confirmed')
+      movie.cast.forEach(cast => cast.status = 'confirmed')
+      movie.crew.forEach(crew => crew.status = 'confiremd');
+    }
+
+    // Update fields with dynamic keys
+    const dynamicKeyFields = ['languages', 'shooting'];
+    dynamicKeyFields.forEach(key => movie[key] = this.form.value[key])
+
+    // Specific update if publishing
     if (publishing) {
       const currentApp: App = getCurrentApp(this.routerQuery);
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess[currentApp] = true;
     }
-    await this.service.save(this.query.getActive(), movie);
+  
+    // -- Update movie & media -- //
+    await this.service.update(movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
   }
+
+
+
+
+
 
   /** Save the form and display feedback to user */
   public async save() {

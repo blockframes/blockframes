@@ -142,28 +142,4 @@ export class MovieService extends CollectionService<MovieState> {
     return movies.map(movie => createMovie(movie));
   }
 
-
-  async save(base: Movie, updates: Movie) {
-    try {
-      const movie: Movie = mergeDeep(base, updates);
-
-      // Specific updates based on production status
-      const prodStatus = ['finished', 'released'];
-      if (prodStatus.includes(updates.productionStatus)) {
-        updates.directors.forEach(director => director.status = 'confirmed')
-        updates.cast.forEach(cast => cast.status = 'confirmed')
-        updates.crew.forEach(crew => crew.status = 'confiremd');
-      }
-
-      // Update fields with dynamic keys
-      const dynamicKeyFields = ['languages', 'shooting'];
-      dynamicKeyFields.forEach(key => movie[key] = updates[key])
-
-      return this.update(movie.id, movie)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-
 }
