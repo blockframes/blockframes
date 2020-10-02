@@ -1,4 +1,4 @@
-import { CrewRolesSlug, ProducerRolesValues, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesValues, ProducerRolesValues, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -81,7 +81,7 @@ export type Cast = Credit;
  * @dev interface to represent a crew credit
  */
 export interface Crew extends Credit {
-  role: CrewRolesSlug, // overrided role scope from Crew interface
+  role: CrewRolesValues, // overrided role scope from Crew interface
 };
 
 /**

@@ -82,6 +82,22 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
+  crewRoles: {
+    writer: 'Writer',
+    scoreComposer: 'Score Composer', // score-composer
+    dialogueWriter: 'Dialogue Writer', // dialogue-writer
+    photographyDirector: 'Director of Photography', // director-of-photography
+    editor: 'Editor',
+    castingDirector: 'Casting Director', // casting-director
+    artisticDirector: 'Artistic Director', // artistic-director
+    costumeDesigner: 'Costume Designer', // costume-designer
+    makeUpArtist: 'Make-Up Artist', // make-up-artist
+    productionDesigner: 'Production Designer', // production-designer
+    firstAssistantDirector: '1st Assistant Director', // first-assistant-director
+    secondAssistantDirector: '2nd Assistant Director', // second-assistant-director
+    postProductionDirector: 'Post-Production Director', // post-production-director
+    originalAuthor: 'Original Author' // original-author
+  },
   directorCategory: {
     firstFeature: 'First Feature',
     risingTalent: 'Rising Talent',

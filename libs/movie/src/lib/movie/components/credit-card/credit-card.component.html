@@ -8,7 +8,7 @@
           {{ credit['category'] ? (credit['category'] | toLabel:'directorCategory') : 'Director' }}
         </ng-container>
         <ng-container *ngSwitchCase="'crew'">
-          {{ credit.role ? (credit.role | translateSlug:'CREW_ROLES') : 'Crew' }}
+          {{ credit.role ? (credit.role | toLabel:'crewRoles') : 'Crew' }}
         </ng-container>
         <ng-container *ngSwitchCase="'cast'">
           Comedian

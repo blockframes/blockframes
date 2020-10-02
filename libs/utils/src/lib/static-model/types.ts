@@ -6,12 +6,6 @@ import constants from './staticConsts';
 export const GENRES_SLUG = models['GENRES'].map(key => key.slug);
 export type GenresSlug = typeof GENRES_SLUG[number];
 
-export const PRODUCER_ROLES_SLUG = models['PRODUCER_ROLES'].map(key => key.slug);
-export type ProducerRolesSlug = typeof PRODUCER_ROLES_SLUG[number];
-
-export const CREW_ROLES_SLUG = models['CREW_ROLES'].map(key => key.slug);
-export type CrewRolesSlug = typeof CREW_ROLES_SLUG[number];
-
 export const LANGUAGES_LABEL = models['LANGUAGES'].map(key => key.label);
 export const LANGUAGES_SLUG = models['LANGUAGES'].map(key => key.slug);
 export type LanguagesLabel = typeof LANGUAGES_LABEL[number];
@@ -82,6 +76,9 @@ export type UnitBoxValue = typeof constants.unitBox[UnitBox];
 
 export type ProducerRoles = keyof typeof constants.producerRoles;
 export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
+
+export type CrewRoles = keyof typeof constants.crewRoles;
+export type CrewRolesValues = typeof constants.crewRoles[CrewRoles];
 
 export type StoreStatus = keyof typeof constants.storeStatus;
 
