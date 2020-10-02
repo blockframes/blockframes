@@ -1,5 +1,5 @@
 import { LandingPage } from '../../support/pages/landing';
-import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../pages/dashboard';
+//import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../pages/dashboard';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { signIn } from '@blockframes/e2e/utils/functions';
 import { TO } from '@blockframes/e2e/utils/env';
@@ -14,9 +14,17 @@ export function signInAndNavigateToMain() {
   p1.clickSignup();   
   signIn(users[0]);
   //const p3 = new HomePage();
-  cy.get('catalog-home', {timeout: TO.PAGE_LOAD});
+  //cy.get('catalog-home', {timeout: TO.PAGE_LOAD});
   // Navigate to movie-tunnel-main
-  const p4: TitlesListPage = TitlesListPage.navigateToPage();
-  const p5: StartTunnelPage = p4.clickAdd();
-  const p6: TunnelMainPage = p5.clickBegin();
+  //const p4: TitlesListPage = TitlesListPage.navigateToPage();
+
+  /*
+  cy.visit('c/o/dashboard/title');
+  cy.wait(TO.THREE_SEC);
+  //const p5: StartTunnelPage = p4.clickAdd();
+  cy.get('festival-dashboard-home [mattooltip="Import a new title"]', 
+          { timeout: TO.PAGE_LOAD })
+    .click();  
+  //const p6: TunnelMainPage = p5.clickBegin();
+  */
 }

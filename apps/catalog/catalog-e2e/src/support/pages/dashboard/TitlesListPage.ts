@@ -12,7 +12,8 @@ export default class TitlesListPage {
   }
 
   clickAdd() {
-    cy.get('catalog-title-list [test-id=add-movie]', { timeout: 30000 }).click();
+    cy.get('catalog-title-list [test-id=add-movie]', { timeout: 30000 })
+      .click();
     return new StartTunnelPage();
   }
 
