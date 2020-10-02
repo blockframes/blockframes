@@ -5,12 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { MovieService, MovieQuery, Movie, MoviePromotionalElements, preareForPublishing } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, MoviePromotionalElements } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { mergeDeep } from '@blockframes/utils/helpers';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +19,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
+import { App, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
@@ -150,7 +151,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private mediaService: MediaService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -196,12 +198,14 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   /** Update the movie. Used by summaries */
   public async update({ publishing }: { publishing: boolean }) {
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional);
+    const { documentToUpdate: movie, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    movie.promotional = this.cleanPromotionalMedia(movie.promotional);
     if (publishing) {
-      preareForPublishing(documentToUpdate);
+      const currentApp: App = getCurrentApp(this.routerQuery);
+      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.storeConfig.appAccess[currentApp] = true;
     }
-    await this.service.save(this.query.getActive(), documentToUpdate);
+    await this.service.save(this.query.getActive(), movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
   }

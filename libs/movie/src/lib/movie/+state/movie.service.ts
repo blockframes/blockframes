@@ -13,16 +13,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
-import { App, createMovieAppAccess, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { App, createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
-
-/** Prepare the movie before publishing */
-export function preareForPublishing(movie: Movie) {
-  const currentApp: App = getCurrentApp(this.routerQuery);
-  movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-  movie.storeConfig.appAccess[currentApp] = true;
-  return movie;
-}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -172,5 +164,6 @@ export class MovieService extends CollectionService<MovieState> {
       console.error(error)
     }
   }
+
 
 }
