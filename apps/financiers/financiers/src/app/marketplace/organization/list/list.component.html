@@ -10,7 +10,12 @@
     </mat-form-field>
   </ng-template>
 
-  <ng-template pageResultDescription><span class="mat-body-2">Shitload of items</span></ng-template>
+  <ng-template pageResultDescription>
+    <span i18n *ngIf="nbHits" class="mat-body-2">
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partners{nbHits, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </ng-template>
 
   <list-filter>
     <ng-template filter label="Partner Country" [form]="orgSearchForm.country">
@@ -22,8 +27,9 @@
     <org-card [org]="org"></org-card>
   </ng-template>
   <ng-template pageProgress>
-    <bf-load-more-button [progressValue]="50" (buttonClicked)="loadMore()">
-      <ng-template buttonText><span>TEST</span></ng-template>
+    <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()"
+      *ngIf="hitsViewed <= nbHits">
+      <ng-template buttonText><span> You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span></ng-template>
     </bf-load-more-button>
   </ng-template>
 </list-page>

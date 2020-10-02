@@ -35,7 +35,7 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="items; else loading">
+  <ng-container *ngIf="items.length; else loading">
     <div fxLayout="row" fxLayoutAlign="end start">
       <ng-template [ngTemplateOutlet]="pageResultDescriptionTemplate"></ng-template>
     </div>
@@ -52,14 +52,12 @@
       </div>
     </ng-container>
     <ng-template #displayList>
-      <div>
-        <ng-container *ngFor="let item of items">
+      <div *ngFor="let item of items">
 
-          <!-- INSERT LIST ITEM -->
-          <ng-template [ngTemplateOutlet]="pageListItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
-          </ng-template>
+        <!-- INSERT LIST ITEM -->
+        <ng-template [ngTemplateOutlet]="pageListItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+        </ng-template>
 
-        </ng-container>
       </div>
     </ng-template>
 
@@ -71,5 +69,4 @@
       <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
     </div>
   </ng-template>
-
 </section>
