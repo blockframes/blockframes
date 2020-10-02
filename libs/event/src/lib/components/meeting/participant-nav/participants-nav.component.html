@@ -1,0 +1,40 @@
+<mat-drawer-container class="menu">
+  <mat-drawer #drawer class="sidenav" mode="side" position="end">
+    <div class="sidenav-content">
+      <div class="title">
+        <div class="title-info">
+          <mat-icon svgIcon="group"></mat-icon>
+          <caption class="mat-caption">List of participants</caption>
+        </div>
+        <button mat-icon-button (click)="drawer.close()">
+          <mat-icon svgIcon="cross"></mat-icon>
+        </button>
+      </div>
+      <div class="content">
+        <div *ngFor="let participant of participants" class="participants">
+          <div class="participant">
+            <div class="participant-info">
+              <div class="profile">
+                <span>{{getInitialFromParticipant(participant)}}</span>
+              </div>
+              <div>
+                <caption class="mat-caption name">{{participant.firstName}} {{participant.lastName}}</caption>
+                <caption class="mat-caption">{{participant.organizationName}}</caption>
+              </div>
+            </div>
+<!--            <mat-icon svgIcon="close" color="warn" class="close"></mat-icon>-->
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="action">
+        <mat-icon svgIcon="add_member"></mat-icon>
+        <caption class="mat-caption">Invite participants</caption>
+      </div>
+    </div>
+  </mat-drawer>
+  <button mat-icon-button class="menu-button" (click)="drawer.toggle()" *ngIf="!drawer.opened">
+    <mat-icon svgIcon="group"></mat-icon>
+  </button>
+  <ng-content></ng-content>
+</mat-drawer-container>
