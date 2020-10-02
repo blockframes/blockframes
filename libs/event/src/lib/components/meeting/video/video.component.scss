@@ -108,6 +108,7 @@
       align-items: center;
       justify-content: start;
       overflow-x: scroll;
+      max-height: 150px;
 
     .participant-not-dominant-speaker {
 
@@ -123,7 +124,6 @@
   .container-remote-participant-not-dominant-speaker > * {
     flex: 1 0 calc(33.3% - 32px);
     margin: 5px;
-    //flex-grow: 4;
     background-color: #5c5b5b;
   }
 
