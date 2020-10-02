@@ -22,7 +22,7 @@ export function isObject(item: any) {
  * @param target
  * @param source
  */
-export function mergeDeep(target: any, source: any) {
+export function mergeDeep<T>(target: T, source: Partial<T>): T {
   const output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach(key => {

@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup, FormArray } from '@angular/forms';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
@@ -27,8 +26,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   constructor(
     private shell: MovieFormShellComponent,
     private router: Router,
-    private route: ActivatedRoute,
-    private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
@@ -47,11 +44,10 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
-      await this.service.updateMovie(this.query.getActive(), this.form.value);
-      this.form.markAsPristine();
+      await this.shell.update({ publishing: true });
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
-        this.router.navigate(['../', 'end'], { relativeTo: this.route })
+        this.router.navigate(['c/o/dashboard/title', this.query.getActiveId()])
       })
     } else {
       // Log the invalid forms

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state';
+import { App } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'movie-form-end',
@@ -9,7 +10,12 @@ import { MovieQuery } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormEndComponent {
-  constructor(private router: Router, private movieQuery: MovieQuery) { }
+  app: App = this.route.snapshot.data.app;
+  constructor(
+    private router: Router,
+    private movieQuery: MovieQuery,
+    private route: ActivatedRoute
+  ) { }
 
   navigate() {
     const movieId = this.movieQuery.getActiveId();

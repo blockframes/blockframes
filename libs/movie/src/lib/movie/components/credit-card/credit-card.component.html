@@ -17,7 +17,10 @@
     </p>
   </div>
   <!-- Icon -->
-  <mat-icon [svgIcon]="credit.status | statusIcon" [matTooltip]="credit.status | toLabel:'memberStatus'"></mat-icon>
+  <mat-icon
+    [svgIcon]="credit.status | statusIcon"
+    [matTooltip]="(credit.status | toLabel:'memberStatus') || 'Status is not provided'">
+  </mat-icon>
 </header>
 
 <mat-divider></mat-divider>
