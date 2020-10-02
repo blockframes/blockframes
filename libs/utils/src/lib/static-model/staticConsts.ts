@@ -82,6 +82,12 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
+  directorCategory: {
+    firstFeature: 'First Feature',
+    risingTalent: 'Rising Talent',
+    confirmed: 'Confirmed Director',
+    prestige: 'Prestige'
+  },
   hostedVideoTypes: {
     tailer: 'Trailer',
     teaser: 'Teaser',
@@ -105,6 +111,12 @@ const constants = {
     world: 'World',
     market: 'Market',
     national: 'National',
+  },
+  producerRoles: {
+    executiveProducer: 'Executive Producer', // executive-producer
+    lineProducer: 'Line Producer', //line-producer
+    associateProducer: 'Associate Producer', // associate-producer
+    productionManager: 'Production Manager' // production-manager
   },
   productionStatus: {
     development: 'In development',

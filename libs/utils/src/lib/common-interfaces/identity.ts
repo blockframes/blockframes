@@ -1,4 +1,4 @@
-import { CrewRolesSlug, ProducerRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesSlug, ProducerRolesValues, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -62,7 +62,7 @@ export interface Filmography {
  * @dev interface to represent a producer credit
  */
 export interface Producer extends Credit {
-  role: ProducerRolesSlug, // overrided role scope from Producer interface
+  role: ProducerRolesValues, // overrided role scope from Producer interface
 };
 
 /**

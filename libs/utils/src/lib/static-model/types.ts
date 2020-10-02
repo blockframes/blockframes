@@ -80,6 +80,9 @@ export type PremiereType = keyof typeof constants.premiereType;
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];
 
+export type ProducerRoles = keyof typeof constants.producerRoles;
+export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
+
 export type StoreStatus = keyof typeof constants.storeStatus;
 
 export type ProductionStatus = keyof typeof constants.productionStatus;

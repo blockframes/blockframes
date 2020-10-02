@@ -2,7 +2,7 @@ import { IsoTerritoriesToSlugAndLabel } from "./territories-ISO-3166";
 
 // TODO issue#2582
 const models = {
-  // TODO #2306 Cast_role is used now only in the import code, we need to rework the import to delete it completely
+  // TODO #2306 Cast_role / Producer_role / Crew_role are used now only in the import code, we need to rework the import to delete it completely
   'CAST_ROLES': [
     {
       'slug': 'lead-role',
@@ -11,6 +11,81 @@ const models = {
     {
       'slug': 'secondary-role',
       'label': 'Secondary Role'
+    }
+  ],
+  'PRODUCER_ROLES': [
+    {
+      'slug': 'executiveProducer',
+      'label': 'Executive Producer'
+    },
+    {
+      'slug': 'lineProducer',
+      'label': 'Line Producer'
+    },
+    {
+      'slug': 'associateProducer',
+      'label': 'Associate Producer'
+    },
+    {
+      'slug': 'productionManager',
+      'label': 'Production Manager'
+    },
+  ],
+  'CREW_ROLES': [
+    {
+      'slug': 'writer',
+      'label': 'Writer'
+    }, {
+      'slug': 'score-composer',
+      'label': 'Score Composer'
+    },
+    {
+      'slug': 'dialogue-writer',
+      'label': 'Dialogue Writer'
+    },
+    {
+      'slug': 'director-of-photography',
+      'label': 'Director of Photography'
+    },
+    {
+      'slug': 'editor',
+      'label': 'Editor'
+    },
+    {
+      'slug': 'casting-director',
+      'label': 'Casting Director'
+    },
+    {
+      'slug': 'artistic-director',
+      'label': 'Artistic Director'
+    },
+    {
+      'slug': 'costume-designer',
+      'label': 'Costume Designer'
+    },
+    {
+      'slug': 'make-up-artist',
+      'label': 'Make-Up Artist'
+    },
+    {
+      'slug': 'production-designer',
+      'label': 'Production Designer'
+    },
+    {
+      'slug': 'first-assistant-director',
+      'label': '1st Assistant Director'
+    },
+    {
+      'slug': 'second-assistant-director',
+      'label': '2nd Assistant Director'
+    },
+    {
+      'slug': 'post-production-director',
+      'label': 'Post-Production Director'
+    },
+    {
+      'slug': 'original-author',
+      'label': 'Original Author'
     }
   ],
   'GENRES': [
@@ -100,99 +175,6 @@ const models = {
       'label': 'Broadcaster coproducer'
     }
   ] as const,
-  'PRODUCER_ROLES': [
-    {
-      'slug': 'executive-producer',
-      'label': 'Executive Producer'
-    },
-    {
-      'slug': 'line-producer',
-      'label': 'Line Producer'
-    },
-    {
-      'slug': 'associate-producer',
-      'label': 'Associate Producer'
-    },
-    {
-      'slug': 'production-manager',
-      'label': 'Production Manager'
-    },
-  ] as const,
-  'DIRECTOR_CATEGORY': [
-    {
-      'slug': 'first-feature',
-      'label': 'First Feature'
-    },
-    {
-      'slug': 'rising-talent',
-      'label': 'Rising Talent'
-    },
-    {
-      'slug': 'confirmed',
-      'label': 'Confirmed Director'
-    },
-    {
-      'slug': 'prestige',
-      'label': 'Prestige'
-    }
-  ],
-  'CREW_ROLES': [
-    {
-      'slug': 'writer',
-      'label': 'Writer'
-    }, {
-      'slug': 'score-composer',
-      'label': 'Score Composer'
-    },
-    {
-      'slug': 'dialogue-writer',
-      'label': 'Dialogue Writer'
-    },
-    {
-      'slug': 'director-of-photography',
-      'label': 'Director of Photography'
-    },
-    {
-      'slug': 'editor',
-      'label': 'Editor'
-    },
-    {
-      'slug': 'casting-director',
-      'label': 'Casting Director'
-    },
-    {
-      'slug': 'artistic-director',
-      'label': 'Artistic Director'
-    },
-    {
-      'slug': 'costume-designer',
-      'label': 'Costume Designer'
-    },
-    {
-      'slug': 'make-up-artist',
-      'label': 'Make-Up Artist'
-    },
-    {
-      'slug': 'production-designer',
-      'label': 'Production Designer'
-    },
-    {
-      'slug': 'first-assistant-director',
-      'label': '1st Assistant Director'
-    },
-    {
-      'slug': 'second-assistant-director',
-      'label': '2nd Assistant Director'
-    },
-    {
-      'slug': 'post-production-director',
-      'label': 'Post-Production Director'
-    },
-    {
-      'slug': 'original-author',
-      'label': 'Original Author'
-    }
-  ],
   'RELEASE_STATUS': [
     {
       'slug': 'estimated',

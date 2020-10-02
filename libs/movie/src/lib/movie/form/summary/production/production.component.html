@@ -63,7 +63,7 @@
       <ng-template let-producers="control">
         <li *ngFor="let producer of producers.controls; let isLast = last">
           <strong>
-            <missing-control [control]="producer.get('role')" [link]="link" scope="PRODUCER_ROLES"></missing-control>
+            <missing-control [control]="producer.get('role')" [link]="link" type="producerRoles"></missing-control>
           </strong>
           <span>&nbsp;</span>
           <missing-control [control]="producer.get('firstName')"></missing-control>

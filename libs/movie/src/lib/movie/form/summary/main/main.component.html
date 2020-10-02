@@ -117,7 +117,7 @@
             <missing-control [control]="director.get('firstName')" [isLast]="false"></missing-control>
             <span>&nbsp;</span>
             <missing-control [control]="director.get('lastName')"></missing-control>
-            (<missing-control [control]="director.get('category')" scope="DIRECTOR_CATEGORY"></missing-control>)
+            (<missing-control [control]="director.get('category')" type="directorCategory"></missing-control>)
           </strong>
           <ng-container *ngFor="let film of director.filmography.controls">
             <span>{{ film | filmography }}</span>
