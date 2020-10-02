@@ -5,7 +5,6 @@ import { User } from "@blockframes/e2e/utils/type";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
-import { TO } from '@blockframes/e2e/utils/env';
 
 const USER: Partial<User> = {
   email: `${Date.now()}@blockfrake.com`,
@@ -25,9 +24,6 @@ beforeEach(() => {
   clearDataAndPrepareTest();
   cy.visit('/');
   const p1 = new LandingPage();
-  cy.get('button[test-id="accept-cookies"]', {timeout: TO.THREE_SEC})
-    .click();
-  cy.wait(TO.WAIT_1SEC);
   p1.clickSignup();
 })
 
