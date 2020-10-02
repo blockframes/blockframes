@@ -17,16 +17,16 @@ export class DurationPipe implements PipeTransform {
       switch (base) {
         // Our base for converting are milliseconds
         case 'ms':
-          return this.converToTimeString(value);
+          return this.convertToTimeString(value);
         case 's':
-          return this.converToTimeString(value * 1000);
+          return this.convertToTimeString(value * 1000);
         case 'min':
-          return this.converToTimeString(value * 60000);
+          return this.convertToTimeString(value * 60000);
       }
     }
   }
 
-  converToTimeString(time: number) {
+  convertToTimeString(time: number) {
     let day: number, hour: number, minute: number, second: number;
     second = Math.floor(time / 1000);
     minute = Math.floor(second / 60);
@@ -50,7 +50,7 @@ export class TimecodePipe implements PipeTransform {
   transform(value: number) {
 
     if(typeof value !== 'number' || Number.isNaN(value) || !Number.isFinite(value) || value < 0) {
-      console.warn(`TIMCODE PIPE ERROR : value must be positive finite number but got ${value}`);
+      console.warn(`TIMECODE PIPE ERROR : value must be a positive finite number but got ${value}`);
     }
 
     return new Date(value * 1000).toISOString().substr(11, 8);

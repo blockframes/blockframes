@@ -3,7 +3,7 @@
   <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
 </ng-container>
 <ng-template #ready>
-  <ng-container *ngIf="control$ | async as control">
+  <ng-container *ngIf="localControl$ | async as control">
     <button mat-icon-button (click)="toggle()">
       <ng-container *ngIf="control.isPlaying; else pause">
         <mat-icon svgIcon="pause_circle"></mat-icon>
@@ -24,9 +24,3 @@
     {{ control.duration | timecode }}
   </ng-container>
 </ng-template>
-
-<!-- Phantom player that control the video -->
-<div class="phantom">
-  <div id="phantom-player"></div>
-</div>
-
