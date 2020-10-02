@@ -1,3 +1,10 @@
+@import '~@angular/material/theming';
+
+:host {
+  @include mat-elevation(3);
+  border-radius: 4px;
+}
+
 :host,
 div,
 mat-expansion-panel {
@@ -5,8 +12,14 @@ mat-expansion-panel {
   position: relative;
 }
 
-.sub-header {
-  padding-top: 8px;
+mat-accordion {
+  padding: 0;
+  background-color: var(--background-card);
+}
+
+mat-expansion-panel-header {
+  padding: 0 8px;
+  height: 40px;
 }
 
 mat-divider {
