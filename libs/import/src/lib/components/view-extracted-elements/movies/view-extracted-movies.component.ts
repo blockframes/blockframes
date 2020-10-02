@@ -351,7 +351,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SHOOTING FORMAT
         if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
-          const shootingFormat = getCodeIfExists('MOVIE_FORMAT', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
+          const shootingFormat = getKeyFromValue('movieFormat', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
           if (shootingFormat) {
             movie.format = shootingFormat;
           } else {
@@ -367,7 +367,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (formatQuality)
         if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
-          const availableFormat = getCodeIfExists('MOVIE_FORMAT_QUALITY', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
+          const availableFormat = getKeyFromValue('movieFormatQuality', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
           if (availableFormat) {
             movie.formatQuality = availableFormat;
           } else {
@@ -383,7 +383,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (soundQuality)
         if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
-          const soundQuality = getCodeIfExists('SOUND_FORMAT', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
+          const soundQuality = getKeyFromValue('soundFormat', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
           if (soundQuality) {
             movie.soundFormat = soundQuality;
           } else {

@@ -128,11 +128,32 @@ const constants = {
     looselyAttached: 'Loosely Attached',
     target: 'Target'
   },
+  movieFormat: {
+    '1_33': '1.33',
+    '1_37': '1.37',
+    '1_66': '1.66',
+    '1_77': '1.77',
+    '1_85': '1.85',
+    scope: 'SCOPE',
+    '4/3': '4/3',
+    '16/9': '16/9'
+  },
+  movieFormatQuality: {
+    sd: 'SD',
+    hd: 'HD',
+    '2k': '2K',
+    '4k': '4K',
+    UHD: 'UHD',
+    '3D': '3D',
+    '3DSD': '3DSD',
+    '3DHD': '3DHD',
+    '3DUHD': '3DUHD'
+  },
   movieLanguageTypes: {
     original: 'Original',
     dubbed: 'Dubbed',
-    subtitle: 'Subtitle',
-    caption: 'Caption',
+    subtitle: 'Subtitled',
+    caption: 'Closed-Captions',
   },
   premiereType: {
     international: 'International',
@@ -182,6 +203,15 @@ const constants = {
     inequalities: 'Reduce inequalities',
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
+  },
+  soundFormat: {
+    mono: 'Mono',
+    stereo: 'Stereo',
+    dolbySR: 'Dolby SR',
+    dts: 'DTS',
+    'dolby-5.1': 'Dolby 5.1',
+    'dolby-7.1': 'Dolby 7.1',
+    thx: 'THX'
   },
   storeStatus: {
     submitted: 'Submitted',
@@ -266,9 +296,20 @@ const constants = {
 };
 
 export default constants;
-export type Scope = keyof typeof constants;
 
-export function getKeyFromValue(scope: Scope, targetValue: any) {
+type Constants = typeof constants;
+type Scopes = keyof Constants;
+export type GetKeys<S extends Scopes> = keyof Constants[S];
+type GetLabel<S extends Scopes> = Constants[S][GetKeys<S>]
+
+
+/**
+ * Returns the key corresponding to a value (ie:code).
+ * @dev Codes are used to store sanitized data in database
+ * @param scope
+ * @param targetValue
+ */
+export function getKeyFromValue(scope: Scopes, targetValue: any) {
   for (const [key, value] of Object.entries(constants[scope])) {
     if (value.toLowerCase() === targetValue.toLowerCase()) {
       return key;
@@ -276,3 +317,18 @@ export function getKeyFromValue(scope: Scope, targetValue: any) {
   }
   return null;
 }
+
+/**
+ * Returns the label corresponding to a key (ie:code).
+ * @dev Codes are used to store sanitized data in database
+ * @param scope
+ * @param targetValue
+ */
+export const getValueByKey = (scope: Scopes, targetValue: string) => {
+  for (const [key, value] of Object.entries(constants[scope])) {
+    if (key.toLowerCase() === targetValue.toLowerCase()) {
+      return value;
+    }
+  }
+  return null;
+};

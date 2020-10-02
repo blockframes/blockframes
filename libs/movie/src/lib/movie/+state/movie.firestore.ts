@@ -6,9 +6,9 @@ import {
   CertificationsValues,
   ColorsValues,
   RatingValues,
-  SoundFormatSlug,
-  FormatQualitySlug,
-  FormatSlug,
+  SoundFormatValues,
+  MovieFormatQualityValues,
+  MovieFormatValues,
   GenresSlug,
   ContentType,
   ProductionStatus,
@@ -56,8 +56,8 @@ interface MovieRaw<D> {
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
+  format?: MovieFormatValues,
+  formatQuality?: MovieFormatQualityValues,
   genres: GenresSlug[], //! required
   customGenres?: string[],
   internalRef?: string,
@@ -80,7 +80,7 @@ interface MovieRaw<D> {
   runningTime?: MovieRunningTime;
   scoring?: ScoringValues,
   shooting?: MovieShooting,
-  soundFormat?: SoundFormatSlug,
+  soundFormat?: SoundFormatValues,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required

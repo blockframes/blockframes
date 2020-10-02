@@ -48,13 +48,20 @@ export async function upgrade(db: Firestore) {
       } else return color;
     }
 
+    const updateSoundFormat = (soundFormat) => {
+      if (soundFormat === 'dolby-sr') {
+        return 'dolbySR'
+      } else return soundFormat;
+    }
+
     const newMovie = {
       ...data,
       certifications: newCertifications,
       color: updateColor(data.color),
       crew: newCrew,
       directors: newDirectors,
-      producers: newProducers
+      producers: newProducers,
+      soundFormat: updateSoundFormat(data.soundFormat)
     };
 
     return batch.set(movieDoc.ref, newMovie);

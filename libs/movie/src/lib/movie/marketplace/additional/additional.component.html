@@ -56,11 +56,11 @@
     <h2>Formats</h2>
     <article *ngIf="movie.format">
       <h5>Shooting Format</h5>
-      <p>{{ movie.format | translateSlug: 'MOVIE_FORMAT' }}</p>
+      <p>{{ movie.format | toLabel: 'movieFormat' }}</p>
     </article>
     <article *ngIf="movie.formatQuality">
       <h5>Format quality</h5>
-      <p>{{ movie.formatQuality | translateSlug: 'MOVIE_FORMAT_QUALITY' }}</p>
+      <p>{{ movie.formatQuality | toLabel: 'movieFormatQuality' }}</p>
     </article>
     <article *ngIf="movie.color">
       <h5>Color information</h5>
@@ -68,7 +68,7 @@
     </article>
     <article *ngIf="movie.soundFormat">
       <h5>Sound format</h5>
-      <p>{{ movie.soundFormat | translateSlug: 'SOUND_FORMAT' }}</p>
+      <p>{{ movie.soundFormat | toLabel: 'soundFormat' }}</p>
     </article>
   </section>
 

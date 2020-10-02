@@ -34,67 +34,67 @@ export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 export const SUB_LICENSOR_ROLES_SLUG = models['SUB_LICENSOR_ROLES'].map(key => key.slug);
 export type SubLicensorRoleSlug = typeof SUB_LICENSOR_ROLES_SLUG[number];
 
-export const MOVIE_FORMAT_LABEL = models['MOVIE_FORMAT'].map(key => key.label);
-export const MOVIE_FORMAT_SLUG = models['MOVIE_FORMAT'].map(key => key.slug);
-export type FormatLabel = typeof MOVIE_FORMAT_LABEL[number];
-export type FormatSlug = typeof MOVIE_FORMAT_SLUG[number];
-
-export const MOVIE_FORMAT_QUALITY_SLUG = models['MOVIE_FORMAT_QUALITY'].map(key => key.slug);
-export type FormatQualitySlug = typeof MOVIE_FORMAT_QUALITY_SLUG[number];
-
-export const SOUND_FORMAT_SLUG = models['SOUND_FORMAT'].map(key => key.slug);
-export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
-
 export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
 export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];
 
 
 // TYPE FOR CONSTANTS
 
-export type ContentType = keyof typeof constants.contentType;
-
-export type StoreType = keyof typeof constants.storeType;
-
-export type PremiereType = keyof typeof constants.premiereType;
-
-export type UnitBox = keyof typeof constants.unitBox;
-export type UnitBoxValue = typeof constants.unitBox[UnitBox];
-
-export type ProducerRoles = keyof typeof constants.producerRoles;
-export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
-
-export type CrewRoles = keyof typeof constants.crewRoles;
-export type CrewRolesValues = typeof constants.crewRoles[CrewRoles];
-
-export type Scoring = keyof typeof constants.scoring;
-export type ScoringValues = typeof constants.scoring[Scoring];
-
-export type Rating = keyof typeof constants.rating;
-export type RatingValues = typeof constants.rating[Rating];
-
-export type Colors = keyof typeof constants.colors;
-export type ColorsValues = typeof constants.colors[Colors];
+export type CartStatus = keyof typeof constants.cartStatus;
 
 export type Certifications = keyof typeof constants.certifications;
 export type CertificationsValues = typeof constants.certifications[Certifications];
 
-export type StoreStatus = keyof typeof constants.storeStatus;
+export type Colors = keyof typeof constants.colors;
+export type ColorsValues = typeof constants.colors[Colors];
 
-export type ProductionStatus = keyof typeof constants.productionStatus;
-
-export type ShootingPeriod = keyof typeof constants.shootingPeriod;
-export type SocialGoals = keyof typeof constants.socialGoals;
-
-export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
-export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
-
-export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+export type ContentType = keyof typeof constants.contentType;
 
 export type ContractStatus = keyof typeof constants.contractStatus;
 export type ContractType = keyof typeof constants.contractType;
 
-export type CartStatus = keyof typeof constants.cartStatus;
+export type CrewRoles = keyof typeof constants.crewRoles;
+export type CrewRolesValues = typeof constants.crewRoles[CrewRoles];
+
+export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+
+export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
+
+export type MovieFormat = keyof typeof constants.movieFormat;
+export type MovieFormatValues = typeof constants.movieFormat[MovieFormat];
+
+export type MovieFormatQuality = keyof typeof constants.movieFormatQuality;
+export type MovieFormatQualityValues = typeof constants.movieFormatQuality[MovieFormatQuality];
+
+export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
+
 export type OrgActivity = keyof typeof constants.orgActivity | '';
 export type OrganizationStatus = keyof typeof constants.organizationStatus;
 
-export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
+export type PremiereType = keyof typeof constants.premiereType;
+
+export type ProducerRoles = keyof typeof constants.producerRoles;
+export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
+
+export type ProductionStatus = keyof typeof constants.productionStatus;
+
+export type Rating = keyof typeof constants.rating;
+export type RatingValues = typeof constants.rating[Rating];
+
+export type Scoring = keyof typeof constants.scoring;
+export type ScoringValues = typeof constants.scoring[Scoring];
+
+export type ShootingPeriod = keyof typeof constants.shootingPeriod;
+
+export type SocialGoals = keyof typeof constants.socialGoals;
+
+export type SoundFormat = keyof typeof constants.soundFormat;
+export type SoundFormatValues = typeof constants.soundFormat[SoundFormat];
+
+export type StoreStatus = keyof typeof constants.storeStatus;
+
+export type StoreType = keyof typeof constants.storeType;
+
+export type UnitBox = keyof typeof constants.unitBox;
+export type UnitBoxValue = typeof constants.unitBox[UnitBox];
