@@ -47,7 +47,7 @@ export class MediaService {
     const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
-      .then(() => delay(5000))
+      .then(() => delay(3000))
       .then(() => this.detachWidget());
     this.showWidget();
   }
