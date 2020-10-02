@@ -5,13 +5,15 @@ import { NgModule } from '@angular/core';
 export class DeepKeyPipe implements PipeTransform {
   transform(value: Object, deepKey: string) {
     if (!value) return;
-    const getDeepValue = (val: Object) => deepKey.split('.').reduce((result, key) => result[key], val);
+
+    const conditions = deepKey.split('||').map(p => p.trim());
+    const getDeepValue = (val: Object, condition: string) => condition.split('.').reduce((result, key) => result?.[key], val);
 
     if (Array.isArray(value)) {
-      return value.map(obj => getDeepValue(obj));
+      return value.map(obj => conditions.find(c => !!getDeepValue(obj, c)));
     } else {
-      return getDeepValue(value);
-    } 
+      return conditions.find(c => !!getDeepValue(value, c));
+    }
   }
 }
 
