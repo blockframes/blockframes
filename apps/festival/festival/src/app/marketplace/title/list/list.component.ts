@@ -68,6 +68,8 @@ export class ListComponent implements OnInit, OnDestroy {
         if (this.loadingMore) {
           this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies));
           this.loadingMore = false;
+        } else {
+          this.movieSearchResultsState.next(movies);
         }
       }),
       tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))
