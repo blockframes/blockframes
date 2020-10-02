@@ -16,11 +16,11 @@
               <mat-label>Production Company Name</mat-label>
               <mat-error>Please specify Production Company Name.</mat-error>
               <input test-id="production-company-name" matInput formControlName="displayName"
-                placeholder="Production Company Name" required />
+                placeholder="Production Company Name" />
             </mat-form-field>
 
             <chips-autocomplete [form]="productionForm.get('countries')" scope="TERRITORIES"
-              placeholder="Type and select Country." required fxFlex>
+              placeholder="Type and select Country." fxFlex>
               <mat-label>Production Country</mat-label>
               <mat-error>Please specify Production Country.</mat-error>
             </chips-autocomplete>

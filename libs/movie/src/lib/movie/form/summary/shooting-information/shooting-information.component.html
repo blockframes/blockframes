@@ -2,14 +2,16 @@
 <article>
   <h6>
     Shooting Dates
-    <a mat-icon-button [routerLink]="link" fragment="shooting-dates"><mat-icon svgIcon="pencil" color="primary"></mat-icon></a>
+    <a mat-icon-button [routerLink]="link" fragment="shooting-dates">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
   </h6>
   <ul>
-    <li *ngIf="!shootingDates.get('completed').value && !shootingDates.get('progress').value && !isThereShootingPlanned()">
+    <li
+      *ngIf="!shootingDates.get('completed').value && !shootingDates.get('progress').value && !isThereShootingPlanned()">
       <strong>Shooting Dates </strong>
-      <a [routerLink]="link" fragment="shooting-dates" class="missing-control">
-        <span>Missing</span>
-      </a>
+      <missing-control [control]="shootingDates.get('completed')" [link]="link" fragment="shooting-dates">
+      </missing-control>
     </li>
     <li *ngIf="movie.shooting.get('dates').get('completed').value">
       <strong>Shooting Completed </strong>
@@ -64,26 +66,18 @@
       </span>
     </li>
     <li>
-      <strong>Shooting Locations </strong>
-      <ng-container *ngIf="!shootingLocations.controls.length else showShootingLocations">
-        <a [routerLink]="link" fragment="shooting-locations" class="missing-control">
-          <span>Missing</span>
-        </a>
-      </ng-container>
-
-      <ng-template #showShootingLocations>
-        <missing-control [control]="movie.shooting.get('locations')" [link]="link" fragment="shooting-locations">
-          <ng-template let-locations>
-            <ng-container *ngFor="let location of locations; let isLast = last">
-              <span>
-                {{ location.city }},
-                {{ location.country | translateSlug: 'TERRITORIES' }}
-              </span>
-              <span>{{ isLast ? '': ' - ' }}</span>
-            </ng-container>
-          </ng-template>
-        </missing-control>
-      </ng-template>
+      <strong>Shooting Locations</strong>
+      <missing-control [control]="shootingLocations" [link]="link" fragment="shooting-locations">
+        <ng-template let-shooting>
+          <ng-container *ngFor="let location of shooting; let isLast = last">
+            <span>
+              {{ location.city }},
+              {{ location.country | translateSlug: 'TERRITORIES' }}
+            </span>
+            <span>{{ isLast ? '': ' - ' }}</span>
+          </ng-container>
+        </ng-template>
+      </missing-control>
     </li>
     <li>
       <strong>Expected Premiere </strong>

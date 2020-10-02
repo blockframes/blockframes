@@ -8,7 +8,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, persistenceSettings } from '@env';
+import { firebase, intercomId, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -27,6 +27,8 @@ import 'firebase/storage';
 import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
+// Intercom
+import { IntercomModule } from 'ng-intercom';
 
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
@@ -63,6 +65,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 
     // Router
     CrmModule,
+
+    // Intercom
+    IntercomModule.forRoot({ appId: intercomId }),
 
   ],
   providers: [ScreenTrackingService, UserTrackingService],

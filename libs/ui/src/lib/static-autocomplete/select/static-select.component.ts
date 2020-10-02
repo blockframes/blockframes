@@ -28,8 +28,6 @@ export class StaticSelectComponent {
     }
   };
   @Input() control: FormControl;
-  @Input() label: string;
-  @Input() hint: string;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;

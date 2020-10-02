@@ -1,6 +1,16 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
   <h1>Main Information</h1>
+  <!-- Sales Pitch -->
+  <section id="sales-pitch" *ngIf="movie | hasKeys: 'promotional.salesPitch'">
+    <h2>Sales Pitch</h2>
+    <article fxLayout fxLayoutGap="32px">
+      <p>{{ movie.promotional.salesPitch.description }}</p>
+    </article>
+    <mat-divider></mat-divider>
+  </section>
+
+
   <!-- Main Information -->
   <section *ngIf="movie | hasKeys: keys.main">
     <h2>Story Elements</h2>

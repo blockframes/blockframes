@@ -9,9 +9,6 @@ export type GenresSlug = typeof GENRES_SLUG[number];
 export const PRODUCER_ROLES_SLUG = models['PRODUCER_ROLES'].map(key => key.slug);
 export type ProducerRolesSlug = typeof PRODUCER_ROLES_SLUG[number];
 
-export const CAST_ROLES_SLUG = models['CAST_ROLES'].map(key => key.slug);
-export type CastRolesSlug = typeof CAST_ROLES_SLUG[number];
-
 export const CREW_ROLES_SLUG = models['CREW_ROLES'].map(key => key.slug);
 export type CrewRolesSlug = typeof CREW_ROLES_SLUG[number];
 
@@ -101,3 +98,5 @@ export type ContractType = keyof typeof constants.contractType;
 export type CartStatus = keyof typeof constants.cartStatus;
 export type OrgActivity = keyof typeof constants.orgActivity | '';
 export type OrganizationStatus = keyof typeof constants.organizationStatus;
+
+export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;

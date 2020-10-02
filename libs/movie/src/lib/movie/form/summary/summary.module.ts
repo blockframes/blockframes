@@ -3,15 +3,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
-import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 
 // Blockframes UI
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Blockframes Utils
@@ -21,9 +22,11 @@ import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
+// Blockframes Movie
+import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
-import { MatDividerModule } from '@angular/material/divider';
 
 // Summary Components
 import { SummaryMainComponent } from './main/main.component';
@@ -74,6 +77,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     TranslateSlugModule,
     HasStatusModule,
     MaxLengthModule,
+    FilmographyPipeModule,
 
     // Materials
     MatChipsModule,

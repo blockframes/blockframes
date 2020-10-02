@@ -10,5 +10,4 @@ export class SummaryAdditionalInformationComponent {
 
   @Input() movie: MovieForm;
   @Input() link: string;
-
 }

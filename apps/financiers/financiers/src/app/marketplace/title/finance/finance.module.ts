@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MarketplaceMovieFinanceComponent } from './finance.component';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
+import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -14,6 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     TranslateSlugModule,
+    ToLabelModule,
     // Material
     MatProgressSpinnerModule,
     MatCardModule,

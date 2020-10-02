@@ -66,7 +66,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
   }
 
   deleteLanguage(language: LanguagesSlug) {
-    this.form.languages.removeControl(language)
+    this.form.languages.removeControl(language);
   }
 
   ngOnDestroy() {

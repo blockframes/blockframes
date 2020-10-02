@@ -2,7 +2,7 @@ import { filter } from 'rxjs/operators';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Inject, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
@@ -33,10 +33,12 @@ import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
+import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { yandexId } from '@env';
 
 // Intercom
-import { IntercomAppModule } from '@blockframes/utils/intercom.module';
+import { IntercomModule } from 'ng-intercom';
+import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { intercomId } from '@env';
 
 // Analytics
@@ -45,6 +47,9 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 
 import { MatNativeDateModule } from '@angular/material/core';
 
+import { SafariBannerModule } from '@blockframes/utils/safari-banner/safari-banner.module';
+import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner/cookie-banner.module';
+import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -58,7 +63,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     OverlayModule,
 
     // Intercom
-    intercomId ? IntercomAppModule : [],
+    IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
     AngularFireModule.initializeApp(firebase),
@@ -89,23 +94,40 @@ import { MatNativeDateModule } from '@angular/material/core';
       relativeLinkResolution: 'corrected',
       scrollPositionRestoration: 'enabled'
     }),
-    MatNativeDateModule
+    MatNativeDateModule,
+
+    // Blockframes
+    SafariBannerModule,
+    CookieBannerModule
   ],
   providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
 
-  constructor(private router: Router, private analytics: FireAnalytics) {
-    const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
+  constructor(
+    router: Router,
+    analytics: FireAnalytics,
+    intercomService: IntercomService,
+    yandexService: YandexMetricaService,
+    gdprService: GDPRService,
+    @Inject(YM_CONFIG) ymConfig: number
+  ) {
+
+    const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
+    if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
+    if (yandex) yandexService.insertMetrika(ymConfig);
+    intercom && intercomId ? intercomService.enable() : intercomService.disable(); 
+
+    const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
       try {
-        this.analytics.event('pageView', {
+        analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });
       } catch {
-        this.analytics.event('pageView', {
+        analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });

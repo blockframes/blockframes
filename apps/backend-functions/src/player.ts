@@ -1,25 +1,22 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db, admin, getStorageBucketName } from './internals/firebase';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
+import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument, PublicUser } from './data/types';
-import { isUserInvitedToMeetingOrScreening } from './internals/invitations/events';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { upsertWatermark } from '@blockframes/firebase-utils';
+import { File as GFile } from '@google-cloud/storage';
 
 // No typing
 const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
-  eventId: string;
-}
-
-interface UploadVideoParams {
-  fileName: string;
-  movieId: string;
+  eventId: string,
+  jwPlayerId?: string;
 }
 
 export const getPrivateVideoUrl = async (
@@ -81,14 +78,24 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  if (!movie.hostedVideo) {
+  if (!data.jwPlayerId) {
+    // no jwPlayerId in request, we assume user want to see the main video (screener)
+    if (!movie.promotional.videos?.screener?.jwPlayerId) {
+      return {
+        error: 'NO_VIDEO',
+        result: `The requested screening doesn't exist on movie ${movie.id}`
+      };
+    } else {
+      data.jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
+    }
+  } else if (!isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
     return {
       error: 'NO_VIDEO',
-      result: `The creator of the movie hasn't uploaded any video for you to watch`
+      result: `The requested media doesn't exist on movie ${movie.id}`
     };
   }
 
-  if (event.isPrivate &&  !await isUserInvitedToMeetingOrScreening(context.auth.uid, movie.id)){
+  if (event.isPrivate && !isUserInvitedToScreening(context.auth.uid, movie.id)) {
     return {
       error: 'NO_INVITATION',
       result: `You have not been invited to see this movie`
@@ -148,12 +155,12 @@ export const getPrivateVideoUrl = async (
   // we then add the duration in seconds to get the final expiry date
   const expires = Math.floor(new Date().getTime() / 1000) + linkDuration; // now + 5 hours
 
-  const toSign = `manifests/${movie.hostedVideo}.m3u8:${expires}:${jwplayerSecret}`;
+  const toSign = `manifests/${data.jwPlayerId}.m3u8:${expires}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `https://cdn.jwplayer.com/manifests/${movie.hostedVideo}.m3u8?exp=${expires}&sig=${signature}`;
+  const signedUrl = `https://cdn.jwplayer.com/manifests/${data.jwPlayerId}.m3u8?exp=${expires}&sig=${signature}`;
 
   return {
     error: '',
@@ -161,72 +168,41 @@ export const getPrivateVideoUrl = async (
   };
 }
 
-export const uploadToJWPlayer = async (
-  data: UploadVideoParams,
-  context: CallableContext
-): Promise<ErrorResultResponse> => {
-
-  if (!data.fileName) {
-    throw new Error(`No 'fileName' params, this parameter is mandatory !`);
+const isJwplayerIdBelongingToMovie = async (jwPlayerId: string, movie: MovieDocument) => {
+  // jwPlayerId is the screener
+  if (movie.promotional.videos?.screener?.jwPlayerId === jwPlayerId) {
+    return true;
   }
 
-  if (!data.movieId) {
-    throw new Error(`No 'movieId' params, this parameter is mandatory !`);
+  // jwPlayerId is in otherVideos array
+  if (movie.promotional.videos?.otherVideos?.length) {
+    return movie.promotional.videos.otherVideos.some(ov => ov.jwPlayerId === jwPlayerId);
   }
 
-  // here we need the ref (instead of getDocument) because we will update the movie bellow
-  const movieRef = db.collection('movies').doc(data.movieId);
-  const movieSnap = await movieRef.get();
+  // not found
+  return false;
+}
 
-  if (!movieSnap.exists){
-    return {
-      error: 'UNKOWN_MOVIE',
-      result: `There is no movie with id ${data.movieId}`
-    }
-  }
+/**
+ * 
+ * @param file 
+ * @see https://developer.jwplayer.com/jwplayer/docs/authentication
+ * @see https://developer.jwplayer.com/jwplayer/reference#post_videos-create
+ * @see https://developer.jwplayer.com/jwplayer/docs/upload-videos-with-a-resumable-protocol
+ * 
+ */
+export const uploadToJWPlayer = async (file: GFile): Promise<{ status: boolean, key?: string, message?: string }> => {
 
-  if (!context.auth) {
-    throw new Error(`Unauthorized call !`);
-  }
-
-  // TODO perform further check to see if user is authorized to upload a video for a given movie
-  // TODO issue#2653
-
-  const storage = admin.storage();
-  const videoFile = await storage.bucket().file(`uploads/${data.fileName}`);
-  const [exists] =  await videoFile.exists();
-
-  if (!exists) {
-    return {
-      error: 'UNKOWN_FILE',
-      result: `There is no file stored with the name ${data.fileName}`
-    }
-  }
-
-  // * This duration (2 hours) is different than the video url duration above
-  // * This is only the time we give to the JWPlayer server
-  // * to download the movie from our firebase storage
-  // it's better to use Date here instead of firestore.Timestamp since
-  // this value will be fed back to 'new Date()' inside the Google system,
-  // using firestore.Timestamp was causing an error about the date being in the past
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
-  const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});
+  const [videoUrl] = await file.getSignedUrl({ action: 'read', expires });
 
-  const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
-  const result = await jw.videos.create({download_url: videoUrl});
+  const jw = new JWPlayerApi({ apiKey: jwplayerKey, apiSecret: jwplayerSecret });
+  const result = await jw.videos.create({ download_url: videoUrl }).catch(e => ({ status: 'error', message: e.message }));
 
   if (result.status === 'error' || !result.video || !result.video.key) {
-    return {
-      error: 'JWPLAYER-ERROR',
-      result: result
-    }
-  }
-
-  await movieRef.update({hostedVideo: result.video.key});
-
-  return {
-    error: '',
-    result: 'OK'
+    return { status: false, message: result.message || '' }
+  } else {
+    return { status: true, key: result.video.key }
   }
 }

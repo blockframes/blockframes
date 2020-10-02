@@ -1,6 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 // Blockframes
 import { Scope } from '@blockframes/utils/static-model/staticModels';
@@ -29,7 +30,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.sub = this.control.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.sub = this.control?.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
   isMissing(control: AbstractControl) {
@@ -39,9 +40,14 @@ export class MissingControlComponent implements OnInit, OnDestroy {
       if (Object.keys(control.controls).length) {
         const values = Object.values(control.controls);
         return values.length ? values.some(c => this.isMissing(c)) : true;
+      } else {
+        return true
       }
     }
-    return !control.value;
+    if (Array.isArray(control?.value)) {
+      return !control?.value.length
+    }
+    return !control?.value;
   }
 
   ngOnDestroy() {

@@ -7,3 +7,8 @@ mat-divider {
   margin: 24px 0;
 }
 
+.note {
+  width: calc(50% - 16px); // (100% - 32px) / 2
+  border-bottom: solid 1px var(--foreground-divider);
+  margin-bottom: 16px;
+}

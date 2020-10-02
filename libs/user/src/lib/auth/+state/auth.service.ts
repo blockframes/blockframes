@@ -1,22 +1,31 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { AuthStore, User, AuthState, createUser } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { User as FireBaseUser } from 'firebase';
-import { map } from 'rxjs/operators';
+import { UserCredential } from '@firebase/auth-types';
+import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { map, take } from 'rxjs/operators';
 import { getCurrentApp, App } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/types';
+import { Intercom } from 'ng-intercom';
+import { getIntercomOptions } from '@blockframes/utils/intercom/intercom.service';
+import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
+import { intercomId } from '@env';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
+    private http: HttpClient,
     private query: AuthQuery,
     private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    public ngIntercom: Intercom,
+    private gdprService: GDPRService
   ) {
     super(store);
   }
@@ -57,12 +66,25 @@ export class AuthService extends FireAuthService<AuthState> {
     return this.auth.verifyPasswordResetCode(actionCode);
   }
 
+  onSignin(userCredential: UserCredential) {
+    this.updateIntercom(userCredential);
+  }
+
+  onSignup(userCredential: UserCredential) {
+    this.updateIntercom(userCredential);
+  }
+
   /**
    * @description function that gets triggered when
    * AuthService.signOut is called
    */
   async onSignout() {
+    // Keep cookieConsent in localStorage
+    const gdpr = localStorage.getItem('gdpr');
     localStorage.clear();
+    localStorage.setItem('gdpr', gdpr);
+
+    this.ngIntercom.shutdown();
     sessionStorage.clear();
     window.location.reload();
   }
@@ -112,4 +134,20 @@ export class AuthService extends FireAuthService<AuthState> {
     return createUser(user);
   }
 
+  public async getPrivacyPolicy() {
+    const { ip } = await this.http.get<{ip: string}>(`http://api.ipify.org/?format=json`).toPromise();
+    return {
+      date: new Date(),
+      ip: ip
+    }
+  }
+
+  private updateIntercom(userCredential: UserCredential) {
+    const { intercom } = this.gdprService.cookieConsent;
+    if (!intercom || !intercomId) return;
+
+    this.db.doc<User>(`users/${userCredential.user.uid}`).valueChanges().pipe(take(1)).subscribe(user => {
+      this.ngIntercom.update(getIntercomOptions(user));
+    });
+  }
 }
