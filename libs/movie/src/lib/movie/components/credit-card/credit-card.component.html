@@ -19,7 +19,7 @@
   <!-- Icon -->
   <mat-icon
     [svgIcon]="credit.status | statusIcon"
-    [matTooltip]="(credit.status | translateSlug:'MEMBER_STATUS') || 'Status is not provided'">
+    [matTooltip]="(credit.status | toLabel:'memberStatus') || 'Status is not provided'">
   </mat-icon>
 </header>
 
