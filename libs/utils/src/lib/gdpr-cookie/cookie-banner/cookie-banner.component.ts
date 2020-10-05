@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -22,6 +22,7 @@ export class CookieBannerComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
     private gdpr: GDPRService,
     private analytics: FireAnalytics,
     private intercom: IntercomService,
@@ -64,6 +65,7 @@ export class CookieBannerComponent implements OnInit {
   confirmCookies() {
     this.document.cookie = 'blockframes=';
     this.hasAccepted = true;
+    this.cdr.markForCheck();
   }
 
   enableIntercom() {
