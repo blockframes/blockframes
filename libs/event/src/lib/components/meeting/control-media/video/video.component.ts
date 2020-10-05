@@ -3,7 +3,7 @@ import {MeetingService, StatusVideoMic} from "@blockframes/event/components/meet
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'event-control-video',
+  selector: 'event-meeting-control-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })

@@ -11,7 +11,7 @@ import { Participant, LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 import {User} from "@blockframes/auth/+state";
 
 @Component({
-  selector: 'event-container-video',
+  selector: 'event-meeting-container-video',
   templateUrl: './container-video.component.html',
   styleUrls: ['./container-video.component.scss']
 })
@@ -117,9 +117,9 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngAfterViewInit() {
 
-    const img = document.querySelector("#contener-event-meeting");
-    const width = img.clientWidth;
-    const height = img.clientHeight;
+    // const img = document.querySelector("#contener-event-meeting");
+    // const width = img.clientWidth;
+    // const height = img.clientHeight;
 
   }
 

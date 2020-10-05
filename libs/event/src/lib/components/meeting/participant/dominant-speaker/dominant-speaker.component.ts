@@ -4,7 +4,7 @@ import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudio
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
-  selector: 'event-dominant-speaker',
+  selector: 'event-meeting-dominant-speaker',
   templateUrl: './dominant-speaker.component.html',
   styleUrls: ['./dominant-speaker.component.scss']
 })

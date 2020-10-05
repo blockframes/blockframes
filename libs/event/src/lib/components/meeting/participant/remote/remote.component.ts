@@ -11,10 +11,10 @@ import {
 import {meetingEventEnum, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
-import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import {Participant as IParticipantMeeting, RemoteTrackPublication} from 'twilio-video';
 
 @Component({
-  selector: 'event-remote-participant',
+  selector: 'event-meeting-remote-participant',
   templateUrl: './remote.component.html',
   styleUrls: ['./remote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

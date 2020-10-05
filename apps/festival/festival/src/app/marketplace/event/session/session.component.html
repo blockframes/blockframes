@@ -35,6 +35,7 @@
 
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
+      <h2>Is Not the Saved is the new one</h2>
 
       <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
 
@@ -47,8 +48,8 @@
           </div>
 
           <!-- FIXME add classe for  style="position: relative"-->
-          <div [fxFlex]="visioContainerSize" style="position: relative; background-color: black" id="contener-event-meeting">
-              <event-container-video [event]="event"></event-container-video>
+          <div [fxFlex]="visioContainerSize" style="position: relative; background-color: black" id="contener-event-meeting-saved">
+              <event-meeting-container-video [event]="event"></event-meeting-container-video>
           </div>
         </div>
         <ng-container *ngIf="event.isOwner">
@@ -57,8 +58,8 @@
         </ng-container>
 
         <div>
-          <event-control-audio></event-control-audio>
-          <event-control-video></event-control-video>
+          <event-meeting-control-audio></event-meeting-control-audio>
+          <event-meeting-control-video></event-meeting-control-video>
         </div>
       </article>
 

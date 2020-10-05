@@ -10,12 +10,12 @@ import {AuthQuery} from "@blockframes/auth/+state";
 
 
 export enum meetingEventEnum {
-  ParticipantConnected= 'participantConnected',
-  ParticipantDisconnected= 'participantDisconnected',
-  TrackSubscribed= 'trackSubscribed',
-  TrackUnsubscribed= 'trackUnsubscribed',
-  Disconnected= 'disconnected',
-  ConnectedToRoomTwilio= 'connectedToRoomTwilio',
+  ParticipantConnected = 'participantConnected',
+  ParticipantDisconnected = 'participantDisconnected',
+  TrackSubscribed = 'trackSubscribed',
+  TrackUnsubscribed = 'trackUnsubscribed',
+  Disconnected = 'disconnected',
+  ConnectedToRoomTwilio = 'connectedToRoomTwilio',
   LocalPreviewDone = 'localPreviewDone',
   TrackDisabled = 'trackDisabled',
   DominantSpeakerChanged = 'dominantSpeakerChanged',
@@ -39,12 +39,15 @@ export interface StatusVideoMic {
 export class MeetingService {
 
   private eventRoom = new BehaviorSubject<EventRoom>({
-    meetingEvent : null,
+    meetingEvent: null,
     data: null
   });
 
 
-  protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
+  protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({
+    video: false,
+    audio: false
+  });
   public localVideoMicStatus$: Observable<StatusVideoMic> = this.$localVideoMicStatusDataSource.asObservable();
 
   activeRoom;
@@ -59,43 +62,43 @@ export class MeetingService {
   constructor(
     private userService: UserService,
     private query: AuthQuery
-    ) {
+  ) {
 
   }
 
-  getEventRoom(){
+  getEventRoom() {
     return this.eventRoom;
   }
 
-  getCamDeactivate(){
+  getCamDeactivate() {
     return this.camDeactivate;
   }
 
-  getMicDeactivate(){
+  getMicDeactivate() {
     return this.micDeactivate;
   }
 
-  getLocalParticipant(){
+  getLocalParticipant() {
     return this.localParticipant;
   }
 
   /**
    *
    */
-  getLocalVideoMicStatus(): Observable<StatusVideoMic>{
+  getLocalVideoMicStatus(): Observable<StatusVideoMic> {
     return this.localVideoMicStatus$;
   }
 
-  getActiveUser(){
+  getActiveUser() {
     return this.query.user;
   }
 
-  getIfIsReelOwner(event:Event){
+  getIfIsReelOwner(event: Event) {
     return this.query.userId === event.organizedBy.uid;
   }
 
-  getIfAudioIsAvailable(){
-    return navigator.mediaDevices.getUserMedia({ audio: true})
+  getIfAudioIsAvailable() {
+    return navigator.mediaDevices.getUserMedia({audio: true})
       .then(value => {
         return true;
       })
@@ -104,14 +107,14 @@ export class MeetingService {
       })
   }
 
-  getIfVideoIsAvailable(){
-    return navigator.mediaDevices.getUserMedia({ video: true})
-    .then(value => {
-      return true;
-    })
-    .catch(reason => {
-      return false;
-    })
+  getIfVideoIsAvailable() {
+    return navigator.mediaDevices.getUserMedia({video: true})
+      .then(value => {
+        return true;
+      })
+      .catch(reason => {
+        return false;
+      })
   }
 
   /**
@@ -139,14 +142,13 @@ export class MeetingService {
   }
 
 
-
   /**
    * Get track of one participant
    * @param participant - All participants connected in the room
    */
   getTracksOfParticipant(participant: Participant) {
     return Array.from(participant.tracks).map((
-      track : any
+      track: any
     ) => {
       //participant[0] is the key
       return track[1];
@@ -159,7 +161,7 @@ export class MeetingService {
    */
   getParticipantOfParticipantsMapAlreadyInRoom(participants: Participant[]) {
     return Array.from(participants).map((
-      participant : any
+      participant: any
     ) => {
       //participant[0] is the key
       return participant[1];
@@ -186,7 +188,7 @@ export class MeetingService {
   }
 
 
-  async getFirstNameAndLastNameOfParticipant(participant: Participant){
+  async getFirstNameAndLastNameOfParticipant(participant: Participant) {
     const localUser: User = await this.userService.getUser(participant.identity)
     participant.firstName = localUser.firstName
     participant.lastName = localUser.lastName
@@ -198,16 +200,16 @@ export class MeetingService {
    * @param room - room twilio where we are connected
    * @param event - event when we com from / cascade8
    */
-  async roomJoined(room:Room, event:Event) {
+  async roomJoined(room: Room, event: Event) {
     //save activeRoom
     this.activeRoom = room;
 
 
     const identity = room.localParticipant.identity;
 
-    if(!!room.participants) {
+    if (!!room.participants) {
       const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
-      if(!!tracksOfParticipants && tracksOfParticipants.length > 0) {
+      if (!!tracksOfParticipants && tracksOfParticipants.length > 0) {
         for (const indexParticipant in tracksOfParticipants) {
           await this.getFirstNameAndLastNameOfParticipant(tracksOfParticipants[indexParticipant])
           this.eventRoom.next({
@@ -220,8 +222,9 @@ export class MeetingService {
 
     const localUser: User = await this.userService.getUser(identity)
 
-    room.localParticipant.firstName = localUser.firstName
-    room.localParticipant.lastName = localUser.lastName
+    room.localParticipant.firstName = localUser.firstName;
+    room.localParticipant.lastName = localUser.lastName;
+    room.localParticipant.avatar = localUser.avatar;
     room.localParticipant.isDominantSpeaker = false
     this.eventRoom.next({
       meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
@@ -242,26 +245,26 @@ export class MeetingService {
    * SetUp all event of the Room went we are connected
    * @param room - Room connected
    */
-  setUpRoomEvent(room:Room){
+  setUpRoomEvent(room: Room) {
 
     // When a Participant joins the Room, log the event.
-    room.on(meetingEventEnum.ParticipantConnected, async (participant: Participant) => {
+    room.on(meetingEventEnum.ParticipantConnected,
+      async (participant: Participant) => {
+        const remoteUser = await this.userService.getUser(participant.identity)
 
+        participant.firstName = remoteUser.firstName
+        participant.lastName = remoteUser.lastName
+        participant.avatar = remoteUser.avatar
+        participant.isDominantSpeaker = false;
 
-      const remoteUser = await this.userService.getUser(participant.identity)
-
-      participant.firstName = remoteUser.firstName
-      participant.lastName = remoteUser.lastName
-      participant.isDominantSpeaker = false;
-
-      this.eventRoom.next({
-        meetingEvent: meetingEventEnum.ParticipantConnected,
-        data: participant
+        this.eventRoom.next({
+          meetingEvent: meetingEventEnum.ParticipantConnected,
+          data: participant
+        });
       });
-    });
 
     // When a Participant adds a Track, attach it to the DOM.
-    room.on(meetingEventEnum.TrackSubscribed, (track: RemoteVideoTrack|RemoteAudioTrack, trackPublication:RemoteTrackPublication, participant: Participant) => {
+    room.on(meetingEventEnum.TrackSubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
       // this.attachTracks([track], participantContainer, 'participantContainer');
 
       this.eventRoom.next({
@@ -271,7 +274,7 @@ export class MeetingService {
     });
 
     // When a Participant removes a Track, detach it from the DOM.
-    room.on(meetingEventEnum.TrackUnsubscribed, (track:RemoteVideoTrack|RemoteAudioTrack, trackPublication:RemoteTrackPublication, participant: Participant) => {
+    room.on(meetingEventEnum.TrackUnsubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.TrackUnsubscribed,
@@ -300,11 +303,11 @@ export class MeetingService {
 
     // Once the LocalParticipant leaves the room, detach the Tracks
     // of all Participants, including that of the LocalParticipant.
-    room.on(meetingEventEnum.Disconnected, (room: Room) => {
+    room.on(meetingEventEnum.Disconnected, () => {
 
       this.eventRoom.next({
         meetingEvent: meetingEventEnum.Disconnected,
-        data: room
+        data: null
       });
 
       // if (this.previewTracks) {
@@ -316,8 +319,6 @@ export class MeetingService {
       // this.activeRoom = null;
     });
   }
-
-
 
 
   /**
@@ -332,7 +333,7 @@ export class MeetingService {
 
     let track: any = [];
     //get audio or video track
-    if(kind === localTrack[0].kind){
+    if (kind === localTrack[0].kind) {
       track = localTrack[0].track
     } else {
       track = localTrack[1].track
@@ -353,11 +354,17 @@ export class MeetingService {
    * @param kind
    * @param boolToChange
    */
-  setUpLocalVideoAndAudio(kind:string, boolToChange:boolean){
-    if(kind === 'video'){
-      this.$localVideoMicStatusDataSource.next( {...this.$localVideoMicStatusDataSource.getValue(), video: boolToChange});
+  setUpLocalVideoAndAudio(kind: string, boolToChange: boolean) {
+    if (kind === 'video') {
+      this.$localVideoMicStatusDataSource.next({
+        ...this.$localVideoMicStatusDataSource.getValue(),
+        video: boolToChange
+      });
     } else {
-      this.$localVideoMicStatusDataSource.next( {...this.$localVideoMicStatusDataSource.getValue(), audio: boolToChange});
+      this.$localVideoMicStatusDataSource.next({
+        ...this.$localVideoMicStatusDataSource.getValue(),
+        audio: boolToChange
+      });
     }
     // this.cd.detectChanges();
   }
@@ -366,8 +373,8 @@ export class MeetingService {
   /**
    *v For disconnect from twilio Room
    */
-  disconnected(){
-    if(!!this.activeRoom){
+  disconnected() {
+    if (!!this.activeRoom) {
       this.activeRoom.disconnect()
     }
   }

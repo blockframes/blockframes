@@ -1,29 +1,18 @@
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import { Participant as IParticipantMeeting } from 'twilio-video';
+import {Participant} from 'twilio-video';
 
 
 @Component({
-  selector: 'event-participants-nav',
+  selector: 'event-meeting-participants-nav',
   templateUrl: './participants-nav.component.html',
   styleUrls: ['./participants-nav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ParticipantsNavComponent implements OnInit {
+export class ParticipantsNavComponent {
 
-  @Input() participants: IParticipantMeeting[];
+  @Input() participants: Participant[];
 
   constructor(
   ) { }
-
-  ngOnInit(): void {
-  }
-
-  /**
-   *
-   * @param participant
-   */
-  getInitialFromParticipant(participant){
-    return `${participant.firstName.charAt(0).toUpperCase()}${participant.lastName.charAt(0).toUpperCase()}`
-  }
 }

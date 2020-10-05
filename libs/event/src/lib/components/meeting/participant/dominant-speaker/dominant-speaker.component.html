@@ -13,7 +13,4 @@
     <div [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
     </div>
   </div>
-  <div *ngIf="!participant" class="dominant-waiting-screen">
-    Waiting for participants
-  </div>
 </ng-container>

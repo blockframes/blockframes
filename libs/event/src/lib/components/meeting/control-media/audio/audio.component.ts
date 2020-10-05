@@ -3,7 +3,7 @@ import {MeetingService, StatusVideoMic} from "@blockframes/event/components/meet
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'event-control-audio',
+  selector: 'event-meeting-control-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss']
 })

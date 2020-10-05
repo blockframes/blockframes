@@ -1,5 +1,5 @@
-<event-participants-nav [participants]="arrayOfParticipantConnected$ | async">
-  <event-video
+<event-meeting-participants-nav [participants]="arrayOfParticipantConnected$ | async">
+  <event-meeting-video
     [arrayOfParticipantConnected$]="arrayOfParticipantConnected$"
     [$participantConnectedDataSource]="$participantConnectedDataSource"
     [localParticipantConnected$]="localParticipantConnected$"
@@ -8,5 +8,5 @@
     [event]="event"
     [isOwner]="getIfIsReelOwner()"
     (eventSetUpLocalVideoAndAudio)="setUpLocalVideoAndAudio($event)"
-    ></event-video>
-</event-participants-nav>
+    ></event-meeting-video>
+</event-meeting-participants-nav>

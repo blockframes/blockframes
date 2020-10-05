@@ -19,7 +19,7 @@ import {Observable} from "rxjs";
 
 
 @Component({
-  selector: 'event-local-participant',
+  selector: 'event-meeting-local-participant',
   templateUrl: './local.component.html',
   styleUrls: ['./local.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

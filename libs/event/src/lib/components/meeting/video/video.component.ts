@@ -7,7 +7,7 @@ import {Participant as IParticipantMeeting} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
 
 @Component({
-  selector: 'event-video',
+  selector: 'event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
