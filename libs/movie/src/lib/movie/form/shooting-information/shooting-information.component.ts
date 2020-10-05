@@ -75,8 +75,8 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   public add(event: MatChipInputEvent): void {
     const { value = '' } = event;
-
-    this.form.shooting.controls['locations'].controls['cities'].add(value);
+    const cities = this.form.shooting.get('locations').get('cities');
+    cities.add(value);
     this.city.reset();
   }
 
