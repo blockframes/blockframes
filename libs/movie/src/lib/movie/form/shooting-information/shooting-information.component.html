@@ -127,7 +127,7 @@
               <mat-label>City</mat-label>
               <mat-chip-list #chipList>
                 <ng-container *ngFor="let value of values$ | async; let i = index">
-                  <mat-chip removable="true" (removed)="remove(i)">
+                  <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">
                     <span>{{ value }}</span>
                     <mat-icon matChipRemove svgIcon="close"></mat-icon>
                   </mat-chip>

@@ -1,14 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
-import { Subscription, Observable, BehaviorSubject } from 'rxjs';
-import { tap, startWith } from 'rxjs/operators'
+import { Subscription, BehaviorSubject } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { FormList } from '@blockframes/utils/form';
 
 
 @Component({
@@ -34,7 +31,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.enableForm();
-    this.form.shooting.get('locations').controls.forEach(shooting => this.values$.next(shooting.get('cities').value))
+    this.form.shooting.get('locations').controls.forEach(location => this.values$.next(location.get('cities').value))
   }
 
   ngOnDestroy() {
@@ -86,12 +83,12 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     event.input.value = '';
   }
 
-  public remove(i: number): void {
+  public remove(i: number, control: FormControl): void {
     const value = this.values$.getValue();
-    const shadowValue = value.slice();
+    const shadowValue = i === 0 ? [] : value.slice();
     shadowValue.splice(i, 1);
 
+    control.setValue(shadowValue);
     this.values$.next(shadowValue);
-    console.log(this.values$.value);
   }
 }
