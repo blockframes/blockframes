@@ -1,7 +1,7 @@
 <ul fxLayout="column" fxLayoutGap="16px">
   <ng-container *ngFor="let timeFrame of timeFrames">
     <!-- For a time frame -->
-    <ng-container *ngIf="(events | filterByDate: timeFrame : 'start') as eventList">
+    <ng-container *ngIf="(events | filterByDate: timeFrame : 'start' : 'end') as eventList">
 
       <h2 *ngIf="eventList.length">
         {{ timeFrame | labelByDate }}
