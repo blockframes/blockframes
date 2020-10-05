@@ -1,7 +1,7 @@
 import * as firebaseFunctions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-export const functions = firebaseFunctions.region('us-central1', 'europe-west1')
+export const functions = firebaseFunctions.region('europe-west1')
 
 export type DocumentReference = admin.firestore.DocumentReference;
 
