@@ -107,7 +107,8 @@
       <h6 class="mat-caption">Shooting Locations</h6>
       <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
         <ng-template itemRef let-location>
-          {{ location.country | translateSlug: 'TERRITORIES' }} - {{ location.city }}
+          {{ location.country | translateSlug: 'TERRITORIES' }} -
+          <ng-container *ngFor="let city of location.cities; let isLast=last">{{ city | titlecase }}{{isLast ? '' : ', '}}</ng-container>
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
@@ -132,8 +133,8 @@
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
-              <input matInput [formControl]="city" [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"/>
+              <input matInput formArrayName="cities" [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event, locationForm.get('cities'))"/>
               <mat-hint>Use commas or press Enter key to separate cities.</mat-hint>
             </mat-form-field>
           </article>

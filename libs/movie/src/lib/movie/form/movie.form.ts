@@ -1070,7 +1070,7 @@ export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsCont
 function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
   const { cities, country } = createShootingLocations(entity);
   return {
-    cities: FormList.factory(cities, el => new FormControl(el)),
+    cities: new FormControl(cities),
     country: new FormControl(country)
   }
 }

@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormArray, FormControl } from '@angular/forms';
 import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription, Observable, BehaviorSubject } from 'rxjs';
 import { tap, startWith } from 'rxjs/operators'
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { FormList } from '@blockframes/utils/form';
 
 
 @Component({
@@ -19,12 +20,10 @@ import { MatChipInputEvent } from '@angular/material/chips';
 export class MovieFormShootingInformationComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  values$: Observable<string[]>;
+  public values$ = new BehaviorSubject<String[]>([]);
 
   form = this.shell.form;
-  city = new FormControl();
   disabledForm = new FormControl()
-
   public periods = Object.keys(staticConsts['shootingPeriod']);
   public months = Object.keys(staticConsts['months']);
   public separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -35,9 +34,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.enableForm();
-    // this.values$ = this.form.shooting.controls['locations'].controls['cities'].valueChanges.pipe(
-    //   startWith(this.form.shooting.controls['locations'].controls['cities'].value)
-    // );
+    this.form.shooting.get('locations').controls.forEach(shooting => this.values$.next(shooting.get('cities').value))
   }
 
   ngOnDestroy() {
@@ -73,15 +70,28 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     }
   }
 
-  public add(event: MatChipInputEvent): void {
-    const { value = '' } = event;
-    const cities = this.form.shooting.get('locations').get('cities');
-    cities.add(value);
-    this.city.reset();
+
+  public add(event: any, control: FormControl): void {
+    const state = control.value;
+    const values = [...state];
+
+    // Add new value to the array
+    values.push(event.value.trim())
+    control.setValue(values)
+
+    // Add new value also to the observable to display it
+    this.values$.next([...this.values$.getValue(), event.value]);
+
+    // Reset the input
+    event.input.value = '';
   }
 
   public remove(i: number): void {
-    this.form.shooting.controls['locations'].controls['cities'].removeAt(i);
-  }
+    const value = this.values$.getValue();
+    const shadowValue = value.slice();
+    shadowValue.splice(i, 1);
 
+    this.values$.next(shadowValue);
+    console.log(this.values$.value);
+  }
 }
