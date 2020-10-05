@@ -45,7 +45,7 @@
   <ng-container *ngIf="titles; else loading">
     <ng-container *ngIf="titles.length else empty">
       <div fxLayout="row" fxLayoutAlign="end start">
-        <span i18n *ngIf="titles.length as count" class="mat-body-2">
+        <span i18n *ngIf="totalCount as count" class="mat-body-2">
           There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}}
           available.
         </span>

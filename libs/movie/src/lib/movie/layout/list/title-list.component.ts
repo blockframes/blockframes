@@ -37,6 +37,7 @@ export class TitleListComponent implements AfterContentInit {
   @ContentChild(TitleProgressDirective, { read: TemplateRef }) titleProgressTemplate: TitleProgressDirective;
 
   @Input() titles: Movie[];
+  @Input() totalCount: number;
 
   @Input() titleType = 'title'; // only for display purpose
 
