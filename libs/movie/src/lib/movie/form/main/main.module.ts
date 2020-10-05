@@ -30,7 +30,7 @@ import { MovieFormMainComponent } from './main.component';
 
 // Pipe
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { MaxLengthModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule, TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
 
 @NgModule({
@@ -53,6 +53,7 @@ import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe
     FilmographyPipeModule,
     FormDisplayNameModule,
     MaxLengthModule,
+    ToLabelModule,
 
     // Material
     MatDividerModule,

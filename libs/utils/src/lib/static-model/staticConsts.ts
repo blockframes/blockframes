@@ -31,6 +31,7 @@ const constants = {
     sale: 'Sale'
   },
 
+
   // ------------------ //
   // DISTRIBUTION RIGHT //
   // ------------------ //
@@ -81,9 +82,23 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
-  storeType: {
-    library: 'Library',
-    line_up: 'Line-Up',
+  hostedVideoTypes: {
+    tailer: 'Trailer',
+    teaser: 'Teaser',
+    reel: 'Reel',
+    clip: 'Clip',
+    pitch: 'Pitch',
+  },
+  memberStatus: {
+    confirmed: 'Confirmed',
+    looselyAttached: 'Loosely Attached',
+    target: 'Target'
+  },
+  movieLanguageTypes: {
+    original: 'Original',
+    dubbed: 'Dubbed',
+    subtitle: 'Subtitle',
+    caption: 'Caption',
   },
   premiereType: {
     international: 'International',
@@ -98,27 +113,10 @@ const constants = {
     finished: 'Completed',
     released: 'Released'
   },
-  unitBox: {
-    boxoffice_dollar: 'Box Office in $',
-    boxoffice_euro: 'Box Office in €',
-    admissions: 'Admissions',
-  },
   shootingPeriod: {
     early: 'Early',
     late: 'Late',
     mid: 'Mid',
-  },
-  storeStatus: {
-    submitted: 'Submitted',
-    accepted: 'Accepted',
-    draft: 'Draft',
-    refused: 'Refused',
-  },
-  movieLanguageTypes: {
-    original: 'Original',
-    dubbed: 'Dubbed',
-    subtitle: 'Subtitle',
-    caption: 'Caption',
   },
   socialGoals: {
     no_poverty: 'No Poverty',
@@ -133,6 +131,21 @@ const constants = {
     inequalities: 'Reduce inequalities',
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
+  },
+  storeStatus: {
+    submitted: 'Submitted',
+    accepted: 'Accepted',
+    draft: 'Draft',
+    refused: 'Refused',
+  },
+  storeType: {
+    library: 'Library',
+    line_up: 'Line-Up',
+  },
+  unitBox: {
+    usd: 'USD',
+    eur: 'EUR',
+    admissions: 'Admissions',
   },
 
 
@@ -184,6 +197,20 @@ const constants = {
     oscar: 'Oscar Academy Awards',
     goldenGlobe: 'Golden Globe Awards',
     bfta: 'BAFTA Film Awards'
+  },
+  months: {
+    january: 'January',
+    february: 'February',
+    march: 'March',
+    april: 'April',
+    may: 'May',
+    june: 'June',
+    july: 'July',
+    august: 'August',
+    september: 'September',
+    october: 'October',
+    november: 'November',
+    december: 'December'
   }
 };
 

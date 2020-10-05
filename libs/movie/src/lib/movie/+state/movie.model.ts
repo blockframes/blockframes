@@ -25,7 +25,8 @@ import {
   MovieGoalsAudience,
   MovieSalesPitch,
   MovieNote,
-  MovieTotalBudget
+  HostedVideos,
+  HostedVideo
 } from './movie.firestore';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
@@ -72,10 +73,9 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     color: null,
     crew: [],
     customGenres: [],
+    expectedPremiere: {},
     format: null,
     formatQuality: null,
-    goals: [],
-    hostedVideo: '',
     internalRef: '',
     keyAssets: '',
     keywords: [],
@@ -94,8 +94,8 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
 
     ...params,
     banner: params.banner ?? '',
+    audience: createAudienceGoals(params.audience),
     estimatedBudget: createRange<number>(params.estimatedBudget),
-    expectedPremiere: createExpectedPremiere(params.expectedPremiere),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
@@ -126,13 +126,13 @@ export function createMoviePromotional(
     trailer_link: params.trailer_link ?? '',
     teaser_link: params.teaser_link ?? '',
     other_links: params.other_links ?? [],
+    videos: createHostedVideos(params.videos),
   };
 }
 
 export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
   return {
     description: '',
-    link: '',
     file: '',
     ...params,
   }
@@ -229,7 +229,7 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: 'boxoffice_dollar',
+    unit: 'usd',
     territory: null,
     ...params,
   }
@@ -312,8 +312,8 @@ export function createExpectedPremiere(params: Partial<MovieExpectedPremiere> = 
 
 export function createAudienceGoals(params: Partial<MovieGoalsAudience> = {}): MovieGoalsAudience {
   return {
-    target: '',
-    goal: '',
+    targets: [],
+    goals: [],
     ...params,
   }
 }
@@ -364,5 +364,20 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
   return {
     ref: '',
     ...note
+  }
+}
+
+
+export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
+  return {
+    ...params,
+  }
+}
+
+export function createHostedVideo(params: Partial<HostedVideo>): HostedVideo {
+  return {
+    ref: '',
+    jwPlayerId: '',
+    ...params,
   }
 }

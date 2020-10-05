@@ -21,7 +21,7 @@
             </a>
             <a mat-list-item [routerLink]="['/c/o/organization', organization.id, 'view', 'documents']">
               <mat-icon matListIcon svgIcon="document"></mat-icon>
-              <span matLine>Organization's ressources</span>
+              <span matLine>Organization's resources</span>
             </a>
             <mat-list-item *ngIf="theme$ | async as theme">
               <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">

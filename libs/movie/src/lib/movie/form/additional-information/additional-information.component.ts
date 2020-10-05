@@ -7,8 +7,8 @@ import { staticModels } from '@blockframes/utils/static-model';
 
 function toUnit(unit: UnitBox) {
   switch (unit) {
-    case 'boxoffice_dollar': return '$'
-    case 'boxoffice_euro': return '€'
+    case 'usd': return '$'
+    case 'eur': return '€'
     case 'admissions': return 'admissions'
   }
 }

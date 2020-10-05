@@ -5,12 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { MovieService, MovieQuery, Movie, MoviePromotionalElements } from '@blockframes/movie/+state';
+import { MovieService, MovieQuery, MoviePromotionalElements } from '@blockframes/movie/+state';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { mergeDeep } from '@blockframes/utils/helpers';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +19,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap, map, startWith, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
+import { App, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { mergeDeep } from '@blockframes/utils/helpers';
 
 function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
@@ -150,7 +152,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private mediaService: MediaService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -194,14 +197,50 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     })
   }
 
-  // Should save movie
-  public async save() {
+  /** Update the movie. Used by summaries */
+  public async update({ publishing }: { publishing: boolean }) {
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    documentToUpdate.promotional = this.cleanPromotionalMedia(documentToUpdate.promotional)
-    const movie: Movie = mergeDeep(this.query.getActive(), documentToUpdate);
-    await this.service.update(movie.id, movie);
+    const base = this.query.getActive();
+    const movie = mergeDeep(base, documentToUpdate);
+
+    // -- Post merge operations -- //
+
+    // Remove empty file ref
+    movie.promotional = this.cleanPromotionalMedia(movie.promotional);
+
+    // Specific updates based on production status
+    const prodStatus = ['finished', 'released'];
+    if (prodStatus.includes(movie.productionStatus)) {
+      movie.directors.forEach(director => director.status = 'confirmed')
+      movie.cast.forEach(cast => cast.status = 'confirmed')
+      movie.crew.forEach(crew => crew.status = 'confiremd');
+    }
+
+    // Update fields with dynamic keys
+    const dynamicKeyFields = ['languages', 'shooting'];
+    dynamicKeyFields.forEach(key => movie[key] = this.form.value[key])
+
+    // Specific update if publishing
+    if (publishing) {
+      const currentApp: App = getCurrentApp(this.routerQuery);
+      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.storeConfig.appAccess[currentApp] = true;
+    }
+  
+    // -- Update movie & media -- //
+    await this.service.update(movie);
     this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
+  }
+
+
+
+
+
+
+  /** Save the form and display feedback to user */
+  public async save() {
+    await this.update({ publishing: false });
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }

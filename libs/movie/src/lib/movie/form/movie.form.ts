@@ -18,7 +18,9 @@ import {
   MovieSalesPitch,
   MovieNote,
   MovieShooting,
-  MovieTotalBudget
+  MovieTotalBudget,
+  HostedVideo,
+  HostedVideos
 } from '../+state/movie.firestore';
 import {
   Movie,
@@ -39,6 +41,8 @@ import {
   createSalesPitch,
   createShooting,
   createMovieNote,
+  createHostedVideos,
+  createHostedVideo
 } from '../+state/movie.model';
 
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -53,7 +57,6 @@ import { yearValidators, urlValidators } from '@blockframes/utils/form/validator
 import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { MediaFormList } from '@blockframes/media/form/media-list.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 
@@ -101,6 +104,7 @@ function createMovieControls(movie: Partial<Movie>) {
     documents: new MovieLegalDocumentsForm(entity.documents),
 
     // Root data
+    audience: new AudienceAndGoalsForm(entity.audience),
     banner: new HostedMediaForm(entity.banner),
     boxOffice: FormList.factory(entity.boxOffice, el => new BoxOfficeForm(el)),
     cast: FormList.factory(entity.cast, el => new CreditForm(el)),
@@ -116,7 +120,6 @@ function createMovieControls(movie: Partial<Movie>) {
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
-    goals: FormList.factory(entity.goals, el => new AudienceAndGoalsForm(el)),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
@@ -289,8 +292,8 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
     return this.get('expectedPremiere');
   }
 
-  get goals() {
-    return this.get('goals');
+  get audience() {
+    return this.get('audience');
   }
 
   public removeDirector(i: number): void {
@@ -413,7 +416,7 @@ export class BoxOfficeForm extends FormEntity<BoxOfficeFormControl> {
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: 'boxoffice_dollar',
+    unit: 'usd',
     value: 0,
     territory: null,
     ...params,
@@ -736,6 +739,9 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
     notes: FormList.factory(entity.notes, el => new MovieNotesForm(el)),
     salesPitch: new MovieSalesPitchForm(entity.salesPitch),
 
+    // Hosted Videos
+    videos: new MovieHostedVideosForm(entity.videos),
+
     // External Media
     clip_link: new FormControl(entity.clip_link, urlValidators),
     promo_reel_link: new FormControl(entity.promo_reel_link, urlValidators),
@@ -777,10 +783,9 @@ export class MovieNotesForm extends FormEntity<MovieNotesControl> {
 // ------------------------------
 
 function createMovieSalesPitchControl(pitch: Partial<MovieSalesPitch> = {}) {
-  const { description, link, file } = createSalesPitch(pitch);
+  const { description, file } = createSalesPitch(pitch);
   return {
     description: new FormControl(description),
-    link: new FormControl(link),
     file: new HostedMediaForm(file),
   }
 }
@@ -1042,7 +1047,7 @@ function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>
   return {
     period: new FormControl(period),
     month: new FormControl(month),
-    year: new FormControl(year)
+    year: new FormControl(year, yearValidators())
   }
 }
 
@@ -1081,17 +1086,66 @@ function createShootingLocations(params: Partial<MovieShootingLocations>): Movie
 // ---------------------------------
 
 export class AudienceAndGoalsForm extends FormEntity<MovieAudianceAndGoalsControl> {
-  constructor(goals?: Partial<MovieGoalsAudience>) {
-    super(createAudianceAndGoalsFormControl(goals));
+  constructor(audience?: Partial<MovieGoalsAudience>) {
+    super(createAudianceAndGoalsFormControl(audience));
   }
 }
 
 function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>) {
-  const { target, goal } = createAudienceGoals(entity);
+  const { targets, goals } = createAudienceGoals(entity);
   return {
-    target: new FormControl(target),
-    goal: new FormControl(goal)
+    targets: FormList.factory(targets, el => new FormControl(el)),
+    goals: new FormControl(goals)
   }
 }
 
 type MovieAudianceAndGoalsControl = ReturnType<typeof createAudianceAndGoalsFormControl>;
+
+
+// ------------------------------
+//         HOSTED VIDEOS
+// ------------------------------
+
+function createMovieHostedVideoControl(hostedVideo: Partial<HostedVideo> = {}) {
+  const { ref, jwPlayerId, title, description, type } = createHostedVideo(hostedVideo);
+  return {
+    ref: new HostedMediaForm(ref),
+    jwPlayerId: new FormControl(jwPlayerId),
+    title: new FormControl(title),
+    description: new FormControl(description),
+    type: new FormControl(type),
+  }
+}
+
+export type MovieHostedVideoControls = ReturnType<typeof createMovieHostedVideoControl>;
+
+export class MovieHostedVideoForm extends FormEntity<MovieHostedVideoControls, HostedVideo> {
+  constructor(video?: Partial<HostedVideo>) {
+    super(createMovieHostedVideoControl(video));
+  }
+}
+
+function createMovieHostedVideosControl(videos: Partial<HostedVideos> = {}) {
+  const { screener, otherVideos } = createHostedVideos(videos);
+  return {
+    screener: new MovieHostedVideoForm(screener),
+    otherVideos: FormList.factory(otherVideos, otherVideo => new MovieHostedVideoForm(otherVideo)),
+  }
+}
+
+export type MovieHostedVideosControls = ReturnType<typeof createMovieHostedVideosControl>;
+
+export class MovieHostedVideosForm extends FormEntity<MovieHostedVideosControls, HostedVideos> {
+  constructor(videos?: Partial<HostedVideos>) {
+    super(createMovieHostedVideosControl(videos));
+  }
+
+
+  get otherVideos() {
+    return this.get('otherVideos');
+  }
+
+  get screener() {
+    return this.get('screener');
+  }
+}

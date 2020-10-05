@@ -8,14 +8,14 @@ import { OverlayModule } from '@angular/cdk/overlay';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { firebase, persistenceSettings } from '@env';
+import { firebase, intercomId, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -27,6 +27,8 @@ import 'firebase/storage';
 import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
+// Intercom
+import { IntercomModule } from 'ng-intercom';
 
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { CrmModule } from './crm.module';
@@ -37,7 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    
+
     // Angular
     BrowserModule,
     BrowserAnimationsModule,
@@ -64,8 +66,14 @@ import { MatNativeDateModule } from '@angular/material/core';
     // Router
     CrmModule,
 
+    // Intercom
+    IntercomModule.forRoot({ appId: intercomId }),
+
   ],
-  providers: [ScreenTrackingService, UserTrackingService],
+  providers: [
+    ScreenTrackingService, UserTrackingService,
+    { provide: REGION, useValue: 'europe-west1' },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

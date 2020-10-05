@@ -49,8 +49,15 @@
       <section id="box-office" *ngIf="units$ | async as units">
 
         <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
-          <ng-template itemRef let-boxOffice>{{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
-            {{ boxOffice.unit | toLabel: 'unitBox' }}: {{ boxOffice.value }}
+          <ng-template itemRef let-boxOffice>
+            <span>
+              {{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
+              <ng-container *ngIf="boxOffice.unit !== 'admissions' else admissions">
+                <mat-icon [svgIcon]="boxOffice.unit | toLabel: 'unitBox'" class="currency-icon"></mat-icon>
+                {{ boxOffice.value }}
+              </ng-container>
+              <ng-template #admissions>{{ boxOffice.value }} Admissions</ng-template>
+            </span>
           </ng-template>
           <ng-template formView let-boxOfficeForm>
             <article [formGroup]="boxOfficeForm" fxLayout="column" fxLayoutGap="24px">

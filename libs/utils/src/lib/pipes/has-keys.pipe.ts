@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 
-function hasValue(value: string | number | any[] | object) {
+export function hasValue(value: string | number | any[] | object) {
   if (!value) return false;
   if (Array.isArray(value)) {
     return !!value.length;
-  } else if (typeof value === 'object') {
+  } else if (typeof value === 'object' && !(value instanceof Date)) {
     return Object.values(value).some(hasValue);
   } else {
     return !!value;
