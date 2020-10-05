@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { isAllowedVideoFileExtension } from '../utils';
 
 @Pipe({
   name: 'fileName'
@@ -38,12 +39,8 @@ export class FileTypePipe implements PipeTransform {
       case 'jpg':
       case 'bmp':
         return 'image';
-      case 'mp4':
-      case 'avi':
-      case 'mpeg':
-      case 'mkv':
-        return 'video';
       default:
+        if (isAllowedVideoFileExtension(extension)) return 'video'
         return 'unknown';
     }
   }

@@ -50,7 +50,7 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
           const hostedVideos: HostedVideo | HostedVideo[] = get(docData, fieldToUpdate);
 
           let update: HostedVideo | HostedVideo[] | {};
-          if (uploadResult.status) {
+          if (uploadResult.success) {
             if (Array.isArray(hostedVideos)) {
               update = hostedVideos.map(video => {
                 if (video.ref === savedRef) { video.jwPlayerId = uploadResult.key };
@@ -162,11 +162,6 @@ interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
 
 function getPathInfo(ref: string) {
   const refParts = ref.split('/').filter(v => !!v);
-
-  // if ref starts with `/` refParts[0] will be ""
-  if (ref.startsWith('/')) {
-    refParts.shift();
-  }
 
   const pathInfo: PathInfo = {
     securityLevel: 'protected', // protected by default

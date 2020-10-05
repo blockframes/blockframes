@@ -18,8 +18,19 @@ import { get } from 'lodash';
 const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
+
+  /**
+   * The id of the event.
+   * If the event is a screening, we will get the JWPlayer video id directly from `movie.promotional.videos.screener`.
+   * Otherwise if the event is a meeting we need the `ref` parameter to know where to find the JWPlayer id in the db.
+   */
   eventId: string,
-  jwPlayerId?: string;
+
+  /**
+   * This parameter is not needed for screening event but it becomes **MANDATORY** for meeting events.
+   *
+   * _Meeting can contains files from several Movies so wee need the file ref to find back it db document (to get the JWPlayer video id)_
+   */
   ref?: string;
 }
 
@@ -87,21 +98,13 @@ export const getPrivateVideoUrl = async (
       };
     }
 
-    if (!data.jwPlayerId) {
-      // no jwPlayerId in request, we assume user want to see the main video (screener)
-      if (!movie.promotional.videos?.screener?.jwPlayerId) {
-        return {
-          error: 'NO_VIDEO',
-          result: `The requested screening doesn't exist on movie ${movie.id}`
-        };
-      } else {
-        data.jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
-      }
-    } else if (!isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
+    if (!movie.promotional.videos?.screener?.jwPlayerId) {
       return {
         error: 'NO_VIDEO',
-        result: `The requested media doesn't exist on movie ${movie.id}`
+        result: `The requested screening doesn't exist on movie ${movie.id}`
       };
+    } else {
+      jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
     }
 
     if (event.isPrivate && !isUserInvitedToEvent(context.auth.uid, movie.id)) {
@@ -110,8 +113,6 @@ export const getPrivateVideoUrl = async (
         result: `You have not been invited to see this movie`
       };
     }
-
-    jwPlayerId = data.jwPlayerId;
 
   // CHECK FOR A MEETING
   } else {
@@ -251,30 +252,23 @@ export const getPrivateVideoUrl = async (
   };
 }
 
-const isJwplayerIdBelongingToMovie = async (jwPlayerId: string, movie: MovieDocument) => {
-  // jwPlayerId is the screener
-  if (movie.promotional.videos?.screener?.jwPlayerId === jwPlayerId) {
-    return true;
-  }
-
-  // jwPlayerId is in otherVideos array
-  if (movie.promotional.videos?.otherVideos?.length) {
-    return movie.promotional.videos.otherVideos.some(ov => ov.jwPlayerId === jwPlayerId);
-  }
-
-  // not found
-  return false;
-}
 
 /**
- *
- * @param file
+ * Use this function to tell JWPlayer's server to download a video file from our storage.
+ * @param file a Google Cloud File object
  * @see https://developer.jwplayer.com/jwplayer/docs/authentication
  * @see https://developer.jwplayer.com/jwplayer/reference#post_videos-create
  * @see https://developer.jwplayer.com/jwplayer/docs/upload-videos-with-a-resumable-protocol
  *
  */
-export const uploadToJWPlayer = async (file: GFile): Promise<{ status: boolean, key?: string, message?: string }> => {
+export const uploadToJWPlayer = async (file: GFile): Promise<{
+  /** signal the upload success/failure */
+  success: boolean,
+  /** if upload is a success (`success = true`) this field will hold the new JWPlayer video id */
+  key?: string,
+  /** if upload is a failure (`success = false`) this field will hold the error message */
+  message?: string
+}> => {
 
   const expires = new Date().getTime() + 7200000; // now + 2 hours
 
@@ -284,8 +278,8 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{ status: boolean, 
   const result = await jw.videos.create({ download_url: videoUrl }).catch(e => ({ status: 'error', message: e.message }));
 
   if (result.status === 'error' || !result.video || !result.video.key) {
-    return { status: false, message: result.message || '' }
+    return { success: false, message: result.message || '' }
   } else {
-    return { status: true, key: result.video.key }
+    return { success: true, key: result.video.key }
   }
 }

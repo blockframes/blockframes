@@ -4,7 +4,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { MatSliderChange } from '@angular/material/slider';
 import { createEvent, Event, EventService } from '@blockframes/event/+state';
 import { Meeting, MeetingVideoControl } from '@blockframes/event/+state/event.firestore';
-import { delay, debounceFactory } from '@blockframes/utils/helpers';
+import { debounceFactory } from '@blockframes/utils/helpers';
 import { BehaviorSubject } from 'rxjs';
 
 
@@ -19,6 +19,7 @@ export class VideoControlComponent {
   /** Backend functions to call in order to get the url of the video to play */
   private getVideoInfo = this.functions.httpsCallable('privateVideo');
 
+  /** A debounced version of `updateRemoteControl` to avoid writing on the db more than every 500ms */
   private debouncedUpdateRemoteControl = debounceFactory((newControl: MeetingVideoControl) => this.updateRemoteControl(newControl), 500);
 
   // Hold the event instance
@@ -113,6 +114,8 @@ export class VideoControlComponent {
   }
 
   // user slide the time code slider
+  // this function can triggered a lot of times in the same seconds
+  // that's why we use a debounced to update the db
   seekPosition(event: MatSliderChange) {
     const newControl = this.localControl$.getValue();
     newControl.position = event.value;
