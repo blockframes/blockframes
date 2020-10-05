@@ -35,14 +35,14 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="items.length; else loading">
+  <ng-container *ngIf="items.length; else error">
     <div fxLayout="row" fxLayoutAlign="end start">
       <ng-template [ngTemplateOutlet]="pageResultDescriptionTemplate"></ng-template>
     </div>
     <ng-container *ngIf="!listView; else displayList">
       <div grid [@fadeList]="items.length">
         <ng-container *ngFor="let item of items; trackBy:trackById">
-          <div class="card" [col]="3">
+          <div [col]="3">
 
             <!-- INSERT CARD -->
             <ng-template [ngTemplateOutlet]="pageCardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
@@ -64,9 +64,15 @@
     <!-- PROGRESS -->
     <ng-template [ngTemplateOutlet]="pageProgressTemplate"></ng-template>
   </ng-container>
-  <ng-template #loading>
-    <div fxLayout fxLayoutAlign="center center">
-      <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
-    </div>
+
+  <!-- ERROR HANDLING -->
+  <ng-template #error>
+    <ng-template [ngTemplateOutlet]="pageErrorTemplate || defaultImg"></ng-template>
+    <ng-template #defaultImg>
+      <div fxLayout="column" fxLayoutAlign="start center">
+        <h6>We didn't found anything.</h6>
+        <img asset="no_titles.webp" alt="No titles">
+      </div>
+    </ng-template>
   </ng-template>
 </section>

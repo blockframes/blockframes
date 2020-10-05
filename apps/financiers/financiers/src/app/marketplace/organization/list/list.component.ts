@@ -43,13 +43,11 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
 
     this.orgs$ = this.organizationSearchResultsState.asObservable();
-
     this.orgSearchForm.setValue(createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'] }))
-    this.orgSearchForm.valueChanges.subscribe(console.log)
     this.sub = this.orgSearchForm.valueChanges.pipe(
       startWith(this.orgSearchForm.value),
       distinctUntilChanged(),
-      debounceTime(300),
+      debounceTime(500),
       switchMap(() => this.orgSearchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),

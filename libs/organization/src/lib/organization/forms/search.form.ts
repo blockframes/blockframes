@@ -62,7 +62,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
-        `country:${this.country.value}`,
+        `country:${this.country.value ? this.country.value : ''}`,
         `appAccess:${this.appAccess.value}`,
         `appModule:${this.appModule.value}`
       ]

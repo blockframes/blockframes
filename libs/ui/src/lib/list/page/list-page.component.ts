@@ -34,6 +34,9 @@ export class PageListItemDirective { }
 @Directive({ selector: '[pageProgress]' })
 export class PageProgressDirective { }
 
+@Directive({ selector: '[pageError]' })
+export class PageErrorDirective { }
+
 @Component({
   selector: '[items]list-page',
   templateUrl: 'list-page.component.html',
@@ -50,6 +53,7 @@ export class ListPageComponent implements AfterContentInit {
   @ContentChild(PageProgressDirective, { read: TemplateRef }) pageProgressTemplate: PageProgressDirective;
   @ContentChild(PageTitleDirective, { read: TemplateRef }) pageTitleTemplate: PageTitleDirective;
   @ContentChild(PageResultDescriptionDirective, { read: TemplateRef }) pageResultDescriptionTemplate: PageResultDescriptionDirective
+  @ContentChild(PageErrorDirective, { read: TemplateRef }) pageErrorTemplate: PageErrorDirective;
 
   @Input() items: unknown[];
 

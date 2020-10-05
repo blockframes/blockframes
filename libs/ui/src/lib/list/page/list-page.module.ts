@@ -23,7 +23,8 @@ import {
   PageSearchDirective,
   PageSortDirective,
   PageTitleDirective,
-  PageResultDescriptionDirective
+  PageResultDescriptionDirective,
+  PageErrorDirective
 } from './list-page.component';
 
 @NgModule({
@@ -33,6 +34,7 @@ import {
     MatLayoutModule,
     ImageReferenceModule,
     FlexLayoutModule,
+    ImageReferenceModule,
 
     // Material
     MatProgressSpinnerModule,
@@ -48,7 +50,8 @@ import {
     PageListItemDirective,
     PageProgressDirective,
     PageTitleDirective,
-    PageResultDescriptionDirective
+    PageResultDescriptionDirective,
+    PageErrorDirective
   ],
   exports: [
     ListPageComponent,
@@ -58,7 +61,8 @@ import {
     PageListItemDirective,
     PageProgressDirective,
     PageTitleDirective,
-    PageResultDescriptionDirective
+    PageResultDescriptionDirective,
+    PageErrorDirective
   ]
 })
 export class ListPageModule { }

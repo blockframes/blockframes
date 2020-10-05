@@ -29,7 +29,7 @@
   <ng-template pageProgress>
     <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()"
       *ngIf="hitsViewed <= nbHits">
-      <ng-template buttonText><span> You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span></ng-template>
+      <ng-template buttonText><span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span></ng-template>
     </bf-load-more-button>
   </ng-template>
 </list-page>
