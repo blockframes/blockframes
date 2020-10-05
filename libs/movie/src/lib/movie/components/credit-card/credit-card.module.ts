@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CreditCardComponent, StatusIconPipe, EmptyImgPipe, HasFilmographyPipe } from './credit-card.component';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { DisplayNameModule, MaxLengthModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, MaxLengthModule, TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FilmographyPipeModule } from '../../pipes/filmography.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -26,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TranslateSlugModule,
     DisplayNameModule,
     MaxLengthModule,
+    ToLabelModule,
     FlexLayoutModule,
     MatTabsModule,
     MatIconModule,

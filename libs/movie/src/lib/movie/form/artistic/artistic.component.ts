@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { staticModels } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'movie-form-artistic',
@@ -10,7 +9,6 @@ import { staticModels } from '@blockframes/utils/static-model';
 })
 export class MovieFormArtisticComponent {
   form = this.shell.form;
-  public memberStatus = staticModels.MEMBER_STATUS;
 
   public castColumns = {
     firstName: 'First Name',

@@ -31,6 +31,7 @@ const constants = {
     sale: 'Sale'
   },
 
+
   // ------------------ //
   // DISTRIBUTION RIGHT //
   // ------------------ //
@@ -81,9 +82,23 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
-  storeType: {
-    library: 'Library',
-    line_up: 'Line-Up',
+  hostedVideoTypes: {
+    tailer: 'Trailer',
+    teaser: 'Teaser',
+    reel: 'Reel',
+    clip: 'Clip',
+    pitch: 'Pitch',
+  },
+  memberStatus: {
+    confirmed: 'Confirmed',
+    looselyAttached: 'Loosely Attached',
+    target: 'Target'
+  },
+  movieLanguageTypes: {
+    original: 'Original',
+    dubbed: 'Dubbed',
+    subtitle: 'Subtitle',
+    caption: 'Caption',
   },
   premiereType: {
     international: 'International',
@@ -98,27 +113,10 @@ const constants = {
     finished: 'Completed',
     released: 'Released'
   },
-  unitBox: {
-    usd: 'USD',
-    eur: 'EUR',
-    admissions: 'Admissions',
-  },
   shootingPeriod: {
     early: 'Early',
     late: 'Late',
     mid: 'Mid',
-  },
-  storeStatus: {
-    submitted: 'Submitted',
-    accepted: 'Accepted',
-    draft: 'Draft',
-    refused: 'Refused',
-  },
-  movieLanguageTypes: {
-    original: 'Original',
-    dubbed: 'Dubbed',
-    subtitle: 'Subtitle',
-    caption: 'Caption',
   },
   socialGoals: {
     no_poverty: 'No Poverty',
@@ -134,12 +132,20 @@ const constants = {
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
   },
-  hostedVideoTypes: {
-    tailer: 'Trailer',
-    teaser: 'Teaser',
-    reel: 'Reel',
-    clip: 'Clip',
-    pitch: 'Pitch',
+  storeStatus: {
+    submitted: 'Submitted',
+    accepted: 'Accepted',
+    draft: 'Draft',
+    refused: 'Refused',
+  },
+  storeType: {
+    library: 'Library',
+    line_up: 'Line-Up',
+  },
+  unitBox: {
+    usd: 'USD',
+    eur: 'EUR',
+    admissions: 'Admissions',
   },
 
 
