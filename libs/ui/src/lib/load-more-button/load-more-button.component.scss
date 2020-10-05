@@ -1,10 +1,15 @@
 :host {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-}
 
-button {
-  margin: 16px 0px;
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      margin: 16px 0px;
+    }
+  }
 }
