@@ -1,14 +1,14 @@
-import * as firebaseFunctions from 'firebase-functions';
+import { region, config } from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-export const functions = firebaseFunctions.region('europe-west1')
+export const functions = region('europe-west1')
 
 export type DocumentReference = admin.firestore.DocumentReference;
 
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
-admin.initializeApp(firebaseFunctions.config().firebase);
+admin.initializeApp(config().firebase);
 export const db = admin.firestore();
 export const auth = admin.auth();
 
@@ -17,8 +17,6 @@ export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 // @deprecated import vars from env directly instead of using this.
 export const getBackupBucketName = (): string => backupBucket;
 export const getStorageBucketName = (): string => storageBucket;
-
-export { admin };
 
 /**
  * Gets the user email for the user corresponding to a given `uid`.

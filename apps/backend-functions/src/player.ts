@@ -1,5 +1,6 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, admin, getStorageBucketName } from './internals/firebase';
+import { db, getStorageBucketName } from './internals/firebase';
+import * as admin from 'firebase-admin';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument, PublicUser } from './data/types';
@@ -184,12 +185,12 @@ const isJwplayerIdBelongingToMovie = async (jwPlayerId: string, movie: MovieDocu
 }
 
 /**
- * 
- * @param file 
+ *
+ * @param file
  * @see https://developer.jwplayer.com/jwplayer/docs/authentication
  * @see https://developer.jwplayer.com/jwplayer/reference#post_videos-create
  * @see https://developer.jwplayer.com/jwplayer/docs/upload-videos-with-a-resumable-protocol
- * 
+ *
  */
 export const uploadToJWPlayer = async (file: GFile): Promise<{ status: boolean, key?: string, message?: string }> => {
 

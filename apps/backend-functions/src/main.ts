@@ -31,10 +31,10 @@ import { RuntimeOptions } from 'firebase-functions';
  * Runtime options for heavy functions
  * @dev linked to #2531 (Changing functions REGION)
  */
-const heavyConfig = {
+const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
-  memory: '1GB'
-} as RuntimeOptions
+  memory: '1GB',
+};
 
 
 //--------------------------------
