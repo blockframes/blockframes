@@ -19,7 +19,8 @@ export async function upgradeAlgoliaOrgs() {
     attributesForFaceting: [
       'appAccess',
       'appModule',
-      'name'
+      'name',
+      'country'
     ],
   };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
@@ -66,7 +67,7 @@ export async function upgradeAlgoliaMovies() {
       'status',
       'storeConfig',
       'storeType',
-      'appAccess',
+      'appAccess'
     ],
   };
   await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);

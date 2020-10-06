@@ -89,6 +89,6 @@
     </a>
   </h6>
   <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications">
-    <ng-template let-certs>{{ certs | translateSlug: 'CERTIFICATIONS' }}</ng-template>
+    <ng-template let-certs>{{ certs | toLabel: 'certifications' }}</ng-template>
   </missing-control>
 </article>
