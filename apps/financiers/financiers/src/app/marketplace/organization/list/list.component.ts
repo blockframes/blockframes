@@ -28,6 +28,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public orgSearchForm = new OrganizationSearchForm();
 
+  public loading$ = new BehaviorSubject<boolean>(false);
+
   public nbHits: number;
   public hitsViewed = 0;
 
@@ -42,11 +44,11 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
-
     this.orgs$ = this.organizationSearchResultsState.asObservable();
     this.orgSearchForm.setValue(createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'] }))
     this.sub = this.orgSearchForm.valueChanges.pipe(
       startWith(this.orgSearchForm.value),
+      tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.orgSearchForm.search()),
@@ -67,11 +69,12 @@ export class ListComponent implements OnInit, OnDestroy {
         If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
         So when the next valueChange is happening we need to reset everything and start from beginning  */
         this.hitsViewed = this.organizationSearchResultsState.value.length
-        if (this.lastPage) {
+        if (this.lastPage && this.orgSearchForm.page.value !== 0) {
           this.hitsViewed = 0;
           this.orgSearchForm.page.setValue(0);
         }
         this.lastPage = this.hitsViewed === this.nbHits;
+        this.loading$.next(false)
       })
     ).subscribe();
   }

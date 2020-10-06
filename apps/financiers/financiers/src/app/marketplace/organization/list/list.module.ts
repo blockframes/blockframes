@@ -14,7 +14,6 @@ import { FormCountryModule } from '@blockframes/ui/form';
 import { LoadMoreButtonModule } from '@blockframes/ui/load-more-button/load-more-button.module';
 
 // Material
-import { MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -33,7 +32,6 @@ import { MatInputModule } from '@angular/material/input';
     LoadMoreButtonModule,
 
     // Material
-    MatRippleModule,
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule
