@@ -1,39 +1,33 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { distinctUntilChanged, filter } from 'rxjs/operators'
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
-import { Subscription, BehaviorSubject, Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-
 
 @Component({
   selector: 'movie-shooting-information',
   templateUrl: './shooting-information.component.html',
   styleUrls: ['./shooting-information.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormShootingInformationComponent implements OnInit, OnDestroy {
-
   private sub: Subscription;
-  public values$ = new BehaviorSubject<String[]>([]);
-  public currentValues$: Observable<String[]>;
 
   form = this.shell.form;
-  disabledForm = new FormControl()
+  disabledForm = new FormControl();
   public periods = Object.keys(staticConsts['shootingPeriod']);
   public months = Object.keys(staticConsts['months']);
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private keys = ['completed', 'planned', 'progress'] as const;
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent) {}
 
   ngOnInit() {
     this.enableForm();
-    this.currentValues$ = this.values$.asObservable();
-    this.form.shooting.get('locations').controls.forEach(location => this.values$.next(location.get('cities').value))
   }
 
   ngOnDestroy() {
@@ -49,12 +43,14 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   }
 
   enableForm() {
-    this.sub = this.disabledForm.valueChanges.pipe(
-      distinctUntilChanged(),
-      filter(value => !!value),
-    ).subscribe(value => this.activate(value));
+    this.sub = this.disabledForm.valueChanges
+      .pipe(
+        distinctUntilChanged(),
+        filter((value) => !!value)
+      )
+      .subscribe((value) => this.activate(value));
 
-    const active = this.keys.find(key => hasValue(this.form.shooting.value.dates[key]));
+    const active = this.keys.find((key) => hasValue(this.form.shooting.value.dates[key]));
     this.disabledForm.setValue(active);
   }
 
@@ -69,28 +65,23 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     }
   }
 
-
   public add(event: any, control: FormControl): void {
     const state = control.value;
-    const values = [...state];
 
     // Add new value to the array
-    values.push(event.value.trim())
-    control.setValue(values)
-
-    // Add new value also to the observable to display it
-    this.values$.next([...this.values$.getValue(), event.value]);
+    state.push(event.value.trim());
+    control.setValue(state);
 
     // Reset the input
     event.input.value = '';
   }
 
   public remove(i: number, control: FormControl): void {
-    const value = this.values$.getValue();
+    console.log(control);
+    const value = control.value;
     const shadowValue = i === 0 ? [] : value.slice();
     shadowValue.splice(i, 1);
 
     control.setValue(shadowValue);
-    this.values$.next(shadowValue);
   }
 }

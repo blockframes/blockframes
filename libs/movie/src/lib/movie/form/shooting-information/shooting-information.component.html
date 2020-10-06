@@ -4,13 +4,13 @@
   <ng-container tunnel-form>
     <h3>Shooting Information</h3>
 
-    <!-- <section id="shooting-dates" fxLayout="column">
+    <section id="shooting-dates" fxLayout="column">
       <h6 class="mat-caption">Shooting Dates</h6>
-      TODO 3788 update hint, error, etc
+      <!-- TODO 3788 update hint, error, etc -->
 
       <mat-radio-group [formControl]="disabledForm" name="shootingStatus">
 
-        Shooting completed
+        <!-- Shooting completed -->
         <article fxLayout="column">
           <mat-radio-button class="mat-body-2" color="primary" value="completed">Shooting completed :
           </mat-radio-button>
@@ -25,7 +25,7 @@
           </mat-form-field>
         </article>
 
-        Shooting in progress
+        <!-- Shooting in progress -->
         <article fxLayout="column">
           <mat-radio-button class="mat-body-2" color="primary" value="progress">Shooting in progress :
           </mat-radio-button>
@@ -39,7 +39,7 @@
           </mat-form-field>
         </article>
 
-        Shooting planned
+        <!-- Shooting planned -->
         <article fxLayout="column">
           <mat-radio-button class="mat-body-2" color="primary" value="planned">Shooting planned :
           </mat-radio-button>
@@ -101,7 +101,7 @@
           </div>
         </article>
       </mat-radio-group>
-    </section> -->
+    </section>
 
     <section id="shooting-locations" fxLayout="column">
       <h6 class="mat-caption">Shooting Locations</h6>
@@ -112,23 +112,17 @@
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-
             <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')"
               [withoutValues]="['world']" fxFlex>
               <mat-label>Country</mat-label>
             </static-select>
 
-            <!-- <mat-form-field appearance="outline" fxFlex>
-              <mat-label>City</mat-label>
-              <input matInput type="text" [formControl]="locationForm.get('city')" placeholder="City"/>
-            </mat-form-field> -->
-
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>City</mat-label>
               <mat-chip-list #chipList>
-                <ng-container *ngFor="let value of currentValues$ | async; let i = index">
+                <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">
                   <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">
-                    <span>{{ value }}</span>
+                    <span>{{ city | titlecase }}</span>
                     <mat-icon matChipRemove svgIcon="close"></mat-icon>
                   </mat-chip>
                 </ng-container>
