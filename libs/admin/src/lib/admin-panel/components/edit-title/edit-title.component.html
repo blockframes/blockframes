@@ -17,7 +17,7 @@
         Amount is <strong>required</strong>
       </mat-error>
     </mat-form-field>
-    <static-select scope="MOVIE_CURRENCIES" type="model" [control]="form.get('currency')">
+    <static-select scope="movieCurrencies" type="constant" [withoutValues]="['']" [control]="form.get('currency')">
       <mat-label>Currency</mat-label>
       <ng-template let-currency>
         <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>

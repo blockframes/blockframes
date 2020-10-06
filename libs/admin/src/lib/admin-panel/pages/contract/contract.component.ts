@@ -303,11 +303,6 @@ export class ContractComponent implements OnInit {
     return true;
   }
 
-  /** Utils function to get currency code for currency pipe. */
-  public getCurrencyCode(currency: MovieCurrenciesSlug) {
-    return getCodeBySlug('MOVIE_CURRENCIES', currency);
-  }
-
   /**
    * @dev this method uses titles.price to update global contract price
    */

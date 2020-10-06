@@ -1,9 +1,9 @@
 <!-- Currency -->
 <h5>CONTRACT CURRENCY</h5>
-<static-select scope="MOVIE_CURRENCIES" type="model" [control]="currencyCtrl" label="Currency">
+<static-select scope="movieCurrencies" type="constant" [control]="currencyCtrl" label="Currency">
   <ng-template let-currency>
-    <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
-    <span>{{ currency.label }}</span>
+    <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
+    <span>{{ currency.value }}</span>
   </ng-template>
 </static-select>
 

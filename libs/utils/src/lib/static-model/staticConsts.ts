@@ -128,6 +128,18 @@ const constants = {
     looselyAttached: 'Loosely Attached',
     target: 'Target'
   },
+  movieCurrencies: {
+    USD: 'US Dollar',
+    EUR: 'Euro',
+    JPY: 'Japanese Yen',
+    GBP: 'Pound Sterling',
+    AUD: 'Australian Dollar',
+    CAD: 'Canadian Dollar',
+    CHF: 'Swiss Franc',
+    CNY: 'Chinese Renminbi',
+    SEK: 'Swedish Krona',
+    NZD: 'New Zealand Dollar'
+  },
   movieFormat: {
     '1_33': '1.33',
     '1_37': '1.37',

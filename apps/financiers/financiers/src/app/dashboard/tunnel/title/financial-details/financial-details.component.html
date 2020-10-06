@@ -7,10 +7,11 @@
       <h3>Currency</h3>
       <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
 
-      <static-select scope="MOVIE_CURRENCIES" type="model" [control]="totalBudget.get('currency')" label="Currency">
+      <static-select scope="movieCurrencies" type="constant" [control]="totalBudget.get('currency')" label="Currency" [withoutValues]="['']">
+        <mat-label>Currency</mat-label>
         <ng-template let-currency>
-          <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
-          <span>{{ currency.label }}</span>
+          <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
+          <span>{{ currency | toLabel: 'movieCurrencies' }}</span>
         </ng-template>
       </static-select>
 
