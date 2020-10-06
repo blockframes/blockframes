@@ -14,13 +14,14 @@ import {
 export class LoadMoreButtonTextDirective { }
 
 @Component({
-  selector: '[progressValue]bf-load-more-button',
+  selector: '[nbHits][hitsViewed]bf-load-more-button',
   templateUrl: 'load-more-button.component.html',
   styleUrls: ['./load-more-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadMoreButtonComponent {
-  @Input() progressValue: number
+  @Input() nbHits: number
+  @Input() hitsViewed: number
 
   @Output() buttonClicked = new EventEmitter;
 

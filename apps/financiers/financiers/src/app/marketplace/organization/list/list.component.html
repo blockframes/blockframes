@@ -27,8 +27,7 @@
     <org-card [org]="org"></org-card>
   </ng-template>
   <ng-template pageProgress>
-    <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()"
-      *ngIf="hitsViewed <= nbHits">
+    <bf-load-more-button [nbHits]="nbHits" [hitsViewed]="hitsViewed" (buttonClicked)="loadMore()">
       <ng-template buttonText><span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span></ng-template>
     </bf-load-more-button>
   </ng-template>

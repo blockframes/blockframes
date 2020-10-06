@@ -33,6 +33,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
   private loadMoreToggle: boolean;
+  private lastPage: boolean;
 
   constructor(
     private service: OrganizationService,
@@ -51,8 +52,7 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(() => this.orgSearchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      tap(orgs => this.hitsViewed = this.hitsViewed + orgs.length),
-      map(result => result.map(org => org.objectID)),
+      map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
       // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
       tap(orgs => {
@@ -62,6 +62,16 @@ export class ListComponent implements OnInit, OnDestroy {
         } else {
           this.organizationSearchResultsState.next(orgs);
         }
+        /* Hits viewed is just the current state of displayed orgs, this information is important for comparing
+        the overall possible results which is represented by nbHits.
+        If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
+        So when the next valueChange is happening we need to reset everything and start from beginning  */
+        this.hitsViewed = this.organizationSearchResultsState.value.length
+        if (this.lastPage) {
+          this.hitsViewed = 0;
+          this.orgSearchForm.page.setValue(0);
+        }
+        this.lastPage = this.hitsViewed === this.nbHits;
       })
     ).subscribe();
   }
