@@ -65,7 +65,7 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: george43g/blockframes-ci
+      - image: george43g/blockframes-ci:gcloud
     working_directory: ~/repo
     resource_class: large
 jobs:
