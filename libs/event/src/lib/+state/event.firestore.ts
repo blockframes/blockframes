@@ -15,7 +15,23 @@ export interface Meeting {
 
   // TODO removed real-time shared state from firestore issue#3748
   selectedFile: string;
+  controls: Record<string, MeetingMediaControl>
 }
+
+export interface MeetingPdfControl {
+  type: 'pdf';
+  currentPage: number;
+  totalPages: number;
+}
+
+export interface MeetingVideoControl {
+  type: 'video';
+  isPlaying: boolean;
+  position: number;
+  duration: number;
+}
+
+type MeetingMediaControl = MeetingPdfControl | MeetingVideoControl;
 
 /** Maximum number of invitations that can be sent for a given Meeting */
 export const MEETING_MAX_INVITATIONS_NUMBER = 9;

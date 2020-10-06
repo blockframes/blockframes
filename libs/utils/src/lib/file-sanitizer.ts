@@ -18,12 +18,12 @@ export function sanitizeFileName(str: string): string {
 
 /**
  * Cleans and returns the storage path
- * @dev example output: 
+ * @dev example output:
  * public/users/123abc/avatar
  */
 export function getStoragePath(path: string, privacy: Privacy = 'public'): string {
   if(!path) return '';
-  
+
   // Remove first trailing slash if any
   path = path[0] === '/' ? path.slice(1) : path;
 
@@ -37,7 +37,7 @@ export function getStoragePath(path: string, privacy: Privacy = 'public'): strin
  * Extract file extension
  * @param fileName
  */
-function getFileExtension(fileName: string) {
+export function getFileExtension(fileName: string) {
   // get the part after the last slash and remove url parameters like "#" and "?"
   const lastSlash = fileName.split('/').pop();
   const filePart = lastSlash !== undefined ? lastSlash.split(/\#|\?/) : [];

@@ -8,7 +8,7 @@ import { ImageParameters, formatParameters } from '@blockframes/media/directives
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
-import { privacies } from '@blockframes/utils/file-sanitizer';
+import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
 import { uploadToJWPlayer } from './player';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
@@ -51,7 +51,7 @@ export async function linkFile(data: storage.ObjectMetadata) {
           const hostedVideos: HostedVideo | HostedVideo[] = get(docData, fieldToUpdate);
 
           let update: HostedVideo | HostedVideo[] | {};
-          if (uploadResult.status) {
+          if (uploadResult.success) {
             if (Array.isArray(hostedVideos)) {
               update = hostedVideos.map(video => {
                 if (video.ref === savedRef) { video.jwPlayerId = uploadResult.key };
@@ -159,16 +159,23 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   }
 }
 
+interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
+
 function getPathInfo(ref: string) {
   const refParts = ref.split('/').filter(v => !!v);
 
-  const pathInfo: Record<string, string | undefined> = {};
+  const pathInfo: PathInfo = {
+    securityLevel: 'protected', // protected by default
+    collection: '',
+    docId: '',
+  };
+
   if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift();
+    pathInfo.securityLevel = refParts.shift()! as Privacy;
   }
 
-  pathInfo.collection = refParts.shift();
-  pathInfo.docId = refParts.shift();
+  pathInfo.collection = refParts.shift()!;
+  pathInfo.docId = refParts.shift()!;
 
   return pathInfo;
 }
