@@ -39,10 +39,9 @@ export class ActionComponent {
   }
 
   /** Request the owner to accept invitation (automatically accepted if event is public) */
-  async request(event: Event) {
+  request(event: Event) {
     const { ownerId, id } = event;
-    await this.service.request('org', ownerId).from('user').to('attendEvent', id);
-
+    this.service.request('org', ownerId).from('user').to('attendEvent', id);
     this.requestPending = true;
   }
 }
