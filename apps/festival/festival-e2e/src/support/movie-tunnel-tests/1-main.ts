@@ -1,5 +1,4 @@
 import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard/movietunnel";
-import { acceptCookie } from '../../support/utils/utils';
 import { TO } from '@blockframes/e2e/utils/env';
 
 export const CONTENT_TYPES = ['TV Film', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
@@ -21,17 +20,16 @@ export const PREMIERE = 'World';
 export const YEAR = '2007';
 
 export const mainTest = () => {
-  cy.visit('c/o/dashboard/tunnel/movie/SRLMJVaWL9zOMeZ8uZw1/title-status');
-  cy.wait(3000);
-  acceptCookie();
-  
+  cy.log('->Reach Movie Tunnel & seek Production Status');
   cy.get('tunnel-page h1', { timeout: TO.VSLOW_UPDATE })
     .contains('Production Status');
 
+  cy.log('Select status card: Released');
   cy.get('mat-card label', {timeout: TO.PAGE_ELEMENT})
     .contains("Released")
     .click();
-  
+
+  cy.log('->Click next & reach movie form');  
   cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
     .click()
   cy.wait(TO.WAIT_1SEC);

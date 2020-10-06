@@ -50,7 +50,7 @@ export function assertUploadStatus(content: string, testId: string) {
 }
 
 export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]', 
-                                    {waitTime: TO.THREE_SEC, message: 'Accepting all cookies'});
+                                    {waitTime: TO.ONE_SEC, message: 'Accepting all cookies'});
 
 /**
  * selectAction : Clicks the element & waits if needed.
