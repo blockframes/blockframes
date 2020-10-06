@@ -68,7 +68,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
       }
       const watermarkUrl = await this.mediaService.generateImgIxUrl(watermarkRef, parameters);
 
-      const signedUrl = new URL(result);
+      const signedUrl = new URL(result.signedUrl);
       const expires = signedUrl.searchParams.get('exp');
       const timestamp = parseInt(expires, 10); // unix timestamp in seconds
       const millisecondTimestamp = timestamp * 1000; // js timestamp in milliseconds
@@ -78,7 +78,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
 
       this.player = jwplayer('player');
       this.player.setup({
-        file: result,
+        file: result.signedUrl,
         logo: {
           file: watermarkUrl,
         }
