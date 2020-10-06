@@ -17,7 +17,9 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column.value }} </th>
       <td mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
-          <ng-template [ngTemplateOutlet]="col.template" [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.key }">
+          <ng-template
+            [ngTemplateOutlet]="col.template"
+            [ngTemplateOutletContext]="{ $implicit: row | deepKey:column.key, item: row }">
           </ng-template>
         </ng-container>
         <ng-template #default>
