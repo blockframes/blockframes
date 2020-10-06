@@ -45,9 +45,9 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   enableForm() {
     this.sub = this.disabledForm.valueChanges.pipe(
-        distinctUntilChanged(),
-        filter(value => !!value)
-      ).subscribe(value => this.activate(value));
+      distinctUntilChanged(),
+      filter(value => !!value),
+    ).subscribe(value => this.activate(value));
 
     const active = this.keys.find(key => hasValue(this.form.shooting.value.dates[key]));
     this.disabledForm.setValue(active);
