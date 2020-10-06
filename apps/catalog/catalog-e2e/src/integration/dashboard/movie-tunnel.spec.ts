@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+﻿/// <reference types="cypress" />
 
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
@@ -14,7 +14,7 @@ import {
   summaryTest
 } from '../../support/movie-tunnel-tests';
 
-describe('User can navigate to the movie tunnel pages start and main.', () => {
+describe.skip('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('Login into an existing account, navigate on titles list page, go to movie tunnel start page, go on movie tunnel main page', () => {
     clearDataAndPrepareTest('/');
