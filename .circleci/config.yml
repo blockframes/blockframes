@@ -65,7 +65,7 @@ orbs:
 executors:
   blockframes-ci:
     docker:
-      - image: blockframes/ci:latest
+      - image: george43g/blockframes-ci
     working_directory: ~/repo
     resource_class: large
 jobs:
@@ -300,8 +300,7 @@ jobs:
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
   copy-storage-from-prod:
-    docker:
-      - image: google/cloud-sdk
+    executor: blockframes-ci
     environment:
       - ENV: blockframes-ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
