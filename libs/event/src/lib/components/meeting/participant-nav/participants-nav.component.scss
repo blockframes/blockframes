@@ -1,123 +1,67 @@
-@import 'node_modules/@angular/flex-layout/mq';
+mat-sidenav-container {
+  mat-sidenav {
+    background-color: var(--background-slider);
 
-:host {
-  height: 100%;
-  width: 100%;
-  background-color: black;
-}
-
-.menu {
-    height: 100%;
-  pointer-events: none;
-  .sidenav {
-    width: 30%;
-    min-width: 250px;
-    border: none;
-    background-color: #33305B;
-    pointer-events: all;
-    div {
-      border: none;
+    header {
+      position: sticky;
+      z-index: 1;
+      top: 0;
+      background-color: var(--whiteBackground);
+      span {
+        span {
+          font-size: 0.7em;
+        }
+        mat-icon {
+          margin-left: 2px;
+        }
+      }
     }
-    .sidenav-content {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      .mat-icon {
-        margin-right: 5px;
-        margin-left: 5px;
-      }
-      .title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: white;
-        .title-info {
-          height: 10%;
-          min-height: 30px;
-          display: flex;
-          align-items: center;
-        }
-        .mat-icon {
-          width: 16px;
-        }
-      }
-
-
-      .content {
-        height: 80%;
-        overflow: scroll;
+    mat-list {
+      mat-list-item {
+        height: unset;
+        padding: 8px;
         &::-webkit-scrollbar {
           display: none;
         }
-        .participants {
-          margin: 10px;
-          .participant {
+
+        div {
+          flex: 1;
+          .profile-name {
+            font-size: 1em;
+            font-weight: bold;
+            text-overflow: ellipsis;
+          }
+          .profile-organization {
+            font-size: 0.8em;
+          }
+
+          .avatar-text {
+            background-color: var(--whiteBackground);
+            width: 7vh;
+            height: 7vh;
+            border-radius: 50%;
+            margin-right: 8px;
+            text-align: center;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            .participant-info {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-            }
-            .profile {
-              background-color: white;
-              width: 50px;
-              height: 50px;
-              border-radius: 50%;
-              margin-right: 10px;
-              text-align: center;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              span {
-                vertical-align: middle;
-                display: inline-flex;
-              }
-            }
-            .name {
-              color: white;
-            }
-            .mat-caption {
-              display: flex;
-            }
-            .close {
-              opacity: 0.5;
-              &:hover {
-                opacity: 1;
-                cursor: pointer;
-              }
-            }
+            justify-content: center;
+            padding: 0;
           }
         }
-
       }
 
-      .action {
-        opacity: 0.5;
-        background-color: #5C597B;
-        height: 10%;
-        min-height: 30px;
-        display: flex;
-        align-items: center;
-        &:hover {
-          opacity: 1;
-          cursor: pointer;
-        }
-        caption {
-          color: white;
-        }
+      mat-divider {
+        width: 100%;
       }
-      hr {
-        opacity: 0.5;
-      }
+
     }
   }
 
-  .menu-button {
-    position: absolute;
-    right: 0;
-    pointer-events: all;
+  mat-sidenav-content {
+    button {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
   }
 }
