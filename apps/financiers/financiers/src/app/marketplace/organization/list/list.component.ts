@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } fr
 
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { scaleOut } from '@blockframes/utils/animations/fade';
+import { scaleOut, slideUp } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
@@ -16,7 +16,7 @@ import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
   selector: 'financiers-organization-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
-  animations: [scaleOut],
+  animations: [scaleOut, slideUp],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListComponent implements OnInit, OnDestroy {

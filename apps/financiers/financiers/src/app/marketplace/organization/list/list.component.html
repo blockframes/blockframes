@@ -33,8 +33,9 @@
     </div>
   </ng-template>
 
-  <list-page-progress *ngIf="!loading$.value">
-    <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()">
+  <list-page-progress>
+    <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()" @slideUp
+      *ngIf="!loading$.value">
       <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
     </bf-load-more-button>
   </list-page-progress>
