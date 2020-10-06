@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // Blockframes
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { CartService } from '@blockframes/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Directive({
   selector: 'wishlist-add-text [wishlistAddText]',
@@ -45,7 +45,7 @@ export class WishlistButtonComponent implements OnInit {
   @Output() added = new EventEmitter<string>()
 
   constructor(
-    private movieQuery: MovieQuery,
+    private movieService: MovieService,
     private orgQuery: OrganizationQuery,
     private cartService: CartService,
     private analytics: FireAnalytics,
@@ -62,10 +62,9 @@ export class WishlistButtonComponent implements OnInit {
     );
   }
 
-
-  public addToWishlist(event?: Event) {
+  public async addToWishlist(event?: Event) {
     event?.stopPropagation();
-    const movie = this.movieQuery.getEntity(this.movieId);
+    const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);
     this.analytics.event('addedToWishlist', {
@@ -76,9 +75,9 @@ export class WishlistButtonComponent implements OnInit {
     this.added.emit(this.movieId)
   }
 
-  public removeFromWishlist(event?: Event) {
+  public async removeFromWishlist(event?: Event) {
     event?.stopPropagation();
-    const movie = this.movieQuery.getEntity(this.movieId);
+    const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);
     this.analytics.event('removedFromWishlist', {
