@@ -38,7 +38,7 @@ export class DurationPipe implements PipeTransform {
     hour = hour % 24;
     hour += day * 24;
     // If the previous number is 0, do not show next smaller one
-    return (hour > 0 ? hour + 'h ' : '') + (minute > 0 && hour > 0 ? minute + 'm ' : '') + 
+    return (hour > 0 ? hour + 'h ' : '') + (minute > 0 && hour > 0 ? minute + 'min' : '') + 
       (second > 0 && minute > 0 ? second + 's' : '');
   }
 }
