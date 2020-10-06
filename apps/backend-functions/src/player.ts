@@ -88,14 +88,14 @@ export const getPrivateVideoUrl = async (
     } else {
       data.jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
     }
-  } else if (!isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
+  } else if (!await isJwplayerIdBelongingToMovie(data.jwPlayerId, movie)) {
     return {
       error: 'NO_VIDEO',
       result: `The requested media doesn't exist on movie ${movie.id}`
     };
   }
 
-  if (event.isPrivate && !isUserInvitedToScreening(context.auth.uid, movie.id)) {
+  if (event.isPrivate && !await isUserInvitedToScreening(context.auth.uid, movie.id)) {
     return {
       error: 'NO_INVITATION',
       result: `You have not been invited to see this movie`
@@ -184,12 +184,12 @@ const isJwplayerIdBelongingToMovie = async (jwPlayerId: string, movie: MovieDocu
 }
 
 /**
- * 
- * @param file 
+ *
+ * @param file
  * @see https://developer.jwplayer.com/jwplayer/docs/authentication
  * @see https://developer.jwplayer.com/jwplayer/reference#post_videos-create
  * @see https://developer.jwplayer.com/jwplayer/docs/upload-videos-with-a-resumable-protocol
- * 
+ *
  */
 export const uploadToJWPlayer = async (file: GFile): Promise<{ status: boolean, key?: string, message?: string }> => {
 

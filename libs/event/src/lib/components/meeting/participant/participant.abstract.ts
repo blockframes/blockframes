@@ -77,14 +77,6 @@ export abstract class AbstractParticipant{
     this.detachTracks(tracks);
   }
 
-  /**
-   *
-   * @param participant
-   */
-  getInitialFromParticipant(participant: IParticipantMeeting){
-    return `${participant.firstName.charAt(0).toUpperCase()}${participant.lastName.charAt(0).toUpperCase()}`
-  }
-
   setUpVideoAndAudio(kind, boolToChange){
     if(kind === 'video'){
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), video: boolToChange});

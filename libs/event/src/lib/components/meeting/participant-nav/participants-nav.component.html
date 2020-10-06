@@ -9,22 +9,19 @@
         <mat-icon svgIcon="cross"></mat-icon>
       </button>
     </header>
-    <mat-list role="list" fxLayout="column" >
-      <mat-list-item *ngFor="let participant of participants" >
-        <div fxLayout fxLayoutAlign="start baseline">
-          <ng-container *ngIf="participant.avatar; else initials">
-            <img asset="profil_user.webp" [ref]="participant.avatar" alt="Profile picture">
-          </ng-container>
-          <ng-template #initials>
+    <mat-list role="list" fxLayout="column" fxLayoutAlign="space-around start">
+      <ng-container *ngFor="let participant of participants">
+        <mat-list-item>
+          <div fxLayout fxLayoutAlign="space-around center">
             <span matListAvatar class="avatar-text">{{participant | eventInitialParticipant}}</span>
-          </ng-template>
-          <p fxLayout fxLayoutAlign="center">
-            <span class="profile-name">{{participant.firstName}} {{participant.lastName}}</span>
-            <span class="profile-organization">{{participant.organizationName}}</span>
-          </p>
-          <mat-divider></mat-divider>
-        </div>
-      </mat-list-item>
+            <div fxLayout="column" fxLayoutAlign="space-around start">
+              <span class="profile-name">{{participant.festivalData.firstName}} {{participant.festivalData.lastName}}</span>
+              <span class="profile-organization">{{participant.festivalData.organizationName}}</span>
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </ng-container>
     </mat-list>
   </mat-sidenav>
   <mat-sidenav-content>

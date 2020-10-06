@@ -1,0 +1,117 @@
+@import 'node_modules/@angular/flex-layout/mq';
+
+.menu {
+  height: 100%;
+  pointer-events: none;
+  .sidenav {
+    width: 30%;
+    min-width: 250px;
+    border: none;
+    background-color: #33305b;
+    pointer-events: all;
+    div {
+      border: none;
+    }
+    .sidenav-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .mat-icon {
+        margin-right: 5px;
+        margin-left: 5px;
+      }
+      .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        .title-info {
+          height: 10%;
+          min-height: 30px;
+          display: flex;
+          align-items: center;
+        }
+        .mat-icon {
+          width: 16px;
+        }
+      }
+
+
+      .content {
+        height: 80%;
+        overflow: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .participants {
+          margin: 10px;
+          .participant {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .participant-info {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .profile {
+              background-color: white;
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              margin-right: 10px;
+              text-align: center;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              span {
+                vertical-align: middle;
+                display: inline-flex;
+              }
+            }
+            .name {
+              color: white;
+            }
+            .mat-caption {
+              display: flex;
+            }
+            .close {
+              opacity: 0.5;
+              &:hover {
+                opacity: 1;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+
+      }
+
+      .action {
+        opacity: 0.5;
+        background-color: #5C597B;
+        height: 10%;
+        min-height: 30px;
+        display: flex;
+        align-items: center;
+        &:hover {
+          opacity: 1;
+          cursor: pointer;
+        }
+        caption {
+          color: white;
+        }
+      }
+      hr {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .menu-button {
+    position: absolute;
+    right: 0;
+    pointer-events: all;
+  }
+}

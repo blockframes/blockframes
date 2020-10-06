@@ -1,0 +1,20 @@
+.dominant-waiting-screen {
+  min-height: 200px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+
+.dominant-speaker-video-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+::ng-deep .dominantSpeakerVideo {
+  width: 100%;
+  max-width: 100%;
+}

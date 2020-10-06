@@ -1,0 +1,12 @@
+<event-participants-nav [participants]="arrayOfParticipantConnected$ | async">
+  <event-video
+    [arrayOfParticipantConnected$]="arrayOfParticipantConnected$"
+    [$participantConnectedDataSource]="$participantConnectedDataSource"
+    [localParticipantConnected$]="localParticipantConnected$"
+    [localPreviewTracks$]="localPreviewTracks$"
+    [dominantParticipantForBuyer$]="dominantParticipantForBuyer$"
+    [event]="event"
+    [isOwner]="getIfIsReelOwner()"
+    (eventSetUpLocalVideoAndAudio)="setUpLocalVideoAndAudio($event)"
+    ></event-video>
+</event-participants-nav>

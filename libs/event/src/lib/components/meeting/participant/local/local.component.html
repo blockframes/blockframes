@@ -4,7 +4,7 @@
     <ng-container *ngIf="localVideoAudioIsOn$ | async as camMicIsOn">
       <div *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
         <span>
-          {{getInitialFromParticipant(localParticipant)}}
+          {{localParticipant | eventInitialParticipant}}
         </span>
       </div>
     </ng-container>

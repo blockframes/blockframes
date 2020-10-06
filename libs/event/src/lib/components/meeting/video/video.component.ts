@@ -3,8 +3,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 
 //Blockframes
 import {Event} from "@blockframes/event/+state";
-import {Participant as IParticipantMeeting} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
+import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Component({
   selector: 'event-meeting-video',
@@ -32,11 +32,11 @@ export class VideoComponent implements OnInit {
   }
 
 
-  getIfLocalIsAlone(){
+  getIfLocalIsAlone() {
     return this.$participantConnectedDataSource.getValue().length < 1;
   }
 
-  setUpLocalVideoAndAudio({kind, boolToChange}){
+  setUpLocalVideoAndAudio({kind, boolToChange}) {
     this.eventSetUpLocalVideoAndAudio.emit({kind, boolToChange})
   }
 

@@ -289,6 +289,36 @@ export async function createNotificationsForEventsToStart() {
  * @param userId : string - Id of user
  * @param docId : string - Id of doc (id of event in Invitation)
  */
+export async function isUserInvitedToScreening(userId: string, docId: string) {
+
+  const acceptedInvitations = db.collection('invitations')
+    .where  ('type', '==', 'attendEvent')
+    .where('docId', '==', docId)
+    .where('toUser.uid', '==', userId)
+    .where('status', '==', 'accepted')
+    .where('mode', '==', 'invitation');
+
+  const acceptedRequests = db.collection('invitations')
+    .where('type', '==', 'attendEvent')
+    .where('docId', '==', docId)
+    .where('fromUser.uid', '==', userId)
+    .where('status', '==', 'accepted')
+    .where('mode', '==', 'request');
+
+  const [invitations, requests] = await Promise.all([
+    acceptedInvitations.get(),
+    acceptedRequests.get()
+  ]);
+
+  return !(invitations.size === 0 && requests.size === 0);
+}
+
+
+/**
+ * Return if the userId is invite into a event with docId param
+ * @param userId : string - Id of user
+ * @param docId : string - Id of doc (id of event in Invitation)
+ */
 export async function isUserInvitedToMeetingOrScreening(userId: string, docId: string) {
 
   const acceptedInvitations = db.collection('invitations')

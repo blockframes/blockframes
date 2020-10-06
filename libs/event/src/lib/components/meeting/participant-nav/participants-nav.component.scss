@@ -18,19 +18,27 @@ mat-sidenav-container {
     }
     mat-list {
       mat-list-item {
-      margin: 4px 0 8px 0;
+        height: unset;
+        padding: 8px;
         &::-webkit-scrollbar {
           display: none;
         }
 
         div {
           flex: 1;
-          padding: 0 0 8px 8px;
+          .profile-name {
+            font-size: 1em;
+            font-weight: bold;
+            text-overflow: ellipsis;
+          }
+          .profile-organization {
+            font-size: 0.8em;
+          }
 
           .avatar-text {
             background-color: var(--whiteBackground);
-            width: 5vh;
-            height: 5vh;
+            width: 7vh;
+            height: 7vh;
             border-radius: 50%;
             margin-right: 8px;
             text-align: center;
@@ -41,6 +49,11 @@ mat-sidenav-container {
           }
         }
       }
+
+      mat-divider {
+        width: 100%;
+      }
+
     }
   }
 

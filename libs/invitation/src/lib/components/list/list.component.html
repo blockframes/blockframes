@@ -1,4 +1,4 @@
-<mat-list>
+  <mat-list>
   <ng-container *ngFor="let timeFrame of timeFrames; let first=first; let last=last">
     <!-- For a time frame -->
     <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">

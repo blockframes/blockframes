@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
-import {Participant} from 'twilio-video';
 
 
 @Component({
@@ -11,8 +11,5 @@ import {Participant} from 'twilio-video';
 })
 export class ParticipantsNavComponent {
 
-  @Input() participants: Participant[];
-
-  constructor(
-  ) { }
+  @Input() participants: IParticipantMeeting[];
 }

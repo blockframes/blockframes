@@ -14,8 +14,9 @@ import {
   StatusVideoMic
 } from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {Participant as IParticipantMeeting, RemoteTrackPublication as IRemoteTrackPublication, LocalTrackPublication} from 'twilio-video';
+import {Participant, RemoteTrackPublication as IRemoteTrackPublication, LocalTrackPublication} from 'twilio-video';
 import {Observable} from "rxjs";
+import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 
 @Component({
@@ -58,27 +59,27 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    */
   setUpLocalParticipantEvent(localParticipant: IParticipantMeeting){
 
-    localParticipant.on(meetingEventEnum.TrackSubscribed, (track: IRemoteTrackPublication) => {
+    localParticipant.twilioData.on(meetingEventEnum.TrackSubscribed, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], true);
 
     })
 
-    localParticipant.on(meetingEventEnum.TrackUnsubscribed, (track: IRemoteTrackPublication) => {
+    localParticipant.twilioData.on(meetingEventEnum.TrackUnsubscribed, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], false);
 
     })
 
-    localParticipant.on('trackDisabled', (track: IRemoteTrackPublication) => {
+    localParticipant.twilioData.on('trackDisabled', (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], false);
 
     })
 
-    localParticipant.on('trackEnabled', (track: IRemoteTrackPublication) => {
+    localParticipant.twilioData.on('trackEnabled', (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], true);
 
     })
 
-    localParticipant.on('trackStopped', (track: IRemoteTrackPublication) => {
+    localParticipant.twilioData.on('trackStopped', (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], false);
 
     })

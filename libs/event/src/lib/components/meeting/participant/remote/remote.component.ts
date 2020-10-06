@@ -11,7 +11,8 @@ import {
 import {meetingEventEnum, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Participant as IParticipantMeeting, RemoteTrackPublication} from 'twilio-video';
+import {Participant, RemoteTrackPublication} from 'twilio-video';
+import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Component({
   selector: 'event-meeting-remote-participant',
@@ -65,53 +66,53 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
   setUpRemoteParticipantEvent(participant: IParticipantMeeting){
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
-    participant.on(meetingEventEnum.TrackSubscribed, (track) => {
+    participant.twilioData.on(meetingEventEnum.TrackSubscribed, (track) => {
 
       this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
     })
 
-    participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
+    participant.twilioData.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       this.detachTracks([track])
     })
 
-    participant.on('disconnected', () => {
+    participant.twilioData.on('disconnected', () => {
       this.detachParticipantTracks(this.participant);
     })
 
-    participant.on('reconnected', () => {
+    participant.twilioData.on('reconnected', () => {
     })
 
-    participant.on('reconnecting', () => {
+    participant.twilioData.on('reconnecting', () => {
     })
 
-    participant.on('trackDisabled', (track:RemoteTrackPublication) => {
+    participant.twilioData.on('trackDisabled', (track:RemoteTrackPublication) => {
       this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
       this.setUpVideoAndAudio(track.kind, false)
     })
 
-    participant.on('trackEnabled', (track:RemoteTrackPublication) => {
+    participant.twilioData.on('trackEnabled', (track:RemoteTrackPublication) => {
       this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant, 'dominantSpeakerVideo')
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.on('trackPublished', () => {
+    participant.twilioData.on('trackPublished', () => {
     })
 
-    participant.on('trackStarted', (track) => {
+    participant.twilioData.on('trackStarted', (track) => {
       // this.setTrackEvent(track);
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.on('trackSubscriptionFailed', () => {
+    participant.twilioData.on('trackSubscriptionFailed', () => {
     })
 
-    participant.on('trackSwitchedOff', (track) => {
+    participant.twilioData.on('trackSwitchedOff', (track) => {
     })
 
-    participant.on('trackSwitchedOn', () => {
+    participant.twilioData.on('trackSwitchedOn', () => {
     })
 
-    participant.on('trackUnpublished', () => {
+    participant.twilioData.on('trackUnpublished', () => {
     })
   }
 

@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 
 //Import Twilio-video
 import * as Video from 'twilio-video';
-import {Participant, Room, RemoteVideoTrack, RemoteAudioTrack, RemoteTrackPublication} from 'twilio-video';
+import {Participant, RemoteAudioTrack, RemoteTrackPublication, RemoteVideoTrack, Room} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
-import {OrganizationMember, User, UserQuery, UserService} from "@blockframes/user/+state";
+import {User, UserService} from "@blockframes/user/+state";
 import {Event} from "@blockframes/event/+state";
 import {AuthQuery} from "@blockframes/auth/+state";
+import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 
 export enum meetingEventEnum {
@@ -187,14 +188,6 @@ export class MeetingService {
     });
   }
 
-
-  async getFirstNameAndLastNameOfParticipant(participant: Participant) {
-    const localUser: User = await this.userService.getUser(participant.identity)
-    participant.firstName = localUser.firstName
-    participant.lastName = localUser.lastName
-    return participant;
-  }
-
   /**
    * When successfully connected to room.
    * @param room - room twilio where we are connected
@@ -211,26 +204,23 @@ export class MeetingService {
       const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
       if (!!tracksOfParticipants && tracksOfParticipants.length > 0) {
         for (const indexParticipant in tracksOfParticipants) {
-          await this.getFirstNameAndLastNameOfParticipant(tracksOfParticipants[indexParticipant])
+          const remoteMeetingParticipant = await this.createIParticipantMeeting(tracksOfParticipants[indexParticipant]);
           this.eventRoom.next({
             meetingEvent: meetingEventEnum.ParticipantConnected,
-            data: tracksOfParticipants[indexParticipant]
+            data: remoteMeetingParticipant
           });
         }
       }
     }
 
-    const localUser: User = await this.userService.getUser(identity)
+    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, false, true);
 
-    room.localParticipant.firstName = localUser.firstName;
-    room.localParticipant.lastName = localUser.lastName;
-    room.localParticipant.avatar = localUser.avatar;
-    room.localParticipant.isDominantSpeaker = false
+
     this.eventRoom.next({
       meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
-      data: room
+      data: {room, localMeetingParticipant}
     });
-    this.localParticipant = room.localParticipant;
+    this.localParticipant = localMeetingParticipant;
 
     this.eventRoom.next({
       meetingEvent: meetingEventEnum.DominantSpeakerChanged,
@@ -238,7 +228,23 @@ export class MeetingService {
     });
 
     await this.setUpRoomEvent(room);
+  }
 
+  private async createIParticipantMeeting(twilioParticipant: Participant, isDominantSpeaker = false, isLocalSpeaker = false){
+    const remoteUser = await this.userService.getUser(twilioParticipant.identity)
+
+    return {
+      identity: twilioParticipant.identity,
+      twilioData : twilioParticipant,
+      festivalData: {
+        firstName: remoteUser.firstName,
+        lastName: remoteUser.lastName,
+        avatar: remoteUser.avatar,
+        organizationName: 'To Be Implemented',
+      },
+      isDominantSpeaker: isDominantSpeaker,
+      isLocalSpeaker: isLocalSpeaker,
+    } as IParticipantMeeting;
   }
 
   /**
@@ -250,16 +256,12 @@ export class MeetingService {
     // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected,
       async (participant: Participant) => {
-        const remoteUser = await this.userService.getUser(participant.identity)
 
-        participant.firstName = remoteUser.firstName
-        participant.lastName = remoteUser.lastName
-        participant.avatar = remoteUser.avatar
-        participant.isDominantSpeaker = false;
+      const meetingParticipant = await this.createIParticipantMeeting(participant);
 
         this.eventRoom.next({
           meetingEvent: meetingEventEnum.ParticipantConnected,
-          data: participant
+          data: meetingParticipant
         });
       });
 
