@@ -57,7 +57,7 @@
     </article>
     <mat-divider></mat-divider>
   </section>
-  
+
 
   <!-- GENERAL INFORMATION -->
   <section *ngIf="movie | hasKeys: keys.general ">
@@ -89,11 +89,11 @@
       </p>
     </article>
 
-    <article *ngIf="movie.runningTime.time || movie.runningTime.time">
+    <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
-        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time }}min</span>
-        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status }}</span>
+        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | duration }}</span>
+        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status | titlecase }}</span>
       </div>
     </article>
 
@@ -120,6 +120,9 @@
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
+        <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
+      </ng-container>
+      <ng-container *ngFor="let prize of movie.customPrizes">
         <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
       </ng-container>
     </article>
