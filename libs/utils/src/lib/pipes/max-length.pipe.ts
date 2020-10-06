@@ -6,12 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Cuts the text to provided length
  * and replace it with 3 dots
  */
-@Pipe({
-  name: 'maxLength'
-})
+@Pipe({ name: 'maxLength' })
 export class MaxLength implements PipeTransform {
   transform(text: string, length: number) {
-    if(text.length > length) {
+    if(text?.length && text.length > length) {
       return text.substr(0, length).concat('...');
     }
     return text;
