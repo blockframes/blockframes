@@ -10,6 +10,7 @@ import { ErrorResultResponse } from './utils';
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { App } from '@blockframes/utils/apps';
 import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@blockframes/event/+state/event.firestore';
+import { Change } from 'firebase-functions';
 
 /**
  * Handles firestore updates on an invitation object,
@@ -18,7 +19,7 @@ import { EventDocument, EventMeta, MEETING_MAX_INVITATIONS_NUMBER } from '@block
  * and dispatch to the correct piece of code depending on the invitation type.
  */
 export async function onInvitationWrite(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+  change: Change<FirebaseFirestore.DocumentSnapshot>
 ) {
   const before = change.before;
   const after = change.after;

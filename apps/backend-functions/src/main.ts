@@ -20,6 +20,7 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
+import { RuntimeOptions } from 'firebase-functions';
 
 
 //--------------------------------
@@ -30,10 +31,10 @@ import { skipInMaintenance } from '@blockframes/firebase-utils';
  * Runtime options for heavy functions
  * @dev linked to #2531 (Changing functions REGION)
  */
-const heavyConfig = {
+const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
-  memory: '1GB'
-} as functions.RuntimeOptions
+  memory: '1GB',
+};
 
 
 //--------------------------------

@@ -1,4 +1,5 @@
 export const production = true;
+export const dev = false;
 export const hmr = false;
 
 // TODO issue#1146 AFM CODE
@@ -6,8 +7,7 @@ export const hmr = false;
 export const AFM_DISABLE = false;
 
 export const persistenceSettings = {
-  // TODO(issue#846): change to synchronizeTabs when available (angularFire 5.2)
-  experimentalTabSynchronization: true
+  synchronizeTabs: true
 };
 
 // Analytics
@@ -20,10 +20,20 @@ export const sentryDsn = 'https://a5f8a3139c754fa088453dbd710d9418@sentry.io/154
 // ========
 
 export const appUrl = {
-  content: 'https://demo1.archipelcontent.com',
-  market: 'https://demo1.archipelmarket.com',
-  crm: 'https://demo1.crm.blockframes.io',
+  content: 'https://blockframes-demo-1.web.app',
+  market: 'https://festival-demo1-blockframes.web.app',
+  crm: 'https://crm-demo1-blockframes.web.app',
+  financiers: 'https://blockframes-demo1-financiers.web.app',
 }
+
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: {
+    host: 'localhost:8080',
+    ssl: false
+  }
+};
 
 export const firebase = {
   apiKey: "AIzaSyBu86_wOPRjXyR-wVXq4FLkQ0GZrcgWTsM",
@@ -77,57 +87,9 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'demo1-backups';
+// export const backupBucket = 'demo1-backups';
+export const backupBucket = 'blockframes-demo-1-db-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
-
-
-// Sendgrid Emails
-export const templateIds = {
-  // Templates for the account creation flow
-  user: {
-    // Template for welcome message when user created his account by himself
-    welcomeMessage: 'd-fc05a8cf5b1548ebae9ca44247a6c256',
-
-    // Template for sending the verify email
-    verifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
-    resetPassword: 'd-6a0710945bc841ffb6955e3dc202704c',
-
-    // Templates for informing new user that his account have been created
-    credentials: {
-      attendEvent: {
-        catalog: 'd-ce3e57248a694cefacad49bc4c820078',
-        festival: 'd-ce3e57248a694cefacad49bc4c820078',
-      },
-      joinOrganization: {
-        catalog: 'd-a34ce9ea59c5477f9feae8f556157b6b',
-        festival: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
-      }
-    },
-  },
-  // Templates for the org management flow
-  org: {
-    accepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
-    appAccessChanged: 'd-274b8b8370b44dc2984273d28970a06d',
-    memberAdded: 'd-f84d8c5a70884316870ca4ef657e368f',
-  },
-  // Templates for requests (invitations)
-  request: {
-    joinOrganization: {
-      created: 'd-b1ab5d21def145ccb759520e2d984436',
-      pending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
-      accepted: 'd-d32b25a504874a708de6bfc50a1acba7',
-    },
-    attendEvent: {
-      created: 'd-07f5e3cc6796455097b6082c22568d9e'
-    }
-  },
-  // Templates for invitations
-  invitation: {
-    attendEvent: {
-      created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5'
-    }
-  }
-}
 
 // Yandex Metrika Id
 export const yandexId = 0;
@@ -166,3 +128,7 @@ export const bigQueryAnalyticsTable = 'blockframes-demo1.analytics_200039147.eve
 // Archipel Content OrgId
 // ======================
 export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+export const heavyChunkSize = 15;
+
+export const chunkSize = 30;
