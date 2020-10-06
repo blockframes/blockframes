@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { TitleFilterComponent, FilterDirective } from './title-filter.component';
+import { ListFilterComponent, FilterDirective } from './list-filter.component';
 
 // Material
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
@@ -13,7 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [TitleFilterComponent, FilterDirective],
+  declarations: [ListFilterComponent, FilterDirective],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -24,6 +24,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatCardModule,
     OverlayWidgetModule
   ],
-  exports: [TitleFilterComponent, FilterDirective]
+  exports: [ListFilterComponent, FilterDirective]
 })
-export class TitleFilterModule {}
+export class ListFilterModule {}

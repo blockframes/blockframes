@@ -50,6 +50,7 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 import { environment } from '../environments/environment';
+import { firebase } from '@env';
 
 @NgModule({
   declarations: [AppComponent],
