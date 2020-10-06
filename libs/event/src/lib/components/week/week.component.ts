@@ -52,7 +52,7 @@ export class CalendarWeekComponent {
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
   @Input() viewDate: Date = new Date();
-  @Input() eventTypes: EventTypes[] = ['screening'];
+  @Input() eventTypes: EventTypes[] = ['screening', /* 'meeting' */]; // TODO uncomment after release 1.9 : see issue#3880
   @Input()
   set events(events: CalendarEvent<any>[]) {
     this.baseEvents = events || [];

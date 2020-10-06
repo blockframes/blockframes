@@ -11,6 +11,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 
 const typesLabel = {
   screening: 'Screenings',
+  // meeting: 'Meetings' // TODO uncomment after release 1.9 : see issue#3880
 }
 
 @Component({
@@ -21,7 +22,7 @@ const typesLabel = {
 })
 export class EventListComponent implements OnInit {
   typesLabel = typesLabel;
-  types: EventTypes[] = ['screening'];
+types: EventTypes[] = ['screening', /* 'meeting' */]; // TODO uncomment after release 1.9 : see issue#3880
   filter = new FormControl(this.types);
   editDialog: MatDialogRef<any>
   events$: Observable<Event[]>;

@@ -37,6 +37,13 @@ const routes = [{
       canDeactivate: [UserGuard],
       loadChildren: () => import('@blockframes/organization/pages/member/member.module').then(m => m.MemberModule)
     },
+    // TODO uncomment after release 1.9 : see issue#3880
+    // {
+    //   path: 'documents',
+    //   canActivate: [UserGuard],
+    //   canDeactivate: [UserGuard],
+    //   loadChildren: () => import('@blockframes/organization/pages/documents/documents.module').then(m => m.DocumentsModule)
+    // },
   ]
 }]
 
