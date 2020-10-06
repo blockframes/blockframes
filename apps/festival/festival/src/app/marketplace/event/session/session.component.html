@@ -48,7 +48,7 @@
           <div [fxFlex]="visioContainerSize">VIDEO CONFERENCE</div>
         </div>
         <ng-container *ngIf="event.isOwner">
-          <div fxFlex="15%">CURRENT MEDIA CONTROL</div>
+          <media-control [event]="event"></media-control>
           <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
       </article>

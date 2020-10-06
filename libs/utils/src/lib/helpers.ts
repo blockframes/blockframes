@@ -22,7 +22,7 @@ export function isObject(item: any) {
  * @param target
  * @param source
  */
-export function mergeDeep(target: any, source: any) {
+export function mergeDeep<T>(target: T, source: Partial<T>): T {
   const output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach(key => {
@@ -164,3 +164,24 @@ export class BehaviorStore<T> {
     this.state.next(value);
   }
 }
+
+/**
+ * This high-order function create debounced functions, that can be continuously called,
+ * but only executed once every `wait` period.
+ * @note If you can work with observable, it's better to use rxjs `debounceTime` instead
+ * @param func the function to debounce
+ * @param wait the debounce duration in ms
+ */
+export function debounceFactory(func: (...params) => any, wait: number) {
+  let timeout: number;
+
+  return function executedFunction(...args) {
+    const later = () => {
+      window.clearTimeout(timeout);
+      func(...args);
+    };
+
+    window.clearTimeout(timeout);
+    timeout = window.setTimeout(later, wait);
+  };
+};

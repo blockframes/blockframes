@@ -17,7 +17,8 @@ export function extractMediaFromDocumentBeforeUpdate(
     OrganizationForm |
     OrganizationAdminForm |
     OrganizationMediasForm |
-    MovieHostedVideosForm): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
+    MovieHostedVideosForm
+): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);
 

@@ -7,6 +7,8 @@ import { MovieFormEndComponent } from './end.component';
 // Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
+import { AppPipeModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 @NgModule({
@@ -17,6 +19,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     MatButtonModule,
     MatIconModule,
     ImageReferenceModule,
+    AppPipeModule,
     RouterModule.forChild([{ path: '', component: MovieFormEndComponent }])
   ],
 })
