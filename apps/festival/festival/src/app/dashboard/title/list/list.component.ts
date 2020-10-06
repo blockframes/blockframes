@@ -49,7 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
       map(movies => movies.filter(movie => !!movie)),
-      map(movies => movies.filter(movie => movie.storeConfig.appAccess.financiers)),
+      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       filter(movies => !!movies.length),
       tap(movies => {
         !!movies.length ?
