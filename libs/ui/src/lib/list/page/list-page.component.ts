@@ -13,28 +13,28 @@ import {
 // Blockframes
 import { fadeList } from '@blockframes/utils/animations/fade';
 
-@Directive({ selector: 'page-title' })
+@Directive({ selector: 'list-page-title' })
 export class PageTitleDirective { }
 
-@Directive({ selector: 'page-description' })
+@Directive({ selector: 'list-page-description' })
 export class PageDescriptionTemplateDirective { }
 
-@Directive({ selector: 'page-sort' })
+@Directive({ selector: 'list-page-sort' })
 export class PageSortDirective { }
 
-@Directive({ selector: 'page-search' })
+@Directive({ selector: 'list-page-search' })
 export class PageSearchDirective { }
 
-@Directive({ selector: '[pageCard]' })
+@Directive({ selector: '[listPageCard]' })
 export class PageCardDirective { }
 
-@Directive({ selector: '[pageListItem]' })
+@Directive({ selector: '[listPageListItem]' })
 export class PageListItemDirective { }
 
-@Directive({ selector: 'page-progress' })
+@Directive({ selector: 'list-page-progress' })
 export class PageProgressDirective { }
 
-@Directive({ selector: 'page-empty' })
+@Directive({ selector: '[listPageEmpty]' })
 export class PageEmptyDirective { }
 
 @Component({
@@ -46,14 +46,9 @@ export class PageEmptyDirective { }
 })
 export class ListPageComponent implements AfterContentInit {
 
-  @ContentChild(PageSortDirective, { read: TemplateRef }) pageSortTemplate: PageSortDirective;
-  @ContentChild(PageSearchDirective, { read: TemplateRef }) pageSearchTemplate: PageSearchDirective;
-  @ContentChild(PageCardDirective, { read: TemplateRef }) pageCardTemplate: PageCardDirective;
-  @ContentChild(PageListItemDirective, { read: TemplateRef }) pageListItemTemplate: PageListItemDirective;
-  @ContentChild(PageProgressDirective, { read: TemplateRef }) pageProgressTemplate: PageProgressDirective;
-  @ContentChild(PageTitleDirective, { read: TemplateRef }) pageTitleTemplate: PageTitleDirective;
-  @ContentChild(PageDescriptionTemplateDirective, { read: TemplateRef }) pageDescriptionTemplate: PageDescriptionTemplateDirective
-  @ContentChild(PageEmptyDirective, { read: TemplateRef }) pageErrorTemplate: PageEmptyDirective;
+  @ContentChild(PageCardDirective, { read: TemplateRef }) cardTemplate: PageCardDirective;
+  @ContentChild(PageListItemDirective, { read: TemplateRef }) listItemTemplate: PageListItemDirective;
+  @ContentChild(PageEmptyDirective, { read: TemplateRef }) listPageEmptyTemplate: PageEmptyDirective;
 
   @Input() items: unknown[];
 
@@ -63,9 +58,9 @@ export class ListPageComponent implements AfterContentInit {
   constructor(private location: Location) { }
 
   ngAfterContentInit() {
-    if (!!this.pageCardTemplate && !!this.pageListItemTemplate) {
+    if (!!this.cardTemplate && !!this.listItemTemplate) {
       this.canToggle = true;
-    } else if (!!this.pageListItemTemplate) {
+    } else if (!!this.listItemTemplate) {
       this.listView = true;
     }
   }

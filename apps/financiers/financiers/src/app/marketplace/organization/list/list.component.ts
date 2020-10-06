@@ -22,7 +22,8 @@ import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 export class ListComponent implements OnInit, OnDestroy {
 
   @HostBinding('@scaleOut') animation = true;
-  orgs$: Observable<Organization[]>;
+
+  public orgs$: Observable<Organization[]>;
 
   private orgResultsState = new BehaviorSubject<Organization[]>([]);
 

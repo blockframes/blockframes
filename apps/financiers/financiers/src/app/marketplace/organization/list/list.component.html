@@ -1,21 +1,21 @@
 <list-page [items]="orgs$ | async">
-  <page-title>
+  <list-page-title>
     <h1 class="mat-display-2 page-title">Our partners</h1>
-  </page-title>
+  </list-page-title>
 
-  <page-search>
+  <list-page-search>
     <mat-form-field appearance="outline">
       <mat-label>Try searching for our partners...</mat-label>
       <input matInput type="text" [formControl]="searchForm.get('query')">
     </mat-form-field>
-  </page-search>
+  </list-page-search>
 
-  <page-description>
+  <list-page-description>
     <span i18n *ngIf="nbHits" class="mat-body-2">
       There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partners{nbHits, plural, =0 {} =1 {} other {s}}
       available.
     </span>
-  </page-description>
+  </list-page-description>
 
   <list-filter>
     <ng-template filter label="Partner Country" [form]="searchForm.country">
@@ -23,19 +23,20 @@
     </ng-template>
   </list-filter>
 
-  <ng-template pageCard let-org>
+  <ng-template listPageCard let-org>
     <org-card [org]="org"></org-card>
   </ng-template>
 
-  <page-empty *ngIf="loading$.asObservable() | async">
+  <ng-template listPageEmpty *ngIf="loading$.value">
     <div class="loading">
       <mat-spinner color="primary"></mat-spinner>
     </div>
-  </page-empty>
+  </ng-template>
 
-  <page-progress>
+  <list-page-progress *ngIf="!loading$.value">
     <bf-load-more-button [progressValue]="hitsViewed / nbHits * 100" (buttonClicked)="loadMore()">
       <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
     </bf-load-more-button>
-  </page-progress>
+  </list-page-progress>
+
 </list-page>

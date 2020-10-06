@@ -3,12 +3,12 @@
   <a mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </a>
-  <ng-content select="page-title"></ng-content>
+  <ng-content select="list-page-title"></ng-content>
   <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="32px">
 
     <div class="search">
       <!-- MAIN SEARCH BAR -->
-      <ng-content select="page-search"></ng-content>
+      <ng-content select="list-page-search"></ng-content>
     </div>
 
     <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
@@ -21,14 +21,14 @@
     </button>
 
     <!-- SORT CONTROL-->
-    <ng-content select="page-sort"></ng-content>
+    <ng-content select="list-page-sort"></ng-content>
 
   </section>
 </header>
 
 <!-- FILTER SIDE CARD -->
 <div fxLayout fxLayoutAlign="space-between center" class="filter dark-contrast-theme" bgAsset="banner_header_page.webp">
-  <ng-content></ng-content>
+  <ng-content select="list-filter"></ng-content>
 </div>
 
 <!-- Items -->
@@ -43,7 +43,7 @@
           <div [col]="3">
 
             <!-- INSERT CARD -->
-            <ng-template [ngTemplateOutlet]="pageCardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+            <ng-template [ngTemplateOutlet]="cardTemplate" [ngTemplateOutletContext]="{$implicit: item}">
             </ng-template>
           </div>
         </ng-container>
@@ -53,7 +53,7 @@
       <div *ngFor="let item of items">
 
         <!-- INSERT LIST ITEM -->
-        <ng-template [ngTemplateOutlet]="pageListItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
+        <ng-template [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{$implicit: item}">
         </ng-template>
 
       </div>
@@ -62,11 +62,11 @@
   </ng-container>
 
   <!-- PROGRESS -->
-  <ng-content select="page-progress"></ng-content>
+  <ng-content select="list-page-progress"></ng-content>
 
   <!-- ERROR HANDLING -->
   <ng-template #empty>
-    <ng-template [ngTemplateOutlet]="pageErrorTemplate || defaultImg"></ng-template>
+    <ng-template [ngTemplateOutlet]="listPageEmptyTemplate || defaultImg"></ng-template>
     <ng-template #defaultImg>
       <div fxLayout="column" fxLayoutAlign="start center">
         <h6>We didn't found anything.</h6>
