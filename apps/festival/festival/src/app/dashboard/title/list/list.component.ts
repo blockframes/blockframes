@@ -52,7 +52,7 @@ export class ListComponent implements OnInit, OnDestroy {
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
       filter(movies => !!movies.length),
       tap(movies => {
-        !!movies.length ?
+        movies.length ?
           this.dynTitle.setPageTitle('My titles') :
           this.dynTitle.setPageTitle('My titles', 'Empty');
       })
