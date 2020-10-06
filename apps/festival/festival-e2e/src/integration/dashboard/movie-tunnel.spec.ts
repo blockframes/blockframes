@@ -1,14 +1,21 @@
 /// <reference types="cypress" />
 
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
-import { signInAndNavigateToMain } from '../../support/utils/utils';
+import { signInAndNavigateToMain, acceptCookie } from '../../support/utils/utils';
 import { 
   mainTest
 } from '../../support/movie-tunnel-tests';
+import { User, USER } from '@blockframes/e2e/fixtures/users';
+import { TO } from '@blockframes/e2e/utils/env';
+
+const userFixture = new User();
+const users  =  [ userFixture.getByUID(USER.Jean) ];
+let movieURL: string;
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
-  it.only('Login into an existing account, navigate on titles list page, go to movie tunnel start page, go on movie tunnel main page', (done) => {
+  it('User logs in, can navigate to add new title page', () => {
+    /*
     cy.on('uncaught:exception', (err, runnable) => {
       expect(err.message).to.include('something about the error');
   
@@ -20,61 +27,17 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       // return false to prevent the error from
       // failing this test
       return false;
-    })    
-    clearDataAndPrepareTest('/');
-    signInAndNavigateToMain();
+    })
+    */
+   cy.visit('c/o/marketplace/home');
+   cy.wait(3000);
+   acceptCookie();
+    //clearDataAndPrepareTest('/');
+    signInAndNavigateToMain(users[0]);
   });
 
   // Main page
-  it('Complete main fields, go on movie tunnel storyline page', () => {
-    //mainTest();
-  });
-
-  // Storyline page
-  it('Complete storyline fields, go on movie tunnel credits page', () => {
-    //storylineTest();
-  });
-
-  // Credits page
-  it('Complete credits fields, go on movie tunnel budget page', () => {
-    //creditsTest();
-  });
-
-  // Budget page
-  it('Complete budget fields, go on movie tunnel technical info page', () => {
-    //budgetTest();
-  });
-
-  // Technical info page
-  it('Complete technical info fields, go on movie tunnel promotional images page', () => {
-    //technicalInfoTest();
-  });
-
-  // Promotional images page
-  it('Go on movie tunnel files page', () => {
-    //promotionalImagesTest();
-  });
-
-  // Files page
-  it('Complete files and links fields, go on movie tunnel chain of titles page', () => {
-    //filesTest();
-  });
-
-  // Chain of titles pages
-  it('Complete chain of titles fields, go on movie tunnel valuation page', () => {
-    //chainOfTitlesTest();
-  });
-
-  // Valuation page
-  it('Complete valuation field, go on movie tunnel summary page', () => {
-    //valuationTest();
-  });
-
-  // Summary page
-  it('Verifies that every field of summary page is matching the inputs, save and verify the movie is saved', () => {
-    //summaryTest();
-    // Reload and relaunch test to make sure the movie has been saved
-    cy.reload();
-    //summaryTest();
+  it.only('Complete main fields, go on movie tunnel storyline page', () => {
+    mainTest();
   });
 });

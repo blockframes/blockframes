@@ -1,5 +1,6 @@
 ﻿import { AuthLoginPage, AuthIdentityPage } from "../pages/auth";
 import { User } from "./type";
+import { TO } from './env';
 
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
@@ -46,6 +47,46 @@ export function uploadFile(p: string, type: string, testId: string): any {
 
 export function assertUploadStatus(content: string, testId: string) {
   return cy.get(`file-upload[test-id=${testId}] section h3`).contains(content);
+}
+
+/**
+ * selectAction : Clicks the element & waits if needed.
+ * @param element : string for selecting button on the page
+ * @param Option : timeouts for button, wait & logging message
+ */
+export function selectAction(element: string, 
+  Option: { waitTime?: number, timeout?: number, message?: string } = 
+    {waitTime : 0, timeout: TO.PAGE_ELEMENT, message: ''}) {
+  if (Option.message !== '') {
+    cy.log(Option.message);
+  }
+  cy.get(element, {timeout: Option.timeout})
+    .click();
+  if (Option.waitTime !== 0) {
+    cy.wait(Option.waitTime);
+  }
+}
+
+/**
+ * clickOnMenu : Clicks the sidemenu
+ * @param page : array of page strings
+ * @param menu : string representing drawer button
+ * @param menu_item : side menu item to click
+ * @param closeMenu : boolean, false to leave side menu opened
+ */
+export function clickOnMenu(page: string[], menu: string, menu_item: string,
+  closeMenu: boolean = true) {
+  cy.get(`${page[0]} button[test-id="${menu}"]`, {timeout: TO.PAGE_ELEMENT})
+    .first().click();
+  cy.wait(TO.THREE_SEC);
+  cy.get(`aside a[routerlink*="${menu_item}"]`, {timeout: TO.PAGE_ELEMENT})
+    .click();
+  cy.wait(TO.WAIT_1SEC);
+  if (closeMenu) {
+    cy.get(`${page[1]} button[test-id="${menu}"]`, {timeout: TO.PAGE_ELEMENT})
+    .first().click();
+    cy.wait(TO.WAIT_1SEC);
+  }
 }
 
 let currentID = 0;
