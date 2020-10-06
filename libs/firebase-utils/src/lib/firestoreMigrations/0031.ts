@@ -296,6 +296,9 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
+    } else if (ref.includes(`movies/${docId}/main.banner.media`)) { // Code is ahead DB
+      oldRef = ref;
+      newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.presentation_deck.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/promotional.presentation_deck/${ref.split('/').pop()}`;
@@ -309,6 +312,9 @@ const changeResourceDirectory = async (
       oldRef = `movies/${docId}/promotionalElements.scenario.media/${fileName}`; // we don't have ref for pdf medias so we recreate it
       newRef = `movies/${docId}/promotional.scenario/${fileName}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.poster`)) {
+      oldRef = ref;
+      newRef = `movies/${docId}/poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
+    } else if (ref.includes(`movies/${docId}/main.poster`)) { // Code is ahead DB
       oldRef = ref;
       newRef = `movies/${docId}/poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
@@ -345,7 +351,7 @@ const changeResourceDirectory = async (
         return EMPTY_REF;
       }
     } else {
-      console.log(`Ref not found for : ${docId}`);
+      console.log(`Could not create new ref from ${ref} (docId : ${docId})`);
       return EMPTY_REF;
     }
 
