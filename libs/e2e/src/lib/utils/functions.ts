@@ -49,6 +49,9 @@ export function assertUploadStatus(content: string, testId: string) {
   return cy.get(`file-upload[test-id=${testId}] section h3`).contains(content);
 }
 
+export const acceptCookie = () => selectAction('button[test-id="accept-cookies"]', 
+                                    {waitTime: TO.THREE_SEC, message: 'Accepting all cookies'});
+
 /**
  * selectAction : Clicks the element & waits if needed.
  * @param element : string for selecting button on the page

@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
-import { signInAndNavigateToMain, acceptCookie } from '../../support/utils/utils';
+import { clearDataAndPrepareTest, acceptCookie } from '@blockframes/e2e/utils/functions';
+import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { 
   mainTest
 } from '../../support/movie-tunnel-tests';
