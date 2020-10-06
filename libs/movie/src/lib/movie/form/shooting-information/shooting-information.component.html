@@ -18,6 +18,7 @@
             <mat-label>Date</mat-label>
             <input matInput [matDatepicker]="completedPicker"
               [formControl]="form.shooting.get('dates').get('completed')">
+            <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
             </mat-datepicker-toggle>
@@ -30,8 +31,9 @@
           <mat-radio-button class="mat-body-2" color="primary" value="progress">Shooting in progress :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Date</mat-label>
+            <mat-label>Approximate end date</mat-label>
             <input matInput [matDatepicker]="progressPicker" [formControl]="form.shooting.get('dates').get('progress')">
+            <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="progressPicker">
               <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
             </mat-datepicker-toggle>
@@ -93,7 +95,8 @@
                 <mat-form-field appearance="outline" fxFlex>
                   <mat-label>Year</mat-label>
                   <input matInput [formControl]="shootingDateTo.get('year')" placeholder="Year" type="number" />
-                  <mat-error *ngIf="shootingDateTo.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
+                  <mat-error *ngIf="shootingDateTo.get('year').hasError('invalidYear')">Please enter a valid year.
+                  </mat-error>
                 </mat-form-field>
               </div>
             </div>
@@ -128,7 +131,8 @@
                 </ng-container>
               </mat-chip-list>
               <input matInput formArrayName="cities" [matChipInputFor]="chipList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event, locationForm.get('cities'))"/>
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" />
               <mat-hint>Use commas or press Enter key to separate cities.</mat-hint>
             </mat-form-field>
           </article>
