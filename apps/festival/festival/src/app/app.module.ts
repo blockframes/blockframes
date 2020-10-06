@@ -15,7 +15,7 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -57,7 +57,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
-    MatNativeDateModule,  // Required for Datepicker
+    MatNativeDateModule, // Required for Datepicker
 
     // Intercom
     IntercomModule.forRoot({ appId: intercomId }),
@@ -85,11 +85,15 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
     SafariBannerModule,
     CookieBannerModule,
   ],
-  providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
-  bootstrap: [AppComponent]
+  providers: [
+    ScreenTrackingService,
+    UserTrackingService,
+    PerformanceMonitoringService,
+    { provide: REGION, useValue: 'europe-west1' },
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {
-
   constructor(
     router: Router,
     analytics: FireAnalytics,
@@ -98,23 +102,22 @@ export class AppModule {
     gdprService: GDPRService,
     @Inject(YM_CONFIG) ymConfig: number
   ) {
-
     const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
     if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
     if (yandex) yandexService.insertMetrika(ymConfig);
-    intercom && intercomId ? intercomService.enable() : intercomService.disable(); 
+    intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
-    const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
+    const navEnds = router.events.pipe(filter((event) => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
       try {
         analytics.event('pageView', {
           page_location: 'marketplace',
-          page_path: event.urlAfterRedirects
+          page_path: event.urlAfterRedirects,
         });
       } catch {
         analytics.event('pageView', {
           page_location: 'marketplace',
-          page_path: event.urlAfterRedirects
+          page_path: event.urlAfterRedirects,
         });
       }
     });

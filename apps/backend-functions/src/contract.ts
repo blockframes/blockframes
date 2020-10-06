@@ -6,6 +6,7 @@ import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
 import { isEqual, uniqBy, flatten } from 'lodash';
 import { firestore } from 'firebase-admin';
+import { Change } from 'firebase-functions';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<number> {
   return (await _getVersionCount(contractId, tx));
@@ -296,7 +297,7 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
  * @param change
  */
 export async function onContractWrite(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  change: Change<FirebaseFirestore.DocumentSnapshot>,
 ): Promise<any> {
   const before = change.before.data();
   const after = change.after.data();

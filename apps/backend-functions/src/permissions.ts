@@ -1,3 +1,4 @@
+import { EventContext } from 'firebase-functions';
 /**
  * Manage permission documents
  */
@@ -12,7 +13,7 @@ import { db, functions } from './internals/firebase';
  */
 export async function onDocumentPermissionCreate(
   _: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  context: EventContext
 ) {
   const { docID, orgID } = context.params;
 
