@@ -37,15 +37,4 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
     .click();
   cy.wait(TO.WAIT_1SEC);
-
-
-  /*
-  cy.visit('c/o/dashboard/title');
-  cy.wait(TO.THREE_SEC);
-  //const p5: StartTunnelPage = p4.clickAdd();
-  cy.get('festival-dashboard-home [mattooltip="Import a new title"]', 
-          { timeout: TO.PAGE_LOAD })
-    .click();  
-  //const p6: TunnelMainPage = p5.clickBegin();
-  */
 }
