@@ -10,7 +10,7 @@
       </button>
     </header>
     <mat-list role="list" fxLayout="column" fxLayoutAlign="space-around start">
-      <ng-container *ngFor="let participant of participants$ | async">
+      <ng-container *ngFor="let participant of participants">
         <mat-list-item>
           <span matListAvatar class="avatar-text ">{{participant | eventInitialParticipant}}</span>
           <h3 matLine>{{participant.festivalData | displayName}}</h3>

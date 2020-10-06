@@ -6,7 +6,7 @@ mat-sidenav-container {
       position: sticky;
       z-index: 1;
       top: 0;
-      background-color: var(--whiteBackground);
+      background-color: var(--background-card);
       padding: 0 8px;
     }
 
@@ -19,15 +19,11 @@ mat-sidenav-container {
         }
 
         h3 {
-          font-size: 1em;
-          font-weight: bold;
-          text-overflow: ellipsis;
           text-align: left;
         }
 
         .avatar-text {
           background-color: var(--whiteBackground);
-          margin-right: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
