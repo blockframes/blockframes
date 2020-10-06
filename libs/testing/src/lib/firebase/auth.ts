@@ -1,4 +1,4 @@
-import { runChunks } from '@blockframes/firebase-utils';
+import { runChunks, sleep } from '@blockframes/firebase-utils';
 import * as env from '@env';
 // tslint:disable: no-console
 import type * as admin from 'firebase-admin';
@@ -10,8 +10,9 @@ export async function deleteAllUsers(auth: admin.auth.Auth) {
   const timeMsg = 'Deleting users took';
   console.time(timeMsg);
   do {
-    result = await auth.listUsers(1000, result.pageToken);
-    await auth.deleteUsers(result.users.map(record => record.uid))
+    result = await auth.listUsers(100, result.pageToken);
+    await auth.deleteUsers(result.users.map(record => record.uid));
+    await sleep(1000); // @see https://groups.google.com/u/1/g/firebase-talk/c/4VkOBKIsBxU
   } while (result.pageToken);
   console.timeEnd(timeMsg);
 }
