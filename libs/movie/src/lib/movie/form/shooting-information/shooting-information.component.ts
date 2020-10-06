@@ -4,7 +4,7 @@ import { distinctUntilChanged, filter } from 'rxjs/operators'
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 
@@ -18,6 +18,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   private sub: Subscription;
   public values$ = new BehaviorSubject<String[]>([]);
+  public currentValues$: Observable<String[]>;
 
   form = this.shell.form;
   disabledForm = new FormControl()
@@ -31,6 +32,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   ngOnInit() {
     this.enableForm();
+    this.currentValues$ = this.values$.asObservable();
     this.form.shooting.get('locations').controls.forEach(location => this.values$.next(location.get('cities').value))
   }
 
