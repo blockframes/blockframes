@@ -78,7 +78,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
 
       this.player = jwplayer('player');
       this.player.setup({
-        file: result,
+        file: result.signedUrl,
         logo: {
           file: watermarkUrl,
         }

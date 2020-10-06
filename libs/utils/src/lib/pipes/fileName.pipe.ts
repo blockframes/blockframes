@@ -40,7 +40,7 @@ export class FileTypePipe implements PipeTransform {
       case 'bmp':
         return 'image';
       default:
-        if (isAllowedVideoFileExtension(extension)) return 'video'
+        if (isAllowedVideoFileExtension(`.${extension}`)) return 'video'
         return 'unknown';
     }
   }
