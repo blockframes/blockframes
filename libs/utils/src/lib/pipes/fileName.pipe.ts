@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
+import { getFileExtension } from '../file-sanitizer';
 import { isAllowedVideoFileExtension } from '../utils';
 
 @Pipe({
@@ -28,8 +29,7 @@ export class FileTypePipe implements PipeTransform {
       return 'unknown';
     }
 
-    const arrayedRef = file.split('.');
-    const extension = arrayedRef.pop();
+    const extension = getFileExtension(file);
 
     switch(extension) {
       case 'pdf':
