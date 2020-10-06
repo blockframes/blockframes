@@ -1,8 +1,8 @@
-//import TunnelCreditsPage from "./TunnelCreditsPage";
+import { TO } from '@blockframes/e2e/utils/env';
 
 export default class TunnelStorylinePage {
   constructor() {
-    cy.get('catalog-tunnel-synopsis', { timeout: 5000 });
+    cy.get('catalog-tunnel-synopsis', { timeout: TO.PAGE_LOAD });
   }
 
   public static navigateToPage(movieId: string) {
@@ -40,6 +40,5 @@ export default class TunnelStorylinePage {
 
   public clickNext() {
     cy.get('[test-id=next]').click();
-    //return new TunnelCreditsPage();
   }
 }

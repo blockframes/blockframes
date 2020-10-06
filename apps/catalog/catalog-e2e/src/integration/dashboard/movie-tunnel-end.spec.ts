@@ -22,6 +22,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
+//TODO: Issue: #3874 
+// Need new movie form for Catalog App to rewrite the tests.
 describe.skip('User can navigate to the movie tunnel, complete required fields, and send the movie', () => {
   it('Login into an existing account, navigate on movie tunnel, complete required fields, go on titles page, navigate to movie page', () => {
 

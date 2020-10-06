@@ -1,15 +1,6 @@
 import { LandingPage } from '../../support/pages/landing';
-//import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../pages/dashboard';
-
 import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
 import { TO, User } from '@blockframes/e2e/utils';
-
-
-function confirmAction(page: string, menu: string, menu_item: string) {
-  cy.get(`${page} button[test-id="${menu}"]`, {timeout: TO.PAGE_ELEMENT})
-    .first().click();
-  cy.wait(TO.WAIT_1SEC);
-}
 
 export function signInAndNavigateToMain(user: Partial<User>) {
   cy.log('Reach LandingPage and accept cookies');

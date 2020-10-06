@@ -1,6 +1,1 @@
-import { mainTest } from './1-main';
-
-
-export {
-  mainTest,
-};
+export { mainTest } from './1-main';
