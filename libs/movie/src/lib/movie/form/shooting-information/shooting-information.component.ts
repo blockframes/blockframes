@@ -6,6 +6,7 @@ import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'movie-shooting-information',
@@ -43,14 +44,12 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   }
 
   enableForm() {
-    this.sub = this.disabledForm.valueChanges
-      .pipe(
+    this.sub = this.disabledForm.valueChanges.pipe(
         distinctUntilChanged(),
-        filter((value) => !!value)
-      )
-      .subscribe((value) => this.activate(value));
+        filter(value => !!value)
+      ).subscribe(value => this.activate(value));
 
-    const active = this.keys.find((key) => hasValue(this.form.shooting.value.dates[key]));
+    const active = this.keys.find(key => hasValue(this.form.shooting.value.dates[key]));
     this.disabledForm.setValue(active);
   }
 
@@ -65,7 +64,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
     }
   }
 
-  public add(event: any, control: FormControl): void {
+  public add(event: MatChipInputEvent, control: FormControl): void {
     const state = control.value;
 
     // Add new value to the array
@@ -77,9 +76,7 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
   }
 
   public remove(i: number, control: FormControl): void {
-    console.log(control);
-    const value = control.value;
-    const shadowValue = i === 0 ? [] : value.slice();
+    const shadowValue = control.value.length === 0 ? [] : control.value.slice();
     shadowValue.splice(i, 1);
 
     control.setValue(shadowValue);

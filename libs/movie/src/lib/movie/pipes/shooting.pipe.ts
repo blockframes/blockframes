@@ -33,7 +33,7 @@ export class ShootingLocationsPipe implements PipeTransform {
     } else {
       return shooting.locations.map(({ cities, country }) => {
         const territory = formatSlug(country, 'TERRITORIES');
-        const allCities = cities.join();
+        const allCities = cities.join(', ');
         return allCities ? `${territory} (${allCities})` : territory;
       }).join(', ');
     }

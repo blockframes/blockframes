@@ -95,13 +95,13 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     ...params,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
-    estimatedBudget: createRange<number>(params.estimatedBudget ? params.estimatedBudget : {}),
+    estimatedBudget: createRange<number>(params.estimatedBudget),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
-    release: createReleaseYear(params.release ? params.release : {}),
-    runningTime: createRunningTime(params.runningTime ? params.runningTime : {}),
-    shooting: createShooting(params.shooting ? params.shooting : {}),
+    release: createReleaseYear(params.release),
+    runningTime: createRunningTime(params.runningTime),
+    shooting: createShooting(params.shooting),
     stakeholders: createMovieStakeholders(params.stakeholders),
     storeConfig: createStoreConfig(params.storeConfig),
     title: createTitle(params.title),
@@ -289,18 +289,15 @@ export function createShooting(params: Partial<MovieShooting> = {}): MovieShooti
 
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
-    completed: null,
-    progress: null,
     planned: {},
     ...params
   }
 }
 
-export function createShootingPlannedObject(params: Partial<MoviePlannedShooting>) {
+export function createShootingPlannedObject(params: Partial<MoviePlannedShooting> = {}) {
   return {
     period: '',
     month: '',
-    year: null,
     ...params
   }
 }

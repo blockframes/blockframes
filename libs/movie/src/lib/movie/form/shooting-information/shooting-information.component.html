@@ -108,7 +108,7 @@
       <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
         <ng-template itemRef let-location>
           {{ location.country | translateSlug: 'TERRITORIES' }} -
-          <ng-container *ngFor="let city of location.cities; let isLast=last">{{ city | titlecase }}{{isLast ? '' : ', '}}</ng-container>
+          {{ location.cities.join(', ') | titlecase }}
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
