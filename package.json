@@ -122,6 +122,8 @@
     "rxjs": "~6.5.5",
     "saturn-datepicker": "^8.0.2",
     "tmp": "0.1.0",
+    "twilio": "3.49.2",
+    "twilio-video": "^2.7.2",
     "xlsx": "^0.15.1",
     "zone.js": "^0.10.2"
   },
