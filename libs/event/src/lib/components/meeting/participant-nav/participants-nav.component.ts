@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
-
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -11,5 +11,5 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 })
 export class ParticipantsNavComponent {
 
-  @Input() participants: IParticipantMeeting[];
+  @Input() participants$: Observable<IParticipantMeeting[]>;
 }

@@ -7,53 +7,35 @@ mat-sidenav-container {
       z-index: 1;
       top: 0;
       background-color: var(--whiteBackground);
-      span {
-        span {
-          font-size: 0.7em;
-        }
-        mat-icon {
-          margin-left: 2px;
-        }
-      }
+      padding: 0 8px;
     }
+
     mat-list {
       mat-list-item {
-        height: unset;
-        padding: 8px;
+        padding: 0 8px;
+
         &::-webkit-scrollbar {
           display: none;
         }
 
-        div {
-          flex: 1;
-          .profile-name {
-            font-size: 1em;
-            font-weight: bold;
-            text-overflow: ellipsis;
-          }
-          .profile-organization {
-            font-size: 0.8em;
-          }
+        h3 {
+          font-size: 1em;
+          font-weight: bold;
+          text-overflow: ellipsis;
+          text-align: left;
+        }
 
-          .avatar-text {
-            background-color: var(--whiteBackground);
-            width: 7vh;
-            height: 7vh;
-            border-radius: 50%;
-            margin-right: 8px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-          }
+        .avatar-text {
+          background-color: var(--whiteBackground);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
       }
 
       mat-divider {
         width: 100%;
       }
-
     }
   }
 
