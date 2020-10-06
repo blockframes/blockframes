@@ -1,5 +1,5 @@
 <div>
-  <ng-template [ngTemplateOutlet]="loadMoreButtonTextTemplate"></ng-template>
+  <ng-content></ng-content>
   <mat-progress-bar color="primary" [value]="progressValue"></mat-progress-bar>
   <button mat-stroked-button color="primary" (click)="buttonClicked.emit()" [disabled]="progressValue === 100">LOAD
     MORE</button>

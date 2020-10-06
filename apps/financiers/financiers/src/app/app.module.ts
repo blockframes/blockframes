@@ -67,7 +67,7 @@ import { firebase } from '@env';
     IntercomModule.forRoot({ appId: intercomId }),
 
     // Firebase
-    AngularFireModule.initializeApp(firebase),
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,

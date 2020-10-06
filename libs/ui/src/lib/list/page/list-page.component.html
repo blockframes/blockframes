@@ -3,28 +3,26 @@
   <a mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </a>
-  <ng-template [ngTemplateOutlet]="pageTitleTemplate"></ng-template>
+  <ng-content select="page-title"></ng-content>
   <section fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="32px">
 
-    <span class="search">
+    <div class="search">
       <!-- MAIN SEARCH BAR -->
-      <ng-template [ngTemplateOutlet]="pageSearchTemplate"></ng-template>
-    </span>
+      <ng-content select="page-search"></ng-content>
+    </div>
 
-    <span>
-      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
-        <ng-container *ngIf="!listView">
-          <mat-icon matPrefix svgIcon="list"></mat-icon>
-        </ng-container>
-        <ng-container *ngIf="listView">
-          <mat-icon matPrefix svgIcon="grid"></mat-icon>
-        </ng-container>
-      </button>
+    <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+      <ng-container *ngIf="!listView">
+        <mat-icon matPrefix svgIcon="list"></mat-icon>
+      </ng-container>
+      <ng-container *ngIf="listView">
+        <mat-icon matPrefix svgIcon="grid"></mat-icon>
+      </ng-container>
+    </button>
 
-      <!-- SORT CONTROL-->
-      <ng-template [ngTemplateOutlet]="pageSortTemplate"></ng-template>
+    <!-- SORT CONTROL-->
+    <ng-content select="page-sort"></ng-content>
 
-    </span>
   </section>
 </header>
 
@@ -35,9 +33,9 @@
 
 <!-- Items -->
 <section>
-  <ng-container *ngIf="items.length; else error">
+  <ng-container *ngIf="items.length; else empty">
     <div fxLayout="row" fxLayoutAlign="end start">
-      <ng-template [ngTemplateOutlet]="pageResultDescriptionTemplate"></ng-template>
+      <ng-content select="page-description"></ng-content>
     </div>
     <ng-container *ngIf="!listView; else displayList">
       <div grid [@fadeList]="items.length">
@@ -61,12 +59,13 @@
       </div>
     </ng-template>
 
-    <!-- PROGRESS -->
-    <ng-template [ngTemplateOutlet]="pageProgressTemplate"></ng-template>
   </ng-container>
 
+  <!-- PROGRESS -->
+  <ng-content select="page-progress"></ng-content>
+
   <!-- ERROR HANDLING -->
-  <ng-template #error>
+  <ng-template #empty>
     <ng-template [ngTemplateOutlet]="pageErrorTemplate || defaultImg"></ng-template>
     <ng-template #defaultImg>
       <div fxLayout="column" fxLayoutAlign="start center">

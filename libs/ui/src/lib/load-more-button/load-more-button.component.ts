@@ -2,16 +2,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
-  Directive,
   EventEmitter,
   Input,
   Output,
-  TemplateRef
 } from '@angular/core';
-
-@Directive({ selector: '[buttonText]' })
-export class LoadMoreButtonTextDirective { }
 
 @Component({
   selector: '[progressValue]bf-load-more-button',
@@ -23,6 +17,4 @@ export class LoadMoreButtonComponent {
   @Input() progressValue: number
 
   @Output() buttonClicked = new EventEmitter;
-
-  @ContentChild(LoadMoreButtonTextDirective, { read: TemplateRef }) loadMoreButtonTextTemplate: LoadMoreButtonTextDirective;
 }

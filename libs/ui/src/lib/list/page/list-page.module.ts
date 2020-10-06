@@ -23,8 +23,8 @@ import {
   PageSearchDirective,
   PageSortDirective,
   PageTitleDirective,
-  PageResultDescriptionDirective,
-  PageErrorDirective
+  PageDescriptionTemplateDirective,
+  PageEmptyDirective
 } from './list-page.component';
 
 @NgModule({
@@ -50,8 +50,8 @@ import {
     PageListItemDirective,
     PageProgressDirective,
     PageTitleDirective,
-    PageResultDescriptionDirective,
-    PageErrorDirective
+    PageDescriptionTemplateDirective,
+    PageEmptyDirective
   ],
   exports: [
     ListPageComponent,
@@ -61,8 +61,8 @@ import {
     PageListItemDirective,
     PageProgressDirective,
     PageTitleDirective,
-    PageResultDescriptionDirective,
-    PageErrorDirective
+    PageDescriptionTemplateDirective,
+    PageEmptyDirective
   ]
 })
 export class ListPageModule { }
