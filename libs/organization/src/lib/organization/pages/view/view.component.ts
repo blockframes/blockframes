@@ -10,16 +10,21 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
-const navLinks = [{
-  path: 'org',
-  label: 'Organization'
-}, {
-  path: 'members',
-  label: 'Members'
-}, {
-  path: 'documents',
-  label: 'Documents'
-}];
+const navLinks = [
+  {
+    path: 'org',
+    label: 'Organization'
+  },
+  {
+    path: 'members',
+    label: 'Members'
+  },
+  // TODO uncomment after release 1.9 : see issue#3880
+  // {
+  //   path: 'documents',
+  //   label: 'Documents'
+  // }
+];
 
 @Component({
   selector: 'organization-view',
@@ -46,9 +51,10 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
       if (data.url.includes('members')) {
         this.dynTitle.setPageTitle('Members', `${this.query.getActive().denomination.full}`,
           { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
-      } else if (data.url.includes('documents')) {
-        this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`,
-          { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
+      // TODO uncomment after release 1.9 : see issue#3880
+      // } else if (data.url.includes('documents')) {
+      //   this.dynTitle.setPageTitle('Documents', `${this.query.getActive().denomination.full}`,
+      //     { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
       } else {
         this.dynTitle.setPageTitle('Company details', `${this.query.getActive().denomination.full}`,
           { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: false })
