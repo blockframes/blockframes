@@ -17,7 +17,9 @@ import {RemoteComponent} from './participant/remote/remote.component';
 import {DominantSpeakerComponent} from './participant/dominant-speaker/dominant-speaker.component';
 import {ContainerVideoComponent} from './container-video/container-video.component';
 import {ControlAudioComponent} from './control-media/audio/audio.component';
+
 import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 
 @NgModule({
@@ -46,6 +48,7 @@ import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-init
       MatGridListModule,
       FlexModule,
       EventInitialParticipantModule,
+      DisplayNameModule,
       ImageReferenceModule
     ]
 })

@@ -10,15 +10,11 @@
       </button>
     </header>
     <mat-list role="list" fxLayout="column" fxLayoutAlign="space-around start">
-      <ng-container *ngFor="let participant of participants">
+      <ng-container *ngFor="let participant of participants$ | async">
         <mat-list-item>
-          <div fxLayout fxLayoutAlign="space-around center">
-            <span matListAvatar class="avatar-text">{{participant | eventInitialParticipant}}</span>
-            <div fxLayout="column" fxLayoutAlign="space-around start">
-              <span class="profile-name">{{participant.festivalData.firstName}} {{participant.festivalData.lastName}}</span>
-              <span class="profile-organization">{{participant.festivalData.organizationName}}</span>
-            </div>
-          </div>
+          <span matListAvatar class="avatar-text ">{{participant | eventInitialParticipant}}</span>
+          <h3 matLine>{{participant.festivalData | displayName}}</h3>
+          <span class="mat-caption" matLine>{{ participant.festivalData.organizationName }}</span>
         </mat-list-item>
         <mat-divider></mat-divider>
       </ng-container>
