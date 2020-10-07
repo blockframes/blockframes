@@ -296,7 +296,7 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.banner.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
-    } else if (ref.includes(`movies/${docId}/main.banner.media`)) { // Code is ahead DB
+    } else if (ref.includes(`movies/${docId}/main.banner.media`)) {
       oldRef = ref;
       newRef = `movies/${docId}/banner/${ref.split('/').pop()}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.presentation_deck.media`)) {
@@ -314,7 +314,7 @@ const changeResourceDirectory = async (
     } else if (ref.includes(`movies/${docId}/promotionalElements.poster`)) {
       oldRef = ref;
       newRef = `movies/${docId}/poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
-    } else if (ref.includes(`movies/${docId}/main.poster`)) { // Code is ahead DB
+    } else if (ref.includes(`movies/${docId}/main.poster`)) {
       oldRef = ref;
       newRef = `movies/${docId}/poster/${ref.split('/').pop().replace(/(\.|\[)[0-9]{1}\]?\./gi, '')}`;
     } else if (ref.includes(`movies/${docId}/promotionalElements.still_photo`)) {
