@@ -4,29 +4,31 @@ import { NgModule } from '@angular/core';
 @Pipe({ name: 'deepKey' })
 export class DeepKeyPipe implements PipeTransform {
   transform(value: Object, deepKey: string) {
+
     try {
-      if (!value) return;
-      const getDeepValue = (val: Object) => deepKey.split('.')
-        .reduce((result, key) => {
-          if (!result) return;
-          return result[key]
-        }, val);
+      if (!value || !deepKey) return;
+
+      const conditions = deepKey.split('||').map(p => p.trim());
+      const getDeepValue = (val: Object, condition: string) => condition.split('.').reduce((result, key) => result?.[key], val);
 
       if (Array.isArray(value)) {
-        return value.map(obj => getDeepValue(obj)).filter(v => !!v);
+        return value.map(obj => {
+          const condition = conditions.find(c => !!getDeepValue(obj, c));
+          return condition ? getDeepValue(obj, condition) : undefined;
+        });
       } else {
-        return getDeepValue(value);
+        const condition = conditions.find(c => !!getDeepValue(value, c));
+        return condition ? getDeepValue(value, condition) : undefined;
       }
-    } catch(error) {
+    } catch (error) {
       console.warn('AN ERROR HAPPENED IN THE DeepKeyPipe');
       console.warn(error);
       return;
     }
   }
-}
 
-@NgModule({
-  declarations: [DeepKeyPipe],
-  exports: [DeepKeyPipe]
-})
-export class DeepKeyPipeModule { }
+  @NgModule({
+    declarations: [DeepKeyPipe],
+    exports: [DeepKeyPipe]
+  })
+  export class DeepKeyPipeModule { }

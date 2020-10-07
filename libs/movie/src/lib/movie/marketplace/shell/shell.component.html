@@ -33,11 +33,14 @@
   </section>
 
   <!-- Footer -->
-  <movie-screening></movie-screening>
-  <h2 flex>Images</h2>
-  <bf-carousel flex [min]="4">
-    <ng-container *ngFor="let photo of movie.promotional.still_photo">
-      <img carouselItem [col]="3" [ref]="photo" asset="empty_poster.webp" >
-    </ng-container>
-  </bf-carousel>
+  <!-- TODO issue#3674 https://github.com/blockframes/blockframes/issues/3674#issuecomment-703626090 -->
+  <!-- <movie-screening></movie-screening> -->
+  <ng-container *ngIf="movie.promotional.still_photo.length">
+    <h2 flex>Images</h2>
+    <bf-carousel flex [min]="4">
+      <ng-container *ngFor="let photo of movie.promotional.still_photo">
+        <img carouselItem [col]="3" [ref]="photo" asset="empty_poster.webp" >
+      </ng-container>
+    </bf-carousel>
+  </ng-container>
 </ng-container>

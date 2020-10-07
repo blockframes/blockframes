@@ -48,8 +48,9 @@ export class FilterByDatePipe implements PipeTransform {
    * @param value A list to order by date
    * @param timeFrame 
    * @param key The key where to find the date value
+   * @param keyFinish The key where to find the end date value. If used, date found at key is used as starting date.
    */
-  transform(value: any[], timeFrame: TimeFrame, key: string = 'date') {
+  transform(value: any[], timeFrame: TimeFrame, key: string = 'date', keyFinish?: string) {
     if (!Array.isArray(value)) {
       return value;
     }
@@ -57,7 +58,12 @@ export class FilterByDatePipe implements PipeTransform {
     const now = startOfDay(Date.now());
     const fromDate = add({ [type]: from }, now);
     const toDate = add({ [type]: to }, now);
-    return value.filter(v => v[key] >= fromDate && v[key] < toDate);
+    return value.filter(v => {
+      if (!!keyFinish) {
+        return v[key] < toDate && v[keyFinish] >= fromDate;
+      }
+      return v[key] >= fromDate && v[key] < toDate;
+    });
   }
 }
 
