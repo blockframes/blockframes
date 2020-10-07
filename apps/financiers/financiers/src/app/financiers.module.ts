@@ -39,6 +39,7 @@ const routes: Routes = createRoutes({
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
     relativeLinkResolution: 'corrected',
+    // @todo(#3907) Use idle state to preload modules
     // preloadingStrategy: PreloadAllModules
   })],
 })

@@ -6,17 +6,24 @@
   </p>
 
   <ng-container tunnel-form>
-    <bf-form-table [columns] [form]>
+    <bf-form-table [columns]="columns" [form]="form.get('perks')">
       <!-- Columns -->
-      <ng-template colRef="title" let-title>{{ title | titlecase }}</ng-template>
+      <ng-template colRef="title" let-title><b>{{ title | titlecase }}</b></ng-template>
       <ng-template colRef="description" let-description>{{ description }}</ng-template>
-      <ng-template colRef="min" let-min>{{ min | currency:'USD' }}</ng-template>
-      <ng-template colRef="amount.total" let-total>{{ total | number }}</ng-template>
+      <ng-template colRef="minPledge" let-minPledge>{{ minPledge | currency:'USD' }}</ng-template>
+      <ng-template colRef="amount" let-amount>
+        <ng-container *ngIf="!(amount | isUnlimited); else unlimited">
+          {{ amount.current | number }} / {{ amount.total | number }}
+        </ng-container>
+        <ng-template #unlimited>
+          Unlimited
+        </ng-template>
+      </ng-template>
       <ng-template colRef="amount.current" let-current>{{ current | number }}</ng-template>
 
       <!-- Local form -->
       <ng-template formView let-perkForm>
-        <form [formGroup]="perkForm">
+        <form [formGroup]="perkForm" fxLayout="column" fxLayoutGap="16px">
           <!-- Title -->
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
@@ -29,14 +36,12 @@
           <!-- Description -->
           <mat-form-field appearance="outline">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" required></textarea>
+            <textarea matInput formControlName="description"></textarea>
             <mat-hint>Please specify the avantages and the details of this privilege to your futur investor.</mat-hint>
             <mat-error *ngIf="perkForm.hasError('required', 'description')">
               Please provide the privilege description.
             </mat-error>
           </mat-form-field>
-
-          <h3>Details</h3>
 
           <!-- Minimum Pledge -->
           <mat-form-field appearance="outline">
@@ -46,24 +51,30 @@
             <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
           </mat-form-field>
 
-          <article formGroupName="amount">
-            <div fxLayout>
-              <mat-form-field appearance="outline">
-                <mat-label>Number of Privileges Available</mat-label>
+          <!-- Amount -->
+          <article fxLayout="column" fxLayoutGap="24px">
+            <h3>Privileges</h3>
+            <p>
+              Please precise the quantity of available privileges or choose the “unlimited privileges”
+            </p>
+            <mat-checkbox (change)="setUnlimited($event, perkForm)" [value]="perkForm.value.amount | isUnlimited">
+              Unlimited Privileges
+            </mat-checkbox>
+            <div formGroupName="amount" fxLayout fxLayoutGap="16px" *ngIf="!(perkForm.value.amount | isUnlimited)">
+              <mat-form-field fxFlex appearance="outline">
+                <mat-label>Amount of Privileges Available</mat-label>
                 <input type="number" matInput placeholder="$" formControlName="total" required/>
                 <mat-hint>Please precise the number of available privileges or choose the “unlimited privileges”.</mat-hint>
+                <mat-error *ngIf="perkForm.hasError('required', 'amount.total')">
+                  Please specify the number of available privileges or check the "unlimited privileges"
+                </mat-error>
               </mat-form-field>
-  
-              <mat-checkbox #unlimited>
-                Unlimited Privilges
-              </mat-checkbox>
+              <mat-form-field fxFlex appearance="outline">
+                <mat-label>Amount of Privileges Remaining</mat-label>
+                <input type="number" matInput formControlName="current"/>
+                <mat-hint>Please set an amount remaining for this privilege.</mat-hint>
+              </mat-form-field>
             </div>
-            <mat-form-field appearance="outline" *ngIf="unlimited.value">
-              <mat-label>Pledge Level</mat-label>
-              <input type="number" matInput placeholder="$" formControlName="current"/>
-              <mat-icon matSuffix svgIcon="USD"></mat-icon>
-              <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
-            </mat-form-field>
           </article>
         </form>
       </ng-template>

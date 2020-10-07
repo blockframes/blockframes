@@ -21,7 +21,7 @@ function createPerkControls(value?: Partial<Perk>) {
 
 type PerkControls = ReturnType<typeof createPerkControls>;
 
-class PerkForm extends FormEntity<PerkControls, Perk> {
+export class PerkForm extends FormEntity<PerkControls, Perk> {
   constructor(value?: Partial<Perk>) {
     const controls = createPerkControls(value);
     super(controls);

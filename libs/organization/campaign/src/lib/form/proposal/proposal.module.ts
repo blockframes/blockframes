@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CampaignFormProposalComponent } from './proposal.component';
 
@@ -14,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [CampaignFormProposalComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
     TunnelPageModule,
     MatFormFieldModule,
