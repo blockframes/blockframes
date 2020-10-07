@@ -19,7 +19,7 @@ import {
   ListPageComponent,
   PageCardDirective,
   PageListItemDirective,
-  PageProgressDirective,
+  PageProgressComponent,
   PageSearchDirective,
   PageSortDirective,
   PageTitleDirective,
@@ -48,7 +48,7 @@ import {
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,
-    PageProgressDirective,
+    PageProgressComponent,
     PageTitleDirective,
     PageDescriptionTemplateDirective,
     PageEmptyDirective
@@ -59,7 +59,7 @@ import {
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,
-    PageProgressDirective,
+    PageProgressComponent,
     PageTitleDirective,
     PageDescriptionTemplateDirective,
     PageEmptyDirective

@@ -7,7 +7,7 @@ import {
   TemplateRef,
   ContentChild,
   Input,
-  AfterContentInit
+  AfterContentInit, Output, EventEmitter
 } from '@angular/core';
 
 // Blockframes
@@ -31,11 +31,24 @@ export class PageCardDirective { }
 @Directive({ selector: '[listPageListItem]' })
 export class PageListItemDirective { }
 
-@Directive({ selector: 'list-page-progress' })
-export class PageProgressDirective { }
-
 @Directive({ selector: '[listPageEmpty]' })
 export class PageEmptyDirective { }
+
+@Component({
+  selector: 'list-page-progress',
+  template: `
+   <ng-content></ng-content>
+  <mat-progress-bar color="primary" [value]="progressValue"></mat-progress-bar>
+  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="progressValue === 100">LOAD
+    MORE</button>
+    `
+})
+export class PageProgressComponent {
+  @Input() progressValue: number
+
+  @Output() loadMore = new EventEmitter();
+}
+
 
 @Component({
   selector: '[items]list-page',
