@@ -9,6 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [AdditionalComponent],
@@ -20,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     FlexLayoutModule,
     MatDividerModule,
     MatChipsModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: AdditionalComponent }])
   ]
 })

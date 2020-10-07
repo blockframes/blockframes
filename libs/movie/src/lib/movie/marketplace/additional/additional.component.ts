@@ -13,10 +13,10 @@ export class AdditionalComponent implements OnInit {
 
   public movie$ = this.shell.movie$;
   public status: Record<string, Movie['productionStatus'][]> = {
-    afterProd: ['post_production', 'finished', 'released']
+    finished: ['finished', 'released']
   };
   public keys = {
-    additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating'],
+    additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating', 'certifications'],
     formats: ['format', 'formatQuality', 'color', 'soundFormat']
   };
 
