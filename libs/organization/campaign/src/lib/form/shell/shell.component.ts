@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
 import { CampaignForm } from '../form';
@@ -35,7 +35,7 @@ const steps: TunnelStep[] = [{
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CampaignFormShellComponent implements OnInit {
+export class CampaignFormShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   campaignId$ = this.route.params.pipe(map(params => params.campaignId));
   steps = steps;

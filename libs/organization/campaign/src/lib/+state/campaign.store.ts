@@ -5,7 +5,7 @@ import { Campaign } from './campaign.model';
 export interface CampaignState extends EntityState<Campaign, string>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'campaigns', idKey: 'id' })
+@StoreConfig({ name: 'campaigns' })
 export class CampaignStore extends EntityStore<CampaignState> {
   constructor() {
     super();
