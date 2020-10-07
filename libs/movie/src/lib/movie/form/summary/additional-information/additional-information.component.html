@@ -99,35 +99,27 @@
 </ng-container>
 
 <!-- BUDGET RANGE -->
-<article>
+<article fxLayout="column" fxLayoutGap="16px">
   <h6>
     Budget Range
     <a mat-icon-button [routerLink]="link" fragment="budget-range">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
   </h6>
-  <ul>
-    <li>
-      <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range">
-        <ng-template let-budget>{{ budget.label }}</ng-template>
-      </missing-control>
-    </li>
-  </ul>
+  <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range" class="missing-margin">
+    <ng-template let-budget>{{ budget.label }}</ng-template>
+  </missing-control>
 </article>
 
 <!-- CERTIFICATION -->
-<article>
+<article fxLayout="column" fxLayoutGap="16px">
   <h6>
     Qualification{ movie.certifications.value.length, plural, =0 {} =1 {} other {s}}
     <a mat-icon-button [routerLink]="link" fragment="qualifications">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
   </h6>
-  <ul>
-    <li>
-      <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications">
-        <ng-template let-certs>{{ certs | translateSlug: 'CERTIFICATIONS' }}</ng-template>
-      </missing-control>
-    </li>
-  </ul>
+  <missing-control [control]="movie.certifications" [link]="link" fragments="qualifications" class="missing-margin">
+    <ng-template let-certs>{{ certs | translateSlug: 'CERTIFICATIONS' }}</ng-template>
+  </missing-control>
 </article>
