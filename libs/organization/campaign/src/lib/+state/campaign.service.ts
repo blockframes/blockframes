@@ -1,13 +1,25 @@
 import { Injectable } from "@angular/core";
+import { OrganizationQuery } from "@blockframes/organization/+state";
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { Campaign } from "./campaign.model";
 import { CampaignState, CampaignStore } from "./campaign.store";
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/campaigns' })
-export class CampainService extends CollectionService<CampaignState> {
+export class CampaignService extends CollectionService<CampaignState> {
 
-  constructor(store: CampaignStore) {
+  constructor(store: CampaignStore, private orgQuery: OrganizationQuery) {
     super(store);
   }
 
+  create(movieId: string) {
+    const orgId = this.orgQuery.getActiveId();
+    const id = movieId; // We use the movieId to index the campaign in the org
+    return this.add({ id, movieId }, { params: {orgId}});
+  }
+
+  save(id: string, updates: Partial<Campaign>) {
+    const orgId = this.orgQuery.getActiveId();
+    return this.update(id, updates, { params: { orgId }});
+  }
 }

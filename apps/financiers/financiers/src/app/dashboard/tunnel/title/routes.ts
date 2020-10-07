@@ -12,7 +12,7 @@ const appSteps: TunnelStep[] = [{
   ],
 }]
 
-export const tunnelRoutes: Routes = [
+export const titleTunnelRoutes: Routes = [
   {
     path: '',
     component: MovieFormShellComponent,

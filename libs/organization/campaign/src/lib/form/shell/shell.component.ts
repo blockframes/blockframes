@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TunnelStep } from '@blockframes/ui/tunnel';
 import { CampaignForm } from '../form';
-import { CampainService } from '../../+state';
+import { CampaignService } from '../../+state';
 import { Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -42,7 +42,7 @@ export class CampaignFormShellComponent implements OnInit {
 
   constructor(
     private orgQuery: OrganizationQuery,
-    private service: CampainService,
+    private service: CampaignService,
     private route: ActivatedRoute,
   ) {}
 
@@ -59,7 +59,7 @@ export class CampaignFormShellComponent implements OnInit {
 
   save(id: string) {
     if (this.form.valid) {
-      this.service.update(id, this.form.value);
+      this.service.save(id, this.form.value);
     }
   }
 }

@@ -4,9 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup, FormArray } from '@angular/forms';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { CampaignService } from '@blockframes/campaign/+state';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 @Component({
   selector: 'financiers-summary-tunnel',
@@ -28,6 +29,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private query: MovieQuery,
+    private campaignService: CampaignService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
   ) {
@@ -45,10 +47,12 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
 
   public async submit() {
     if (this.form.valid) {
+      const movieId = this.query.getActiveId();
       await this.shell.update({ publishing: true });
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
+      await this.campaignService.create(movieId); // We use the movieId to index the campaign
       ref.afterDismissed().subscribe(_ => {
-        this.router.navigate(['../end'], { relativeTo: this.route });
+        this.router.navigate(['../../campaign', this.query.getActiveId()], { relativeTo: this.route });
       })
     } else {
       // Log the invalid forms
@@ -74,18 +78,4 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     recursiveFunc(formToInvestigate);
   }
 
-
-  private updateFormArraysByProdStatus() {
-    const prodStatusValue = this.form.productionStatus.value;
-    const prodStatus = ['finished', 'released'];
-
-    /* Directors */
-    /* Cast Member */
-    /* Crew Member */
-    if (prodStatus.includes(prodStatusValue)) {
-      this.form.directors.controls.forEach(director => director.get('status').setValue('confirmed'))
-      this.form.cast.controls.forEach(cast => cast.get('status').setValue('confirmed'))
-      this.form.crew.controls.forEach(crew => crew.get('status').setValue('confiremd'));
-    }
-  }
 }

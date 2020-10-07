@@ -26,4 +26,4 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ]
 })
-export class ShellModule { }
+export class CampaignFormShellModule { }

@@ -7,8 +7,9 @@ import { PerksComponent } from './perks/perks.component';
 
 @NgModule({
   declarations: [ProposalComponent, PerksComponent],
+  exports: [ProposalComponent, PerksComponent],
   imports: [
     CommonModule
   ]
 })
-export class SummaryModule { }
+export class CampaignSummaryModule { }
