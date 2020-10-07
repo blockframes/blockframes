@@ -48,7 +48,7 @@
   <section *ngIf="(movie | hasKeys: 'certifications')">
     <h2>Qualifications</h2>
     <article>
-      <p>{{ movie.certifications | translateSlug: 'CERTIFICATIONS' }}</p>
+      <p>{{ movie.certifications | toLabel: 'certifications' }}</p>
     </article>
 
     <mat-divider></mat-divider>
@@ -94,7 +94,7 @@
           <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
           <mat-chip-list>
             <ng-container *ngFor="let version of language.value | keyvalue">
-              <mat-chip *ngIf="version.value">{{ version.key | translateSlug: 'VERSION_INFO' }}</mat-chip>
+              <mat-chip *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}</mat-chip>
             </ng-container>
           </mat-chip-list>
         </div>
