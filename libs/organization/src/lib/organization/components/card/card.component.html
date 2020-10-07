@@ -5,7 +5,7 @@
   <h5>{{ org | orgName }}</h5>
   <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
 </div>
-<mat-tab-group headerPosition="below" mat-align-tabs="center">
+<mat-tab-group headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon svgIcon="profile"></mat-icon>
