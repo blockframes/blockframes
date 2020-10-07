@@ -10,9 +10,7 @@ import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contr
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
-import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { staticConsts } from '@blockframes/utils/static-model';
-import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';

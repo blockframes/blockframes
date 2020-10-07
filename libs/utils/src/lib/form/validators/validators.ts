@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
+import { isInKeys, Scope as ConstantScope } from '../../static-model/staticConsts';
 
 export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
 
@@ -138,6 +139,20 @@ export function isSlugValidator(scope: Scope): ValidatorFn {
       return null;
     } else {
       return isInSlug(scope, control.value) ? null : { invalidValue: true }
+    };
+  };
+}
+
+/**
+ * @description Check if value is a key of the scope provided, inside the static constant
+ * @param scope Scope inside the static constant
+ */
+export function isKeyValidator(scope: ConstantScope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    if (!control.value) {
+      return null;
+    } else {
+      return isInKeys(scope, control.value) ? null : { invalidValue: true }
     };
   };
 }

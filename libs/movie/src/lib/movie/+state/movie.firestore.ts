@@ -2,13 +2,13 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
-  ScoringValues,
-  CertificationsValues,
-  ColorsValues,
-  RatingValues,
-  SoundFormatValues,
-  MovieFormatQualityValues,
-  MovieFormatValues,
+  Scoring,
+  Certifications,
+  Colors,
+  Rating,
+  SoundFormat,
+  MovieFormatQuality,
+  MovieFormat,
   GenresSlug,
   ContentType,
   ProductionStatus,
@@ -17,7 +17,7 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrenciesSlug,
+  MovieCurrencies,
   HostedVideoTypes
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
@@ -49,15 +49,15 @@ interface MovieRaw<D> {
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
-  certifications?: CertificationsValues[],
-  color?: ColorsValues,
+  certifications?: Certifications[],
+  color?: Colors,
   contentType: ContentType; //! required
   crew?: Crew[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
-  format?: MovieFormatValues,
-  formatQuality?: MovieFormatQualityValues,
+  format?: MovieFormat,
+  formatQuality?: MovieFormatQuality,
   genres: GenresSlug[], //! required
   customGenres?: string[],
   internalRef?: string,
@@ -78,9 +78,9 @@ interface MovieRaw<D> {
   release: MovieRelease, //! required
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
-  scoring?: ScoringValues,
+  scoring?: Scoring,
   shooting?: MovieShooting,
-  soundFormat?: SoundFormatValues,
+  soundFormat?: SoundFormat,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
@@ -203,7 +203,7 @@ export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 export interface MovieRating {
   country: TerritoriesSlug;
   reason?: string,
-  system?: RatingValues,
+  system?: Rating,
   value: string,
 }
 
@@ -304,7 +304,7 @@ export interface MovieGoalsAudience {
 
 export interface MovieTotalBudget {
   castCost?: number,
-  currency?: MovieCurrenciesSlug,
+  currency?: MovieCurrencies,
   others?: number,
   postProdCost?: number,
   producerFees?: number,

@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { staticConsts, MovieCurrencies } from '@blockframes/utils/static-model';
 import { SSF } from 'xlsx';
 import { createContractPartyDetail, createContractTitleDetail, createContract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -16,6 +16,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { getKeyFromValue } from '@blockframes/utils/static-model/staticConsts';
 
 
 enum SpreadSheetContract {
@@ -437,7 +438,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // Check if priceParts have at least two parts (amount and currency)
       if (priceParts.length >= 2) {
         const amount = parseInt(priceParts[0], 10);
-        const currency = getCodeIfExists('MOVIE_CURRENCIES', priceParts[1]);
+        const currency = getKeyFromValue('movieCurrencies', priceParts[1]) as MovieCurrencies;
         titleDetails.price.amount = amount;
         if (currency) {
           titleDetails.price.currency = currency;
@@ -483,7 +484,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      const currency = getCodeIfExists('MOVIE_CURRENCIES', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
+      const currency = getKeyFromValue('movieCurrencies', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) as MovieCurrencies;
       if (currency) {
         recoupableExpense.price.currency = currency;
       } else {

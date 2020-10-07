@@ -309,10 +309,10 @@ const constants = {
 
 export default constants;
 
-type Constants = typeof constants;
-type Scopes = keyof Constants;
-export type GetKeys<S extends Scopes> = keyof Constants[S];
-type GetLabel<S extends Scopes> = Constants[S][GetKeys<S>]
+export type Constants = typeof constants;
+export type Scope = keyof Constants;
+export type GetKeys<S extends Scope> = keyof Constants[S];
+export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
 
 
 /**
@@ -321,7 +321,7 @@ type GetLabel<S extends Scopes> = Constants[S][GetKeys<S>]
  * @param scope
  * @param targetValue
  */
-export function getKeyFromValue(scope: Scopes, targetValue: any) {
+export function getKeyFromValue(scope: Scope, targetValue: any) {
   for (const [key, value] of Object.entries(constants[scope])) {
     if (value.toLowerCase() === targetValue.toLowerCase()) {
       return key;
@@ -336,7 +336,7 @@ export function getKeyFromValue(scope: Scopes, targetValue: any) {
  * @param scope
  * @param targetValue
  */
-export const getValueByKey = (scope: Scopes, targetValue: string) => {
+export const getValueByKey = (scope: Scope, targetValue: string) => {
   for (const [key, value] of Object.entries(constants[scope])) {
     if (key.toLowerCase() === targetValue.toLowerCase()) {
       return value;
@@ -344,3 +344,8 @@ export const getValueByKey = (scope: Scopes, targetValue: string) => {
   }
   return null;
 };
+
+/** Check if the given value is a key of a scope */
+export const isInKeys = (scope: Scope, givenValue: string) => {
+  return (Object.keys(constants[scope]) as any[]).map(({ key }) => key).includes(givenValue);
+}

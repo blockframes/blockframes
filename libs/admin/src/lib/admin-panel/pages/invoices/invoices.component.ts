@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
-import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'admin-invoices',

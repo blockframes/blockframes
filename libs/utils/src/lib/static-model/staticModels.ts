@@ -303,48 +303,6 @@ const models = {
     { 'slug': 'vietnamese', 'label': 'Vietnamese' },
     { 'slug': 'welsh', 'label': 'Welsh' },
   ] as const,
-  'MOVIE_CURRENCIES': [
-    {
-      'slug': 'USD',
-      'label': 'US dollar',
-    },
-    {
-      'slug': 'EUR',
-      'label': 'Euro'
-    },
-    {
-      'slug': 'JPY',
-      'label': 'Japanese yen',
-    },
-    {
-      'slug': 'GBP',
-      'label': 'Pound sterling'
-    },
-    {
-      'slug': 'AUD',
-      'label': 'Australian Dollar'
-    },
-    {
-      'slug': 'CAD',
-      'label': 'Canadian Dollar'
-    },
-    {
-      'slug': 'CHF',
-      'label': 'Swiss Franc'
-    },
-    {
-      'slug': 'CNY',
-      'label': 'Chinese Renminbi'
-    },
-    {
-      'slug': 'SEK',
-      'label': 'Swedish krona'
-    },
-    {
-      'slug': 'NZD',
-      'label': 'New Zealand dollar'
-    }
-  ] as const,
   'SELECTION_CATEGORIES': [
     {
       'slug': 'prestige-directors',

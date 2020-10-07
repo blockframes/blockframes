@@ -11,9 +11,6 @@ export const LANGUAGES_SLUG = models['LANGUAGES'].map(key => key.slug);
 export type LanguagesLabel = typeof LANGUAGES_LABEL[number];
 export type LanguagesSlug = typeof LANGUAGES_SLUG[number];
 
-export const MOVIE_CURRENCIES_SLUG = models['MOVIE_CURRENCIES'].map(key => key.slug);
-export type MovieCurrenciesSlug = typeof MOVIE_CURRENCIES_SLUG[number];
-
 export const TERRITORIES_LABEL = models['TERRITORIES'].map(key => key.label);
 export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
@@ -46,7 +43,6 @@ export type Certifications = keyof typeof constants.certifications;
 export type CertificationsValues = typeof constants.certifications[Certifications];
 
 export type Colors = keyof typeof constants.colors;
-export type ColorsValues = typeof constants.colors[Colors];
 
 export type ContentType = keyof typeof constants.contentType;
 
@@ -60,11 +56,11 @@ export type DistributionRightStatus = keyof typeof constants.distributionRightSt
 
 export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
 
+export type MovieCurrencies = keyof typeof constants.movieCurrencies;
+
 export type MovieFormat = keyof typeof constants.movieFormat;
-export type MovieFormatValues = typeof constants.movieFormat[MovieFormat];
 
 export type MovieFormatQuality = keyof typeof constants.movieFormatQuality;
-export type MovieFormatQualityValues = typeof constants.movieFormatQuality[MovieFormatQuality];
 
 export type MovieLanguageTypes = keyof typeof constants.movieLanguageTypes;
 export type MovieLanguageTypesValue = typeof constants.movieLanguageTypes[MovieLanguageTypes];
@@ -80,17 +76,14 @@ export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
 export type ProductionStatus = keyof typeof constants.productionStatus;
 
 export type Rating = keyof typeof constants.rating;
-export type RatingValues = typeof constants.rating[Rating];
 
 export type Scoring = keyof typeof constants.scoring;
-export type ScoringValues = typeof constants.scoring[Scoring];
 
 export type ShootingPeriod = keyof typeof constants.shootingPeriod;
 
 export type SocialGoals = keyof typeof constants.socialGoals;
 
 export type SoundFormat = keyof typeof constants.soundFormat;
-export type SoundFormatValues = typeof constants.soundFormat[SoundFormat];
 
 export type StoreStatus = keyof typeof constants.storeStatus;
 
