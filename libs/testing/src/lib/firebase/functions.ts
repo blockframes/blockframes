@@ -29,7 +29,9 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    admin.initializeApp({ projectId });
+    if (!admin.apps.length) {
+      admin.initializeApp({ projectId });
+    }
     firebaseTest.firebaseConfig = { projectId };
     return firebaseTest;
   }
@@ -47,9 +49,9 @@ export function getTestingProjectId() {
   return 'test' + testIndex;
 }
 
-////////////
-// DB TOOLS
-////////////
+//////////////
+// DB TOOLS //
+//////////////
 
 export function populate(collection: string, set: any[]) {
   const db = admin.firestore();

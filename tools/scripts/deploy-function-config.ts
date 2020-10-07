@@ -23,6 +23,9 @@ function getKeyValFormat(): string[] {
   output.push(`admin.password="${process.env?.ADMIN_PASSWORD}"`);
   output.push(`admin.email="${process.env?.CASCADE8_ADMIN}"`);
   output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
+  output.push(`twilio.sid=${process.env?.TWILIO_SID}`);
+  output.push(`twilio.secret=${process.env?.TWILIO_SECRET}`);
+  output.push(`twilio.token=${process.env?.TWILIO_TOKEN}`);
   return output;
 }
 

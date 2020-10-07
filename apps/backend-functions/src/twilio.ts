@@ -9,16 +9,21 @@ import {getDocument} from "@blockframes/firebase-utils";
 import {EventDocument, Meeting} from "@blockframes/event/+state/event.firestore";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 
-import * as twilio from "twilio";
 import {twilioSecret, twilioSid, twilioToken} from './environments/environment';
-import {isUserInvitedToMeetingOrScreening} from "./internals/invitations/events";
+import {hasUserAcceptedEvent} from "./internals/invitations/events";
+import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 
-const AccessToken = twilio.jwt.AccessToken;
-const VideoGrant = AccessToken.VideoGrant;
-
+/**
+ * Interface for the data need in getTwilioAccessToken
+ */
 export interface RequestAccessToken {
   eventId: string,
 }
+
+/**
+ * Error type return by getTwilioAccessToken function
+ */
+export type TwilioErrors = 'EVENT_FINISHED' | 'NOT_ALREADY_STARTED' | 'NOT_A_MEETING' | 'UNKNOWN_EVENT' | 'NOT_ACCEPTED';
 
 /**
  * If access right granted, create Twilio Access Token for specified room (eventId = roomName)
@@ -75,9 +80,9 @@ export const getTwilioAccessToken = async (
   }
 
   // Check if user is owner or is invited to event
-  if (!(event.meta.organizerId === userId || await isUserInvitedToMeetingOrScreening(context.auth.uid, eventId))) {
+  if (!(userActiveIsTheOwnerOfEvent(event, userId) || await hasUserAcceptedEvent(context.auth.uid, eventId))) {
     return {
-      error: 'NO_INVITATION',
+      error: 'NOT_ACCEPTED',
       result: `You are not the owner of the event or you have not been invited to see this meeting`
     };
   }
@@ -94,3 +99,7 @@ export const getTwilioAccessToken = async (
     result: token.toJwt()
   };
 };
+
+function userActiveIsTheOwnerOfEvent(event: EventDocument<Meeting>, userId: string){
+  return event.meta.organizerId === userId
+}
