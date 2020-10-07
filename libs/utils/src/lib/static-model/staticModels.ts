@@ -261,32 +261,6 @@ const models = {
     { 'slug': 'vietnamese', 'label': 'Vietnamese' },
     { 'slug': 'welsh', 'label': 'Welsh' },
   ] as const,
-  'SELECTION_CATEGORIES': [
-    {
-      'slug': 'prestige-directors',
-      'label': 'Prestige Directors'
-    },
-    {
-      'slug': 'producers-network',
-      'label': 'Producers Network'
-    },
-    {
-      'slug': 'festival-approved',
-      'label': 'Festival Approved'
-    },
-    {
-      'slug': 'our-critics-choice',
-      'label': 'Our Critics Choice'
-    },
-    {
-      'slug': 'logical-presents',
-      'label': 'Logical Presents'
-    },
-    {
-      'slug': 'vip-access',
-      'label': 'VIP Access'
-    }
-  ] as const,
   'TERRITORIES': [
     {
       'slug': 'world',
