@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
 import { BehaviorSubject } from 'rxjs';
 import { OrganizationForm } from '../../forms/organization.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 @Component({
   selector: 'organization-create',
@@ -35,7 +35,9 @@ export class OrganizationCreateComponent {
       return;
     }
 
-    await this.service.addOrganization(this.form.value);
+    const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(this.form);
+
+    await this.service.addOrganization(documentToUpdate);
     this.router.navigate(['../app-access'], { relativeTo: this.route });
   }
 }
