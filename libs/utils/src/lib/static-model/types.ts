@@ -31,9 +31,6 @@ export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 export const SUB_LICENSOR_ROLES_SLUG = models['SUB_LICENSOR_ROLES'].map(key => key.slug);
 export type SubLicensorRoleSlug = typeof SUB_LICENSOR_ROLES_SLUG[number];
 
-export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
-export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];
-
 
 // TYPE FOR CONSTANTS
 
@@ -88,6 +85,7 @@ export type SoundFormat = keyof typeof constants.soundFormat;
 export type StoreStatus = keyof typeof constants.storeStatus;
 
 export type StoreType = keyof typeof constants.storeType;
+export type StoreTypeValue = typeof constants.storeType[StoreType];
 
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];

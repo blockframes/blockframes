@@ -309,10 +309,6 @@ const models = {
     { 'slug': 'signatory', 'label': 'Signatory' },
     { 'slug': 'observator', 'label': 'Observator' },
   ] as const,
-  'STORE_TYPE': [
-    { 'slug': 'line_up', 'label': 'Line-up'},
-    { 'slug': 'library', 'label': 'Library'},
-  ]
 };
 
 export type Scope = keyof typeof models;

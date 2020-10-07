@@ -1,6 +1,7 @@
 
-import { GenresSlug, LanguagesSlug, TerritoriesSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
+import { GenresSlug, LanguagesSlug, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -18,7 +19,7 @@ export interface LanguagesSearch {
 
 export interface MovieSearch extends AlgoliaSearch {
   appAccess: (keyof MovieAppAccess)[],
-  storeType: StoreTypeSlug[];
+  storeType: StoreType[];
   storeConfig: StoreStatus[]
   genres: GenresSlug[];
   originCountries: TerritoriesSlug[];
@@ -66,7 +67,7 @@ function createMovieSearchControl(search: MovieSearch) {
     appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
     page: new FormControl(search.page),
-    storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
+    storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
     genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
     originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
