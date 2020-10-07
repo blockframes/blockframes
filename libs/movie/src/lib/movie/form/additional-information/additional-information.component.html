@@ -38,13 +38,16 @@
       </section>
 
       <mat-divider></mat-divider>
+    </ng-container>
 
-      <h3>Budget Range</h3>
-      <section id="budget-range">
-        <movie-form-budget-range [form]="form.estimatedBudget"></movie-form-budget-range>
-      </section>
-      <mat-divider></mat-divider>
+    <h3>Budget Range</h3>
+    <section id="budget-range">
+      <movie-form-budget-range [form]="form.estimatedBudget"></movie-form-budget-range>
+    </section>
 
+    <mat-divider></mat-divider>
+
+    <ng-container *ngIf="form | hasStatus: ['released']">
       <h3>Box Office</h3>
       <section id="box-office" *ngIf="units$ | async as units">
 
@@ -99,7 +102,9 @@
       </section>
 
       <mat-divider></mat-divider>
+    </ng-container>
 
+    <ng-container *ngIf="form | hasStatus: ['finished', 'released']">
       <h3>Rating</h3>
       <section id="rating">
         <bf-form-list [form]="form.rating" buttonText="Add a Rating">
@@ -122,7 +127,6 @@
       </section>
 
       <mat-divider></mat-divider>
-
     </ng-container>
 
     <h3>Qualifications</h3>
