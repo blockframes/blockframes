@@ -38,11 +38,10 @@
 
       <p>Sorry, Meetings are not available anymore.</p>
 
-      <!-- TODO uncomment after release 1.9 : see issue#3880 -->
-      <!-- <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3> -->
+      <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
 
       <!-- WORK IN PROGRESS -->
-      <!-- <article fxLayout="column" class="meeting">
+      <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
           <div [fxFlex]="mediaContainerSize">
             <h3>MEDIA</h3>
@@ -54,7 +53,7 @@
           <media-control [event]="event"></media-control>
           <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
-      </article> -->
+      </article>
 
       <img asset="meeting.webp" alt="Meeting room">
 

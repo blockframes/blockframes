@@ -19,11 +19,10 @@
               <mat-icon matListIcon svgIcon="building"></mat-icon>
               <span matLine>Organization</span>
             </a>
-            <!-- TODO uncomment after release 1.9 : see issue#3880 -->
-            <!-- <a mat-list-item [routerLink]="['/c/o/organization', organization.id, 'view', 'documents']">
+            <a mat-list-item [routerLink]="['/c/o/organization', organization.id, 'view', 'documents']">
               <mat-icon matListIcon svgIcon="document"></mat-icon>
               <span matLine>Organization's resources</span>
-            </a> -->
+            </a>
             <mat-list-item *ngIf="theme$ | async as theme">
               <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
                 Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme

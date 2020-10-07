@@ -21,7 +21,7 @@ const typesLabel = {
 })
 export class EventCalendarComponent implements OnInit {
   typesLabel = typesLabel;
-  types: EventTypes[] = ['screening', /* 'meeting' */]; // TODO uncomment after release 1.9 : see issue#3880
+  types: EventTypes[] = ['screening', 'meeting'];
   filter = new FormControl(this.types);
   events$: Observable<Event[]>;
   viewDate = new Date();
