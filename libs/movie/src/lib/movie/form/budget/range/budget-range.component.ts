@@ -21,7 +21,6 @@ export class MovieFormBudgetRangeComponent implements OnInit {
   ngOnInit() {
     if (this.form.value?.from) {
       this.optionsBudget.forEach(option => {
-        console.log(option.to, this.form.value?.to)
         if (option.to === this.form.value?.to) {
           this.form.setValue(option)
         }
