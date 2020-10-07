@@ -60,16 +60,17 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(() => this.filterForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      tap(movies => this.hitsViewed = this.hitsViewed + movies.length),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
       // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
       tap(movies => {
         if (this.loadingMore) {
           this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies));
+          this.hitsViewed += movies.length;
           this.loadingMore = false;
         } else {
           this.movieSearchResultsState.next(movies);
+          this.hitsViewed = movies.length;
         }
       }),
       tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))

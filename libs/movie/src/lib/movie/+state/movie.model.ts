@@ -89,7 +89,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     review: [],
     scoring: null,
     soundFormat: '',
-    isOriginalVersionAvailable: false,
+    isOriginalVersionAvailable: null,
     totalBudget: {},
 
     ...params,
@@ -130,7 +130,7 @@ export function createMoviePromotional(
   };
 }
 
-export function createSalesPitch(params: Partial<MovieSalesPitch>): MovieSalesPitch {
+export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSalesPitch {
   return {
     description: '',
     file: '',
@@ -289,15 +289,15 @@ export function createShooting(params: Partial<MovieShooting> = {}): MovieShooti
 
 export function createShootingDate(params: Partial<MovieShootingDate> = {}): MovieShootingDate {
   return {
+    planned: {},
     ...params
   }
 }
 
-export function createShootingPlannedObject(params: Partial<MoviePlannedShooting>) {
+export function createShootingPlannedObject(params: Partial<MoviePlannedShooting> = {}) {
   return {
     period: '',
     month: '',
-    year: null,
     ...params
   }
 }

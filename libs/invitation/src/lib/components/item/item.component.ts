@@ -16,7 +16,7 @@ export class ItemComponent {
   get eventLink() {
     if (this.invitation.type === 'attendEvent') {
       if (this.invitation.mode === 'request') {
-        return `../event/${this.invitation.docId}/edit`;
+        return `/c/o/dashboard/event/${this.invitation.docId}/edit`;
       } else {
         return `/c/o/marketplace/event/${this.invitation.docId}`;
       }

@@ -41,7 +41,7 @@
     <ng-container matColumnDef="totalRunTime">
       <th mat-header-cell *matHeaderCellDef>Running time</th>
       <td mat-cell *matCellDef="let element">
-        <span>{{ element.totalRunTime | duration: 'min'}}</span>
+        <span>{{ element.runningTime.time | duration}}</span>
       </td>
     </ng-container>
 
