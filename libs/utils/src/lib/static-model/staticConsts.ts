@@ -197,6 +197,11 @@ const constants = {
     c: 'C',
     d: 'D'
   },
+  screeningStatus: {
+    tobedetermined: 'To be determined',
+    estimated: 'Estimated',
+    confirmed: 'Confirmed'
+  },
   shootingPeriod: {
     early: 'Early',
     late: 'Late',

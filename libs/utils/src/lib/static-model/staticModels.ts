@@ -176,30 +176,6 @@ const models = {
       'label': 'Broadcaster coproducer'
     }
   ] as const,
-  'RELEASE_STATUS': [
-    {
-      'slug': 'estimated',
-      'label': 'Estimated'
-    },
-    {
-      'slug': 'confirmed',
-      'label': 'Confirmed'
-    }
-  ] as const,
-  'SCREENING_STATUS': [
-    {
-      'slug': 'tobedetermined',
-      'label': 'To be determined'
-    },
-    {
-      'slug': 'estimated',
-      'label': 'Estimated'
-    },
-    {
-      'slug': 'confirmed',
-      'label': 'Confirmed'
-    }
-  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },
