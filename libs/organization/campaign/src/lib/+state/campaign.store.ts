@@ -6,4 +6,8 @@ export interface CampaignState extends EntityState<Campaign, string>, ActiveStat
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'campaigns', idKey: 'id' })
-export class CampaignStore extends EntityStore<CampaignState> {}
+export class CampaignStore extends EntityStore<CampaignState> {
+  constructor() {
+    super();
+  }
+}

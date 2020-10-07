@@ -52,7 +52,7 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       await this.campaignService.create(movieId); // We use the movieId to index the campaign
       ref.afterDismissed().subscribe(_ => {
-        this.router.navigate(['../../campaign', this.query.getActiveId()], { relativeTo: this.route });
+        this.router.navigate(['../../../campaign', this.query.getActiveId()], { relativeTo: this.route });
       })
     } else {
       // Log the invalid forms

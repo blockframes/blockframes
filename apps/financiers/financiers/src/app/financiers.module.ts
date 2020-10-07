@@ -39,7 +39,7 @@ const routes: Routes = createRoutes({
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
     relativeLinkResolution: 'corrected',
-    preloadingStrategy: PreloadAllModules
+    // preloadingStrategy: PreloadAllModules
   })],
 })
 export class FinanciersModule { }

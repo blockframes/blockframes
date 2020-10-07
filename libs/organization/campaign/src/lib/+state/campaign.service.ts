@@ -8,7 +8,7 @@ import { CampaignState, CampaignStore } from "./campaign.store";
 @CollectionConfig({ path: 'orgs/:orgId/campaigns' })
 export class CampaignService extends CollectionService<CampaignState> {
 
-  constructor(store: CampaignStore, private orgQuery: OrganizationQuery) {
+  constructor(protected store: CampaignStore, private orgQuery: OrganizationQuery) {
     super(store);
   }
 

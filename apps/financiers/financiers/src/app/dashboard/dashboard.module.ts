@@ -89,26 +89,22 @@ const routes: Routes = [{
     path: 'tunnel',
     canActivate: [TunnelGuard],
     children: [{
-      path: 'movie',
-      children: [{
-        path: ':movieId',
-        canActivate: [MovieActiveGuard, MovieTunnelGuard],
-        canDeactivate: [MovieActiveGuard],
-        children: titleTunnelRoutes,
-        data: {
-          redirect: '/c/o/dashboard/tunnel/movie'
-        },
-      }]
+      path: 'movie/:movieId',
+      canActivate: [MovieActiveGuard, MovieTunnelGuard],
+      canDeactivate: [MovieActiveGuard],
+      children: titleTunnelRoutes,
+      data: {
+        redirect: '/c/o/dashboard/tunnel/movie',
+        paramId: 'movieId'
+      },
     }, {
-      path: 'campaign',
-      children: [{
-        path: ':campaignId',
-        canActivate: [MovieTunnelGuard],
-        children: campaignTunnelRoutes,
-        data: {
-          redirect: '/c/o/dashboard/tunnel/movie'
-        },
-      }]
+      path: 'campaign/:campaignId',
+      canActivate: [MovieTunnelGuard],
+      children: campaignTunnelRoutes,
+      data: {
+        redirect: '/c/o/dashboard/tunnel/movie',
+        paramId: 'campaignId'
+      },
     }]
   },
 ];
