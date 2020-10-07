@@ -1,6 +1,0 @@
-<div *ngIf="localVideoMicStatus$ | async as localVideoMicStatus" class="container-btn-mute-unmute-local-audio">
-  <div (click)="muteAudio(localVideoMicStatus)" class="btn-mute-unmute-local-audio" [ngStyle]="{'background-color':localVideoMicStatus.audio ? 'green' : 'red' }" >
-    <img src="assets/icons/microphone.svg" alt="Audio">
-  </div>
-</div>
-

@@ -14,7 +14,12 @@ import {
   StatusVideoMic
 } from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {Participant, RemoteTrackPublication as IRemoteTrackPublication, LocalTrackPublication} from 'twilio-video';
+import {
+  Participant,
+  RemoteTrackPublication as IRemoteTrackPublication,
+  LocalTrackPublication,
+  RemoteVideoTrack, RemoteAudioTrack
+} from 'twilio-video';
 import {Observable} from "rxjs";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
@@ -98,7 +103,7 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    *
    * @param localPreviewTracks
    */
-  makeLocalTrack(localPreviewTracks: IRemoteTrackPublication[]){
+  makeLocalTrack(localPreviewTracks: LocalTrackPublication){
     this.setUpCamAndMic(localPreviewTracks, true);
     this.attachTracks(localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
   }

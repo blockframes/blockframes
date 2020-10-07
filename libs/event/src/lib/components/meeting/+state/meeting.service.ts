@@ -9,7 +9,8 @@ import {
   RemoteVideoTrack,
   Room,
   LocalAudioTrack,
-  LocalVideoTrack
+  LocalVideoTrack,
+  RemoteParticipant
 } from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
 import {User, UserService} from "@blockframes/user/+state";
@@ -84,7 +85,7 @@ export class MeetingService {
     return this.eventRoom;
   }
 
-  getLocalPreviewTracks(): Observable<IParticipantMeeting[]> {
+  getLocalPreviewTracks(): Observable<Array<LocalAudioTrack | LocalVideoTrack>> {
     return this.$localPreviewTracksDataSource.asObservable();
   }
 
@@ -140,7 +141,7 @@ export class MeetingService {
    * function to remove a specific participant to the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to remove
    */
-  removeParticipantFromConnectedParticipant(participant: Participant) {
+  removeParticipantFromConnectedParticipant(participant: IParticipantMeeting | Participant) {
     const roomArr: any[] = this.$participantsConnectedDataSource.getValue();
 
     roomArr.forEach((item, index) => {
@@ -257,7 +258,7 @@ export class MeetingService {
    * Get all participant already in the room.
    * @param participants - All participants connected in the room
    */
-  getParticipantOfParticipantsMapAlreadyInRoom(participants: Participant[]) {
+  getParticipantOfParticipantsMapAlreadyInRoom(participants: Map<string, RemoteParticipant>) {
     return Array.from(participants).map((
       participant: any
     ) => {

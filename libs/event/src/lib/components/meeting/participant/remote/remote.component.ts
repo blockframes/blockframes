@@ -76,7 +76,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     })
 
     participant.twilioData.on('disconnected', () => {
-      this.detachParticipantTracks(this.participant.twilioData);
+      this.detachParticipantTracks(this.participant);
     })
 
     participant.twilioData.on('reconnected', () => {

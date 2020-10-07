@@ -1,7 +1,7 @@
 mat-sidenav-container {
+  height: 100%;
   mat-sidenav {
     background-color: var(--background-slider);
-
     header {
       position: sticky;
       z-index: 1;

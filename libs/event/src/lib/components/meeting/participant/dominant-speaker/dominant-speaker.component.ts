@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import { Participant, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import {Participant, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack, RemoteDataTrack} from 'twilio-video';
 import {meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
@@ -85,7 +85,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
     })
   }
 
-  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack {
+  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack | RemoteAudioTrack | RemoteDataTrack {
     return trackPublication.track;
   }
 

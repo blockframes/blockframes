@@ -161,6 +161,8 @@
     "@types/node": "~12.11.1",
     "@types/pdfmake": "^0.1.13",
     "@types/tmp": "0.1.0",
+    "@types/twilio": "^2.11.0",
+    "@types/twilio-video": "^2.7.1",
     "angular-prerender": "^5.4.0",
     "babel-loader": "8.0.6",
     "bundlesize": "^0.18.0",
