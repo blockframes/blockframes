@@ -6,15 +6,14 @@
     <section id="festival">
       <bf-form-list [form]="form.prizes" buttonText="Add a Festival">
         <ng-template itemRef let-prizes>{{ prizes.name | toLabel: 'festival' }} - {{ prizes.prize }} - {{ prizes.year }}
-          - {{ prizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+          - {{ prizes.premiere | toLabel: 'premiereType' }}</ng-template>
         <ng-template formView let-prizesForm>
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival"
-                fxFlex label="Festival name"
-                hint="If you can't find the festival you're looking for, go to 'Custom Festival' section.">
-                <mat-label>Festival name</mat-label>
+              <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival" fxFlex>
+                <mat-label>Festival Name</mat-label>
+                <mat-hint>If you can't find the festival you're looking for, go to 'Custom Festival' section.</mat-hint>
               </static-select>
             </div>
 
@@ -40,9 +39,8 @@
             <div>
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
-                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
-                    [matTooltipDisabled]="!premiere?.hint">
-                    {{ premiere.label }}
+                  <mat-button-toggle [value]="premiere">
+                    {{ premiere | toLabel: 'premiereType' }}
                   </mat-button-toggle>
                 </ng-container>
               </mat-button-toggle-group>
@@ -61,12 +59,12 @@
 
       <bf-form-list [form]="form.customPrizes" buttonText="Add other Festival">
         <ng-template itemRef let-customPrizes>{{ customPrizes.name }} - {{ customPrizes.prize }} -
-          {{ customPrizes.year }} - {{ customPrizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
+          {{ customPrizes.year }} - {{ customPrizes.premiere | toLabel: 'premiereType' }}</ng-template>
         <ng-template formView let-customPrizesForm>
           <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <mat-form-field appearance="outline" fxFlex>
-              <mat-label>Other festival name</mat-label>
+              <mat-label>Other Festival Name</mat-label>
               <input matInput formControlName="name">
             </mat-form-field>
 
@@ -93,9 +91,8 @@
               <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
                 aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
-                  <mat-button-toggle [value]="premiere.slug" [matTooltip]="premiere?.hint"
-                    [matTooltipDisabled]="!premiere?.hint">
-                    {{ premiere.label }}
+                  <mat-button-toggle [value]="premiere">
+                    {{ premiere | toLabel: 'premiereType' }}
                   </mat-button-toggle>
                 </ng-container>
               </mat-button-toggle-group>
