@@ -26,9 +26,10 @@ export class DeepKeyPipe implements PipeTransform {
       return;
     }
   }
+}
 
-  @NgModule({
-    declarations: [DeepKeyPipe],
-    exports: [DeepKeyPipe]
-  })
-  export class DeepKeyPipeModule { }
+@NgModule({
+  declarations: [DeepKeyPipe],
+  exports: [DeepKeyPipe]
+})
+export class DeepKeyPipeModule { }
