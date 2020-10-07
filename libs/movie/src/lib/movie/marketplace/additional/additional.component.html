@@ -39,10 +39,7 @@
     <article>
       <h5>Budget Range</h5>
       <p>
-        From
-        <mat-icon [svgIcon]="'USD'"></mat-icon><b>{{ movie.estimatedBudget.from | number }}</b>
-        to
-        <mat-icon [svgIcon]="'USD'"></mat-icon><b>{{ movie.estimatedBudget.to | number }}</b>
+        From <b>{{ movie.estimatedBudget.from | currency: 'USD' }}</b> to <b>{{ movie.estimatedBudget.to | currency: 'USD' }}</b>
       </p>
     </article>
 
@@ -52,10 +49,7 @@
   <section *ngIf="(movie | hasKeys: 'certifications')">
     <h2>Qualifications</h2>
     <article>
-      <h5>Qualifications</h5>
-      <ng-container *ngFor="let certification of movie.certifications">
-        <p>{{ certification | translateSlug: 'CERTIFICATIONS' }}</p>
-      </ng-container>
+      <p>{{ movie.certifications | translateSlug: 'CERTIFICATIONS' }}</p>
     </article>
 
     <mat-divider></mat-divider>
