@@ -1,0 +1,28 @@
+
+<ng-container *ngIf="!!event.meta.selectedFile; else noFile">
+  <p>{{ event.meta.selectedFile | fileName }}</p>
+  <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
+    <ng-container *ngSwitchCase="'image'">
+      <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
+    </ng-container>
+    <ng-container *ngSwitchCase="'pdf'">
+      PDF <!-- TODO issue#3693 -->
+    </ng-container>
+    <ng-container *ngSwitchCase="'video'">
+      VIDEO <!-- TODO issue#3688 -->
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <p>Sorry, we don't know how to display this file.</p>
+      <p>Currently supported file are: pdf, images, and videos</p>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<ng-template #noFile>
+  <p>No File Selected:</p>
+  <ng-container *ngIf="event.isOwner">
+    <p>you can select a file to display in the list below.</p>
+  </ng-container>
+  <ng-template #notOwner>
+    <p>when the meeting owner select a file to display it will appear here.</p>
+  </ng-template>
+</ng-template>
