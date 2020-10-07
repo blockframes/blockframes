@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import { TerritoriesSlug } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
 import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
+import { createAlgoliaSearch } from '@blockframes/utils/algolia/algolia-search';
 
 // Utils
 import algoliasearch, { Index } from 'algoliasearch';
@@ -26,26 +27,12 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
   };
 }
 
-function createOrganizationSearchControl(search: OrganizationSearch) {
-  return {
-    query: new FormControl(search.query),
-    page: new FormControl(search.page),
-    country: new FormControl(search.country),
-    appAccess: new FormControl(search.appAccess),
-    appModule: new FormControl(search.appModule)
-  };
-}
-
-export type OrganizationSearchControl = ReturnType<typeof createOrganizationSearchControl>;
-
-export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl> {
+export class OrganizationSearchForm extends FormEntity<any> {
 
   private organizationIndex: Index;
 
   constructor(search: Partial<OrganizationSearch> = {}) {
-    const organizationSearch = createOrganizationSearch(search);
-    const control = createOrganizationSearchControl(organizationSearch);
-    super(control);
+    super(createAlgoliaSearch<any, any>(search, createOrganizationSearch));
 
     this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations);
   }
