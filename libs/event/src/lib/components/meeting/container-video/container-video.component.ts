@@ -42,7 +42,6 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   //Dominant Participant for Buyer
   // private $dominantParticipantForBuyerDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
   dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
-  tt = 1;
 
   localPreviewTracks$: Observable<LocalAudioTrack | LocalVideoTrack>;
 

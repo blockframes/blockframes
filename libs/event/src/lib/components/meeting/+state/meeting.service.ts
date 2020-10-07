@@ -140,7 +140,7 @@ export class MeetingService {
    * function to remove a specific participant to the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to remove
    */
-  removeParticipantFromConnectedParticipant(participant: IParticipantMeeting) {
+  removeParticipantFromConnectedParticipant(participant: Participant) {
     const roomArr: any[] = this.$participantsConnectedDataSource.getValue();
 
     roomArr.forEach((item, index) => {
@@ -148,7 +148,6 @@ export class MeetingService {
         roomArr.splice(index, 1);
       }
     });
-
     this.$participantsConnectedDataSource.next(roomArr);
   }
 
@@ -165,7 +164,6 @@ export class MeetingService {
       }
     });
     const newCurrentValue = [...currentValue, participant]
-    // currentValue.push(participant);
     this.$participantsConnectedDataSource.next(newCurrentValue);
   }
 
@@ -311,21 +309,25 @@ export class MeetingService {
 
     const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, event, false, true);
 
-
-    this.eventRoom.next({
-      meetingEvent: meetingEventEnum.ConnectedToRoomTwilio,
-      data: {room, localMeetingParticipant}
-    });
+    this.addParticipantToConnectedParticipant(localMeetingParticipant);
     this.localParticipant = localMeetingParticipant;
-
-    this.eventRoom.next({
-      meetingEvent: meetingEventEnum.DominantSpeakerChanged,
-      data: null
-    });
+    //
+    // this.eventRoom.next({
+    //   meetingEvent: meetingEventEnum.DominantSpeakerChanged,
+    //   data: null
+    // });
 
     await this.setUpRoomEvent(room, event);
   }
 
+  /**
+   * Make a IParticipantMeeting
+   * @param twilioParticipant
+   * @param event
+   * @param isDominantSpeaker
+   * @param isLocalSpeaker
+   * @private
+   */
   private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isDominantSpeaker = false, isLocalSpeaker = false) {
     const remoteUser = await this.userService.getUser(twilioParticipant.identity)
 
@@ -355,42 +357,33 @@ export class MeetingService {
     // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected,
       async (participant: Participant) => {
-
         const meetingParticipant = await this.createIParticipantMeeting(participant, event);
-
-        this.eventRoom.next({
-          meetingEvent: meetingEventEnum.ParticipantConnected,
-          data: meetingParticipant
-        });
+        this.addParticipantToConnectedParticipant(meetingParticipant);
       });
 
     // When a Participant adds a Track, attach it to the DOM.
     room.on(meetingEventEnum.TrackSubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
       // this.attachTracks([track], participantContainer, 'participantContainer');
 
-      this.eventRoom.next({
-        meetingEvent: meetingEventEnum.TrackSubscribed,
-        data: {track, trackPublication, participant}
-      });
+      // this.eventRoom.next({
+      //   meetingEvent: meetingEventEnum.TrackSubscribed,
+      //   data: {track, trackPublication, participant}
+      // });
     });
 
     // When a Participant removes a Track, detach it from the DOM.
     room.on(meetingEventEnum.TrackUnsubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
 
-      this.eventRoom.next({
-        meetingEvent: meetingEventEnum.TrackUnsubscribed,
-        data: {track, trackPublication, participant}
-      });
+      // this.eventRoom.next({
+      //   meetingEvent: meetingEventEnum.TrackUnsubscribed,
+      //   data: {track, trackPublication, participant}
+      // });
       // this.detachTracks([track]);
     });
 
     // When a Participant leaves the Room, detach its Tracks.
     room.on(meetingEventEnum.ParticipantDisconnected, (participant: Participant) => {
-
-      this.eventRoom.next({
-        meetingEvent: meetingEventEnum.ParticipantDisconnected,
-        data: participant
-      });
+      this.removeParticipantFromConnectedParticipant(participant);
     });
 
     // To catch the dominant speaker change
