@@ -5,12 +5,12 @@
         {{participant | eventInitialParticipant}}
       </div>
       <div class="nameParticipant">
-        {{getFirstAndLastNameOfParticipant(participant)}}
+        {{participant.festivalData | displayName}}
       </div>
     </div>
     <div [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" >
       <div class="nameParticipant">
-        {{getFirstAndLastNameOfParticipant(participant)}}
+        {{participant.festivalData | displayName}}
       </div>
     </div>
   </div>

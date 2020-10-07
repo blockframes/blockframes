@@ -6,7 +6,8 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'event-meeting-participants-nav',
   templateUrl: './participants-nav.component.html',
-  styleUrls: ['./participants-nav.component.scss']
+  styleUrls: ['./participants-nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantsNavComponent {
 

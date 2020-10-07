@@ -76,7 +76,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     })
 
     participant.twilioData.on('disconnected', () => {
-      this.detachParticipantTracks(this.participant);
+      this.detachParticipantTracks(this.participant.twilioData);
     })
 
     participant.twilioData.on('reconnected', () => {
@@ -126,7 +126,7 @@ export class RemoteComponent extends AbstractParticipant implements OnInit, Afte
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     this.renderer.addClass(containerRemotParticipant, `remoteVideo`);
-    this.attachParticipantTracks(participant, containerRemotParticipant, 'remoteParticipant');
+    this.attachParticipantTracks(participant.twilioData, containerRemotParticipant, 'remoteParticipant');
 
   }
 

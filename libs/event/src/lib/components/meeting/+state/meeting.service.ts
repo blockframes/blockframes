@@ -2,12 +2,21 @@ import {Injectable} from '@angular/core';
 
 //Import Twilio-video
 import * as Video from 'twilio-video';
-import {Participant, RemoteAudioTrack, RemoteTrackPublication, RemoteVideoTrack, Room} from 'twilio-video';
+import {
+  Participant,
+  RemoteAudioTrack,
+  RemoteTrackPublication,
+  RemoteVideoTrack,
+  Room,
+  LocalAudioTrack,
+  LocalVideoTrack
+} from 'twilio-video';
 import {BehaviorSubject, Observable} from "rxjs";
 import {User, UserService} from "@blockframes/user/+state";
 import {Event} from "@blockframes/event/+state";
 import {AuthQuery} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {filter, find, map} from "rxjs/operators";
 
 
 export enum meetingEventEnum {
@@ -44,6 +53,10 @@ export class MeetingService {
     data: null
   });
 
+  //Array of participant connected to the room
+  private $participantsConnectedDataSource: BehaviorSubject<IParticipantMeeting[]> = new BehaviorSubject([]);
+
+  private $localPreviewTracksDataSource: BehaviorSubject<Array<LocalAudioTrack | LocalVideoTrack>> = new BehaviorSubject([]);
 
   protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({
     video: false,
@@ -69,6 +82,91 @@ export class MeetingService {
 
   getEventRoom() {
     return this.eventRoom;
+  }
+
+  getLocalPreviewTracks(): Observable<IParticipantMeeting[]> {
+    return this.$localPreviewTracksDataSource.asObservable();
+  }
+
+  getConnectedAllParticipants(): Observable<IParticipantMeeting[]> {
+    return this.$participantsConnectedDataSource.asObservable();
+  }
+
+  getConnectedRemoteParticipants(): Observable<IParticipantMeeting[]> {
+    return this.$participantsConnectedDataSource
+      .pipe(
+        map(participants => participants.filter(participant => !participant.isLocalSpeaker)
+        )
+      );
+  }
+
+  getConnectedLocalParticipant(): Observable<IParticipantMeeting> {
+    return this.$participantsConnectedDataSource
+      .pipe(
+        map(participants => participants.find(participant => !!participant.isLocalSpeaker)
+        )
+      );
+  }
+
+  getConnectedDominantParticipant(): Observable<IParticipantMeeting> {
+    return this.$participantsConnectedDataSource
+      .pipe(
+        map(participants => participants.find(participant => !!participant.isDominantSpeaker)
+        )
+      );
+  }
+
+  changeConnectedAllParticipants(dataToChange: IParticipantMeeting, isAddParticipant: boolean){
+    if(isAddParticipant){
+      this.addParticipantToConnectedParticipant(dataToChange)
+    } else {
+      this.removeParticipantFromConnectedParticipant(dataToChange)
+    }
+  }
+
+  changeLocalTrack(dataToChange){
+    this.$localPreviewTracksDataSource.next(dataToChange)
+  }
+
+  changeConnectedDominantParticipant(dataToChange: IParticipantMeeting){
+
+  }
+
+  numbConnectedParticipants(): number {
+    return this.$participantsConnectedDataSource.getValue().filter(participant => !!participant.isLocalSpeaker).length
+  }
+
+  /**
+   * function to remove a specific participant to the array of participant connected (participantConnected$)
+   * @param participant: IParticipantMeeting : Participant to remove
+   */
+  removeParticipantFromConnectedParticipant(participant: IParticipantMeeting) {
+    const roomArr: any[] = this.$participantsConnectedDataSource.getValue();
+
+    roomArr.forEach((item, index) => {
+      if (item.identity === participant.identity) {
+        roomArr.splice(index, 1);
+      }
+    });
+
+    this.$participantsConnectedDataSource.next(roomArr);
+  }
+
+  /**
+   * function to add a specific participant to the array of participant connected (participantConnected$)
+   * @param participant: IParticipantMeeting : Participant to add
+   */
+  addParticipantToConnectedParticipant(participant: IParticipantMeeting) {
+    const currentValue = this.$participantsConnectedDataSource.getValue();
+    currentValue.forEach((item) => {
+      if (item.identity === participant.identity) {
+        // Participant already in room
+        return;
+      }
+    });
+    const newCurrentValue = [...currentValue, participant]
+    // currentValue.push(participant);
+    this.$participantsConnectedDataSource.next(newCurrentValue);
   }
 
   getCamDeactivate() {
@@ -131,6 +229,7 @@ export class MeetingService {
     localTracksPromise.then(
       (tracks) => {
         this.previewTracks = tracks;
+        this.changeLocalTrack(tracks);
         this.eventRoom.next({
           meetingEvent: meetingEventEnum.LocalPreviewDone,
           data: tracks
@@ -204,16 +303,13 @@ export class MeetingService {
       const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
       if (!!tracksOfParticipants && tracksOfParticipants.length > 0) {
         for (const indexParticipant in tracksOfParticipants) {
-          const remoteMeetingParticipant = await this.createIParticipantMeeting(tracksOfParticipants[indexParticipant]);
-          this.eventRoom.next({
-            meetingEvent: meetingEventEnum.ParticipantConnected,
-            data: remoteMeetingParticipant
-          });
+          const remoteMeetingParticipant = await this.createIParticipantMeeting(tracksOfParticipants[indexParticipant], event);
+          this.addParticipantToConnectedParticipant(remoteMeetingParticipant);
         }
       }
     }
 
-    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, false, true);
+    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, event, false, true);
 
 
     this.eventRoom.next({
@@ -227,15 +323,17 @@ export class MeetingService {
       data: null
     });
 
-    await this.setUpRoomEvent(room);
+    await this.setUpRoomEvent(room, event);
   }
 
-  private async createIParticipantMeeting(twilioParticipant: Participant, isDominantSpeaker = false, isLocalSpeaker = false){
+  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isDominantSpeaker = false, isLocalSpeaker = false) {
     const remoteUser = await this.userService.getUser(twilioParticipant.identity)
+
+    isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid
 
     return {
       identity: twilioParticipant.identity,
-      twilioData : twilioParticipant,
+      twilioData: twilioParticipant,
       festivalData: {
         firstName: remoteUser.firstName,
         lastName: remoteUser.lastName,
@@ -250,14 +348,15 @@ export class MeetingService {
   /**
    * SetUp all event of the Room went we are connected
    * @param room - Room connected
+   * @param event
    */
-  setUpRoomEvent(room: Room) {
+  setUpRoomEvent(room: Room, event: Event) {
 
     // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected,
       async (participant: Participant) => {
 
-      const meetingParticipant = await this.createIParticipantMeeting(participant);
+        const meetingParticipant = await this.createIParticipantMeeting(participant, event);
 
         this.eventRoom.next({
           meetingEvent: meetingEventEnum.ParticipantConnected,

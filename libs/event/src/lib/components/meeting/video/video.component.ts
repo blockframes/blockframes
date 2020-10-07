@@ -1,21 +1,20 @@
 //Angular
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 //Blockframes
 import {Event} from "@blockframes/event/+state";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
   selector: 'event-meeting-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./video.component.scss']
 })
 export class VideoComponent implements OnInit {
 
   //Input event meeting
-  @Input() $participantConnectedDataSource: BehaviorSubject<IParticipantMeeting[]>;
   @Input() arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
@@ -25,7 +24,7 @@ export class VideoComponent implements OnInit {
 
   @Output() eventSetUpLocalVideoAndAudio = new EventEmitter;
 
-  constructor() {
+  constructor(private meetingService: MeetingService) {
   }
 
   ngOnInit() {
@@ -33,7 +32,7 @@ export class VideoComponent implements OnInit {
 
 
   getIfLocalIsAlone() {
-    return this.$participantConnectedDataSource.getValue().length < 1;
+    return this.meetingService.numbConnectedParticipants() < 1;
   }
 
   setUpLocalVideoAndAudio({kind, boolToChange}) {

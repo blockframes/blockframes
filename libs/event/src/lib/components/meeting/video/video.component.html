@@ -9,7 +9,9 @@
         </div>
       </ng-container>
       <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-        <event-meeting-remote-participant [participant]="participant"  [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-meeting-remote-participant>
+        <ng-container  *ngIf="!participant.isLocalSpeaker" class="participant-not-dominant-speaker">
+          <event-meeting-remote-participant [participant]="participant"  [ngClass]="{'cardListItem-1':(arrayOfParticipantConnected.length < 2), 'cardListItem-2':(arrayOfParticipantConnected.length < 5), 'cardListItem-3':(arrayOfParticipantConnected.length > 4)}"  class="event-remote-participant"></event-meeting-remote-participant>
+        </ng-container>
       </ng-container>
     </div>
   </div>
@@ -19,6 +21,7 @@
     <div class="container-remote-participant-dominant-speaker">
       <!--    <div *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
       <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">
+        ffdominantParticipantForBuyer : {{dominantParticipantForBuyer}}
         <event-meeting-dominant-speaker [participant]="dominantParticipantForBuyer" class="event-remote-participant"></event-meeting-dominant-speaker>
       </ng-container>
       <ng-container *ngIf="!(dominantParticipantForBuyer$ | async) as dominantParticipantForBuyer">
@@ -30,7 +33,7 @@
     </div>
     <div class="container-remote-participant-not-dominant-speaker">
       <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">
-        <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
+        <ng-container  *ngIf="!participant.isDominantSpeaker && !participant.isLocalSpeaker" class="participant-not-dominant-speaker">
           <event-meeting-remote-participant [isBuyer]="!isOwner" [participant]="participant" class="event-remote-participant"></event-meeting-remote-participant>
         </ng-container>
       </ng-container>

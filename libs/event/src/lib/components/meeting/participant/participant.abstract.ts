@@ -1,6 +1,6 @@
 import {BehaviorSubject, Observable} from "rxjs";
 import {ChangeDetectorRef} from "@angular/core";
-import { Participant as IParticipantMeeting, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
+import { Participant, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 import {StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 export abstract class AbstractParticipant{
@@ -32,7 +32,7 @@ export abstract class AbstractParticipant{
    * @param container - container of participant in DOM
    * @param nameClass - name of class css
    */
-  attachParticipantTracks(participant, container, nameClass) {
+  attachParticipantTracks(participant: Participant, container, nameClass) {
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {
@@ -68,7 +68,7 @@ export abstract class AbstractParticipant{
    * Detach the Participant's Tracks from the DOM.
    * @param participant - participant to detach track of the DOM
    */
-  detachParticipantTracks(participant: IParticipantMeeting) {
+  detachParticipantTracks(participant: Participant) {
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {

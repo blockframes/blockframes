@@ -94,7 +94,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
    * @param participants
    */
   makeDominantSpeakerTrack(participants: IParticipantMeeting){
-    this.attachParticipantTracks(participants, this.containerDominantSpeakerVideo.nativeElement, 'dominantSpeakerVideo')
+    this.attachParticipantTracks(participants.twilioData, this.containerDominantSpeakerVideo.nativeElement, 'dominantSpeakerVideo')
   }
 
   setUpCamAndMic(tracks, boolToChange){

@@ -1,5 +1,5 @@
 <ng-container>
-  <div *ngIf="!!participant" class="dominant-speaker-video-container container-round-div-initial-name-participant">
+  <ng-container *ngIf="!!participant" class="dominant-speaker-video-container container-round-div-initial-name-participant">
     <ng-container *ngIf="camMicIsOn$ | async as camMicIsOn">
       <div *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
         <span>
@@ -7,10 +7,10 @@
         </span>
       </div>
       <div class="nameParticipant">
-        {{getFirstAndLastNameOfParticipant(participant)}}
+        {{participant.festivalData | displayName}}
       </div>
     </ng-container>
     <div [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
     </div>
-  </div>
+  </ng-container>
 </ng-container>
