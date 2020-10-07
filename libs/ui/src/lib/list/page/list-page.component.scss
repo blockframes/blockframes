@@ -34,16 +34,3 @@ section {
 span.mat-body-2 {
   margin-bottom: 16px;
 }
-
-list-page-prgoress {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-
-  mat-progress-bar {
-    margin: 16px;
-    width: 80%;
-  }
-}

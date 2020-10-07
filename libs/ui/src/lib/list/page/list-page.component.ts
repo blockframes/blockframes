@@ -34,21 +34,6 @@ export class PageListItemDirective { }
 @Directive({ selector: '[listPageEmpty]' })
 export class PageEmptyDirective { }
 
-@Component({
-  selector: 'list-page-progress',
-  template: `
-   <ng-content></ng-content>
-  <mat-progress-bar color="primary" [value]="progressValue"></mat-progress-bar>
-  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="progressValue === 100">LOAD
-    MORE</button>
-    `
-})
-export class PageProgressComponent {
-  @Input() progressValue: number
-
-  @Output() loadMore = new EventEmitter();
-}
-
 
 @Component({
   selector: '[items]list-page',
@@ -85,4 +70,32 @@ export class ListPageComponent implements AfterContentInit {
   goBack() {
     this.location.back();
   }
+}
+
+@Component({
+  selector: 'list-page-progress',
+  template: `
+   <ng-content></ng-content>
+  <mat-progress-bar color="primary" [value]="progressValue"></mat-progress-bar>
+  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="progressValue === 100">LOAD
+    MORE</button>
+    `,
+  styles: [`
+    :host {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    mat-progress-bar {
+        margin: 16px;
+        width: 80%;
+      }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PageProgressComponent {
+  @Input() progressValue: number
+
+  @Output() loadMore = new EventEmitter();
 }
