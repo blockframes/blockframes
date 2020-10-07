@@ -1,0 +1,68 @@
+<tunnel-page>
+  <h4 title>Investment Campaign</h4>
+  <h1 subtitle>Privileges</h1>
+  <ng-container tunnel-form>
+    <bf-form-table [columns] [form]>
+      <!-- Columns -->
+      <ng-template colRef="title" let-title>{{ title | titlecase }}</ng-template>
+      <ng-template colRef="description" let-description>{{ description }}</ng-template>
+      <ng-template colRef="min" let-min>{{ min | currency:'USD' }}</ng-template>
+      <ng-template colRef="amount.total" let-total>{{ total | number }}</ng-template>
+      <ng-template colRef="amount.current" let-current>{{ current | number }}</ng-template>
+
+      <!-- Local form -->
+      <ng-template formView let-perkForm>
+        <form [formGroup]="perkForm">
+          <!-- Title -->
+          <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required/>
+            <mat-hint>Please pay attetion, amount should be in dollars.</mat-hint>
+            <mat-error *ngIf="perkForm.hasError('required', 'title')">
+              Please specify the privilege title.
+            </mat-error>
+          </mat-form-field>
+          <!-- Description -->
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" required></textarea>
+            <mat-hint>Please specify the avantages and the details of this privilege to your futur investor.</mat-hint>
+            <mat-error *ngIf="perkForm.hasError('required', 'description')">
+              Please provide the privilege description.
+            </mat-error>
+          </mat-form-field>
+
+          <h3>Details</h3>
+
+          <!-- Minimum Pledge -->
+          <mat-form-field appearance="outline">
+            <mat-label>Pledge Level</mat-label>
+            <input type="number" matInput placeholder="$" formControlName="minPledge"/>
+            <mat-icon matSuffix svgIcon="USD"></mat-icon>
+            <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
+          </mat-form-field>
+
+          <article formGroupName="amount">
+            <div fxLayout>
+              <mat-form-field appearance="outline">
+                <mat-label>Number of Privileges Available</mat-label>
+                <input type="number" matInput placeholder="$" formControlName="total" required/>
+                <mat-hint>Please precise the number of available privileges or choose the “unlimited privileges”.</mat-hint>
+              </mat-form-field>
+  
+              <mat-checkbox #unlimited>
+                Unlimited Privilges
+              </mat-checkbox>
+            </div>
+            <mat-form-field appearance="outline" *ngIf="unlimited.value">
+              <mat-label>Pledge Level</mat-label>
+              <input type="number" matInput placeholder="$" formControlName="current"/>
+              <mat-icon matSuffix svgIcon="USD"></mat-icon>
+              <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
+            </mat-form-field>
+          </article>
+        </form>
+      </ng-template>
+    </bf-form-table>
+  </ng-container>
+</tunnel-page>
