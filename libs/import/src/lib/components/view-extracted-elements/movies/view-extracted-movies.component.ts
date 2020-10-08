@@ -22,14 +22,8 @@ import {
   staticConsts,
   MovieCurrencies,
   Rating,
-  SoundFormat,
-  Scoring,
-  Colors,
-  MovieFormatQuality,
-  MovieFormat,
-  Certifications
 } from '@blockframes/utils/static-model';
-import { getKeyFromValue } from '@blockframes/utils/static-model/staticConsts';
+import { GetCode } from '@blockframes/utils/static-model/staticConsts';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -263,7 +257,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // COLOR (Color / Black & White )
         if (spreadSheetRow[SpreadSheetMovie.color]) {
-          const color = getKeyFromValue('colors', spreadSheetRow[SpreadSheetMovie.color]) as Colors;
+          const color = getKeyIfExists('colors', spreadSheetRow[SpreadSheetMovie.color]);
           if (color) {
             movie.color = color;
           } else {
@@ -305,7 +299,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             const movieRating = createMovieRating({ value: ratingParts[1].trim() });
 
             if (ratingParts[2]) { // System
-              const system = getKeyFromValue('rating', ratingParts[2]) as Rating;
+              const system = getKeyIfExists('rating', ratingParts[2]) as Rating;
 
               if (system) {
                 movieRating.system = system;
@@ -359,7 +353,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SHOOTING FORMAT
         if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
-          const shootingFormat = getKeyFromValue('movieFormat', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim()) as MovieFormat;
+          const shootingFormat = getKeyIfExists('movieFormat', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
           if (shootingFormat) {
             movie.format = shootingFormat;
           } else {
@@ -375,7 +369,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (formatQuality)
         if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
-          const availableFormat = getKeyFromValue('movieFormatQuality', spreadSheetRow[SpreadSheetMovie.availableFormat].trim()) as MovieFormatQuality;
+          const availableFormat = getKeyIfExists('movieFormatQuality', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
           if (availableFormat) {
             movie.formatQuality = availableFormat;
           } else {
@@ -391,7 +385,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (soundQuality)
         if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
-          const soundQuality = getKeyFromValue('soundFormat', spreadSheetRow[SpreadSheetMovie.soundQuality].trim()) as SoundFormat;
+          const soundQuality = getKeyIfExists('soundFormat', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
           if (soundQuality) {
             movie.soundFormat = soundQuality;
           } else {
@@ -408,7 +402,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.quotas]) {
           spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c) => {
-            const certification = getKeyFromValue('certifications', c) as Certifications;
+            const certification = getKeyIfExists('certifications', c);
             if (certification) {
               movie.certifications.push(certification);
             } else {
@@ -691,11 +685,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.totalBudget.currency = getKeyFromValue('movieCurrencies', 'USD') as MovieCurrencies;
+                movie.totalBudget.currency = getKeyIfExists('movieCurrencies', 'USD') as MovieCurrencies;
                 break;
               case '€':
               default:
-                movie.totalBudget.currency = getKeyFromValue('movieCurrencies', 'EUR') as MovieCurrencies;
+                movie.totalBudget.currency = getKeyIfExists('movieCurrencies', 'EUR') as MovieCurrencies;
                 break;
             }
 
@@ -881,7 +875,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (this.isUserBlockframesAdmin) {
           // SCORING (Scoring)
           if (spreadSheetRow[SpreadSheetMovie.scoring]) {
-            const scoring = getKeyFromValue('scoring', spreadSheetRow[SpreadSheetMovie.scoring]) as Scoring;
+            const scoring = getKeyIfExists('scoring', spreadSheetRow[SpreadSheetMovie.scoring]);
             if (scoring) {
               movie.scoring = scoring;
             } else {

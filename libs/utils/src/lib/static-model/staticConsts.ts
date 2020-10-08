@@ -116,6 +116,30 @@ const constants = {
     confirmed: 'Confirmed Director',
     prestige: 'Prestige'
   },
+  genres: {
+    comedy: 'Comedy',
+    drama: 'Drama',
+    action: 'Action',
+    horror: 'Horror',
+    scienceFiction: 'Science Fiction', // science-fiction
+    thriller: 'Thriller',
+    comingAge: 'Young Adult', // coming-of-age
+    fantasy: 'Fantasy',
+    romance: 'Romance',
+    western: 'Western',
+    periodPiece: 'Period Piece', // period-piece
+    adventure: 'Adventure',
+    biography: 'Biography',
+    war: 'War',
+    police: 'Police',
+    animation: 'Animation',
+    documentary: 'Documentary',
+    erotic: 'Erotic',
+    tvShow: 'TV Show', //tv-show
+    webSeries: 'Web Series', //web-series
+    virtualReality: 'Virtual Reality', // virtual-reality
+    family: 'Family',
+  },
   hostedVideoTypes: {
     tailer: 'Trailer',
     teaser: 'Teaser',
@@ -318,7 +342,8 @@ export type Constants = typeof constants;
 export type Scope = keyof Constants;
 export type GetKeys<S extends Scope> = keyof Constants[S];
 export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
-
+export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
+export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
 /**
  * Returns the key corresponding to a value (ie:code).
@@ -326,14 +351,15 @@ export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
  * @param scope
  * @param targetValue
  */
-export function getKeyFromValue(scope: Scope, targetValue: any) {
+export function getKeyFromValue(scope: Scope, targetValue: string) {
   for (const [key, value] of Object.entries(constants[scope])) {
-    if (value.toLowerCase() === targetValue.toLowerCase()) {
+    if (value.toLowerCase() === targetValue.trim().toLowerCase()) {
       return key;
     }
   }
   return null;
-}
+};
+
 
 /**
  * Returns the label corresponding to a key (ie:code).
@@ -343,7 +369,7 @@ export function getKeyFromValue(scope: Scope, targetValue: any) {
  */
 export const getValueByKey = (scope: Scope, targetValue: string) => {
   for (const [key, value] of Object.entries(constants[scope])) {
-    if (key.toLowerCase() === targetValue.toLowerCase()) {
+    if (key.toLowerCase() === targetValue.trim().toLowerCase()) {
       return value;
     }
   }
