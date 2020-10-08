@@ -11,7 +11,7 @@ import {
 import {meetingEventEnum, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {BehaviorSubject, Observable} from "rxjs";
-import {Participant, RemoteTrackPublication} from 'twilio-video';
+import {RemoteTrackPublication} from 'twilio-video';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Component({

@@ -5,9 +5,9 @@
       {{participant.festivalData | displayName}}
     </span>
   </ng-container>
-  <ng-container [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" >
+  <div [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" >
     <span>
       {{participant.festivalData | displayName}}
     </span>
-  </ng-container>
+  </div>
 </section>

@@ -55,3 +55,4 @@ import { AvatarInitialComponent } from './avatar-initial/avatar-initial.componen
     ]
 })
 export class MeetingModule { }
+

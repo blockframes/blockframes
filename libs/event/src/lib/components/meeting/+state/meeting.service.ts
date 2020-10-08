@@ -400,10 +400,7 @@ export class MeetingService {
     // of all Participants, including that of the LocalParticipant.
     room.on(meetingEventEnum.Disconnected, () => {
 
-      this.eventRoom.next({
-        meetingEvent: meetingEventEnum.Disconnected,
-        data: null
-      });
+      this.disconnected();
 
       // if (this.previewTracks) {
       //   this.previewTracks.forEach((track) => {
@@ -466,12 +463,32 @@ export class MeetingService {
 
 
   /**
-   *v For disconnect from twilio Room
+   * Function call when local participant leave the room
    */
   disconnected() {
     if (!!this.activeRoom) {
-      this.activeRoom.disconnect()
+      this.deactiveLocalTracks();
+      this.activeRoom.disconnect();
     }
+  }
+
+
+  /**
+   *
+   */
+  deactiveLocalTracks() {
+    const localParticipant = this.localParticipant.twilioData;
+    if (!!!localParticipant) {
+      return;
+    }
+    localParticipant.audioTracks.forEach((publication) => {
+      publication.track.stop()
+      publication.track.disable()
+    })
+    localParticipant.videoTracks.forEach((publication) => {
+      publication.track.stop()
+      publication.track.disable()
+    })
   }
 
 

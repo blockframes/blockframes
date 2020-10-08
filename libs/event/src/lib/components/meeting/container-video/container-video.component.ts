@@ -60,9 +60,6 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
         case meetingEventEnum.ParticipantDisconnected:
           this.participantDisconnected(value.data);
           break;
-        case meetingEventEnum.Disconnected:
-          this.disconnected();
-          break;
         case meetingEventEnum.ConnectedToRoomTwilio:
           this.connectedToRoomTwilio(value.data);
           break;
@@ -163,52 +160,18 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   /**
-   * Function call when local participant leave the room
-   */
-  disconnected() {
-    this.deactiveLocalTracks();
-    this.meetingService.disconnected();
-  }
-
-  /**
    *
    */
   dominantSpeakerChanged(participant: IParticipantMeeting) {
     // this.setParticipantDominantSpeaker(participant);
   }
 
-  /**
-   *
-   * @param participant
-   */
-  eventParticipantDisconnected(participant: IParticipantMeeting) {
-    this.meetingService.changeConnectedAllParticipants(participant, true);
-    this.disconnected();
-  }
-
-  /**
-   *
-   */
-  deactiveLocalTracks() {
-    const localParticipant = this.meetingService.getLocalParticipant();
-    if (!!!localParticipant) {
-      return;
-    }
-    localParticipant.audioTracks.forEach((publication) => {
-      publication.track.stop()
-      publication.track.disable()
-    })
-    localParticipant.videoTracks.forEach((publication) => {
-      publication.track.stop()
-      publication.track.disable()
-    })
-  }
 
   setUpLocalVideoAndAudio({kind, boolToChange}) {
     this.meetingService.setUpLocalVideoAndAudio(kind, boolToChange)
   }
 
   ngOnDestroy() {
-    this.disconnected()
+    this.meetingService.disconnected()
   }
 }
