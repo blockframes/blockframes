@@ -6,7 +6,7 @@
       <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />
     </ng-container>
     <ng-container *ngSwitchCase="'pdf'">
-      PDF <!-- TODO issue#3693 -->
+      <event-pdf-viewer [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
     </ng-container>
     <ng-container *ngSwitchCase="'video'">
       VIDEO <!-- TODO issue#3688 -->
