@@ -33,7 +33,7 @@
     </div>
   </ng-template>
 
-  <list-page-progress [progressValue]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" @slideUp
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" @slideUp
     *ngIf="!loading$.value">
     <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
   </list-page-progress>

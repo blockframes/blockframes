@@ -76,8 +76,8 @@ export class ListPageComponent implements AfterContentInit {
   selector: 'list-page-progress',
   template: `
    <ng-content></ng-content>
-  <mat-progress-bar color="primary" [value]="progressValue"></mat-progress-bar>
-  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="progressValue === 100">LOAD
+  <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
+  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="value === 100">LOAD
     MORE</button>
     `,
   styles: [`
@@ -95,7 +95,7 @@ export class ListPageComponent implements AfterContentInit {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageProgressComponent {
-  @Input() progressValue: number
+  @Input() value: number
 
   @Output() loadMore = new EventEmitter();
 }
