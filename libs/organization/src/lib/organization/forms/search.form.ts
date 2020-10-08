@@ -1,7 +1,4 @@
 
-// Angular
-import { FormControl } from '@angular/forms';
-
 // Blockframes
 import { TerritoriesSlug } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
@@ -20,6 +17,7 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
   return {
     query: '',
     page: 0,
+    hitsPerPage: 8,
     country: '',
     ...search,
     appAccess: search.appAccess,
@@ -32,7 +30,7 @@ export class OrganizationSearchForm extends FormEntity<any> {
   private organizationIndex: Index;
 
   constructor(search: Partial<OrganizationSearch> = {}) {
-    super(createAlgoliaSearch<any, any>(search, createOrganizationSearch));
+    super(createAlgoliaSearch<OrganizationSearch, OrganizationSearch>(search, createOrganizationSearch));
 
     this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations);
   }
@@ -49,7 +47,7 @@ export class OrganizationSearchForm extends FormEntity<any> {
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
-        `country:${this.country.value ? this.country.value : ''}`,
+        `country:${this.country.value || ''}`,
         `appAccess:${this.appAccess.value}`,
         `appModule:${this.appModule.value}`
       ]

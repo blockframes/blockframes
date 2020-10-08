@@ -35,7 +35,7 @@
 <section>
   <ng-container *ngIf="items.length; else empty">
     <div fxLayout="row" fxLayoutAlign="end start">
-      <ng-content select="page-description"></ng-content>
+      <ng-content select="list-page-description"></ng-content>
     </div>
     <ng-container *ngIf="!listView; else displayList">
       <div grid [@fadeList]="items.length">
