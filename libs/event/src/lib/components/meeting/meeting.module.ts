@@ -12,15 +12,16 @@ import {ImageReferenceModule} from '@blockframes/media/directives/image-referenc
 
 import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
 import {DisplayNameModule} from '@blockframes/utils/pipes';
+import {ContainerVideoComponent} from "@blockframes/event/components/meeting/container-video/container-video.component";
 
 
 @NgModule({
   declarations: [
     ParticipantsNavComponent,
+    ContainerVideoComponent,
   ],
   exports: [
-    ParticipantsNavComponent,
-
+    ContainerVideoComponent,
   ],
     imports: [
       MatButtonModule,
