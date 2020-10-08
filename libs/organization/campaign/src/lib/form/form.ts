@@ -10,8 +10,8 @@ function createPerkControls(value?: Partial<Perk>) {
   const perk = createPerk(value);
   return {
     title: new FormControl(perk.title, Validators.required),
-    description: new FormControl(perk.description),
-    minPledge: new FormControl(perk.title, Validators.required),
+    description: new FormControl(perk.description, Validators.required),
+    minPledge: new FormControl(perk.minPledge),
     amount: new FormEntity({
       current: new FormControl(perk.amount.current),
       total: new FormControl(perk.amount.total, Validators.required),
@@ -45,8 +45,11 @@ function createCampaignControls(value?: Partial<Campaign>) {
 type CampaignControls = ReturnType<typeof createCampaignControls>;
 
 export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
+
   constructor(value?: Partial<Campaign>) {
     const controls = createCampaignControls(value);
     super(controls);
   }
 }
+
+export const createCampaignForm = () => CampaignForm.factory(createCampaign(), createCampaignControls);

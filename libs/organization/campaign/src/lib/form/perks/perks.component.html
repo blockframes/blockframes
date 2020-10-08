@@ -11,7 +11,14 @@
       <!-- Columns -->
       <ng-template colRef="title" let-title><b>{{ title | titlecase }}</b></ng-template>
       <ng-template colRef="description" let-description>{{ description }}</ng-template>
-      <ng-template colRef="minPledge" let-minPledge>{{ minPledge | currency:'USD' }}</ng-template>
+      <ng-template colRef="minPledge" let-minPledge>
+        <ng-container *ngIf="minPledge; else anyInvestment">
+          {{ minPledge | currency:'USD' }}
+        </ng-container>
+        <ng-template #anyInvestment>
+          Any investment
+        </ng-template>
+      </ng-template>
       <ng-template colRef="amount" let-amount>
         <ng-container *ngIf="!(amount | isUnlimited); else unlimited">
           {{ amount.current | number }} / {{ amount.total | number }}
@@ -29,7 +36,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Title</mat-label>
             <input matInput formControlName="title" required/>
-            <mat-hint>Please pay attetion, amount should be in dollars.</mat-hint>
+            <mat-hint>Please pay attention, amount should be in dollars.</mat-hint>
             <mat-error *ngIf="perkForm.hasError('required', 'title')">
               Please specify the privilege title.
             </mat-error>
@@ -37,7 +44,7 @@
           <!-- Description -->
           <mat-form-field appearance="outline">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description"></textarea>
+            <textarea matInput formControlName="description" required></textarea>
             <mat-hint>Please specify the avantages and the details of this privilege to your futur investor.</mat-hint>
             <mat-error *ngIf="perkForm.hasError('required', 'description')">
               Please provide the privilege description.

@@ -3,6 +3,16 @@
   <h1 subtitle>Summary & Submit</h1>
   <ng-container tunnel-form>
 
+    <campaign-summary-proposal [form]="form" link="../proposal"></campaign-summary-proposal>
+
+    <mat-divider></mat-divider>
     
+    <campaign-summary-perks [form]="form" link="../perks"></campaign-summary-perks>
+
+    <footer fxLayout fxLayoutAlign="center center">
+      <button mat-stroked-button color="primary" (click)="save()">
+        Submit for Validation
+      </button>
+    </footer>
   </ng-container>
 </tunnel-page>

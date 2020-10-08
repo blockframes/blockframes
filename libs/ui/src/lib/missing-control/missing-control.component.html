@@ -22,7 +22,7 @@
 <ng-template #value>
   <!-- If there is a static model -->
   <ng-container *ngIf="(scope && !!control.value) else withType">
-    <span>{{ control.value | translateSlug: scope }}{{ isLast ? '' : ', ' }}</span>
+    <span>{{ control.value | translateSlug: scope }}</span>
   </ng-container>
   <ng-template #withType>
     <!-- If there is a type string -->

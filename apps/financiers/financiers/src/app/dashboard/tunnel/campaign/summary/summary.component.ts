@@ -1,15 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
+import { CampaignFormShellComponent } from '@blockframes/campaign/form/shell/shell.component';
 
 @Component({
-  selector: 'financiers-summary',
+  selector: 'financiers-campaign-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.scss']
+  styleUrls: ['./summary.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent {
+  form = this.shell.form;
+  constructor(
+    private shell: CampaignFormShellComponent,
+    private router: Router
+  ) { }
 
-  constructor() { }
-
-  ngOnInit(): void {
+  async save() {
+    const id = await this.shell.save();
+    this.router.navigate(['/c/o/dashboard/title', id]);
   }
-
 }
