@@ -1,15 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CampaignForm } from '../../form';
 
 @Component({
-  selector: 'campaign-perks',
+  selector: 'campaign-summary-perks',
   templateUrl: './perks.component.html',
-  styleUrls: ['./perks.component.scss']
+  styleUrls: ['./perks.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PerksComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class PerksComponent {
+  @Input() link: string;
+  @Input() form: CampaignForm;
 }

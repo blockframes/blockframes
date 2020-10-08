@@ -1,1 +1,36 @@
-<p>perks works!</p>
+<article>
+  <h6>
+    Privileges
+    <a mat-icon-button [routerLink]="link">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li fxLayout="columns" *ngFor="let control of form.controls">
+      <missing-control [control]="control.get('title')" [link]="link">
+        <ng-template let-title>
+          <strong>
+            {{ title }}
+            <ng-container *ngIf="control.get('minPledge').value as minPledge; else anyInvestment">
+              (from {{ minPledge | currency:'USD' }})
+            </ng-container>
+            <ng-template #anyInvestment>
+              (for any investment)
+            </ng-template>
+          </strong>
+        </ng-template>
+      </missing-control>
+      <missing-control [control]="control.get('description')" [link]="link">
+        <ng-template let-description>
+          <p>{{ description }}</p>
+        </ng-template>
+      </missing-control>
+      <missing-control [control]="control.get('amount')" [link]="link">
+        <ng-template let-amount>
+          <strong *ngIf="amount | isUnlimited">Unlimited</strong>
+          <strong *ngIf="!(amount | isUnlimited)">{{ amount.current }} / {{ amount.totle }}</strong>
+        </ng-template>
+      </missing-control>
+    </li>
+  </ul>
+</article>
