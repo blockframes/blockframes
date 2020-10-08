@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 // Blockframes
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { AppBarModule } from '@blockframes/ui/app-bar';
 
 // Component and Directives
 import {
@@ -24,7 +25,8 @@ import {
   PageSortDirective,
   PageTitleDirective,
   PageDescriptionTemplateDirective,
-  PageEmptyDirective
+  PageEmptyDirective,
+  PageAppBarSearchDirective
 } from './list-page.component';
 
 @NgModule({
@@ -35,6 +37,7 @@ import {
     ImageReferenceModule,
     FlexLayoutModule,
     ImageReferenceModule,
+    AppBarModule,
 
     // Material
     MatProgressSpinnerModule,
@@ -51,7 +54,8 @@ import {
     PageProgressComponent,
     PageTitleDirective,
     PageDescriptionTemplateDirective,
-    PageEmptyDirective
+    PageEmptyDirective,
+    PageAppBarSearchDirective
   ],
   exports: [
     ListPageComponent,
@@ -62,7 +66,8 @@ import {
     PageProgressComponent,
     PageTitleDirective,
     PageDescriptionTemplateDirective,
-    PageEmptyDirective
+    PageEmptyDirective,
+    PageAppBarSearchDirective
   ]
 })
 export class ListPageModule { }

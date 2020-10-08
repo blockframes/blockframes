@@ -16,6 +16,7 @@ import { FormCountryModule } from '@blockframes/ui/form';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { MatInputModule } from '@angular/material/input';
     // Material
     MatProgressSpinnerModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule
   ]
 })
 export class OrganizationListModule { }

@@ -1,4 +1,13 @@
 <list-page [items]="orgs$ | async">
+
+  <list-page-app-bar>
+    <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
+      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
+      <input type="text" formControlName="query" [value]="searchForm.query"
+        placeholder="Search for titles, directors, keywords, ...">
+    </form>
+  </list-page-app-bar>
+
   <list-page-title>
     <h1 class="mat-display-2 page-title">Our partners</h1>
   </list-page-title>
@@ -33,8 +42,7 @@
     </div>
   </ng-template>
 
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" @slideUp
-    *ngIf="!loading$.value">
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
     <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
   </list-page-progress>
 

@@ -1,5 +1,12 @@
+<ng-template pageBar targetId="app-bar">
+  <div class="pageBar" fxLayout fxLayoutAlign="start center">
+    <app-menu></app-menu>
+    <ng-content select="list-page-app-bar"></ng-content>
+  </div>
+</ng-template>
+
 <!-- we use class="dark-contrast-theme" to override theme style of the header because it always has a "dark" background image -->
-<header class="dark-contrast-theme" bgAsset="banner_header_page.webp">
+<header class="dark-contrast-theme" bgAsset="banner_header_page.webp" id="app-bar">
   <a mat-icon-button (click)="goBack()">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </a>

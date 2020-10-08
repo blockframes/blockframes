@@ -22,8 +22,8 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  private movieSearchResultsState = new BehaviorSubject<Movie[]>([]);
-  public movieSearchResults$: Observable<Movie[]>;
+  public movieSearchResultsState = new BehaviorSubject<Movie[]>([]);
+  public movies$: Observable<Movie[]>;
   private sub: Subscription;
   public nbHits: number;
   public hitsViewed = 0;
@@ -31,10 +31,12 @@ export class ListComponent implements OnInit, OnDestroy {
   public sortByControl: FormControl = new FormControl('Title');
   public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
 
-  public filterForm = new MovieSearchForm();
+  public searchForm = new MovieSearchForm();
 
   private scrollOffsetTop: number;
   private loadingMore = true;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private movieService: MovieService,
@@ -46,18 +48,18 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
-    this.filterForm.storeConfig.add('accepted');
+    this.searchForm.storeConfig.add('accepted');
     // On festival, we want only movie available for festival
-    this.filterForm.appAccess.add('festival');
+    this.searchForm.appAccess.add('festival');
 
-    this.movieSearchResults$ = this.movieSearchResultsState.asObservable();
+    this.movies$ = this.movieSearchResultsState.asObservable();
 
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value), distinctUntilChanged())
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
     ]).pipe(
       debounceTime(300),
-      switchMap(() => this.filterForm.search()),
+      switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
@@ -85,15 +87,15 @@ export class ListComponent implements OnInit, OnDestroy {
 
   clear() {
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
-    this.filterForm.reset(initial);
+    this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }
 
   async loadMore() {
     this.loadingMore = true;
     this.setScrollOffset();
-    this.filterForm.page.setValue(this.filterForm.page.value + 1);
-    await this.filterForm.search();
+    this.searchForm.page.setValue(this.searchForm.page.value + 1);
+    await this.searchForm.search();
   }
 
   setScrollOffset() {
@@ -103,5 +105,4 @@ export class ListComponent implements OnInit, OnDestroy {
   scrollToScrollOffset() {
     this.scrollable.scrollTo({ top: this.scrollOffsetTop });
   }
-  
 }

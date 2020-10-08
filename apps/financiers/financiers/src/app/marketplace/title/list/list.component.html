@@ -1,14 +1,14 @@
-<title-list [titles]="movieSearchResults$ | async">
+<list-page [items]="movies$ | async">
 
   <!-- App Bar Search -->
-  <ng-template titleAppBarSearch>
-    <form class="app-bar" [formGroup]="filterForm">
-      <input type="text" formControlName="query" [value]="filterForm.query">
+  <list-page-app-bar>
+    <form class="app-bar" [formGroup]="searchForm">
+      <input type="text" formControlName="query" [value]="searchForm.query">
     </form>
-  </ng-template>
+  </list-page-app-bar>
 
   <!-- SORT -->
-  <ng-template titleSort>
+  <list-page-sort>
 
     <mat-form-field class="sort">
       <mat-label>Sort by</mat-label>
@@ -19,56 +19,51 @@
       </mat-select>
     </mat-form-field>
 
-  </ng-template>
+  </list-page-sort>
 
 
   <!-- SEARCH BAR -->
-  <ng-template titleSearch>
 
-    <form [formGroup]="filterForm">
+  <list-page-search>
+    <form [formGroup]="searchForm">
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="filterForm.query.valueChanges | async">
+        <input matInput type="text" formControlName="query" [value]="searchForm.query.valueChanges | async">
       </mat-form-field>
     </form>
-
-  </ng-template>
-
+  </list-page-search>
 
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
     <!-- TODO issue#2576 -->
-    <ng-template filter label="Sales Agents" [form]="filterForm.sellers">
-      <algolia-chips-autocomplete
-        index="org"
-        displayWithPath="name"
-        [filters]="['appAccess:financiers', 'appModule:dashboard']"
-        [form]="filterForm.sellers"
-        label="Search for a Sales Agent"
-        placeholder="Organization name"
-      ></algolia-chips-autocomplete>
+    <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
+      <algolia-chips-autocomplete index="org" displayWithPath="name"
+        [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"
+        label="Search for a Sales Agent" placeholder="Organization name"></algolia-chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Genres" [form]="filterForm.genres">
-      <chips-autocomplete [form]="filterForm.genres" scope="GENRES"></chips-autocomplete>
+    <ng-template filter label="Genres" [form]="searchForm.genres">
+      <chips-autocomplete [form]="searchForm.genres" scope="GENRES"></chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Country of Origin" [form]="filterForm.originCountries" >
-      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES"></chips-autocomplete>
+    <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
+      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES">
+      </chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Language & Version" [form]="filterForm.languages">
-      <title-language-filter [languagesFilterForm]="filterForm.languages"></title-language-filter>
+    <ng-template filter label="Language & Version" [form]="searchForm.languages">
+      <title-language-filter [languagesFilterForm]="searchForm.languages"></title-language-filter>
     </ng-template>
 
-    <ng-template filter label="Production Status" [form]="filterForm.productionStatus">
-      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" scope="productionStatus" type="constant"></static-check-boxes>
+    <ng-template filter label="Production Status" [form]="searchForm.productionStatus">
+      <static-check-boxes fxLayout="column" [form]="searchForm.productionStatus" scope="productionStatus"
+        type="constant"></static-check-boxes>
     </ng-template>
 
-    <ng-template filter label="Budget" [form]="filterForm.minBudget">
-      <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
+    <ng-template filter label="Budget" [form]="searchForm.minBudget">
+      <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
   </list-filter>
@@ -78,11 +73,20 @@
   </button>
 
   <!-- TITLE CARD -->
-  <ng-template titleCard let-title>
-
+  <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]" size="poster">
     </movie-card>
-
   </ng-template>
 
-</title-list>
+  <ng-template listPageEmpty *ngIf="loading$.value">
+    <div class="loading">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+  </ng-template>
+
+
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+    You've viewed {{ hitsViewed }} of {{ nbHits }} titles
+  </list-page-progress>
+
+</list-page>

@@ -29,6 +29,7 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
   return {
     query: new FormControl(search.query),
     page: new FormControl(search.page),
+    hitsPerPage: new FormControl(search.hitsPerPage),
     country: new FormControl(search.country),
     appAccess: new FormControl(search.appAccess),
     appModule: new FormControl(search.appModule)
@@ -51,6 +52,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
   get query() { return this.get('query'); }
   get page() { return this.get('page'); }
+  get hitsPerPage() { return this.get('hitsPerPage') }
   get country() { return this.get('country'); }
   get appAccess() { return this.get('appAccess') }
   get appModule() { return this.get('appModule') }
@@ -58,11 +60,10 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
   search() {
     return this.organizationIndex.search({
-      hitsPerPage: 8,
+      hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
-        `country:${this.country.value ? this.country.value : ''}`,
         `country:${this.country.value || ''}`,
         `appAccess:${this.appAccess.value}`,
         `appModule:${this.appModule.value}`

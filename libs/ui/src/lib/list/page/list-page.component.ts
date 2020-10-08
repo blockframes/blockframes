@@ -7,11 +7,14 @@ import {
   TemplateRef,
   ContentChild,
   Input,
-  AfterContentInit, Output, EventEmitter
+  AfterContentInit, Output, EventEmitter, HostBinding
 } from '@angular/core';
 
 // Blockframes
-import { fadeList } from '@blockframes/utils/animations/fade';
+import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
+
+@Directive({ selector: 'list-page-app-bar' })
+export class PageAppBarSearchDirective { }
 
 @Directive({ selector: 'list-page-title' })
 export class PageTitleDirective { }
@@ -75,7 +78,7 @@ export class ListPageComponent implements AfterContentInit {
 @Component({
   selector: 'list-page-progress',
   template: `
-   <ng-content></ng-content>
+  <ng-content></ng-content>
   <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
   <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="value === 100">LOAD
     MORE</button>
@@ -92,10 +95,13 @@ export class ListPageComponent implements AfterContentInit {
         margin: 16px;
         width: 80%;
       }`],
+  animations: [slideUp],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PageProgressComponent {
   @Input() value: number
 
   @Output() loadMore = new EventEmitter();
+
+  @HostBinding('@slideUp') animation;
 }
