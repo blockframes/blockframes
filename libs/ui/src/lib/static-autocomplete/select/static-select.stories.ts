@@ -14,11 +14,11 @@ export const staticSelect = () => ({
   template: `
   <storybook-toolkit>
     <h1 title>Static Select</h1>
-      <static-select [scope]="scope" [control]="control"></static-select>
+      <static-select [scope]="scope" [control]="control" type="constant"></static-select>
   </storybook-toolkit>
 `,
   props: {
-    scope: text('scope', 'GENRES'),
+    scope: text('scope', 'genres'),
     control: new FormControl()
   }
 });

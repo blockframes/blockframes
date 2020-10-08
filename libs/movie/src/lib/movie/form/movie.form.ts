@@ -119,7 +119,7 @@ function createMovieControls(movie: Partial<Movie>) {
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
+    genres: FormList.factory(entity.genres, el => new FormConstantValue(el, 'genres'), [Validators.required]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),

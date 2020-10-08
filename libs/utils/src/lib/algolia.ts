@@ -88,7 +88,7 @@ export interface AlgoliaMovie {
   },
   directors: string[],
   keywords: string[],
-  genres: ExtractSlug<'GENRES'>[],
+  genres: GetKeys<'genres'>[],
   originCountries: ExtractSlug<'TERRITORIES'>[],
   languages: {
     original: ExtractSlug<'LANGUAGES'>[],

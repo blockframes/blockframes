@@ -1,7 +1,7 @@
 import { MovieCurrencies } from "@blockframes/utils/static-model/types";
 import { firestore } from "firebase";
 import { toDate } from "@blockframes/utils/helpers"
-import { getKeyFromValue } from "../static-model/staticConsts";
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 type Timestamp = firestore.Timestamp;
 
@@ -134,7 +134,7 @@ export interface PaymentDocument extends PaymentRaw<Timestamp> { }
  * A factory function that creates Price
  */
 export function createPrice(price: Partial<Price> = {}): Price {
-  const defaultCurrency = getKeyFromValue('movieCurrencies', 'EUR') as MovieCurrencies;
+  const defaultCurrency = 'EUR';
   return {
     amount: 0,
     currency: defaultCurrency,

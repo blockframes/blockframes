@@ -3,9 +3,6 @@ import constants from './staticConsts';
 
 // TYPE FOR MODELS
 
-export const GENRES_SLUG = models['GENRES'].map(key => key.slug);
-export type GenresSlug = typeof GENRES_SLUG[number];
-
 export const LANGUAGES_LABEL = models['LANGUAGES'].map(key => key.label);
 export const LANGUAGES_SLUG = models['LANGUAGES'].map(key => key.slug);
 export type LanguagesLabel = typeof LANGUAGES_LABEL[number];
@@ -31,7 +28,6 @@ export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 export const SUB_LICENSOR_ROLES_SLUG = models['SUB_LICENSOR_ROLES'].map(key => key.slug);
 export type SubLicensorRoleSlug = typeof SUB_LICENSOR_ROLES_SLUG[number];
 
-
 // TYPE FOR CONSTANTS
 
 export type CartStatus = keyof typeof constants.cartStatus;
@@ -50,6 +46,8 @@ export type CrewRoles = keyof typeof constants.crewRoles;
 export type CrewRolesValues = typeof constants.crewRoles[CrewRoles];
 
 export type DistributionRightStatus = keyof typeof constants.distributionRightStatus;
+
+export type Genres = keyof typeof constants.genres;
 
 export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
 

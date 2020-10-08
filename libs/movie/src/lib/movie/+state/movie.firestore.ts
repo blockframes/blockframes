@@ -9,7 +9,7 @@ import {
   SoundFormat,
   MovieFormatQuality,
   MovieFormat,
-  GenresSlug,
+  Genres,
   ContentType,
   ProductionStatus,
   StoreStatus,
@@ -58,7 +58,7 @@ interface MovieRaw<D> {
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
   format?: MovieFormat,
   formatQuality?: MovieFormatQuality,
-  genres: GenresSlug[], //! required
+  genres: Genres[], //! required
   customGenres?: string[],
   internalRef?: string,
   isOriginalVersionAvailable: boolean;

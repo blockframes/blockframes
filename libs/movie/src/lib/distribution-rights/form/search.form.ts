@@ -2,7 +2,7 @@ import {
   LanguagesLabel,
   TerritoriesLabel,
   LanguagesSlug,
-  GenresSlug,
+  Genres,
   CertificationsValues,
   MediasSlug,
   MEDIAS_SLUG,
@@ -17,7 +17,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
-import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
+import { FormConstantArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 
@@ -27,7 +27,7 @@ import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 
 export interface CatalogSearch {
   releaseYear: DateRange;
-  genres: GenresSlug[];
+  genres: Genres[];
   productionStatus: string[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
@@ -133,7 +133,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
   );
   return {
     releaseYear: createTermsControl(search.releaseYear),
-    genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
+    genres: new FormConstantArray(search.genres, 'genres', [Validators.required]),
     productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),

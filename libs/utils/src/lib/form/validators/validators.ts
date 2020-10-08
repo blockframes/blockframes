@@ -166,3 +166,13 @@ export function isSlugArrayValidator(scope: Scope): ValidatorFn {
     return control.value.every(value => isInSlug(scope, value)) ? null : { invalidValue: true }
   };
 }
+
+/**
+ * @description Check if all values are keys of the scope provided, inside the static constant
+ * @param scope Scope inside the static model
+ */
+export function isKeyArrayValidator(scope: ConstantScope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return control.value.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
+  };
+}

@@ -89,30 +89,6 @@ const models = {
       'label': 'Original Author'
     }
   ],
-  'GENRES': [
-    { 'slug': 'comedy', 'label': 'Comedy' },
-    { 'slug': 'drama', 'label': 'Drama' },
-    { 'slug': 'action', 'label': 'Action' },
-    { 'slug': 'horror', 'label': 'Horror' },
-    { 'slug': 'science-fiction', 'label': 'Science Fiction' },
-    { 'slug': 'thriller', 'label': 'Thriller' },
-    { 'slug': 'coming-of-age', 'label': 'Young Adult' },
-    { 'slug': 'fantasy', 'label': 'Fantasy' },
-    { 'slug': 'romance', 'label': 'Romance' },
-    { 'slug': 'western', 'label': 'Western' },
-    { 'slug': 'period-piece', 'label': 'Period Piece' },
-    { 'slug': 'adventure', 'label': 'Adventure' },
-    { 'slug': 'biography', 'label': 'Biography' },
-    { 'slug': 'war', 'label': 'War' },
-    { 'slug': 'police', 'label': 'Police' },
-    { 'slug': 'animation', 'label': 'Animation' },
-    { 'slug': 'documentary', 'label': 'Documentary' },
-    { 'slug': 'erotic', 'label': 'Erotic' },
-    { 'slug': 'tv-show', 'label': 'TV Show' },
-    { 'slug': 'web-series', 'label': 'Web Series' },
-    { 'slug': 'virtual-reality', 'label': 'Virtual Reality' },
-    { 'slug': 'family', 'label': 'Family' }
-  ] as const,
   'PROMOTIONAL_ELEMENT_TYPES': [
     { 'slug': 'trailer', 'label': 'Trailer' },
     { 'slug': 'poster', 'label': 'Poster' },
