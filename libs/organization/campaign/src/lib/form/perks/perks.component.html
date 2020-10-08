@@ -11,7 +11,14 @@
       <!-- Columns -->
       <ng-template colRef="title" let-title><b>{{ title | titlecase }}</b></ng-template>
       <ng-template colRef="description" let-description>{{ description }}</ng-template>
-      <ng-template colRef="minPledge" let-minPledge>{{ minPledge | currency:'USD' }}</ng-template>
+      <ng-template colRef="minPledge" let-minPledge>
+        <ng-container *ngIf="minPledge; else anyInvestment">
+          {{ minPledge | currency:'USD' }}
+        </ng-container>
+        <ng-template #anyInvestment>
+          Any investment
+        </ng-template>
+      </ng-template>
       <ng-template colRef="amount" let-amount>
         <ng-container *ngIf="!(amount | isUnlimited); else unlimited">
           {{ amount.current | number }} / {{ amount.total | number }}

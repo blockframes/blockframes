@@ -45,8 +45,11 @@ function createCampaignControls(value?: Partial<Campaign>) {
 type CampaignControls = ReturnType<typeof createCampaignControls>;
 
 export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
+
   constructor(value?: Partial<Campaign>) {
     const controls = createCampaignControls(value);
     super(controls);
   }
 }
+
+export const createCampaignForm = () => CampaignForm.factory(createCampaign(), createCampaignControls);

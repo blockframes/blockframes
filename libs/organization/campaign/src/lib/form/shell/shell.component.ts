@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
-import { CampaignForm } from '../form';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { createCampaignForm } from '../form';
 import { CampaignService } from '../../+state';
 import { of, Subscription } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { MatDialog } from '@angular/material/dialog';
 
 const steps: TunnelStep[] = [{
   title: 'Investment Campaign',
@@ -35,20 +35,20 @@ export class CampaignFormShellComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   campaignId$ = this.route.params.pipe(map(params => params.campaignId));
   steps = steps;
-  form = new CampaignForm();
+  form = createCampaignForm();
 
   constructor(
     private orgQuery: OrganizationQuery,
     private service: CampaignService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit() {
     const orgId = this.orgQuery.getActiveId();
     this.sub = this.campaignId$.pipe(
       switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
-    ).subscribe(campaign => this.form.reset(campaign));
+    ).subscribe(campaign => this.form.patchAllValue(campaign));
   }
 
   ngOnDestroy() {
