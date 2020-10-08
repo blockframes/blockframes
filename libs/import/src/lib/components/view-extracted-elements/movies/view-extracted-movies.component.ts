@@ -466,8 +466,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
           movie.genres = [];
-          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: GetCode<'genres'>) => {
-            const genre = getKeyIfExists(staticConsts.genres, g);
+          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: ExtractCode<'GENRES'>) => {
+            const genre = getCodeIfExists('GENRES', g);
             if (genre) {
               movie.genres.push(genre);
             } else {
