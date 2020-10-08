@@ -61,13 +61,13 @@
       <bf-form-list [form]="form.producers" buttonText="Add Producer">
         <ng-template itemRef let-producer>
           {{ producer.firstName }} - {{ producer.lastName}} -
-          {{ producer.role | translateSlug: 'PRODUCER_ROLES' }}</ng-template>
+          {{ producer.role | toLabel: 'producerRoles' }}</ng-template>
         <ng-template formView let-producerForm>
           <article [formGroup]="producerForm">
 
             <form-display-name [form]="producerForm" labelSuffix="Producer's"></form-display-name>
 
-            <static-select type="model" [control]="producerForm.get('role')" scope="PRODUCER_ROLES">
+            <static-select type="constant" [control]="producerForm.get('role')" scope="producerRoles" [withoutValues]="['']">
               <mat-label>Role</mat-label>
               <mat-hint>Please specify producer's role: executive, associate...</mat-hint>
             </static-select>

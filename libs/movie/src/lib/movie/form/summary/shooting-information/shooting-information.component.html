@@ -65,16 +65,14 @@
         </missing-control>
       </span>
     </li>
-    <li>
+    <li fxLayout="row" fxLayoutGap="8px">
       <strong>Shooting Locations</strong>
       <missing-control [control]="shootingLocations" [link]="link" fragment="shooting-locations">
         <ng-template let-shooting>
-          <ng-container *ngFor="let location of shooting; let isLast = last">
-            <span>
-              {{ location.city }},
-              {{ location.country | translateSlug: 'TERRITORIES' }}
-            </span>
-            <span>{{ isLast ? '': ' - ' }}</span>
+          <ng-container *ngFor="let location of shooting">
+            <li>
+              {{ location.country | translateSlug: 'TERRITORIES' }} - {{ location.cities.join(', ') | titlecase }}
+            </li>
           </ng-container>
         </ng-template>
       </missing-control>

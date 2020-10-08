@@ -1,16 +1,15 @@
 import {
   LanguagesLabel,
-  CertificationsLabel,
   TerritoriesLabel,
   LanguagesSlug,
   GenresSlug,
-  CertificationsSlug,
-  CERTIFICATIONS_SLUG,
+  CertificationsValues,
   MediasSlug,
   MEDIAS_SLUG,
   TerritoriesSlug,
   TERRITORIES_SLUG,
   ProductionStatus,
+  Certifications
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -32,7 +31,7 @@ export interface CatalogSearch {
   productionStatus: string[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
-  certifications: CertificationsLabel[];
+  certifications: Certifications[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
   storeType: StoreType[];
@@ -230,17 +229,17 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     }
   }
 
-  checkCertification(certificationChecked: CertificationsSlug) {
+  checkCertification(certificationChecked: CertificationsValues) {
     // check if certification is already checked by the user
     if (
-      CERTIFICATIONS_SLUG.includes(certificationChecked) &&
+      Object.keys(staticConsts.certifications).includes(certificationChecked) &&
       !this.get('certifications').value.includes(certificationChecked)
     ) {
       this.get('certifications').setValue([
         ...this.get('certifications').value,
         certificationChecked
       ]);
-    } else if (CERTIFICATIONS_SLUG.includes(certificationChecked)) {
+    } else if (Object.keys(staticConsts.certifications).includes(certificationChecked)) {
       const uncheckCertification = this.get('certifications').value.filter(
         removeCef => removeCef !== certificationChecked
       );

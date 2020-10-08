@@ -178,7 +178,7 @@ jobs:
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
           npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-          npx firebase deploy --only firestore --force && 
+          npx firebase deploy --only firestore --force &&
           npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
@@ -221,7 +221,7 @@ jobs:
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force && 
+            npx firebase deploy --only firestore --force &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -276,15 +276,14 @@ jobs:
       - run:
           command: |
             npx firebase use demo1 &&
-            cp firestore.rules firestore.rules.regular &&
-            cp firestore.maintenance.rules firestore.rules &&
+            npm run backend-ops prepareFirestoreRulesPreDeploy &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force && 
+            npx firebase deploy --only firestore --force &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
-            cp firestore.rules.regular firestore.rules &&
+            npm run backend-ops restoreFirestoreRulesPostDeploy &&
             npx firebase use demo1 &&
             npx firebase deploy --only firestore:rules
           when: always
@@ -300,8 +299,7 @@ jobs:
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
   copy-storage-from-prod:
-    docker:
-      - image: google/cloud-sdk
+    executor: blockframes-ci
     environment:
       - ENV: blockframes-ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
@@ -349,10 +347,10 @@ workflows:
                 - master
                 - production
                 - staging
-      - test-e2e-release:
-          <<: *release_only
-          requires:
-            - build-and-test-all
+      # - test-e2e-release:
+      #     <<: *release_only
+      #     requires:
+      #       - build-and-test-all
       - test-e2e:
           requires:
             - build-and-test-all

@@ -3,7 +3,6 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
 import { staticConsts, UnitBox } from '@blockframes/utils/static-model';
 import { startWith, map } from 'rxjs/operators';
-import { staticModels } from '@blockframes/utils/static-model';
 
 function toUnit(unit: UnitBox) {
   switch (unit) {
@@ -24,8 +23,8 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
   form = this.shell.form;
   unitBox = staticConsts.unitBox;
   units$: Observable<Unit[]>;
-  certifications = staticModels.CERTIFICATIONS.filter(cert =>
-    (cert.slug !== 'awarded-film' && cert.slug !== 'a-list-cast'));
+  certifications = Object.keys(staticConsts.certifications).filter(cert =>
+    (cert !== 'awardedFilm' && cert !== 'aListCast'));
 
 
   public qualificationsColumns = {

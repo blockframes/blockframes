@@ -1,5 +1,6 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db, admin, getStorageBucketName } from './internals/firebase';
+import { db, getStorageBucketName } from './internals/firebase';
+import * as admin from 'firebase-admin';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToEvent } from './internals/invitations/events';
 import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';

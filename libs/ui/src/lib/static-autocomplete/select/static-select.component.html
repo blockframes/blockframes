@@ -1,9 +1,21 @@
-<ng-container *ngIf="type === 'model'">
-  <mat-form-field [appearance]="mode">
-    <mat-label>
-      <ng-content select="mat-label"></ng-content>
-    </mat-label>
-    <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
+
+<mat-form-field [appearance]="mode">
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+  </mat-label>
+  <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
+
+    <!-- for Constant type -->
+    <ng-container *ngIf="type === 'constant'">
+      <ng-container *ngFor="let value of staticValue">
+        <mat-option [value]="value">
+          {{ value | toLabel: option }}
+        </mat-option>
+      </ng-container>
+    </ng-container>
+
+    <!-- for Model type -->
+    <ng-container *ngIf="type === 'model'">
       <mat-option *ngFor="let scope of staticValue" [value]="scope.slug">
         <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
         </ng-template>
@@ -11,33 +23,13 @@
           {{ scope.label }}
         </ng-template>
       </mat-option>
-    </mat-select>
-    <mat-hint>
-      <ng-content select="mat-hint"></ng-content>
-    </mat-hint>
-    <mat-error>
-      <ng-content select="mat-error"></ng-content>
-    </mat-error>
-  </mat-form-field>
-</ng-container>
+    </ng-container>
 
-<ng-container *ngIf="type === 'constant'">
-  <mat-form-field [appearance]="mode">
-    <mat-label>
-      <ng-content select="mat-label"></ng-content>
-    </mat-label>
-    <mat-select [formControl]="control" [placeholder]="placeholder" [required]="required">
-      <ng-container *ngFor="let value of staticValue">
-        <mat-option [value]="value">
-          {{ value | toLabel: option }}
-        </mat-option>
-      </ng-container>
-    </mat-select>
-    <mat-hint>
-      <ng-content select="mat-hint"></ng-content>
-    </mat-hint>
-    <mat-error>
-      <ng-content select="mat-error"></ng-content>
-    </mat-error>
-  </mat-form-field>
-</ng-container>
+  </mat-select>
+  <mat-hint>
+    <ng-content select="mat-hint"></ng-content>
+  </mat-hint>
+  <mat-error>
+    <ng-content select="mat-error"></ng-content>
+  </mat-error>
+</mat-form-field>

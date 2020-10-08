@@ -179,7 +179,7 @@
         <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
-        <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
           <ng-container *ngFor="let film of filmography">{{ film | filmography }}
@@ -201,7 +201,13 @@
                 </static-select>
               </ng-container>
 
-              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex>
+              <static-select
+              scope="directorCategory"
+              type="constant"
+              [control]="directorForm.get('category')"
+              placeholder="Director's Category"
+              [withoutValues]="['']"
+              fxFlex>
                 <mat-label>Director's Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.

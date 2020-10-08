@@ -6,20 +6,19 @@ import {
   TemplateRef,
   ContentChildren,
   QueryList,
-  ChangeDetectorRef,
   OnInit
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-@Directive({selector: '[filter]'})
+@Directive({ selector: '[filter]' })
 export class FilterDirective implements OnInit {
   @Input() label = 'filter name';
   @Input() form: AbstractControl;
   private active$ = new BehaviorSubject(false);
   public color$: Observable<'primary' | ''>;
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>) { }
 
   set active(isActive: boolean) {
     this.active$.next(isActive);
@@ -37,12 +36,11 @@ export class FilterDirective implements OnInit {
 }
 
 @Component({
-  selector: 'title-filter',
-  templateUrl: './title-filter.component.html',
-  styleUrls: ['./title-filter.component.scss'],
+  selector: 'list-filter',
+  templateUrl: './list-filter.component.html',
+  styleUrls: ['./list-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleFilterComponent {
+export class ListFilterComponent {
   @ContentChildren(FilterDirective) filters: QueryList<FilterDirective>;
-  constructor(private cdr: ChangeDetectorRef) {}
 }

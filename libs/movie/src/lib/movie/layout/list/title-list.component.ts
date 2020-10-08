@@ -1,24 +1,35 @@
-import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
+// Angular
+import { Location } from '@angular/common';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Directive,
+  ContentChild,
+  TemplateRef,
+  Input,
+  AfterContentInit
+} from '@angular/core';
+
+// Blockframes
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { fadeList } from '@blockframes/utils/animations/fade';
-import { Location } from '@angular/common';
 
-@Directive({selector: '[titleAppBarSearch]'})
-export class TitleAppBarSearchDirective {}
+@Directive({ selector: '[titleAppBarSearch]' })
+export class TitleAppBarSearchDirective { }
 
-@Directive({selector: '[titleSort]'})
-export class TitleSortDirective {}
+@Directive({ selector: '[titleSort]' })
+export class TitleSortDirective { }
 
-@Directive({selector: '[titleSearch]'})
-export class TitleSearchDirective {}
+@Directive({ selector: '[titleSearch]' })
+export class TitleSearchDirective { }
 
-@Directive({selector: '[titleCard]'})
-export class TitleCardDirective {}
-@Directive({selector: '[titleListItem]'})
-export class TitleListItemDirective {}
+@Directive({ selector: '[titleCard]' })
+export class TitleCardDirective { }
+@Directive({ selector: '[titleListItem]' })
+export class TitleListItemDirective { }
 
-@Directive({selector: '[titleProgress]'})
-export class TitleProgressDirective {}
+@Directive({ selector: '[titleProgress]' })
+export class TitleProgressDirective { }
 
 @Component({
   selector: '[titles] title-list',
@@ -37,8 +48,7 @@ export class TitleListComponent implements AfterContentInit {
   @ContentChild(TitleProgressDirective, { read: TemplateRef }) titleProgressTemplate: TitleProgressDirective;
 
   @Input() titles: Movie[];
-
-  @Input() titleType = 'title'; // only for display purpose
+  @Input() totalCount: number;
 
   public listView = false;
   public canToggle = false;

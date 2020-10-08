@@ -7,13 +7,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus, ProductionStatus } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
-
-// TODO extract that (along with other potential common features) into an algolia file
-export interface AlgoliaSearch {
-  query: string;
-  page: number;
-}
+import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
 
 export interface LanguagesSearch {
   original: LanguagesSlug[];

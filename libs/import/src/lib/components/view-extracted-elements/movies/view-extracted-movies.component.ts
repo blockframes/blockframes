@@ -21,6 +21,7 @@ import {
   UnitBoxValue,
   staticConsts,
 } from '@blockframes/utils/static-model';
+import { getKeyFromValue } from '@blockframes/utils/static-model/staticConsts';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -254,7 +255,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // COLOR (Color / Black & White )
         if (spreadSheetRow[SpreadSheetMovie.color]) {
-          const color = getCodeIfExists('COLORS', spreadSheetRow[SpreadSheetMovie.color]);
+          const color = getKeyFromValue('colors', spreadSheetRow[SpreadSheetMovie.color]);
           if (color) {
             movie.color = color;
           } else {
@@ -296,7 +297,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             const movieRating = createMovieRating({ value: ratingParts[1].trim() });
 
             if (ratingParts[2]) { // System
-              const system = getCodeIfExists('RATING', ratingParts[2] as ExtractCode<'RATING'>);
+              const system = getKeyFromValue('rating', ratingParts[2]);
 
               if (system) {
                 movieRating.system = system;
@@ -350,7 +351,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SHOOTING FORMAT
         if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
-          const shootingFormat = getCodeIfExists('MOVIE_FORMAT', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
+          const shootingFormat = getKeyFromValue('movieFormat', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
           if (shootingFormat) {
             movie.format = shootingFormat;
           } else {
@@ -366,7 +367,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (formatQuality)
         if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
-          const availableFormat = getCodeIfExists('MOVIE_FORMAT_QUALITY', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
+          const availableFormat = getKeyFromValue('movieFormatQuality', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
           if (availableFormat) {
             movie.formatQuality = availableFormat;
           } else {
@@ -382,7 +383,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (soundQuality)
         if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
-          const soundQuality = getCodeIfExists('SOUND_FORMAT', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
+          const soundQuality = getKeyFromValue('soundFormat', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
           if (soundQuality) {
             movie.soundFormat = soundQuality;
           } else {
@@ -398,8 +399,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.quotas]) {
-          spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
-            const certification = getCodeIfExists('CERTIFICATIONS', c);
+          spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c) => {
+            const certification = getKeyFromValue('certifications', c);
             if (certification) {
               movie.certifications.push(certification);
             } else {
@@ -872,7 +873,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (this.isUserBlockframesAdmin) {
           // SCORING (Scoring)
           if (spreadSheetRow[SpreadSheetMovie.scoring]) {
-            const scoring = getCodeIfExists('SCORING', spreadSheetRow[SpreadSheetMovie.scoring]);
+            const scoring = getKeyFromValue('scoring', spreadSheetRow[SpreadSheetMovie.scoring]);
             if (scoring) {
               movie.scoring = scoring;
             } else {

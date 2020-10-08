@@ -9,10 +9,6 @@
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         <span matLine><b>My Titles</b></span>
       </a>
-      <a mat-list-item routerLink="event" routerLinkActive="active" test-id="calendar">
-        <mat-icon matListIcon svgIcon="calendar"></mat-icon>
-        <span matLine><b>My Events</b></span>
-      </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
         <mat-divider></mat-divider>
         <a mat-list-item routerLink="/c/o/marketplace/home" routerLinkActive="active">

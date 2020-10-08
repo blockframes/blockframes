@@ -2,13 +2,13 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
-  ScoringSlug,
-  CertificationsSlug,
-  ColorsSlug,
-  RatingSlug,
-  SoundFormatSlug,
-  FormatQualitySlug,
-  FormatSlug,
+  ScoringValues,
+  CertificationsValues,
+  ColorsValues,
+  RatingValues,
+  SoundFormatValues,
+  MovieFormatQualityValues,
+  MovieFormatValues,
   GenresSlug,
   ContentType,
   ProductionStatus,
@@ -49,15 +49,15 @@ interface MovieRaw<D> {
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
-  certifications?: CertificationsSlug[],
-  color?: ColorsSlug,
+  certifications?: CertificationsValues[],
+  color?: ColorsValues,
   contentType: ContentType; //! required
   crew?: Crew[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
+  format?: MovieFormatValues,
+  formatQuality?: MovieFormatQualityValues,
   genres: GenresSlug[], //! required
   customGenres?: string[],
   internalRef?: string,
@@ -78,9 +78,9 @@ interface MovieRaw<D> {
   release: MovieRelease, //! required
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
-  scoring?: ScoringSlug,
+  scoring?: ScoringValues,
   shooting?: MovieShooting,
-  soundFormat?: SoundFormatSlug,
+  soundFormat?: SoundFormatValues,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
@@ -203,7 +203,7 @@ export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 export interface MovieRating {
   country: TerritoriesSlug;
   reason?: string,
-  system?: RatingSlug,
+  system?: RatingValues,
   value: string,
 }
 
@@ -258,8 +258,8 @@ export interface MovieShootingRaw<D> {
 export interface MovieShooting extends MovieShootingRaw<Date> {}
 
 export interface MovieShootingLocations {
-  city: string,
-  country: TerritoriesSlug,
+  cities?: string[],
+  country?: TerritoriesSlug,
 }
 
 export interface MovieShootingDateRaw<D> {
@@ -293,8 +293,8 @@ export interface MovieExpectedPremiereRaw<D> {
 export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
 
 export interface MovieSalesPitch {
-  description: string,
-  file: string, // hosted media
+  description?: string,
+  file?: string, // hosted media
 }
 
 export interface MovieGoalsAudience {

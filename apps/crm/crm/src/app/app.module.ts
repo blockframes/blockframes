@@ -15,7 +15,7 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -39,7 +39,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    
+
     // Angular
     BrowserModule,
     BrowserAnimationsModule,
@@ -70,7 +70,10 @@ import { MatNativeDateModule } from '@angular/material/core';
     IntercomModule.forRoot({ appId: intercomId }),
 
   ],
-  providers: [ScreenTrackingService, UserTrackingService],
+  providers: [
+    ScreenTrackingService, UserTrackingService,
+    { provide: REGION, useValue: 'europe-west1' },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

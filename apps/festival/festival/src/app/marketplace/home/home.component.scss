@@ -13,7 +13,16 @@ header {
   border: none;
 
   h1.mat-display-2 {
-    margin-bottom: 80px;
+    margin-bottom: 30px;
+  }
+
+  p {
+    margin-bottom: 30px;
+    margin-left: 12px;
+    a {
+      border-bottom: 2px solid;
+      font-weight: bolder;
+    }
   }
   h4 {
     text-transform: uppercase;

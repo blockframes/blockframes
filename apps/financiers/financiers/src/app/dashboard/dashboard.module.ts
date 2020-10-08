@@ -11,9 +11,11 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
+import { CampaignFormShellModule } from '@blockframes/campaign/form/shell/shell.module';
 
 // Tunnel routes
-import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
+import { titleTunnelRoutes } from './tunnel/title/routes';
+import { campaignTunnelRoutes } from './tunnel/campaign/routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -87,16 +89,22 @@ const routes: Routes = [{
     path: 'tunnel',
     canActivate: [TunnelGuard],
     children: [{
-      path: 'movie',
-      children: [{
-        path: ':movieId',
-        canActivate: [MovieActiveGuard, MovieTunnelGuard],
-        canDeactivate: [MovieActiveGuard],
-        children: tunnelRoutes,
-        data: {
-          redirect: '/c/o/dashboard/tunnel/movie'
-        },
-      }]
+      path: 'movie/:movieId',
+      canActivate: [MovieActiveGuard, MovieTunnelGuard],
+      canDeactivate: [MovieActiveGuard],
+      children: titleTunnelRoutes,
+      data: {
+        redirect: '/c/o/dashboard/tunnel/movie',
+        paramId: 'movieId'
+      },
+    }, {
+      path: 'campaign/:campaignId',
+      canActivate: [MovieTunnelGuard],
+      children: campaignTunnelRoutes,
+      data: {
+        redirect: '/c/o/dashboard/tunnel/movie',
+        paramId: 'campaignId'
+      },
     }]
   },
 ];
@@ -112,7 +120,7 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
-
+    CampaignFormShellModule,
     // Material
     MatDividerModule,
     MatListModule,

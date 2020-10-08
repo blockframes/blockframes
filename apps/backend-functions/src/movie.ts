@@ -7,6 +7,7 @@ import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { cleanMovieMedias } from './media';
+import { Change, EventContext } from 'firebase-functions';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -29,7 +30,7 @@ export async function onMovieCreate(
 /** Remove a movie and send notifications to all users of concerned organizations. */
 export async function onMovieDelete(
   snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  context: EventContext
 ) {
   const movie = snap.data() as MovieDocument;
 
@@ -68,7 +69,7 @@ export async function onMovieDelete(
 }
 
 export async function onMovieUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+  change: Change<FirebaseFirestore.DocumentSnapshot>
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;

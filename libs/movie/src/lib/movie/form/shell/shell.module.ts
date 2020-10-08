@@ -12,7 +12,6 @@ import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 // Materials
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -30,7 +29,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     // Material
     MatIconModule,
     MatButtonModule,
-    MatListModule,
     MatSnackBarModule,
     MatDialogModule,
   ],
