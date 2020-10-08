@@ -95,7 +95,7 @@
       "tags": [],
       "implicitDependencies": ["financiers"]
     },
-    "organization-campaign": {
+    "campaign": {
       "tags": []
     }
   },
