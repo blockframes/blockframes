@@ -1,140 +1,146 @@
 :host {
   display: flex;
   height: 100%;
-  align-items: center;
-  justify-content: center;
-  background-color: black;
-  padding: 10px 20px;
-  //background-color: var(--background);
+  padding: 32px 32px;
+  background-color: var(--background);
+  position: relative;
 }
 
-::ng-deep .container-round-div-initial-name-participant {
-  align-items: center;
-  justify-content: center;
-
-  .round-div-initial-name-participant {
-    background-color: white;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    span {
-      vertical-align: middle;
-      display: inline-flex;
-    }
-  }
-
-
-  .nameParticipant {
-
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    padding: 5px;
-    font-size: 60%;
+mat-grid-list {
+  flex-grow: 1;
+  mat-grid-tile {
   }
 }
 
-
-.container-remote-participant-Owner {
+event-meeting-remote-participant{
   width: 100%;
   height: 100%;
-
-  .cardList {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    flex-basis: 0;
-    flex-grow: 1;
-  }
-  /* Column Gap */
-  .cardList > * {
-    box-sizing: border-box;
-    margin-top: 5px;
-  }
-  .cardList > *:not(:last-child) {
-    margin-right: 5px;
-
-  }
-  /* Item sizing */
-  .cardListItem-1 {
-    flex: 0 1 calc(100%);
-  }
-
-  .cardListItem-2 {
-    flex: 0 1 calc(50% - 16px);
-  }
-
-  .cardListItem-3 {
-    flex: 0 1 calc(33.3% - 32px);
-  }
 }
 
-.waiting-container {
-  color: white;
-}
-
-.container-remote-participant-Buyer {
-  width: 100%;
-
-  .container-remote-participant-dominant-speaker{
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    margin: 5px 5px;
-    min-height: 250px;
-    background-color: #5c5b5b;
-    border: 25px solid green;
-
-  }
-
-  .container-remote-participant-not-dominant-speaker{
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow-x: scroll;
-      max-height: 150px;
-
-    .participant-not-dominant-speaker {
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      overflow-y: hidden;
-    }
-  }
-
-  .container-remote-participant-not-dominant-speaker > * {
-    flex: 1 0 calc(33.3% - 32px);
-    margin: 5px;
-    background-color: #5c5b5b;
-  }
-
-  .container-remote-participant-not-dominant-speaker::-webkit-scrollbar {
-    display: block;
-  }
-
-  .event-remote-participant {
-  }
-}
-
-.dominant-waiting-screen {
-  color: white;
-}
+//
+//
+//::ng-deep .container-round-div-initial-name-participant {
+//  align-items: center;
+//  justify-content: center;
+//
+//  .round-div-initial-name-participant {
+//    text-align: center;
+//    display: flex;
+//    align-items: center;
+//    justify-content: center;
+//
+//    span {
+//      vertical-align: middle;
+//      display: inline-flex;
+//    }
+//  }
+//
+//
+//  .nameParticipant {
+//
+//    position: absolute;
+//    bottom: 10px;
+//    left: 10px;
+//    color: white;
+//    background: rgba(0, 0, 0, 0.5);
+//    border-radius: 5px;
+//    padding: 5px;
+//    font-size: 60%;
+//  }
+//}
+//
+//
+//.container-remote-participant-Owner {
+//  width: 100%;
+//  height: 100%;
+//
+//  .cardList {
+//    display: flex;
+//    flex-direction: row;
+//    flex-wrap: wrap;
+//    flex-flow: row wrap;
+//    align-items: center;
+//    justify-content: center;
+//    width: 100%;
+//    height: 100%;
+//    flex-basis: 0;
+//    flex-grow: 1;
+//  }
+//  /* Column Gap */
+//  .cardList > * {
+//    box-sizing: border-box;
+//    margin-top: 5px;
+//  }
+//  .cardList > *:not(:last-child) {
+//    margin-right: 5px;
+//
+//  }
+//  /* Item sizing */
+//  .cardListItem-1 {
+//    flex: 0 1 calc(100%);
+//  }
+//
+//  .cardListItem-2 {
+//    flex: 0 1 calc(50% - 16px);
+//  }
+//
+//  .cardListItem-3 {
+//    flex: 0 1 calc(33.3% - 32px);
+//  }
+//}
+//
+//.container-remote-participant-Buyer {
+//  width: 100%;
+//
+//  p {
+//
+//  }
+//  .container-remote-participant-dominant-speaker{
+//    position: relative;
+//    display: flex;
+//    align-items: center;
+//    justify-content: center;
+//    flex-direction: row;
+//    margin: 5px 5px;
+//    min-height: 250px;
+//    background-color: #5c5b5b;
+//    border: 25px solid green;
+//
+//  }
+//
+//  .container-remote-participant-not-dominant-speaker{
+//
+//      display: flex;
+//      align-items: center;
+//      justify-content: center;
+//      overflow-x: scroll;
+//      max-height: 150px;
+//
+//    .participant-not-dominant-speaker {
+//
+//      display: inline-flex;
+//      align-items: center;
+//      justify-content: center;
+//      flex-wrap: nowrap;
+//      overflow-x: auto;
+//      overflow-y: hidden;
+//    }
+//  }
+//
+//  .container-remote-participant-not-dominant-speaker > * {
+//    flex: 1 0 calc(33.3% - 32px);
+//    margin: 5px;
+//    background-color: #5c5b5b;
+//  }
+//
+//  .container-remote-participant-not-dominant-speaker::-webkit-scrollbar {
+//    display: block;
+//  }
+//
+//  .event-remote-participant {
+//  }
+//}
+//
+//.dominant-waiting-screen {
+//  color: white;
+//}

@@ -20,6 +20,7 @@ import {ControlAudioComponent} from './control-media/audio/audio.component';
 
 import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
 import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { AvatarInitialComponent } from './avatar-initial/avatar-initial.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
     ParticipantsNavComponent,
     ContainerVideoComponent,
     ControlAudioComponent,
-    ControlVideoComponent
+    ControlVideoComponent,
+    AvatarInitialComponent
   ],
   exports: [
     VideoComponent,

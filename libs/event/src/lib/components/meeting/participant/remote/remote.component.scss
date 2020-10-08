@@ -1,29 +1,47 @@
-.remote-participant {
-  position: relative;
-
-}
-
-.div-remote-no-cam {
+section {
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 0;
-  background: #75768B;
-}
+  height: 100%;
+  background-color: var(--background-hover);
 
-::ng-deep #remote-participant {
-  .remoteParticipant {
-    background-position: center center;
-    background-size: cover;
-    max-height: 100%;
-    max-width: 100%;
-    width: 100%;
+  span {
+
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 60%;
   }
-
 }
 
-.remoteVideo {
-  width: 100%;
-  position: relative;
-}
+//
+//.remote-participant {
+//  position: relative;
+//}
+//
+//.div-remote-no-cam {
+//  width: 100%;
+//  display: flex;
+//  align-items: center;
+//  justify-content: center;
+//  padding: 20px 0;
+//  background: #75768B;
+//}
+//
+//::ng-deep #remote-participant {
+//  .remoteParticipant {
+//    background-position: center center;
+//    background-size: cover;
+//    max-height: 100%;
+//    max-width: 100%;
+//    width: 100%;
+//  }
+//
+//}
+//
+//.remoteVideo {
+//  width: 100%;
+//  position: relative;
+//}

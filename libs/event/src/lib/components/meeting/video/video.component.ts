@@ -8,7 +8,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
-  selector: 'event-meeting-video',
+  selector: '[arrayOfParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] [isOwner] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
@@ -33,6 +33,15 @@ export class VideoComponent implements OnInit {
 
   getIfLocalIsAlone() {
     return this.meetingService.numbConnectedParticipants() < 1;
+  }
+
+  numOfCols(arrayOfParticipantConnected) {
+    if(!!arrayOfParticipantConnected){
+      // need - 1 to remove the local User
+      const numbConnectedParticipants = arrayOfParticipantConnected.length - 1;
+      return (numbConnectedParticipants > 0 && numbConnectedParticipants < 2) ? 1 : (numbConnectedParticipants > 2 && numbConnectedParticipants < 5) ? 2 : 3;
+    }
+    return 0;
   }
 
   setUpLocalVideoAndAudio({kind, boolToChange}) {
