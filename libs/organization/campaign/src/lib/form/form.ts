@@ -38,7 +38,7 @@ function createCampaignControls(value?: Partial<Campaign>) {
     cap: new FormControl(campaign.cap, Validators.required),
     minPledge: new FormControl(campaign.minPledge, Validators.required),
     received: new FormControl(campaign.received),
-    perks: FormList.factory(campaign.perks, (value?: Partial<Perk>) => new PerkForm(value)),
+    perks: FormList.factory(campaign.perks, (perk?: Partial<Perk>) => new PerkForm(perk)),
   }
 }
 
