@@ -1,0 +1,84 @@
+<tunnel-page>
+  <h4 title>Investment Campaign</h4>
+  <h1 subtitle>Privileges</h1>
+  <p description class="mat-body-1">
+    Privileges are the bonuses that are offered to an investor due to his / hers contribution.
+    For example, it can be tickets for your projetc’s premiere, or goodies. 
+  </p>
+
+  <ng-container tunnel-form>
+    <bf-form-table [columns]="columns" [form]="form.get('perks')">
+      <!-- Columns -->
+      <ng-template colRef="title" let-title><b>{{ title | titlecase }}</b></ng-template>
+      <ng-template colRef="description" let-description>{{ description }}</ng-template>
+      <ng-template colRef="minPledge" let-minPledge>{{ minPledge | currency:'USD' }}</ng-template>
+      <ng-template colRef="amount" let-amount>
+        <ng-container *ngIf="!(amount | isUnlimited); else unlimited">
+          {{ amount.current | number }} / {{ amount.total | number }}
+        </ng-container>
+        <ng-template #unlimited>
+          Unlimited
+        </ng-template>
+      </ng-template>
+      <ng-template colRef="amount.current" let-current>{{ current | number }}</ng-template>
+
+      <!-- Local form -->
+      <ng-template formView let-perkForm>
+        <form [formGroup]="perkForm" fxLayout="column" fxLayoutGap="16px">
+          <!-- Title -->
+          <mat-form-field appearance="outline">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required/>
+            <mat-hint>Please pay attetion, amount should be in dollars.</mat-hint>
+            <mat-error *ngIf="perkForm.hasError('required', 'title')">
+              Please specify the privilege title.
+            </mat-error>
+          </mat-form-field>
+          <!-- Description -->
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+            <mat-hint>Please specify the avantages and the details of this privilege to your futur investor.</mat-hint>
+            <mat-error *ngIf="perkForm.hasError('required', 'description')">
+              Please provide the privilege description.
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Minimum Pledge -->
+          <mat-form-field appearance="outline">
+            <mat-label>Pledge Level</mat-label>
+            <input type="number" matInput placeholder="$" formControlName="minPledge"/>
+            <mat-icon matSuffix svgIcon="USD"></mat-icon>
+            <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
+          </mat-form-field>
+
+          <!-- Amount -->
+          <article fxLayout="column" fxLayoutGap="24px">
+            <h3>Privileges</h3>
+            <p>
+              Please precise the quantity of available privileges or choose the “unlimited privileges”
+            </p>
+            <mat-checkbox (change)="setUnlimited($event, perkForm)" [value]="perkForm.value.amount | isUnlimited">
+              Unlimited Privileges
+            </mat-checkbox>
+            <div formGroupName="amount" fxLayout fxLayoutGap="16px" *ngIf="!(perkForm.value.amount | isUnlimited)">
+              <mat-form-field fxFlex appearance="outline">
+                <mat-label>Amount of Privileges Available</mat-label>
+                <input type="number" matInput placeholder="$" formControlName="total" required/>
+                <mat-hint>Please precise the number of available privileges or choose the “unlimited privileges”.</mat-hint>
+                <mat-error *ngIf="perkForm.hasError('required', 'amount.total')">
+                  Please specify the number of available privileges or check the "unlimited privileges"
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field fxFlex appearance="outline">
+                <mat-label>Amount of Privileges Remaining</mat-label>
+                <input type="number" matInput formControlName="current"/>
+                <mat-hint>Please set an amount remaining for this privilege.</mat-hint>
+              </mat-form-field>
+            </div>
+          </article>
+        </form>
+      </ng-template>
+    </bf-form-table>
+  </ng-container>
+</tunnel-page>

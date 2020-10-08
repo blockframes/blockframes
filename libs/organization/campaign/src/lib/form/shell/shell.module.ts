@@ -5,32 +5,27 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 
 // Components
-import { MovieFormShellComponent } from './shell.component';
+import { CampaignFormShellComponent } from './shell.component';
 import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 
-
 @NgModule({
-  declarations: [MovieFormShellComponent],
-  exports: [MovieFormShellComponent],
+  declarations: [CampaignFormShellComponent],
+  exports: [CampaignFormShellComponent],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
     TunnelLayoutModule,
     AppLogoModule,
-
-    // Material
     MatIconModule,
     MatButtonModule,
-    MatSnackBarModule,
     MatDialogModule,
-  ],
+  ]
 })
-export class MovieFormShellModule { }
+export class CampaignFormShellModule { }
