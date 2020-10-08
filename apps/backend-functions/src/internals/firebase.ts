@@ -6,7 +6,9 @@ export type DocumentReference = admin.firestore.DocumentReference;
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
-admin.initializeApp(functions.config().firebase);
+if (!admin.apps.length) {
+  admin.initializeApp(functions.config().firebase);
+}
 export const db = admin.firestore();
 export const auth = admin.auth();
 
