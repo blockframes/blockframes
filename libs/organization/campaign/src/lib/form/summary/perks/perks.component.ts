@@ -10,4 +10,8 @@ import { CampaignForm } from '../../form';
 export class PerksComponent {
   @Input() link: string;
   @Input() form: CampaignForm;
+
+  get perks() {
+    return this.form?.get('perks');
+  }
 }

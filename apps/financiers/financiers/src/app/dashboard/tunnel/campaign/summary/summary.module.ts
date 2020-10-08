@@ -6,12 +6,17 @@ import { CampaignSummaryModule } from '@blockframes/campaign/form/summary/summar
 
 import { SummaryComponent } from './summary.component';
 
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+
 @NgModule({
   declarations: [SummaryComponent],
   imports: [
     CommonModule,
     TunnelPageModule,
     CampaignSummaryModule,
+    MatDividerModule,
+    MatButtonModule,
     RouterModule.forChild([{ path: '', component: SummaryComponent }])
   ]
 })

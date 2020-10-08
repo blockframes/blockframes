@@ -3,6 +3,14 @@
   <h1 subtitle>Summary & Submit</h1>
   <ng-container tunnel-form>
 
+    <campaign-summary-proposal [form]="form" link="../proposal"></campaign-summary-proposal>
+
+    <mat-divider></mat-divider>
     
+    <campaign-summary-perks [form]="form" link="../perks"></campaign-summary-perks>
+
+    <button mat-stroked-button (click)="save()">
+      Submit for Validation
+    </button>
   </ng-container>
 </tunnel-page>

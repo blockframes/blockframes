@@ -11,22 +11,18 @@ import { MatDialog } from '@angular/material/dialog';
 const steps: TunnelStep[] = [{
   title: 'Investment Campaign',
   icon: 'home',
-  time: 15,
-  routes: [{
-    path: 'proposal',
-    label: 'Investment Proposal'
-  }, {
-    path: 'perks',
-    label: 'Privileges'
-  }],
+  time: 3,
+  routes: [{ path: 'proposal', label: 'Investment Proposal' }],
 }, {
+  title: 'Privileges',
+  icon: 'home',
+  time: 12,
+  routes: [{ path: 'perks', label: 'Privileges' }],
+},{
   title: 'Summary',
   icon: 'send',
   time: 3,
-  routes: [{
-    path: 'summary',
-    label: 'Summary & Submission'
-  }]
+  routes: [{ path: 'summary', label: 'Summary & Submission' }]
 }];
 
 @Component({
@@ -61,9 +57,10 @@ export class CampaignFormShellComponent implements OnInit, OnDestroy {
 
   async save() {
     if (this.form.valid) {
-      const id = this.route.snapshot.params.campaignId;
+      const id: string = this.route.snapshot.params.campaignId;
       await this.service.save(id, this.form.value);
       this.form.markAsPristine();
+      return id;
     }
   }
 

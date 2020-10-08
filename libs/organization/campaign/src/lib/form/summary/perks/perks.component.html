@@ -1,4 +1,4 @@
-<article>
+<article *ngIf="perks.controls.length">
   <h6>
     Privileges
     <a mat-icon-button [routerLink]="link">
@@ -6,7 +6,7 @@
     </a>
   </h6>
   <ul>
-    <li fxLayout="columns" *ngFor="let control of form.controls">
+    <li fxLayout="column" *ngFor="let control of perks.controls">
       <missing-control [control]="control.get('title')" [link]="link">
         <ng-template let-title>
           <strong>
@@ -27,8 +27,12 @@
       </missing-control>
       <missing-control [control]="control.get('amount')" [link]="link">
         <ng-template let-amount>
-          <strong *ngIf="amount | isUnlimited">Unlimited</strong>
-          <strong *ngIf="!(amount | isUnlimited)">{{ amount.current }} / {{ amount.totle }}</strong>
+          <strong *ngIf="amount | isUnlimited">
+            Unlimited
+          </strong>
+          <strong *ngIf="!(amount | isUnlimited)">
+            {{ amount.current }} privileges available initially, {{ amount.total }} privileges left.
+          </strong>
         </ng-template>
       </missing-control>
     </li>
