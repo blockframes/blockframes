@@ -346,22 +346,6 @@ export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
 /**
- * Returns the key corresponding to a value (ie:code).
- * @dev Codes are used to store sanitized data in database
- * @param scope
- * @param targetValue
- */
-export function getKeyFromValue(scope: Scope, targetValue: string) {
-  for (const [key, value] of Object.entries(constants[scope])) {
-    if (value.toLowerCase() === targetValue.trim().toLowerCase()) {
-      return key;
-    }
-  }
-  return null;
-};
-
-
-/**
  * Returns the label corresponding to a key (ie:code).
  * @dev Codes are used to store sanitized data in database
  * @param scope
