@@ -10,12 +10,12 @@ import { switchMap, map } from 'rxjs/operators';
 
 const steps: TunnelStep[] = [{
   title: 'Investment Campaign',
-  icon: 'home',
+  icon: 'campaign',
   time: 3,
   routes: [{ path: 'proposal', label: 'Investment Proposal' }],
 }, {
   title: 'Privileges',
-  icon: 'home',
+  icon: 'gift',
   time: 12,
   routes: [{ path: 'perks', label: 'Privileges' }],
 },{
