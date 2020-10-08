@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
-
 @Component({
-  selector: 'event-meeting-participants-nav',
+  selector: '[participants] event-meeting-participants-nav',
   templateUrl: './participants-nav.component.html',
-  styleUrls: ['./participants-nav.component.scss']
+  styleUrls: ['./participants-nav.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ParticipantsNavComponent {
 
