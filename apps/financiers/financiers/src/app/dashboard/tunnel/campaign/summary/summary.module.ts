@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { CampaignSummaryModule } from '@blockframes/campaign/form/summary/summary.module';
 
@@ -14,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     TunnelPageModule,
+    FlexLayoutModule,
     CampaignSummaryModule,
     MatDividerModule,
     MatButtonModule,
