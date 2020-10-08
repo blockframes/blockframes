@@ -9,7 +9,7 @@ import {getDocument} from "@blockframes/firebase-utils";
 import {EventDocument, Meeting} from "@blockframes/event/+state/event.firestore";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 
-import {twilioSecret, twilioSid, twilioToken} from './environments/environment';
+import {twilioApiKeySecret, twilioAccountSid, twilioApiKeySid} from './environments/environment';
 import {hasUserAcceptedEvent} from "./internals/invitations/events";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 
@@ -88,7 +88,7 @@ export const getTwilioAccessToken = async (
   }
 
   //Create access token with twilio global var et identity of the user as identity of token
-  const token = new AccessToken(twilioSid, twilioToken, twilioSecret, {identity: userId});
+  const token = new AccessToken(twilioAccountSid, twilioApiKeySid, twilioApiKeySecret, {identity: userId});
   //Create VideoGrant of room. RoomName is the EventId
   const videoGrant = new VideoGrant({room: eventId});
   //add Grant to token

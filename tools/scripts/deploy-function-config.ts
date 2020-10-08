@@ -23,9 +23,9 @@ function getKeyValFormat(): string[] {
   output.push(`admin.password="${process.env?.ADMIN_PASSWORD}"`);
   output.push(`admin.email="${process.env?.CASCADE8_ADMIN}"`);
   output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`); // @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
-  output.push(`twilio.sid=${process.env?.TWILIO_SID}`);
-  output.push(`twilio.secret=${process.env?.TWILIO_SECRET}`);
-  output.push(`twilio.token=${process.env?.TWILIO_TOKEN}`);
+  output.push(`twilio.account.sid=${process.env?.TWILIO_ACCOUNT_SID}`);
+  output.push(`twilio.api.key.secret=${process.env?.TWILIO_API_KEY_SECRET}`);
+  output.push(`twilio.api.key.sid=${process.env?.TWILIO_API_KEY_SID}`);
   return output;
 }
 

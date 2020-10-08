@@ -51,6 +51,6 @@ export const jwplayerKey = mockConfigIfNeeded('jwplayer', 'key');
 
 export const imgixToken = mockConfigIfNeeded('imgix', 'token');
 
-export const twilioSid = mockConfigIfNeeded('twilio', 'sid');
-export const twilioSecret = mockConfigIfNeeded('twilio', 'secret');
-export const twilioToken = mockConfigIfNeeded('twilio', 'token');
+export const twilioAccountSid = mockConfigIfNeeded('twilio', 'account', 'sid');
+export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
+export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
