@@ -17,6 +17,7 @@ import { app, module, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
+import { Change, EventContext } from 'firebase-functions';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -88,7 +89,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
 
 export async function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  context: EventContext
 ): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
@@ -106,7 +107,7 @@ export async function onOrganizationCreate(
   ]);
 }
 
-export async function onOrganizationUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+export async function onOrganizationUpdate(change: Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
@@ -182,7 +183,7 @@ export async function onOrganizationUpdate(change: functions.Change<FirebaseFire
 
 export async function onOrganizationDelete(
   orgSnapshot: FirebaseFirestore.DocumentSnapshot<OrganizationDocument>,
-  context: functions.EventContext
+  context: EventContext
 ): Promise<any> {
 
   const org = orgSnapshot.data() as OrganizationDocument;
@@ -201,7 +202,7 @@ export const accessToAppChanged = async (
   const admins = await Promise.all(adminIds.map(id => getUser(id)));
   const from = await getFromEmail(orgId);
   const appKey = await getOrgAppKey(orgId);
-  const appName = getAppName(appKey)
+  const appName = getAppName(appKey);
   const appUrl = await getAppUrl(orgId);
 
   await Promise.all(admins.map(admin => {

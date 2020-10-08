@@ -285,22 +285,22 @@ export async function createNotificationsForEventsToStart() {
 }
 
 /**
- * Return if the userId is invite into a event with docId param
- * @param userId : string - Id of user
- * @param docId : string - Id of doc (id of event in Invitation)
+ * Check if a given user has accepted an invitation to an event.
+ * @param userId
+ * @param eventOrMovieId if the event is a screening this **MUST** be a movieId other wise it should be an eventId
  */
-export async function isUserInvitedToScreening(userId: string, docId: string) {
+export async function isUserInvitedToEvent(userId: string, eventOrMovieId: string) {
 
   const acceptedInvitations = db.collection('invitations')
-    .where  ('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
+    .where('type', '==', 'attendEvent')
+    .where('docId', '==', eventOrMovieId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
+    .where('docId', '==', eventOrMovieId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');

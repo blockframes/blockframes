@@ -177,9 +177,9 @@
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
         <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
-        <ng-template colRef="status" let-status>{{ status ? (status | translateSlug: 'MEMBER_STATUS') : 'Confirmed' }}
+        <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
-        <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
           <ng-container *ngFor="let film of filmography">{{ film | filmography }}
@@ -193,16 +193,22 @@
             <div fxLayout fxLayoutGap="24px">
 
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-                <static-select scope="MEMBER_STATUS" type="model" [control]="directorForm.get('status')" fxFlex>
-                  <mat-label>Director's Directors Status</mat-label>
+                <static-select scope="memberStatus" type="constant" [control]="directorForm.get('status')" [withoutValues]="['']" fxFlex>
+                  <mat-label>Director's Status</mat-label>
                   <mat-hint>
                     Please specify if the director is confirmed for this project or not.
                   </mat-hint>
                 </static-select>
               </ng-container>
 
-              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex>
-                <mat-label>Director's Directors Category</mat-label>
+              <static-select
+              scope="directorCategory"
+              type="constant"
+              [control]="directorForm.get('category')"
+              placeholder="Director's Category"
+              [withoutValues]="['']"
+              fxFlex>
+                <mat-label>Director's Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.
                 </mat-hint>

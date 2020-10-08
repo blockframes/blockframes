@@ -47,7 +47,7 @@ export class MediaService {
     const tasks = files.map(file => this.storage.upload(`${tempUploadDir}/${file.path}/${file.fileName}`, file.data));
     this.addTasks(tasks);
     (Promise as any).allSettled(tasks)
-      .then(() => delay(5000))
+      .then(() => delay(3000))
       .then(() => this.detachWidget());
     this.showWidget();
   }
@@ -96,9 +96,9 @@ export class MediaService {
 
   /**
    * This https callable method will check if current user asking for the media
-   * have the rights to do so. 
+   * have the rights to do so.
    * @dev protected resources are stored the same way than other resources but in the "protected" directory.
-   * For example 
+   * For example
    * @param ref (without "/protected")
    * @param parametersSet ImageParameters[]
    */
@@ -129,7 +129,7 @@ export class MediaService {
   }
 
   /**
-   * 
+   *
    * @param ref string
    * @param parameters ImageParameters
    */

@@ -1,4 +1,4 @@
-import { functions, getStorageBucketName } from './internals/firebase';
+import { getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { get, isEqual } from 'lodash';
 import { createHash } from 'crypto';
@@ -8,22 +8,27 @@ import { ImageParameters, formatParameters } from '@blockframes/media/directives
 import { getDocAndPath } from '@blockframes/firebase-utils';
 import { createPublicUser, PublicUser } from '@blockframes/user/types';
 import { createOrganizationBase, OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
-import { privacies } from '@blockframes/utils/file-sanitizer';
+import { privacies, Privacy } from '@blockframes/utils/file-sanitizer';
 import { MovieDocument } from './data/types';
+import { uploadToJWPlayer } from './player';
+import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+import { storage } from 'firebase-functions';
 
 /**
  * This function is executed on every files uploaded on the tmp directory of the storage.
  * It check if a new file in tmp directory is already referenced on DB and movie it to correct folder
  */
-export async function linkFile(data: functions.storage.ObjectMetadata) {
+export async function linkFile(data: storage.ObjectMetadata) {
   // get the needed values
-  const { filePath, fieldToUpdate, isInTmpDir, docData } = await getDocAndPath(data.name);
+  const { filePath, fieldToUpdate, isInTmpDir, docData, collection, doc } = await getDocAndPath(data.name);
 
   if (isInTmpDir && data.name) {
     let savedRef: any = get(docData, fieldToUpdate);
 
     if (Array.isArray(savedRef)) {
       savedRef = savedRef.map(e => e.ref || e).find(ref => ref === filePath) || '';
+    } else if (!!savedRef.ref) {
+      savedRef = savedRef.ref;
     }
 
     const bucket = admin.storage().bucket(getStorageBucketName());
@@ -36,6 +41,41 @@ export async function linkFile(data: functions.storage.ObjectMetadata) {
         await from.copy(to);
         // Remove previous
         await from.delete();
+
+        // If file is a video
+        const [fileMetaData] = await to.getMetadata();
+        if (fileMetaData.contentType.indexOf('video/') === 0 && collection === 'movies') {
+
+          const uploadResult = await uploadToJWPlayer(to);
+
+          const hostedVideos: HostedVideo | HostedVideo[] = get(docData, fieldToUpdate);
+
+          let update: HostedVideo | HostedVideo[] | {};
+          if (uploadResult.success) {
+            if (Array.isArray(hostedVideos)) {
+              update = hostedVideos.map(video => {
+                if (video.ref === savedRef) { video.jwPlayerId = uploadResult.key };
+                return video;
+              });
+            } else {
+              hostedVideos.jwPlayerId = uploadResult.key;
+              update = hostedVideos;
+            }
+          } else {
+            // There was an error when uploading file to jwPlayer
+
+            if (uploadResult.message) {
+              console.log(`An error occured when uploading video to JwPlayer: ${uploadResult.message}`);
+            }
+
+            if (Array.isArray(hostedVideos)) {
+              update = hostedVideos.filter(video => video.ref !== savedRef);
+            } else {
+              update = {};
+            }
+          }
+          await doc.update({ [fieldToUpdate]: update });
+        }
       }
       return true;
     } else {
@@ -119,16 +159,23 @@ async function isAllowedToAccessMedia(ref: string, uid: string): Promise<boolean
   }
 }
 
-function getPathInfo(ref: string) {
-  const refParts = ref.split('/');
+interface PathInfo { securityLevel: Privacy, collection: string, docId: string }
 
-  const pathInfo: Record<string, string | undefined> = {};
+function getPathInfo(ref: string) {
+  const refParts = ref.split('/').filter(v => !!v);
+
+  const pathInfo: PathInfo = {
+    securityLevel: 'protected', // protected by default
+    collection: '',
+    docId: '',
+  };
+
   if (privacies.includes(refParts[0] as any)) {
-    pathInfo.securityLevel = refParts.shift();
+    pathInfo.securityLevel = refParts.shift()! as Privacy;
   }
 
-  pathInfo.collection = refParts.shift();
-  pathInfo.docId = refParts.shift();
+  pathInfo.collection = refParts.shift()!;
+  pathInfo.docId = refParts.shift()!;
 
   return pathInfo;
 }
@@ -205,20 +252,38 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    before.promotional.still_photo.forEach((photo, index) => {
-      const stillBefore = photo
-      const stillAfter = after.promotional.still_photo[index];
-      if ((stillBefore !== stillAfter || stillAfter === '')) {
-        mediaToDelete.push(stillBefore);
-      }
-    });
-    before.promotional.notes.forEach((note, index) => {
-      const noteBefore = note;
-      const noteAfter = after.promotional.notes[index];
-      if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
-        mediaToDelete.push(noteBefore.ref);
-      }
-    })
+    if (!!before.promotional.videos?.screener?.ref &&
+      (before.promotional.videos.screener?.ref !== after.promotional.videos?.screener?.ref || after.promotional.videos?.screener?.ref === '')) {
+      mediaToDelete.push(before.promotional.videos.screener.ref);
+    }
+
+    if (before.promotional.videos?.otherVideos?.length) {
+      before.promotional.videos.otherVideos.forEach(vb => {
+        if (!after.promotional.videos?.otherVideos?.length || !after.promotional.videos.otherVideos.some(va => va.ref === vb.ref)) {
+          mediaToDelete.push(vb.ref);
+        }
+      });
+    }
+
+    if (before.promotional.still_photo?.length) {
+      before.promotional.still_photo.forEach((photo, index) => {
+        const stillBefore = photo
+        const stillAfter = after.promotional.still_photo[index];
+        if ((stillBefore !== stillAfter || stillAfter === '')) {
+          mediaToDelete.push(stillBefore);
+        }
+      });
+    }
+
+    if (before.promotional.notes?.length) {
+      before.promotional.notes.forEach((note, index) => {
+        const noteBefore = note;
+        const noteAfter = after.promotional.notes[index];
+        if ((!isEqual(noteBefore, noteAfter) || isEqual(noteAfter, {}))) {
+          mediaToDelete.push(noteBefore.ref);
+        }
+      });
+    }
 
   } else { // Deleting
 
@@ -242,8 +307,21 @@ export async function cleanMovieMedias(before: MovieDocument, after?: MovieDocum
       mediaToDelete.push(before.promotional.moodboard);
     }
 
-    before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
-    before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+    if (!!before.promotional.videos?.screener?.ref) {
+      mediaToDelete.push(before.promotional.videos.screener.ref);
+    }
+
+    if (before.promotional.videos?.otherVideos?.length) {
+      before.promotional.videos.otherVideos.forEach(n => mediaToDelete.push(n.ref));
+    }
+
+    if (before.promotional.still_photo?.length) {
+      before.promotional.still_photo.forEach(photo => mediaToDelete.push(photo));
+    }
+
+    if (before.promotional.notes?.length) {
+      before.promotional.notes.forEach(note => mediaToDelete.push(note.ref));
+    }
   }
 
   await Promise.all(mediaToDelete.map(m => deleteMedia(m)));

@@ -1,0 +1,34 @@
+<article>
+  <h6>
+    Investment Proposal
+    <a mat-icon-button [routerLink]="link">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li>
+      <strong>Current amount: </strong>
+      <missing-control [control]="form.get('received')" [link]="link">
+        <ng-template let-received>
+          {{ received | currency:'USD' }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Total investment needed: </strong>
+      <missing-control [control]="form.get('cap')" [link]="link">
+        <ng-template let-cap>
+          {{ cap | currency:'USD' }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Minimum investment amount: </strong>
+      <missing-control [control]="form.get('minPledge')" [link]="link">
+        <ng-template let-minPledge>
+          {{ minPledge | currency:'USD' }}
+        </ng-template>
+      </missing-control>
+    </li>
+  </ul>
+</article>

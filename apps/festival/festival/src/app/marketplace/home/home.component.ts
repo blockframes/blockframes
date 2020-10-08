@@ -60,8 +60,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       {
         title: 'In production',
-        movieCount$: selectMovies('shooting').pipe(map(movies => movies.length)),
-        movies$: selectMovies('shooting')
+        movieCount$: this.movieQuery.selectAll({ 
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
+          && movie.storeConfig?.status === 'accepted' 
+          && movie.storeConfig.appAccess.festival
+        }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
+          && movie.storeConfig?.status === 'accepted' 
+          && movie.storeConfig.appAccess.festival
+        })
       },
       {
         title: 'Completed films',

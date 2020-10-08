@@ -31,6 +31,7 @@ const constants = {
     sale: 'Sale'
   },
 
+
   // ------------------ //
   // DISTRIBUTION RIGHT //
   // ------------------ //
@@ -70,6 +71,18 @@ const constants = {
   // ------ //
   // MOVIE  //
   // ------ //
+  certifications: {
+    artEssai: 'Art & Essai',
+    eof: 'EOF',
+    awardedFilm: 'Awarded Film',
+    aListCast: 'A-list Cast',
+    europeanQualification: 'European Qualification'
+  },
+  colors: {
+    c: 'Color',
+    b: 'Black & white',
+    colorBW: 'Color & Black & White'
+  },
   contentType: {
     feature_film: 'Feature Film',
     short: 'Short Film',
@@ -81,15 +94,78 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
-  storeType: {
-    library: 'Library',
-    line_up: 'Line-Up',
+  crewRoles: {
+    writer: 'Writer',
+    scoreComposer: 'Score Composer',
+    dialogueWriter: 'Dialogue Writer',
+    photographyDirector: 'Director of Photography',
+    editor: 'Editor',
+    castingDirector: 'Casting Director',
+    artisticDirector: 'Artistic Director',
+    costumeDesigner: 'Costume Designer',
+    makeUpArtist: 'Make-Up Artist',
+    productionDesigner: 'Production Designer',
+    firstAssistantDirector: '1st Assistant Director',
+    secondAssistantDirector: '2nd Assistant Director',
+    postProductionDirector: 'Post-Production Director',
+    originalAuthor: 'Original Author'
+  },
+  directorCategory: {
+    firstFeature: 'First Feature',
+    risingTalent: 'Rising Talent',
+    confirmed: 'Confirmed Director',
+    prestige: 'Prestige'
+  },
+  hostedVideoTypes: {
+    tailer: 'Trailer',
+    teaser: 'Teaser',
+    reel: 'Reel',
+    clip: 'Clip',
+    pitch: 'Pitch',
+  },
+  memberStatus: {
+    confirmed: 'Confirmed',
+    looselyAttached: 'Loosely Attached',
+    target: 'Target'
+  },
+  movieFormat: {
+    '1_33': '1.33',
+    '1_37': '1.37',
+    '1_66': '1.66',
+    '1_77': '1.77',
+    '1_85': '1.85',
+    scope: 'SCOPE',
+    '4/3': '4/3',
+    '16/9': '16/9'
+  },
+  movieFormatQuality: {
+    sd: 'SD',
+    hd: 'HD',
+    '2k': '2K',
+    '4k': '4K',
+    UHD: 'UHD',
+    '3D': '3D',
+    '3DSD': '3DSD',
+    '3DHD': '3DHD',
+    '3DUHD': '3DUHD'
+  },
+  movieLanguageTypes: {
+    original: 'Original',
+    dubbed: 'Dubbed',
+    subtitle: 'Subtitled',
+    caption: 'Closed-Captions',
   },
   premiereType: {
     international: 'International',
     world: 'World',
     market: 'Market',
     national: 'National',
+  },
+  producerRoles: {
+    executiveProducer: 'Executive Producer',
+    lineProducer: 'Line Producer',
+    associateProducer: 'Associate Producer',
+    productionManager: 'Production Manager'
   },
   productionStatus: {
     development: 'In development',
@@ -98,27 +174,21 @@ const constants = {
     finished: 'Completed',
     released: 'Released'
   },
-  unitBox: {
-    usd: 'USD',
-    eur: 'EUR',
-    admissions: 'Admissions',
+  rating: {
+    pegi: 'PEGI',
+    csa: 'CSA',
+    cnc: 'CNC'
+  },
+  scoring: {
+    a: 'A',
+    b: 'B',
+    c: 'C',
+    d: 'D'
   },
   shootingPeriod: {
     early: 'Early',
     late: 'Late',
     mid: 'Mid',
-  },
-  storeStatus: {
-    submitted: 'Submitted',
-    accepted: 'Accepted',
-    draft: 'Draft',
-    refused: 'Refused',
-  },
-  movieLanguageTypes: {
-    original: 'Original',
-    dubbed: 'Dubbed',
-    subtitle: 'Subtitle',
-    caption: 'Caption',
   },
   socialGoals: {
     no_poverty: 'No Poverty',
@@ -133,6 +203,30 @@ const constants = {
     inequalities: 'Reduce inequalities',
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
+  },
+  soundFormat: {
+    mono: 'Mono',
+    stereo: 'Stereo',
+    dolbySR: 'Dolby SR',
+    dts: 'DTS',
+    'dolby-5.1': 'Dolby 5.1',
+    'dolby-7.1': 'Dolby 7.1',
+    thx: 'THX'
+  },
+  storeStatus: {
+    submitted: 'Submitted',
+    accepted: 'Accepted',
+    draft: 'Draft',
+    refused: 'Refused',
+  },
+  storeType: {
+    library: 'Library',
+    line_up: 'Line-Up',
+  },
+  unitBox: {
+    usd: 'USD',
+    eur: 'EUR',
+    admissions: 'Admissions',
   },
 
 
@@ -168,7 +262,7 @@ const constants = {
   },
 
   // ------------- //
-  // FESTIVALS  //
+  //   FESTIVALS   //
   // ------------- //
   festival: {
     cannes: 'Cannes International Film Festival',
@@ -202,3 +296,39 @@ const constants = {
 };
 
 export default constants;
+
+type Constants = typeof constants;
+type Scopes = keyof Constants;
+export type GetKeys<S extends Scopes> = keyof Constants[S];
+type GetLabel<S extends Scopes> = Constants[S][GetKeys<S>]
+
+
+/**
+ * Returns the key corresponding to a value (ie:code).
+ * @dev Codes are used to store sanitized data in database
+ * @param scope
+ * @param targetValue
+ */
+export function getKeyFromValue(scope: Scopes, targetValue: any) {
+  for (const [key, value] of Object.entries(constants[scope])) {
+    if (value.toLowerCase() === targetValue.toLowerCase()) {
+      return key;
+    }
+  }
+  return null;
+}
+
+/**
+ * Returns the label corresponding to a key (ie:code).
+ * @dev Codes are used to store sanitized data in database
+ * @param scope
+ * @param targetValue
+ */
+export const getValueByKey = (scope: Scopes, targetValue: string) => {
+  for (const [key, value] of Object.entries(constants[scope])) {
+    if (key.toLowerCase() === targetValue.toLowerCase()) {
+      return value;
+    }
+  }
+  return null;
+};

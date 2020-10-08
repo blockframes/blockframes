@@ -6,6 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MediaControlModule } from '@blockframes/media/components/controls/media-control.module';
+import { MediaViewerModule } from '@blockframes/media/components/viewers/media-viewer.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
@@ -32,6 +34,8 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     EventPlayerModule,
     MeetingMediaListModule,
     FileNameModule,
+    MediaControlModule,
+    MediaViewerModule,
 
     // Materials
     MatButtonModule,

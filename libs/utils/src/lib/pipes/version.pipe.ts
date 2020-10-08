@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { CommonModule } from '@angular/common';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 
 
 @Pipe({
@@ -9,7 +9,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 })
 export class VersionPipe implements PipeTransform {
   transform(language: MovieLanguageSpecification) {
-    const formatSlug = (slug: string) => slug ? getLabelBySlug('VERSION_INFO', slug.trim().toLocaleLowerCase()) : '';
+    const formatKey = (key: string) => key ? getValueByKey('movieLanguageTypes', key.trim().toLocaleLowerCase()) : '';
 
     const versionArray = [];
     for (const [key, value] of Object.entries(language)) {
@@ -20,7 +20,7 @@ export class VersionPipe implements PipeTransform {
     let version = '';
     versionArray.forEach((v, index) => {
       const isLast = index === versionArray.length - 1;
-      version += formatSlug(v) + (isLast ? '' : ', ');
+      version += formatKey(v) + (isLast ? '' : ', ');
     })
     return version;
   }

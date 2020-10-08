@@ -2,13 +2,13 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   MediasSlug,
-  ScoringSlug,
-  CertificationsSlug,
-  ColorsSlug,
-  RatingSlug,
-  SoundFormatSlug,
-  FormatQualitySlug,
-  FormatSlug,
+  ScoringValues,
+  CertificationsValues,
+  ColorsValues,
+  RatingValues,
+  SoundFormatValues,
+  MovieFormatQualityValues,
+  MovieFormatValues,
   GenresSlug,
   ContentType,
   ProductionStatus,
@@ -17,7 +17,8 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrenciesSlug
+  MovieCurrenciesSlug,
+  HostedVideoTypes
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -48,21 +49,17 @@ interface MovieRaw<D> {
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
-  certifications?: CertificationsSlug[],
-  color?: ColorsSlug,
+  certifications?: CertificationsValues[],
+  color?: ColorsValues,
   contentType: ContentType; //! required
   crew?: Crew[],
   directors: Director[], //! required
   estimatedBudget?: NumberRange,
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
-  format?: FormatSlug,
-  formatQuality?: FormatQualitySlug,
+  format?: MovieFormatValues,
+  formatQuality?: MovieFormatQualityValues,
   genres: GenresSlug[], //! required
   customGenres?: string[],
-  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
-  // TODO we will need more visibility on the upload part to take the final decision
-  // TODO we also need to consider how to differentiate full movies from trailer
-  hostedVideo?: string;
   internalRef?: string,
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
@@ -81,9 +78,9 @@ interface MovieRaw<D> {
   release: MovieRelease, //! required
   review?: MovieReview[],
   runningTime?: MovieRunningTime;
-  scoring?: ScoringSlug,
+  scoring?: ScoringValues,
   shooting?: MovieShooting,
-  soundFormat?: SoundFormatSlug,
+  soundFormat?: SoundFormatValues,
   stakeholders?: MovieStakeholders,
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
@@ -110,24 +107,43 @@ export interface PublicMovie {
   title: Title;
 }
 
+export interface HostedVideos {
+  screener?: HostedVideo; // Main screener
+  otherVideos?: HostedVideo[]; // Other videos
+}
+
+export interface HostedVideo {
+  ref: string,
+  jwPlayerId: string,
+  title?: string,
+  description?: string,
+  type?: HostedVideoTypes
+}
+
 ////////////////////
 // MOVIE SECTIONS //
 ////////////////////
 
 export interface MoviePromotionalElements {
-  clip_link: string,
+
   financialDetails: string,
   moodboard: string,
   notes: MovieNote[],
   presentation_deck: string,
-  promo_reel_link: string,
   salesPitch: MovieSalesPitch,
   scenario: string,
-  screener_link: string,
   still_photo: string[],
+  videos?: HostedVideos,
+
+  // @TODO #2586 remove this when we can upload
+  // videos through movie tunnel and remove the component for external links
+  // + migration for cleaning
+  clip_link: string,
+  promo_reel_link: string,
+  screener_link: string,
   teaser_link: string,
   trailer_link: string,
-  other_links: OtherLink[];
+  other_links: OtherLink[],
 }
 
 ////////////////////
@@ -187,7 +203,7 @@ export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 export interface MovieRating {
   country: TerritoriesSlug;
   reason?: string,
-  system?: RatingSlug,
+  system?: RatingValues,
   value: string,
 }
 
@@ -242,8 +258,8 @@ export interface MovieShootingRaw<D> {
 export interface MovieShooting extends MovieShootingRaw<Date> {}
 
 export interface MovieShootingLocations {
-  city: string,
-  country: TerritoriesSlug,
+  cities?: string[],
+  country?: TerritoriesSlug,
 }
 
 export interface MovieShootingDateRaw<D> {
@@ -259,8 +275,8 @@ export interface MovieNote extends Person {
 }
 
 export interface MoviePlannedShootingDateRange {
-  from: MoviePlannedShooting,
-  to: MoviePlannedShooting
+  from?: MoviePlannedShooting,
+  to?: MoviePlannedShooting
 }
 
 export interface MoviePlannedShooting {
@@ -277,9 +293,8 @@ export interface MovieExpectedPremiereRaw<D> {
 export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
 
 export interface MovieSalesPitch {
-  description: string,
-  link: string
-  file: string, // hosted media
+  description?: string,
+  file?: string, // hosted media
 }
 
 export interface MovieGoalsAudience {

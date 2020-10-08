@@ -146,6 +146,9 @@
         ],
         "crm": [
           "crm-demo1-blockframes"
+        ],
+        "financiers" : [
+          "blockframes-demo1-financiers"
         ]
       }
     },

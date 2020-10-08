@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormList, FormEntity } from '@blockframes/utils/form';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { Subscription, combineLatest } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
@@ -18,7 +19,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   /** list of selected language (chips), they can later be added in *'original'*, *'subtitle'*, etc... */
   public selectedLanguages = FormList.factory<ExtractSlug<'LANGUAGES'>>([]);
 
-  public versions = FormList.factory<ExtractSlug<'VERSION_INFO'>>([]);
+  public versions = FormList.factory<GetKeys<'movieLanguageTypes'>>([]);
 
   private sub: Subscription;
   private formSub: Subscription;
@@ -30,7 +31,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-      .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], ExtractSlug<'VERSION_INFO'>[]]))
+      .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], GetKeys<'movieLanguageTypes'>[]]))
       .subscribe(
         ([languages, versions]) => {
           this.rebuildingForm = true;

@@ -23,7 +23,7 @@ export class FileUploadComponent implements OnInit {
   /** firestore path */
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
-  @Input() filePrivacy : Privacy = 'public';
+  @Input() filePrivacy: Privacy = 'public';
 
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
@@ -95,8 +95,10 @@ export class FileUploadComponent implements OnInit {
     const size = (file.size / 1000);
     if (size < 1000) {
       this.localSize = `${size.toFixed(1)} KB`;
+    } else if (size < 1000 * 1000) {
+      this.localSize = `${(size / 1000).toFixed(1)} MB`;
     } else {
-      this.localSize = `${(size / 100).toFixed(1)} MB`;
+      this.localSize = `${(size / (1000 * 1000)).toFixed(1)} GB`;
     }
     this.state = 'ready';
 

@@ -1,18 +1,20 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, HostBinding } from '@angular/core';
 import { AngularFireUploadTask } from '@angular/fire/storage';
 
 // Blockframes
 import { BehaviorStore } from '@blockframes/utils/helpers';
+import { slideUp } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'bf-upload-widget',
   templateUrl: 'upload-widget.component.html',
   styleUrls: ['./upload-widget.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [slideUp]
 })
 export class UploadWidgetComponent {
-
+  @HostBinding('@slideUp') animation = true;
 
   constructor(
     @Inject('tasks') public tasks: BehaviorStore<AngularFireUploadTask[]>,
@@ -21,11 +23,15 @@ export class UploadWidgetComponent {
   getFileType(file: string) {
     const type = file.split('.').pop();
     switch (type) {
-      case 'docx' || 'doc':
+      case 'docx':
+      case 'doc':
         return '/assets/images/dark/docx.webp';
-      case 'xls' || 'xlsx':
+      case 'xls':
+      case 'xlsx':
         return '/assets/images/dark/xls.webp';
       case 'png':
+      case 'webp':
+      case 'jpg':
         return '/assets/images/dark/image.webp';
       case 'pdf':
         return '/assets/images/dark/pdf.webp';

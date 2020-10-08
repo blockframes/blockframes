@@ -52,6 +52,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     name: orgName(org),
     appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
+    country: org.addresses.main.country
   };
 
   return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject(orgRecord);

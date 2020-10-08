@@ -1,4 +1,4 @@
-<title-list [titles]="movieSearchResults$ | async">
+<title-list [titles]="movieSearchResults$ | async" [totalCount]="nbHits">
 
   <!-- App Bar Search -->
   <ng-template titleAppBarSearch>
@@ -38,7 +38,7 @@
 
 
   <!-- FILTERS (ng-content) -->
-  <title-filter>
+  <list-filter>
 
     <!-- TODO issue#2576 -->
     <ng-template filter label="Library / Line-up" [form]="filterForm.storeType">
@@ -95,7 +95,7 @@
       <button mat-stroked-button color="primary">Apply Avails Filter</button>
     </ng-template> -->
 
-  </title-filter>
+  </list-filter>
 
   <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
     <mat-icon svgIcon="refresh_filters"></mat-icon>

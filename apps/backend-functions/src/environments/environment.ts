@@ -43,7 +43,7 @@ export const algolia = {
 
 
 
-export const adminEmail = dev ? mockConfigIfNeeded('admin', 'password'): 'developers@cascade8.com';
+export const adminEmail = dev ? mockConfigIfNeeded('admin', 'email'): 'developers@cascade8.com';
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
 
 export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');

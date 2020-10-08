@@ -10,3 +10,6 @@ export * from './deep-key.pipe';
 export * from './isAbove.pipe';
 export * from './max-length.pipe';
 export * from './has-keys.pipe';
+export * from './fileName.pipe';
+export * from './sanitize.pipe';
+export * from './app.pipe';

@@ -1,4 +1,4 @@
-import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesValues, ProducerRolesValues, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -62,28 +62,26 @@ export interface Filmography {
  * @dev interface to represent a producer credit
  */
 export interface Producer extends Credit {
-  role: ProducerRolesSlug, // overrided role scope from Producer interface
+  role: ProducerRolesValues, // overrided role scope from Producer interface
 };
 
 /**
  * @dev interface to represent a director credit
  */
 export interface Director extends Credit {
-  category?: string, // TODO Do a static when we have predefined value for category
+  category?: string,
 };
 
 /**
- * @dev interface to represent a cast credit
+ * @dev type to represent a cast credit
  */
-export interface Cast extends Credit {
-  role: CastRolesSlug, // overrided role scope from Cast interface
-};
+export type Cast = Credit;
 
 /**
  * @dev interface to represent a crew credit
  */
 export interface Crew extends Credit {
-  role: CrewRolesSlug, // overrided role scope from Crew interface
+  role: CrewRolesValues, // overrided role scope from Crew interface
 };
 
 /**
