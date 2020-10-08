@@ -8,15 +8,15 @@
 
         <bf-form-list [form]="form.originalRelease" buttonText="Add a Release">
           <ng-template itemRef let-release>{{ release.country | translateSlug: 'TERRITORIES' }} -
-            {{ release.media | translateSlug: 'MEDIAS' }} - {{ release.date | date: 'shortDate' }}</ng-template>
+            {{ release.media | toLabel: 'medias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
 
               <div fxLayout="row" fxLayoutGap="24px">
                 <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
 
-                <static-select test-id="release-media" type="model" [control]="releaseForm.get('media')" scope="MEDIAS" fxFlex
-                  [withoutValues]="['pay-tv', 'free-tv', 'pay-per-view', 'est', 'n-vod','a-vod', 'f-vod', 's-vod', 'planes', 'boats']">
+                <static-select test-id="release-media" type="constant" [control]="releaseForm.get('media')" scope="medias" fxFlex
+                  [withoutValues]="['payTv', 'freeTv', 'payPerView', 'est', 'nVod','aVod', 'fVod', 'sVod', 'planes', 'boats']">
                   <mat-label>Release Media</mat-label>
                 </static-select>
               </div>
@@ -135,8 +135,7 @@
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications">
-            <mat-button-toggle [value]="certification" [matTooltip]="certification?.hint"
-              [matTooltipDisabled]="!certification?.hint">
+            <mat-button-toggle [value]="certification">
               {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
           </ng-container>

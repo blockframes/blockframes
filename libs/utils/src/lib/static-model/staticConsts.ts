@@ -147,6 +147,29 @@ const constants = {
     clip: 'Clip',
     pitch: 'Pitch',
   },
+  medias: {
+    payTv: 'Pay TV', // pay-tv
+    freeTv: 'Free TV', // free-tv
+    payPerView: 'Pay Per View', // pay-per-view
+    est: 'EST',
+    nVod: 'N-VOD', // n-vod
+    aVod: 'A-VOD', // a-vod
+    fVod: 'F-VOD', // f-vod
+    sVod: 'S-VOD', // s-vod
+    theatrical: 'Theatrical',
+    video: 'Video',
+    planes: 'Planes',
+    boats: 'Boats',
+    hotels: 'Hotels',
+    // tVodStreaming: 'T-VOD, ER, DTR, Streaming',
+    // allRights: 'All rights',
+    // trains: 'Trains',
+    // remake: 'Remake',
+    // bookAdaptation: 'Book Adaptation',
+    // musicPublishing: 'Music Publishing',
+    // merchandising: 'Merchandising',
+    // ancillary: 'Ancillary'
+  },
   memberStatus: {
     confirmed: 'Confirmed',
     looselyAttached: 'Loosely Attached',

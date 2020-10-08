@@ -13,9 +13,6 @@ export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
 export type TerritoriesSlug = typeof TERRITORIES_SLUG[number];
 
-export const MEDIAS_SLUG = models['MEDIAS'].map(key => key.slug);
-export type MediasSlug = typeof MEDIAS_SLUG[number];
-
 export const RESOURCE_SIZES_SLUG = models['RESOURCE_SIZES'].map(key => key.slug);
 export type ResourceSizesSlug = typeof RESOURCE_SIZES_SLUG[number];
 
@@ -40,6 +37,7 @@ export type Colors = keyof typeof constants.colors;
 export type ContentType = keyof typeof constants.contentType;
 
 export type ContractStatus = keyof typeof constants.contractStatus;
+
 export type ContractType = keyof typeof constants.contractType;
 
 export type CrewRoles = keyof typeof constants.crewRoles;
@@ -50,6 +48,9 @@ export type DistributionRightStatus = keyof typeof constants.distributionRightSt
 export type Genres = keyof typeof constants.genres;
 
 export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
+
+export type Medias = keyof typeof constants.medias;
+export type MediasValues = typeof constants.medias[Medias];
 
 export type MovieCurrencies = keyof typeof constants.movieCurrencies;
 

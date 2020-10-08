@@ -1,7 +1,7 @@
 import {
   TerritoriesSlug,
   LanguagesSlug,
-  MediasSlug,
+  MediasValues,
   Scoring,
   Certifications,
   Colors,
@@ -195,7 +195,7 @@ export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguag
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
   country: TerritoriesSlug;
-  media?: MediasSlug
+  media?: MediasValues
 }
 
 export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}

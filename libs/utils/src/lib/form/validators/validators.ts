@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
-import { isInKeys, Scope as ConstantScope } from '../../static-model/staticConsts';
+import { isInKeys, Scope as ConstantScope, getValueByKey } from '../../static-model/staticConsts';
 
 export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
 
@@ -122,6 +122,21 @@ export function validRange(): ValidatorFn {
 export function valueIsInModelValidator(scope: Scope): ValidatorFn {
   return (parent: FormGroup | FormArray): ValidationErrors => {
     if (parent.value.filter(val => getLabelBySlug(scope, val)).length) {
+      return null;
+    } else {
+      return { invalidValue: true };
+    }
+  };
+}
+
+/**
+ * @description This validator checks if the value in the form group
+ * or form array is in the static constant and then valid
+ * @param scope defines where to look. For instance 'TERRITORIES'
+ */
+export function valueIsInConstantValidator(scope: ConstantScope): ValidatorFn {
+  return (parent: FormGroup | FormArray): ValidationErrors => {
+    if (parent.value.filter(val => getValueByKey(scope, val)).length) {
       return null;
     } else {
       return { invalidValue: true };

@@ -19,8 +19,6 @@ import {
   MovieLanguageTypesValue,
   UnitBoxValue,
   staticConsts,
-  Rating,
-  Genres
 } from '@blockframes/utils/static-model';
 import { GetCode } from '@blockframes/utils/static-model/staticConsts';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
@@ -453,7 +451,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               originalRelease.country = country;
             }
 
-            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] as ExtractCode<'MEDIAS'>);
+            const media = getKeyIfExists(staticConsts.medias, originalReleaseParts[1]);
             if (media) {
               originalRelease.media = media;
             }
