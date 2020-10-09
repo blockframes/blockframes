@@ -247,6 +247,12 @@ const constants = {
     csa: 'CSA',
     cnc: 'CNC'
   },
+  resourceSizes: {
+    medium: 'Medium',
+    small: 'Small',
+    large: 'Large',
+    thumbnail: 'Thumbnail'
+  },
   scoring: {
     a: 'A',
     b: 'B',
@@ -285,6 +291,16 @@ const constants = {
     'dolby-5.1': 'Dolby 5.1',
     'dolby-7.1': 'Dolby 7.1',
     thx: 'THX'
+  },
+  stakeholderRoles: {
+    executiveProducer: 'Executive Producer',
+    coProducer: 'Co-Producer',
+    lineProducer: 'Line Producer',
+    distributor: 'Distributor',
+    salesAgent: 'Sales Agent',
+    laboratory: 'Laboratory',
+    financier: 'Financier',
+    broadcasterCoproducer: 'Broadcaster coproducer'
   },
   storeStatus: {
     submitted: 'Submitted',

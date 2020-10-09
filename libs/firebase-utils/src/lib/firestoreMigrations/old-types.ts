@@ -1,9 +1,9 @@
-import { ResourceSizesSlug, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+import { ResourceSizes, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
   label: string,
-  size?: ResourceSizesSlug,
+  size?: ResourceSizes,
   ratio?: ResourceRatioSlug,
   media: OldImgRef,
   language?: LanguagesSlug,
@@ -127,7 +127,7 @@ export function createOldHostedMedia(media?: Partial<OldHostedMedia>) {
 
 export interface OldNewPromotionalElement {
   label: string,
-  size?: ResourceSizesSlug,
+  size?: ResourceSizes,
   ratio?: ResourceRatioSlug,
   media: OldHostedMedia,
   language?: LanguagesSlug,

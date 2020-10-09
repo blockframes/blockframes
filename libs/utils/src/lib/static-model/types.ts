@@ -13,9 +13,6 @@ export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
 export type TerritoriesSlug = typeof TERRITORIES_SLUG[number];
 
-export const RESOURCE_SIZES_SLUG = models['RESOURCE_SIZES'].map(key => key.slug);
-export type ResourceSizesSlug = typeof RESOURCE_SIZES_SLUG[number];
-
 export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slug);
 export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];
 
@@ -69,6 +66,8 @@ export type ProductionStatus = keyof typeof constants.productionStatus;
 
 export type Rating = keyof typeof constants.rating;
 
+export type ResourceSizes = keyof typeof constants.resourceSizes;
+
 export type Scoring = keyof typeof constants.scoring;
 
 export type ShootingPeriod = keyof typeof constants.shootingPeriod;
@@ -76,6 +75,8 @@ export type ShootingPeriod = keyof typeof constants.shootingPeriod;
 export type SocialGoals = keyof typeof constants.socialGoals;
 
 export type SoundFormat = keyof typeof constants.soundFormat;
+
+export type StakeholderRoles = keyof typeof constants.stakeholderRoles;
 
 export type StoreStatus = keyof typeof constants.storeStatus;
 

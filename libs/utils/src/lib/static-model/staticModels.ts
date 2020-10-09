@@ -105,52 +105,12 @@ const models = {
     { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
     { 'slug': 'invoices', 'label': 'Invoices' },
   ] as const,
-  'RESOURCE_SIZES': [
-    { 'slug': 'medium', 'label': 'Medium' },
-    { 'slug': 'small', 'label': 'Small' },
-    { 'slug': 'large', 'label': 'Large' },
-    { 'slug': 'thumbnail', 'label': 'Thumbnail' },
-  ] as const,
   'RESOURCE_RATIOS': [
     { 'slug': '16/9', 'label': '16:9' },
     { 'slug': '4/3', 'label': '4:3' },
     { 'slug': 'round', 'label': 'Round' },
     { 'slug': 'square', 'label': 'Square' },
     { 'slug': 'rectangle', 'label': 'Rectangle' },
-  ] as const,
-  'STAKEHOLDER_ROLES': [
-    {
-      'slug': 'executive-producer',
-      'label': 'Executive Producer'
-    },
-    {
-      'slug': 'co-producer',
-      'label': 'Co-Producer'
-    },
-    {
-      'slug': 'line-producer',
-      'label': 'Line Producer'
-    },
-    {
-      'slug': 'distributor',
-      'label': 'Distributor'
-    },
-    {
-      'slug': 'sales-agent',
-      'label': 'Sales Agent'
-    },
-    {
-      'slug': 'laboratory',
-      'label': 'Laboratory'
-    },
-    {
-      'slug': 'financier',
-      'label': 'Financier'
-    },
-    {
-      'slug': 'broadcaster-coproducer',
-      'label': 'Broadcaster coproducer'
-    }
   ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
