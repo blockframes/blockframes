@@ -11,7 +11,7 @@ import { loadJWPlayerScript } from "@blockframes/utils/utils";
 declare const jwplayer: any;
 
 @Component({
-  selector: '[ref] [control] event-video-viewer',
+  selector: '[eventId] [ref] [control] event-video-viewer',
   templateUrl: './video-viewer.component.html',
   styleUrls: ['./video-viewer.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
@@ -42,9 +42,10 @@ export class VideoViewerComponent implements AfterViewInit {
     this.updatePlayer();
   }
 
+  @Input() eventId: string;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private eventQuery: EventQuery,
     private authQuery: AuthQuery,
     private mediaService: MediaService,
     private functions: AngularFireFunctions,
@@ -52,10 +53,9 @@ export class VideoViewerComponent implements AfterViewInit {
 
   async initPlayer() {
 
-    const { id } = this.eventQuery.getActive();
 
     const privateVideo = this.functions.httpsCallable('privateVideo');
-    const { error, result } = await privateVideo({ eventId: id, ref: this.ref }).toPromise();
+    const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
 
     if (!!error) {
       // if error is set, result will contain the error message

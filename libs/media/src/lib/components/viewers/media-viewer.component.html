@@ -9,7 +9,7 @@
       <event-pdf-viewer [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]"></event-pdf-viewer>
     </ng-container>
     <ng-container *ngSwitchCase="'video'">
-      <event-video-viewer [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
+      <event-video-viewer [eventId]="event.id" [ref]="event.meta.selectedFile" [control]="event.meta.controls[event.meta.selectedFile]" ></event-video-viewer>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <p>Sorry, we don't know how to display this file.</p>
