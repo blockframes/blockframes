@@ -1,0 +1,10 @@
+<event-meeting-video
+  [arrayOfParticipantConnected$]="arrayOfParticipantConnected$"
+  [localParticipantConnected$]="localParticipantConnected$"
+  [localPreviewTracks$]="localPreviewTracks$"
+  [dominantParticipantForBuyer$]="dominantParticipantForBuyer$"
+  [localVideoAudioIsOn$]="localVideoAudioIsOn$"
+  [event]="event"
+  [isSeller]="isSeller"
+  (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"
+  ></event-meeting-video>

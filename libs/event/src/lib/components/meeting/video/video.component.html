@@ -1,0 +1,22 @@
+<ng-container>
+  <ng-container *ngIf="arrayOfParticipantConnected$ | async as arrayOfParticipantConnected">
+    <ng-container *ngIf="getIfLocalIsAlone(arrayOfParticipantConnected)">
+      <section>
+        <span>
+          Waiting for the participants
+        </span>
+      </section>
+    </ng-container>
+    <mat-grid-list [cols]="numOfCols(arrayOfParticipantConnected)" rowHeight="fit">
+      <ng-container *ngFor="let participant of arrayOfParticipantConnected; trackBy: identify">
+        <ng-container *ngIf="!participant.isLocalSpeaker && !participant.isDominantSpeaker">
+          <mat-grid-tile>
+              <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>
+          </mat-grid-tile>
+        </ng-container>
+      </ng-container>
+    </mat-grid-list>
+  </ng-container>
+</ng-container>
+
+

@@ -19,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import {MeetingModule} from "@blockframes/event/components/meeting/meeting.module";
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     OrgNameModule,
     EventPlayerModule,
     MeetingMediaListModule,
+    MeetingModule,
     FileNameModule,
     MediaControlModule,
     MediaViewerModule,
