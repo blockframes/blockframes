@@ -79,8 +79,8 @@ export class CropperComponent implements OnInit {
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
   @Input() filePrivacy: Privacy = 'public';
-  @Input() public types: string[] = ['image/jpeg', 'image/png'];
-  @Input() public accept: string[] = ['.jpg', '.png'];
+  @Input() types: string[] = ['image/jpeg', 'image/png'];
+  @Input() accept: string[] = ['.jpg', '.png'];
 
   constructor(
     private mediaService: MediaService,
