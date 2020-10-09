@@ -5,7 +5,7 @@ import { TO, User } from '@blockframes/e2e/utils';
 export function signInAndNavigateToMain(user: Partial<User>) {
   cy.log('Reach LandingPage and accept cookies');
   const p1 = new LandingPage();
-  acceptCookie();
+  //acceptCookie();
     
   //Note: Here we click sign-up because inside signIn
   //we switchmode to Login.
@@ -13,6 +13,7 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   p1.clickSignup();   
   signIn(user);
   cy.get('festival-marketplace', {timeout: TO.PAGE_LOAD});
+  acceptCookie();
 
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');

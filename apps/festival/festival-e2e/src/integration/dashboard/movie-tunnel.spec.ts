@@ -68,11 +68,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   // Main page
-  it.only('Complete main fields, go on movie tunnel storyline page', () => {
+  it('Complete main fields, go on movie tunnel storyline page', () => {
     //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
-    cy.wait(3000);
-    acceptCookie();
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
+    //cy.wait(3000);
     cy.get('h1', {timeout: 30000}).contains('Main Information');
     const formOpt: FormOptions = {
       inputValue: Movie_MainInfo
