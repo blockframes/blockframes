@@ -45,11 +45,11 @@
     </ng-template>
 
     <ng-template filter label="Genres" [form]="searchForm.genres">
-      <chips-autocomplete [form]="searchForm.genres" scope="genres"></chips-autocomplete>
+      <chips-autocomplete [form]="searchForm.genres" scope="genres" type="constant"></chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
-      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES">
+      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES" type="model">
       </chips-autocomplete>
     </ng-template>
 

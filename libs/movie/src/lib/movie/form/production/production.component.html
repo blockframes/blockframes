@@ -19,7 +19,7 @@
                 placeholder="Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="productionForm.get('countries')" scope="TERRITORIES"
+            <chips-autocomplete [form]="productionForm.get('countries')" scope="TERRITORIES" type="model"
               placeholder="Type and select Country." fxFlex>
               <mat-label>Production Country</mat-label>
               <mat-error>Please specify Production Country.</mat-error>
@@ -45,7 +45,7 @@
                 placeholder="Co-Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="coProductionForm.get('countries')" scope="TERRITORIES"
+            <chips-autocomplete [form]="coProductionForm.get('countries')" scope="TERRITORIES" type="model"
               placeholder="Type and select Country" fxFlex>
               <mat-label>Co-Production Country</mat-label>
               <mat-error>Please specify Co-Production Country.</mat-error>
@@ -96,7 +96,7 @@
                 placeholder="Distribution Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="distributorForm.get('countries')" scope="TERRITORIES"
+            <chips-autocomplete [form]="distributorForm.get('countries')" scope="TERRITORIES" type="model"
               placeholder="Enter Distribution Country/ies" fxFlex>
               <mat-label>Enter Distribution Country/ies.</mat-label>
               <mat-error>Please specify Distribution Country.</mat-error>
@@ -124,7 +124,7 @@
                 placeholder="Sales Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete [form]="salesForm.get('countries')" scope="TERRITORIES"
+            <chips-autocomplete [form]="salesForm.get('countries')" scope="TERRITORIES" type="model"
               placeholder="Type and select Country" fxFlex type="model">
               <mat-label>Sales Company's Nationality</mat-label>
               <mat-error>Please specify Sales Company's Country.</mat-error>
