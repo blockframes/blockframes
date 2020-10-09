@@ -1,8 +1,9 @@
-import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard";
+import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard/movietunnel";
+import { TO } from '@blockframes/e2e/utils/env';
 
 export const CONTENT_TYPES = ['TV Film', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
 export const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
-export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'Pl', 'It'];
+export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
 export const MAIN_COUNTRIES = ['France', 'Poland', 'Italy'];
 export const MEDIA = 'Pay TV';
 export const DATE = '10/10/2007';
@@ -19,6 +20,23 @@ export const PREMIERE = 'World';
 export const YEAR = '2007';
 
 export const mainTest = () => {
+  cy.log('->Reach Movie Tunnel & seek Production Status');
+  cy.get('tunnel-page h1', { timeout: TO.VSLOW_UPDATE })
+    .contains('Production Status');
+
+  cy.log('Select status card: Released');
+  cy.get('mat-card label', {timeout: TO.PAGE_ELEMENT})
+    .contains("Released")
+    .click();
+
+  cy.log('->Click next & reach movie form');  
+  cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
+    .click()
+  cy.wait(TO.WAIT_1SEC);
+
+  //TODO:
+  return;
+
   const p1 = new TunnelMainPage();
 
   // Content Type
