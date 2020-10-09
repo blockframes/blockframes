@@ -42,7 +42,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
    * @note this method is specific from FormList and is not part and Angular FormGroup interface
    */
   patchAllValue(
-    value: Partial<T>,
+    value: Partial<T> = {},
     options: {
       onlySelf?: boolean;
       emitEvent?: boolean;

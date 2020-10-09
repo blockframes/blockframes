@@ -9,10 +9,10 @@ export interface Campaign {
 
 export interface Perk {
   title: string,
-  description?: string,
-  minPledge?: number,
+  description: string,
+  minPledge: number,
   amount: {
-    current?: number,
+    current: number,
     total: number
   }
 }
@@ -32,6 +32,7 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
 export function createPerk(params: Partial<Perk> = {}): Perk {
   return {
     title: '',
+    description: '',
     minPledge: 0,
     amount: {
       total: 0,
