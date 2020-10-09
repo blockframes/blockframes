@@ -178,8 +178,8 @@ jobs:
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
           npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-          npx firebase deploy --only firestore --force &&
-          npx firebase deploy --only functions --force
+          npx firebase deploy --only functions --force &&
+          npx firebase deploy --only firestore --force
       - run:
           name: prepare staging for testing
           command: node dist/apps/backend-ops/main.js prepareForTesting
@@ -221,8 +221,8 @@ jobs:
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force &&
-            npx firebase deploy --only functions --force
+            npx firebase deploy --only functions --force &&
+            npx firebase deploy --only firestore --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
@@ -249,8 +249,8 @@ jobs:
             npx firebase use staging &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force &&
-            npx firebase deploy --only functions --force
+            npx firebase deploy --only functions --force &&
+            npx firebase deploy --only firestore --force
       - run: npm run backend-ops upgrade
       - run:
           command: |
@@ -279,8 +279,8 @@ jobs:
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force &&
-            npx firebase deploy --only functions --force
+            npx firebase deploy --only functions --force &&
+            npx firebase deploy --only firestore --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
