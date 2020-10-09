@@ -40,11 +40,9 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
 
   setTrackEvent(track) {
     track.on('dimensionsChanged', (dd) => {
-      console.log('dimensionsChanged : ')
       console.log({dd})
     })
   }
-
 
   /**
    * Set up all event we need for meeting

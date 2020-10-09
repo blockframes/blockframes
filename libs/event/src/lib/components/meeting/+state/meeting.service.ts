@@ -84,7 +84,6 @@ export class MeetingService {
     private query: AuthQuery,
     private eventService: EventService,
   ) {
-
   }
 
   /**
@@ -310,9 +309,6 @@ export class MeetingService {
   async roomJoined(room: Room, event: Event) {
     //save activeRoom
     this.activeRoom = room;
-
-
-    const identity = room.localParticipant.identity;
 
     if (!!room.participants) {
       const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);

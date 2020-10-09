@@ -19,6 +19,7 @@ export abstract class AbstractParticipant{
    * @param className - name of class css
    */
   attachTracks(tracks, container, className) {
+    //TODO a virer avant pr
     tracks.forEach((track) => {
       if (track) {
         container.appendChild(track.attach()).className = className;
@@ -42,7 +43,7 @@ export abstract class AbstractParticipant{
   }
 
   /**
-   *  etach the Tracks from the DOM.
+   *  Detach the Tracks from the DOM.
    * @param tracks - track to detach of the DOM
    */
   detachTracks(tracks ) {
@@ -57,14 +58,6 @@ export abstract class AbstractParticipant{
   }
 
   /**
-   *
-   * @param trackPublication
-   */
-  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack|RemoteDataTrack {
-    return trackPublication.track;
-  }
-
-  /**
    * Detach the Participant's Tracks from the DOM.
    * @param participant - participant to detach track of the DOM
    */
@@ -74,8 +67,15 @@ export abstract class AbstractParticipant{
     ) => {
       return trackPublication.track;
     });
-    console.log('tracks : ', tracks)
     this.detachTracks(tracks);
+  }
+
+  /**
+   *
+   * @param trackPublication
+   */
+  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack|RemoteDataTrack {
+    return trackPublication.track;
   }
 
   setUpVideoAndAudio(kind, boolToChange){
@@ -84,14 +84,5 @@ export abstract class AbstractParticipant{
     } else {
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
     }
-  }
-
-
-  /**
-   *
-   * @param participant
-   */
-  getFirstAndLastNameOfParticipant(participant){
-    return `${participant.firstName} ${participant.lastName}`
   }
 }
