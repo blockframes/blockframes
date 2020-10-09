@@ -114,7 +114,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               if (licensorParts[1]) {
                 licensor.party.orgId = licensorParts[1].trim();
               }
-              licensor.party.role = getKeyIfExists(staticConsts.legalRoles, 'licensor');
+              licensor.party.role = 'licensor';
               contract.parties.push(licensor);
             });
           }
@@ -127,7 +127,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (licenseeParts[1]) {
               licensee.party.orgId = licenseeParts[1].trim();
             }
-            licensee.party.role = getKeyIfExists(staticConsts.legalRoles, 'licensee');
+            licensee.party.role = 'licensee';
 
             // SHOW NAME
             if (spreadSheetRow[SpreadSheetContract.displayLicenseeName]) {
@@ -142,7 +142,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
               const childRoleParts = r.split(this.subSeparator);
               const partyName = childRoleParts.shift().trim();
-              const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === getKeyIfExists(staticConsts.legalRoles, 'licensor'));
+              const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === 'licensor');
               if (party) {
                 childRoleParts.forEach(childRole => {
                   const role = getKeyIfExists(staticConsts.subLicensorRoles, childRole.trim() as GetCode<'subLicensorRoles'>);
