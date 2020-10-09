@@ -1,11 +1,10 @@
-@import '~@angular/flex-layout/mq';
-
 mat-form-field {
   width: 100%;
 }
 
 list-filter {
-  static-check-boxes, filter-budget {
+  static-check-boxes,
+  filter-budget {
     padding: 0 16px;
   }
 }
@@ -18,6 +17,21 @@ mat-icon[matPrefix] {
   margin-right: 12px;
 }
 
-.progress {
-  margin-bottom: 16px;
+mat-form-field {
+  width: 100%;
+}
+
+.page-title {
+  text-align: center;
+}
+
+list-filter {
+  display: flex;
+  justify-content: center;
+}
+
+.loading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

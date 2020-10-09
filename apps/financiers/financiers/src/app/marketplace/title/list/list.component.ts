@@ -2,15 +2,14 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef, 
+  ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
 import { Observable, combineLatest, of, Subscription, BehaviorSubject } from 'rxjs';
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged } from 'rxjs/operators';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -54,20 +53,23 @@ export class ListComponent implements OnInit, OnDestroy {
     this.movies$ = this.movieResultsState.asObservable();
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.searchForm.valueChanges.pipe(distinctUntilChanged())
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
     ]).pipe(
-      debounceTime(300),
+      tap(() => this.loading$.next(true)),
+      distinctUntilChanged(),
+      debounceTime(500),
       switchMap(() => this.searchForm.search()),
+      tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))),
-    ).subscribe(orgs => {
+      /*  map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), */
+    ).subscribe(movies => {
       if (this.loadMoreToggle) {
-        this.movieResultsState.next(this.movieResultsState.value.concat(orgs))
+        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
         this.loadMoreToggle = false;
       } else {
-        this.movieResultsState.next(orgs);
+        this.movieResultsState.next(movies);
       }
       /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
       the overall possible results which is represented by nbHits.

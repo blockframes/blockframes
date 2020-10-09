@@ -8,7 +8,7 @@
   </list-page-app-bar>
 
   <!-- SORT -->
-  <list-page-sort>
+  <!--   <list-page-sort>
 
     <mat-form-field class="sort">
       <mat-label>Sort by</mat-label>
@@ -19,7 +19,7 @@
       </mat-select>
     </mat-form-field>
 
-  </list-page-sort>
+  </list-page-sort> -->
 
   <!-- SEARCH BAR -->
 
@@ -28,7 +28,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query">
+        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').valueChanges | async">
       </mat-form-field>
     </form>
   </list-page-search>

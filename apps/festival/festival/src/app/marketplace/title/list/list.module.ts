@@ -1,7 +1,6 @@
 // Pages
 import { ListComponent } from './list.component';
 import { MovieCardModule } from "@blockframes/movie/components/card/card.module";
-import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,8 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
-import { ListPageModule } from "@blockframes/ui/list/page/list-page.module"
-import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
+import { ListPageModule } from "@blockframes/ui/list/page/list-page.module";
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
@@ -36,14 +34,12 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ReactiveFormsModule,,
+    ReactiveFormsModule,
     MovieCardModule,
-    MovieDisplayListModule,
     ChipsAutocompleteModule,
     AlgoliaAutocompleteModule,
     AlgoliaChipsAutocompleteModule,
     ListPageModule,
-    WishlistButtonModule,
     ListFilterModule,
     LanguageFilterModule,
     BudgetFilterModule,
