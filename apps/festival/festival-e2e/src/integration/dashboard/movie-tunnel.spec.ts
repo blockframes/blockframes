@@ -2,13 +2,11 @@
 
 import { clearDataAndPrepareTest, setForm, FormOptions, acceptCookie } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
-import { 
-  mainTest
-} from '../../support/movie-tunnel-tests';
+import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Jean) ];
+const users = [ userFixture.getByUID(USER.Jean) ];
 let movieURL: string;
 
 const Movie_MainInfo = {
