@@ -11,12 +11,12 @@ import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell
 })
 export class MovieViewFinancialDetailComponent implements OnInit {
 
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) {}
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Title page', 'Financial Details');
+    this.dynTitle.setPageTitle('Title page', 'Estimated Budget');
   }
 
 }

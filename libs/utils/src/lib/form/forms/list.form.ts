@@ -102,7 +102,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
    * @note this method is specific from FormList and is not part and Angular FormArray interface
    */
   patchAllValue(
-    value: Partial<T>[],
+    value: Partial<T>[] = [],
     options: {
       onlySelf?: boolean;
       emitEvent?: boolean;

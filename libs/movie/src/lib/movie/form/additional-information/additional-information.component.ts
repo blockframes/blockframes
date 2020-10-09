@@ -20,7 +20,7 @@ type Unit = ReturnType<typeof toUnit>;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormAdditionalInformationComponent implements OnInit {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   unitBox = staticConsts.unitBox;
   units$: Observable<Unit[]>;
   certifications = Object.keys(staticConsts.certifications).filter(cert =>

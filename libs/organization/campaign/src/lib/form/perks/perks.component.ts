@@ -1,8 +1,8 @@
-import { Component, ChangeDetectionStrategy, Pipe } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Perk } from '@blockframes/campaign/+state';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { Perk } from '../../+state';
 import { PerkForm } from '../form';
-import { CampaignFormShellComponent } from '../shell/shell.component';
 
 const columns = {
   title: 'Title',
@@ -20,9 +20,9 @@ const columns = {
 export class CampaignFormPerksComponent {
   private amount: Perk['amount'] = { total: 0 };
   columns = columns;
-  form = this.shell.form;
+  form = this.shell.getForm('campaign');
   
-  constructor(private shell: CampaignFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent) { }
 
   setUnlimited(change: MatCheckboxChange, form: PerkForm) {
     if (change.checked) {

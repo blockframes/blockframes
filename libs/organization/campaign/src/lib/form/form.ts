@@ -42,7 +42,7 @@ function createCampaignControls(value?: Partial<Campaign>) {
   }
 }
 
-type CampaignControls = ReturnType<typeof createCampaignControls>;
+export type CampaignControls = ReturnType<typeof createCampaignControls>;
 
 export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
 

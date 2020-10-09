@@ -8,7 +8,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMediaVideosComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   constructor(private shell: MovieFormShellComponent) { }
 }

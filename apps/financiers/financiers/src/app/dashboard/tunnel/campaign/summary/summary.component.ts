@@ -9,7 +9,7 @@ import { CampaignFormShellComponent } from '@blockframes/campaign/form/shell/she
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SummaryComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   constructor(
     private shell: CampaignFormShellComponent,
     private router: Router

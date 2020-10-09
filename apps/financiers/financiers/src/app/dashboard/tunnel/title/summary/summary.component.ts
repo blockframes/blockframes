@@ -16,7 +16,8 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelSummaryComponent implements OnInit, OnDestroy {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
+  campaignForm = this.shell.getForm('campaign');
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];

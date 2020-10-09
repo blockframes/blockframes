@@ -10,7 +10,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormFinancialDetailsComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 

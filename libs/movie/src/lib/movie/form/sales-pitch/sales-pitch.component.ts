@@ -10,7 +10,7 @@ import { staticConsts } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormSalesPitchComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   public staticGoals = Object.keys(staticConsts['socialGoals']);
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }

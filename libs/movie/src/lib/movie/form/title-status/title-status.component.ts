@@ -19,7 +19,7 @@ import { getAppName } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleStatusComponent implements OnInit {
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   public appInformation = { disabledStatus: [], appName: { slug: '', label: '' } }
 

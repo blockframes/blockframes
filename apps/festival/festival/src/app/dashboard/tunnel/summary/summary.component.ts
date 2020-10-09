@@ -15,7 +15,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelSummaryComponent implements OnInit, OnDestroy {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];

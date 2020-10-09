@@ -11,7 +11,9 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
-import { CampaignFormShellModule } from '@blockframes/campaign/form/shell/shell.module';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
+import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
+import { FORMS_CONFIG } from '@blockframes/movie/form/shell/shell.component';
 
 // Tunnel routes
 import { titleTunnelRoutes } from './tunnel/title/routes';
@@ -95,15 +97,6 @@ const routes: Routes = [{
       children: titleTunnelRoutes,
       data: {
         redirect: '/c/o/dashboard/tunnel/movie',
-        paramId: 'movieId'
-      },
-    }, {
-      path: 'campaign/:campaignId',
-      canActivate: [MovieTunnelGuard],
-      children: campaignTunnelRoutes,
-      data: {
-        redirect: '/c/o/dashboard/tunnel/movie',
-        paramId: 'campaignId'
       },
     }]
   },
@@ -120,13 +113,17 @@ const routes: Routes = [{
     ToLabelModule,
     OrgAccessModule,
     MovieFormShellModule,
-    CampaignFormShellModule,
     // Material
     MatDividerModule,
     MatListModule,
     MatIconModule,
     MatToolbarModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  providers: [{
+    provide: FORMS_CONFIG,
+    useFactory: (movie, campaign) => ({ movie, campaign }),
+    deps: [MovieShellConfig, CampaignShellConfig]
+  }]
 })
 export class DashboardModule { }

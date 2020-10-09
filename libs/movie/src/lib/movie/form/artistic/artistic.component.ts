@@ -8,7 +8,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormArtisticComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   public castColumns = {
     firstName: 'First Name',
