@@ -2,13 +2,11 @@
 
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
-import { 
-  mainTest
-} from '../../support/movie-tunnel-tests';
+import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 
 const userFixture = new User();
-const users  =  [ userFixture.getByUID(USER.Jean) ];
+const users = [ userFixture.getByUID(USER.Jean) ];
 let movieURL: string;
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
