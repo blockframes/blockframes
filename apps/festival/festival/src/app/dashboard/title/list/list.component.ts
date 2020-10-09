@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { startWith, map, switchMap, tap, filter } from 'rxjs/operators';
+import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
@@ -50,7 +50,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(org => this.service.valueChanges(org.movieIds)),
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
-      filter(movies => !!movies.length),
       tap(movies => {
         movies.length ?
           this.dynTitle.setPageTitle('My titles') :
