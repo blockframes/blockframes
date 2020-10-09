@@ -14,6 +14,7 @@
               <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival"
                 fxFlex label="Festival name"
                 hint="If you can't find the festival you're looking for, go to 'Custom Festival' section.">
+                <mat-label>Festival name</mat-label>
               </static-select>
             </div>
 
@@ -55,17 +56,17 @@
 
     <mat-divider></mat-divider>
 
-    <h3>Custom Festival & Awards</h3>
+    <h3>Other Festival & Awards</h3>
     <section id="custom-festival">
 
-      <bf-form-list [form]="form.customPrizes" buttonText="Add a custom Festival">
+      <bf-form-list [form]="form.customPrizes" buttonText="Add other Festival">
         <ng-template itemRef let-customPrizes>{{ customPrizes.name }} - {{ customPrizes.prize }} -
           {{ customPrizes.year }} - {{ customPrizes.premiere | translateSlug: 'PREMIERE_TYPE' }}</ng-template>
         <ng-template formView let-customPrizesForm>
           <article [formGroup]="customPrizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <mat-form-field appearance="outline" fxFlex>
-              <mat-label>Custom festival name</mat-label>
+              <mat-label>Other festival name</mat-label>
               <input matInput formControlName="name">
             </mat-form-field>
 

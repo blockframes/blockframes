@@ -135,7 +135,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public async getPrivacyPolicy() {
-    const { ip } = await this.http.get<{ip: string}>(`http://api.ipify.org/?format=json`).toPromise();
+    const { ip } = await this.http.get<{ip: string}>(`https://api.ipify.org/?format=json`).toPromise();
     return {
       date: new Date(),
       ip: ip

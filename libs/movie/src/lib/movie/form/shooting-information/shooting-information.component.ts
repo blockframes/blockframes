@@ -1,31 +1,31 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { distinctUntilChanged, filter } from 'rxjs/operators'
+import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { staticConsts } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
+import { Subscription } from 'rxjs';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'movie-shooting-information',
   templateUrl: './shooting-information.component.html',
   styleUrls: ['./shooting-information.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormShootingInformationComponent implements OnInit, OnDestroy {
-
   private sub: Subscription;
 
   form = this.shell.form;
-  disabledForm = new FormControl()
-
+  disabledForm = new FormControl();
   public periods = Object.keys(staticConsts['shootingPeriod']);
-
   public months = Object.keys(staticConsts['months']);
+  public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private keys = ['completed', 'planned', 'progress'] as const;
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent) {}
 
   ngOnInit() {
     this.enableForm();
@@ -62,5 +62,23 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
         this.form.shooting.get('dates').get(key).reset();
       }
     }
+  }
+
+  public add(event: MatChipInputEvent, control: FormControl): void {
+    const state = control.value;
+
+    // Add new value to the array
+    state.push(event.value.trim());
+    control.setValue(state);
+
+    // Reset the input
+    event.input.value = '';
+  }
+
+  public remove(i: number, control: FormControl): void {
+    const shadowValue = control.value.length === 0 ? [] : control.value.slice();
+    shadowValue.splice(i, 1);
+
+    control.setValue(shadowValue);
   }
 }

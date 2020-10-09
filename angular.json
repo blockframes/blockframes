@@ -1590,6 +1590,38 @@
           }
         }
       }
+    },
+    "campaign": {
+      "projectType": "library",
+      "root": "libs/organization/campaign",
+      "sourceRoot": "libs/organization/campaign/src",
+      "prefix": "campaign",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/organization/campaign/tsconfig.lib.json",
+              "libs/organization/campaign/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/organization/campaign/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/organization/campaign/jest.config.js",
+            "tsConfig": "libs/organization/campaign/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/organization/campaign/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {

@@ -79,7 +79,7 @@ export class CalendarWeekComponent {
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   startDragToCreate(
     segment: WeekViewHourSegment,
@@ -135,16 +135,16 @@ export class CalendarWeekComponent {
   private createEvent(calEvent: CalendarEvent) {
     const data = { event: { ...calEvent, type: this.eventTypes[0] }, types: this.eventTypes };
     this.dialog.open(EventCreateComponent, { data, width: '650px' }).afterClosed()
-    .subscribe(async ({ event, redirect } = {}) => {
-      if (event) {
-        this.service.add(event);
-        if (redirect) {
-          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+      .subscribe(async ({ event, redirect } = {}) => {
+        if (event) {
+          this.service.add(event);
+          if (redirect) {
+            this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+          }
+        } else {
+          this.refresh(this.baseEvents);
         }
-      } else {
-        this.refresh(this.baseEvents);
-      }
-    });
+      });
   }
 
 

@@ -46,6 +46,11 @@ const routes = [{
       path: 'production',
       loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
       data: { animation: 3 }
+    },
+    {
+      path: 'additional',
+      loadChildren: () => import('@blockframes/movie/dashboard/additional/additional.module').then(m => m.MovieViewAdditionalModule),
+      data: { animation: 4 }
     }
   ]
 }];
