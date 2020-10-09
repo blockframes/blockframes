@@ -1,27 +1,35 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
 // Blockframes
 import { CookiesConsent, CookiesConsentForm } from './cookie.form';
-import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
 // Material
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatRadioChange } from '@angular/material/radio';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'cookie-form',
+  selector: '[form] cookie-form',
   templateUrl: './cookie-form.component.html',
   styleUrls: ['./cookie-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CookieFormComponent {
+export class CookieFormComponent implements OnInit, OnDestroy {
 
-  form = new CookiesConsentForm();
+  @Input() form: CookiesConsentForm;
 
-  constructor(
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<any>,
-  ) { 
+  public masterToggleStatus: 'accept' | 'reject' | 'other'
+  private sub: Subscription;
 
+  ngOnInit() {
+    this.sub = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe(data => {
+      const allAccepted = !Object.keys(data).some(key => !data[key]);
+      const allRejected = !Object.keys(data).some(key => data[key]);
+      this.masterToggleStatus = allAccepted ? 'accept' : allRejected ? 'reject' : 'other';
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   masterToggle(event: MatRadioChange) {
@@ -34,12 +42,4 @@ export class CookieFormComponent {
     this.form.get(event.source.name as keyof CookiesConsent).setValue(event.checked);
   }
 
-  save() {
-    this.dialogRef.close(this.form.value);
-  }
-
-  /** Opens a dialog with terms of use and privacy policy given by the parent. */
-  public openPrivacyPolicy() {
-    this.dialog.open(PrivacyPolicyComponent, { maxHeight: '80vh', maxWidth: '80vw' });
-  }
 }

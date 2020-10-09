@@ -4,11 +4,8 @@ import { DOCUMENT } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 // Blockframes
 import { PrivacyPolicyComponent } from '@blockframes/auth/components/privacy-policy/privacy-policy.component';
-import { CookieFormComponent } from '../cookie-form/cookie-form.component';
+import { CookieDialogComponent } from '../cookie-dialog/cookie-dialog.component';
 import { GDPRService } from '../gdpr-service/gdpr.service'
-import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Component({
   selector: 'cookie-banner',
@@ -24,10 +21,6 @@ export class CookieBannerComponent implements OnInit {
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private gdpr: GDPRService,
-    private analytics: FireAnalytics,
-    private intercom: IntercomService,
-    private yandex: YandexMetricaService,
-    @Inject(YM_CONFIG) private ymConfig: number,
     @Inject(DOCUMENT) private document: Document
   ) {}
 
@@ -45,19 +38,19 @@ export class CookieBannerComponent implements OnInit {
 
   public acceptCookies() {
     this.confirmCookies();
-    this.enableIntercom();
-    this.enableAnalytics();
-    this.enableYandex();
+    this.gdpr.enableIntercom(true);
+    this.gdpr.enableAnalytics(true);
+    this.gdpr.enableYandex(true);
   }
 
   public changePreferences() {
-    const dialogRef = this.dialog.open(CookieFormComponent, { maxHeight: '80vh', maxWidth: '80vw' });
+    const dialogRef = this.dialog.open(CookieDialogComponent, { maxHeight: '80vh', maxWidth: '80vw' });
     dialogRef.afterClosed().subscribe(settings => {
       if (!!settings) {
         this.confirmCookies();
-        if (settings.google) this.enableAnalytics();
-        if (settings.intercom) this.enableIntercom();
-        if (settings.yandex) this.enableYandex();
+        this.gdpr.enableAnalytics(settings.googleAnalytics);
+        this.gdpr.enableIntercom(settings.intercom);
+        this.gdpr.enableYandex(settings.yandex);
       }
     })
   }
@@ -66,21 +59,6 @@ export class CookieBannerComponent implements OnInit {
     this.document.cookie = 'blockframes=';
     this.hasAccepted = true;
     this.cdr.markForCheck();
-  }
-
-  enableIntercom() {
-    this.gdpr.enable('intercom', true);
-    this.intercom.enable();
-  }
-
-  enableAnalytics() {
-    this.gdpr.enable('googleAnalytics', true);
-    this.analytics.analytics.setAnalyticsCollectionEnabled(true);
-  }
-
-  enableYandex() {
-    this.gdpr.enable('yandex', true);
-    this.yandex.insertMetrika(this.ymConfig);
   }
 
 }
