@@ -41,7 +41,7 @@
             <li>
               <span>Child roles : </span>
               <ng-container *ngIf="partyDetails.childRoles.length else nochildrole">
-                {{ partyDetails.childRoles | translateSlug: 'SUB_LICENSOR_ROLES' }}
+                {{ partyDetails.childRoles | toLabel: 'subLicensorRoles' }}
               </ng-container>
               <ng-template #nochildrole>
                 --
