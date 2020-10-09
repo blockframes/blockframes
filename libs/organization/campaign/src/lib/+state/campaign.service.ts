@@ -29,7 +29,7 @@ export class CampaignService extends CollectionService<CampaignState> {
     const orgId = this.orgQuery.getActiveId();
     const exists = await this.getRef(id, { params: { orgId }}).get().then(snap => snap.exists);
     return exists
-      ? this.upsert({id, ...updates}, { params: { orgId }})
+      ? this.update({ id, ...updates }, { params: { orgId }})
       : this.add({ id, movieId: id, ...updates }, { params: { orgId }});
   }
 }

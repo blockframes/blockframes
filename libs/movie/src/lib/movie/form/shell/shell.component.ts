@@ -191,16 +191,16 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   /** Update the movie. Used by summaries */
   public async update(options: FormSaveOptions) {
     if (options.publishing) {
-      for (const key in this.configs) {
-        const form: FormEntity<any> = this.getForm(key as any);
+      for (const name in this.configs) {
+        const form: FormEntity<any> = this.getForm(name as any);
         if (form.invalid) {
           const fields = findInvalidControls(form);
-          throw new Error(`Form "${key}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
+          throw new Error(`Form "${name}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
         }
       }
     }
-    for (const form in this.configs) {
-      await this.configs[form].onSave(options);
+    for (const name in this.configs) {
+      await this.configs[name].onSave(options);
     }
   }
 
@@ -239,7 +239,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
   const recursiveFunc = (form: FormGroup | FormArray) => {
     const fields = [];
-    Object.keys(form.controls).forEach(field => {
+    for (const field in form.controls) {
       const control = form.get(field);
       if (control.invalid) {
         fields.push(field);
@@ -247,7 +247,7 @@ export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
       if (control instanceof FormArray || control instanceof FormGroup) {
         fields.concat(recursiveFunc(control));
       }
-    });
+    }
     return fields;
   }
   return recursiveFunc(formToInvestigate);

@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { FormSaveOptions, FormShellConfig } from '@blockframes/movie/form/shell/shell.component';
 import { OrganizationQuery } from "@blockframes/organization/+state";
 import { CampaignControls, createCampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from "rxjs";
-import { RouterQuery } from "@datorama/akita-ng-router-store";
 
 @Injectable({ providedIn: 'root' })
 export class CampaignShellConfig implements FormShellConfig<CampaignControls, Campaign>{

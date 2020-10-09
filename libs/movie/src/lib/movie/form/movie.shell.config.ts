@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
 import { extractMediaFromDocumentBeforeUpdate } from "@blockframes/media/+state/media.model";
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { App, getMoviePublishStatus } from "@blockframes/utils/apps";
@@ -8,8 +7,9 @@ import { staticConsts } from "@blockframes/utils/static-model";
 import { MovieControl, MovieForm } from "./movie.form";
 import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
 import { FormShellConfig, FormSaveOptions } from './shell/shell.component';
-import { switchMap, map, startWith, filter } from "rxjs/operators";
+import { switchMap, startWith, filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 
 
@@ -48,7 +48,7 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
   form = new MovieForm(this.query.getActive());
   constructor(
-    private route: ActivatedRoute,
+    private route: RouterQuery,
     private service: MovieService,
     private query: MovieQuery,
     private mediaService: MediaService
@@ -56,8 +56,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
 
   onInit(): Subscription[] {
     // Update form on change
-    const onMovieChanges = this.route.params.pipe(
-      map(params => params.movieId),
+    const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.valueChanges(id)),
     ).subscribe(movie => this.form.patchAllValue(movie));
 
@@ -97,7 +96,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
 
     // Specific update if publishing
     if (publishing) {
-      const currentApp: App = this.route.snapshot.data.app;
+      const currentApp: App = this.route.getData('app');
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess[currentApp] = true;
     }

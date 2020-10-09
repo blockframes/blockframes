@@ -41,20 +41,14 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
    * Use to apply patchAllValue to FormList and FormEntity
    * @note this method is specific from FormList and is not part and Angular FormGroup interface
    */
-  patchAllValue(
-    value: Partial<T> = {},
-    options: {
-      onlySelf?: boolean;
-      emitEvent?: boolean;
-    } = {}
-  ) {
+  patchAllValue(value: Partial<T> = {}) {
     const controls = this['createControl'] ? this.createControl(value) : {};
-    Object.keys(controls).forEach(name => {
+    for (const name in controls) {
       if (this.controls[name]) {
         if (!!this.controls[name]['patchAllValue']) {
-          this.controls[name]['patchAllValue'](value[name], { onlySelf: true, emitEvent: options.emitEvent });
+          this.controls[name]['patchAllValue'](value[name]);
         } else {
-          this.controls[name].patchValue(value[name], { onlySelf: true, emitEvent: options.emitEvent });
+          this.controls[name].patchValue(value[name]);
         }
       }
       else {
@@ -62,6 +56,6 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
           this.addControl(name, controls[name])
         }
       }
-    });
+    }
   }
 }
