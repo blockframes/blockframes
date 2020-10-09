@@ -49,11 +49,11 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
     this.user = this.meetingService.getActiveUser();
 
+    this.isSeller = this.meetingService.getIfIsReelOwner(this.event);
+
     await this.meetingService.doCreateLocalPreview();
 
     this.meetingService.doConnectToMeetingService(this.event);
-
-    this.isSeller = this.meetingService.getIfIsReelOwner(this.event)
   }
 
   /**
@@ -70,6 +70,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
    * when ngDestroy we disconnect the local participant;
    */
   ngOnDestroy() {
+    console.log('ngOnDestroy')
     this.meetingService.doDisconnected()
   }
 }

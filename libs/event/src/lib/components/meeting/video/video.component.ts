@@ -28,7 +28,6 @@ export class VideoComponent  {
   // Outup
   @Output() eventSetUpLocalVideoAndAudio = new EventEmitter;
 
-
   /**
    * To know if local is alone in Connected participants
    */

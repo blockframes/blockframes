@@ -1,13 +1,12 @@
 <ng-container *ngIf="isSeller">
   <ng-container *ngIf="arrayOfParticipantConnected$ | async as arrayOfParticipantConnected">
-    <ng-container *ngIf="getIfLocalIsAlone(arrayOfParticipantConnected); else grid">
+    <ng-container *ngIf="getIfLocalIsAlone(arrayOfParticipantConnected)">
       <section>
         <span>
           Waiting for the participants
         </span>
       </section>
     </ng-container>
-    <ng-template #grid>
       <mat-grid-list  [cols]="numOfCols(arrayOfParticipantConnected)" rowHeight="fit">
         <!-- TODO arrayOfParticipantConnected to arrayOfParticipantConnected Without Local et Dominant  -->
         <ng-container *ngFor="let participant of arrayOfParticipantConnected; trackBy: identify">
@@ -18,7 +17,6 @@
           </ng-container>
         </ng-container>
       </mat-grid-list>
-    </ng-template>
   </ng-container>
 </ng-container>
 

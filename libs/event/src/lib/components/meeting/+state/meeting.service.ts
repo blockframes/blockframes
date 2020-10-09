@@ -431,8 +431,8 @@ export class MeetingService {
    * Function call when local participant leave the room
    */
   doDisconnected() {
+    this.deactiveLocalTracks();
     if (!!this.activeRoom) {
-      this.deactiveLocalTracks();
       this.activeRoom.disconnect();
     }
   }
@@ -445,8 +445,9 @@ export class MeetingService {
     const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
     if (!!localTracks && localTracks.length > 0) {
       localTracks.forEach(localTrack => {
-        localTrack.track.disable();
+        console.log('localTrack 22 : ', localTrack.track)
         localTrack.track.stop();
+        localTrack.track.disable();
       })
     }
   }

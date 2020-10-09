@@ -28,7 +28,6 @@ import { AvatarInitialComponent } from './avatar-initial/avatar-initial.componen
     AvatarInitialComponent
   ],
   exports: [
-    VideoComponent,
     ContainerVideoComponent,
   ],
     imports: [
