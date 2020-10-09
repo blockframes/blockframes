@@ -161,14 +161,6 @@ const constants = {
     planes: 'Planes',
     boats: 'Boats',
     hotels: 'Hotels',
-    // tVodStreaming: 'T-VOD, ER, DTR, Streaming',
-    // allRights: 'All rights',
-    // trains: 'Trains',
-    // remake: 'Remake',
-    // bookAdaptation: 'Book Adaptation',
-    // musicPublishing: 'Music Publishing',
-    // merchandising: 'Merchandising',
-    // ancillary: 'Ancillary'
   },
   memberStatus: {
     confirmed: 'Confirmed',
