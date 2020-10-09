@@ -16,8 +16,7 @@ import { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.c
 import { FORMS_CONFIG } from '@blockframes/movie/form/shell/shell.component';
 
 // Tunnel routes
-import { titleTunnelRoutes } from './tunnel/title/routes';
-import { campaignTunnelRoutes } from './tunnel/campaign/routes';
+import { titleTunnelRoutes } from './tunnel/routes';
 
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
