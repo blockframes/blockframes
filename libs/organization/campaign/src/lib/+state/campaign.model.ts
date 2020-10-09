@@ -1,9 +1,9 @@
 export interface Campaign {
   id: string;
   movieId: string;
-  cap: number;
-  minPledge: number;
-  received: number;
+  cap?: number;
+  minPledge?: number;
+  received?: number;
   perks: Perk[];
 }
 
@@ -21,9 +21,6 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
   return {
     id: '',
     movieId: '',
-    cap: 0,
-    minPledge: 0,
-    received: 0,
     perks: [],
     ...params
   }

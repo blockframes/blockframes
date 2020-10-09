@@ -9,7 +9,7 @@ import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.m
 function createPerkControls(value?: Partial<Perk>) {
   const perk = createPerk(value);
   return {
-    title: new FormControl(perk.title, Validators.required),
+    title: new FormControl(perk.title, [Validators.required]),
     description: new FormControl(perk.description, Validators.required),
     minPledge: new FormControl(perk.minPledge),
     amount: new FormEntity({
@@ -35,8 +35,8 @@ export class PerkForm extends FormEntity<PerkControls, Perk> {
 function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
   return {
-    cap: new FormControl(campaign.cap, Validators.required),
-    minPledge: new FormControl(campaign.minPledge, Validators.required),
+    cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
+    minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
     perks: FormList.factory(campaign.perks, (perk?: Partial<Perk>) => new PerkForm(perk)),
   }

@@ -18,7 +18,7 @@ const columns = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CampaignFormPerksComponent {
-  private amount: Perk['amount'] = { total: 0 };
+  private amount: Perk['amount'] = { total: 0, current: 0 };
   columns = columns;
   form = this.shell.getForm('campaign');
   

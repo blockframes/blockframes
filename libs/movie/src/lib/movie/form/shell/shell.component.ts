@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
@@ -192,8 +192,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   public async update(options: FormSaveOptions) {
     if (options.publishing) {
       for (const key in this.configs) {
-        if (this.getForm(key as any).valid) {
-          throw new Error(`Form "${key}" should be valid before publishing`);
+        const form: FormEntity<any> = this.getForm(key as any);
+        if (form.invalid) {
+          const fields = findInvalidControls(form);
+          throw new Error(`Form "${key}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
         }
       }
     }
@@ -233,3 +235,20 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 }
 
+/* Utils function to get the list of invalid form. Not used yet, but could be useful later */
+export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
+  const recursiveFunc = (form: FormGroup | FormArray) => {
+    const fields = [];
+    Object.keys(form.controls).forEach(field => {
+      const control = form.get(field);
+      if (control.invalid) {
+        fields.push(field);
+      }
+      if (control instanceof FormArray || control instanceof FormGroup) {
+        fields.concat(recursiveFunc(control));
+      }
+    });
+    return fields;
+  }
+  return recursiveFunc(formToInvestigate);
+}
