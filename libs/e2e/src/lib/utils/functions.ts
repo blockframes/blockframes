@@ -83,11 +83,22 @@ interface FormData {
  */
 export function setForm(selector: string, formOpt: FormOptions) {
   const formData:FormData[] = [];
+  const formElements = [];
 
   cy.get(selector).each(($formEl) => {
     const keyBag = $formEl.attr('test-id');
     const formelData = {name: $formEl[0].localName, id: $formEl.attr('id'),
                  testId: $formEl.attr('test-id'), value: 'skipped'}
+
+    if (formElements.length) {
+      const lastElement = formElements[formElements.length - 1];
+      if (lastElement && lastElement.has($formEl).length) {
+        cy.log(`~skipping : ${formelData.name}-id:${formelData.id}`);
+        console.log(`~>skipped : ${formelData.name}-id:${formelData.id}`);
+        return;
+      }
+    }
+    formElements.push($formEl);
 
     if (keyBag === undefined) {
       formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
@@ -98,7 +109,7 @@ export function setForm(selector: string, formOpt: FormOptions) {
       formData.push(formelData);
       return;
     }
-    const keyBunch = keyBag.split('-');
+    const keyBunch = keyBag.split(':');
     let vault: any = formOpt.inputValue;
     for (let i = 0 ; vault && (i < keyBunch.length); i++) {
       vault = vault[keyBunch[i]];
@@ -113,11 +124,19 @@ export function setForm(selector: string, formOpt: FormOptions) {
     }
     formelData.value = vault;
     if (needsHandling && (vault !== undefined)) {
+      const cw = cy.wrap($formEl);
       //Set the form field..
-      cy.wrap($formEl).click().type(vault);
-      if ($formEl.is('mat-select') || ($formEl.attr('role') === 'combobox')) {
-        cy.get('mat-option')
-          .contains(vault).click();
+      if ($formEl.is('input')) {
+        cw.click()
+          .type(vault, {force: true});
+      } else {
+        if ($formEl.is('chips-autocomplete')) {
+          cy.get(`[test-id="${keyBag}"] input`, {timeout: 1000})
+            .type(vault, {force: true});
+        }
+        cw.click()
+          .get('mat-option', {timeout: 1000})
+          .contains(vault).click({force: true});
       }
     }
     formData.push(formelData);
@@ -126,4 +145,3 @@ export function setForm(selector: string, formOpt: FormOptions) {
     console.table(formData);
   });
 }
-
