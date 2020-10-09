@@ -94,6 +94,9 @@
     "financiers-e2e": {
       "tags": [],
       "implicitDependencies": ["financiers"]
+    },
+    "campaign": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

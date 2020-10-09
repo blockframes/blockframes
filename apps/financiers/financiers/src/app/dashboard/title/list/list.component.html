@@ -1,6 +1,6 @@
-<ng-container *ngIf="(hasMovies$ | async); else noTitle">
-  <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-    <div fxLayout="row" fxLayoutAlign="space-between center" class="import">
+<ng-container *ngIf="(titles$ | async) as titles; else loading">
+  <ng-container *ngIf="titles.length; else empty">
+    <header fxLayout="row" fxLayoutAlign="space-between center" class="import">
       <h1>My Titles</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
@@ -11,26 +11,27 @@
           <mat-icon svgIcon="add"></mat-icon>
         </a>
       </div>
-    </div>
+    </header>
 
     <mat-card>
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
         (rowClick)="goToTitle($event)">
-        <ng-template colRef="director" let-director>{{ director | displayName }}</ng-template>
-        <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
+        <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
+        <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
-        <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="storeConfig.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
 
-  <ng-template #isLoading>
-    <mat-spinner></mat-spinner>
-  </ng-template>
 </ng-container>
 
-<!-- @TODO (#2891) -->
-<ng-template #noTitle>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
+
+<ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no title yet.</h1>
     <p class="mat-body-1">
@@ -41,11 +42,11 @@
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.webp" alt="Add title image">
-        <a routerLink="lobby" mat-stroked-button color="primary">Add one title</a>
+        <a routerLink="lobby" mat-button color="primary">Add one title</a>
       </mat-card>
       <mat-card class="no-title-card" fxLayout="column">
         <img asset="add_files.webp" alt="Upload files image">
-        <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
+        <a routerLink="../import" mat-button color="primary">Import your titles in bulk</a>
       </mat-card>
     </article>
   </section>

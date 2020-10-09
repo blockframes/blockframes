@@ -258,8 +258,8 @@ export interface MovieShootingRaw<D> {
 export interface MovieShooting extends MovieShootingRaw<Date> {}
 
 export interface MovieShootingLocations {
-  city: string,
-  country: TerritoriesSlug,
+  cities?: string[],
+  country?: TerritoriesSlug,
 }
 
 export interface MovieShootingDateRaw<D> {
@@ -293,8 +293,8 @@ export interface MovieExpectedPremiereRaw<D> {
 export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
 
 export interface MovieSalesPitch {
-  description: string,
-  file: string, // hosted media
+  description?: string,
+  file?: string, // hosted media
 }
 
 export interface MovieGoalsAudience {

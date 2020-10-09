@@ -36,6 +36,29 @@
   </section>
 
 
+  <!-- Audience & Goal -->
+  <section id="audience-goals" *ngIf="movie | hasKeys: 'audience'">
+    <h2>Audience & Goals</h2>
+    <article *ngIf="movie.audience.targets.length">
+      <h5>Target audience</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let target of movie.audience.targets">
+          <mat-chip>{{ target }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
+    <article *ngIf="movie.audience.goals.length">
+      <h5>Social responsability goals</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let goal of movie.audience.goals">
+          <mat-chip>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
+    <mat-divider></mat-divider>
+  </section>
+
+
   <!-- GENERAL INFORMATION -->
   <section *ngIf="movie | hasKeys: keys.general ">
     <h2>General Information</h2>
@@ -66,11 +89,11 @@
       </p>
     </article>
 
-    <article *ngIf="movie.runningTime.time || movie.runningTime.time">
+    <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
-        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time }}min</span>
-        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status }}</span>
+        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | duration }}</span>
+        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status | titlecase }}</span>
       </div>
     </article>
 
@@ -97,6 +120,9 @@
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">
+        <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
+      </ng-container>
+      <ng-container *ngFor="let prize of movie.customPrizes">
         <title-prize-card [col]="3" [prize]="prize"></title-prize-card>
       </ng-container>
     </article>

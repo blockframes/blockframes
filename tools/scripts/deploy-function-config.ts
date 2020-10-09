@@ -15,14 +15,14 @@ import { execSync } from 'child_process'
  */
 function getKeyValFormat(): string[] {
   const output = [];
-  output.push(`sendgrid.api_key="${process.env?.SENDGRID_API_KEY}"`);
+  output.push(`sendgrid.api_key="${process.env?.SENDGRID_API_KEY}"`); // @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
   output.push(`relayer.mnemonic="${process.env?.ETHEREUM_MNEMONIC}"`);
-  output.push(`jwplayer.key="${process.env?.JWPLAYER_KEY}"`);
+  output.push(`jwplayer.key="${process.env?.JWPLAYER_KEY}"`); // @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   output.push(`jwplayer.secret="${process.env?.JWPLAYER_SECRET}"`);
   output.push(`algolia.api_key="${process.env?.ALGOLIA_API_KEY}"`);
   output.push(`admin.password="${process.env?.ADMIN_PASSWORD}"`);
   output.push(`admin.email="${process.env?.CASCADE8_ADMIN}"`);
-  output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
+  output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`); // @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
   return output;
 }
 

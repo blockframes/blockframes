@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Event } from '@blockframes/event/+state';
 import { Invitation, InvitationService } from '../../+state';
 
@@ -15,9 +16,17 @@ export class ActionComponent {
 
   @Input() set invitation(invit: Invitation) {
     this.invit= invit;
+
+    if (this.requestPending && invit.status === 'accepted') {
+      this.router.navigate(['/c/o/marketplace/event', invit.docId, 'session']);
+      this.requestPending = false;
+    }
   }
 
+  private requestPending: boolean = false;
+
   constructor(
+    private router: Router,
     private service: InvitationService
   ) {}
 
@@ -33,5 +42,6 @@ export class ActionComponent {
   request(event: Event) {
     const { ownerId, id } = event;
     this.service.request('org', ownerId).from('user').to('attendEvent', id);
+    this.requestPending = true;
   }
 }
