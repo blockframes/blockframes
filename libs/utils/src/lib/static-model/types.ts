@@ -19,12 +19,6 @@ export type ResourceSizesSlug = typeof RESOURCE_SIZES_SLUG[number];
 export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slug);
 export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];
 
-export const LEGAL_ROLES_SLUG = models['LEGAL_ROLES'].map(key => key.slug);
-export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
-
-export const SUB_LICENSOR_ROLES_SLUG = models['SUB_LICENSOR_ROLES'].map(key => key.slug);
-export type SubLicensorRoleSlug = typeof SUB_LICENSOR_ROLES_SLUG[number];
-
 // TYPE FOR CONSTANTS
 
 export type CartStatus = keyof typeof constants.cartStatus;
@@ -48,6 +42,8 @@ export type DistributionRightStatus = keyof typeof constants.distributionRightSt
 export type Genres = keyof typeof constants.genres;
 
 export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
+
+export type LegalRoles = keyof typeof constants.legalRoles;
 
 export type Medias = keyof typeof constants.medias;
 export type MediasValues = typeof constants.medias[Medias];
@@ -85,6 +81,8 @@ export type StoreStatus = keyof typeof constants.storeStatus;
 
 export type StoreType = keyof typeof constants.storeType;
 export type StoreTypeValue = typeof constants.storeType[StoreType];
+
+export type SubLicensorRoles = keyof typeof constants.subLicensorRoles;
 
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];

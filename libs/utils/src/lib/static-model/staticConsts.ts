@@ -30,6 +30,23 @@ const constants = {
     mandate: 'Mandate',
     sale: 'Sale'
   },
+  legalRoles: {
+    undefined: 'Undefined role',
+    serviceProvider: 'Service provider', // service-provider
+    licensor: 'Licensor',
+    licensee: 'Licensee',
+    seller: 'Seller',
+    lender: 'Lender',
+    promisor: 'Promisor',
+    promisee: 'Promisee',
+    beneficiary: 'Beneficiary',
+    thirdParty: 'Third party', // third-party
+    purchaser: 'Purchaser'
+  },
+  subLicensorRoles: {
+    signatory: 'Signatory',
+    observator: 'Observator'
+  },
 
 
   // ------------------ //

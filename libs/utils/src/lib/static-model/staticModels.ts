@@ -245,23 +245,6 @@ const models = {
     },
     ...IsoTerritoriesToSlugAndLabel()
   ],
-  'LEGAL_ROLES': [
-    { 'slug': 'undefined', 'label': 'Undefined role' },
-    { 'slug': 'service-provider', 'label': 'Service provider' },
-    { 'slug': 'licensor', 'label': 'Licensor' },
-    { 'slug': 'licensee', 'label': 'Licensee' },
-    { 'slug': 'seller', 'label': 'Seller' },
-    { 'slug': 'lender', 'label': 'Lender' },
-    { 'slug': 'promisor', 'label': 'Promisor' },
-    { 'slug': 'promisee', 'label': 'Promisee' },
-    { 'slug': 'beneficiary', 'label': 'Beneficiary' },
-    { 'slug': 'third-party', 'label': 'Third party' },
-    { 'slug': 'purchaser', 'label': 'Purchaser' },
-  ] as const,
-  'SUB_LICENSOR_ROLES': [
-    { 'slug': 'signatory', 'label': 'Signatory' },
-    { 'slug': 'observator', 'label': 'Observator' },
-  ] as const,
 };
 
 export type Scope = keyof typeof models;
