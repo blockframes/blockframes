@@ -4,10 +4,10 @@ import {
   TERRITORIES_SLUG,
   LanguagesSlug
 } from '@blockframes/utils/static-model/types';
-import { MovieMain, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
+import { Movie, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionRight, createDistributionRight } from '../+state/distribution-right.model';
-import { valueIsInModelValidator, numberRangeValidator } from '@blockframes/utils/form/validators/validators';
+import { valueIsInModelValidator, numberRangeValidator, valueIsInConstantValidator } from '@blockframes/utils/form/validators/validators';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 /* ------------- */
@@ -38,7 +38,7 @@ function createDistributionRightControls(right: Partial<DistributionRight> = {})
   return {
     medias: new FormArray(right.licenseType.map(media => new FormControl(media)), [
       Validators.required,
-      valueIsInModelValidator('MEDIAS')
+      valueIsInConstantValidator('medias')
     ]),
     languages: new FormGroup(languageControl, Validators.required),
     duration: new FormGroup(
@@ -112,7 +112,7 @@ export class DistributionRightForm extends FormEntity<DistributionRightControls>
 
   addLanguage(
     language: LanguagesSlug,
-    movie: MovieMain,
+    movie: Movie,
     value: Partial<MovieLanguageSpecification> = {}
   ) {
     if (movie.originalLanguages.includes(language)) {

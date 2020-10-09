@@ -11,6 +11,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { BudgetPipeModule } from '@blockframes/movie/pipes/budget.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +31,7 @@ import { MatDividerModule } from '@angular/material/divider';
     StaticSelectModule,
     UploadModule,
     BudgetPipeModule,
+    ToLabelModule,
 
     // Material
     MatIconModule,

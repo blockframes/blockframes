@@ -2,7 +2,7 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface CarouselSection {
@@ -73,7 +73,7 @@ export class MarketplaceHomeComponent implements OnInit {
     return [
       originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
       typeof runningTime.time === 'number' ? `${runningTime.time} min` : 'TBC',
-      genres.slice(0, 2).map(genre => getLabelBySlug('GENRES', genre)).join(', '),
+      genres.slice(0, 2).map(genre => getValueByKey('genres', genre)).join(', '),
     ].filter(value => !!value).join(' | ');
   }
 }

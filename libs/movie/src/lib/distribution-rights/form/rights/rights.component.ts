@@ -1,5 +1,5 @@
 // Blockframes
-import { staticModels, MediasSlug } from '@blockframes/utils/static-model';
+import { MediasValues, staticConsts } from '@blockframes/utils/static-model';
 import { DistributionRightForm } from '../distribution-right.form';
 
 // Angular
@@ -14,16 +14,16 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class DistributionRightRightsComponent {
   @Input() form: DistributionRightForm;
 
-  public staticMedias = staticModels['MEDIAS'].filter(media => {
+  public staticMedias = Object.values(staticConsts['medias']).filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];
-    return wantedMedias.includes(media.label);
+    return wantedMedias.includes(media);
   });
 
   get licenseType() {
     return this.form.get('licenseType');
   }
 
-  public isChecked(media: MediasSlug) {
+  public isChecked(media: MediasValues) {
     return this.licenseType.value.includes(media);
   }
 }

@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
+import { isInKeys, Scope as ConstantScope, getValueByKey } from '../../static-model/staticConsts';
 
 export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
 
@@ -129,6 +130,21 @@ export function valueIsInModelValidator(scope: Scope): ValidatorFn {
 }
 
 /**
+ * @description This validator checks if the value in the form group
+ * or form array is in the static constant and then valid
+ * @param scope defines where to look. For instance 'TERRITORIES'
+ */
+export function valueIsInConstantValidator(scope: ConstantScope): ValidatorFn {
+  return (parent: FormGroup | FormArray): ValidationErrors => {
+    if (parent.value.filter(val => getValueByKey(scope, val)).length) {
+      return null;
+    } else {
+      return { invalidValue: true };
+    }
+  };
+}
+
+/**
  * @description Check if value is a slug of the scope provided, inside the static model
  * @param scope Scope inside the static model
  */
@@ -143,11 +159,35 @@ export function isSlugValidator(scope: Scope): ValidatorFn {
 }
 
 /**
+ * @description Check if value is a key of the scope provided, inside the static constant
+ * @param scope Scope inside the static constant
+ */
+export function isKeyValidator(scope: ConstantScope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    if (!control.value) {
+      return null;
+    } else {
+      return isInKeys(scope, control.value) ? null : { invalidValue: true }
+    };
+  };
+}
+
+/**
  * @description Check if all values are slugs of the scope provided, inside the static model
  * @param scope Scope inside the static model
  */
 export function isSlugArrayValidator(scope: Scope): ValidatorFn {
   return (control: FormControl): ValidationErrors => {
     return control.value.every(value => isInSlug(scope, value)) ? null : { invalidValue: true }
+  };
+}
+
+/**
+ * @description Check if all values are keys of the scope provided, inside the static constant
+ * @param scope Scope inside the static model
+ */
+export function isKeyArrayValidator(scope: ConstantScope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return control.value.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
   };
 }

@@ -116,6 +116,30 @@ const constants = {
     confirmed: 'Confirmed Director',
     prestige: 'Prestige'
   },
+  genres: {
+    comedy: 'Comedy',
+    drama: 'Drama',
+    action: 'Action',
+    horror: 'Horror',
+    scienceFiction: 'Science Fiction', // science-fiction
+    thriller: 'Thriller',
+    comingAge: 'Young Adult', // coming-of-age
+    fantasy: 'Fantasy',
+    romance: 'Romance',
+    western: 'Western',
+    periodPiece: 'Period Piece', // period-piece
+    adventure: 'Adventure',
+    biography: 'Biography',
+    war: 'War',
+    police: 'Police',
+    animation: 'Animation',
+    documentary: 'Documentary',
+    erotic: 'Erotic',
+    tvShow: 'TV Show', //tv-show
+    webSeries: 'Web Series', //web-series
+    virtualReality: 'Virtual Reality', // virtual-reality
+    family: 'Family',
+  },
   hostedVideoTypes: {
     tailer: 'Trailer',
     teaser: 'Teaser',
@@ -123,10 +147,37 @@ const constants = {
     clip: 'Clip',
     pitch: 'Pitch',
   },
+  medias: {
+    payTv: 'Pay TV', // pay-tv
+    freeTv: 'Free TV', // free-tv
+    payPerView: 'Pay Per View', // pay-per-view
+    est: 'EST',
+    nVod: 'N-VOD', // n-vod
+    aVod: 'A-VOD', // a-vod
+    fVod: 'F-VOD', // f-vod
+    sVod: 'S-VOD', // s-vod
+    theatrical: 'Theatrical',
+    video: 'Video',
+    planes: 'Planes',
+    boats: 'Boats',
+    hotels: 'Hotels',
+  },
   memberStatus: {
     confirmed: 'Confirmed',
     looselyAttached: 'Loosely Attached',
     target: 'Target'
+  },
+  movieCurrencies: {
+    USD: 'US Dollar',
+    EUR: 'Euro',
+    JPY: 'Japanese Yen',
+    GBP: 'Pound Sterling',
+    AUD: 'Australian Dollar',
+    CAD: 'Canadian Dollar',
+    CHF: 'Swiss Franc',
+    CNY: 'Chinese Renminbi',
+    SEK: 'Swedish Krona',
+    NZD: 'New Zealand Dollar'
   },
   movieFormat: {
     '1_33': '1.33',
@@ -184,6 +235,11 @@ const constants = {
     b: 'B',
     c: 'C',
     d: 'D'
+  },
+  screeningStatus: {
+    tobedetermined: 'To be determined',
+    estimated: 'Estimated',
+    confirmed: 'Confirmed'
   },
   shootingPeriod: {
     early: 'Early',
@@ -297,26 +353,12 @@ const constants = {
 
 export default constants;
 
-type Constants = typeof constants;
-type Scopes = keyof Constants;
-export type GetKeys<S extends Scopes> = keyof Constants[S];
-type GetLabel<S extends Scopes> = Constants[S][GetKeys<S>]
-
-
-/**
- * Returns the key corresponding to a value (ie:code).
- * @dev Codes are used to store sanitized data in database
- * @param scope
- * @param targetValue
- */
-export function getKeyFromValue(scope: Scopes, targetValue: any) {
-  for (const [key, value] of Object.entries(constants[scope])) {
-    if (value.toLowerCase() === targetValue.toLowerCase()) {
-      return key;
-    }
-  }
-  return null;
-}
+export type Constants = typeof constants;
+export type Scope = keyof Constants;
+export type GetKeys<S extends Scope> = keyof Constants[S];
+export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
+export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
+export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
 /**
  * Returns the label corresponding to a key (ie:code).
@@ -324,11 +366,16 @@ export function getKeyFromValue(scope: Scopes, targetValue: any) {
  * @param scope
  * @param targetValue
  */
-export const getValueByKey = (scope: Scopes, targetValue: string) => {
+export const getValueByKey = (scope: Scope, targetValue: string) => {
   for (const [key, value] of Object.entries(constants[scope])) {
-    if (key.toLowerCase() === targetValue.toLowerCase()) {
+    if (key.toLowerCase() === targetValue.trim().toLowerCase()) {
       return value;
     }
   }
   return null;
 };
+
+/** Check if the given value is a key of a scope */
+export const isInKeys = (scope: Scope, givenValue: string) => {
+  return (Object.keys(constants[scope]) as any[]).map(({ key }) => key).includes(givenValue);
+}

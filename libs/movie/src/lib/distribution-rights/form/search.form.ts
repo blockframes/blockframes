@@ -2,10 +2,9 @@ import {
   LanguagesLabel,
   TerritoriesLabel,
   LanguagesSlug,
-  GenresSlug,
+  Genres,
   CertificationsValues,
-  MediasSlug,
-  MEDIAS_SLUG,
+  MediasValues,
   TerritoriesSlug,
   TERRITORIES_SLUG,
   ProductionStatus,
@@ -17,9 +16,10 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
-import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
+import { FormConstantArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 import { StoreType, staticConsts } from '@blockframes/utils/static-model';
+import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -27,7 +27,7 @@ import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 
 export interface CatalogSearch {
   releaseYear: DateRange;
-  genres: GenresSlug[];
+  genres: Genres[];
   productionStatus: string[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
@@ -46,7 +46,7 @@ export interface AvailsSearch {
   terms: Terms;
   territory: TerritoriesSlug[];
   territoryExcluded: TerritoriesSlug[];
-  licenseType: MediasSlug[];
+  licenseType: MediasValues[];
   exclusive: boolean;
   isActive: boolean;
 }
@@ -133,7 +133,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
   );
   return {
     releaseYear: createTermsControl(search.releaseYear),
-    genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
+    genres: new FormConstantArray(search.genres, 'genres', [Validators.required]),
     productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
@@ -321,20 +321,20 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     this.get('territory').removeAt(index);
   }
 
-  checkMedia(checkedMedia: MediasSlug) {
+  checkMedia(checkedMedia: MediasValues) {
     // check if media is already checked by the user
-    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('licenseType').value.includes(checkedMedia)) {
+    if (Object.keys(staticConsts.medias).includes(checkedMedia) && !this.get('licenseType').value.includes(checkedMedia)) {
       this.get('licenseType').setValue([...this.get('licenseType').value, checkedMedia]);
     } else if (
-      MEDIAS_SLUG.includes(checkedMedia) &&
+      Object.keys(staticConsts.medias).includes(checkedMedia) &&
       this.get('licenseType').value.includes(checkedMedia)
     ) {
       const checkedMedias = this.get('licenseType').value.filter(
-        (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
+        (alreadyCheckedMedia: MediasValues) => alreadyCheckedMedia !== checkedMedia
       );
       this.get('licenseType').setValue(checkedMedias);
     } else {
-      throw new Error(`Media ${getLabelBySlug('MEDIAS', checkedMedia)} doesn't exist`);
+      throw new Error(`Media ${getValueByKey('medias', checkedMedia)} doesn't exist`);
     }
   }
 }

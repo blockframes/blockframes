@@ -437,7 +437,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // Check if priceParts have at least two parts (amount and currency)
       if (priceParts.length >= 2) {
         const amount = parseInt(priceParts[0], 10);
-        const currency = getCodeIfExists('MOVIE_CURRENCIES', priceParts[1]);
+        const currency = getKeyIfExists(staticConsts.movieCurrencies, priceParts[1]);
         titleDetails.price.amount = amount;
         if (currency) {
           titleDetails.price.currency = currency;
@@ -483,7 +483,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      const currency = getCodeIfExists('MOVIE_CURRENCIES', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
+      const currency = getKeyIfExists(staticConsts.movieCurrencies, spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
       if (currency) {
         recoupableExpense.price.currency = currency;
       } else {
