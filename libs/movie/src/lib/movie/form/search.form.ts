@@ -33,6 +33,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     appAccess: [],
     query: '',
     page: 0,
+    hitsPerPage: 8,
     storeType: [],
     storeConfig: [],
     genres: [],
@@ -100,7 +101,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get minBudget() { return this.get('minBudget'); }
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
-  get appAccess() { return this.get('appAccess')};
+  get appAccess() { return this.get('appAccess') };
 
 
   isEmpty() {
