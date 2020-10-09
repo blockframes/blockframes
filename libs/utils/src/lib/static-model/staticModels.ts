@@ -89,22 +89,6 @@ const models = {
       'label': 'Original Author'
     }
   ],
-  'PROMOTIONAL_ELEMENT_TYPES': [
-    { 'slug': 'trailer', 'label': 'Trailer' },
-    { 'slug': 'poster', 'label': 'Poster' },
-    { 'slug': 'banner', 'label': 'Banner' },
-    { 'slug': 'still_photo', 'label': 'Stills' },
-    { 'slug': 'presentation_deck', 'label': 'Presentation deck' },
-    { 'slug': 'scenario', 'label': 'Script' },
-    { 'slug': 'promo_reel_link', 'label': 'Promo reel' },
-    { 'slug': 'screener_link', 'label': 'Screener' },
-    { 'slug': 'trailer_link', 'label': 'Trailer' },
-    { 'slug': 'teaser_link', 'label': 'Teaser' },
-  ] as const,
-  'LEGAL_DOCUMENT_TYPES': [
-    { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
-    { 'slug': 'invoices', 'label': 'Invoices' },
-  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },

@@ -30,6 +30,10 @@ const constants = {
     mandate: 'Mandate',
     sale: 'Sale'
   },
+  legalDocumentTypes: {
+    chain_of_titles: 'Chain of titles',
+    invoices: 'Invoices'
+  },
   legalRoles: {
     undefined: 'Undefined role',
     serviceProvider: 'Service provider', // service-provider
@@ -241,6 +245,18 @@ const constants = {
     post_production: 'In Post-production',
     finished: 'Completed',
     released: 'Released'
+  },
+  promotionalElementTypes: {
+    trailer: 'Trailer',
+    poster: 'Poster',
+    banner: 'Banner',
+    still_photo: 'Stills',
+    presentation_deck: 'Presentation deck',
+    scenario: 'Script',
+    promo_reel_link: 'Promo reel',
+    screener_link: 'Screener',
+    trailer_link: 'Trailer',
+    teaser_link: 'Teaser'
   },
   rating: {
     pegi: 'PEGI',
