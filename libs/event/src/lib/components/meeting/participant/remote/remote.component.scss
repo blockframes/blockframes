@@ -3,8 +3,13 @@ section {
   height: 100%;
   background-color: var(--background-hover);
 
-  span {
+  article {
+    ::ng-deep video {
+      flex: 1;
+    }
+  }
 
+  span {
     position: absolute;
     bottom: 10px;
     left: 10px;
@@ -15,33 +20,3 @@ section {
     font-size: 60%;
   }
 }
-
-//
-//.remote-participant {
-//  position: relative;
-//}
-//
-//.div-remote-no-cam {
-//  width: 100%;
-//  display: flex;
-//  align-items: center;
-//  justify-content: center;
-//  padding: 20px 0;
-//  background: #75768B;
-//}
-//
-//::ng-deep #remote-participant {
-//  .remoteParticipant {
-//    background-position: center center;
-//    background-size: cover;
-//    max-height: 100%;
-//    max-width: 100%;
-//    width: 100%;
-//  }
-//
-//}
-//
-//.remoteVideo {
-//  width: 100%;
-//  position: relative;
-//}

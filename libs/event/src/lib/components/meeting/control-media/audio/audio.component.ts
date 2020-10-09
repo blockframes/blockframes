@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MeetingService, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {MeetingService, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {Observable} from "rxjs";
 
 @Component({
@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class ControlAudioComponent implements OnInit {
 
-  localVideoMicStatus$: Observable<StatusVideoMic>;
+  localVideoMicStatus$: Observable<IStatusVideoMic>;
 
   constructor(private meetingService: MeetingService) {
     this.localVideoMicStatus$ = this.meetingService.getLocalVideoMicStatus()
@@ -18,7 +18,7 @@ export class ControlAudioComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  muteAudio(localVideoMicStatus: StatusVideoMic){
+  muteAudio(localVideoMicStatus: IStatusVideoMic){
     console.log('muteAudio :', {localVideoMicStatus})
     this.meetingService.muteOrUnmuteYourLocalMediaPreview('audio', localVideoMicStatus.audio);
   }

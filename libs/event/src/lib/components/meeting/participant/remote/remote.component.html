@@ -1,13 +1,13 @@
 <section id="remote-participant" fxFlex fxLayoutAlign="center center">
-  <ng-container *ngIf="!((camMicIsOnRemote$ | async).video)" class="div-remote-no-cam">
+  <ng-container *ngIf="!((camMicIsOnRemote$ | async).video)">
     <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
     <span>
       {{participant.festivalData | displayName}}
     </span>
   </ng-container>
-  <div [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" >
+  <article [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" fxFlex>
     <span>
       {{participant.festivalData | displayName}}
     </span>
-  </div>
+  </article>
 </section>

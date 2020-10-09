@@ -15,8 +15,8 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
 
   @ViewChild('dominantSpeakerVideo') containerDominantSpeakerVideo;
 
-  constructor(private elm: ElementRef, protected cd: ChangeDetectorRef) {
-    super(cd);
+  constructor(private elm: ElementRef) {
+    super();
   }
 
   ngOnInit(): void {

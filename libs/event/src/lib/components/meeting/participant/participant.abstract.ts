@@ -1,15 +1,14 @@
 import {BehaviorSubject, Observable} from "rxjs";
-import {ChangeDetectorRef} from "@angular/core";
-import {Participant, RemoteTrackPublication, RemoteAudioTrack, RemoteVideoTrack, RemoteDataTrack} from 'twilio-video';
-import {StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Participant, RemoteAudioTrack, RemoteDataTrack, RemoteTrackPublication, RemoteVideoTrack} from 'twilio-video';
+import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 export abstract class AbstractParticipant{
 
-  protected $camMicIsOnDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({video: false, audio: false});
-  public camMicIsOn$: Observable<StatusVideoMic> = this.$camMicIsOnDataSource.asObservable();
+  protected $camMicIsOnDataSource: BehaviorSubject<IStatusVideoMic> = new BehaviorSubject({video: false, audio: false});
+  public camMicIsOn$: Observable<IStatusVideoMic> = this.$camMicIsOnDataSource.asObservable();
 
-  protected constructor(protected cd: ChangeDetectorRef) {
+  protected constructor() {
     this.$camMicIsOnDataSource.next({video: false, audio: false})
   }
 
@@ -46,7 +45,7 @@ export abstract class AbstractParticipant{
    *  etach the Tracks from the DOM.
    * @param tracks - track to detach of the DOM
    */
-  detachTracks(tracks) {
+  detachTracks(tracks ) {
     tracks.forEach((track) => {
       if (track) {
         this.setUpVideoAndAudio(track.kind, false);
@@ -75,6 +74,7 @@ export abstract class AbstractParticipant{
     ) => {
       return trackPublication.track;
     });
+    console.log('tracks : ', tracks)
     this.detachTracks(tracks);
   }
 
@@ -84,7 +84,6 @@ export abstract class AbstractParticipant{
     } else {
       this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
     }
-    this.cd.detectChanges();
   }
 
 

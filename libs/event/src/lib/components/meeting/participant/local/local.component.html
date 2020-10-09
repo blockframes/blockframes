@@ -1,15 +1,15 @@
 <ng-container>
-
-  <div class="local-video-container container-round-div-initial-name-participant">
-    <ng-container *ngIf="localVideoAudioIsOn$ | async as camMicIsOn">
-      <div *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
-        <span>
-          {{localParticipant | eventInitialParticipant}}
-        </span>
-      </div>
+  <section [ngClass]="{'section-open': open, 'section-close': !open}" fxFlex fxLayoutAlign="center center">
+    <ng-container *ngIf="!localVideoAudioIsOn.video">
+      <event-meeting-avatar-initial [participant]="localParticipant"></event-meeting-avatar-initial>
     </ng-container>
-    <div [hidden]="!(localVideoAudioIsOn$ | async).video" id="localVideo" #localVideo>
+    <div [hidden]="localVideoAudioIsOn.video" id="localVideo" #localVideo>
     </div>
-  </div>
+    <span>
+      {{localParticipant.festivalData | displayName}}
+    </span>
+    <mat-icon *ngIf="open" (click)="open = !open" svgIcon="close"></mat-icon>
+    <mat-icon *ngIf="!open" (click)="open = !open" svgIcon="open_to"></mat-icon>
+  </section>
 </ng-container>
 

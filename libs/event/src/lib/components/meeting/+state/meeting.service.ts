@@ -1,44 +1,39 @@
+// Angular
 import {Injectable} from '@angular/core';
 
-//Import Twilio-video
-import * as Video from 'twilio-video';
-import {
-  Participant,
-  RemoteAudioTrack,
-  RemoteTrackPublication,
-  RemoteVideoTrack,
-  Room,
-  LocalAudioTrack,
-  LocalVideoTrack,
-  RemoteParticipant
-} from 'twilio-video';
-import {BehaviorSubject, Observable} from "rxjs";
-import {User, UserService} from "@blockframes/user/+state";
+// Blockframes
+import {UserService} from "@blockframes/user/+state";
 import {Event} from "@blockframes/event/+state";
 import {AuthQuery} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
-import {filter, find, map} from "rxjs/operators";
+
+// Rxjs
+import {BehaviorSubject, Observable} from "rxjs";
+import {map} from "rxjs/operators";
+
+//Import Twilio-video
+import {createLocalTracks, connect, LocalAudioTrack, LocalVideoTrack, Participant, RemoteParticipant, Room} from 'twilio-video';
 
 
+/**
+ * Enum for all Event twilio we can get
+ */
 export enum meetingEventEnum {
   ParticipantConnected = 'participantConnected',
   ParticipantDisconnected = 'participantDisconnected',
   TrackSubscribed = 'trackSubscribed',
   TrackUnsubscribed = 'trackUnsubscribed',
   Disconnected = 'disconnected',
-  ConnectedToRoomTwilio = 'connectedToRoomTwilio',
-  LocalPreviewDone = 'localPreviewDone',
   TrackDisabled = 'trackDisabled',
   DominantSpeakerChanged = 'dominantSpeakerChanged',
+  TrackEnabled = 'trackEnabled',
+  TrackStopped = 'trackStopped',
 }
 
-export interface EventRoom {
-  meetingEvent: meetingEventEnum,
-  data: any
-}
-
-
-export interface StatusVideoMic {
+/**
+ * Interface for the status of video and audio
+ */
+export interface IStatusVideoMic {
   video: boolean,
   audio: boolean
 }
@@ -49,30 +44,28 @@ export interface StatusVideoMic {
 })
 export class MeetingService {
 
-  private eventRoom = new BehaviorSubject<EventRoom>({
-    meetingEvent: null,
-    data: null
-  });
-
-  //Array of participant connected to the room
+  // BehaviorSubject of all Participant connected to room twilio
+  // Type of participant : IParticipantMeeting
   private $participantsConnectedDataSource: BehaviorSubject<IParticipantMeeting[]> = new BehaviorSubject([]);
 
+  // BehaviorSubject of local tracks
+  // Type of tracks : LocalAudioTrack | LocalVideoTrack (type twilio-video)
   private $localPreviewTracksDataSource: BehaviorSubject<Array<LocalAudioTrack | LocalVideoTrack>> = new BehaviorSubject([]);
 
-  protected $localVideoMicStatusDataSource: BehaviorSubject<StatusVideoMic> = new BehaviorSubject({
+  // BehaviorSubject of stauts Video and Audio
+  // Type of status : IStatusVideoMic
+  protected $localVideoMicStatusDataSource: BehaviorSubject<IStatusVideoMic> = new BehaviorSubject({
     video: false,
     audio: false
   });
-  public localVideoMicStatus$: Observable<StatusVideoMic> = this.$localVideoMicStatusDataSource.asObservable();
+  public localVideoMicStatus$: Observable<IStatusVideoMic> = this.$localVideoMicStatusDataSource.asObservable();
 
-  activeRoom;
+  // Active room twilio
+  activeRoom: Room;
 
   previewTracks;
 
-  localParticipant;
-
-  camDeactivate = false;
-  micDeactivate = false;
+  localParticipant: IParticipantMeeting;
 
   constructor(
     private userService: UserService,
@@ -81,18 +74,23 @@ export class MeetingService {
 
   }
 
-  getEventRoom() {
-    return this.eventRoom;
-  }
-
+  /**
+   * return Observable of LocalTrack
+   */
   getLocalPreviewTracks(): Observable<Array<LocalAudioTrack | LocalVideoTrack>> {
     return this.$localPreviewTracksDataSource.asObservable();
   }
 
+  /**
+   * Return Observable of all participant connected to room twilio
+   */
   getConnectedAllParticipants(): Observable<IParticipantMeeting[]> {
     return this.$participantsConnectedDataSource.asObservable();
   }
 
+  /**
+   *
+   */
   getConnectedRemoteParticipants(): Observable<IParticipantMeeting[]> {
     return this.$participantsConnectedDataSource
       .pipe(
@@ -133,8 +131,8 @@ export class MeetingService {
 
   }
 
-  numbConnectedParticipants(): number {
-    return this.$participantsConnectedDataSource.getValue().filter(participant => !!participant.isLocalSpeaker).length
+  getAllConnectedParticipantsWithoutLocal(): number {
+    return this.$participantsConnectedDataSource.getValue().filter(participant => !participant.isLocalSpeaker).length
   }
 
   /**
@@ -168,14 +166,6 @@ export class MeetingService {
     this.$participantsConnectedDataSource.next(newCurrentValue);
   }
 
-  getCamDeactivate() {
-    return this.camDeactivate;
-  }
-
-  getMicDeactivate() {
-    return this.micDeactivate;
-  }
-
   getLocalParticipant() {
     return this.localParticipant;
   }
@@ -183,7 +173,7 @@ export class MeetingService {
   /**
    *
    */
-  getLocalVideoMicStatus(): Observable<StatusVideoMic> {
+  getLocalVideoMicStatus(): Observable<IStatusVideoMic> {
     return this.localVideoMicStatus$;
   }
 
@@ -198,9 +188,11 @@ export class MeetingService {
   getIfAudioIsAvailable() {
     return navigator.mediaDevices.getUserMedia({audio: true})
       .then(value => {
+        this.setUpLocalVideoAndAudio('audio', true);
         return true;
       })
       .catch(reason => {
+        this.setUpLocalVideoAndAudio('audio', false);
         return false;
       })
   }
@@ -208,9 +200,11 @@ export class MeetingService {
   getIfVideoIsAvailable() {
     return navigator.mediaDevices.getUserMedia({video: true})
       .then(value => {
+        this.setUpLocalVideoAndAudio('video', true);
         return true;
       })
       .catch(reason => {
+        this.setUpLocalVideoAndAudio('video', false);
         return false;
       })
   }
@@ -223,16 +217,12 @@ export class MeetingService {
     //get local track if here or recreate local track for twilio
     const localTracksPromise = this.previewTracks
       ? Promise.resolve(this.previewTracks)
-      : Video.createLocalTracks();
+      : createLocalTracks();
 
     localTracksPromise.then(
       (tracks) => {
         this.previewTracks = tracks;
         this.changeLocalTrack(tracks);
-        this.eventRoom.next({
-          meetingEvent: meetingEventEnum.LocalPreviewDone,
-          data: tracks
-        });
       },
       () => {
 
@@ -281,7 +271,7 @@ export class MeetingService {
       connectOptions.enableDominantSpeaker = true;
     }
 
-    Video.connect(accessToken, connectOptions).then((r: Room) => this.roomJoined(r, event), (error) => {
+    connect(accessToken, connectOptions).then((r: Room) => this.roomJoined(r, event), (error) => {
       console.log('error : ', error)
     });
   }
@@ -312,11 +302,6 @@ export class MeetingService {
 
     this.addParticipantToConnectedParticipant(localMeetingParticipant);
     this.localParticipant = localMeetingParticipant;
-    //
-    // this.eventRoom.next({
-    //   meetingEvent: meetingEventEnum.DominantSpeakerChanged,
-    //   data: null
-    // });
 
     await this.setUpRoomEvent(room, event);
   }
@@ -362,53 +347,15 @@ export class MeetingService {
         this.addParticipantToConnectedParticipant(meetingParticipant);
       });
 
-    // When a Participant adds a Track, attach it to the DOM.
-    room.on(meetingEventEnum.TrackSubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
-      // this.attachTracks([track], participantContainer, 'participantContainer');
-
-      // this.eventRoom.next({
-      //   meetingEvent: meetingEventEnum.TrackSubscribed,
-      //   data: {track, trackPublication, participant}
-      // });
-    });
-
-    // When a Participant removes a Track, detach it from the DOM.
-    room.on(meetingEventEnum.TrackUnsubscribed, (track: RemoteVideoTrack | RemoteAudioTrack, trackPublication: RemoteTrackPublication, participant: Participant) => {
-
-      // this.eventRoom.next({
-      //   meetingEvent: meetingEventEnum.TrackUnsubscribed,
-      //   data: {track, trackPublication, participant}
-      // });
-      // this.detachTracks([track]);
-    });
-
     // When a Participant leaves the Room, detach its Tracks.
     room.on(meetingEventEnum.ParticipantDisconnected, (participant: Participant) => {
       this.removeParticipantFromConnectedParticipant(participant);
     });
 
-    // To catch the dominant speaker change
-    // room.on(meetingEventEnum.DominantSpeakerChanged, (participant: Participant) => {
-    //
-    //   this.eventRoom.next({
-    //     meetingEvent: meetingEventEnum.DominantSpeakerChanged,
-    //     data: participant
-    //   });
-    // });
-
     // Once the LocalParticipant leaves the room, detach the Tracks
     // of all Participants, including that of the LocalParticipant.
     room.on(meetingEventEnum.Disconnected, () => {
-
       this.disconnected();
-
-      // if (this.previewTracks) {
-      //   this.previewTracks.forEach((track) => {
-      //     track.stop();
-      //   });
-      // }
-      // this.detachParticipantTracks(room.localParticipant);
-      // this.activeRoom = null;
     });
   }
 
@@ -420,23 +367,23 @@ export class MeetingService {
    */
   muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
     //get local track
-    const localTrack = this.getTracksOfParticipant(this.localParticipant);
-    this.setUpLocalVideoAndAudio(kind, mute);
+    const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
+    this.setUpLocalVideoAndAudio(kind, !mute);
 
     let track: any = [];
     //get audio or video track
-    if (kind === localTrack[0].kind) {
-      track = localTrack[0].track
+    if (kind === localTracks[0].kind) {
+      track = localTracks[0].track
     } else {
-      track = localTrack[1].track
+      track = localTracks[1].track
     }
 
     if (mute) {
-      track.stop();
       track.disable();
+      track.stop();
     } else {
-      track.restart();
       track.enable();
+      track.restart();
     }
   }
 
@@ -447,18 +394,14 @@ export class MeetingService {
    * @param boolToChange
    */
   setUpLocalVideoAndAudio(kind: string, boolToChange: boolean) {
+    const statusVideoAudio: IStatusVideoMic = this.$localVideoMicStatusDataSource.getValue();
     if (kind === 'video') {
-      this.$localVideoMicStatusDataSource.next({
-        ...this.$localVideoMicStatusDataSource.getValue(),
-        video: boolToChange
-      });
+      statusVideoAudio.video = boolToChange;
+      this.$localVideoMicStatusDataSource.next(statusVideoAudio);
     } else {
-      this.$localVideoMicStatusDataSource.next({
-        ...this.$localVideoMicStatusDataSource.getValue(),
-        audio: boolToChange
-      });
+      statusVideoAudio.audio = boolToChange;
+      this.$localVideoMicStatusDataSource.next(statusVideoAudio);
     }
-    // this.cd.detectChanges();
   }
 
 
@@ -477,18 +420,13 @@ export class MeetingService {
    *
    */
   deactiveLocalTracks() {
-    const localParticipant = this.localParticipant.twilioData;
-    if (!!!localParticipant) {
-      return;
+    const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
+    if (!!localTracks && localTracks.length > 0) {
+      localTracks.forEach( localTrack => {
+        localTrack.track.disable();
+        localTrack.track.stop();
+      })
     }
-    localParticipant.audioTracks.forEach((publication) => {
-      publication.track.stop()
-      publication.track.disable()
-    })
-    localParticipant.videoTracks.forEach((publication) => {
-      publication.track.stop()
-      publication.track.disable()
-    })
   }
 
 

@@ -1,5 +1,5 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {MeetingService, StatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {MeetingService, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {Observable} from "rxjs";
 
 @Component({
@@ -9,7 +9,7 @@ import {Observable} from "rxjs";
 })
 export class ControlVideoComponent implements OnInit {
 
-  localVideoMicStatus$: Observable<StatusVideoMic>;
+  localVideoMicStatus$: Observable<IStatusVideoMic>;
 
   constructor(private meetingService: MeetingService) {
     this.localVideoMicStatus$ = this.meetingService.getLocalVideoMicStatus()
@@ -18,11 +18,10 @@ export class ControlVideoComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  muteVideo(localVideoMicStatus: StatusVideoMic){
-    console.log('muteVideo :', {localVideoMicStatus})
+  muteVideo(localVideoMicStatus: IStatusVideoMic){
     this.meetingService.muteOrUnmuteYourLocalMediaPreview('video', localVideoMicStatus.video)
   }
 
-  getControlVideo(localVideoMicStatus: StatusVideoMic){
+  getControlVideo(localVideoMicStatus: IStatusVideoMic){
   }
 }

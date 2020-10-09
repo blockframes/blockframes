@@ -1,21 +1,9 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Event, EventService} from "@blockframes/event/+state";
-import {BehaviorSubject, Observable} from "rxjs";
-import {
-  EventRoom,
-  meetingEventEnum,
-  MeetingService
-} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Observable} from "rxjs";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
-import {Participant, LocalAudioTrack, LocalVideoTrack} from 'twilio-video';
+import {LocalAudioTrack, LocalVideoTrack} from 'twilio-video';
 import {User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
@@ -25,22 +13,20 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
   styleUrls: ['./container-video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   //Input event meeting
   @Input() event: Event;
 
   accessToken: string = null;
 
-
+  //All Participants in the room Twilio
   arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
 
   //Participant local in the room
-  // private $localParticipantConnectedDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
   localParticipantConnected$: Observable<IParticipantMeeting>;
 
   //Dominant Participant for Buyer
-  // private $dominantParticipantForBuyerDataSource: BehaviorSubject<IParticipantMeeting> = new BehaviorSubject(null);
   dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
 
   localPreviewTracks$: Observable<Array<LocalAudioTrack | LocalVideoTrack>>;
@@ -48,29 +34,7 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
   user: User;
 
   constructor(private eventService: EventService,
-              private meetingService: MeetingService, private cd: ChangeDetectorRef) {
-
-
-    //construct listener to the meetingEvent
-    this.meetingService.getEventRoom().subscribe((value: EventRoom) => {
-      switch (value.meetingEvent) {
-        case meetingEventEnum.ParticipantConnected:
-          this.participantConnected(value.data);
-          break;
-        case meetingEventEnum.ParticipantDisconnected:
-          this.participantDisconnected(value.data);
-          break;
-        case meetingEventEnum.ConnectedToRoomTwilio:
-          this.connectedToRoomTwilio(value.data);
-          break;
-        case meetingEventEnum.LocalPreviewDone:
-          this.localPreviewDone(value.data);
-          break;
-        case meetingEventEnum.DominantSpeakerChanged:
-          this.dominantSpeakerChanged(value.data);
-          break;
-      }
-    })
+              private meetingService: MeetingService) {
 
     this.localPreviewTracks$ = this.meetingService.getLocalPreviewTracks();
     this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
@@ -87,6 +51,9 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
     const video = await this.meetingService.getIfVideoIsAvailable();
     await this.meetingService.createLocalPreview();
 
+    /**
+     *
+     */
     this.eventService.getTwilioAccessToken(this.event.id).then((value: ErrorResultResponse) => {
       if (value.error !== '') {
       } else {
@@ -111,66 +78,18 @@ export class ContainerVideoComponent implements OnInit, AfterViewInit, OnDestroy
     })
   }
 
-  ngAfterViewInit() {
-
-    // const img = document.querySelector("#contener-event-meeting");
-    // const width = img.clientWidth;
-    // const height = img.clientHeight;
-
-  }
-
   /**
-   * Get the user connected is the reel Owner of the room (event.organizedBy.uid)
+   *
+   * @param kind
+   * @param boolToChange
    */
-  getIfIsReelOwner() {
-    return this.meetingService.getIfIsReelOwner(this.event);
-  }
-
-  /**
-   * Function call when event localPreview is done and past to the observable localPreviewTracks$
-   * @param localTrack : Array of tracks - all tracks of the local (audio or/and video)
-   */
-  localPreviewDone(localTrack) {
-    this.meetingService.changeLocalTrack(localTrack);
-  }
-
-  /**
-   * Function call when event connectedToRoomTwilio
-   * @param room: Room (object twilio)
-   * @param localMeetingParticipant: IParticipantMeeting
-   */
-  connectedToRoomTwilio({room, localMeetingParticipant}) {
-    this.meetingService.changeConnectedAllParticipants(localMeetingParticipant, true);
-  }
-
-  /**
-   * Function call when participant conncted to the room
-   * @param participant: IParticipantMeeting (object twilio)
-   */
-  participantConnected(participant: IParticipantMeeting) {
-    this.meetingService.changeConnectedAllParticipants(participant, true);
-  }
-
-  /**
-   * Function call when participant disconnected to the room
-   * @param participant: IParticipantMeeting (object twilio)
-   */
-  participantDisconnected(participant: IParticipantMeeting) {
-    this.meetingService.changeConnectedAllParticipants(participant, false);
+  setUpLocalVideoAndAudio({kind, boolToChange}) {
+    this.meetingService.setUpLocalVideoAndAudio(kind, boolToChange)
   }
 
   /**
    *
    */
-  dominantSpeakerChanged(participant: IParticipantMeeting) {
-    // this.setParticipantDominantSpeaker(participant);
-  }
-
-
-  setUpLocalVideoAndAudio({kind, boolToChange}) {
-    this.meetingService.setUpLocalVideoAndAudio(kind, boolToChange)
-  }
-
   ngOnDestroy() {
     this.meetingService.disconnected()
   }

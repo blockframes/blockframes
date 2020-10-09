@@ -4,7 +4,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 @Component({
   selector: '[participant] event-meeting-avatar-initial',
   templateUrl: './avatar-initial.component.html',
-  styleUrls: ['./avatar-initial.component.css']
+  styleUrls: ['./avatar-initial.component.scss']
 })
 export class AvatarInitialComponent implements OnInit {
 
