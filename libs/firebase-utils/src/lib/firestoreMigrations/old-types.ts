@@ -1,10 +1,10 @@
-import { ResourceSizes, ResourceRatioSlug, LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+import { LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
   label: string,
   size?: ResourceSizes,
-  ratio?: ResourceRatioSlug,
+  ratio?: ResourceRatios,
   media: OldImgRef,
   language?: LanguagesSlug,
   country?: TerritoriesSlug,
@@ -128,7 +128,7 @@ export function createOldHostedMedia(media?: Partial<OldHostedMedia>) {
 export interface OldNewPromotionalElement {
   label: string,
   size?: ResourceSizes,
-  ratio?: ResourceRatioSlug,
+  ratio?: ResourceRatios,
   media: OldHostedMedia,
   language?: LanguagesSlug,
   country?: TerritoriesSlug,
@@ -143,3 +143,21 @@ export function createOldNewPromotionalElement(
     media: createOldHostedMedia(promotionalElement.media),
   };
 }
+
+
+const ResourceRatios = {
+  '16/9': '16:9',
+  '4/3': '4:3',
+  round: 'Round',
+  square: 'Square',
+  rectangle: 'Rectangle'
+};
+type ResourceRatios = keyof typeof ResourceRatios;
+
+const ResourceSizes = {
+  medium: 'Medium',
+  small: 'Small',
+  large: 'Large',
+  thumbnail: 'Thumbnail'
+};
+type ResourceSizes = keyof typeof ResourceSizes;

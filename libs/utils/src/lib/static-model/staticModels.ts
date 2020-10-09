@@ -105,13 +105,6 @@ const models = {
     { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
     { 'slug': 'invoices', 'label': 'Invoices' },
   ] as const,
-  'RESOURCE_RATIOS': [
-    { 'slug': '16/9', 'label': '16:9' },
-    { 'slug': '4/3', 'label': '4:3' },
-    { 'slug': 'round', 'label': 'Round' },
-    { 'slug': 'square', 'label': 'Square' },
-    { 'slug': 'rectangle', 'label': 'Rectangle' },
-  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },

@@ -247,12 +247,6 @@ const constants = {
     csa: 'CSA',
     cnc: 'CNC'
   },
-  resourceSizes: {
-    medium: 'Medium',
-    small: 'Small',
-    large: 'Large',
-    thumbnail: 'Thumbnail'
-  },
   scoring: {
     a: 'A',
     b: 'B',

@@ -13,9 +13,6 @@ export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
 export type TerritoriesSlug = typeof TERRITORIES_SLUG[number];
 
-export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slug);
-export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];
-
 // TYPE FOR CONSTANTS
 
 export type CartStatus = keyof typeof constants.cartStatus;
@@ -65,8 +62,6 @@ export type ProducerRolesValues = typeof constants.producerRoles[ProducerRoles];
 export type ProductionStatus = keyof typeof constants.productionStatus;
 
 export type Rating = keyof typeof constants.rating;
-
-export type ResourceSizes = keyof typeof constants.resourceSizes;
 
 export type Scoring = keyof typeof constants.scoring;
 
