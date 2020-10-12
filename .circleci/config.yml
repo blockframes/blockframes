@@ -278,6 +278,7 @@ jobs:
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
       - prepare_gcloud
       - run: cp ./env/demo/env.demo1.ts ./env/env.ts
+      - run: touch .env
       - slack/notify:
           message: 'Deploying to demo1...'
       - run:
