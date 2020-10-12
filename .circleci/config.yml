@@ -63,7 +63,7 @@ commands:
     description: 'Ensure gcloud and gsutil are correctly configured to execute commands'
     steps:
         - run: gcloud auth activate-service-account --key-file=creds.json
-        - run: gcloud --quiet config set project ${ENV}
+        - run: gcloud --quiet config set project ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
 orbs:
@@ -270,6 +270,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: demo1
+      - PROJECT_ID: blocframes-demo-1
       - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
@@ -308,7 +309,7 @@ jobs:
   copy-storage-from-prod:
     executor: blockframes-ci
     environment:
-      - ENV: blockframes-ci
+      - PROJECT_ID: blockframes-ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
