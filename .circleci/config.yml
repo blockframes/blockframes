@@ -270,7 +270,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: demo1
-      - PROJECT_ID: blocframes-demo-1
+      - PROJECT_ID: blockframes-demo-1
       - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
