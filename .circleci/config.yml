@@ -274,8 +274,8 @@ jobs:
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
-      - prepare_gcloud
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - prepare_gcloud
       - slack/notify:
           message: 'Deploying to demo1...'
       - run:
