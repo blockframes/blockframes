@@ -7,7 +7,7 @@
         </span>
       </section>
     </ng-container>
-      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected )" rowHeight="fit">
+      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit">
         <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected; trackBy: identify">
           <mat-grid-tile>
             <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>

@@ -19,21 +19,12 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   //All Remote Participants in the room Twilio (all participant connected without local)
   arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
 
-  //Participant local in the room
-  localParticipantConnected$: Observable<IParticipantMeeting>;
-
-  //Dominant Participant for Buyer
-  dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
-
   user: User;
 
   isSeller: boolean;
 
   constructor(private meetingService: MeetingService) {
-
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
-    this.localParticipantConnected$ = this.meetingService.getConnectedLocalParticipant();
-    this.dominantParticipantForBuyer$ = this.meetingService.getConnectedDominantParticipant();
   }
 
   async ngOnInit() {

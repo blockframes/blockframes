@@ -38,12 +38,6 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
     this.mocDivVideo(this.participant);
   }
 
-  setTrackEvent(track) {
-    track.on('dimensionsChanged', (dd) => {
-      console.log({dd})
-    })
-  }
-
   /**
    * Set up all event we need for meeting
    * @param participant
@@ -73,9 +67,7 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-
     participant.twilioData.on(meetingEventEnum.TrackStarted, (track) => {
-      // this.setTrackEvent(track);
       this.setUpVideoAndAudio(track.kind, true)
     })
   }

@@ -113,28 +113,6 @@ export class MeetingService {
   }
 
   /**
-   * Get only local participant of the twilio room
-   */
-  getConnectedLocalParticipant(): Observable<IParticipantMeeting> {
-    return this.$participantsConnectedDataSource
-      .pipe(
-        map(participants => participants.find(participant => !!participant.isLocalSpeaker)
-        )
-      );
-  }
-
-  /**
-   * Get only dominante speaker participant of the twilio room
-   */
-  getConnectedDominantParticipant(): Observable<IParticipantMeeting> {
-    return this.$participantsConnectedDataSource
-      .pipe(
-        map(participants => participants.find(participant => !!participant.isDominantSpeaker)
-        )
-      );
-  }
-
-  /**
    * function to remove a specific participant to the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to remove
    */
@@ -442,8 +420,8 @@ export class MeetingService {
    * Function call when local participant leave the room
    */
   doDisconnected() {
-    this.deactiveLocalTracks(this.activeRoom);
     if (!!this.activeRoom) {
+      this.deactiveLocalTracks(this.activeRoom);
       this.activeRoom.disconnect();
     }
   }
