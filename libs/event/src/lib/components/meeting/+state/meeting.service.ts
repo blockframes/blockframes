@@ -13,9 +13,10 @@ import {map} from "rxjs/operators";
 
 //Import Twilio-video
 import {
-  createLocalTracks,
   connect,
+  createLocalTracks,
   LocalAudioTrack,
+  LocalDataTrack,
   LocalVideoTrack,
   Participant,
   RemoteParticipant,
@@ -60,7 +61,7 @@ export class MeetingService {
 
   // BehaviorSubject of local tracks
   // Type of tracks : LocalAudioTrack | LocalVideoTrack (type twilio-video)
-  private $localPreviewTracksDataSource: BehaviorSubject<Array<LocalAudioTrack | LocalVideoTrack>> = new BehaviorSubject([]);
+  private $localPreviewTracksDataSource: BehaviorSubject<Array<LocalAudioTrack | LocalVideoTrack | LocalDataTrack>> = new BehaviorSubject([]);
 
   // BehaviorSubject of stauts Video and Audio
   // Type of status : IStatusVideoMic
@@ -73,7 +74,7 @@ export class MeetingService {
   // Active room twilio
   activeRoom: Room;
 
-  previewTracks;
+  previewTracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[];
 
   localParticipant: IParticipantMeeting;
 
@@ -89,7 +90,7 @@ export class MeetingService {
   /**
    * return Observable of LocalTrack
    */
-  getLocalPreviewTracks(): Observable<Array<LocalAudioTrack | LocalVideoTrack>> {
+  getLocalPreviewTracks(): Observable<Array<LocalAudioTrack | LocalVideoTrack | LocalDataTrack>> {
     return this.$localPreviewTracksDataSource.asObservable();
   }
 
@@ -181,11 +182,11 @@ export class MeetingService {
 
   getIfAudioIsAvailable() {
     return navigator.mediaDevices.getUserMedia({audio: true})
-      .then(value => {
+      .then( () => {
         this.doSetupLocalVideoAndAudio('audio', true);
         return true;
       })
-      .catch(reason => {
+      .catch( () => {
         this.doSetupLocalVideoAndAudio('audio', false);
         return false;
       })
@@ -193,11 +194,11 @@ export class MeetingService {
 
   getIfVideoIsAvailable() {
     return navigator.mediaDevices.getUserMedia({video: true})
-      .then(value => {
+      .then( () => {
         this.doSetupLocalVideoAndAudio('video', true);
         return true;
       })
-      .catch(reason => {
+      .catch( () => {
         this.doSetupLocalVideoAndAudio('video', false);
         return false;
       })
@@ -214,7 +215,7 @@ export class MeetingService {
       : createLocalTracks();
 
     localTracksPromise.then(
-      (tracks) => {
+      (tracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[]) => {
         this.previewTracks = tracks;
         this.$localPreviewTracksDataSource.next(tracks);
       },
@@ -346,7 +347,7 @@ export class MeetingService {
    * @param isLocalSpeaker
    * @private
    */
-  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isDominantSpeaker = false, isLocalSpeaker = false) {
+  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isDominantSpeaker, isLocalSpeaker = false) {
     const remoteUser = await this.userService.getUser(twilioParticipant.identity)
 
     isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid
@@ -403,7 +404,7 @@ export class MeetingService {
     const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
     this.doSetupLocalVideoAndAudio(kind, !mute);
 
-    let track: any = [];
+    let track: any;
     //get audio or video track
     if (kind === localTracks[0].kind) {
       track = localTracks[0].track
@@ -454,11 +455,19 @@ export class MeetingService {
    * @param activeRoom: Room (twilio-video Object)
    */
   deactiveLocalTracks(activeRoom) {
-    activeRoom.localParticipant.tracks.forEach((track) => {
-      track.track.detach()
-      track.track.stop()
-      track.unpublish()
-    });
+    if(!!activeRoom){
+      const arrayOfLocalTrack = [];
+      activeRoom.localParticipant.tracks.forEach((track) => {
+        arrayOfLocalTrack.push(track.track);
+        track.track.stop()
+      });
+      if(!!arrayOfLocalTrack && arrayOfLocalTrack.length > 0){
+        activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
+      }
+      activeRoom.localParticipant.tracks.forEach((track) => {
+        track.track.detach()
+      });
+    }
   }
 
 
