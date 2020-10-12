@@ -1,8 +1,8 @@
 // Angular
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, Renderer2} from '@angular/core';
 
 // Blockframes
-import {meetingEventEnum, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {IStatusVideoMic, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
@@ -86,7 +86,6 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
    */
   mocDivVideo(participant: IParticipantMeeting) {
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
-    this.renderer.addClass(containerRemotParticipant, `remoteVideo`);
     this.attachParticipantTracks(participant.twilioData, containerRemotParticipant);
 
   }

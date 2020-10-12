@@ -1,11 +1,10 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {Event, EventService} from "@blockframes/event/+state";
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Event} from "@blockframes/event/+state";
 import {Observable} from "rxjs";
 import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
-import {ErrorResultResponse} from "@blockframes/utils/utils";
-import {LocalAudioTrack, LocalVideoTrack} from 'twilio-video';
 import {User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {LocalAudioTrack, LocalVideoTrack} from "twilio-video";
 
 @Component({
   selector: 'event-meeting-container-video',
@@ -30,6 +29,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   //Dominant Participant for Buyer
   dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
 
+
   localPreviewTracks$: Observable<Array<LocalAudioTrack | LocalVideoTrack>>;
 
   localVideoAudioIsOn$: Observable<IStatusVideoMic>
@@ -45,7 +45,6 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
     this.localParticipantConnected$ = this.meetingService.getConnectedLocalParticipant();
     this.dominantParticipantForBuyer$ = this.meetingService.getConnectedDominantParticipant();
-    this.localVideoAudioIsOn$ = this.meetingService.getLocalVideoMicStatus();
   }
 
   async ngOnInit() {

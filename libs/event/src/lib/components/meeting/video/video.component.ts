@@ -4,7 +4,6 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 // Blockframes
 import {Event} from "@blockframes/event/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
-import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 // RxJs
 import {Observable} from "rxjs";
