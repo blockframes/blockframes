@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container *ngIf="isSeller">
   <ng-container *ngIf="arrayOfRemoteParticipantConnected$ | async as arrayOfRemoteParticipantConnected">
     <ng-container *ngIf="getIfLocalIsAlone(arrayOfRemoteParticipantConnected)">
       <section>
