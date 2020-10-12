@@ -1,7 +1,7 @@
-import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
-import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
+import { MovieCurrencies } from "@blockframes/utils/static-model/types";
 import { firestore } from "firebase";
 import { toDate } from "@blockframes/utils/helpers"
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 type Timestamp = firestore.Timestamp;
 
@@ -58,7 +58,7 @@ export type PaymentStatusValue = typeof paymentStatus[PaymentStatus];
 
 export interface PriceRaw<D> {
   amount: number;
-  currency?: MovieCurrenciesSlug;
+  currency?: MovieCurrencies;
   /**
    * @dev percentage
    */
@@ -134,7 +134,7 @@ export interface PaymentDocument extends PaymentRaw<Timestamp> { }
  * A factory function that creates Price
  */
 export function createPrice(price: Partial<Price> = {}): Price {
-  const defaultCurrency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
+  const defaultCurrency = 'EUR';
   return {
     amount: 0,
     currency: defaultCurrency,

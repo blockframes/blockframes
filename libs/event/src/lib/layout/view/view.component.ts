@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, shareReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
 @Component({
@@ -35,9 +35,8 @@ export class EventViewComponent implements OnInit {
 
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
 
-    this.invitation$ = this.event$.pipe(
-      switchMap(event => this.invitationQuery.selectByDocId(event.id)),
-      shareReplay(1)
+    this.invitation$ = this.invitationQuery.selectAll().pipe(
+      map(invits => invits.find(e => e.docId === this.event.id))
     );
   }
 

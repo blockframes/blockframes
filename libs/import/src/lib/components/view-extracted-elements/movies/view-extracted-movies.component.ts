@@ -16,11 +16,11 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import {
-  PremiereType,
   MovieLanguageTypesValue,
   UnitBoxValue,
   staticConsts,
 } from '@blockframes/utils/static-model';
+import { GetCode } from '@blockframes/utils/static-model/staticConsts';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -254,7 +254,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // COLOR (Color / Black & White )
         if (spreadSheetRow[SpreadSheetMovie.color]) {
-          const color = getCodeIfExists('COLORS', spreadSheetRow[SpreadSheetMovie.color]);
+          const color = getKeyIfExists(staticConsts.colors, spreadSheetRow[SpreadSheetMovie.color]);
           if (color) {
             movie.color = color;
           } else {
@@ -296,7 +296,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             const movieRating = createMovieRating({ value: ratingParts[1].trim() });
 
             if (ratingParts[2]) { // System
-              const system = getCodeIfExists('RATING', ratingParts[2] as ExtractCode<'RATING'>);
+              const system = getKeyIfExists(staticConsts.rating, ratingParts[2]);
 
               if (system) {
                 movieRating.system = system;
@@ -350,7 +350,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // SHOOTING FORMAT
         if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
-          const shootingFormat = getCodeIfExists('MOVIE_FORMAT', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
+          const shootingFormat = getKeyIfExists(staticConsts.movieFormat, spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
           if (shootingFormat) {
             movie.format = shootingFormat;
           } else {
@@ -366,7 +366,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (formatQuality)
         if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
-          const availableFormat = getCodeIfExists('MOVIE_FORMAT_QUALITY', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
+          const availableFormat = getKeyIfExists(staticConsts.movieFormatQuality, spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
           if (availableFormat) {
             movie.formatQuality = availableFormat;
           } else {
@@ -382,7 +382,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // AVAILABLE FORMAT (soundQuality)
         if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
-          const soundQuality = getCodeIfExists('SOUND_FORMAT', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
+          const soundQuality = getKeyIfExists(staticConsts.soundFormat, spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
           if (soundQuality) {
             movie.soundFormat = soundQuality;
           } else {
@@ -398,8 +398,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.quotas]) {
-          spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
-            const certification = getCodeIfExists('CERTIFICATIONS', c);
+          spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c) => {
+            const certification = getKeyIfExists(staticConsts.certifications, c);
             if (certification) {
               movie.certifications.push(certification);
             } else {
@@ -451,7 +451,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               originalRelease.country = country;
             }
 
-            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] as ExtractCode<'MEDIAS'>);
+            const media = getKeyIfExists(staticConsts.medias, originalReleaseParts[1]);
             if (media) {
               originalRelease.media = media;
             }
@@ -464,8 +464,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
           movie.genres = [];
-          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: ExtractCode<'GENRES'>) => {
-            const genre = getCodeIfExists('GENRES', g);
+          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: GetCode<'genres'>) => {
+            const genre = getKeyIfExists(staticConsts.genres, g);
             if (genre) {
               movie.genres.push(genre);
             } else {
@@ -496,7 +496,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                     prize.premiere = 'international';
                     break;
                   default:
-                    prize.premiere = getKeyIfExists(staticConsts.premiereType, prizeParts[3] as PremiereType);
+                    prize.premiere = getKeyIfExists(staticConsts.premiereType, prizeParts[3]);
                     break;
                 }
 
@@ -682,11 +682,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD');
+                movie.totalBudget.currency = 'USD';
                 break;
               case '€':
               default:
-                movie.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
+                movie.totalBudget.currency = 'EUR';
                 break;
             }
 
@@ -872,7 +872,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (this.isUserBlockframesAdmin) {
           // SCORING (Scoring)
           if (spreadSheetRow[SpreadSheetMovie.scoring]) {
-            const scoring = getCodeIfExists('SCORING', spreadSheetRow[SpreadSheetMovie.scoring]);
+            const scoring = getKeyIfExists(staticConsts.scoring, spreadSheetRow[SpreadSheetMovie.scoring]);
             if (scoring) {
               movie.scoring = scoring;
             } else {

@@ -1,6 +1,4 @@
 import {NgModule, Pipe, PipeTransform} from '@angular/core';
-
-import {EventLinkPipe} from "@blockframes/event/pipes/event-link.pipe";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Pipe({

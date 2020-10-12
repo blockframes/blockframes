@@ -1,5 +1,6 @@
 import { DistributionRightTermsModule } from '../terms/terms.module';
 import { DistributionRightHoldbacksComponent } from './holdbacks.component';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,6 +19,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
     // Modules
     DistributionRightTermsModule,
+    ToLabelModule,
 
     // Material
     MatButtonToggleModule

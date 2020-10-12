@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
-import { AngularFireFunctionsModule } from '@angular/fire/functions';
+import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -50,6 +50,7 @@ import { CookieBannerModule } from '@blockframes/utils/gdpr-cookie/cookie-banner
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 import { environment } from '../environments/environment';
+import { firebase } from '@env';
 
 @NgModule({
   declarations: [AppComponent],
@@ -89,7 +90,10 @@ import { environment } from '../environments/environment';
     SafariBannerModule,
     CookieBannerModule
   ],
-  providers: [ScreenTrackingService, UserTrackingService, PerformanceMonitoringService],
+  providers: [
+    ScreenTrackingService, UserTrackingService, PerformanceMonitoringService,
+    { provide: REGION, useValue: 'europe-west1' },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

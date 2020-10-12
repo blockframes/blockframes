@@ -5,13 +5,13 @@
     <p class="mat-caption">
       <ng-container [ngSwitch]="type">
         <ng-container *ngSwitchCase="'director'">
-          {{ credit['category'] ? (credit['category'] | translateSlug:'DIRECTOR_CATEGORY') : 'Director' }}
+          {{ credit['category'] ? (credit['category'] | toLabel:'directorCategory') : 'Director' }}
         </ng-container>
         <ng-container *ngSwitchCase="'crew'">
-          {{ credit.role ? (credit.role | translateSlug:'CREW_ROLES') : 'Crew' }}
+          {{ credit.role ? (credit.role | toLabel:'crewRoles') : 'Crew' }}
         </ng-container>
         <ng-container *ngSwitchCase="'cast'">
-          Comedian
+          Actor
         </ng-container>
       </ng-container>
     </p>

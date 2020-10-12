@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Event, EventService} from "@blockframes/event/+state";
 import {Observable} from "rxjs";
-import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 import {LocalAudioTrack, LocalVideoTrack} from 'twilio-video';
 import {User} from "@blockframes/auth/+state";
@@ -18,10 +18,8 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   //Input event meeting
   @Input() event: Event;
 
-  accessToken: string = null;
-
-  //All Participants in the room Twilio
-  arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
+  //All Remote Participants in the room Twilio (all participant connected without local)
+  arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
 
   //Participant local in the room
   localParticipantConnected$: Observable<IParticipantMeeting>;
@@ -31,15 +29,19 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   localPreviewTracks$: Observable<Array<LocalAudioTrack | LocalVideoTrack>>;
 
+  localVideoAudioIsOn$: Observable<IStatusVideoMic>
+
   user: User;
 
-  constructor(private eventService: EventService,
-              private meetingService: MeetingService) {
+  isSeller: boolean;
+
+  constructor(private meetingService: MeetingService) {
 
     this.localPreviewTracks$ = this.meetingService.getLocalPreviewTracks();
-    this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
+    this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
     this.localParticipantConnected$ = this.meetingService.getConnectedLocalParticipant();
     this.dominantParticipantForBuyer$ = this.meetingService.getConnectedDominantParticipant();
+    this.localVideoAudioIsOn$ = this.meetingService.getLocalVideoMicStatus();
   }
 
   async ngOnInit() {
@@ -47,50 +49,28 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
     this.user = this.meetingService.getActiveUser();
 
-    const audio = await this.meetingService.getIfAudioIsAvailable();
-    const video = await this.meetingService.getIfVideoIsAvailable();
-    await this.meetingService.createLocalPreview();
+    this.isSeller = this.meetingService.getIfIsReelOwner(this.event);
 
-    /**
-     *
-     */
-    this.eventService.getTwilioAccessToken(this.event.id).then((value: ErrorResultResponse) => {
-      if (value.error !== '') {
-      } else {
-        this.accessToken = value.result;
-        this.meetingService.connectToTwilioRoom(this.accessToken,
-          {
-            name: this.event.id, dominantSpeaker: true, audio, video,
-            bandwidthProfile: {
-              video: {
-                renderDimensions: {
-                  low: {width: 640, height: 480},
-                  standard: {width: 640, height: 480},
-                  high: {width: 640, height: 480},
-                }
-              },
-            },
-            networkQuality: {local: 1, remote: 1},
-            preferredVideoCodecs: [{codec: 'VP8', simulcast: true}],
-            width: 640, height: 480
-          }, this.event);
-      }
-    })
+    await this.meetingService.doCreateLocalPreview();
+
+    this.meetingService.doConnectToMeetingService(this.event);
   }
 
   /**
+   * Event come from child when audio or video is deactivated or activated
    *
    * @param kind
    * @param boolToChange
    */
-  setUpLocalVideoAndAudio({kind, boolToChange}) {
-    this.meetingService.setUpLocalVideoAndAudio(kind, boolToChange)
+  doSetupLocalVideoAndAudio({kind, boolToChange}) {
+    this.meetingService.doSetupLocalVideoAndAudio(kind, boolToChange)
   }
 
   /**
-   *
+   * when ngDestroy we disconnect the local participant;
    */
   ngOnDestroy() {
-    this.meetingService.disconnected()
+    console.log('ngOnDestroy')
+    this.meetingService.doDisconnected()
   }
 }

@@ -1,12 +1,16 @@
-import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
+// Angular
+import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } from '@angular/core';
+
+// Blockframes
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleOut } from '@blockframes/utils/animations/fade';
-import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state';
-import { map } from 'rxjs/operators';
-import { centralOrgID } from '@env';
-import { Movie } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
+
+// RxJs
+import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'financiers-organization-list',
@@ -15,11 +19,24 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   animations: [scaleOut],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
 
   @HostBinding('@scaleOut') animation = true;
-  orgs$: Observable<Organization[]>;
-  public movies: Movie[] = [];
+
+  public orgs$: Observable<Organization[]>;
+
+  private orgResultsState = new BehaviorSubject<Organization[]>([]);
+
+  public searchForm = new OrganizationSearchForm();
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  public nbHits: number;
+  public hitsViewed = 0;
+
+  private sub: Subscription;
+  private loadMoreToggle: boolean;
+  private lastPage: boolean;
 
   constructor(
     private service: OrganizationService,
@@ -28,10 +45,48 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
-    this.orgs$ = this.service
-      .valueChanges(ref => ref
-        .where('appAccess.financiers.dashboard', '==', true)
-        .where('status', '==', 'accepted'))
-      .pipe(map(orgs => orgs.filter((org: Organization) => org.id !== centralOrgID && org.movieIds.length)));
+    this.orgs$ = this.orgResultsState.asObservable();
+    const search = createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'] });
+    this.searchForm.setValue(search);
+    this.sub = this.searchForm.valueChanges.pipe(
+      startWith(this.searchForm.value),
+      tap(() => this.loading$.next(true)),
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap(() => this.searchForm.search()),
+      tap(res => this.nbHits = res.nbHits),
+      pluck('hits'),
+      map(results => results.map(org => org.objectID)),
+      switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
+      // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
+    ).subscribe(orgs => {
+      if (this.loadMoreToggle) {
+        this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
+        this.loadMoreToggle = false;
+      } else {
+        this.orgResultsState.next(orgs);
+      }
+      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
+      the overall possible results which is represented by nbHits.
+      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
+      So when the next valueChange is happening we need to reset everything and start from beginning  */
+      this.hitsViewed = this.orgResultsState.value.length
+      if (this.lastPage && this.searchForm.page.value !== 0) {
+        this.hitsViewed = 0;
+        this.searchForm.page.setValue(0);
+      }
+      this.lastPage = this.hitsViewed === this.nbHits;
+      this.loading$.next(false)
+    });
+  }
+
+  async loadMore() {
+    this.loadMoreToggle = true;
+    this.searchForm.page.setValue(this.searchForm.page.value + 1);
+    await this.searchForm.search();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

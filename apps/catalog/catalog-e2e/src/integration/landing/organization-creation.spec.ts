@@ -9,13 +9,13 @@ import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 // Create new users
 const USERS: Partial<User>[] = [
   {
-    email: `org-create-test-a${Date.now()}@cypress.com`,
+    email: `dev+org-create-test-a${Date.now()}@cascade8.com`,
     password: 'blockframes',
     firstName: `${Date.now()}-Cypress first name1`,
     lastName: `${Date.now()}-Cypress last name1`
   },
   {
-    email: `org-create-test-b${Date.now()}@cypress.com`,
+    email: `dev+org-create-test-b${Date.now()}@cascade8.com`,
     password: 'blockframes',
     firstName: `${Date.now()}-Cypress first name`,
     lastName: `${Date.now()}-Cypress last name`
@@ -25,7 +25,7 @@ const USERS: Partial<User>[] = [
 const ORGANIZATION: Organization = {
   id: 'Cy1234',
   name: `Org-${Date.now()}-Cypress`,
-  email: `${Date.now()}@cypress.com`,
+  email: `dev+${Date.now()}@cascade8.com`,
   address: {
     street: '42 test road',
     zipCode: '69001',

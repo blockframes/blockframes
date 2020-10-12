@@ -1,4 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+// Angular
+import {Component, Input} from '@angular/core';
+
+// Blockframes
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Component({
@@ -6,13 +9,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
   templateUrl: './avatar-initial.component.html',
   styleUrls: ['./avatar-initial.component.scss']
 })
-export class AvatarInitialComponent implements OnInit {
+export class AvatarInitialComponent {
 
   @Input() participant: IParticipantMeeting
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

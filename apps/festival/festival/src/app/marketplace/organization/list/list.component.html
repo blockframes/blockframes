@@ -1,8 +1,49 @@
-<section grid>
-  <ng-container *ngIf="(orgs$ | async) as orgs; else loading">
-    <org-card *ngFor="let org of orgs" [col]="3" [org]="org"></org-card>
-  </ng-container>
-</section>
-<ng-template #loading>
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</ng-template>
+<list-page [items]="orgs$ | async">
+
+  <list-page-app-bar>
+    <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
+      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
+      <input type="text" formControlName="query" [value]="searchForm.query"
+        placeholder="Search for titles, directors, keywords, ...">
+    </form>
+  </list-page-app-bar>
+
+  <list-page-title>
+    <h1 class="mat-display-2 page-title">Our partners</h1>
+  </list-page-title>
+
+  <list-page-search>
+    <mat-form-field appearance="outline">
+      <mat-label>Try searching for our partners...</mat-label>
+      <input matInput type="text" [formControl]="searchForm.get('query')">
+    </mat-form-field>
+  </list-page-search>
+
+  <list-page-description>
+    <span i18n *ngIf="nbHits" class="mat-body-2">
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partners{nbHits, plural, =0 {} =1 {} other {s}}
+      available.
+    </span>
+  </list-page-description>
+
+  <list-filter>
+    <ng-template filter label="Partner Country" [form]="searchForm.country">
+      <form-country [form]="searchForm.country"></form-country>
+    </ng-template>
+  </list-filter>
+
+  <ng-template listPageCard let-org>
+    <org-card [org]="org"></org-card>
+  </ng-template>
+
+  <ng-template listPageEmpty *ngIf="loading$.value">
+    <div class="loading">
+      <mat-spinner color="primary"></mat-spinner>
+    </div>
+  </ng-template>
+
+  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+  </list-page-progress>
+
+</list-page>

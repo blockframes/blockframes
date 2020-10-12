@@ -10,16 +10,20 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
-const navLinks = [{
-  path: 'org',
-  label: 'Organization'
-}, {
-  path: 'members',
-  label: 'Members'
-}, {
-  path: 'documents',
-  label: 'Documents'
-}];
+const navLinks = [
+  {
+    path: 'org',
+    label: 'Organization'
+  },
+  {
+    path: 'members',
+    label: 'Members'
+  },
+  {
+    path: 'documents',
+    label: 'Documents'
+  }
+];
 
 @Component({
   selector: 'organization-view',

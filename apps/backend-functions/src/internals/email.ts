@@ -15,11 +15,6 @@ import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
  * Handles development mode: logs a warning when no sendgrid API key is provided.
  */
 export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJSON = getSendgridFrom()): Promise<any> {
-  if (sendgridAPIKey === '') {
-    console.warn('No sendgrid API key set, skipping');
-    return;
-  }
-  SendGrid.setApiKey(sendgridAPIKey);
   const msg: MailDataRequired = {
     from,
     to,
@@ -27,16 +22,10 @@ export async function sendMail({ to, subject, text }: EmailRequest, from: EmailJ
     text,
   };
 
-  return SendGrid.send(msg);
+  return send(msg);
 }
 
 export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequest, from: EmailJSON = getSendgridFrom()) {
-  if (sendgridAPIKey === '') {
-    console.warn('No sendgrid API key set, skipping');
-    return;
-  }
-  SendGrid.setApiKey(sendgridAPIKey);
-
   const msg: MailDataRequired = {
     from,
     to,
@@ -44,7 +33,24 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
     dynamicTemplateData: data,
   };
 
-  return SendGrid.send(msg);
+  return send(msg);
+}
+
+function send(msg: MailDataRequired) {
+  if (sendgridAPIKey === '') {
+    console.warn('No sendgrid API key set, skipping');
+    return;
+  }
+
+  SendGrid.setApiKey(sendgridAPIKey);
+  return SendGrid.send(msg).catch(e => {
+    if (e.message === 'Unauthorized') {
+      console.log('API key is not authorized to send mails. Please visit: https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0 ');
+    } else {
+      console.log(`Unexpected error while sending mail : ${e.message}`);
+    }
+    return;
+  });
 }
 
 /**

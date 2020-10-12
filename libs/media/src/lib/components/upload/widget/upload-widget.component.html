@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount" class="mat-card">
+<mat-accordion *ngIf="(tasks.$ | async)?.length as itemCount">
   <mat-expansion-panel expanded>
     <mat-expansion-panel-header i18n>Uploading {{ itemCount }} item{ itemCount,
       plural, =1 {} other {s} }
@@ -7,7 +7,7 @@
     <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="24px" class="content">
 
       <mat-divider></mat-divider>
-      <caption class="mat-caption sub-header">We’re uploading your files to our servers. That can take a while,
+      <caption class="mat-caption">We’re uploading your files to our servers. That can take a while,
         thank you for your patience! You can continue using the platform</caption>
 
       <div fxLayout="column-reverse" fxLayoutGap="24px">

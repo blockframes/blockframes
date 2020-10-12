@@ -7,7 +7,7 @@ import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
 
 const USER: Partial<User> = {
-  email: `${Date.now()}@blockfrake.com`,
+  email: `dev+user-${Date.now()}@cascade8.com`,
   password: 'cypress',
   firstName: 'Catalog',
   lastName: 'User'
@@ -51,7 +51,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except name', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `name${Date.now()}@blockfrake.com`;
+    const newEmail = `dev+name${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'name', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -61,7 +61,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except surname', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `surname${Date.now()}@blockfrake.com`;
+    const newEmail = `dev+surname${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'surname', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -71,7 +71,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except password', () => {
     const p1 = new AuthLoginPage();
-    const newEmail = `pwd${Date.now()}@blockfrake.com`;
+    const newEmail = `dev+pwd${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'password', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -81,7 +81,7 @@ describe('Try with each fields except one', () => {
 
   it('Fill all the fields except password confirm', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`pwdC${Date.now()}@blockfrake.com`;
+    const newEmail =`dev+pwdC${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.clickTermsAndCondition();
     p1.clickPrivacyPolicy();
@@ -113,7 +113,7 @@ describe('Try email address', () => {
 describe('Try password', () => {
   it('Try with different passwords in password confirm', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`wrongPwd${Date.now()}@blockfrake.com`;
+    const newEmail =`dev+wrongPwd${Date.now()}@cascade8.com`;
     p1.fillSignupExceptOne(USER, 'passwordConfirm', newEmail);
     p1.fillPasswordConfirmInSignup(WRONG_PASSWORD);
     p1.clickTermsAndCondition();
@@ -123,7 +123,7 @@ describe('Try password', () => {
   })
   it('Try with less than 6 characters', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`shortPwd${Date.now()}@blockfrake.com`;
+    const newEmail =`dev+shortPwd${Date.now()}@cascade8.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.firstName);
     p1.fillSurnameInSignup(USER.lastName);
@@ -136,7 +136,7 @@ describe('Try password', () => {
   })
   it('Try with more than 24 characters', () => {
     const p1 = new AuthLoginPage();
-    const newEmail =`longPwd${Date.now()}@blockfrake.com`;
+    const newEmail =`dev+longPwd${Date.now()}@cascade8.com`;
     p1.fillEmailInSignup(newEmail);
     p1.fillNameInSignup(USER.firstName);
     p1.fillSurnameInSignup(USER.lastName);

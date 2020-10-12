@@ -1,35 +1,10 @@
-@import '~@angular/flex-layout/mq';
-form.app-bar {
-  width: 24em;
-  padding: 0 12px;
-  margin-left: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-
-  &:hover {
-    border-color: var(--primary);
-  }
-
-  input {
-    height: 50px;
-    width: 24em;
-    margin-left: 12px;
-    background-color: transparent;
-    border: none;
-    font: inherit;
-
-    &:focus {
-      outline: none;
-    }
-  }
-}
-
 mat-form-field {
   width: 100%;
 }
 
-title-filter {
-  static-check-boxes, filter-budget {
+list-filter {
+  static-check-boxes,
+  filter-budget {
     padding: 0 16px;
   }
 }
@@ -42,6 +17,21 @@ mat-icon[matPrefix] {
   margin-right: 12px;
 }
 
-.progress {
-  margin-bottom: 16px;
+mat-form-field {
+  width: 100%;
+}
+
+.page-title {
+  text-align: center;
+}
+
+list-filter {
+  display: flex;
+  justify-content: center;
+}
+
+.loading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }

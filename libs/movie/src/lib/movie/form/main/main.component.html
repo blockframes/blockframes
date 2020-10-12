@@ -93,7 +93,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" required fxFlex>
+          <static-select scope="screeningStatus" type="constant" [control]="form.release.get('status')" [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the release date is estimated or confirmed.
@@ -121,7 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" scope="GENRES" placeholder="Enter Genre(s)">
+      <chips-autocomplete [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -157,8 +157,8 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
-            placeholder="To be determined/Estimated/Confirmed" fxFlex>
+          <static-select scope="screeningStatus" type="constant" [control]="form.runningTime.get('status')"
+            placeholder="To be determined/Estimated/Confirmed" [withoutValues]="['']" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
@@ -179,7 +179,7 @@
         <ng-template colRef="description" let-description>{{ description  | maxLength: 20 }}</ng-template>
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
-        <ng-template colRef="category" let-category>{{ category | translateSlug: 'DIRECTOR_CATEGORY' }}
+        <ng-template colRef="category" let-category>{{ category | toLabel: 'directorCategory' }}
         </ng-template>
         <ng-template colRef="filmography" let-filmography>
           <ng-container *ngFor="let film of filmography">{{ film | filmography }}
@@ -201,7 +201,13 @@
                 </static-select>
               </ng-container>
 
-              <static-select scope="DIRECTOR_CATEGORY" type="model" [control]="directorForm.get('category')" fxFlex>
+              <static-select
+              scope="directorCategory"
+              type="constant"
+              [control]="directorForm.get('category')"
+              placeholder="Director's Category"
+              [withoutValues]="['']"
+              fxFlex>
                 <mat-label>Director's Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.

@@ -16,6 +16,8 @@ export interface ImageParameters {
   h?: number;
   /** security token : https://github.com/imgix/imgix-blueprint#securing-urls */
   s?: string;
+  /** PDF page to display : https://docs.imgix.com/apis/rendering/pdf/page */
+  page?: number;
 }
 
 export function getImgSize(ref: string) {
@@ -58,10 +60,10 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
    * @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
-   * If parameters contains "s" attribute, the file is protected and then the protected imgix source 
+   * If parameters contains "s" attribute, the file is protected and then the protected imgix source
    * must be used (it should be "blockframes-firstName-protected")
    */
-  const protectedMediaDir : Privacy = 'protected'; 
+  const protectedMediaDir : Privacy = 'protected';
   const query = formatParameters(parameters);
   const imgixSource = parameters.s ? `${firebase.projectId}-${protectedMediaDir}` : firebase.projectId;
   return `https://${imgixSource}.imgix.net/${ref}?${query}`;

@@ -30,7 +30,7 @@
         </ng-container>
         <li *ngIf="movie.certifications.length > 0"><strong>Quotas </strong>
           <span
-            *ngFor="let quota of movie.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span>
+            *ngFor="let quota of movie.certifications; let isLast = last">{{ quota | toLabel: 'certifications' }}{{ isLast ? '' : ', ' }}</span>
         </li>
         <li *ngIf="movie.rating.length > 0"><strong>Rating </strong>
           <span *ngFor="let rating of movie.rating; let isLast = last">

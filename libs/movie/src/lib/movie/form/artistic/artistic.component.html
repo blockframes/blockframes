@@ -69,7 +69,7 @@
       <bf-form-table [columns]="crewColumns" [form]="crew" buttonText="Add Crew Member">
         <ng-template colRef="status" let-status>{{ status ? (status | toLabel: 'memberStatus') : 'Confirmed' }}
         </ng-template>
-        <ng-template colRef="role" let-role>{{ role | translateSlug: 'CREW_ROLES' }}</ng-template>
+        <ng-template colRef="role" let-role>{{ role | toLabel:'crewRoles' }}</ng-template>
         <ng-template colRef="filmography" let-filmography>{{ filmography | filmography }}</ng-template>
         <ng-template formView let-crewForm>
           <article [formGroup]="crewForm" fxLayout="column" fxLayoutGap="24px">
@@ -88,16 +88,17 @@
             </div>
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="crew-role" type="model" [control]="crewForm.get('role')" scope="CREW_ROLES"
-                fxFlex>
+              <static-select test-id="crew-role" type="constant" [control]="crewForm.get('role')" scope="crewRoles"
+                fxFlex [withoutValues]="['']">
                 <mat-label>Role</mat-label>
                 <mat-hint align="start">
                   Please specify crew member's role in your project (director of photography, score composer, writer...)
                 </mat-hint>
               </static-select>
 
-              <static-select test-id="crew-status" scope="memberStatus" type="constant" [control]="crewForm.get('status')"
-                fxFlex *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
+              <static-select test-id="crew-status" scope="memberStatus" type="constant"
+                [control]="crewForm.get('status')" fxFlex *ngIf="form | hasStatus: ['development', 'shooting']"
+                [withoutValues]="['']">
                 <mat-label>Status</mat-label>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
                 </mat-hint>

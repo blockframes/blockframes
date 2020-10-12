@@ -7,7 +7,7 @@
       <h5>{{ company.countries | translateSlug : 'TERRITORIES' }}</h5>
       <p>{{ company.displayName }}</p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -29,7 +29,7 @@
       <h5>{{ producer.role }}</h5>
       <p>{{ producer | displayName }}</p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -40,7 +40,7 @@
       <h5>{{ distributor.displayName }}</h5>
       <p>{{ distributor.countries | translateSlug : 'TERRITORIES' }}</p>
     </article>
-  
+
     <mat-divider></mat-divider>
   </section>
 
@@ -63,7 +63,7 @@
     </article>
     <article>
       <h5>Shooting locations</h5>
-      <p>{{ movie.shooting | shootingLocations }}</p>
+      <p>{{ movie.shooting | shootingLocations | titlecase}}</p>
     </article>
     <article *ngIf="movie.expectedPremiere.date">
       <h5>Expected premiere</h5>

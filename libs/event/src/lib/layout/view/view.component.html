@@ -23,12 +23,10 @@
         <ng-container *ngSwitchCase="'onTime'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
-          <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner; else noAccess">
+          <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+          <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner">
             <a test-id="event-room" mat-flat-button routerLink="./session" color="accent">Access {{ event.type | titlecase }} Room</a>
           </ng-container>
-          <ng-template #noAccess>
-            <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
-          </ng-template>
         </ng-container>
 
         <ng-container *ngSwitchCase="'late'">

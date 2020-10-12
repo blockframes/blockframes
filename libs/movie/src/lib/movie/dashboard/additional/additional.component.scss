@@ -1,0 +1,12 @@
+mat-divider {
+  border-top-width: 2px;
+  margin: 24px;
+}
+
+article {
+  margin: 0 24px;
+  *:not(h3) {
+    display: block;
+    margin: 0 16px;
+  }
+ }

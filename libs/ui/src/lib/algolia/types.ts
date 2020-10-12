@@ -1,5 +1,12 @@
+import { App, Module } from '@blockframes/utils/apps';
+import { TerritoriesSlug } from '@blockframes/utils/static-model';
 
-import { App, Module} from '@blockframes/utils/apps';
+// TODO extract that (along with other potential common features) into an algolia file
+export interface AlgoliaSearch {
+  query: string;
+  page: number;
+  hitsPerPage: number;
+}
 
 interface AlgoliaRecord {
   objectID: string,
@@ -8,6 +15,7 @@ export interface AlgoliaRecordOrganization extends AlgoliaRecord {
   name: string,
   appAccess: App[],
   appModule: Module[],
+  country: TerritoriesSlug
 }
 
 export interface AlgoliaRecordMovie extends AlgoliaRecord {

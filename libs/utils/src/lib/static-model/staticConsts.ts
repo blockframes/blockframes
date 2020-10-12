@@ -71,6 +71,18 @@ const constants = {
   // ------ //
   // MOVIE  //
   // ------ //
+  certifications: {
+    artEssai: 'Art & Essai',
+    eof: 'EOF',
+    awardedFilm: 'Awarded Film',
+    aListCast: 'A-list Cast',
+    europeanQualification: 'European Qualification'
+  },
+  colors: {
+    c: 'Color',
+    b: 'Black & white',
+    colorBW: 'Color & Black & White'
+  },
   contentType: {
     feature_film: 'Feature Film',
     short: 'Short Film',
@@ -82,6 +94,52 @@ const constants = {
     tv_film: 'TV Film',
     flow: 'Flow'
   },
+  crewRoles: {
+    writer: 'Writer',
+    scoreComposer: 'Score Composer',
+    dialogueWriter: 'Dialogue Writer',
+    photographyDirector: 'Director of Photography',
+    editor: 'Editor',
+    castingDirector: 'Casting Director',
+    artisticDirector: 'Artistic Director',
+    costumeDesigner: 'Costume Designer',
+    makeUpArtist: 'Make-Up Artist',
+    productionDesigner: 'Production Designer',
+    firstAssistantDirector: '1st Assistant Director',
+    secondAssistantDirector: '2nd Assistant Director',
+    postProductionDirector: 'Post-Production Director',
+    originalAuthor: 'Original Author'
+  },
+  directorCategory: {
+    firstFeature: 'First Feature',
+    risingTalent: 'Rising Talent',
+    confirmed: 'Confirmed Director',
+    prestige: 'Prestige'
+  },
+  genres: {
+    comedy: 'Comedy',
+    drama: 'Drama',
+    action: 'Action',
+    horror: 'Horror',
+    scienceFiction: 'Science Fiction', // science-fiction
+    thriller: 'Thriller',
+    comingAge: 'Young Adult', // coming-of-age
+    fantasy: 'Fantasy',
+    romance: 'Romance',
+    western: 'Western',
+    periodPiece: 'Period Piece', // period-piece
+    adventure: 'Adventure',
+    biography: 'Biography',
+    war: 'War',
+    police: 'Police',
+    animation: 'Animation',
+    documentary: 'Documentary',
+    erotic: 'Erotic',
+    tvShow: 'TV Show', //tv-show
+    webSeries: 'Web Series', //web-series
+    virtualReality: 'Virtual Reality', // virtual-reality
+    family: 'Family',
+  },
   hostedVideoTypes: {
     tailer: 'Trailer',
     teaser: 'Teaser',
@@ -89,16 +147,64 @@ const constants = {
     clip: 'Clip',
     pitch: 'Pitch',
   },
+  medias: {
+    payTv: 'Pay TV', // pay-tv
+    freeTv: 'Free TV', // free-tv
+    payPerView: 'Pay Per View', // pay-per-view
+    est: 'EST',
+    nVod: 'N-VOD', // n-vod
+    aVod: 'A-VOD', // a-vod
+    fVod: 'F-VOD', // f-vod
+    sVod: 'S-VOD', // s-vod
+    theatrical: 'Theatrical',
+    video: 'Video',
+    planes: 'Planes',
+    boats: 'Boats',
+    hotels: 'Hotels',
+  },
   memberStatus: {
     confirmed: 'Confirmed',
     looselyAttached: 'Loosely Attached',
     target: 'Target'
   },
+  movieCurrencies: {
+    USD: 'US Dollar',
+    EUR: 'Euro',
+    JPY: 'Japanese Yen',
+    GBP: 'Pound Sterling',
+    AUD: 'Australian Dollar',
+    CAD: 'Canadian Dollar',
+    CHF: 'Swiss Franc',
+    CNY: 'Chinese Renminbi',
+    SEK: 'Swedish Krona',
+    NZD: 'New Zealand Dollar'
+  },
+  movieFormat: {
+    '1_33': '1.33',
+    '1_37': '1.37',
+    '1_66': '1.66',
+    '1_77': '1.77',
+    '1_85': '1.85',
+    scope: 'SCOPE',
+    '4/3': '4/3',
+    '16/9': '16/9'
+  },
+  movieFormatQuality: {
+    sd: 'SD',
+    hd: 'HD',
+    '2k': '2K',
+    '4k': '4K',
+    UHD: 'UHD',
+    '3D': '3D',
+    '3DSD': '3DSD',
+    '3DHD': '3DHD',
+    '3DUHD': '3DUHD'
+  },
   movieLanguageTypes: {
     original: 'Original',
     dubbed: 'Dubbed',
-    subtitle: 'Subtitle',
-    caption: 'Caption',
+    subtitle: 'Subtitled',
+    caption: 'Closed-Captions',
   },
   premiereType: {
     international: 'International',
@@ -106,12 +212,34 @@ const constants = {
     market: 'Market',
     national: 'National',
   },
+  producerRoles: {
+    executiveProducer: 'Executive Producer',
+    lineProducer: 'Line Producer',
+    associateProducer: 'Associate Producer',
+    productionManager: 'Production Manager'
+  },
   productionStatus: {
     development: 'In development',
     shooting: 'In Production',
     post_production: 'In Post-production',
     finished: 'Completed',
     released: 'Released'
+  },
+  rating: {
+    pegi: 'PEGI',
+    csa: 'CSA',
+    cnc: 'CNC'
+  },
+  scoring: {
+    a: 'A',
+    b: 'B',
+    c: 'C',
+    d: 'D'
+  },
+  screeningStatus: {
+    tobedetermined: 'To be determined',
+    estimated: 'Estimated',
+    confirmed: 'Confirmed'
   },
   shootingPeriod: {
     early: 'Early',
@@ -131,6 +259,15 @@ const constants = {
     inequalities: 'Reduce inequalities',
     communities: 'Sustainable cities and communities',
     life_on_land: 'Life on land'
+  },
+  soundFormat: {
+    mono: 'Mono',
+    stereo: 'Stereo',
+    dolbySR: 'Dolby SR',
+    dts: 'DTS',
+    'dolby-5.1': 'Dolby 5.1',
+    'dolby-7.1': 'Dolby 7.1',
+    thx: 'THX'
   },
   storeStatus: {
     submitted: 'Submitted',
@@ -181,7 +318,7 @@ const constants = {
   },
 
   // ------------- //
-  // FESTIVALS  //
+  //   FESTIVALS   //
   // ------------- //
   festival: {
     cannes: 'Cannes International Film Festival',
@@ -215,3 +352,30 @@ const constants = {
 };
 
 export default constants;
+
+export type Constants = typeof constants;
+export type Scope = keyof Constants;
+export type GetKeys<S extends Scope> = keyof Constants[S];
+export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
+export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
+export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
+
+/**
+ * Returns the label corresponding to a key (ie:code).
+ * @dev Codes are used to store sanitized data in database
+ * @param scope
+ * @param targetValue
+ */
+export const getValueByKey = (scope: Scope, targetValue: string) => {
+  for (const [key, value] of Object.entries(constants[scope])) {
+    if (key.toLowerCase() === targetValue.trim().toLowerCase()) {
+      return value;
+    }
+  }
+  return null;
+};
+
+/** Check if the given value is a key of a scope */
+export const isInKeys = (scope: Scope, givenValue: string) => {
+  return (Object.keys(constants[scope]) as any[]).map(({ key }) => key).includes(givenValue);
+}

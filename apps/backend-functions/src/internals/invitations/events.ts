@@ -285,22 +285,22 @@ export async function createNotificationsForEventsToStart() {
 }
 
 /**
- * Return if the userId is invite into a event with docId param
- * @param userId : string - Id of user
- * @param docId : string - Id of doc (id of event in Invitation)
+ * Check if a given user has accepted an invitation to an event.
+ * @param userId
+ * @param eventOrMovieId if the event is a screening this **MUST** be a movieId other wise it should be an eventId
  */
-export async function isUserInvitedToScreening(userId: string, docId: string) {
+export async function isUserInvitedToEvent(userId: string, eventOrMovieId: string) {
 
   const acceptedInvitations = db.collection('invitations')
-    .where  ('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
+    .where('type', '==', 'attendEvent')
+    .where('docId', '==', eventOrMovieId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
+    .where('docId', '==', eventOrMovieId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'request');
@@ -313,27 +313,20 @@ export async function isUserInvitedToScreening(userId: string, docId: string) {
   return !(invitations.size === 0 && requests.size === 0);
 }
 
+//TODO A VOIR AVEC OMAR
 
 /**
- * Return if the userId is invite into a event with docId param
+ * Return true if userId has accepted invitation for eventId
  * @param userId : string - Id of user
- * @param docId : string - Id of doc (id of event in Invitation)
+ * @param eventId : string - Id of doc (id of event in Invitation)
  */
-export async function isUserInvitedToMeetingOrScreening(userId: string, docId: string) {
-
-  const acceptedInvitations = db.collection('invitations')
-    .where  ('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
-    .where('toUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'invitation');
-
-  const acceptedRequests = db.collection('invitations')
+export async function hasUserAcceptedEvent(userId: string, eventId: string) {
+  const accepted = db.collection('invitations')
     .where('type', '==', 'attendEvent')
-    .where('docId', '==', docId)
-    .where('fromUser.uid', '==', userId)
-    .where('status', '==', 'accepted')
-    .where('mode', '==', 'request');
+    .where('docId', '==', eventId)
+    .where('status', '==', 'accepted');
+  const acceptedInvitations = accepted.where('toUser.uid', '==', userId).where('mode', '==', 'invitation');
+  const acceptedRequests = accepted.where('fromUser.uid', '==', userId).where('mode', '==', 'request');
 
   const [invitations, requests] = await Promise.all([
     acceptedInvitations.get(),
