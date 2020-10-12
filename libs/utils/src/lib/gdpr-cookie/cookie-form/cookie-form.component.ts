@@ -22,8 +22,8 @@ export class CookieFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.form.valueChanges.pipe(startWith(this.form.value)).subscribe(data => {
-      const allAccepted = !Object.keys(data).some(key => !data[key]);
-      const allRejected = !Object.keys(data).some(key => data[key]);
+      const allAccepted = Object.keys(data).every(key => data[key]);
+      const allRejected = Object.keys(data).every(key => !data[key]);
       this.masterToggleStatus = allAccepted ? 'accept' : allRejected ? 'reject' : 'other';
     })
   }

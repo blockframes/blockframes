@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CookiesConsentForm } from '@blockframes/utils/gdpr-cookie/cookie-form/cookie.form';
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 @Component({
   selector: 'profile-cookie',
   templateUrl: 'profile-cookie.component.html',
-  styleUrls: ['profile-cookie.component.scss']
+  styleUrls: ['profile-cookie.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class ProfileCookieComponent {
