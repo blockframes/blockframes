@@ -82,7 +82,7 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    *
    */
   makeLocalTrack() {
-    this.attachTracks(this.localPreviewTracks, this.containerLocalVideo.nativeElement, 'localVideo')
+    this.attachTracks(this.localPreviewTracks, this.containerLocalVideo.nativeElement)
   }
 
   setUpCamAndMic(tracks, boolToChange) {

@@ -10,7 +10,7 @@ import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meet
 import {Observable} from "rxjs";
 
 @Component({
-  selector: '[localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] event-meeting-video',
+  selector: '[arrayOfRemoteParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] [isSeller] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
@@ -20,7 +20,6 @@ export class VideoComponent  {
   @Input() arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
-  @Input() localVideoAudioIsOn$: Observable<IStatusVideoMic>;
   @Input() localPreviewTracks$: Observable<any>;
   @Input() event: Event;
   @Input() isSeller: boolean;

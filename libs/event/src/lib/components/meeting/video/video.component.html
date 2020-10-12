@@ -1,20 +1,18 @@
 <ng-container>
-  <ng-container *ngIf="isBuyer">
-    <ng-container *ngIf="arrayOfParticipantConnected$ | async as arrayOfParticipantConnected">
-      <ng-container *ngIf="getIfLocalIsAlone()">
+  <ng-container *ngIf="isSeller">
+    <ng-container *ngIf="arrayOfRemoteParticipantConnected$ | async as arrayOfRemoteParticipantConnected">
+      <ng-container *ngIf="getIfLocalIsAlone(arrayOfRemoteParticipantConnected)">
         <section>
-          <span>
-            Waiting for the participants
-          </span>
+        <span>
+          Waiting for the participants
+        </span>
         </section>
       </ng-container>
-      <mat-grid-list [cols]="numOfCols(arrayOfParticipantConnected)" rowHeight="fit">
-        <ng-container *ngFor="let participant of arrayOfParticipantConnected; trackBy: identify">
-          <ng-container *ngIf="!participant.isLocalSpeaker && !participant.isDominantSpeaker">
-            <mat-grid-tile>
-                <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>
-            </mat-grid-tile>
-          </ng-container>
+      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit">
+        <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected; trackBy: identify">
+          <mat-grid-tile>
+            <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>
+          </mat-grid-tile>
         </ng-container>
       </mat-grid-list>
     </ng-container>
@@ -48,5 +46,3 @@
 <!--  </ng-container>-->
 
 </ng-container>
-
-

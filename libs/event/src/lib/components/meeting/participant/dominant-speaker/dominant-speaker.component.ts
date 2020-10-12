@@ -37,7 +37,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#dominantSpeakerVideo`);
 
     participant.twilioData.on(meetingEventEnum.TrackSubscribed, (track) => {
-      this.attachTracks([track], containerRemotParticipant, 'dominantSpeakerVideo')
+      this.attachTracks([track], containerRemotParticipant)
     })
 
     participant.twilioData.on(meetingEventEnum.TrackUnsubscribed, (track) => {
@@ -60,7 +60,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
     })
 
     participant.twilioData.on('trackEnabled', (track:RemoteTrackPublication) => {
-      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant, 'dominantSpeakerVideo')
+      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant)
       this.setUpVideoAndAudio(track.kind, true)
     })
 
@@ -94,7 +94,7 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
    * @param participants
    */
   makeDominantSpeakerTrack(participants: IParticipantMeeting){
-    this.attachParticipantTracks(participants.twilioData, this.containerDominantSpeakerVideo.nativeElement, 'dominantSpeakerVideo')
+    this.attachParticipantTracks(participants.twilioData, this.containerDominantSpeakerVideo.nativeElement)
   }
 
   setUpCamAndMic(tracks, boolToChange){

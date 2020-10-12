@@ -2,9 +2,10 @@
   <event-meeting-video
     [arrayOfRemoteParticipantConnected$]="arrayOfRemoteParticipantConnected$"
     [localParticipantConnected$]="localParticipantConnected$"
-    [localPreviewTracks$]="localPreviewTracks$"
     [dominantParticipantForBuyer$]="dominantParticipantForBuyer$"
+    [localPreviewTracks$]="localPreviewTracks$"
     [event]="event"
-    (eventSetUpLocalVideoAndAudio)="setUpLocalVideoAndAudio($event)"
+    [isSeller]="isSeller"
+    (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"
     ></event-meeting-video>
 </event-meeting-participants-nav>
