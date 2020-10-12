@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
-import {LocalAudioTrack, LocalVideoTrack} from "twilio-video";
+import {LocalAudioTrack, LocalDataTrack, LocalVideoTrack} from "twilio-video";
 
 @Component({
   selector: 'event-meeting-container-video',
@@ -30,7 +30,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
 
 
-  localPreviewTracks$: Observable<Array<LocalAudioTrack | LocalVideoTrack>>;
+  localPreviewTracks$: Observable<Array<LocalAudioTrack | LocalVideoTrack | LocalDataTrack>>;
 
   localVideoAudioIsOn$: Observable<IStatusVideoMic>
 
@@ -41,6 +41,8 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   constructor(private meetingService: MeetingService) {
 
     this.localPreviewTracks$ = this.meetingService.getLocalPreviewTracks();
+    this.localVideoAudioIsOn$ = this.meetingService.getLocalVideoMicStatus();
+    this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
     this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
     this.localParticipantConnected$ = this.meetingService.getConnectedLocalParticipant();

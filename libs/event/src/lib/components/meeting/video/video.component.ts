@@ -7,9 +7,10 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 
 // RxJs
 import {Observable} from "rxjs";
+import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
-  selector: '[arrayOfRemoteParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] [isSeller] event-meeting-video',
+  selector: '[arrayOfRemoteParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [localVideoAudioIsOn$] [event] [isSeller] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
@@ -20,6 +21,7 @@ export class VideoComponent  {
   @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
   @Input() localPreviewTracks$: Observable<any>;
+  @Input() localVideoAudioIsOn$: Observable<IStatusVideoMic>;
   @Input() event: Event;
   @Input() isSeller: boolean;
 

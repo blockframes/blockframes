@@ -19,30 +19,28 @@
   </ng-container>
 
 
-<!--  <ng-container *ngIf="!isBuyer" class="container-remote-participant-Buyer">-->
-<!--    <section class="container-remote-participant-dominant-speaker">-->
-<!--      <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">-->
-<!--        <event-meeting-dominant-speaker [participant]="dominantParticipantForBuyer" class="event-remote-participant"></event-meeting-dominant-speaker>-->
-<!--      </ng-container>-->
-<!--      <ng-container *ngIf="!(dominantParticipantForBuyer$ | async) as dominantParticipantForBuyer">-->
-<!--        <p class="dominant-waiting-screen">-->
-<!--          Waiting for the organizer-->
-<!--        </p>-->
-<!--      </ng-container>-->
-<!--    </section>-->
-<!--    <section class="container-remote-participant-not-dominant-speaker">-->
-<!--      <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
-<!--        <ng-container  *ngIf="!participant.isDominantSpeaker && !participant.isLocalSpeaker" class="participant-not-dominant-speaker">-->
-<!--          <event-meeting-remote-participant [participant]="participant" class="event-remote-participant"></event-meeting-remote-participant>-->
-<!--        </ng-container>-->
-<!--      </ng-container>-->
-<!--    </section>-->
-<!--  </ng-container>-->
+  <ng-container *ngIf="!isSeller" class="container-remote-participant-Buyer">
+    <section class="container-remote-participant-dominant-speaker">
+      <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">
+        <event-meeting-dominant-speaker [participant]="dominantParticipantForBuyer" class="event-remote-participant"></event-meeting-dominant-speaker>
+      </ng-container>
+      <ng-container *ngIf="!(dominantParticipantForBuyer$ | async) as dominantParticipantForBuyer">
+        <p class="dominant-waiting-screen">
+          Waiting for the organizer
+        </p>
+      </ng-container>
+    </section>
+    <section class="container-remote-participant-not-dominant-speaker">
+      <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected$ | async; trackBy: identify">
+        <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
+          <event-meeting-remote-participant [participant]="participant" class="event-remote-participant"></event-meeting-remote-participant>
+        </ng-container>
+      </ng-container>
+    </section>
+  </ng-container>
 
-<!--  <ng-container *ngFor="let participant of arrayOfParticipantConnected$ | async; trackBy: identify">-->
-<!--    <ng-container *ngIf="participant.isLocalSpeaker">-->
-<!--      <event-meeting-local-participant [isBuyer]="isBuyer" [localParticipant]="participant" [localVideoAudioIsOn]="localVideoAudioIsOn$ | async" [localPreviewTracks]="localPreviewTracks$ | async" (eventSetUpLocalVideoAndAudio)="setUpLocalVideoAndAudio($event)"></event-meeting-local-participant>-->
-<!--    </ng-container>-->
-<!--  </ng-container>-->
+  <ng-container *ngIf="localParticipantConnected$ | async as localParticipant">
+      <event-meeting-local-participant [isSeller]="isSeller" [localParticipant]="localParticipant" [localVideoAudioIsOn]="localVideoAudioIsOn$ | async" [localPreviewTracks]="localPreviewTracks$ | async" (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"></event-meeting-local-participant>
+  </ng-container>
 
 </ng-container>

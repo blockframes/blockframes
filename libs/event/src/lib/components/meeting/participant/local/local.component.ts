@@ -25,7 +25,7 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
   @Input() localParticipant: IParticipantMeeting;
   @Input() localPreviewTracks: LocalTrackPublication;
-  @Input() isBuyer: boolean;
+  @Input() isSeller: boolean;
   @Input() localVideoAudioIsOn: IStatusVideoMic;
 
   @Output() eventSetUpLocalVideoAndAudio = new EventEmitter();
