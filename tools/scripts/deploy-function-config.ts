@@ -8,22 +8,51 @@ import { warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
 
+const args = process.argv.slice(2);
+const [arg, ...flags] = args;
+
+if (arg) console.log('The following args were detected:', args)
+
+/**
+ * This tuple array maps field names to the environment variable key to set them to
+ */
+const functionsConfigMap: [string, string][] = [
+  ['sendgrid.api_key', 'SENDGRID_API_KEY'],
+  ['relayer.mnemonic', 'ETHEREUM_MNEMONIC'],
+  ['jwplayer.key', 'JWPLAYER_KEY'],
+  ['jwplayer.secret', 'JWPLAYER_SECRET'],
+  ['algolia.api_key', 'ALGOLIA_API_KEY'],
+  ['admin.password', 'ADMIN_PASSWORD'],
+  ['admin.email', 'CASCADE8_ADMIN'],
+  ['imgix.token', 'IMGIX_TOKEN'],
+]
+
 /**
  * This is temporary because key names are hardcoded.
  * Future versions will not hardcode this.
  * But need to figure out how to indicate nested objects (more underscores?)
  */
-function getKeyValFormat(): string[] {
-  const output = [];
-  output.push(`sendgrid.api_key="${process.env?.SENDGRID_API_KEY}"`);
-  output.push(`relayer.mnemonic="${process.env?.ETHEREUM_MNEMONIC}"`);
-  output.push(`jwplayer.key="${process.env?.JWPLAYER_KEY}"`);
-  output.push(`jwplayer.secret="${process.env?.JWPLAYER_SECRET}"`);
-  output.push(`algolia.api_key="${process.env?.ALGOLIA_API_KEY}"`);
-  output.push(`admin.password="${process.env?.ADMIN_PASSWORD}"`);
-  output.push(`admin.email="${process.env?.CASCADE8_ADMIN}"`);
-  output.push(`imgix.token=${process.env?.IMGIX_TOKEN}`);
-  return output;
+function getKeyValFormat(env?: string): string[] {
+  /**
+   * This nested function will check to see if a key exists in process.env when prefixed
+   * with a particular env name & default to base key if not set
+   * @param key environment variable keyname
+   */
+  function getKeyName(key: string) {
+    if (env && process.env.hasOwnProperty(`${env}_${key}`) ) {
+      return `${env}_${key}`;
+    }
+    return key;
+  }
+
+  /**
+   * This generates the statement line used to set function config values in Firebase Functions
+   */
+  function getSettingStatement([fieldPath, envKey]) {
+    return `${fieldPath}="${process.env[getKeyName(envKey)]}"`
+  }
+
+  return functionsConfigMap.map(getSettingStatement)
 }
 
 async function setFirebaseConfig() {
@@ -42,9 +71,9 @@ async function setFirebaseConfig() {
   console.log('Getting existing Firebase Functions Config Values...\n');
   await firebaseTools.functions.config.get(undefined, FIREBASE_CONFIG).then(console.log);
 
-  const keyVal = getKeyValFormat(); // TODO(#3620) Parse .env rather than read hardcoded values
+  const keyVal = getKeyValFormat(arg); // TODO(#3620) Parse .env rather than read hardcoded values
 
-  console.log('Writing new config...\n');
+  console.log('Writing new config:\n', keyVal);
   const cmd = `firebase functions:config:set ${keyVal.join(' ')}`;
   process.stdout.write(execSync(cmd));
   // await firebaseTools.functions.config.set(keyVal, FIREBASE_CONFIG);

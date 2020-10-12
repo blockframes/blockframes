@@ -59,6 +59,13 @@ commands:
             else
               exit 0
             fi
+  prepare_gcloud:
+    description: 'Ensure gcloud and gsutil are correctly configured to execute commands'
+    steps:
+        - run: gcloud auth activate-service-account --key-file=creds.json
+        - run: gcloud --quiet config set project ${ENV}
+        - run: gcloud info
+        - run: gsutil ls
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -178,7 +185,7 @@ jobs:
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
           npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-          npx firebase deploy --only firestore --force && 
+          npx firebase deploy --only firestore --force &&
           npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
@@ -221,7 +228,7 @@ jobs:
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force && 
+            npx firebase deploy --only firestore --force &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -262,30 +269,30 @@ jobs:
   deploy-to-demo1:
     executor: blockframes-ci
     environment:
-      - ENV: staging
+      - ENV: demo1
       - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
+      - prepare_gcloud
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
-      - run: cp env/demo/env.demo1.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: cp env/demo/env.demo1.ts env/env.staging.ts # prevent rewrites
-      - run: npm run build:all
       - slack/notify:
           message: 'Deploying to demo1...'
       - run:
           command: |
-            npx firebase use demo1 &&
+            npm run backend-ops displayCredentials &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force &&
-            npx firebase deploy --only functions --force
-      - run: node dist/apps/backend-ops/main.js upgrade
+            npm run deploy:catalog &&
+            npm run deploy:festival &&
+            npm run deploy:crm &&
+            npm run deploy:storage &&
+            npm run deploy:firestore &&
+            npm run deploy:functions
+      - run: npm run backend-ops upgrade
       - run:
           command: |
             npm run backend-ops restoreFirestoreRulesPostDeploy &&
-            npx firebase use demo1 &&
-            npx firebase deploy --only firestore:rules
+            npm run deploy:firestore:rules
           when: always
       - slack/status
   push-anon-db-to-ci:
@@ -299,17 +306,14 @@ jobs:
       - run: npm run db:anonymize
       - run: npm run db:upload-ci
   copy-storage-from-prod:
-    docker:
-      - image: google/cloud-sdk
+    executor: blockframes-ci
     environment:
       - ENV: blockframes-ci
       - NODE_OPTIONS: "--max_old_space_size=7168"
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
-      - run: gcloud auth activate-service-account --key-file=creds.json
-      - run: gcloud --quiet config set project ${ENV}
-      - run: gcloud info
+      - prepare_gcloud
       - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
 workflows:
   version: 2.1

@@ -39,3 +39,4 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN sudo apt-get install apt-transport-https ca-certificates gnupg -q -y
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN sudo apt-get update -q -y && sudo apt-get install google-cloud-sdk -q -y
+RUN gcloud config set pass_credentials_to_gsutil true

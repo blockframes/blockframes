@@ -1,4 +1,5 @@
 import { loadAdminServices, MIGRATIONS } from "@blockframes/firebase-utils";
+import { join } from "path";
 import { loadDBVersion } from "./migrations";
 
 export function showHelp() {
@@ -18,4 +19,19 @@ export async function isMigrationRequired() {
 export function disableMaintenanceMode() {
   process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
   console.warn('Maintenance mode is disabled!')
+}
+
+export async function displayCredentials() {
+  let GAP: any;
+  try {
+    // If service account is a stringified json object
+    GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  } catch (e) {
+    // If service account is a path
+    // tslint:disable-next-line: no-eval
+    GAP = eval('require')(join(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS));
+  }
+  delete GAP.privateKey;
+  delete GAP.private_key;
+  console.log('Using default service account:', GAP);
 }

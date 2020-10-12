@@ -335,6 +335,22 @@
                   "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "demo1": {
+              "maxWorkers": 2,
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                },
+                {
+                  "replace": "apps/backend-functions/src/environments/environment.ts",
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                }
+              ]
             }
           }
         },
@@ -359,6 +375,71 @@
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npx nx lint backend-functions"
+              },
+              {
+                "command": "npm run build:backend-functions"
+              },
+              {
+                "command": "npx cross-env firebase use $ENV"
+              },
+              {
+                "command": "npx cross-env npm run deploy:functions:config $ENV"
+              },
+              {
+                "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
+              }
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                {
+                  "command": "npx nx lint backend-functions"
+                },
+                {
+                  "command": "npx cross-env ENV=demo1 npm run build:backend-functions"
+                },
+                {
+                  "command": "npx firebase use demo1"
+                },
+                {
+                  "command": "npm run deploy:functions:config demo1"
+                },
+                {
+                  "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
+                }
+              ]
+            },
+            "staging": {
+              "commands": [
+                {
+                  "command": "npx nx lint backend-functions"
+                },
+                {
+                  "command": "npx cross-env ENV=staging npm run build:backend-functions"
+                },
+                {
+                  "command": "npx firebase use staging"
+                },
+                {
+                  "command": "npm run deploy:functions:config staging"
+                },
+                {
+                  "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
+                }
+              ]
+            }
           }
         }
       }
@@ -651,6 +732,35 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
             }
           }
         },
@@ -686,6 +796,53 @@
           "options": {
             "jestConfig": "apps/catalog/catalog/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npm run build:catalog"
+              },
+              {
+                "command": "npx cross-env firebase use $ENV"
+              },
+              {
+                "command": "npx firebase deploy --only hosting:catalog"
+              }
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=demo1 npm run build:catalog"
+                },
+                {
+                  "command": "npx firebase use demo1"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:catalog"
+                }
+              ]
+            },
+            "staging": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=staging npm run build:catalog"
+                },
+                {
+                  "command": "npx firebase use staging"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:catalog"
+                }
+              ]
+            }
           }
         }
       }
@@ -849,6 +1006,35 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
             }
           }
         },
@@ -927,6 +1113,53 @@
               ],
               "sourceMap": false,
               "optimization": true
+            }
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npm run build:festival"
+              },
+              {
+                "command": "npx cross-env firebase use $ENV"
+              },
+              {
+                "command": "npx firebase deploy --only hosting:festival"
+              }
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=demo1 npm run build:festival"
+                },
+                {
+                  "command": "npx firebase use demo1"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:festival"
+                }
+              ]
+            },
+            "staging": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=staging npm run build:festival"
+                },
+                {
+                  "command": "npx firebase use staging"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:festival"
+                }
+              ]
             }
           }
         }
@@ -1280,6 +1513,35 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
             }
           }
         },
@@ -1312,6 +1574,53 @@
           "options": {
             "jestConfig": "apps/crm/crm/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              {
+                "command": "npm run build:crm"
+              },
+              {
+                "command": "npx cross-env firebase use $ENV"
+              },
+              {
+                "command": "npx firebase deploy --only hosting:crm"
+              }
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=demo1 npm run build:crm"
+                },
+                {
+                  "command": "npx firebase use demo1"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:crm"
+                }
+              ]
+            },
+            "staging": {
+              "commands": [
+                {
+                  "command": "npx cross-env ENV=staging npm run build:crm"
+                },
+                {
+                  "command": "npx firebase use staging"
+                },
+                {
+                  "command": "npx firebase deploy --only hosting:crm"
+                }
+              ]
+            }
           }
         }
       }
