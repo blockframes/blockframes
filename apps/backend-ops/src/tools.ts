@@ -1,6 +1,7 @@
 import { loadAdminServices, MIGRATIONS } from "@blockframes/firebase-utils";
 import { join } from "path";
 import { loadDBVersion } from "./migrations";
+import { firebase } from '@env'
 
 export function showHelp() {
   console.log('TODO: write a documentation');
@@ -33,5 +34,7 @@ export async function displayCredentials() {
   }
   delete GAP.privateKey;
   delete GAP.private_key;
-  console.log('Using default service account:', GAP);
+  console.log('Using default service account:\n', GAP);
+
+  console.log('Local env.ts:\n', firebase)
 }
