@@ -185,7 +185,7 @@ export function setForm(selector: string, formOpt: FormOptions) {
     }
     formData.push(formelData);
   })
-  .last().then(() => {
+  .then(() => {
     console.table(formData);
   });
 }
