@@ -17,7 +17,7 @@ export class MovieFeaturePipe implements PipeTransform {
     if (genres.length > 1) displayedGenres += ', ...';
 
     let displayedLanguages = '';
-    if (originalLanguages.length > 0) displayedLanguages += getLabelBySlug('LANGUAGES', originalLanguages[0]);
+    if (originalLanguages.length > 0) displayedLanguages += getValueByKey('languages', originalLanguages[0]);
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
     const isTBC = (runningTime.time && release.status !== 'TBC') ? `${runningTime.time}'` : 'TBC';

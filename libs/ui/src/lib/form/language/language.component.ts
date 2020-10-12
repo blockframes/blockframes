@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { staticModels } from '@blockframes/utils/static-model';
-import { FormStaticValue } from '@blockframes/utils/form';
-import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { staticConsts } from '@blockframes/utils/static-model';
+import { FormConstantValue } from '@blockframes/utils/form';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 
-type LANGUAGES = typeof staticModels.LANGUAGES;
+type LANGUAGES = typeof staticConsts.languages;
 
 @Component({
   selector: 'form-language',
@@ -14,10 +14,10 @@ type LANGUAGES = typeof staticModels.LANGUAGES;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormLanguageComponent implements OnInit {
-  @Input() public form: FormStaticValue<'LANGUAGES'>;
-  @Output() selected = new EventEmitter<ExtractSlug<'LANGUAGES'>>();
+  @Input() public form: FormConstantValue<'languages'>;
+  @Output() selected = new EventEmitter<GetKeys<'languages'>>();
 
-  public languages = staticModels.LANGUAGES;
+  public languages = staticConsts.languages;
 
   filteredLanguages$: Observable<LANGUAGES>;
 
@@ -31,14 +31,17 @@ export class FormLanguageComponent implements OnInit {
   // @dev displayFn "this" is the MatAutocomplete, not the component
   displayFn(key: string) {
     if (key) {
-      return staticModels.LANGUAGES.find(({ slug }) => slug === key).label;
+      Object.entries(staticConsts.languages).find(([arrayKey, arrayValue]) => {
+        if(arrayKey === key) {
+          return arrayValue;
+        }});
     }
   }
 
   private filter(language: string): LANGUAGES {
     const filterValue = language.toLowerCase();
-    return this.languages.filter(
-      ({ label }) => label.toLowerCase().indexOf(filterValue) === 0
+    return Object.values(this.languages).filter(
+      label => label.toLowerCase().indexOf(filterValue) === 0
     ) as any;
   }
 }

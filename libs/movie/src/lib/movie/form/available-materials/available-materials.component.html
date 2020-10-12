@@ -35,7 +35,7 @@
     <!-- Buttons -->
 
     <div *ngIf="!showButtons">
-      <input-autocomplete scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
+      <input-autocomplete scope="languages" [control]="languageCtrl" label="Language"></input-autocomplete>
       <div fxLayout="row" fxLayoutAlign="space-between start">
         <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
           [disabled]="!languageCtrl.value">

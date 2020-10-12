@@ -522,8 +522,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
           movie.originalLanguages = [];
-          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-            const language = getCodeIfExists('LANGUAGES', g);
+          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: GetCode<'languages'>) => {
+            const language = getKeyIfExists(staticConsts.languages, g);
             if (language) {
               movie.originalLanguages.push(language);
               populateMovieLanguageSpecification(movie.languages, language, 'original', true);
@@ -545,7 +545,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             const versionParts = version.split(this.subSeparator);
             const languageTemp = versionParts.shift();
-            const language = getCodeIfExists('LANGUAGES', languageTemp as ExtractCode<'LANGUAGES'>);
+            const language = getKeyIfExists(staticConsts.languages, languageTemp);
 
             const parseErrors = [];
             if (language) {

@@ -1,7 +1,7 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { Languages } from '@blockframes/utils/static-model';
 import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
@@ -102,13 +102,13 @@ export function storeSearchableMovie(
       languages: {
         original: !!movie.originalLanguages ? movie.originalLanguages: [],
         dubbed: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.dubbed) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Languages]?.dubbed) :
           [],
         subtitle: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.subtitle) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Languages]?.subtitle) :
           [],
         caption: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.caption) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Languages]?.caption) :
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',

@@ -1,5 +1,5 @@
 // Angular
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -21,7 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    TranslateSlugModule,
+    ToLabelModule,
 
     // Forms
     FormLanguageModule,

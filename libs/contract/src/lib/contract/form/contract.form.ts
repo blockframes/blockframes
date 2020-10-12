@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
+import { FormStaticValue, FormConstantValue, FormList, FormEntity } from '@blockframes/utils/form';
 import {
   createContract,
   createContractPartyDetail,
@@ -42,7 +42,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
     id: new FormControl(id),
     label: new FormControl(label),
     media: new HostedMediaForm(media),
-    language: new FormStaticValue(language, 'LANGUAGES'),
+    language: new FormConstantValue(language, 'languages'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };
 }

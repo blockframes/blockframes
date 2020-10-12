@@ -207,8 +207,8 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // DUBS (Authorized language(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.dubbings]) {
-              spreadSheetRow[SpreadSheetDistributionRight.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                const dubbing = getCodeIfExists('LANGUAGES', g);
+              spreadSheetRow[SpreadSheetDistributionRight.dubbings].split(this.separator).forEach((g: GetCode<'languages'>) => {
+                const dubbing = getKeyIfExists(staticConsts.languages, g);
                 if (dubbing) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
                     distributionRight.assetLanguage,
@@ -230,8 +230,8 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // SUBTILES (Available subtitle(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.subtitles]) {
-              spreadSheetRow[SpreadSheetDistributionRight.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                const subtitle = getCodeIfExists('LANGUAGES', g);
+              spreadSheetRow[SpreadSheetDistributionRight.subtitles].split(this.separator).forEach((g: GetCode<'languages'>) => {
+                const subtitle = getKeyIfExists(staticConsts.languages, g);
                 if (!!subtitle) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
                     distributionRight.assetLanguage,
@@ -252,8 +252,8 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // CAPTIONS (Available subtitle(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.captions]) {
-              spreadSheetRow[SpreadSheetDistributionRight.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                const caption = getCodeIfExists('LANGUAGES', g);
+              spreadSheetRow[SpreadSheetDistributionRight.captions].split(this.separator).forEach((g: GetCode<'languages'>) => {
+                const caption = getKeyIfExists(staticConsts.languages, g);
                 if (!!caption) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
                     distributionRight.assetLanguage,

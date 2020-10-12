@@ -1,7 +1,6 @@
 import {
-  LanguagesLabel,
   TerritoriesLabel,
-  LanguagesSlug,
+  Languages,
   Genres,
   CertificationsValues,
   MediasValues,
@@ -30,7 +29,7 @@ export interface CatalogSearch {
   genres: Genres[];
   productionStatus: string[];
   salesAgent: string[];
-  languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
+  languages: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
   certifications: Certifications[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
@@ -198,12 +197,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('estimatedBudget');
   }
 
-  addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
+  addLanguage(language: Languages, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 
-  removeLanguage(language: LanguagesSlug) {
+  removeLanguage(language: Languages) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
   }

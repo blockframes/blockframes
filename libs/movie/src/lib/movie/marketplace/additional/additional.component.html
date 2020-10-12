@@ -91,7 +91,7 @@
       <h5>Versions</h5>
       <ng-container *ngFor="let language of movie.languages | keyvalue">
         <div class="version" fxLayout fxLayoutGap="8px">
-          <b>{{ language.key | translateSlug: 'LANGUAGES' }}: </b>
+          <b>{{ language.key | toLabel: 'languages' }}: </b>
           <mat-chip-list>
             <ng-container *ngFor="let version of language.value | keyvalue">
               <mat-chip *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}</mat-chip>

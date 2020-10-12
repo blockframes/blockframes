@@ -8,7 +8,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 // Blockframes
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { Languages } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 // RxJs
@@ -40,7 +40,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
     this.sub = this.form.languages.valueChanges.pipe(tap(value => {
       if (Object.keys(value).includes('all')) {
         this.languageCtrl.disable();
-        Object.keys(value).forEach((language: LanguagesSlug) => {
+        Object.keys(value).forEach((language: Languages) => {
           if (language !== 'all') {
             this.deleteLanguage(language)
           }
@@ -59,7 +59,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
   addLanguage() {
     const spec = createMovieLanguageSpecification({});
-    this.form.languages.addControl(this.languageCtrl.value as LanguagesSlug, new VersionSpecificationForm(spec));
+    this.form.languages.addControl(this.languageCtrl.value as Languages, new VersionSpecificationForm(spec));
     this.languageCtrl.reset();
     this.showButtons = true;
   }
@@ -68,7 +68,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
     this.showButtons = !this.showButtons
   }
 
-  deleteLanguage(language: LanguagesSlug) {
+  deleteLanguage(language: Languages) {
     this.form.languages.removeControl(language);
   }
 
