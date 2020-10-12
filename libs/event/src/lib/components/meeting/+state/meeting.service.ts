@@ -330,7 +330,7 @@ export class MeetingService {
       }
     }
 
-    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, event, false, true);
+    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, event, true );
 
     this.addParticipantToConnectedParticipant(localMeetingParticipant);
     this.localParticipant = localMeetingParticipant;
@@ -343,14 +343,13 @@ export class MeetingService {
    * Make a IParticipantMeeting
    * @param twilioParticipant
    * @param event
-   * @param isDominantSpeaker
    * @param isLocalSpeaker
    * @private
    */
-  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isDominantSpeaker, isLocalSpeaker = false) {
+  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isLocalSpeaker = false) {
     const remoteUser = await this.userService.getUser(twilioParticipant.identity)
 
-    isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid
+    const isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid
 
     return {
       identity: twilioParticipant.identity,
