@@ -455,8 +455,9 @@ export class MeetingService {
    */
   deactiveLocalTracks(activeRoom) {
     activeRoom.localParticipant.tracks.forEach((track) => {
-      track.unpublish()
+      track.track.detach()
       track.track.stop()
+      track.unpublish()
     });
   }
 

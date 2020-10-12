@@ -10,14 +10,13 @@ import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meet
 import {Observable} from "rxjs";
 
 @Component({
-  selector: '[arrayOfParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] event-meeting-video',
+  selector: '[localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [event] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
 export class VideoComponent  {
 
   // Input
-  @Input() arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
@@ -46,8 +45,6 @@ export class VideoComponent  {
         return 0;
       }
       const allRemoteConnectedParticipants = arrayOfRemoteParticipantConnected.length;
-      console.log('arrayOfRemoteParticipantConnected : ', arrayOfRemoteParticipantConnected)
-      console.log('allConnectedParticipants : ', allRemoteConnectedParticipants)
       return (allRemoteConnectedParticipants === 1) ? 1 : (allRemoteConnectedParticipants > 1 && allRemoteConnectedParticipants < 5) ? 2 : 3;
     }
     return 0;
