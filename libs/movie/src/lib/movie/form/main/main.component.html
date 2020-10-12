@@ -112,7 +112,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('originalLanguages')" scope="LANGUAGES" type="model"
+      <chips-autocomplete [form]="form.get('originalLanguages')" scope="languages" type="constant"
         placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
@@ -121,7 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)" type="constant">
+      <chips-autocomplete [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)" type="constant" [withoutValues]="['']">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>

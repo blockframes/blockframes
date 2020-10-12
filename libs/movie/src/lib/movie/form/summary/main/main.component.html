@@ -73,18 +73,13 @@
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
-      <missing-control [control]="movie.originCountries" [link]="link" fragment="general-information">
-        <ng-template let-countries="control">
-          <ng-container *ngFor="let country of countries.controls; let isLast = last">
-            <missing-control [control]="country" scope="TERRITORIES" [isLast]="isLast"></missing-control>
-          </ng-container>
-        </ng-template>
+      <missing-control [control]="movie.originCountries" [link]="link" fragment="general-information" scope="TERRITORIES">
       </missing-control>
     </li>
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
       <missing-control [control]="movie.originalLanguages" [link]="link" fragment="general-information"
-        scope="LANGUAGES">
+        type="languages">
       </missing-control>
     </li>
     <li>

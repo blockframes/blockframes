@@ -28,7 +28,7 @@ import { FormList } from '@blockframes/utils/form';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 @Component({
-  selector: '[form][scope]chips-autocomplete',
+  selector: '[form]chips-autocomplete',
   templateUrl: './chips-autocomplete.component.html',
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,7 +40,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
    * @example
    * <chips-autocomplete scope="TERRITORIES" ...
    */
-  @Input() scope: Scope | ConstantScope;
+  @Input() scope: string;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
@@ -68,7 +68,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   public values$: Observable<any[]>;
   private sub: Subscription;
 
-  private items;
+  private items: any[];
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('chipList') chipList: MatChipList;
 
@@ -86,8 +86,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
         map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
       );
     }
-
-    if(this.type === 'constant') {
+    else if(this.type === 'constant') {
       this.items = this.withoutValues.length
         ? Object.keys(staticConsts[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
         : Object.keys(staticConsts[this.scope]);
@@ -117,8 +116,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
         const key: string = item['slug'];
         return key.toLowerCase().indexOf(filterValue) === 0;
       });
-    }
-    if(this.type === 'constant') {
+    } else if(this.type === 'constant') {
       return this.items.filter(item => {
         return item.toLowerCase().indexOf(filterValue) === 0;
       });
@@ -134,8 +132,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
         this.form.add(slugByLabel);
         this.added.emit(value);
       }
-    }
-    if(this.type === 'constant') {
+    } else if(this.type === 'constant') {
       const keyByValue = getKeyIfExists(this.scope as ConstantScope, value)
       if (value && keyByValue) {
         this.form.add(keyByValue);
