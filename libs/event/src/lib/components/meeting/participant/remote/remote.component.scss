@@ -6,17 +6,18 @@ section {
   article {
     ::ng-deep video {
       flex: 1;
+      width: 100%;
     }
   }
 
   span {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
+    bottom: 8px;
+    left: 8px;
     color: var(--color-nrwl-gray);
     background: var(--background-disabled-button);
     border-radius: 5px;
-    padding: 5px;
-    font-size: 60%;
+    padding: 8px;
+    font-size: small;
   }
 }

@@ -261,7 +261,7 @@ export class MeetingService {
                 },
               },
               networkQuality: {local: 1, remote: 1},
-              preferredVideoCodecs: [{codec: 'VP8', simulcast: true}],
+              mode: 'grid',
               width: 640, height: 480
             }, event);
         }
@@ -422,7 +422,9 @@ export class MeetingService {
   doDisconnected() {
     if (!!this.activeRoom) {
       this.deactiveLocalTracks(this.activeRoom);
-      this.activeRoom.disconnect();
+      if(this.activeRoom.disconnect()){
+        this.$participantsConnectedDataSource.next([]);
+      }
     }
   }
 

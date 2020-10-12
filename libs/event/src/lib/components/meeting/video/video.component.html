@@ -1,4 +1,4 @@
-<ng-container *ngIf="isSeller">
+<ng-container>
   <ng-container *ngIf="arrayOfRemoteParticipantConnected$ | async as arrayOfRemoteParticipantConnected">
     <ng-container *ngIf="getIfLocalIsAlone(arrayOfRemoteParticipantConnected)">
       <section>
@@ -7,7 +7,7 @@
         </span>
       </section>
     </ng-container>
-      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit">
+      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit" [gutterSize]="'8px'">
         <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected; trackBy: identify">
           <mat-grid-tile>
             <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>
