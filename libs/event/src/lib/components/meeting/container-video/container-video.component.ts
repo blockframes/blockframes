@@ -21,6 +21,9 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   //All Participants in the room Twilio
   arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
 
+  //All Remote Participants in the room Twilio (all participant connected without local)
+  arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
+
   //Participant local in the room
   localParticipantConnected$: Observable<IParticipantMeeting>;
 
@@ -39,6 +42,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
     this.localPreviewTracks$ = this.meetingService.getLocalPreviewTracks();
     this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
+    this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
     this.localParticipantConnected$ = this.meetingService.getConnectedLocalParticipant();
     this.dominantParticipantForBuyer$ = this.meetingService.getConnectedDominantParticipant();
     this.localVideoAudioIsOn$ = this.meetingService.getLocalVideoMicStatus();

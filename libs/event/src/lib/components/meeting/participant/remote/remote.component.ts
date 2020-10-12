@@ -52,7 +52,7 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     participant.twilioData.on(meetingEventEnum.TrackSubscribed, (track) => {
-      this.attachTracks([track], containerRemotParticipant, 'remoteParticipant')
+      this.attachTracks([track], containerRemotParticipant)
     })
 
     participant.twilioData.on(meetingEventEnum.TrackUnsubscribed, (track) => {
@@ -69,7 +69,7 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
     })
 
     participant.twilioData.on(meetingEventEnum.TrackEnabled, (track: RemoteTrackPublication) => {
-      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant, 'dominantSpeakerVideo')
+      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant)
       this.setUpVideoAndAudio(track.kind, true)
     })
 
@@ -87,7 +87,7 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
   mocDivVideo(participant: IParticipantMeeting) {
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
     this.renderer.addClass(containerRemotParticipant, `remoteVideo`);
-    this.attachParticipantTracks(participant.twilioData, containerRemotParticipant, 'remoteParticipant');
+    this.attachParticipantTracks(participant.twilioData, containerRemotParticipant);
 
   }
 

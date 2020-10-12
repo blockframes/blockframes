@@ -251,6 +251,13 @@ export class MeetingService {
     });
   }
 
+
+  /**
+   * Function to begin the connection to twilio
+   * First we get the access token with de cloud function
+   * Second we connect to the room with the access token
+   * @param event
+   */
   doConnectToMeetingService(event) {
     this.eventService.getTwilioAccessToken(event.id)
       .then(async (value: ErrorResultResponse) => {
@@ -282,6 +289,7 @@ export class MeetingService {
       })
   }
 
+
   /**
    * Connection to twilio with the access token and option of connection
    * @param accessToken - string - access Token for twilio
@@ -300,6 +308,7 @@ export class MeetingService {
       console.log('error : ', error)
     });
   }
+
 
   /**
    * When successfully connected to room.
@@ -328,6 +337,7 @@ export class MeetingService {
     await this.setUpRoomEvent(room, event);
   }
 
+
   /**
    * Make a IParticipantMeeting
    * @param twilioParticipant
@@ -354,6 +364,7 @@ export class MeetingService {
       isLocalSpeaker: isLocalSpeaker,
     } as IParticipantMeeting;
   }
+
 
   /**
    * SetUp all event of the Room went we are connected
@@ -384,7 +395,7 @@ export class MeetingService {
 
   /**
    * Mute/unmute your local media.
-   * @param kind - The type of media you want to mute/unmute
+   * @param kind: string = 'video' || 'audio'  - The type of media you want to mute/unmute
    * @param mute - bool - mute/unmute
    */
   muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
@@ -412,8 +423,8 @@ export class MeetingService {
 
   /**
    *
-   * @param kind
-   * @param boolToChange
+   * @param kind: string = 'video' || 'audio' - The type of media you want to mute/unmute
+   * @param boolToChange: boolean
    */
   doSetupLocalVideoAndAudio(kind: string, boolToChange: boolean) {
     const statusVideoAudio: IStatusVideoMic = this.$localVideoMicStatusDataSource.getValue();
@@ -431,7 +442,7 @@ export class MeetingService {
    * Function call when local participant leave the room
    */
   doDisconnected() {
-    this.deactiveLocalTracks();
+    this.deactiveLocalTracks(this.activeRoom);
     if (!!this.activeRoom) {
       this.activeRoom.disconnect();
     }
@@ -439,17 +450,14 @@ export class MeetingService {
 
 
   /**
-   *
+   * Deactive local track of active Room
+   * @param activeRoom: Room (twilio-video Object)
    */
-  deactiveLocalTracks() {
-    const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
-    if (!!localTracks && localTracks.length > 0) {
-      localTracks.forEach(localTrack => {
-        console.log('localTrack 22 : ', localTrack.track)
-        localTrack.track.stop();
-        localTrack.track.disable();
-      })
-    }
+  deactiveLocalTracks(activeRoom) {
+    activeRoom.localParticipant.tracks.forEach((track) => {
+      track.unpublish()
+      track.track.stop()
+    });
   }
 
 

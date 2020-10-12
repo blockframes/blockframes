@@ -16,13 +16,11 @@ export abstract class AbstractParticipant{
    * Attach the Tracks to the DOM.
    * @param tracks - track to attach in the container
    * @param container - container from DOM to attach the track
-   * @param className - name of class css
    */
-  attachTracks(tracks, container, className) {
-    //TODO a virer avant pr
+  attachTracks(tracks, container) {
     tracks.forEach((track) => {
       if (track) {
-        container.appendChild(track.attach()).className = className;
+        container.appendChild(track.attach());
       }
     });
   }
@@ -31,15 +29,14 @@ export abstract class AbstractParticipant{
    * Attach the Participant's Tracks to the DOM.
    * @param participant - participant to attach in the container
    * @param container - container of participant in DOM
-   * @param nameClass - name of class css
    */
-  attachParticipantTracks(participant: Participant, container, nameClass) {
+  attachParticipantTracks(participant: Participant, container) {
     const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {
       return trackPublication.track;
     });
-    this.attachTracks(tracks, container, nameClass);
+    this.attachTracks(tracks, container);
   }
 
   /**

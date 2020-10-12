@@ -18,6 +18,7 @@ export class VideoComponent  {
 
   // Input
   @Input() arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
+  @Input() arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() localParticipantConnected$: Observable<IParticipantMeeting>;
   @Input() dominantParticipantForBuyer$: Observable<IParticipantMeeting>;
   @Input() localVideoAudioIsOn$: Observable<IStatusVideoMic>;
@@ -31,22 +32,23 @@ export class VideoComponent  {
   /**
    * To know if local is alone in Connected participants
    */
-  getIfLocalIsAlone(arrayOfParticipantConnected) {
-    return arrayOfParticipantConnected.length === 1;
+  getIfLocalIsAlone(arrayOfRemoteParticipantConnected) {
+    return arrayOfRemoteParticipantConnected.length === 0;
   }
 
   /**
    * Function to know how many column we need for mat-grid-list
-   * @param arrayOfParticipantConnected
+   * @param arrayOfRemoteParticipantConnected
    */
-  numOfCols(arrayOfParticipantConnected) {
-    if(!!arrayOfParticipantConnected){
-      if(arrayOfParticipantConnected.length < 1){
+  numOfCols(arrayOfRemoteParticipantConnected) {
+    if(!!arrayOfRemoteParticipantConnected){
+      if(arrayOfRemoteParticipantConnected.length < 1){
         return 0;
       }
-      // need - 1 to remove the local User
-      const allConnectedParticipants = arrayOfParticipantConnected.length - 1;
-      return (allConnectedParticipants === 1) ? 1 : (allConnectedParticipants > 1 && allConnectedParticipants < 5) ? 2 : 3;
+      const allRemoteConnectedParticipants = arrayOfRemoteParticipantConnected.length;
+      console.log('arrayOfRemoteParticipantConnected : ', arrayOfRemoteParticipantConnected)
+      console.log('allConnectedParticipants : ', allRemoteConnectedParticipants)
+      return (allRemoteConnectedParticipants === 1) ? 1 : (allRemoteConnectedParticipants > 1 && allRemoteConnectedParticipants < 5) ? 2 : 3;
     }
     return 0;
   }
