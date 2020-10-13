@@ -1,6 +1,6 @@
 <ng-container *ngIf="user$ | async as user">
-  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayout.lt-sm="column">
-    <article fxLayout="row" fxLayoutAlign="space-around start">
+  <header fxLayout fxLayoutAlign="space-between start" fxLayout.lt-sm="column">
+    <article fxLayout fxLayoutAlign="space-around start">
       <img [ref]="user.avatar" asset="profil_user.webp" alt="profile picture">
       <div class="user-info" *ngIf="organization$ | async as org">
         <h1>{{ user.firstName }} {{ user.lastName }}</h1>
@@ -14,14 +14,19 @@
         <span>Previous page</span>
       </a>
   </header>
+  <section>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+        {{ link.label }}
+      </a>
+    </nav>
+  </section>
 </ng-container>
 <section>
-  <auth-form-profile [form]="profileForm"></auth-form-profile>
-  <auth-form-password [form]="passwordForm"></auth-form-password>
+  <router-outlet></router-outlet>
 </section>
-<footer fxLayout="row" fxLayoutAlign="center center">
-  <button mat-flat-button color="accent" (click)="update()">
-    <mat-icon svgIcon="floppy"></mat-icon>
-    <span>Update</span>
-  </button>
-</footer>
+
