@@ -3,7 +3,7 @@ import { CookiesConsentForm } from '@blockframes/utils/gdpr-cookie/cookie-form/c
 import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.service';
 
 @Component({
-  selector: 'profile-cookie',
+  selector: 'user-profile-cookie',
   templateUrl: 'profile-cookie.component.html',
   styleUrls: ['profile-cookie.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

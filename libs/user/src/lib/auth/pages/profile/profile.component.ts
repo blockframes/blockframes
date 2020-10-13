@@ -12,7 +12,7 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 
 @Component({
-  selector: 'profile-edit',
+  selector: 'user-profile-edit',
   templateUrl: 'profile.component.html',
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
