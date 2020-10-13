@@ -14,8 +14,5 @@
     "key": "FIREBASE_CI_SERVICE_ACCOUNT",
     "msg": "You have missing service account keys. Please see: https://www.notion.so/cascade8/Preparing-your-Environment-e3c184db24d447c496c3241d4f16bc94"
   },
-  { "key": "IMGIX_TOKEN", "msg": "API key for imgIx CDN is missing. Please see: https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a" },
-  { "key": "TWILIO_ACCOUNT_SID", "msg": "SID key for Twilio Account is missing. Please see : https://www.notion.so/Twilio-Video-Usage-Feedback-f67d060127b64bd8902960bdb781ae42" },
-  { "key": "TWILIO_API_KEY_SECRET", "msg": "SECRET key for Twilio token video is missing. Please see : https://www.notion.so/Twilio-Video-Usage-Feedback-f67d060127b64bd8902960bdb781ae42" },
-  { "key": "TWILIO_API_KEY_SID", "msg": "SID key for Twilio token video is missing. Please see : https://www.notion.so/Twilio-Video-Usage-Feedback-f67d060127b64bd8902960bdb781ae42" }
+  { "key": "IMGIX_TOKEN", "msg": "API key for imgIx CDN is missing. Please see: https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a" }
 ]

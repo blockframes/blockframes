@@ -8,9 +8,7 @@ export type DocumentReference = admin.firestore.DocumentReference;
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
-if (!admin.apps.length) {
-  admin.initializeApp(config().firebase);
-}
+admin.initializeApp(config().firebase);
 export const db = admin.firestore();
 export const auth = admin.auth();
 
