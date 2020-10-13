@@ -25,11 +25,7 @@ export class CampaignService extends CollectionService<CampaignState> {
   }
 
   async save(id: string, updates: Partial<Campaign>) {
-    // 10/09/2020: Update to `this.upsert` when akita-ng-fire is updated
     const orgId = this.orgQuery.getActiveId();
-    const exists = await this.getRef(id, { params: { orgId }}).get().then(snap => snap.exists);
-    return exists
-      ? this.update({ id, ...updates }, { params: { orgId }})
-      : this.add({ id, movieId: id, ...updates }, { params: { orgId }});
+    return this.upsert({ id, ...updates }, { params: { orgId }});
   }
 }
