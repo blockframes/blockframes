@@ -105,7 +105,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
+    this.sub?.unsubscribe();
   }
 
   /** Filter the items */
