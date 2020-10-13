@@ -22,6 +22,9 @@ import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 import { RuntimeOptions } from 'firebase-functions';
 
+import { getTwilioAccessToken } from './twilio';
+
+
 
 //--------------------------------
 //    Configuration             //
@@ -145,6 +148,14 @@ export const onEventDeleteEvent = onDocumentDelete(
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUsers));
+
+//--------------------------------
+//      Twilio Access           //
+//--------------------------------
+
+/** Trigger: REST call to create the access token for connection to twilio */
+export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
+
 
 //--------------------------------
 //   Notifications Management   //

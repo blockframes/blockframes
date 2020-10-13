@@ -1,4 +1,5 @@
 import { firestore } from "firebase/app";
+import { keys } from "lodash";
 import { BehaviorSubject, Observable } from "rxjs";
 
 /**
@@ -185,3 +186,27 @@ export function debounceFactory(func: (...params) => any, wait: number) {
     timeout = window.setTimeout(later, wait);
   };
 };
+
+
+
+/** 
+ * Remove all undefined fields 
+ * @param value anything
+ */
+export function removeUndefined(value: any) {
+  if (Array.isArray(value)) {
+    return value.map(removeUndefined);
+  } else if (value === null) {
+    return null;
+  } else if (typeof value === 'object') {
+    const result = {};
+    for (const key in value) {
+      if (value[key] !== undefined) {
+        result[key] = removeUndefined(value[key]);
+      }
+    }
+    return result;
+  } else {
+    return value;
+  }
+}

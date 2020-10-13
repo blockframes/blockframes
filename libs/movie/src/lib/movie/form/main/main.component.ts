@@ -13,6 +13,7 @@ import { startWith, distinctUntilChanged } from 'rxjs/operators';
 // Material
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-form-main',
@@ -21,7 +22,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMainComponent implements OnInit, OnDestroy {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
   public sub: Subscription;
   valuesCustomGenres$: Observable<string[]>;
@@ -38,9 +39,10 @@ export class MovieFormMainComponent implements OnInit, OnDestroy {
     filmography: 'Filmography'
   }
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Main Information')
     this.valuesCustomGenres$ = this.form.customGenres.valueChanges.pipe(startWith(this.form.customGenres.value));
 
     this.sub = this.form.runningTime.valueChanges.pipe(distinctUntilChanged()).subscribe(runningTime => {

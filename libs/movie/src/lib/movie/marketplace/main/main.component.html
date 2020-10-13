@@ -112,7 +112,9 @@
   </section>
 
 
-  <h1 *ngIf="movie | hasKeys: keys.prizes">Selection & reviews</h1>
+  <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
+    Selection & reviews
+  </h1>
 
 
   <!-- Festival -->

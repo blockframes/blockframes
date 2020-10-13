@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CampaignFormShellComponent } from '../shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 
 @Component({
   selector: 'campaign-form-proposal',
@@ -8,8 +10,11 @@ import { CampaignFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CampaignFormProposalComponent {
-  form = this.shell.form;
-  
-  constructor(private shell: CampaignFormShellComponent) { }
+  form = this.shell.getForm('campaign');
+  errorMatcher = new CrossFieldErrorMatcher();
+
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Investment Proposal')
+  }
 
 }

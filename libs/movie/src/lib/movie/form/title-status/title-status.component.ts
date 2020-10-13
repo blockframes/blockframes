@@ -11,6 +11,7 @@ import { Intercom } from 'ng-intercom';
 // Blockframes
 import { staticConsts } from '@blockframes/utils/static-model'
 import { getAppName } from '@blockframes/utils/apps';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-form-title-status',
@@ -19,7 +20,7 @@ import { getAppName } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleStatusComponent implements OnInit {
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   public appInformation = { disabledStatus: [], appName: { slug: '', label: '' } }
 
@@ -51,9 +52,10 @@ export class TitleStatusComponent implements OnInit {
   }]
 
   constructor(private shell: MovieFormShellComponent, private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom) { }
+    @Optional() private intercom: Intercom, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Title Status')
     this.appInformation.disabledStatus = this.routerQuery.getData()?.disabled || [];
     this.status = this.status.map(s => ({ ...s, disabled: this.appInformation.disabledStatus.includes(s.value) }))
     if (this.appInformation.disabledStatus.length) {

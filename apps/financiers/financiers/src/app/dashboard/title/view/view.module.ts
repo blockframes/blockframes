@@ -51,6 +51,11 @@ const routes = [{
       path: 'financial-details',
       loadChildren: () => import('../financial-details/financial-details.module').then(m => m.MovieViewFinancialDetailModule),
       data: { animation: 3 }
+    },
+    {
+      path: 'campaign',
+      loadChildren: () => import('@blockframes/campaign/dashboard/dashboard.module').then(m => m.DashboardModule),
+      data: { animation: 4 }
     }
   ]
 }];

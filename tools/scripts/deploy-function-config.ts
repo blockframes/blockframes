@@ -25,6 +25,9 @@ const functionsConfigMap: [string, string][] = [
   ['admin.password', 'ADMIN_PASSWORD'],
   ['admin.email', 'CASCADE8_ADMIN'],
   ['imgix.token', 'IMGIX_TOKEN'],// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
+  ['twilio.account.sid', 'TWILIO_ACCOUNT_SID'],
+  ['twilio.api.key.secret', 'TWILIO_API_KEY_SECRET'],
+  ['twilio.api.key.sid', 'TWILIO_API_KEY_SID']
 ]
 
 /**

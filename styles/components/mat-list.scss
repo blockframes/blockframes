@@ -13,6 +13,7 @@
   }
 
   .mat-list-base {
+    padding: 0;
     background-color: mat-color($background, app-bar);
     border: 1px solid mat-color($foreground, divider);
   }

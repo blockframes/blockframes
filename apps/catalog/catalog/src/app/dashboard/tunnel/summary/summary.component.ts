@@ -1,12 +1,11 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormGroup, FormArray } from '@angular/forms';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
-import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { MovieFormShellComponent, findInvalidControls } from '@blockframes/movie/form/shell/shell.component';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -15,7 +14,7 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelSummaryComponent implements OnInit, OnDestroy {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   subscription: Subscription;
   missingFields: string[] = [];
   invalidFields: string[] = [];
@@ -35,8 +34,8 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.findInvalidControlsRecursive(this.form);
-    this.subscription = this.form.valueChanges.subscribe(() => this.findInvalidControlsRecursive(this.form));
+    this.missingFields = findInvalidControls(this.form);
+    this.subscription = this.form.valueChanges.subscribe(() => this.missingFields = findInvalidControls(this.form));
   }
 
   ngOnDestroy(): void {
@@ -56,17 +55,4 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray) {
-    this.invalidFields = [];
-    const recursiveFunc = (form: FormGroup | FormArray) => {
-      Object.keys(form.controls).forEach(field => {
-        const control = form.get(field);
-        if (control instanceof FormArray || control instanceof FormGroup) {
-          recursiveFunc(control);
-        }
-      });
-    }
-    recursiveFunc(formToInvestigate);
-  }
 }

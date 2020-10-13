@@ -1,61 +1,51 @@
-<mat-card>
-  <mat-card-content>
+<section>
+  <h3>CASCADE 8, publisher of ARCHIPEL MARKET</h3>
+  <p>We value your privacy.</p>
 
-    <section>
-      <h3>CASCADE 8, publisher of ARCHIPEL MARKET</h3>
-      <p>We value your privacy.</p>
+  <p>You can set your consent preferences and determine how you want your data to be used based on the purposes below.
+  You may set your preferences for us independently from those of third-party partners.
+  Each purpose has a description so that you know how we and partners use your data.</p>
+</section>
 
-      <p>You can set your consent preferences and determine how you want your data to be used based on the purposes below.
-      You may set your preferences for us independently from those of third-party partners.
-      Each purpose has a description so that you know how we and partners use your data.</p>
-    </section>
+<section class="divider">
+  <mat-divider [inset]="true"></mat-divider>
+</section>
 
-    <mat-divider></mat-divider>
+<section>
+  <h5>CASCADE 8</h5>
+  <div fxLayout="row" fxLayoutAlign="space-between">
+    <p>Information storage and access</p>
+    <mat-slide-toggle checked disabled></mat-slide-toggle>
+  </div>
+  <p class="mat-caption">The storage of information, such as images, content or credentials for better performances and automatic log in.</p>
+</section>
 
-    <section>
-      <h5>CASCADE 8</h5>
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <p>Information storage and access</p>
-        <mat-slide-toggle checked disabled></mat-slide-toggle>
-      </div>
-      <p class="mat-caption">The storage of information, such as images, content or credentials for better performances and automatic log in.</p>
-    </section>
+<section class="divider">
+  <mat-divider [inset]="true"></mat-divider>
+</section>
 
-    <section>
-      <mat-divider></mat-divider>
+<section>
+  <h5>THIRD PARTY PARTNERS</h5>
 
-      <h5>THIRD PARTY PARTNERS</h5>
+  <mat-radio-group (change)="masterToggle($event)">
+    <mat-radio-button [value]="false" [checked]="masterToggleStatus === 'reject'" >Reject All</mat-radio-button>
+    <mat-radio-button [value]="true" [checked]="masterToggleStatus === 'accept'">Accept All</mat-radio-button>
+  </mat-radio-group>
 
-      <mat-radio-group (change)="masterToggle($event)">
-        <mat-radio-button [value]="false">Reject All</mat-radio-button>
-        <mat-radio-button [value]="true" checked>Accept All</mat-radio-button>
-      </mat-radio-group>
+  <h6>GOOGLE</h6>
+  <div fxLayout fxLayoutAlign="space-between">
+    <p>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
+    <mat-slide-toggle [checked]="form.get('googleAnalytics').value" name="googleAnalytics" (change)="toggleCookie($event)"></mat-slide-toggle>
+  </div>
+  <h6>INTERCOM</h6>
+  <div fxLayout fxLayoutAlign="space-between">
+    <p>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>
+    <mat-slide-toggle [checked]="form.get('intercom').value" name="intercom" (change)="toggleCookie($event)"></mat-slide-toggle>
+  </div>
 
-      <h6>GOOGLE</h6>
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <p>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
-        <mat-slide-toggle [checked]="form.get('googleAnalytics').value" name="google" (change)="toggleCookie($event)"></mat-slide-toggle>
-      </div>
-      <h6>INTERCOM</h6>
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <p>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>
-        <mat-slide-toggle [checked]="form.get('intercom').value" name="intercom" (change)="toggleCookie($event)"></mat-slide-toggle>
-      </div>
-
-      <h6>YANDEX</h6>
-      <div fxLayout="row" fxLayoutAlign="space-between">
-        <p>Yandex is used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
-        <mat-slide-toggle [checked]="form.get('yandex').value" name="yandex" (change)="toggleCookie($event)"></mat-slide-toggle>
-      </div>
-    </section>
-
-    <section fxLayout="row" fxLayoutAlign="center center">
-      <button mat-flat-button color="primary" (click)="save()">Save and quit</button>
-    </section>
-
-    <mat-divider></mat-divider>
-
-    <button mat-button (click)="openPrivacyPolicy()">Privacy Policy</button>
-
-  </mat-card-content>
-</mat-card>
+  <h6>YANDEX</h6>
+  <div fxLayout fxLayoutAlign="space-between">
+    <p>Yandex is used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
+    <mat-slide-toggle [checked]="form.get('yandex').value" name="yandex" (change)="toggleCookie($event)"></mat-slide-toggle>
+  </div>
+</section>

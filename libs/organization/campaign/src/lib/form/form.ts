@@ -1,6 +1,31 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.model';
+
+///////////////
+// VALIDATOR //
+///////////////
+export function compareMinPledge(form: CampaignForm): ValidationErrors | null {
+  return form?.value.cap < form?.value.minPledge
+    ? { minPledgeOverflow: true }
+    : null
+};
+
+function compareReceived(form: CampaignForm): ValidationErrors | null {
+  return form?.value.cap < form?.value.received
+    ? { receivedOverflow: true }
+    : null
+}
+
+export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
+  const control = form.get('amount');
+  if (control) {
+    return control?.value.total < control?.value.current
+      ? { amountOverflow: true }
+      : null
+  }
+};
+
 
 //////////
 // PERK //
@@ -9,7 +34,7 @@ import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.m
 function createPerkControls(value?: Partial<Perk>) {
   const perk = createPerk(value);
   return {
-    title: new FormControl(perk.title, Validators.required),
+    title: new FormControl(perk.title, [Validators.required]),
     description: new FormControl(perk.description, Validators.required),
     minPledge: new FormControl(perk.minPledge),
     amount: new FormEntity({
@@ -24,7 +49,7 @@ type PerkControls = ReturnType<typeof createPerkControls>;
 export class PerkForm extends FormEntity<PerkControls, Perk> {
   constructor(value?: Partial<Perk>) {
     const controls = createPerkControls(value);
-    super(controls);
+    super(controls, comparePerkAmount);
   }
 }
 
@@ -35,14 +60,17 @@ export class PerkForm extends FormEntity<PerkControls, Perk> {
 function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
   return {
-    cap: new FormControl(campaign.cap, Validators.required),
-    minPledge: new FormControl(campaign.minPledge, Validators.required),
+    cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
+    minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
-    perks: FormList.factory(campaign.perks, (perk?: Partial<Perk>) => new PerkForm(perk)),
+    perks: FormList.factory(
+      campaign.perks,
+      (perk?: Partial<Perk>) => new PerkForm(perk),
+    ),
   }
 }
 
-type CampaignControls = ReturnType<typeof createCampaignControls>;
+export type CampaignControls = ReturnType<typeof createCampaignControls>;
 
 export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
 
@@ -52,4 +80,8 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
   }
 }
 
-export const createCampaignForm = () => CampaignForm.factory(createCampaign(), createCampaignControls);
+export const createCampaignForm = () => CampaignForm.factory(
+  createCampaign(),
+  createCampaignControls,
+  [compareMinPledge, compareReceived]
+);
