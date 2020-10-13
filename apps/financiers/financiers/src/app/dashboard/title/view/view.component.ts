@@ -32,6 +32,10 @@ export class TitleViewComponent implements OnInit {
     {
       path: 'financial-details',
       label: 'Estimated Budget'
+    },
+    {
+      path: 'campaign',
+      label: 'Investment Campaign',
     }
   ];
 
