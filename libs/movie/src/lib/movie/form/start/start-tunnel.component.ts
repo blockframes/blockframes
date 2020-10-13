@@ -18,7 +18,7 @@ export class MovieFormStartTunnelComponent {
 
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(private movieService: MovieService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private movieService: MovieService, private router: Router) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);

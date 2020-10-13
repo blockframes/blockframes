@@ -21,11 +21,11 @@ export class CampaignService extends CollectionService<CampaignState> {
   create(movieId: string) {
     const orgId = this.orgQuery.getActiveId();
     const id = movieId; // We use the movieId to index the campaign in the org
-    return this.add({ id, movieId }, { params: {orgId}});
+    return this.add({ id, movieId }, { params: { orgId } });
   }
 
   async save(id: string, updates: Partial<Campaign>) {
     const orgId = this.orgQuery.getActiveId();
-    return this.upsert({ id, ...updates }, { params: { orgId }});
+    return this.upsert({ id, ...updates }, { params: { orgId } });
   }
 }

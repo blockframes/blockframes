@@ -7,6 +7,7 @@ import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-shooting-information',
@@ -25,7 +26,9 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   private keys = ['completed', 'planned', 'progress'] as const;
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Shooting Information')
+  }
 
   ngOnInit() {
     this.enableForm();
