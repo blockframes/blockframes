@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import {meetingEventEnum, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {LocalTrackPublication, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
+import {LocalTrackPublication, Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 
@@ -27,6 +27,7 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   @Input() localPreviewTracks: LocalTrackPublication;
   @Input() isSeller: boolean;
   @Input() localVideoAudioIsOn: IStatusVideoMic;
+  @Input() twilioData: Participant
 
   @Output() eventSetUpLocalVideoAndAudio = new EventEmitter();
 
@@ -39,12 +40,11 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   }
 
   ngOnInit(): void {
-    this.open = !this.isBuyer;
+    this.open = !this.isSeller;
   }
 
   ngAfterViewInit() {
-    this.setUpLocalParticipantEvent(this.localParticipant);
-    console.log('localVideoAudioIsOn : ', this.localVideoAudioIsOn)
+    this.setUpLocalParticipantEvent(this.twilioData);
     this.makeLocalTrack();
   }
 
@@ -52,19 +52,19 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
    *
    * @param localParticipant
    */
-  setUpLocalParticipantEvent(localParticipant: IParticipantMeeting) {
+  setUpLocalParticipantEvent(localParticipant: Participant) {
 
-    localParticipant.twilioData.on(meetingEventEnum.TrackDisabled, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackDisabled, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], false);
     })
 
-    localParticipant.twilioData.on(meetingEventEnum.TrackEnabled, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackEnabled, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], true);
       console.log(this.localVideoAudioIsOn)
       this.makeLocalTrack();
     })
 
-    localParticipant.twilioData.on(meetingEventEnum.TrackStopped, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackStopped, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], false);
     })
   }

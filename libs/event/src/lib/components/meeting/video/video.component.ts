@@ -8,6 +8,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 // RxJs
 import {Observable} from "rxjs";
 import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Participant} from "twilio-video";
 
 @Component({
   selector: '[arrayOfRemoteParticipantConnected$] [localParticipantConnected$] [dominantParticipantForBuyer$] [localPreviewTracks$] [localVideoAudioIsOn$] [event] [isSeller] event-meeting-video',
@@ -23,6 +24,7 @@ export class VideoComponent  {
   @Input() localPreviewTracks$: Observable<any>;
   @Input() localVideoAudioIsOn$: Observable<IStatusVideoMic>;
   @Input() event: Event;
+  @Input() getTwilioParticipantDataFromUid: (uid: string) => Participant;
   @Input() isSeller: boolean;
 
   // Outup
@@ -66,5 +68,10 @@ export class VideoComponent  {
    */
   identify(index, item) {
     return item.identity;
+  }
+
+
+  doGetTwilioParticipantDataFromUid(participant): Participant{
+    return this.getTwilioParticipantDataFromUid(participant.identity);
   }
 }

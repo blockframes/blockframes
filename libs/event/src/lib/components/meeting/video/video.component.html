@@ -3,15 +3,15 @@
     <ng-container *ngIf="arrayOfRemoteParticipantConnected$ | async as arrayOfRemoteParticipantConnected">
       <ng-container *ngIf="getIfLocalIsAlone(arrayOfRemoteParticipantConnected)">
         <section>
-        <span>
-          Waiting for the participants
-        </span>
+          <span>
+            Waiting for the participants
+          </span>
         </section>
       </ng-container>
-      <mat-grid-list  [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit">
+      <mat-grid-list class="grid-list-Seller" [cols]="numOfCols(arrayOfRemoteParticipantConnected)" rowHeight="fit">
         <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected; trackBy: identify">
           <mat-grid-tile>
-            <event-meeting-remote-participant [participant]="participant"></event-meeting-remote-participant>
+            <event-meeting-remote-participant [participant]="participant" [twilioData]="doGetTwilioParticipantDataFromUid(participant)"></event-meeting-remote-participant>
           </mat-grid-tile>
         </ng-container>
       </mat-grid-list>
@@ -19,28 +19,30 @@
   </ng-container>
 
 
-  <ng-container *ngIf="!isSeller" class="container-remote-participant-Buyer">
-    <section class="container-remote-participant-dominant-speaker">
-      <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">
-        <event-meeting-dominant-speaker [participant]="dominantParticipantForBuyer" class="event-remote-participant"></event-meeting-dominant-speaker>
-      </ng-container>
-      <ng-container *ngIf="!(dominantParticipantForBuyer$ | async) as dominantParticipantForBuyer">
-        <p class="dominant-waiting-screen">
-          Waiting for the organizer
-        </p>
-      </ng-container>
-    </section>
-    <section class="container-remote-participant-not-dominant-speaker">
-      <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected$ | async; trackBy: identify">
-        <ng-container  *ngIf="!participant.isDominantSpeaker" class="participant-not-dominant-speaker">
-          <event-meeting-remote-participant [participant]="participant" class="event-remote-participant"></event-meeting-remote-participant>
+  <ng-container *ngIf="!isSeller">
+    <section fxFlex fxLayout="column">
+      <article class="article-dominant">
+        <ng-container *ngIf="dominantParticipantForBuyer$ | async as dominantParticipantForBuyer">
+          <event-meeting-dominant-speaker [participant]="dominantParticipantForBuyer" [twilioData]="doGetTwilioParticipantDataFromUid(dominantParticipantForBuyer)"></event-meeting-dominant-speaker>
         </ng-container>
-      </ng-container>
+        <ng-container *ngIf="!(dominantParticipantForBuyer$ | async) as dominantParticipantForBuyer">
+          <span>
+            Waiting for the organizer
+          </span>
+        </ng-container>
+      </article>
+      <article class="article-buyer">
+          <ng-container *ngFor="let participant of arrayOfRemoteParticipantConnected$ | async; trackBy: identify">
+            <ng-container  *ngIf="!participant.isDominantSpeaker">
+                <event-meeting-remote-participant [participant]="participant" [twilioData]="doGetTwilioParticipantDataFromUid(participant)"></event-meeting-remote-participant>
+            </ng-container>
+          </ng-container>
+      </article>
     </section>
   </ng-container>
 
   <ng-container *ngIf="localParticipantConnected$ | async as localParticipant">
-      <event-meeting-local-participant [isSeller]="isSeller" [localParticipant]="localParticipant" [localVideoAudioIsOn]="localVideoAudioIsOn$ | async" [localPreviewTracks]="localPreviewTracks$ | async" (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"></event-meeting-local-participant>
+      <event-meeting-local-participant [isSeller]="isSeller" [localParticipant]="localParticipant" [localVideoAudioIsOn]="localVideoAudioIsOn$ | async" [twilioData]="doGetTwilioParticipantDataFromUid(localParticipant)" [localPreviewTracks]="localPreviewTracks$ | async" (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"></event-meeting-local-participant>
   </ng-container>
 
 </ng-container>

@@ -58,8 +58,8 @@ export abstract class AbstractParticipant{
    * Detach the Participant's Tracks from the DOM.
    * @param participant - participant to detach track of the DOM
    */
-  detachParticipantTracks(participant: IParticipantMeeting) {
-    const tracks = Array.from(participant.twilioData.tracks.values()).map((
+  detachParticipantTracks(participant: Participant) {
+    const tracks = Array.from(participant.tracks.values()).map((
       trackPublication : any
     ) => {
       return trackPublication.track;

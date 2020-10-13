@@ -13,13 +13,48 @@ section {
   align-items: center;
 }
 
-mat-grid-list {
-  flex-grow: 1;
-  mat-grid-tile {
+.article-buyer {
+  width: 100%;
+  height: 30%;
+  overflow-y: auto;
+  overflow-x: scroll;
+  mat-grid-list {
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    transform: translateZ(0);
+    height: 100%;
+    mat-grid-tile {
+      event-meeting-remote-participant{
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 }
 
-event-meeting-remote-participant{
+.article-dominant {
   width: 100%;
-  height: 100%;
+  height: 70%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: var(--whiteBackground);
+  border: 32px solid var(--background);
+}
+
+.grid-list-Seller {
+  flex-grow: 1;
+  mat-grid-tile {
+    event-meeting-remote-participant{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+
+.container-remote-participant-Buyer {
+
 }

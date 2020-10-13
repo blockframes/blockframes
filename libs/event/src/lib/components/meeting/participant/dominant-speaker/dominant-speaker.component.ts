@@ -12,6 +12,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 export class DominantSpeakerComponent extends AbstractParticipant implements OnInit, AfterViewInit {
 
   @Input() participant: IParticipantMeeting
+  @Input() twilioData: Participant
 
   @ViewChild('dominantSpeakerVideo') containerDominantSpeakerVideo;
 
@@ -24,8 +25,8 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
 
 
   ngAfterViewInit() {
-    this.setUpRemoteParticipantEvent(this.participant);
-    this.makeDominantSpeakerTrack(this.participant);
+    this.setUpRemoteParticipantEvent(this.twilioData);
+    this.makeDominantSpeakerTrack(this.twilioData);
   }
 
 
@@ -33,55 +34,55 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
    *
    * @param participant
    */
-  setUpRemoteParticipantEvent(participant: IParticipantMeeting){
+  setUpRemoteParticipantEvent(participant: Participant){
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#dominantSpeakerVideo`);
 
-    participant.twilioData.on(meetingEventEnum.TrackSubscribed, (track) => {
+    participant.on(meetingEventEnum.TrackSubscribed, (track) => {
       this.attachTracks([track], containerRemotParticipant)
     })
 
-    participant.twilioData.on(meetingEventEnum.TrackUnsubscribed, (track) => {
+    participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
       this.detachTracks([track])
     })
 
-    participant.twilioData.on('disconnected', () => {
-      this.detachParticipantTracks(this.participant);
+    participant.on('disconnected', () => {
+      this.detachParticipantTracks(this.twilioData);
     })
 
-    participant.twilioData.on('reconnected', () => {
+    participant.on('reconnected', () => {
     })
 
-    participant.twilioData.on('reconnecting', () => {
+    participant.on('reconnecting', () => {
     })
 
-    participant.twilioData.on('trackDisabled', (track:RemoteTrackPublication) => {
+    participant.on('trackDisabled', (track:RemoteTrackPublication) => {
       this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
       this.setUpVideoAndAudio(track.kind, false)
     })
 
-    participant.twilioData.on('trackEnabled', (track:RemoteTrackPublication) => {
+    participant.on('trackEnabled', (track:RemoteTrackPublication) => {
       this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant)
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.twilioData.on('trackPublished', (track) => {
+    participant.on('trackPublished', (track) => {
     })
 
-    participant.twilioData.on('trackStarted', (track) => {
+    participant.on('trackStarted', (track) => {
       // this.setTrackEvent(track);
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-    participant.twilioData.on('trackSubscriptionFailed', (track) => {
+    participant.on('trackSubscriptionFailed', (track) => {
     })
 
-    participant.twilioData.on('trackSwitchedOff', (track) => {
+    participant.on('trackSwitchedOff', (track) => {
     })
 
-    participant.twilioData.on('trackSwitchedOn', (track) => {
+    participant.on('trackSwitchedOn', (track) => {
     })
 
-    participant.twilioData.on('trackUnpublished', (track) => {
+    participant.on('trackUnpublished', (track) => {
     })
   }
 
@@ -93,8 +94,8 @@ export class DominantSpeakerComponent extends AbstractParticipant implements OnI
    *
    * @param participants
    */
-  makeDominantSpeakerTrack(participants: IParticipantMeeting){
-    this.attachParticipantTracks(participants.twilioData, this.containerDominantSpeakerVideo.nativeElement)
+  makeDominantSpeakerTrack(participants: Participant){
+    this.attachParticipantTracks(participants, this.containerDominantSpeakerVideo.nativeElement)
   }
 
   setUpCamAndMic(tracks, boolToChange){

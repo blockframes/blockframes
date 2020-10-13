@@ -1,17 +1,12 @@
-<ng-container>
-  <ng-container *ngIf="!!participant" class="dominant-speaker-video-container container-round-div-initial-name-participant">
-    <ng-container *ngIf="camMicIsOn$ | async as camMicIsOn">
-      <div *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
-        <span>
-          {{participant | eventInitialParticipant}}
-        </span>
-      </div>
-      <div class="nameParticipant">
+<section fxFlex fxLayoutAlign="center center">
+  <ng-container *ngIf="camMicIsOn$ | async as camMicIsOn">
+    <section *ngIf="!camMicIsOn.video" class="round-div-initial-name-participant">
+      <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
+    </section>
+    <span>
         {{participant.festivalData | displayName}}
-      </div>
-    </ng-container>
-    <div [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
-    </div>
+      </span>
   </ng-container>
-</ng-container>
-
+  <section [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
+  </section>
+</section>

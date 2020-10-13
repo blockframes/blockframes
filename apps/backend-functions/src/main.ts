@@ -24,7 +24,6 @@ import { RuntimeOptions } from 'firebase-functions';
 
 import * as twilio from './twilio';
 
-import * as twilio from './twilio';
 
 
 //--------------------------------
@@ -254,11 +253,3 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
-
-
-//--------------------------------
-//      Twilio Access           //
-//--------------------------------
-
-/** Trigger: REST call to create the access token for connection to twilio */
-export const getTwilioAccessToken = functions.https.onCall(logErrors(twilio.getTwilioAccessToken));
