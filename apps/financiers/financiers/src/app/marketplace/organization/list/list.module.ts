@@ -11,12 +11,12 @@ import { OrganizationCardModule } from '@blockframes/organization/components/car
 import { ListPageModule } from '@blockframes/ui/list/page/list-page.module';
 import { ListFilterModule } from '@blockframes/ui/list/filter/list-filter.module';
 import { FormCountryModule } from '@blockframes/ui/form';
-import { LoadMoreButtonModule } from '@blockframes/ui/load-more-button/load-more-button.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -29,12 +29,12 @@ import { MatInputModule } from '@angular/material/input';
     RouterModule.forChild([{ path: '', component: ListComponent }]),
     ListFilterModule,
     FormCountryModule,
-    LoadMoreButtonModule,
 
     // Material
     MatProgressSpinnerModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatIconModule
   ]
 })
 export class OrganizationListModule { }

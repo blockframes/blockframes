@@ -10,9 +10,7 @@ import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contr
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
-import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { staticConsts } from '@blockframes/utils/static-model';
-import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
@@ -301,11 +299,6 @@ export class ContractComponent implements OnInit {
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
-  }
-
-  /** Utils function to get currency code for currency pipe. */
-  public getCurrencyCode(currency: MovieCurrenciesSlug) {
-    return getCodeBySlug('MOVIE_CURRENCIES', currency);
   }
 
   /**

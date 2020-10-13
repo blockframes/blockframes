@@ -1,7 +1,7 @@
 import { DistributionRight, getRightTerritories } from '../+state/distribution-right.model';
 import { AvailsSearch } from '../form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
-import { MediasSlug } from '@blockframes/utils/static-model';
+import { MediasValues } from '@blockframes/utils/static-model';
 import { Terms } from '@blockframes/utils/common-interfaces/terms';
 
 /**
@@ -116,7 +116,7 @@ export function getFilterMatchingRights(
  * @param medias The medias from the filter defined by the buyer
  * @param rights The array of rights from a movie in the previously specified date range
  */
-export function getRightsWithMedias(medias: MediasSlug[], rights: DistributionRight[]): DistributionRight[] {
+export function getRightsWithMedias(medias: MediasValues[], rights: DistributionRight[]): DistributionRight[] {
   const rightsWithMediasInCommon: DistributionRight[] = [];
 
   for (const right of rights) {

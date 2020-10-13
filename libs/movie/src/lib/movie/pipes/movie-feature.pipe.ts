@@ -1,6 +1,8 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { getLabelBySlug, } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
+
 
 @Pipe({
   name: 'movieFeature',
@@ -11,7 +13,7 @@ export class MovieFeaturePipe implements PipeTransform {
     const { contentType, runningTime, genres, originalLanguages, release } = value;
 
     let displayedGenres = '';
-    if (genres.length > 0) displayedGenres += getLabelBySlug('GENRES', genres[0]);
+    if (genres.length > 0) displayedGenres += getValueByKey('genres', genres[0]);
     if (genres.length > 1) displayedGenres += ', ...';
 
     let displayedLanguages = '';

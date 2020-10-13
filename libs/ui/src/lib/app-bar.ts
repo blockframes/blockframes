@@ -112,7 +112,7 @@ export class AppContainerDirective {
 
   observe(targetId: string) {
     // Adding a delay is not optimal but couldn't find the source of the issue.
-    // Without the delay, the entry.rootBounds in the observer has value 0 - eventhough the element does exist.
+    // Without the delay, the entry.rootBounds in the observer has value 0 - even though the element does exist.
     // Running inside Angular or removing animations didn't solve the issue.
     setTimeout(() => {
       const el = this.document.getElementById(targetId);

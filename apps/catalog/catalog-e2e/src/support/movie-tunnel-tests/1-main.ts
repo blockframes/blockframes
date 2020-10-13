@@ -2,7 +2,7 @@ import { TunnelMainPage, TunnelStorylinePage } from "../pages/dashboard";
 
 export const CONTENT_TYPES = ['TV Film', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
 export const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
-export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
+export const MAIN_PARTIAL_COUNTRIES = ['Fr', 'Pl', 'It'];
 export const MAIN_COUNTRIES = ['France', 'Poland', 'Italy'];
 export const MEDIA = 'Pay TV';
 export const DATE = '10/10/2007';

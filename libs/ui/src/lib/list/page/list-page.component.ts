@@ -7,11 +7,14 @@ import {
   TemplateRef,
   ContentChild,
   Input,
-  AfterContentInit
+  AfterContentInit, Output, EventEmitter, HostBinding
 } from '@angular/core';
 
 // Blockframes
-import { fadeList } from '@blockframes/utils/animations/fade';
+import { fadeList, slideUp } from '@blockframes/utils/animations/fade';
+
+@Directive({ selector: 'list-page-app-bar' })
+export class PageAppBarSearchDirective { }
 
 @Directive({ selector: 'list-page-title' })
 export class PageTitleDirective { }
@@ -31,11 +34,9 @@ export class PageCardDirective { }
 @Directive({ selector: '[listPageListItem]' })
 export class PageListItemDirective { }
 
-@Directive({ selector: 'list-page-progress' })
-export class PageProgressDirective { }
-
 @Directive({ selector: '[listPageEmpty]' })
 export class PageEmptyDirective { }
+
 
 @Component({
   selector: '[items]list-page',
@@ -72,4 +73,35 @@ export class ListPageComponent implements AfterContentInit {
   goBack() {
     this.location.back();
   }
+}
+
+@Component({
+  selector: 'list-page-progress',
+  template: `
+  <ng-content></ng-content>
+  <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
+  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="value === 100">LOAD
+    MORE</button>
+    `,
+  styles: [`
+    :host {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    mat-progress-bar {
+        margin: 16px;
+        width: 80%;
+      }`],
+  animations: [slideUp],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PageProgressComponent {
+  @Input() value: number
+
+  @Output() loadMore = new EventEmitter();
+
+  @HostBinding('@slideUp') animation = true;;
 }
