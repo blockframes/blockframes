@@ -1,14 +1,16 @@
 
 <ng-container *ngIf="event.meta?.files?.length; else noFiles">
   <p>Select a file to display</p>
-  <mat-list>
-    <mat-list-item *ngFor="let file of event.meta.files" [matTooltip]="file | fileName">
-      <button mat-button (click)="select(file)" [disabled]="isSelected(file)">
-        <img [asset]="file | fileTypeImage" alt="file type">
-        <span>{{file | fileName | maxLength: 15}}</span>
+  <bf-carousel flex>
+    <ng-container *ngFor="let file of event.meta.files">
+      <button mat-button (click)="select(file)" [disabled]="isSelected(file)" carouselItem>
+        <div fxLayout="column" fxLayoutAlign="center center" [matTooltip]="file | fileName">
+          <img [asset]="file | fileTypeImage" alt="file type">
+          <span>{{file | fileName | maxLength: 15}}</span>
+        </div>
       </button>
-    </mat-list-item>
-  </mat-list>
+    </ng-container>
+  </bf-carousel>
 </ng-container>
 <ng-template #noFiles>
   <p>There is no files in this meeting.</p>
