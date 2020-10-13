@@ -20,8 +20,8 @@ img {
   border-radius: 50%;
 }
 
-footer {
-  margin: 80px 0;
+nav {
+  margin-bottom: 16px;
 }
 
 @include layout-bp(sm) {

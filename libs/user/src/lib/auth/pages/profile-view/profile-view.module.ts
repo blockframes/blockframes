@@ -1,22 +1,41 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { ProfileFormModule } from '@blockframes/auth/forms/profile/profile.module';
-import { PasswordFormModule } from '@blockframes/auth/forms/password/password.module';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
 import { ProfileViewComponent } from './profile-view.component';
 
 // Material
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+
+const routes: Routes = [{
+  path: '',
+  component: ProfileViewComponent,
+  children: [
+    {
+      path: '',
+      redirectTo: 'settings',
+      pathMatch: 'full'
+    },
+    {
+      path: 'settings',
+      loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule)
+    },
+    {
+      path: 'cookies',
+      loadChildren: () => import('../profile-cookie/profile-cookie.module').then(m => m.ProfileCookieModule)
+    }
+  ]
+}]
 
 @NgModule({
   declarations: [ProfileViewComponent],
@@ -24,15 +43,14 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     ImageReferenceModule,
-    ProfileFormModule,
-    PasswordFormModule,
     // Material
     MatProgressSpinnerModule,
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
     OrgNameModule,
-    RouterModule.forChild([{ path: '', component: ProfileViewComponent}])
+    MatTabsModule,
+    RouterModule.forChild(routes)
   ]
 })
 export class ProfileViewModule { }

@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
 import { CookieBannerComponent } from './cookie-banner.component';
-import { CookieFormModule } from '../cookie-form/cookie-form.module';
+import { CookieDialogModule } from '../cookie-dialog/cookie-dialog.module';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatCardModule,
     MatButtonModule,
     MatDialogModule,
-    CookieFormModule
+    CookieDialogModule
   ],
   exports: [CookieBannerComponent]
 })
