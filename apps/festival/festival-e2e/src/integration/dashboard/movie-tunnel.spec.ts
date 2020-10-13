@@ -31,6 +31,12 @@ const Movie = {
     "film-title": 'Ceci est mon corps (2001)',
     "film-year": '2001'
   },
+  storyElements: {
+    "logline": 'An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.',
+    "synopsis": 'I saw this film at the Stockholm Film festival. Before watching I read some reviews on other websites and found criticisms for the lack of depth and how much you really get to know the man. Well I was pleasantly surprised. You don\'t get to know his childhood story and how he became such an icon, but what you do get is a glimpse into his world and some of his philosophies. I actually preferred this rather than knowing in what year he did this or why he did that. He has a tremendous grip on life and there is a good chance you will walk away after watching this film and reflect on some of his insights.\nThe shots are interesting and the pace of the movie is excellent. I was not bored. The only disappointing thing was how abruptly the movie finished.\nOverall very good though.',
+    "key-assets": 'One of the few films presenting Karl Lagerfeld.',
+    "keyword": ''
+  },
   production: {
     "production-company-name": 'Realitism Films',
     "production-country": 'France',
@@ -132,8 +138,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     setForm('movie-form-additional-information form-country, static-select', formOpt);
   });
 
-  // Available Materials
+  // Storyline Elements
   it.only('Complete Technical Specs, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/story-elements');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Storyline Elements');
+    const formOpt: FormOptions = {
+      inputValue: Movie.storyElements
+    }
+    setForm('movie-form-story-elements textarea', formOpt);
+  });
+
+  // Available Materials
+  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/available-materials');
     cy.wait(3000);
