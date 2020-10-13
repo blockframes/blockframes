@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm, FormOptions, acceptCookie } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, setForm, FormOptions, 
+         acceptCookie, uploadFile, createFakeScript, randomID } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
@@ -95,6 +96,9 @@ const Movie = {
   availableMaterials: {
     "languages": 'English',
     "original-version": false,
+  },
+  notesStatements: {
+    "": ''
   }
 }
 
@@ -110,8 +114,24 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
+  // Notes & Statements
+  it.only('Complete Notes, go on Promotions', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/media-notes');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Notes and Statements');
+    const formOpt: FormOptions = {
+      inputValue: Movie.notesStatements
+    }
+    //setForm('movie-form-media-notes mat-radio-button, static-select, input', formOpt);
+    createFakeScript(`${randomID()}`).then(path => {
+      uploadFile(path, 'application/pdf', 'intent-note');
+    });
+  });
+
   // Shooting Information
-  it.only('Complete Shooting Information, go on movie tunnel storyline page', () => {
+  it.skip('Complete Shooting Information, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/shooting-information');
     cy.wait(3000);
