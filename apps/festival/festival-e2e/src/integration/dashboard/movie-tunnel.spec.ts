@@ -59,6 +59,19 @@ const Movie = {
     "crew-film1": 'Love Comedy',
     "crew-year1": '1989'
   },
+  additionalInfo: {
+    "release-country": 'World',
+    "release-media": 'N-VOD',
+    "boxoffice-territory": 'France',
+    "release-date": '01/01/2020',
+    "budget-range": '$10 - 20 millions',
+    "address-country": 'France',
+    "boxoffice-earnings": '120000',
+    "rating": 'Tous publics',
+    "rating-country": 'France',
+    "certification2": true,
+    "certification3": true
+  },
   techSpec: {
     "aspectRatio": '1.66',
     "resolution": '4K',
@@ -102,8 +115,34 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
-  // Technical Spec
+  // TODO Information
+  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/additional-information');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Additional Information');
+    const formOpt: FormOptions = {
+      inputValue: Movie.additionalInfo
+    }
+    setForm('movie-form-additional-information form-country, static-select', formOpt);
+  });
+
+  // Additional Information
   it.only('Complete Technical Specs, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/additional-information');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Additional Information');
+    const formOpt: FormOptions = {
+      inputValue: Movie.additionalInfo
+    }
+    setForm('movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', formOpt);
+  });
+
+  // Technical Spec
+  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/technical-spec');
     cy.wait(3000);

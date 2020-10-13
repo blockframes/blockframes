@@ -124,6 +124,12 @@ function handleFormElement(el:any, id: string, value: string) {
     return;
   }
 
+  if (el.is('mat-button-toggle')) {
+    cy.get(`[test-id="${id}"]`, {timeout: 1000})
+      .click();
+    return;
+  }
+
   if (el.is('chips-autocomplete')) {
     cy.get(`[test-id="${id}"] input`, {timeout: 1000})
       .type(value, {force: true});

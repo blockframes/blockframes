@@ -42,7 +42,7 @@
 
     <h3>Budget Range</h3>
     <section id="budget-range">
-      <movie-form-budget-range [form]="form.estimatedBudget"></movie-form-budget-range>
+      <movie-form-budget-range test-id="budget-range" [form]="form.estimatedBudget"></movie-form-budget-range>
     </section>
 
     <mat-divider></mat-divider>
@@ -114,7 +114,7 @@
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Rating</mat-label>
-                <input matInput formControlName="value" />
+                <input test-id="rating" matInput formControlName="value" />
                 <mat-hint>Please specify your title's rating, if existing.</mat-hint>
               </mat-form-field>
 
@@ -134,8 +134,8 @@
       <article>
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
-          <ng-container *ngFor="let certification of certifications">
-            <mat-button-toggle [value]="certification" [matTooltip]="certification?.hint"
+          <ng-container *ngFor="let certification of certifications; index as i">
+            <mat-button-toggle [attr.test-id]= "'certification' + (i + 1)" [value]="certification" [matTooltip]="certification?.hint"
               [matTooltipDisabled]="!certification?.hint">
               {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
