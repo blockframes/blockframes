@@ -5,7 +5,7 @@ import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
-  SubLicensorRoleSlug,
+  SubLicensorRoles,
   ContractStatus,
   ContractType
 } from "@blockframes/utils/static-model/types";
@@ -52,7 +52,7 @@ interface ContractPartyDetailRaw<D> {
    * For example, the licensor for a movie can have to approve sub-sells of the license for this movie.
    * A more explicit naming would have been: rolesForChildContracts
    */
-  childRoles?: SubLicensorRoleSlug[],
+  childRoles?: SubLicensorRoles[],
 }
 
 /**

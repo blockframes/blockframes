@@ -3,8 +3,8 @@
     <div fxLayout="column">
       <mat-button-toggle-group formControlName="media" multiple>
         <ng-container *ngFor="let media of staticMedias">
-          <mat-button-toggle [value]="media.slug" color="primary">
-            {{media.label}}
+          <mat-button-toggle [value]="media" color="primary">
+            {{media | toLabel: 'medias'}}
           </mat-button-toggle>
         </ng-container>
       </mat-button-toggle-group>

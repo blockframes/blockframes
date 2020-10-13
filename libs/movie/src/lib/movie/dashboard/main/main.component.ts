@@ -11,7 +11,7 @@ import { DashboardTitleShellComponent } from '../shell/shell.component';
 })
 export class MovieViewMainComponent implements OnInit {
 
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   constructor(private dynTitle: DynamicTitleService, private shell: DashboardTitleShellComponent) {}
 

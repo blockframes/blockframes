@@ -84,7 +84,7 @@
     <article *ngIf="movie.genres.length">
       <h5>Genres</h5>
       <p>
-        <span>{{ movie.genres | translateSlug: 'GENRES' }}</span>
+        <span>{{ movie.genres | toLabel: 'genres' }}</span>
         <span *ngIf="movie.customGenres.length">, {{ movie.customGenres.join(', ') }}</span>
       </p>
     </article>

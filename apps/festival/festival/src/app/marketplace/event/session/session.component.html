@@ -44,7 +44,7 @@
           <div [fxFlex]="mediaContainerSize">
             <media-viewer [event]="event"></media-viewer>
           </div>
-          <div [fxFlex]="visioContainerSize">VIDEO CONFERENCE</div>
+          <div [fxFlex]="visioContainerSize" class="visio">VIDEO CONFERENCE</div>
         </div>
         <ng-container *ngIf="event.isOwner">
           <media-control [event]="event"></media-control>

@@ -41,7 +41,7 @@
             <li>
               <span>Child roles : </span>
               <ng-container *ngIf="partyDetails.childRoles.length else nochildrole">
-                {{ partyDetails.childRoles | translateSlug: 'SUB_LICENSOR_ROLES' }}
+                {{ partyDetails.childRoles | toLabel: 'subLicensorRoles' }}
               </ng-container>
               <ng-template #nochildrole>
                 --
@@ -59,7 +59,7 @@
       <article fxLayout="column" fxLayoutAlign="space-between start">
         <h2>Contract Price : </h2>
         <div>
-          <span *ngIf="contract.lastVersion && contract.lastVersion.price else nocontractprice" i18n>Overall contract price : <b>{{ contract.lastVersion.price.amount | currency: getCurrencyCode(contract.lastVersion.price.currency) }}</b></span>
+          <span *ngIf="contract.lastVersion && contract.lastVersion.price else nocontractprice" i18n>Overall contract price : <b>{{ contract.lastVersion.price.amount | currency: contract.lastVersion.price.currency }}</b></span>
           <ng-template #nocontractprice>
             --
           </ng-template>
@@ -134,7 +134,7 @@
           </ng-template>
           <ng-template colRef="price" let-price>
             <ng-container *ngIf="price && price.currency else noversionprice">
-              {{ price.amount | currency: getCurrencyCode(price.currency) }}
+              {{ price.amount | currency: price.currency }}
             </ng-container>
             <ng-template #noversionprice>
               --
@@ -169,7 +169,7 @@
           </ng-template>
           <ng-template colRef="price" let-price>
             <ng-container *ngIf="price && price.currency else notitleprice">
-              {{ price.amount | currency: getCurrencyCode(price.currency) }}
+              {{ price.amount | currency: price.currency }}
             </ng-container>
             <ng-template #notitleprice>
               --

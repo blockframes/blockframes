@@ -46,6 +46,7 @@ export const icons = [
   { name: 'building', url: 'assets/icons/building.svg' },
   { name: 'CAD', url: 'assets/icons/CAD.svg' },
   { name: 'calendar', url: 'assets/icons/calendar.svg' },
+  { name: 'campaign', url: 'assets/icons/campaign.svg' },
   { name: 'certificate', url: 'assets/icons/certificate.svg' },
   { name: 'check', url: 'assets/icons/check.svg' },
   {
@@ -85,6 +86,7 @@ export const icons = [
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
   { name: 'folder', url: 'assets/icons/folder.svg' },
+  { name: 'gift', url: 'assets/icons/gift.svg' },
   { name: 'empty_status', url: 'assets/icons/empty_status.svg' },
   { name: 'excel', url: 'assets/icons/excel.svg' },
   {

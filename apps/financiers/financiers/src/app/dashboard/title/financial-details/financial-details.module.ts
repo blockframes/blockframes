@@ -9,7 +9,7 @@ import { MovieViewFinancialDetailComponent } from './financial-details.component
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { SummaryFinancialDetailsModule } from '../../tunnel/title/summary/financial-details/financial-details.module';
+import { SummaryFinancialDetailsModule } from '../../tunnel/summary/financial-details/financial-details.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
