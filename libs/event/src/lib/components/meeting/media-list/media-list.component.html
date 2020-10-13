@@ -4,7 +4,7 @@
   <mat-list>
     <mat-list-item *ngFor="let file of event.meta.files" [matTooltip]="file | fileName">
       <button mat-button (click)="select(file)" [disabled]="isSelected(file)">
-        <img asset="docx.webp" alt="file type">
+        <img [asset]="file | fileTypeImage" alt="file type">
         <span>{{file | fileName | maxLength: 15}}</span>
       </button>
     </mat-list-item>

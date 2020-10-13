@@ -7,6 +7,7 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 
 import { MeetingMediaListComponent } from './media-list.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { FileTypeImagePipeModule } from '@blockframes/media/pipes/file-type-image.pipe';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
@@ -22,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
     FileNameModule,
     ImageReferenceModule,
     MaxLengthModule,
+    FileTypeImagePipeModule,
 
     MatTooltipModule,
     MatButtonModule,
