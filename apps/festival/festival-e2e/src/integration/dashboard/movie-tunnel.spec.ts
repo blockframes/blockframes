@@ -79,8 +79,12 @@ const Movie = {
     "certification3": true
   },
   shootingInformation: {
+    "shooting-completed": true,
+    "date-completed": '31/12/2019',
     "country": 'France',
-    "cities": 'Paris, Provence, Rochefort{enter}'
+    "cities": 'Paris, Provence, Rochefort{enter}',
+    "event-premiere": 'Cannes Festival',
+    "event-date": '01/02/2020'
   },
   techSpec: {
     "aspectRatio": '1.66',
@@ -116,7 +120,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     const formOpt: FormOptions = {
       inputValue: Movie.shootingInformation
     }
-    setForm('movie-shooting-information static-select, input', formOpt);
+    setForm('movie-shooting-information mat-radio-button, static-select, input', formOpt);
   });
 
   // Storyline Elements

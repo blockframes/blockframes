@@ -12,11 +12,11 @@
 
         <!-- Shooting completed -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="completed">Shooting completed :
+          <mat-radio-button test-id="shooting-completed" class="mat-body-2" color="primary" value="completed">Shooting completed :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="completedPicker"
+            <input test-id="date-completed" matInput [matDatepicker]="completedPicker"
               [formControl]="form.shooting.get('dates').get('completed')">
             <mat-hint>You can put the first day of month if there is no exact date.</mat-hint>
             <mat-datepicker-toggle matSuffix [for]="completedPicker">
@@ -28,7 +28,7 @@
 
         <!-- Shooting in progress -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="progress">Shooting in progress :
+          <mat-radio-button test-id="shooting-progress" class="mat-body-2" color="primary" value="progress">Shooting in progress :
           </mat-radio-button>
           <mat-form-field appearance="outline" fxFlex>
             <mat-label>Approximate end date</mat-label>
@@ -43,7 +43,7 @@
 
         <!-- Shooting planned -->
         <article fxLayout="column">
-          <mat-radio-button class="mat-body-2" color="primary" value="planned">Shooting planned :
+          <mat-radio-button test-id="shooting-planned" class="mat-body-2" color="primary" value="planned">Shooting planned :
           </mat-radio-button>
           <div fxLayout="row wrap" fxFlex>
 
@@ -145,12 +145,12 @@
       <article fxLayout="row" fxLayoutGap="24px">
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Event</mat-label>
-          <input matInput type="text" [formControl]="form.expectedPremiere.get('event')" placeholder="Event">
+          <input test-id="event-premiere" matInput type="text" [formControl]="form.expectedPremiere.get('event')" placeholder="Event">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Approximate Date</mat-label>
-          <input matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')">
+          <input test-id="event-date" matInput [matDatepicker]="eventDate" [formControl]="form.expectedPremiere.get('date')">
           <mat-datepicker-toggle matSuffix [for]="eventDate">
             <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
           </mat-datepicker-toggle>

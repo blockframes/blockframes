@@ -124,7 +124,8 @@ function handleFormElement(el:any, id: string, value: string) {
     return;
   }
 
-  if (el.is('mat-button-toggle') || el.is('mat-slide-toggle')) {
+  if (el.is('mat-button-toggle') || el.is('mat-slide-toggle') ||
+      el.is('mat-radio-button')) {
     if (value) {
       cy.get(`[test-id="${id}"]`, {timeout: 1000})
         .click();
