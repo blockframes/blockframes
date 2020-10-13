@@ -9,5 +9,5 @@ import { CampaignForm } from '../../form';
 })
 export class ProposalComponent {
   @Input() form: CampaignForm;
-  @Input() link: string;
+  @Input() link: string | string[];
 }

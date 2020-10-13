@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 })
 export class DashboardComponent implements OnInit {
   private sub: Subscription;
+  movieId$ = this.route.selectParams('movieId');
   form = createCampaignForm();
 
   constructor(
@@ -24,7 +25,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const orgId = this.orgQuery.getActiveId();
-    this.sub = this.route.selectParams('movieId').pipe(
+    this.sub = this.movieId$.pipe(
       switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
     ).subscribe(campaign => this.form.patchAllValue(campaign));
   }
