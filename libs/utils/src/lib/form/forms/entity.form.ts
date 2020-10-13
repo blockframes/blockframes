@@ -25,7 +25,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
       form['createControl'] = createControl.bind(form);
       return form;
     }
-    return new FormEntity<Control, E>({}, validators);;
+    return new FormEntity<Control, E>({}, validators);
   }
 
 

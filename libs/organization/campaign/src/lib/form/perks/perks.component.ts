@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { Perk } from '../../+state';
 import { PerkForm } from '../form';
 
@@ -22,6 +23,7 @@ export class CampaignFormPerksComponent {
   private amount: Perk['amount'] = { total: 0, current: 0 };
   columns = columns;
   form = this.shell.getForm('campaign');
+  errorMatcher = new CrossFieldErrorMatcher();
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Privileges')
