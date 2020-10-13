@@ -16,4 +16,13 @@
       </movie-header-actions>
     </movie-header>
   </title-marketplace-shell>
+
+  <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+    <h1>Project Funding</h1>
+    <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
+    <button mat-flat-button color="accent">
+      Ask for invitation
+    </button>
+    <p class="mat-caption">Learn more about investing in cinema industry</p>
+  </section>
 </ng-container>
