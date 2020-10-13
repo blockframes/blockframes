@@ -1,7 +1,7 @@
 import { firestore } from "firebase";
 import { Expense } from "@blockframes/utils/common-interfaces/price";
 import { RawRange } from '@blockframes/utils/common-interfaces/range';
-import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
+import { MovieCurrencies } from "@blockframes/utils/static-model/types";
 import { ScheduledDateWithCounterRaw, TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Location } from "@blockframes/utils/common-interfaces/utility";
 
@@ -91,12 +91,12 @@ interface FinancialReportVersionRaw<D> {
    * recipientShare is calculated as follow:
    *  if (netReceipts - sumTaxes - expenses >= 0)
    *    recipientShare = netReceipts - sumTaxes - expenses;
-   *  else 
+   *  else
    *    recipientShare = 0;
    */
   recipientShare: number;
   /**
-   * @dev summ (invoices.price.amount) of invoices that have the contractId referenced 
+   * @dev summ (invoices.price.amount) of invoices that have the contractId referenced
    * and where contract.titles array-contains { reportId = this report id }
    */
   invoicedAmount: number;
@@ -118,22 +118,22 @@ interface FinancialReportRaw<D> {
    * @dev this represents the frequency of financial report sending (mail or email)
    * This data is stored here so we can have different frequencies & currencies
    * for each recipient of a financialReport.
-   * 
+   *
    */
   reportFrequency: ScheduledDateWithCounterRaw<D>[];
-  /** 
-   * @dev reporting conditions 
+  /**
+   * @dev reporting conditions
    * This represents the acceptable lag between an expected report generation ( defined by reportFrequency)
    * and it's actual send.
-   * 
+   *
    */
   reportingTerm: TermsRaw<D>,
-  choosenCurrency: MovieCurrenciesSlug;
+  choosenCurrency: MovieCurrencies;
   /**
    * @dev this is an OrgId that belongs to a party of FinancialReport.contractId
    * This org will receive the report.
    * Given that a FinancialReportRaw is linked only one recipient,
-   * There will be as much as FinancialReport documents as we have recipients for 
+   * There will be as much as FinancialReport documents as we have recipients for
    * a report.
    */
   recipientId: string;
@@ -156,9 +156,9 @@ export interface FinancialReportTitleDetail {
   expenses: Expense[],
   /**
    * @dev this is the sum of the expected expenses (price) (expenses: Expense[]).
-   * Details: 
-   * (sum Expense[] where type = 'market' * percentageMarketExpenses) 
-   * + 
+   * Details:
+   * (sum Expense[] where type = 'market' * percentageMarketExpenses)
+   * +
    * (sum Expense[] where type = 'export')
    */
   sumExpenses: number,

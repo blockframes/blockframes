@@ -3,6 +3,7 @@ import { OrganizationQuery } from "@blockframes/organization/+state";
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
 import { CampaignState, CampaignStore } from "./campaign.store";
+import { removeUndefined } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/campaigns' })
@@ -12,14 +13,19 @@ export class CampaignService extends CollectionService<CampaignState> {
     super(store);
   }
 
+  // Make sure we remove all undefined values
+  formatToFirestore(campaign: Partial<Campaign>) {
+    return removeUndefined(campaign);
+  }
+
   create(movieId: string) {
     const orgId = this.orgQuery.getActiveId();
     const id = movieId; // We use the movieId to index the campaign in the org
     return this.add({ id, movieId }, { params: {orgId}});
   }
 
-  save(id: string, updates: Partial<Campaign>) {
+  async save(id: string, updates: Partial<Campaign>) {
     const orgId = this.orgQuery.getActiveId();
-    return this.update(id, updates, { params: { orgId }});
+    return this.upsert({ id, ...updates }, { params: { orgId }});
   }
 }

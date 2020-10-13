@@ -88,7 +88,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     rating: [],
     review: [],
     scoring: null,
-    soundFormat: '',
+    soundFormat: null,
     isOriginalVersionAvailable: null,
     totalBudget: {},
 

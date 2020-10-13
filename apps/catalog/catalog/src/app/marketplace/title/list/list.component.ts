@@ -6,7 +6,6 @@ import {
   OnInit,
   ChangeDetectorRef, OnDestroy
 } from '@angular/core';
-import { CdkScrollable } from '@angular/cdk/overlay';
 
 // Blockframes
 import { Movie, MovieService } from '@blockframes/movie/+state';
@@ -16,8 +15,8 @@ import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rx
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 // Others
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -27,83 +26,84 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  private movieSearchResultsState = new BehaviorSubject<Movie[]>([]);
-  public movieSearchResults$: Observable<Movie[]>;
-  private sub: Subscription;
+  private movieResultsState = new BehaviorSubject<Movie[]>([]);
+
+  public movies$: Observable<Movie[]>;
+
+  public sortByControl: FormControl = new FormControl('Title');
+  public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
+
+  public searchForm = new MovieSearchForm();
+
   public nbHits: number;
   public hitsViewed = 0;
 
-  public sortByControl: FormControl = new FormControl('Title');
-  public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
+  private sub: Subscription;
+  private loadMoreToggle: boolean;
+  private lastPage: boolean;
 
-  public filterForm = new MovieSearchForm();
-
-  private scrollOffsetTop: number;
-  private loadingMore = true;
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private scrollable: CdkScrollable
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
-    this.filterForm.storeConfig.add('accepted');
-    // On catalog, we want only movie available for catalog
-    this.filterForm.appAccess.add('catalog');
-
-    this.movieSearchResults$ = this.movieSearchResultsState.asObservable();
-
+    this.searchForm.storeConfig.add('accepted');
+    // On financiers, we want only movie available for financiers
+    this.searchForm.appAccess.add('catalog');
+    this.movies$ = this.movieResultsState.asObservable();
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value), distinctUntilChanged())
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
     ]).pipe(
-      debounceTime(300),
-      switchMap(() => this.filterForm.search()),
+      tap(() => this.loading$.next(true)),
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
-      tap(movies => {
-        if (this.loadingMore) {
-          this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies));
-          this.hitsViewed += movies.length;
-          this.loadingMore = false;
-        } else {
-          this.movieSearchResultsState.next(movies);
-          this.hitsViewed = movies.length;
-        }
-      }),
-      tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+      /*    map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), TODO issue #3584 */
+    ).subscribe(movies => {
+      if (this.loadMoreToggle) {
+        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
+        this.loadMoreToggle = false;
+      } else {
+        this.movieResultsState.next(movies);
+      }
+      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
+      the overall possible results which is represented by nbHits.
+      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
+      So when the next valueChange is happening we need to reset everything and start from beginning  */
+      this.hitsViewed = this.movieResultsState.value.length
+      if (this.lastPage && this.searchForm.page.value !== 0) {
+        this.hitsViewed = 0;
+        this.searchForm.page.setValue(0);
+      }
+      this.lastPage = this.hitsViewed === this.nbHits;
+      this.loading$.next(false)
+    });;
   }
 
   clear() {
     const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
-    this.filterForm.reset(initial);
+    this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }
 
   async loadMore() {
-    this.loadingMore = true;
-    this.setScrollOffset();
-    this.filterForm.page.setValue(this.filterForm.page.value + 1);
-    await this.filterForm.search();
+    this.loadMoreToggle = true;
+    this.searchForm.page.setValue(this.searchForm.page.value + 1);
+    await this.searchForm.search();
   }
 
-  setScrollOffset() {
-    this.scrollOffsetTop = this.scrollable.measureScrollOffset('top');
-  }
-
-  scrollToScrollOffset() {
-    this.scrollable.scrollTo({ top: this.scrollOffsetTop });
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

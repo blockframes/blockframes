@@ -21,8 +21,8 @@ interface PartyDialogData {
 export class EditPartyComponent implements OnInit {
   public form: PartyDetailsForm;
   public statuses = staticConsts.contractStatus;
-  public staticRoles = staticModels.LEGAL_ROLES;
-  public staticSubRoles = staticModels.SUB_LICENSOR_ROLES;
+  public staticRoles = staticConsts.legalRoles;
+  public staticSubRoles = staticConsts.subLicensorRoles;
   public algoliaOrg = algolia.indexNameOrganizations;
   public resetInput = false;
 

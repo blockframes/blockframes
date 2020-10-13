@@ -1,6 +1,6 @@
 import { algolia } from '@env';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { staticModels } from '@blockframes/utils/static-model';
+import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
@@ -22,14 +22,14 @@ export class ContractFormPartyComponent {
 
   public algoliaOrg = algolia.indexNameOrganizations;
 
-  public staticRoles = staticModels.LEGAL_ROLES.filter(role => {
+  public staticRoles = Object.keys(staticConsts.legalRoles).filter(role => {
     const wantedRoles = ['licensee', 'licensor'];
-    return wantedRoles.includes(role.slug);
+    return wantedRoles.includes(role);
   })
 
-  public staticSubRoles = staticModels.SUB_LICENSOR_ROLES.filter(role => {
+  public staticSubRoles = Object.keys(staticConsts.subLicensorRoles).filter(role => {
     const wantedSubRoles = ['observator', 'signatory'];
-    return wantedSubRoles.includes(role.slug)
+    return wantedSubRoles.includes(role)
   })
 
 

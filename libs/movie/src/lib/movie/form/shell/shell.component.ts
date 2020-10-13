@@ -1,27 +1,33 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Input, Inject, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 // Blockframes
-import { MovieService, MovieQuery, MoviePromotionalElements } from '@blockframes/movie/+state';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieQuery } from '@blockframes/movie/+state';
 import { TunnelRoot, TunnelConfirmComponent, TunnelStep } from '@blockframes/ui/tunnel';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { MediaService } from '@blockframes/media/+state/media.service';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
-import { switchMap, map, startWith, filter } from 'rxjs/operators';
+import { switchMap, map, startWith } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
-import { ProductionStatus, staticConsts } from '@blockframes/utils/static-model';
-import { App, getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { ProductionStatus } from '@blockframes/utils/static-model';
+import { EntityControl, FormEntity } from '@blockframes/utils/form';
+import type { MovieShellConfig } from '../movie.shell.config';
+import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { mergeDeep } from '@blockframes/utils/helpers';
+
+
+function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
+  return prodStatusCtrl.valueChanges.pipe(
+    startWith(prodStatusCtrl.value),
+    map(prodStatus => acceptableStatus.includes(prodStatus))
+  )
+}
 
 function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
@@ -102,35 +108,24 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
   }]
 }
 
-function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
-  return prodStatusCtrl.valueChanges.pipe(
-    startWith(prodStatusCtrl.value),
-    map(prodStatus => acceptableStatus.includes(prodStatus))
-  )
+
+
+export interface FormSaveOptions {
+  publishing: boolean;
 }
 
-const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
-  development: {
-    'release.status': '',
-    "runningTime.status": ''
-  },
-  shooting: {
-    'release.status': '',
-    "runningTime.status": ''
-  },
-  post_production: {
-    'release.status': '',
-    "runningTime.status": ''
-  },
-  finished: {
-    'release.status': 'confirmed',
-    "runningTime.status": 'confirmed'
-  },
-  released: {
-    'release.status': 'confirmed',
-    "runningTime.status": 'confirmed'
-  }
+export interface FormShellConfig<Control extends EntityControl<Entity>, Entity> {
+  form: FormEntity<Control, Entity>;
+  onInit(): Subscription[];
+  onSave(options: FormSaveOptions): Promise<any>
 }
+
+export interface ShellConfig {
+  movie: MovieShellConfig;
+  campaign?: CampaignShellConfig
+}
+
+export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form managed by the shell');
 
 @Component({
   selector: 'movie-form-shell',
@@ -139,104 +134,75 @@ const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], R
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  form = new MovieForm(this.query.getActive());
+  private sub: Subscription[] = [];
   steps: TunnelStep[];
-
-  public exitRoute: string;
-  private sub: Subscription;
+  exitRoute: string;
 
   constructor(
     @Inject(DOCUMENT) private doc: Document,
-    private service: MovieService,
+    @Inject(FORMS_CONFIG) private configs: ShellConfig,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private mediaService: MediaService,
-    private route: ActivatedRoute,
-    private routerQuery: RouterQuery
+    private route: RouterQuery,
   ) { }
 
   ngOnInit() {
-    this.exitRoute = `../../../title/${this.query.getActiveId()}`;
-    const appSteps = this.route.snapshot.data.appSteps;
-    this.steps = getSteps(this.form.get('productionStatus'), appSteps);
-    this.sub = this.form.productionStatus.valueChanges.pipe(startWith(this.form.productionStatus.value),
-      filter(status => !!status)).subscribe(status => {
-        const pathToUpdate = Object.keys(valueByProdStatus[status]);
-        pathToUpdate.forEach(path => this.form.get(path as any).setValue(valueByProdStatus[status][path]));
-      })
+    for (const form in this.configs) {
+      const formSubs = this.configs[form].onInit();
+      this.sub.concat(formSubs);
+    }
+    const appSteps = this.route.getData<TunnelStep[]>('appSteps');
+    const movieForm = this.getForm('movie');
+    this.steps = getSteps(movieForm.get('productionStatus'), appSteps);
+    this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
   }
 
   ngAfterViewInit() {
-    const routerSub = this.route.fragment.subscribe(async (fragment: string) => {
+    const routerSub = this.route.selectFragment().subscribe(async (fragment: string) => {
       const el: HTMLElement = await this.checkIfElementIsReady(fragment);
-      el?.scrollIntoView(
-        {
-          behavior: 'smooth',
-          block: 'center',
-          inline: 'start',
-        }
-      );
+      el?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'start',
+      });
     });
-    this.sub.add(routerSub);
+    this.sub.push(routerSub);
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub.forEach(sub => sub.unsubscribe());
+  }
+
+  getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
+    return this.configs[name].form;
   }
 
   private checkIfElementIsReady(id: string) {
-    return new Promise<HTMLElement>((resolve, _) => {
+    return new Promise<HTMLElement>((resolve, rej) => {
       const el = this.doc.getElementById(id);
-      if (el) {
-        resolve(el);
-      }
+      if (el) resolve(el);
       new MutationObserver((_, observer) => {
         resolve(this.doc.getElementById(id));
       }).observe(this.doc.documentElement, { childList: true, subtree: true });
-    })
+    });
   }
 
   /** Update the movie. Used by summaries */
-  public async update({ publishing }: { publishing: boolean }) {
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    const base = this.query.getActive();
-    const movie = mergeDeep(base, documentToUpdate);
-
-    // -- Post merge operations -- //
-
-    // Remove empty file ref
-    movie.promotional = this.cleanPromotionalMedia(movie.promotional);
-
-    // Specific updates based on production status
-    const prodStatus = ['finished', 'released'];
-    if (prodStatus.includes(movie.productionStatus)) {
-      movie.directors.forEach(director => director.status = 'confirmed')
-      movie.cast.forEach(cast => cast.status = 'confirmed')
-      movie.crew.forEach(crew => crew.status = 'confiremd');
+  public async update(options: FormSaveOptions) {
+    if (options.publishing) {
+      for (const name in this.configs) {
+        const form: FormEntity<any> = this.getForm(name as any);
+        if (form.invalid) {
+          const fields = findInvalidControls(form);
+          throw new Error(`Form "${name}" should be valid before publishing. Invalid fields are: ${fields.join()}`);
+        }
+      }
     }
-
-    // Update fields with dynamic keys
-    const dynamicKeyFields = ['languages', 'shooting'];
-    dynamicKeyFields.forEach(key => movie[key] = this.form.value[key])
-
-    // Specific update if publishing
-    if (publishing) {
-      const currentApp: App = getCurrentApp(this.routerQuery);
-      movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
-      movie.storeConfig.appAccess[currentApp] = true;
+    for (const name in this.configs) {
+      await this.configs[name].onSave(options);
     }
-  
-    // -- Update movie & media -- //
-    await this.service.update(movie);
-    this.mediaService.uploadMedias(mediasToUpload);
-    this.form.markAsPristine();
   }
-
-
-
-
-
 
   /** Save the form and display feedback to user */
   public async save() {
@@ -246,7 +212,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   confirmExit() {
-    if (this.form.pristine) {
+    const isPristine = Object.values(this.configs).every(config => config.form.pristine);
+    if (isPristine) {
       return of(true);
     }
     const dialogRef = this.dialog.open(TunnelConfirmComponent, {
@@ -266,12 +233,22 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
       })
     );
   }
+}
 
-  cleanPromotionalMedia(promotional: MoviePromotionalElements): MoviePromotionalElements {
-    return {
-      ...promotional,
-      still_photo: promotional.still_photo.filter(photo => !!photo),
-      notes: promotional.notes.filter(note => !!note.ref)
+/* Utils function to get the list of invalid form. Not used yet, but could be useful later */
+export function findInvalidControls(formToInvestigate: FormGroup | FormArray) {
+  const recursiveFunc = (form: FormGroup | FormArray) => {
+    const fields = [];
+    for (const field in form.controls) {
+      const control = form.get(field);
+      if (control.invalid) {
+        fields.push(field);
+      }
+      if (control instanceof FormArray || control instanceof FormGroup) {
+        fields.concat(recursiveFunc(control));
+      }
     }
+    return fields;
   }
+  return recursiveFunc(formToInvestigate);
 }

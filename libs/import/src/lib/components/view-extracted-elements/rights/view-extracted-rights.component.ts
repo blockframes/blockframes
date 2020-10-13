@@ -3,6 +3,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { populateMovieLanguageSpecification, MovieService, } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { staticConsts } from '@blockframes/utils/static-model';
+import { GetCode } from '@blockframes/utils/static-model/staticConsts';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { SSF } from 'xlsx';
 import { createDistributionRight, createHoldback } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
@@ -186,8 +189,8 @@ export class ViewExtractedRightsComponent implements OnInit {
             // MEDIAS (Mandate Medias)
             if (spreadSheetRow[SpreadSheetDistributionRight.licenseType]) {
               distributionRight.licenseType = [];
-              spreadSheetRow[SpreadSheetDistributionRight.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
-                const media = getCodeIfExists('MEDIAS', c);
+              spreadSheetRow[SpreadSheetDistributionRight.licenseType].split(this.separator).forEach((c: GetCode<'medias'>) => {
+                const media = getKeyIfExists(staticConsts.medias, c);
                 if (media) {
                   distributionRight.licenseType.push(media);
                 } else {
@@ -352,7 +355,7 @@ export class ViewExtractedRightsComponent implements OnInit {
               const holdbacks = spreadSheetRow[SpreadSheetDistributionRight.holdbacks].split(this.separator)
               holdbacks.forEach(h => {
                 const holdbackParts = h.split(this.subSeparator);
-                const media = getCodeIfExists('MEDIAS', holdbackParts[0] as ExtractCode<'MEDIAS'>);
+                const media = getKeyIfExists(staticConsts.medias, holdbackParts[0] as GetCode<'medias'>);
 
                 if (holdbackParts.length !== 3) {
                   importErrors.errors.push({
