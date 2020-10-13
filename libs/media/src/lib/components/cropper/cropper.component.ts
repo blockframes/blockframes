@@ -4,8 +4,9 @@ import { BehaviorSubject } from 'rxjs';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
-import { getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
+import { getStoragePath, sanitizeFileName, Privacy, getMimeType } from '@blockframes/utils/file-sanitizer';
 import { SafeUrl, DomSanitizer } from '@angular/platform-browser';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
@@ -77,11 +78,14 @@ export class CropperComponent implements OnInit {
   /** Disable fileUploader & delete buttons in 'show' step */
   @Input() useFileUploader?= true;
   @Input() useDelete?= true;
-  @Input() filePrivacy : Privacy = 'public';
+  @Input() filePrivacy: Privacy = 'public';
+  @Input() types: string[] = ['image/jpeg', 'image/png'];
+  @Input() accept: string[] = ['.jpg', '.png'];
 
   constructor(
     private mediaService: MediaService,
     private sanitizer: DomSanitizer,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -131,7 +135,23 @@ export class CropperComponent implements OnInit {
   // drop
   filesSelected(fileList: FileList): void {
     this.file = fileList[0];
-    this.nextStep('crop');
+    const fileType = getMimeType(this.file);
+
+    // Hack around cypress issue with Files and events,
+    // See https://github.com/cypress-io/cypress/issues/3613
+    if (!(this.file instanceof File)) {
+      // @ts-ignore
+      this.file.__proto__ = new File([], fileType);
+    }
+
+    const isFileTypeValid = this.types && this.types.includes(fileType);
+    if (!isFileTypeValid) {
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
+      this.delete();
+    } else {
+      this.nextStep('crop');
+    }
+
   }
 
   // crop
@@ -169,7 +189,7 @@ export class CropperComponent implements OnInit {
       this.croppedImage = '';
     }
 
-    this.form.patchValue({ ref: ''});
+    this.form.patchValue({ ref: '' });
     this.form.markAsDirty();
 
     this.nextStep('drop');
