@@ -78,6 +78,10 @@ const Movie = {
     "certification2": true,
     "certification3": true
   },
+  shootingInformation: {
+    "country": 'France',
+    "cities": 'Paris, Provence, Rochefort{enter}'
+  },
   techSpec: {
     "aspectRatio": '1.66',
     "resolution": '4K',
@@ -89,29 +93,6 @@ const Movie = {
     "original-version": false,
   }
 }
-
-/*
-http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main
-
-
-https://github.com/blockframes/blockframes/pull/3862
-
-movie id:
-1dPPD8KtuGqvQcAytVWx
-
-
-http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary
-
-https://github.com/blockframes/blockframes/issues/3887
-
-https://staging.archipelmarket.com/c/o/dashboard/tunnel/movie/jfJsOGNmY4nbgMIBjA8U/main
-
-https://staging.archipelmarket.com/c/o/dashboard/title/P9GQDCuk7wMV6Knddec7/additional
-
-https://github.com/blockframes/blockframes/issues/3419
-
-Real life movie, New Cinema
-*/
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
@@ -125,21 +106,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
-  // TODO Information
-  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
+  // Shooting Information
+  it.only('Complete Shooting Information, go on movie tunnel storyline page', () => {
     //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/additional-information');
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/shooting-information');
     cy.wait(3000);
     acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Additional Information');
+    cy.get('h1', {timeout: 30000}).contains('Shooting Information');
     const formOpt: FormOptions = {
-      inputValue: Movie.additionalInfo
+      inputValue: Movie.shootingInformation
     }
-    setForm('movie-form-additional-information form-country, static-select', formOpt);
+    setForm('movie-shooting-information static-select, input', formOpt);
   });
 
   // Storyline Elements
-  it.only('Complete Technical Specs, go on movie tunnel storyline page', () => {
+  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/story-elements');
     cy.wait(3000);

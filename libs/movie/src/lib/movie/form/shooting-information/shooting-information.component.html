@@ -115,7 +115,7 @@
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-            <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')"
+            <static-select test-id="country" scope="TERRITORIES" type="model" [control]="locationForm.get('country')"
               [withoutValues]="['world']" fxFlex>
               <mat-label>Country</mat-label>
             </static-select>
@@ -130,7 +130,7 @@
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
-              <input matInput formArrayName="cities" [matChipInputFor]="chipList"
+              <input test-id="cities" matInput formArrayName="cities" [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="add($event, locationForm.get('cities'))" />
               <mat-hint>Use commas or press Enter key to separate cities.</mat-hint>
