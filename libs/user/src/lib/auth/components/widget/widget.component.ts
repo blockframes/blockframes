@@ -25,14 +25,6 @@ export class AuthWidgetComponent {
 
   public async logout() {
     await this.service.signOut();
-    /**
-     * the databases function seems to be not typed
-     * in typescript node.
-     */
-    const dbKeys = await (window.indexedDB as any).databases();
-    for (const key of dbKeys) {
-      indexedDB.deleteDatabase(key.name);
-    }
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

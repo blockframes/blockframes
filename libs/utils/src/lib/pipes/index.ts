@@ -13,3 +13,4 @@ export * from './has-keys.pipe';
 export * from './fileName.pipe';
 export * from './sanitize.pipe';
 export * from './app.pipe';
+export * from './form.pipe';
