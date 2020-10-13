@@ -1,4 +1,4 @@
-import { CrewRolesValues, ProducerRolesValues, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesValues, ProducerRolesValues, LegalRoles, TerritoriesSlug, SubLicensorRoles } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -88,7 +88,7 @@ export interface Crew extends Credit {
  * @dev interface to represent an entity within contracts
  */
 export interface Party extends StakeholderRaw {
-  role: LegalRolesSlug | SubLicensorRoleSlug, // overrided role scope from Person interface
+  role: LegalRoles | SubLicensorRoles, // overrided role scope from Person interface
   address?: Location
 }
 

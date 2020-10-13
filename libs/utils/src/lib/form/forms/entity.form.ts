@@ -16,14 +16,16 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
   createControl?: (value?: Partial<T>) => C
   static factory<E, Control extends EntityControl = any>(
     value: Partial<E>,
-    createControl?: (value?: Partial<E>) => Control, validators?: Validator
+    createControl?: (value?: Partial<E>) => Control,
+    validators?: Validator
   ): FormEntity<Control, E> {
-    const form = new FormEntity<Control, E>({}, validators);
     if (createControl) {
+      const controls = createControl(value);
+      const form = new FormEntity<Control, E>(controls, validators);
       form['createControl'] = createControl.bind(form);
+      return form;
     }
-    form.patchAllValue(value)
-    return form;
+    return new FormEntity<Control, E>({}, validators);;
   }
 
 
@@ -47,7 +49,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     } = {}
   ) {
     const controls = this['createControl'] ? this.createControl(value) : {};
-    Object.keys(value).forEach(name => {
+    Object.keys(controls).forEach(name => {
       if (this.controls[name]) {
         if (!!this.controls[name]['patchAllValue']) {
           this.controls[name]['patchAllValue'](value[name], { onlySelf: true, emitEvent: options.emitEvent });

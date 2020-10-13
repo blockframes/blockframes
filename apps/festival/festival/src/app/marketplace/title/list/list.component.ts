@@ -12,7 +12,6 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 // import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -22,85 +21,84 @@ import { CdkScrollable } from '@angular/cdk/overlay';
 })
 export class ListComponent implements OnInit, OnDestroy {
 
-  private movieSearchResultsState = new BehaviorSubject<Movie[]>([]);
-  public movieSearchResults$: Observable<Movie[]>;
-  private sub: Subscription;
-  public nbHits: number;
-  public hitsViewed = 0;
+  private movieResultsState = new BehaviorSubject<Movie[]>([]);
+
+  public movies$: Observable<Movie[]>;
 
   public sortByControl: FormControl = new FormControl('Title');
   public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
 
-  public filterForm = new MovieSearchForm();
+  public searchForm = new MovieSearchForm();
 
-  private scrollOffsetTop: number;
-  private loadingMore = true;
+  public nbHits: number;
+  public hitsViewed = 0;
+
+  private sub: Subscription;
+  private loadMoreToggle: boolean;
+  private lastPage: boolean;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private scrollable: CdkScrollable
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
-    this.filterForm.storeConfig.add('accepted');
-    // On festival, we want only movie available for festival
-    this.filterForm.appAccess.add('festival');
-
-    this.movieSearchResults$ = this.movieSearchResultsState.asObservable();
-
+    this.searchForm.storeConfig.add('accepted');
+    // On financiers, we want only movie available for financiers
+    this.searchForm.appAccess.add('festival');
+    this.movies$ = this.movieResultsState.asObservable();
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.filterForm.valueChanges.pipe(startWith(this.filterForm.value), distinctUntilChanged())
+      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
     ]).pipe(
-      debounceTime(300),
-      switchMap(() => this.filterForm.search()),
+      tap(() => this.loading$.next(true)),
+      distinctUntilChanged(),
+      debounceTime(500),
+      switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      tap(movies => this.hitsViewed = this.hitsViewed + movies.length),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      // map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), // TODO issue #3584
-      tap(movies => {
-        if (this.loadingMore) {
-          this.movieSearchResultsState.next(this.movieSearchResultsState.value.concat(movies));
-          this.loadingMore = false;
-        } else {
-          this.movieSearchResultsState.next(movies);
-        }
-      }),
-      tap(_ => setTimeout(() => this.scrollToScrollOffset(), 0))
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+      /*    map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), TODO issue #3584 */
+    ).subscribe(movies => {
+      if (this.loadMoreToggle) {
+        this.movieResultsState.next(this.movieResultsState.value.concat(movies))
+        this.loadMoreToggle = false;
+      } else {
+        this.movieResultsState.next(movies);
+      }
+      /* hitsViewed is just the current state of displayed orgs, this information is important for comparing
+      the overall possible results which is represented by nbHits.
+      If nbHits and hitsViewed are the same, we know that we are on the last page from the algolia index.
+      So when the next valueChange is happening we need to reset everything and start from beginning  */
+      this.hitsViewed = this.movieResultsState.value.length
+      if (this.lastPage && this.searchForm.page.value !== 0) {
+        this.hitsViewed = 0;
+        this.searchForm.page.setValue(0);
+      }
+      this.lastPage = this.hitsViewed === this.nbHits;
+      this.loading$.next(false)
+    });;
   }
 
   clear() {
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
-    this.filterForm.reset(initial);
+    this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }
 
   async loadMore() {
-    this.loadingMore = true;
-    this.setScrollOffset();
-    this.filterForm.page.setValue(this.filterForm.page.value + 1);
-    await this.filterForm.search();
+    this.loadMoreToggle = true;
+    this.searchForm.page.setValue(this.searchForm.page.value + 1);
+    await this.searchForm.search();
   }
 
-  setScrollOffset() {
-    this.scrollOffsetTop = this.scrollable.measureScrollOffset('top');
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
-
-  scrollToScrollOffset() {
-    this.scrollable.scrollTo({ top: this.scrollOffsetTop });
-  }
-  
 }

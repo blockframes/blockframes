@@ -1,7 +1,4 @@
 
-// Angular
-import { FormControl } from '@angular/forms';
-
 // Blockframes
 import { TerritoriesSlug } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
@@ -10,6 +7,7 @@ import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/ui/algoli
 // Utils
 import algoliasearch, { Index } from 'algoliasearch';
 import { algolia } from '@env';
+import { FormControl } from '@angular/forms';
 
 export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaRecordOrganization> {
   country: TerritoriesSlug,
@@ -19,6 +17,7 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
   return {
     query: '',
     page: 0,
+    hitsPerPage: 8,
     country: '',
     ...search,
     appAccess: search.appAccess,
@@ -30,6 +29,7 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
   return {
     query: new FormControl(search.query),
     page: new FormControl(search.page),
+    hitsPerPage: new FormControl(search.hitsPerPage),
     country: new FormControl(search.country),
     appAccess: new FormControl(search.appAccess),
     appModule: new FormControl(search.appModule)
@@ -46,23 +46,25 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
     const organizationSearch = createOrganizationSearch(search);
     const control = createOrganizationSearchControl(organizationSearch);
     super(control);
-
     this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations);
   }
 
+
   get query() { return this.get('query'); }
   get page() { return this.get('page'); }
+  get hitsPerPage() { return this.get('hitsPerPage') }
   get country() { return this.get('country'); }
   get appAccess() { return this.get('appAccess') }
   get appModule() { return this.get('appModule') }
 
+
   search() {
     return this.organizationIndex.search({
-      hitsPerPage: 8,
+      hitsPerPage: this.hitsPerPage.value,
       query: this.query.value,
       page: this.page.value,
       facetFilters: [
-        `country:${this.country.value ? this.country.value : ''}`,
+        `country:${this.country.value || ''}`,
         `appAccess:${this.appAccess.value}`,
         `appModule:${this.appModule.value}`
       ]

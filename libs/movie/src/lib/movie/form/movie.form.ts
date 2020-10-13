@@ -48,7 +48,7 @@ import {
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
+import { FormStaticValue, FormConstantValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
@@ -119,7 +119,7 @@ function createMovieControls(movie: Partial<Movie>) {
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    genres: FormList.factory(entity.genres, el => new FormStaticValue(el, 'GENRES'), [Validators.required]),
+    genres: FormList.factory(entity.genres, el => new FormConstantValue(el, 'genres'), [Validators.required]),
     internalRef: new FormControl(entity.internalRef, [Validators.maxLength(30)]),
     keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)]),
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
@@ -537,7 +537,7 @@ export class FilmographyForm extends FormEntity<FilmographyFormControl> {
 function createTotalBudgetFormControl(totalBudget: Partial<MovieTotalBudget> = {}) {
   return {
     castCost: new FormControl(totalBudget.castCost),
-    currency: new FormStaticValue(totalBudget.currency, 'MOVIE_CURRENCIES'),
+    currency: new FormConstantValue(totalBudget.currency, 'movieCurrencies'),
     postProdCost: new FormControl(totalBudget.postProdCost),
     producerFees: new FormControl(totalBudget.producerFees),
     shootCost: new FormControl(totalBudget.shootCost),
@@ -759,6 +759,10 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 }
+
+// ------------------------------
+//              NOTES
+// ------------------------------
 
 function createMovieNoteControls(note?: Partial<MovieNote>) {
   const entity = createMovieNote(note)
@@ -1024,7 +1028,7 @@ function createShootingRangeFormControl(entity?: Partial<MoviePlannedShootingDat
 
 type ShootingPlannedFormControl = ReturnType<typeof createShootingRangeFormControl>;
 
-function createPlannedRange(params: Partial<MoviePlannedShootingDateRange>) {
+function createPlannedRange(params: Partial<MoviePlannedShootingDateRange> = {}) {
   return {
     from: {},
     to: {},
@@ -1042,7 +1046,7 @@ export class ShootingPlannedObjectForm extends FormEntity<MoviePlannedShootingCo
   }
 }
 
-function createShootingPlannedFormControl(entity?: Partial<MoviePlannedShooting>) {
+function createShootingPlannedFormControl(entity: Partial<MoviePlannedShooting> = {}) {
   const { period, month, year } = createShootingPlannedObject(entity);
   return {
     period: new FormControl(period),
@@ -1064,9 +1068,9 @@ export class ShootingLocationsForm extends FormEntity<MovieShootingLocationsCont
 }
 
 function createShootingLocationsFormControl(entity?: Partial<MovieShootingLocations>) {
-  const { city, country } = createShootingLocations(entity);
+  const { cities, country } = createShootingLocations(entity);
   return {
-    city: new FormControl(city),
+    cities: new FormControl(cities),
     country: new FormControl(country)
   }
 }
@@ -1075,7 +1079,7 @@ type MovieShootingLocationsControl = ReturnType<typeof createShootingLocationsFo
 
 function createShootingLocations(params: Partial<MovieShootingLocations>): MovieShootingLocations {
   return {
-    city: '',
+    cities: [],
     country: '',
     ...params
   }

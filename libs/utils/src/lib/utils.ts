@@ -26,3 +26,23 @@ export function isAllowedVideoFileType(type: string) {
 export function isAllowedVideoFileExtension(extension: string) {
   return allowedVideoFilesExtensions.some(fileExtension => fileExtension === extension);
 }
+
+export async function loadJWPlayerScript(document: Document) {
+  return new Promise(res => {
+    const id = 'jwplayer-script';
+
+    // check if the script tag already exists
+    if (!document.getElementById(id)) {
+      const script = document.createElement('script');
+      script.setAttribute('id', id);
+      script.setAttribute('type', 'text/javascript');
+      script.setAttribute('src', 'https://cdn.jwplayer.com/libraries/lpkRdflk.js');
+      document.head.appendChild(script);
+      script.onload = () => {
+        res();
+      }
+    } else {
+      res(); // already loaded
+    }
+  });
+}

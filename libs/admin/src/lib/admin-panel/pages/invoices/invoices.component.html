@@ -4,7 +4,7 @@
   <bf-table-filter [source]="rows" [columns]="versionColumns" [initialColumns]="initialColumns"
     [filterPredicate]="filterPredicate" showFilter showLoader showPaginator>
     <ng-template colRef="collected" let-collected>
-      {{ collected.amount | currency: getCurrencyCode(collected.currency) }}
+      {{ collected.amount | currency: collected.currency }}
     </ng-template>
     <ng-template colRef="legalDocumentId" let-id>
       <a target="_blank" [routerLink]="getLegalDocument(id)" routerLinkActive="active"> {{ id }}</a>

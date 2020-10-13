@@ -1,0 +1,69 @@
+<tunnel-page>
+  <h4 title>Financing Conditions</h4>
+  <h1 subtitle>Financial Details</h1>
+  <ng-container tunnel-form>
+
+    <section id="financial-details" fxLayout="column">
+      <h3>Currency</h3>
+      <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
+
+      <static-select scope="movieCurrencies" type="constant" [control]="totalBudget.get('currency')" [withoutValues]="['']">
+        <mat-label>Currency</mat-label>
+        <ng-template let-currency>
+          <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
+          <span>{{ currency | toLabel: 'movieCurrencies' }}</span>
+        </ng-template>
+      </static-select>
+
+      <mat-divider></mat-divider>
+      <!-- TODO 3788 update hint, error, etc -->
+      <h3>Estimated Budget</h3>
+      <h5>1. Please fill in the general information</h5>
+      <mat-form-field appearance="outline">
+        <mat-label>Producer's Fees</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('producerFees')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cast Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('castCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Shoot Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('shootCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Post-Production Cost</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('postProdCost')" placeholder=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Other Charges</mat-label>
+        <input matInput type="number" [formControl]="totalBudget.get('others')" placeholder=""/>
+        <mat-hint>Other charges include insurance, research screenings, general expense...</mat-hint>
+      </mat-form-field>
+
+      <p class="mat-body-2 total-budget">
+        Your total estimated budget is : {{ totalBudget | budget | async | currency: totalBudget.get('currency').value }}
+      </p>
+
+      <h5>2. Please upload your total estimated budget</h5>
+      <p class="mat-body-2">This upload is optional but can help future investors*</p>
+
+      <file-upload
+      [form]="form.promotional.get('financialDetails')"
+      [storagePath]="getPath()"
+      accept="['.pdf']"
+      [types]="['application/pdf']">
+        <h3 type>Upload Files</h3>
+        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      </file-upload>
+      <span class="mat-caption">Upload a complete document.</span>
+
+    </section>
+
+
+  </ng-container>
+</tunnel-page>

@@ -355,10 +355,10 @@ workflows:
                 - master
                 - production
                 - staging
-      - test-e2e-release:
-          <<: *release_only
-          requires:
-            - build-and-test-all
+      # - test-e2e-release:
+      #     <<: *release_only
+      #     requires:
+      #       - build-and-test-all
       - test-e2e:
           requires:
             - build-and-test-all

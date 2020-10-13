@@ -96,8 +96,9 @@
                 </mat-hint>
               </static-select>
 
-              <static-select test-id="crew-status" scope="memberStatus" type="constant" [control]="crewForm.get('status')"
-                fxFlex *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
+              <static-select test-id="crew-status" scope="memberStatus" type="constant"
+                [control]="crewForm.get('status')" fxFlex *ngIf="form | hasStatus: ['development', 'shooting']"
+                [withoutValues]="['']">
                 <mat-label>Status</mat-label>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
                 </mat-hint>

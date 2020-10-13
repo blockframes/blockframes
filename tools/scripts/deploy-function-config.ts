@@ -17,14 +17,14 @@ if (arg) console.log('The following args were detected:', args)
  * This tuple array maps field names to the environment variable key to set them to
  */
 const functionsConfigMap: [string, string][] = [
-  ['sendgrid.api_key', 'SENDGRID_API_KEY'],
+  ['sendgrid.api_key', 'SENDGRID_API_KEY'],// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
   ['relayer.mnemonic', 'ETHEREUM_MNEMONIC'],
-  ['jwplayer.key', 'JWPLAYER_KEY'],
+  ['jwplayer.key', 'JWPLAYER_KEY'],// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
   ['jwplayer.secret', 'JWPLAYER_SECRET'],
   ['algolia.api_key', 'ALGOLIA_API_KEY'],
   ['admin.password', 'ADMIN_PASSWORD'],
   ['admin.email', 'CASCADE8_ADMIN'],
-  ['imgix.token', 'IMGIX_TOKEN'],
+  ['imgix.token', 'IMGIX_TOKEN'],// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
 ]
 
 /**
