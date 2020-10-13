@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
 import { staticConsts } from '@blockframes/utils/static-model';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-form-sales-pitch',
@@ -13,7 +14,10 @@ export class MovieFormSalesPitchComponent {
   form = this.shell.getForm('movie');
   public staticGoals = Object.keys(staticConsts['socialGoals']);
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Sales Pitch')
+  }
 
   public getPath() {
     const { movieId } = this.route.snapshot.params;

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
-
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'financiers-form-financial-details',
@@ -12,7 +12,10 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 export class MovieFormFinancialDetailsComponent {
   form = this.shell.getForm('movie');
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
+  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService) { 
+      this.dynTitle.setPageTitle('Financial Details')
+    }
 
   get totalBudget() {
     return this.form.get('totalBudget');
