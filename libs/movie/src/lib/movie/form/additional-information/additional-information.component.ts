@@ -3,6 +3,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
 import { staticConsts, UnitBox } from '@blockframes/utils/static-model';
 import { startWith, map } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 function toUnit(unit: UnitBox) {
   switch (unit) {
@@ -31,7 +32,9 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
     certifications: "Qualifications",
   }
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Additional Information')
+  }
 
   ngOnInit() {
     this.units$ = this.form.boxOffice.valueChanges.pipe(
