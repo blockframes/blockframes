@@ -100,7 +100,7 @@ export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
       movie.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
       movie.storeConfig.appAccess[currentApp] = true;
     }
-  
+    
     // -- Update movie & media -- //
     await this.service.update(movie);
     this.mediaService.uploadMedias(mediasToUpload);
