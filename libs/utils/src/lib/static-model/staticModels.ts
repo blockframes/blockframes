@@ -89,69 +89,6 @@ const models = {
       'label': 'Original Author'
     }
   ],
-  'PROMOTIONAL_ELEMENT_TYPES': [
-    { 'slug': 'trailer', 'label': 'Trailer' },
-    { 'slug': 'poster', 'label': 'Poster' },
-    { 'slug': 'banner', 'label': 'Banner' },
-    { 'slug': 'still_photo', 'label': 'Stills' },
-    { 'slug': 'presentation_deck', 'label': 'Presentation deck' },
-    { 'slug': 'scenario', 'label': 'Script' },
-    { 'slug': 'promo_reel_link', 'label': 'Promo reel' },
-    { 'slug': 'screener_link', 'label': 'Screener' },
-    { 'slug': 'trailer_link', 'label': 'Trailer' },
-    { 'slug': 'teaser_link', 'label': 'Teaser' },
-  ] as const,
-  'LEGAL_DOCUMENT_TYPES': [
-    { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
-    { 'slug': 'invoices', 'label': 'Invoices' },
-  ] as const,
-  'RESOURCE_SIZES': [
-    { 'slug': 'medium', 'label': 'Medium' },
-    { 'slug': 'small', 'label': 'Small' },
-    { 'slug': 'large', 'label': 'Large' },
-    { 'slug': 'thumbnail', 'label': 'Thumbnail' },
-  ] as const,
-  'RESOURCE_RATIOS': [
-    { 'slug': '16/9', 'label': '16:9' },
-    { 'slug': '4/3', 'label': '4:3' },
-    { 'slug': 'round', 'label': 'Round' },
-    { 'slug': 'square', 'label': 'Square' },
-    { 'slug': 'rectangle', 'label': 'Rectangle' },
-  ] as const,
-  'STAKEHOLDER_ROLES': [
-    {
-      'slug': 'executive-producer',
-      'label': 'Executive Producer'
-    },
-    {
-      'slug': 'co-producer',
-      'label': 'Co-Producer'
-    },
-    {
-      'slug': 'line-producer',
-      'label': 'Line Producer'
-    },
-    {
-      'slug': 'distributor',
-      'label': 'Distributor'
-    },
-    {
-      'slug': 'sales-agent',
-      'label': 'Sales Agent'
-    },
-    {
-      'slug': 'laboratory',
-      'label': 'Laboratory'
-    },
-    {
-      'slug': 'financier',
-      'label': 'Financier'
-    },
-    {
-      'slug': 'broadcaster-coproducer',
-      'label': 'Broadcaster coproducer'
-    }
-  ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },
@@ -245,23 +182,6 @@ const models = {
     },
     ...IsoTerritoriesToSlugAndLabel()
   ],
-  'LEGAL_ROLES': [
-    { 'slug': 'undefined', 'label': 'Undefined role' },
-    { 'slug': 'service-provider', 'label': 'Service provider' },
-    { 'slug': 'licensor', 'label': 'Licensor' },
-    { 'slug': 'licensee', 'label': 'Licensee' },
-    { 'slug': 'seller', 'label': 'Seller' },
-    { 'slug': 'lender', 'label': 'Lender' },
-    { 'slug': 'promisor', 'label': 'Promisor' },
-    { 'slug': 'promisee', 'label': 'Promisee' },
-    { 'slug': 'beneficiary', 'label': 'Beneficiary' },
-    { 'slug': 'third-party', 'label': 'Third party' },
-    { 'slug': 'purchaser', 'label': 'Purchaser' },
-  ] as const,
-  'SUB_LICENSOR_ROLES': [
-    { 'slug': 'signatory', 'label': 'Signatory' },
-    { 'slug': 'observator', 'label': 'Observator' },
-  ] as const,
 };
 
 export type Scope = keyof typeof models;

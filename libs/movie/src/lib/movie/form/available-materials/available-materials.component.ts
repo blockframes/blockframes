@@ -22,7 +22,7 @@ import { tap } from 'rxjs/operators';
 })
 export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   public languageCtrl = new FormControl();
 

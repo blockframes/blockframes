@@ -5,10 +5,18 @@
   </mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
-      <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
-        {{ value | translateSlug: scope }}
-        <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
-      </mat-chip>
+      <ng-container *ngIf="type === 'constant'">
+        <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
+          {{ value | toLabel: scope }}
+          <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
+        </mat-chip>
+      </ng-container>
+      <ng-container *ngIf="type === 'model'">
+        <mat-chip *ngIf="value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
+          {{ value | translateSlug: scope }}
+          <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
+        </mat-chip>
+      </ng-container>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -22,7 +30,14 @@
   </mat-error>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-  <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item['slug']">
-    {{ item['label'] }}
-  </mat-option>
+  <ng-container *ngIf="type === 'model'">
+    <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item['slug']">
+      {{ item['label'] }}
+    </mat-option>
+  </ng-container>
+  <ng-container *ngIf="type === 'constant'">
+    <mat-option *ngFor="let item of (filteredItems$ | async)" [value]="item">
+      {{ item | toLabel: scope }}
+    </mat-option>
+  </ng-container>
 </mat-autocomplete>

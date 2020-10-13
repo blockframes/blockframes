@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/+state';
 import { App } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'movie-form-end',
@@ -10,11 +11,11 @@ import { App } from '@blockframes/utils/apps';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormEndComponent {
-  app: App = this.route.snapshot.data.app;
+  app: App = this.route.getData('app');
   constructor(
     private router: Router,
     private movieQuery: MovieQuery,
-    private route: ActivatedRoute
+    private route: RouterQuery
   ) { }
 
   navigate() {

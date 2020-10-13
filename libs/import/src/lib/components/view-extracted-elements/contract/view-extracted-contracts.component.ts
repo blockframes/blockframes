@@ -16,6 +16,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { GetCode } from '@blockframes/utils/static-model/staticConsts';
 
 
 enum SpreadSheetContract {
@@ -113,7 +114,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               if (licensorParts[1]) {
                 licensor.party.orgId = licensorParts[1].trim();
               }
-              licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
+              licensor.party.role = 'licensor';
               contract.parties.push(licensor);
             });
           }
@@ -126,7 +127,7 @@ export class ViewExtractedContractsComponent implements OnInit {
             if (licenseeParts[1]) {
               licensee.party.orgId = licenseeParts[1].trim();
             }
-            licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
+            licensee.party.role = 'licensee';
 
             // SHOW NAME
             if (spreadSheetRow[SpreadSheetContract.displayLicenseeName]) {
@@ -141,10 +142,10 @@ export class ViewExtractedContractsComponent implements OnInit {
             spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
               const childRoleParts = r.split(this.subSeparator);
               const partyName = childRoleParts.shift().trim();
-              const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === 'licensor');
               if (party) {
                 childRoleParts.forEach(childRole => {
-                  const role = getCodeIfExists('SUB_LICENSOR_ROLES', childRole.trim() as ExtractCode<'SUB_LICENSOR_ROLES'>);
+                  const role = getKeyIfExists(staticConsts.subLicensorRoles, childRole.trim() as GetCode<'subLicensorRoles'>);
                   if (role) {
                     party.childRoles.push(role);
                   } else {

@@ -9,12 +9,12 @@ export const formatSlug = (slug: string, scope: Scope) => slug
   name: 'translateSlug'
 })
 export class TranslateSlugPipe implements PipeTransform {
-  transform(value: string | string[], scope: Scope, language?: string): string {
+  transform(value: string | string[], scope: string, language?: string): string {
     // TODO(MF, BD): add language parameter, when translation exist
     if (Array.isArray(value)) {
-      return value.map((v) => formatSlug(v, scope)).join(', ');
+      return value.map((v) => formatSlug(v, scope as Scope)).join(', ');
     } else {
-      return formatSlug(value, scope);
+      return formatSlug(value, scope as Scope);
     }
   }
 }

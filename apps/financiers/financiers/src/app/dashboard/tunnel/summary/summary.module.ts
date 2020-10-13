@@ -6,6 +6,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { TunnelSummaryComponent } from './summary.component';
 
 import { MovieTunnelSummaryModule } from '@blockframes/movie/form/summary/summary.module';
+import { CampaignSummaryModule } from '@blockframes/campaign/form/summary/summary.module';
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { FromCamelCasePipeModule } from '@blockframes/utils/pipes/from-camel-calse.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
@@ -25,6 +26,7 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     TunnelPageModule,
     MovieTunnelSummaryModule,
+    CampaignSummaryModule,
     GetPathModule,
     FromCamelCasePipeModule,
     HasStatusModule,

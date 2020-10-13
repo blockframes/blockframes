@@ -24,7 +24,7 @@ export class MovieFormStartTunnelComponent {
     this.loadingTunnel.next(true);
     try {
       const { id } = await this.movieService.create();
-      this.router.navigate(['../../tunnel/movie/', id], { relativeTo: this.route });
+      this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {
       this.loadingTunnel.next(false);
       console.error(err);

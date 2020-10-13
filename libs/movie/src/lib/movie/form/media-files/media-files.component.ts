@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMediaFilesComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute) { }
 

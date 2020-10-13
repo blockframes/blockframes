@@ -10,7 +10,7 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMediaImagesComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
 
   constructor(

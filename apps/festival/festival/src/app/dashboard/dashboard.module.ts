@@ -11,6 +11,8 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { MovieFormShellModule } from '@blockframes/movie/form/shell/shell.module';
+import { MovieShellConfig } from '@blockframes/movie/form/movie.shell.config';
+import { FORMS_CONFIG } from '@blockframes/movie/form/shell/shell.component';
 
 // Tunnel routes
 import { tunnelRoutes } from './tunnel/movie-tunnel.routes';
@@ -141,6 +143,11 @@ const routes: Routes = [{
     MatIconModule,
     MatToolbarModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  providers: [{
+    provide: FORMS_CONFIG,
+    useFactory: (movie) => ({ movie }),
+    deps: [MovieShellConfig]
+  }]
 })
 export class DashboardModule { }
