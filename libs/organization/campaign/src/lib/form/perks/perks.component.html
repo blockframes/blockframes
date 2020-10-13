@@ -71,7 +71,7 @@
             <div formGroupName="amount" fxLayout fxLayoutGap="16px" *ngIf="!(perkForm.value.amount | isUnlimited)">
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount of Privileges Available</mat-label>
-                <input type="number" matInput placeholder="$" formControlName="total" required/>
+                <input type="number" matInput placeholder="$" formControlName="total" required min="0"/>
                 <mat-hint>Please precise the number of available privileges or choose the “unlimited privileges”.</mat-hint>
                 <mat-error *ngIf="perkForm.hasError('required', 'amount.total')">
                   Please specify the number of available privileges or check the "unlimited privileges"
@@ -79,8 +79,11 @@
               </mat-form-field>
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount of Privileges Remaining</mat-label>
-                <input type="number" matInput formControlName="current"/>
+                <input type="number" matInput formControlName="current" [errorStateMatcher]="errorMatcher" min="0"/>
                 <mat-hint>Please set an amount remaining for this privilege.</mat-hint>
+                <mat-error *ngIf="perkForm.hasError('amountOverflow')">
+                  Remaining amount should be lower that total amount of privileges.
+                </mat-error>
               </mat-form-field>
             </div>
           </article>
