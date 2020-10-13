@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
 })
 export class MovieFormStoryElementsComponent implements OnInit {
   values$: Observable<string[]>;
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   keyword = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 

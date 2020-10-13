@@ -1,4 +1,4 @@
-<article *ngIf="perks.controls.length">
+<article *ngIf="hasPerks$ | async">
   <h6>
     Privileges
     <a mat-icon-button [routerLink]="link">

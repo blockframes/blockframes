@@ -9,7 +9,7 @@ import { staticConsts } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormReviewscComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   public premieres = Object.keys(staticConsts['premiereType']);
 

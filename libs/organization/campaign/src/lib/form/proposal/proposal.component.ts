@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CampaignFormShellComponent } from '../shell/shell.component';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 @Component({
   selector: 'campaign-form-proposal',
@@ -8,8 +8,8 @@ import { CampaignFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CampaignFormProposalComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('campaign');
   
-  constructor(private shell: CampaignFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent) { }
 
 }

@@ -21,7 +21,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMainComponent implements OnInit, OnDestroy {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   public movieId = this.route.snapshot.params.movieId;
   public sub: Subscription;
   valuesCustomGenres$: Observable<string[]>;

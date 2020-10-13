@@ -12,7 +12,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormMediaNotesComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   roles = ['producer', 'director', 'other'];
 

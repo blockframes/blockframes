@@ -17,7 +17,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 export class MovieFormShootingInformationComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   disabledForm = new FormControl();
   public periods = Object.keys(staticConsts['shootingPeriod']);
   public months = Object.keys(staticConsts['months']);
