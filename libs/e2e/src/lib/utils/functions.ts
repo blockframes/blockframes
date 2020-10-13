@@ -124,13 +124,15 @@ function handleFormElement(el:any, id: string, value: string) {
     return;
   }
 
-  if (el.is('mat-button-toggle')) {
-    cy.get(`[test-id="${id}"]`, {timeout: 1000})
-      .click();
+  if (el.is('mat-button-toggle') || el.is('mat-slide-toggle')) {
+    if (value) {
+      cy.get(`[test-id="${id}"]`, {timeout: 1000})
+        .click();
+    }
     return;
   }
 
-  if (el.is('chips-autocomplete')) {
+  if (el.is('chips-autocomplete') || el.is('input-autocomplete')) {
     cy.get(`[test-id="${id}"] input`, {timeout: 1000})
       .type(value, {force: true});
   }

@@ -77,6 +77,10 @@ const Movie = {
     "resolution": '4K',
     "colorInfo": 'Color & Black & White',
     "soundMix": 'Dolby SR'
+  },
+  availableMaterials: {
+    "languages": 'English',
+    "original-version": false,
   }
 }
 
@@ -128,8 +132,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     setForm('movie-form-additional-information form-country, static-select', formOpt);
   });
 
-  // Additional Information
+  // Available Materials
   it.only('Complete Technical Specs, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/available-materials');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Available Materials');
+    const formOpt: FormOptions = {
+      inputValue: Movie.availableMaterials
+    }
+    setForm('movie-form-available-materials mat-slide-toggle, input-autocomplete', formOpt);
+  });
+
+  // Additional Information
+  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/additional-information');
     cy.wait(3000);
