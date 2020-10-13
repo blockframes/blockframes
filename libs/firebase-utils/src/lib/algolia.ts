@@ -1,10 +1,18 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
-import { algolia } from '../environments/environment';
-import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
+import { algolia as algoliaClient, dev } from '@env';
+import * as functions from 'firebase-functions';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
+import { mockConfigIfNeeded } from './firebase-utils';
+import { PublicUser } from '@blockframes/user/types';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+
+export const algolia = {
+  ...algoliaClient,
+  adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia.api_key
+};
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
