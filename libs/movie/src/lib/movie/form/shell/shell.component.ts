@@ -179,7 +179,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   }
 
   private checkIfElementIsReady(id: string) {
-    return new Promise<HTMLElement>((resolve, _) => {
+    return new Promise<HTMLElement>((resolve, rej) => {
       const el = this.doc.getElementById(id);
       if (el) resolve(el);
       new MutationObserver((_, observer) => {
