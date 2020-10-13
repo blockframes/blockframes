@@ -114,6 +114,36 @@ interface FormData {
   value: string;
 }
 
+function handleFormElement(el:any, id: string, value: string) {
+  const cw = cy.wrap(el);
+  let doClick = true;
+
+  if (el.is('input') || el.is('textarea')) {
+    cw.click()
+      .type(value, {force: true});
+    return;
+  }
+
+  if (el.is('chips-autocomplete')) {
+    cy.get(`[test-id="${id}"] input`, {timeout: 1000})
+      .type(value, {force: true});
+  }
+  
+  if (el.is('static-select')) {
+    cy.get(`[test-id="${id}"] .mat-form-field-outline`, {timeout: 1000})
+      .first()
+      .click({force: true});
+      doClick = false;
+  }
+
+  if (doClick) {
+    cw.click();
+  }
+
+  cy.get('mat-option', {timeout: 1000})
+    .contains(value).click({force: true});  
+}
+
 /**
  * setForm : helper function to set the form with given values
  * @param selector : string to identify the form set
@@ -168,20 +198,8 @@ export function setForm(selector: string, formOpt: FormOptions) {
     }
     formelData.value = vault;
     if (needsHandling && (vault !== undefined)) {
-      const cw = cy.wrap($formEl);
       //Set the form field..
-      if ($formEl.is('input')) {
-        cw.click()
-          .type(vault, {force: true});
-      } else {
-        if ($formEl.is('chips-autocomplete')) {
-          cy.get(`[test-id="${keyBag}"] input`, {timeout: 1000})
-            .type(vault, {force: true});
-        }
-        cw.click()
-          .get('mat-option', {timeout: 1000})
-          .contains(vault).click({force: true});
-      }
+      handleFormElement($formEl, keyBag, vault);
     }
     formData.push(formelData);
   })

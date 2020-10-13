@@ -45,12 +45,19 @@ const Movie = {
     "sales-country": 'France',
   },
   artisticTeam: {
-    "cast-first-name": '',
-    "cast-last-name": '',
-    "cast-status": '',
-    "crew-first-name": '',
-    "crew-last-name": '',
-
+    "cast-first-name": 'Nicole',
+    "cast-last-name": 'Kidman',
+    "cast-status": 'Confirmed',
+    "cast-description": 'Elegant Nicole Kidman, known as one of Hollywood\'s top Australian imports, was actually born in Honolulu, Hawaii, while her Australian parents were there on educational visas. Kidman is the daughter of Janelle Ann (Glenny), a nursing instructor, and Antony David Kidman, a biochemist and clinical psychologist.',
+    "cast-film1": 'Bombshell',
+    "cast-year1": '2018',    
+    "crew-first-name": 'Karl',
+    "crew-last-name": 'Lagerfeld',
+    "crew-role": 'Costume Designer',
+    "crew-status": 'Confirmed',
+    "crew-description": 'Karl Lagerfeld was born on September 10, 1933 in Hamburg, Germany as Karl Otto Lagerfeldt. He was a costume designer and actor, known for The Tale of a Fairy (2011), The Return (2013) and Reincarnation (2014). He died on February 19, 2019 in Neuilly-sur-Seine, Hauts-de-Seine, France.',
+    "crew-film1": 'Love Comedy',
+    "crew-year1": '1989'
   }
 }
 
@@ -89,8 +96,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
-  // Main page
+  // Artistic Team
   it.only('Complete main fields, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/artistic');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Artistic Team');
+    const formOpt: FormOptions = {
+      inputValue: Movie.artisticTeam
+    }    
+    setForm('movie-form-artistic input, textarea, static-select', formOpt);
+  });  
+
+  // Production page
+  it.skip('Complete main fields, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/production');
     cy.wait(3000);
