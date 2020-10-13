@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-form-media-images',
@@ -16,7 +17,10 @@ export class MovieFormMediaImagesComponent {
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
-  ) { }
+    private dynTitle: DynamicTitleService
+  ) { 
+    this.dynTitle.setPageTitle('Images')
+  }
 
   ngOnInit() {
     if (!this.stillPhoto.controls.length) {
