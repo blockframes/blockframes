@@ -342,7 +342,8 @@ const constants = {
     promo_reel_link: 'Promo reel',
     screener_link: 'Screener',
     trailer_link: 'Trailer',
-    teaser_link: 'Teaser'
+    teaser_link: 'Teaser',
+    moodboard:'Moodboard'
   },
   rating: {
     pegi: 'PEGI',
