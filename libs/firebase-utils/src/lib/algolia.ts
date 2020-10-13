@@ -81,7 +81,7 @@ export function storeSearchableMovie(
   }
 
   try {
-    const movieAppAccess = movie.storeConfig!.appAccess;
+    const movieAppAccess = movie.storeConfig.appAccess;
 
     const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
@@ -102,13 +102,13 @@ export function storeSearchableMovie(
       languages: {
         original: !!movie.originalLanguages ? movie.originalLanguages: [],
         dubbed: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.dubbed) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.dubbed) :
           [],
         subtitle: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.subtitle) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.subtitle) :
           [],
         caption: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.caption) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as LanguagesSlug]?.caption) :
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
