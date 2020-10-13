@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { staticModels } from '@blockframes/utils/static-model';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'movie-form-reviews',
@@ -9,9 +9,9 @@ import { staticModels } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormReviewscComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
-  public premieres = staticModels['PREMIERE_TYPE'];
+  public premieres = Object.keys(staticConsts['premiereType']);
 
   constructor(private shell: MovieFormShellComponent) {}
 }

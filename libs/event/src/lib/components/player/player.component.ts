@@ -5,6 +5,7 @@ import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { loadJWPlayerScript } from '@blockframes/utils/utils';
 
 declare const jwplayer: any;
 
@@ -25,27 +26,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
     private authQuery: AuthQuery,
     private mediaService: MediaService,
     private functions: AngularFireFunctions,
-  ) {}
-
-  async loadScript() {
-    return new Promise(res => {
-      const id = 'jwplayer-script';
-
-      // check if the script tag already exists
-      if (!this.document.getElementById(id)) {
-        const script = this.document.createElement('script');
-        script.setAttribute('id', id);
-        script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', 'https://cdn.jwplayer.com/libraries/lpkRdflk.js');
-        document.head.appendChild(script);
-        script.onload = () => {
-          res();
-        }
-      } else {
-        res(); // already loaded
-      }
-    });
-  }
+  ) { }
 
   async initPlayer() {
 
@@ -87,7 +68,7 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit() {
-    await this.loadScript();
+    await loadJWPlayerScript(this.document);
     this.initPlayer();
   }
 

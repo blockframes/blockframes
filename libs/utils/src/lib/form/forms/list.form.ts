@@ -102,7 +102,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
    * @note this method is specific from FormList and is not part and Angular FormArray interface
    */
   patchAllValue(
-    value: Partial<T>[],
+    value: Partial<T>[] = [],
     options: {
       onlySelf?: boolean;
       emitEvent?: boolean;
@@ -130,11 +130,6 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     // If there is more value than form controls, remove it.
     while (this.length > value.length) {
       this.removeAt(this.length - 1);
-    }
-
-    // We always want to have one form by default in the list
-    if (this.length === 0) {
-      this.add();
     }
   }
 

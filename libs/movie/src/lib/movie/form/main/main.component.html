@@ -93,7 +93,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select test-id="status" scope="RELEASE_STATUS" type="model" [control]="form.release.get('status')" required fxFlex>
+          <static-select test-id="status" scope="screeningStatus" type="constant" [control]="form.release.get('status')" [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the release date is estimated or confirmed.
@@ -103,7 +103,7 @@
 
       </article>
 
-      <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="TERRITORIES"
+      <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="TERRITORIES"  type="model"
         placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
@@ -112,7 +112,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="LANGUAGES"
+      <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages" type="constant"
         placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
@@ -121,7 +121,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="GENRES" placeholder="Enter Genre(s)">
+      <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)" type="constant" [withoutValues]="['']">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -157,8 +157,8 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select test-id="screening-status" scope="SCREENING_STATUS" type="model" [control]="form.runningTime.get('status')"
-            placeholder="To be determined/Estimated/Confirmed" fxFlex>
+          <static-select  test-id="screening-status" scope="screeningStatus" type="constant" [control]="form.runningTime.get('status')"
+            placeholder="To be determined/Estimated/Confirmed" [withoutValues]="['']" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.

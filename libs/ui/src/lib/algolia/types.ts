@@ -5,6 +5,7 @@ import { TerritoriesSlug } from '@blockframes/utils/static-model';
 export interface AlgoliaSearch {
   query: string;
   page: number;
+  hitsPerPage: number;
 }
 
 interface AlgoliaRecord {

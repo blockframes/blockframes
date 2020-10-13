@@ -1,6 +1,7 @@
 
-import { GenresSlug, LanguagesSlug, TerritoriesSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
+import { Genres, LanguagesSlug, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
@@ -18,9 +19,9 @@ export interface LanguagesSearch {
 
 export interface MovieSearch extends AlgoliaSearch {
   appAccess: (keyof MovieAppAccess)[],
-  storeType: StoreTypeSlug[];
+  storeType: StoreType[];
   storeConfig: StoreStatus[]
-  genres: GenresSlug[];
+  genres: Genres[];
   originCountries: TerritoriesSlug[];
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
@@ -33,6 +34,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     appAccess: [],
     query: '',
     page: 0,
+    hitsPerPage: 8,
     storeType: [],
     storeConfig: [],
     genres: [],
@@ -65,9 +67,9 @@ function createMovieSearchControl(search: MovieSearch) {
     appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
     page: new FormControl(search.page),
-    storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
+    storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
-    genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
+    genres: FormList.factory<GetKeys<'genres'>>(search.genres),
     originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
@@ -100,7 +102,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get minBudget() { return this.get('minBudget'); }
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
-  get appAccess() { return this.get('appAccess')};
+  get appAccess() { return this.get('appAccess') };
 
 
   isEmpty() {

@@ -9,6 +9,7 @@ import { PriceComponent } from './price.component';
 import { MovieBannerModule } from '@blockframes/movie/components/banner';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
+import { ToLabelModule } from "@blockframes/utils/pipes/to-label.pipe";
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -29,6 +30,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MovieBannerModule,
     StaticSelectModule,
     AlgoliaAutocompleteModule,
+    ToLabelModule,
 
     // Material
     MatFormFieldModule,

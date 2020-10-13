@@ -12,10 +12,10 @@
         </static-select>
       </div>
       <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="24px">
-        <static-select test-id="colorInfo" type="constant" [control]="color" scope="colors" placeholder="Select Color/ B&W">
+        <static-select test-id="colorInfo" type="constant" [control]="color" scope="colors" placeholder="Select Color/ B&W" [withoutValues]="['']">
           <mat-label>Color Information</mat-label>
         </static-select>
-        <static-select test-id="soundMix" type="constant" [control]="soundFormat" scope="soundFormat" placeholder="Select Sound Format">
+        <static-select test-id="soundMix" type="constant" [control]="soundFormat" scope="soundFormat" placeholder="Select Sound Format" [withoutValues]="['']">
           <mat-label>Sound Mix</mat-label>
         </static-select>
       </div>

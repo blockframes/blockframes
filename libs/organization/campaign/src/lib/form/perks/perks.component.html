@@ -7,7 +7,7 @@
   </p>
 
   <ng-container tunnel-form>
-    <bf-form-table [columns]="columns" [form]="form.get('perks')">
+    <bf-form-table [columns]="columns" [form]="form.get('perks')" buttonText="Add a new Privilege">
       <!-- Columns -->
       <ng-template colRef="title" let-title><b>{{ title | titlecase }}</b></ng-template>
       <ng-template colRef="description" let-description>{{ description }}</ng-template>

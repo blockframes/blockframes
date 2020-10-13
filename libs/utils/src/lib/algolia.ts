@@ -3,6 +3,7 @@ import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
 import { ExtractSlug } from './static-model/staticModels';
+import { GetKeys } from './static-model/staticConsts';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 import { ProductionStatus } from './static-model';
@@ -87,7 +88,7 @@ export interface AlgoliaMovie {
   },
   directors: string[],
   keywords: string[],
-  genres: ExtractSlug<'GENRES'>[],
+  genres: GetKeys<'genres'>[],
   originCountries: ExtractSlug<'TERRITORIES'>[],
   languages: {
     original: ExtractSlug<'LANGUAGES'>[],
@@ -98,7 +99,7 @@ export interface AlgoliaMovie {
   status: ProductionStatus,
   budget: number,
   orgName: string,
-  storeType: ExtractSlug<'STORE_TYPE'>,
+  storeType: GetKeys<'storeType'>,
   objectID: string
 }
 

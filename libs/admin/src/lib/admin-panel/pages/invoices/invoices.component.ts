@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
-import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'admin-invoices',
@@ -75,13 +73,8 @@ export class InvoicesComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  /** Utils function to get currency code for currency pipe. */
-  public getCurrencyCode(currency: MovieCurrenciesSlug) {
-    return getCodeBySlug('MOVIE_CURRENCIES', currency);
-  }
-
   public getLegalDocument(legalDocumentId: string) {
-    // @TODO 
+    // @TODO
     console.log(`retreiving : ${legalDocumentId}`);
     return '#';
   }
