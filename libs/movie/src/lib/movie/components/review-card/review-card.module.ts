@@ -8,6 +8,7 @@ import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
   exports: [ReviewCardComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ImageReferenceModule,
     MaxLengthModule,
     MatCardModule,

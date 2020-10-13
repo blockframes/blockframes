@@ -30,6 +30,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     {
       path: 'finance',
       label: 'Financing Conditions'
+    },
+    {
+      path: 'campaign',
+      label: 'Investment Campaign'
     }
   ];
 
