@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent, findInvalidControls } from '@blockframes/movie/form/shell/shell.component';
-import { CampaignService } from '@blockframes/campaign/+state';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
