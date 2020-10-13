@@ -58,6 +58,12 @@ const Movie = {
     "crew-description": 'Karl Lagerfeld was born on September 10, 1933 in Hamburg, Germany as Karl Otto Lagerfeldt. He was a costume designer and actor, known for The Tale of a Fairy (2011), The Return (2013) and Reincarnation (2014). He died on February 19, 2019 in Neuilly-sur-Seine, Hauts-de-Seine, France.',
     "crew-film1": 'Love Comedy',
     "crew-year1": '1989'
+  },
+  techSpec: {
+    "aspectRatio": '1.66',
+    "resolution": '4K',
+    "colorInfo": 'Color & Black & White',
+    "soundMix": 'Dolby SR'
   }
 }
 
@@ -96,8 +102,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     })
   });
 
+  // Technical Spec
+  it.only('Complete Technical Specs, go on movie tunnel storyline page', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/technical-spec');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Technical Specification');
+    const formOpt: FormOptions = {
+      inputValue: Movie.techSpec
+    }
+    setForm('movie-form-technical-info static-select', formOpt);
+  });
+
   // Artistic Team
-  it.only('Complete main fields, go on movie tunnel storyline page', () => {
+  it.skip('Complete main fields, go on movie tunnel storyline page', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/artistic');
     cy.wait(3000);
@@ -105,9 +124,9 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     cy.get('h1', {timeout: 30000}).contains('Artistic Team');
     const formOpt: FormOptions = {
       inputValue: Movie.artisticTeam
-    }    
+    }
     setForm('movie-form-artistic input, textarea, static-select', formOpt);
-  });  
+  });
 
   // Production page
   it.skip('Complete main fields, go on movie tunnel storyline page', () => {
