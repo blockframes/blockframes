@@ -47,9 +47,9 @@ export function getTestingProjectId() {
   return 'test' + testIndex;
 }
 
-//////////////
-// DB TOOLS //
-//////////////
+////////////
+// DB TOOLS
+////////////
 
 export function populate(collection: string, set: any[]) {
   const db = admin.firestore();
