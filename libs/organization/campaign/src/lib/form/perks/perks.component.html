@@ -82,7 +82,7 @@
                 <input type="number" matInput formControlName="current" [errorStateMatcher]="errorMatcher" min="0"/>
                 <mat-hint>Please set an amount remaining for this privilege.</mat-hint>
                 <mat-error *ngIf="perkForm.hasError('amountOverflow')">
-                  Remaining amount should be lower that total amount of privileges.
+                  Remaining amount should be lower than total amount of privileges.
                 </mat-error>
               </mat-form-field>
             </div>
