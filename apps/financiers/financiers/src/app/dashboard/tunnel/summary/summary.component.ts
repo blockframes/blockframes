@@ -28,7 +28,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
     private shell: MovieFormShellComponent,
     private router: Router,
     private query: MovieQuery,
-    private campaignService: CampaignService,
     private snackBar: MatSnackBar,
     private dynTitle: DynamicTitleService
   ) {
@@ -49,8 +48,6 @@ export class TunnelSummaryComponent implements OnInit, OnDestroy {
       await this.shell.update({ publishing: true });
       const movieId = this.query.getActiveId();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
-       // We use the movieId to index the campaign
-      await this.campaignService.create(movieId);
       ref.afterDismissed().subscribe(_ => this.router.navigate(['/c/o/dashboard/title', movieId]))
     } catch (err) {
       console.error(err);
