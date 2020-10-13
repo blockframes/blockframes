@@ -6,11 +6,13 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 import { MediaViewerComponent } from './media-viewer.component';
 import { PdfViewerComponent } from './pdf-viewer/pdf-viewer.component';
+import { VideoViewerComponent } from './video-viewer/video-viewer.component';
 
 @NgModule({
   declarations: [
     MediaViewerComponent,
     PdfViewerComponent,
+    VideoViewerComponent,
   ],
   imports: [
     CommonModule,

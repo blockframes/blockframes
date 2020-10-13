@@ -197,7 +197,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
           spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
             const stakeHolderParts = p.split(this.subSeparator);
             const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0].trim() });
-            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
+            const role = getKeyIfExists(staticConsts.stakeholderRoles, stakeHolderParts[1] as GetCode<'stakeholderRoles'>);
             if (stakeHolderParts[2]) {
               const country = getCodeIfExists('TERRITORIES', stakeHolderParts[2] as ExtractCode<'TERRITORIES'>);
               if (country) {
@@ -214,7 +214,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
             }
             if (role) {
               switch (role) {
-                case 'broadcaster-coproducer':
+                case 'broadcasterCoproducer':
                   movie.stakeholders.broadcasterCoproducer.push(stakeHolder);
                   break;
                 case 'financier':
@@ -223,19 +223,19 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 case 'laboratory':
                   movie.stakeholders.laboratory.push(stakeHolder);
                   break;
-                case 'sales-agent':
+                case 'salesAgent':
                   movie.stakeholders.salesAgent.push(stakeHolder);
                   break;
                 case 'distributor':
                   movie.stakeholders.distributor.push(stakeHolder);
                   break;
-                case 'line-producer':
+                case 'lineProducer':
                   movie.stakeholders.lineProducer.push(stakeHolder);
                   break;
-                case 'co-producer':
+                case 'coProducer':
                   movie.stakeholders.coProductionCompany.push(stakeHolder);
                   break;
-                case 'executive-producer':
+                case 'executiveProducer':
                 default:
                   movie.stakeholders.productionCompany.push(stakeHolder);
                   break;

@@ -30,6 +30,27 @@ const constants = {
     mandate: 'Mandate',
     sale: 'Sale'
   },
+  legalDocumentTypes: {
+    chain_of_titles: 'Chain of titles',
+    invoices: 'Invoices'
+  },
+  legalRoles: {
+    undefined: 'Undefined role',
+    serviceProvider: 'Service provider', // service-provider
+    licensor: 'Licensor',
+    licensee: 'Licensee',
+    seller: 'Seller',
+    lender: 'Lender',
+    promisor: 'Promisor',
+    promisee: 'Promisee',
+    beneficiary: 'Beneficiary',
+    thirdParty: 'Third party', // third-party
+    purchaser: 'Purchaser'
+  },
+  subLicensorRoles: {
+    signatory: 'Signatory',
+    observator: 'Observator'
+  },
 
 
   // ------------------ //
@@ -225,6 +246,18 @@ const constants = {
     finished: 'Completed',
     released: 'Released'
   },
+  promotionalElementTypes: {
+    trailer: 'Trailer',
+    poster: 'Poster',
+    banner: 'Banner',
+    still_photo: 'Stills',
+    presentation_deck: 'Presentation deck',
+    scenario: 'Script',
+    promo_reel_link: 'Promo reel',
+    screener_link: 'Screener',
+    trailer_link: 'Trailer',
+    teaser_link: 'Teaser'
+  },
   rating: {
     pegi: 'PEGI',
     csa: 'CSA',
@@ -268,6 +301,16 @@ const constants = {
     'dolby-5.1': 'Dolby 5.1',
     'dolby-7.1': 'Dolby 7.1',
     thx: 'THX'
+  },
+  stakeholderRoles: {
+    executiveProducer: 'Executive Producer',
+    coProducer: 'Co-Producer',
+    lineProducer: 'Line Producer',
+    distributor: 'Distributor',
+    salesAgent: 'Sales Agent',
+    laboratory: 'Laboratory',
+    financier: 'Financier',
+    broadcasterCoproducer: 'Broadcaster coproducer'
   },
   storeStatus: {
     submitted: 'Submitted',

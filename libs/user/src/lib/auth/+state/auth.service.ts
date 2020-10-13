@@ -86,7 +86,6 @@ export class AuthService extends FireAuthService<AuthState> {
 
     this.ngIntercom.shutdown();
     sessionStorage.clear();
-    window.location.reload();
   }
 
   /**
