@@ -1,8 +1,10 @@
-import { Component, ChangeDetectionStrategy, Pipe } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { Perk } from '@blockframes/campaign/+state';
+import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
+import { Perk } from '../../+state';
 import { PerkForm } from '../form';
-import { CampaignFormShellComponent } from '../shell/shell.component';
 
 const columns = {
   title: 'Title',
@@ -18,11 +20,14 @@ const columns = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CampaignFormPerksComponent {
-  private amount: Perk['amount'] = { total: 0 };
+  private amount: Perk['amount'] = { total: 0, current: 0 };
   columns = columns;
-  form = this.shell.form;
-  
-  constructor(private shell: CampaignFormShellComponent) { }
+  form = this.shell.getForm('campaign');
+  errorMatcher = new CrossFieldErrorMatcher();
+
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Privileges')
+  }
 
   setUnlimited(change: MatCheckboxChange, form: PerkForm) {
     if (change.checked) {

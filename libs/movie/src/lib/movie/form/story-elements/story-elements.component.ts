@@ -5,6 +5,7 @@ import { startWith } from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { FormControl } from '@angular/forms';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-form-story-elements',
@@ -14,11 +15,13 @@ import { FormControl } from '@angular/forms';
 })
 export class MovieFormStoryElementsComponent implements OnInit {
   values$: Observable<string[]>;
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
   keyword = new FormControl();
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Storyline Elements')
+  }
 
   ngOnInit() {
     this.values$ = this.form.keywords.valueChanges.pipe(startWith(this.form.keywords.value));

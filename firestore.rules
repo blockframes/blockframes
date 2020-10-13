@@ -206,6 +206,11 @@ service cloud.firestore {
         allow update: if isOrgMember(orgId);
         allow delete: if isOrgAdmin(userOrgId());
       }
+
+      match /campaigns/{movieId} {
+        allow read: if isSignedIn();
+        allow write: if isOrgMember(orgId);
+      }
     }
 
     /// FUNCTIONS ///

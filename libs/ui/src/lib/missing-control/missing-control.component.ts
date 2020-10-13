@@ -1,7 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
-import { FormStaticValue } from '@blockframes/utils/form';
 
 // Blockframes
 import { Scope } from '@blockframes/utils/static-model/staticModels';
@@ -21,7 +20,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   @Input() control: AbstractControl;
   @Input() scope: Scope;
   @Input() type: string;
-  @Input() link: string;
+  @Input() link: string | string[];
   @Input() fragment: string;
   @Input() isLast = true;
 
@@ -41,13 +40,14 @@ export class MissingControlComponent implements OnInit, OnDestroy {
         const values = Object.values(control.controls);
         return values.length ? values.some(c => this.isMissing(c)) : true;
       } else {
-        return true
+        return true;
       }
     }
     if (Array.isArray(control?.value)) {
-      return !control?.value.length
+      return !control?.value.length;
     }
-    return !control?.value;
+    const value = control?.value;
+    return value === null || value === undefined || value === ''; // 0 should be a valid value
   }
 
   ngOnDestroy() {

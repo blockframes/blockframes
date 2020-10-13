@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
@@ -8,7 +9,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieFormArtisticComponent {
-  form = this.shell.form;
+  form = this.shell.getForm('movie');
 
   public castColumns = {
     firstName: 'First Name',
@@ -28,7 +29,9 @@ export class MovieFormArtisticComponent {
   }
 
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Artistic Team')
+  }
 
   get crew() {
     return this.form.crew;

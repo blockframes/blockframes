@@ -18,13 +18,13 @@ export class MovieFormStartTunnelComponent {
 
   public loadingTunnel = new BehaviorSubject(false);
 
-  constructor(private movieService: MovieService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private movieService: MovieService, private router: Router) { }
 
   async navigateToTunnel() {
     this.loadingTunnel.next(true);
     try {
       const { id } = await this.movieService.create();
-      this.router.navigate(['../../tunnel/movie/', id], { relativeTo: this.route });
+      this.router.navigate(['/c/o/dashboard/tunnel/movie/', id]);
     } catch (err) {
       this.loadingTunnel.next(false);
       console.error(err);

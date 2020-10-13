@@ -9,6 +9,7 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state';
 import { VersionSpecificationForm } from '@blockframes/movie/form/movie.form';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 // RxJs
 import { Subscription } from 'rxjs';
@@ -22,7 +23,7 @@ import { tap } from 'rxjs/operators';
 })
 export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
-  public form = this.shell.form;
+  public form = this.shell.getForm('movie');
 
   public languageCtrl = new FormControl();
 
@@ -30,7 +31,9 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Available Material')
+   }
 
   ngOnInit() {
     this.formIsEmpty ? this.showButtons = true : this.showButtons = false;

@@ -10,6 +10,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
     RouterModule,
     FlexLayoutModule,
     // Blockframes
+    MovieFeatureModule,
     ToLabelModule,
     TranslateSlugModule,
     DisplayNameModule,
