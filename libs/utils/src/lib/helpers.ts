@@ -108,7 +108,6 @@ export function getKeyIfExists<T, K extends Code<T>>(base: Scope, code: string):
   // Sanitized input to properly compare with base data
   const sanitizedCode = (code as string).trim().toLowerCase();
   const candidate = Object.entries(staticConsts[base]).find(([key, value]) => {
-    console.log(value);
     return [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode)
   })
   return candidate ? candidate.shift() as any : undefined;
@@ -193,8 +192,8 @@ export function debounceFactory(func: (...params) => any, wait: number) {
 
 
 
-/** 
- * Remove all undefined fields 
+/**
+ * Remove all undefined fields
  * @param value anything
  */
 export function removeUndefined(value: any) {
