@@ -1,22 +1,12 @@
+bf-carousel {
+  margin: 24px 0;
+}
 
-mat-list {
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-  overflow-x: auto;
-  mat-list-item {
-    display: inline-block;
-    height: 100%;
-    width: auto;
-    button {
-      img {
-        width: 90px;
-      }
-      span {
-        display: block;
-      }
-    }
-  }
+img {
+  width: 90px;
+}
+span {
+  display: block;
 }
 
 a {
