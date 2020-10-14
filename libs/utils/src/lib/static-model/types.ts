@@ -31,7 +31,7 @@ import {
   storeType,
   subLicensorRoles,
   unitBox,
-  territories
+  territories, territoriesISOA3, territoriesISOA2, territoriesNUMCODE, territoriesFR
 } from './staticConsts';
 
 // TYPE FOR CONSTANTS
@@ -108,3 +108,11 @@ export type UnitBoxValue = typeof unitBox[UnitBox];
 
 export type Territories = keyof typeof territories;
 export type TerritoriesValues = typeof territories[Territories];
+export type TerritoriesISOA2 = keyof typeof territoriesISOA2;
+export type TerritoriesISOA2Values = typeof territoriesISOA2[TerritoriesISOA2];
+export type TerritoriesISOA3 = keyof typeof territoriesISOA3;
+export type TerritoriesISOA3Values = typeof territoriesISOA3[TerritoriesISOA3];
+export type TerritoriesNUMCODE = keyof typeof territoriesNUMCODE;
+export type TerritoriesNUMCODEValues = typeof territoriesNUMCODE[TerritoriesNUMCODE];
+export type TerritoriesFR = keyof typeof territoriesFR;
+export type TerritoriesFRValues = typeof territoriesFR[TerritoriesFR];
