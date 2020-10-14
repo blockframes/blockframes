@@ -68,7 +68,6 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
       this.setUpVideoAndAudio(track.kind, true)
     })
 
-
     participant.on(meetingEventEnum.TrackStarted, (track) => {
       this.setUpVideoAndAudio(track.kind, true)
     })
@@ -76,7 +75,7 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
 
   /**
    *
-   * @param participant
+   * @param participant: Participant
    */
   mocDivVideo(participant: Participant) {
     const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
@@ -84,7 +83,12 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
 
   }
 
-  setUpVideoAndAudio(kind, boolToChange) {
+  /**
+   *
+   * @param kind: string
+   * @param boolToChange: boolean
+   */
+  setUpVideoAndAudio(kind: string, boolToChange: boolean) {
     if (kind === 'video') {
       this.$camMicIsOnRemoteDataSource.next({...this.$camMicIsOnRemoteDataSource.getValue(), video: boolToChange});
     } else {
