@@ -79,3 +79,6 @@ export type SubLicensorRoles = keyof typeof constants.subLicensorRoles;
 
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];
+
+
+export const languages = constants.languages;

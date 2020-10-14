@@ -275,14 +275,14 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
 /**
  * @dev Simplify ISO3166TERRITORIES array by returning only key and value
  */
-export function KeyValueTerritories() {
-  const territories = ISO3166TERRITORIES;
-  const keyValueTerritories = {};
+export function getIsoCountries() {
+  const iso = {};
 
-  for(const t of territories) {
-    keyValueTerritories[t.slug] = t.label}
+  for(const t of ISO3166TERRITORIES) {
+    iso[t.slug] = t.label;
+  }
 
-    return keyValueTerritories;
+  return iso;
 }
 
 /**

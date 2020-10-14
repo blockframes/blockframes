@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 
 
