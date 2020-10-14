@@ -1,6 +1,31 @@
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.model';
+
+///////////////
+// VALIDATOR //
+///////////////
+export function compareMinPledge(form: CampaignForm): ValidationErrors | null {
+  return form?.value.cap < form?.value.minPledge
+    ? { minPledgeOverflow: true }
+    : null
+};
+
+function compareReceived(form: CampaignForm): ValidationErrors | null {
+  return form?.value.cap < form?.value.received
+    ? { receivedOverflow: true }
+    : null
+}
+
+export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
+  const control = form.get('amount');
+  if (control) {
+    return control?.value.total < control?.value.current
+      ? { amountOverflow: true }
+      : null
+  }
+};
+
 
 //////////
 // PERK //
@@ -24,7 +49,7 @@ type PerkControls = ReturnType<typeof createPerkControls>;
 export class PerkForm extends FormEntity<PerkControls, Perk> {
   constructor(value?: Partial<Perk>) {
     const controls = createPerkControls(value);
-    super(controls);
+    super(controls, comparePerkAmount);
   }
 }
 
@@ -38,7 +63,10 @@ function createCampaignControls(value?: Partial<Campaign>) {
     cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
     minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
-    perks: FormList.factory(campaign.perks, (perk?: Partial<Perk>) => new PerkForm(perk)),
+    perks: FormList.factory(
+      campaign.perks,
+      (perk?: Partial<Perk>) => new PerkForm(perk),
+    ),
   }
 }
 
@@ -52,4 +80,8 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
   }
 }
 
-export const createCampaignForm = () => CampaignForm.factory(createCampaign(), createCampaignControls);
+export const createCampaignForm = () => CampaignForm.factory(
+  createCampaign(),
+  createCampaignControls,
+  [compareMinPledge, compareReceived]
+);

@@ -8,7 +8,6 @@ export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
 
 export interface Meeting {
-  callUrl: string;
   organizerId: string;
   description: string;
   files: string[];

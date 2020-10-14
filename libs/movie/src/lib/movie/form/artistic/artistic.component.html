@@ -51,6 +51,8 @@
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
                     <input matInput formControlName="year" type="number">
+                    <mat-error *ngIf="cast.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>
@@ -124,6 +126,8 @@
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Crew's Filmography</mat-label>
                     <input matInput formControlName="year" type="number">
+                    <mat-error *ngIf="crew.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>

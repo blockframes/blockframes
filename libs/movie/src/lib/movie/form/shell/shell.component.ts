@@ -144,7 +144,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private route: RouterQuery,
+    private route: RouterQuery
   ) { }
 
   ngOnInit() {

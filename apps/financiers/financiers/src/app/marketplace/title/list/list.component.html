@@ -3,12 +3,12 @@
   <!-- App Bar Search -->
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
-      <input type="text" formControlName="query" [value]="searchForm.query">
+      <input type="text" formControlName="query" [value]="searchForm.query.value">
     </form>
   </list-page-app-bar>
 
   <!-- SORT -->
-<!--   <list-page-sort>
+  <!--   <list-page-sort>
 
     <mat-form-field class="sort">
       <mat-label>Sort by</mat-label>
@@ -29,7 +29,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="searchForm.query.valueChanges | async">
+        <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
       </mat-form-field>
     </form>
   </list-page-search>
@@ -49,7 +49,8 @@
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
-      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES" type="model">
+      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES"
+        type="model">
       </chips-autocomplete>
     </ng-template>
 

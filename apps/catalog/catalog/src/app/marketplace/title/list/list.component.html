@@ -3,7 +3,7 @@
   <!-- App Bar Search -->
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
-      <input type="text" formControlName="query" [value]="searchForm.query">
+      <input type="text" formControlName="query" [value]="searchForm.query.value">
     </form>
   </list-page-app-bar>
 
@@ -28,7 +28,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').valueChanges | async">
+        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value">
       </mat-form-field>
     </form>
   </list-page-search>

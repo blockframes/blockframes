@@ -22,7 +22,8 @@ import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 import { RuntimeOptions } from 'firebase-functions';
 
-import * as twilio from './twilio';
+import { getTwilioAccessToken } from './twilio';
+
 
 
 
@@ -154,7 +155,7 @@ export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUs
 //--------------------------------
 
 /** Trigger: REST call to create the access token for connection to twilio */
-export const getTwilioAccessToken = functions.https.onCall(logErrors(twilio.getTwilioAccessToken));
+export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
 
 
 //--------------------------------

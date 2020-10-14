@@ -9,7 +9,7 @@ import { startWith, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PerksComponent {
-  @Input() link: string;
+  @Input() link: string | string[];
   @Input() form: CampaignForm;
 
   get hasPerks$() {
