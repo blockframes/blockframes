@@ -8,8 +8,8 @@ import { Campaign } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgressComponent {
-  received: number = 0;
-  progress: number = 0;
+  received = 0;
+  progress = 0;
   steps: number[] = [];
 
   @Input()
