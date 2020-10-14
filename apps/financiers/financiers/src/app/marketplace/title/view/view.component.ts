@@ -6,8 +6,10 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'financiers-movie-view',
@@ -18,6 +20,7 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces';
 export class MarketplaceMovieViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
+  public campaign$: Observable<Campaign>;
 
   public navLinks: RouteDescription[] = [
     mainRoute,
@@ -48,14 +51,20 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
+    private orgQuery: OrganizationQuery,
     private orgService: OrganizationService,
+    private campaignService: CampaignService,
     public router: Router
   ) {}
 
   ngOnInit() {
+    const orgId = this.orgQuery.getActiveId();
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.movieQuery.selectActiveId().pipe(
       switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
+    );
+    this.campaign$ = this.movieQuery.selectActiveId().pipe(
+      switchMap(id => this.campaignService.valueChanges(id, { params: { orgId }}))
     );
   }
 }
