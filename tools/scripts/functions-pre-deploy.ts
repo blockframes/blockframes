@@ -4,7 +4,7 @@ function logBuffer(b: Buffer) {
   process.stdout.write(b);
 }
 
-if (!process.env['IS_NX']) {
+if (!process.env['SKIP_PREDEPLOY_HOOKS']) {
   // * run predeploy hooks
   let output: Buffer;
   output = execSync('npm run lint backend-functions');
@@ -14,5 +14,5 @@ if (!process.env['IS_NX']) {
   output = execSync('npm run deploy:functions:config');
   logBuffer(output);
 } else {
-  console.log('Env variable "IS_NX" is set, skipping pre-deploy hooks...');
+  console.log('Env variable "SKIP_PREDEPLOY_HOOKS" is set, skipping pre-deploy hooks...');
 }

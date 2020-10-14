@@ -382,21 +382,11 @@
           "options": {
             "envFile": ".env",
             "commands": [
-              {
-                "command": "npx nx lint backend-functions"
-              },
-              {
-                "command": "npm run build:backend-functions"
-              },
-              {
-                "command": "npx cross-env firebase use $ENV"
-              },
-              {
-                "command": "npx cross-env npm run deploy:functions:config $ENV"
-              },
-              {
-                "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
-              }
+              "npx nx lint backend-functions",
+              "npm run build:backend-functions",
+              "npx cross-env firebase use $ENV",
+              "npx cross-env npm run deploy:functions:config $ENV",
+              "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --force --only functions"
             ],
             "parallel": false,
             "color": true
@@ -404,40 +394,20 @@
           "configurations": {
             "demo1": {
               "commands": [
-                {
-                  "command": "npx nx lint backend-functions"
-                },
-                {
-                  "command": "npx cross-env ENV=demo1 npm run build:backend-functions"
-                },
-                {
-                  "command": "npx firebase use demo1"
-                },
-                {
-                  "command": "npm run deploy:functions:config demo1"
-                },
-                {
-                  "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
-                }
+                "npx nx lint backend-functions",
+                "npx cross-env ENV=demo1 npm run build:backend-functions",
+                "npx firebase use demo1",
+                "npm run deploy:functions:config demo1",
+                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --force --only functions"
               ]
             },
             "staging": {
               "commands": [
-                {
-                  "command": "npx nx lint backend-functions"
-                },
-                {
-                  "command": "npx cross-env ENV=staging npm run build:backend-functions"
-                },
-                {
-                  "command": "npx firebase use staging"
-                },
-                {
-                  "command": "npm run deploy:functions:config staging"
-                },
-                {
-                  "command": "npx cross-env IS_NX=true firebase deploy --force --only functions"
-                }
+                "npx nx lint backend-functions",
+                "npx cross-env ENV=staging npm run build:backend-functions",
+                "npx firebase use staging",
+                "npm run deploy:functions:config staging",
+                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --force --only functions"
               ]
             }
           }
@@ -459,36 +429,6 @@
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
             "assets": [],
             "buildLibsFromSource": true
-          },
-          "configurations": {
-            "dev": {},
-            "ci": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                }
-              ]
-            },
-            "production": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                }
-              ]
-            },
-            "staging": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                }
-              ]
-            }
           }
         },
         "serve": {
@@ -803,15 +743,9 @@
           "options": {
             "envFile": ".env",
             "commands": [
-              {
-                "command": "npm run build:catalog"
-              },
-              {
-                "command": "npx cross-env firebase use $ENV"
-              },
-              {
-                "command": "npx firebase deploy --only hosting:catalog"
-              }
+              "npm run build:catalog",
+              "npx cross-env firebase use $ENV",
+              "npx firebase deploy --only hosting:catalog"
             ],
             "parallel": false,
             "color": true
@@ -819,28 +753,16 @@
           "configurations": {
             "demo1": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=demo1 npm run build:catalog"
-                },
-                {
-                  "command": "npx firebase use demo1"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:catalog"
-                }
+                "npx cross-env ENV=demo1 npm run build:catalog",
+                "npx firebase use demo1",
+                "npx firebase deploy --only hosting:catalog"
               ]
             },
             "staging": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=staging npm run build:catalog"
-                },
-                {
-                  "command": "npx firebase use staging"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:catalog"
-                }
+                "npx cross-env ENV=staging npm run build:catalog",
+                "npx firebase use staging",
+                "npx firebase deploy --only hosting:catalog"
               ]
             }
           }
@@ -1121,15 +1043,9 @@
           "options": {
             "envFile": ".env",
             "commands": [
-              {
-                "command": "npm run build:festival"
-              },
-              {
-                "command": "npx cross-env firebase use $ENV"
-              },
-              {
-                "command": "npx firebase deploy --only hosting:festival"
-              }
+                "npm run build:festival",
+                "npx cross-env firebase use $ENV",
+                "npx firebase deploy --only hosting:festival"
             ],
             "parallel": false,
             "color": true
@@ -1137,28 +1053,16 @@
           "configurations": {
             "demo1": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=demo1 npm run build:festival"
-                },
-                {
-                  "command": "npx firebase use demo1"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:festival"
-                }
+                  "npx cross-env ENV=demo1 npm run build:festival",
+                 "npx firebase use demo1",
+                 "npx firebase deploy --only hosting:festival"
               ]
             },
             "staging": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=staging npm run build:festival"
-                },
-                {
-                  "command": "npx firebase use staging"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:festival"
-                }
+                  "npx cross-env ENV=staging npm run build:festival",
+                 "npx firebase use staging",
+                 "npx firebase deploy --only hosting:festival"
               ]
             }
           }
@@ -1581,15 +1485,9 @@
           "options": {
             "envFile": ".env",
             "commands": [
-              {
-                "command": "npm run build:crm"
-              },
-              {
-                "command": "npx cross-env firebase use $ENV"
-              },
-              {
-                "command": "npx firebase deploy --only hosting:crm"
-              }
+                 "npm run build:crm",
+               "npx cross-env firebase use $ENV",
+               "npx firebase deploy --only hosting:crm"
             ],
             "parallel": false,
             "color": true
@@ -1597,28 +1495,16 @@
           "configurations": {
             "demo1": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=demo1 npm run build:crm"
-                },
-                {
-                  "command": "npx firebase use demo1"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:crm"
-                }
+                  "npx cross-env ENV=demo1 npm run build:crm",
+                 "npx firebase use demo1",
+                 "npx firebase deploy --only hosting:crm"
               ]
             },
             "staging": {
               "commands": [
-                {
-                  "command": "npx cross-env ENV=staging npm run build:crm"
-                },
-                {
-                  "command": "npx firebase use staging"
-                },
-                {
-                  "command": "npx firebase deploy --only hosting:crm"
-                }
+                   "npx cross-env ENV=staging npm run build:crm",
+                  "npx firebase use staging",
+                 "npx firebase deploy --only hosting:crm"
               ]
             }
           }
