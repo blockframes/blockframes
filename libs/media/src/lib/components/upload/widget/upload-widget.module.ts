@@ -10,6 +10,8 @@ import { UploadWidgetComponent } from './upload-widget.component';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { TaskProgressModule } from '../../../pipes/task-progress.pipe';
 import { TaskSnapshotModule } from '../../../pipes/task-state.pipe';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 
 // Material
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -27,6 +29,10 @@ import { MatDividerModule } from '@angular/material/divider';
     MaxLengthModule,
     TaskProgressModule,
     TaskSnapshotModule,
+    FileNameModule,
+
+    // Blockframes
+    ImageReferenceModule,
 
     // Material
     MatExpansionModule,
