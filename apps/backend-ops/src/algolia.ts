@@ -1,13 +1,17 @@
-import { loadAdminServices, getCollectionInBatches } from "@blockframes/firebase-utils";
 import {
+  loadAdminServices,
+  getCollectionInBatches,
   clearIndex,
   setIndexConfiguration,
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-} from '../../backend-functions/src/internals/algolia';  // TODO (#3471) remove this call to backend-functions
-import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+} from '@blockframes/firebase-utils'; 
+
 import { algolia } from '@env';
+import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
+import { PublicUser } from "@blockframes/user/types";
 
 // TODO MIGRATE TO ALGOLIA v4 #2554
 
