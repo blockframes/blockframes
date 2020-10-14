@@ -7,9 +7,9 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 import { isInKeys, Scope as ConstantScope, getValueByKey } from '../../static-model/staticConsts';
+import { staticConsts } from '@blockframes/utils/static-model';
 
 export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
 
@@ -78,7 +78,7 @@ export function validPercentage(control: FormControl): ValidationErrors {
  * Checks if the language exists
  */
 export function languageValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  return !LANGUAGES_SLUG.includes(control.value.trim().toLowerCase())
+  return !Object.keys(staticConsts.languages).includes(control.value.trim().toLowerCase())
     ? { languageNotSupported: true }
     : null;
 }

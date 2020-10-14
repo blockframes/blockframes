@@ -91,10 +91,10 @@ export interface AlgoliaMovie {
   genres: GetKeys<'genres'>[],
   originCountries: ExtractSlug<'TERRITORIES'>[],
   languages: {
-    original: ExtractSlug<'LANGUAGES'>[],
-    dubbed: ExtractSlug<'LANGUAGES'>[],
-    subtitle: ExtractSlug<'LANGUAGES'>[],
-    caption: ExtractSlug<'LANGUAGES'>[]
+    original: GetKeys<'languages'>[],
+    dubbed: GetKeys<'languages'>[],
+    subtitle: GetKeys<'languages'>[],
+    caption: GetKeys<'languages'>[]
   },
   status: ProductionStatus,
   budget: number,

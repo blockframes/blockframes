@@ -3,11 +3,6 @@ import constants from './staticConsts';
 
 // TYPE FOR MODELS
 
-export const LANGUAGES_LABEL = models['LANGUAGES'].map(key => key.label);
-export const LANGUAGES_SLUG = models['LANGUAGES'].map(key => key.slug);
-export type LanguagesLabel = typeof LANGUAGES_LABEL[number];
-export type LanguagesSlug = typeof LANGUAGES_SLUG[number];
-
 export const TERRITORIES_LABEL = models['TERRITORIES'].map(key => key.label);
 export const TERRITORIES_SLUG = models['TERRITORIES'].map(key => key.slug);
 export type TerritoriesLabel = typeof TERRITORIES_LABEL[number];
@@ -36,6 +31,8 @@ export type DistributionRightStatus = keyof typeof constants.distributionRightSt
 export type Genres = keyof typeof constants.genres;
 
 export type HostedVideoTypes = keyof typeof constants.hostedVideoTypes;
+
+export type Languages = keyof typeof constants.languages;
 
 export type LegalRoles = keyof typeof constants.legalRoles;
 
@@ -82,3 +79,6 @@ export type SubLicensorRoles = keyof typeof constants.subLicensorRoles;
 
 export type UnitBox = keyof typeof constants.unitBox;
 export type UnitBoxValue = typeof constants.unitBox[UnitBox];
+
+
+export const languages = constants.languages;

@@ -2,10 +2,10 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { DistributionRight, getRightTerritories } from '../+state/distribution-right.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
-import { LanguagesLabel } from '@blockframes/utils/static-model/types';
+import { Languages, StoreType } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from './search.form';
 import { getFilterMatchingRights, getRightsInDateRange, getExclusiveRights } from '../create/availabilities.util';
-import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
 function isReleaseYearBetween(movie: Movie, range: DateRange): boolean {
@@ -14,11 +14,11 @@ function isReleaseYearBetween(movie: Movie, range: DateRange): boolean {
   }
   // prevent from default error that property is undefined
   if (typeof range.from && typeof range.to) {
-    return movie.releaseYear >= range.from.getFullYear() && movie.releaseYear <= range.to.getFullYear();
+    return movie.release.year >= range.from.getFullYear() && movie.release.year <= range.to.getFullYear();
   }
 }
 
-function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in LanguagesLabel]: MovieLanguageSpecification }>) {
+function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in Languages]: MovieLanguageSpecification }>) {
     if (Object.entries(language).length === 0) {
       return true;
     }

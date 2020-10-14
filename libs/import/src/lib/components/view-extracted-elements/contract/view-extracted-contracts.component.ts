@@ -3,8 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { staticConsts } from '@blockframes/utils/static-model';
 import { SSF } from 'xlsx';
 import { createContractPartyDetail, createContractTitleDetail, createContract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -145,7 +143,7 @@ export class ViewExtractedContractsComponent implements OnInit {
               const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === 'licensor');
               if (party) {
                 childRoleParts.forEach(childRole => {
-                  const role = getKeyIfExists(staticConsts.subLicensorRoles, childRole.trim() as GetCode<'subLicensorRoles'>);
+                  const role = getKeyIfExists('subLicensorRoles', childRole.trim() as GetCode<'subLicensorRoles'>);
                   if (role) {
                     party.childRoles.push(role);
                   } else {
@@ -172,7 +170,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
           // CONTRACT TYPE
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
-            const key = getKeyIfExists(staticConsts.contractType, spreadSheetRow[SpreadSheetContract.contractType]);
+            const key = getKeyIfExists('contractType', spreadSheetRow[SpreadSheetContract.contractType]);
             if (key) {
               contract.type = key;
             } else {
@@ -197,7 +195,7 @@ export class ViewExtractedContractsComponent implements OnInit {
 
         // CONTRACT STATUS
         if (spreadSheetRow[SpreadSheetContract.status]) {
-          const key = getKeyIfExists(staticConsts.contractStatus, spreadSheetRow[SpreadSheetContract.status]);
+          const key = getKeyIfExists('contractStatus', spreadSheetRow[SpreadSheetContract.status]);
           if (key) {
             contract.lastVersion.status = key;
           } else {
@@ -438,7 +436,7 @@ export class ViewExtractedContractsComponent implements OnInit {
       // Check if priceParts have at least two parts (amount and currency)
       if (priceParts.length >= 2) {
         const amount = parseInt(priceParts[0], 10);
-        const currency = getKeyIfExists(staticConsts.movieCurrencies, priceParts[1]);
+        const currency = getKeyIfExists('movieCurrencies', priceParts[1]);
         titleDetails.price.amount = amount;
         if (currency) {
           titleDetails.price.currency = currency;
@@ -484,7 +482,7 @@ export class ViewExtractedContractsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      const currency = getKeyIfExists(staticConsts.movieCurrencies, spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
+      const currency = getKeyIfExists('movieCurrencies', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
       if (currency) {
         recoupableExpense.price.currency = currency;
       } else {

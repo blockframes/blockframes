@@ -8,7 +8,7 @@
 </div>
 <ng-container *ngFor="let control of form.controls | keyvalue">
     <div fxLayout="column">
-        <span>{{ control.key | translateSlug: 'LANGUAGES'}}</span>
+        <span>{{ control.key | toLabel: 'languages'}}</span>
         <!-- Div is for grouping because of space-between -->
         <div fxLayout="row" fxLayoutAlign="space-between baseline">
             <span>
