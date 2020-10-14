@@ -11,8 +11,6 @@ import { switchMap, startWith, filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-
-
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
   development: {
     'release.status': '',
@@ -45,20 +43,20 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 }
 
 @Injectable({ providedIn: 'root' })
-export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
+export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   form = new MovieForm(this.query.getActive());
   constructor(
     private route: RouterQuery,
     private service: MovieService,
     private query: MovieQuery,
-    private mediaService: MediaService
+    private mediaService: MediaService,
   ) {}
 
   onInit(): Subscription[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.valueChanges(id)),
-    ).subscribe(movie => this.form.patchAllValue(movie));
+    ).subscribe(movie => this.form.setAllValue(movie));
 
     // Update form on status change
     const onStatusChanges = this.form.productionStatus.valueChanges.pipe(

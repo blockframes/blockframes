@@ -59,6 +59,7 @@ import { createCredit, Stakeholder, createStakeholder, Director } from '@blockfr
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Languages } from '@blockframes/utils/static-model';
+import { keys } from 'lodash';
 
 // LEGAL DOCUMENTS
 
@@ -154,6 +155,13 @@ export type MovieControl = ReturnType<typeof createMovieControls>;
 export class MovieForm extends FormEntity<MovieControl, Movie> {
   constructor(movie?: Partial<Movie>) {
     super(createMovieControls(movie));
+  }
+
+  setAllValue(movie: Partial<Movie> = {}) {
+    const controls = createMovieControls(movie);
+    for (const key in controls) {
+      this.setControl(key as any, controls[key]);
+    }
   }
 
   get customPrizes() {
