@@ -1,4 +1,4 @@
-import { Territories, Languages, MediasValues, DistributionRightStatus } from '@blockframes/utils/static-model';
+import { DistributionRightStatus, Language, MediaValue, Territory } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { TermsRaw } from '@blockframes/utils/common-interfaces/terms';
 import { firestore } from 'firebase/app';
@@ -7,7 +7,7 @@ type Timestamp = firestore.Timestamp;
 
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>;
-  media: MediasValues;
+  media: MediaValue;
 }
 
 export interface HoldbackWithDates extends HoldbackRaw<Date> { }
@@ -16,11 +16,11 @@ export interface HoldbackWithDates extends HoldbackRaw<Date> { }
 interface DistributionRightRaw<D> {
   id: string,
   publicId?: string,
-  licenseType: MediasValues[];
+  licenseType: MediaValue[];
   terms: TermsRaw<D>;
-  territory: Territories[];
-  territoryExcluded: Territories[];
-  assetLanguage: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
+  territory: Territory[];
+  territoryExcluded: Territory[];
+  assetLanguage: Partial<{ [language in Language]: MovieLanguageSpecification }>;
   exclusive: boolean;
   titleInternalAlias: string;
   download: boolean;

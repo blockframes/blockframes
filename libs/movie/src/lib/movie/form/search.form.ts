@@ -1,28 +1,26 @@
 
-import { Genres, Languages, Territories, StoreType } from '@blockframes/utils/static-model';
-import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus, ProductionStatus } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
 
 export interface LanguagesSearch {
-  original: Languages[];
-  dubbed: Languages[];
-  subtitle: Languages[];
-  caption: Languages[];
+  original: Language[];
+  dubbed: Language[];
+  subtitle: Language[];
+  caption: Language[];
 }
 
 export interface MovieSearch extends AlgoliaSearch {
   appAccess: (keyof MovieAppAccess)[],
   storeType: StoreType[];
   storeConfig: StoreStatus[]
-  genres: Genres[];
-  originCountries: Territories[];
+  genres: Genre[];
+  originCountries: Territory[];
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
@@ -70,7 +68,7 @@ function createMovieSearchControl(search: MovieSearch) {
     storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
+    originCountries: FormList.factory<Territory>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),

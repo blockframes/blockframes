@@ -1,4 +1,10 @@
-import { Territories, TerritoriesFRValues, TerritoriesISOA2, TerritoriesISOA2Values, TerritoriesISOA3, TerritoriesISOA3Values, TerritoriesNUMCODEValues } from './types'
+import {
+  Territories,
+  TerritoriesISOA2,
+  TerritoriesISOA2Values,
+  TerritoriesISOA3,
+  TerritoriesISOA3Values
+} from './types'
 
 export const contractStatus = {
   accepted: 'Accepted',
@@ -484,6 +490,7 @@ export const festival = {
 } as const
 
 export const territories = {
+  world: '',
   ambia: "Zambia",
   "aland-islands": "Åland Islands",
   afghanistan: "Afghanistan",
@@ -740,6 +747,7 @@ export const territories = {
 } as const
 
 export const territoriesISOA2 = {
+  world: '',
   afghanistan: 'AF',
   albania: 'AL',
   algeria: 'DZ',
@@ -995,6 +1003,7 @@ export const territoriesISOA2 = {
 } as const
 
 export const territoriesISOA3 = {
+  world: '',
   afghanistan: 'AFG',
   albania: 'ALB',
   algeria: 'DZA',
@@ -1250,6 +1259,7 @@ export const territoriesISOA3 = {
 } as const
 
 export const territoriesNUMCODE = {
+  world: '',
   afghanistan: 4,
   albania: 8,
   algeria: 12,
@@ -1505,6 +1515,7 @@ export const territoriesNUMCODE = {
 } as const
 
 export const territoriesFR = {
+  world: '',
   afghanistan: 'Afghanistan (l\')',
   albania: 'Albanie (l\')',
   algeria: 'Algérie (l\')',
@@ -1833,22 +1844,6 @@ export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
 export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
-/**
- * Returns the value corresponding to a key (ie:code).
- * @dev Codes are used to store sanitized data in database
- * @param scope
- * @param targetValue
- */
-export const getValueByKey = (scope: Scope, targetValue: string) => {
-  for (const [key, value] of Object.entries(constants[scope])) {
-    console.log(key, value)
-    if (key.toLowerCase() === targetValue.trim().toLowerCase()) {
-      return value as GetLabel<Scope>
-    }
-  }
-  return null;
-};
-
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {
   return (Object.keys(constants[scope])).map((key) => key).includes(givenValue);
@@ -1910,3 +1905,5 @@ export function getISO3166TerritoryFromSlug(slug: Territories) {
     'fr': territoriesFR[territory],
   }
 }
+
+getKeyByValue('territories', 'Germany')

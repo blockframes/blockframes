@@ -1,6 +1,6 @@
 
 // Blockframes
-import { Territories } from '@blockframes/utils/static-model';
+import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
 import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
 
@@ -10,7 +10,7 @@ import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
 
 export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaRecordOrganization> {
-  country?: Territories,
+  country?: Territory,
 }
 
 export function createOrganizationSearch(search: Partial<OrganizationSearch> = {}): OrganizationSearch {

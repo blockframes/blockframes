@@ -12,9 +12,8 @@ import { ContractVersion } from '@blockframes/contract/version/+state/contract-v
 import { DistributionRightQuery } from './distribution-right.query';
 import { Movie } from '@blockframes/movie/+state';
 import { AvailsSearch } from '../form/search.form';
-import { Model } from '@blockframes/utils/static-model/staticModels';
 import { getFilterMatchingRights, getRightsInDateRange } from '../create/availabilities.util';
-import { Territories } from '@blockframes/utils/static-model';
+import { Territory } from '@blockframes/utils/static-model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionRights' })
@@ -88,7 +87,7 @@ export class DistributionRightService extends CollectionService<DistributionRigh
   }
 
   /** Check if the formValue is valid to create a right, throw an error for each case. */
-  public verifyRight(formValue: AvailsSearch, territories: Territories[]) {
+  public verifyRight(formValue: AvailsSearch, territories: Territory[]) {
     if (!formValue.terms.start || !formValue.terms.end) {
       throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
     }

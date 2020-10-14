@@ -86,15 +86,7 @@ const models = {
       'slug': 'original-author',
       'label': 'Original Author'
     }
-  ],
-  'TERRITORIES': [
-    {
-      'slug': 'world',
-      'label': 'World',
-      'iso_a3': '',
-    },
-    ...IsoTerritoriesToSlugAndLabel()
-  ],
+  ]
 };
 
 export type Scope = keyof typeof models;

@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { populateMovieLanguageSpecification, MovieService, } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { GetCode, getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { SSF } from 'xlsx';
 import { createDistributionRight, createHoldback } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -14,6 +13,7 @@ import { Intercom } from 'ng-intercom';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RightsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { LanguageValue, MediaValue, TerritoryValue } from '@blockframes/utils/static-model';
 
 enum SpreadSheetDistributionRight {
   internalRef,
@@ -150,8 +150,8 @@ export class ViewExtractedRightsComponent implements OnInit {
             // TERRITORIES (Mandate Territories)
             if (spreadSheetRow[SpreadSheetDistributionRight.territories]) {
               distributionRight.territory = [];
-              spreadSheetRow[SpreadSheetDistributionRight.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-                const territory = getValueByKey('territories', c);
+              spreadSheetRow[SpreadSheetDistributionRight.territories].split(this.separator).forEach((c: TerritoryValue) => {
+                const territory = getKeyIfExists('territories', c);
                 if (territory) {
                   distributionRight.territory.push(territory);
                 } else {
@@ -169,8 +169,8 @@ export class ViewExtractedRightsComponent implements OnInit {
             // TERRITORIES EXCLUDED
             if (spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded]) {
               distributionRight.territoryExcluded = [];
-              spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-                const territory = getValueByKey('territories', c);
+              spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded].split(this.separator).forEach((c: TerritoryValue) => {
+                const territory = getKeyIfExists('territories', c);
                 if (territory) {
                   distributionRight.territoryExcluded.push(territory);
                 } else {
@@ -188,7 +188,7 @@ export class ViewExtractedRightsComponent implements OnInit {
             // MEDIAS (Mandate Medias)
             if (spreadSheetRow[SpreadSheetDistributionRight.licenseType]) {
               distributionRight.licenseType = [];
-              spreadSheetRow[SpreadSheetDistributionRight.licenseType].split(this.separator).forEach((c: GetCode<'medias'>) => {
+              spreadSheetRow[SpreadSheetDistributionRight.licenseType].split(this.separator).forEach((c: MediaValue) => {
                 const media = getKeyIfExists('medias', c);
                 if (media) {
                   distributionRight.licenseType.push(media);
@@ -206,7 +206,7 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // DUBS (Authorized language(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.dubbings]) {
-              spreadSheetRow[SpreadSheetDistributionRight.dubbings].split(this.separator).forEach((g: GetCode<'languages'>) => {
+              spreadSheetRow[SpreadSheetDistributionRight.dubbings].split(this.separator).forEach((g: LanguageValue) => {
                 const dubbing = getKeyIfExists('languages', g);
                 if (dubbing) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
@@ -229,7 +229,7 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // SUBTILES (Available subtitle(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.subtitles]) {
-              spreadSheetRow[SpreadSheetDistributionRight.subtitles].split(this.separator).forEach((g: GetCode<'languages'>) => {
+              spreadSheetRow[SpreadSheetDistributionRight.subtitles].split(this.separator).forEach((g: LanguageValue) => {
                 const subtitle = getKeyIfExists('languages', g);
                 if (!!subtitle) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
@@ -251,7 +251,7 @@ export class ViewExtractedRightsComponent implements OnInit {
 
             // CAPTIONS (Available subtitle(s))
             if (spreadSheetRow[SpreadSheetDistributionRight.captions]) {
-              spreadSheetRow[SpreadSheetDistributionRight.captions].split(this.separator).forEach((g: GetCode<'languages'>) => {
+              spreadSheetRow[SpreadSheetDistributionRight.captions].split(this.separator).forEach((g: LanguageValue) => {
                 const caption = getKeyIfExists('languages', g);
                 if (!!caption) {
                   distributionRight.assetLanguage = populateMovieLanguageSpecification(
@@ -354,7 +354,7 @@ export class ViewExtractedRightsComponent implements OnInit {
               const holdbacks = spreadSheetRow[SpreadSheetDistributionRight.holdbacks].split(this.separator)
               holdbacks.forEach(h => {
                 const holdbackParts = h.split(this.subSeparator);
-                const media = getKeyIfExists('medias', holdbackParts[0] as GetCode<'medias'>);
+                const media = getKeyIfExists('medias', holdbackParts[0] as MediaValue);
 
                 if (holdbackParts.length !== 3) {
                   importErrors.errors.push({
