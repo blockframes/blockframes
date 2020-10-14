@@ -2,8 +2,8 @@
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/movie/+state/movie.model';
 import { PublicUser } from '@blockframes/user/types';
-import { PublicOrganization } from 'apps/backend-functions/src/data/types';
-import { OldPromotionalElement } from './old-types'; // @TODO (#3471) remove this call to backend-functions
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { OldPromotionalElement } from './old-types'; 
 import { firebase } from '@env';
 export const { storageBucket } = firebase;
 import {

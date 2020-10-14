@@ -1,8 +1,8 @@
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
-import { FormStaticValue } from '@blockframes/utils/form';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { FormConstantValue } from '@blockframes/utils/form';
+import { Languages } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] distribution-form-languages',
@@ -13,7 +13,7 @@ import { LanguagesSlug } from '@blockframes/utils/static-model';
 export class DistributionRightLanguagesComponent implements OnInit {
   @Input() form: MovieVersionInfoForm;
 
-  public languageCtrl = new FormStaticValue(null, 'LANGUAGES');
+  public languageCtrl = new FormConstantValue(null, 'languages');
 
   public toggleCtrl = new FormControl();
 
@@ -28,7 +28,7 @@ export class DistributionRightLanguagesComponent implements OnInit {
     }
   }
 
-  public removeLanguage(language: LanguagesSlug) {
+  public removeLanguage(language: Languages) {
     if (language === 'all') {
       this.stateOfForm(false);
     }

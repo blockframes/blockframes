@@ -1,13 +1,14 @@
-import { functions, db } from './internals/firebase';
+import { db } from './internals/firebase';
 import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
-import { storeSearchableMovie, deleteObject } from './internals/algolia';
-import { centralOrgID, algolia } from './environments/environment';
+
+import { centralOrgID } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
+import { algolia, deleteObject, storeSearchableMovie } from '@blockframes/firebase-utils';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(

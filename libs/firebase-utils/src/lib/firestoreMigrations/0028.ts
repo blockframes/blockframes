@@ -2,7 +2,8 @@
 import { Firestore, Storage } from '../types';
 import { Credit } from '@blockframes/utils/common-interfaces';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { InvitationDocument, NotificationDocument } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { InvitationDocument } from '@blockframes/invitation/+state/invitation.firestore';
+import { NotificationDocument } from '@blockframes/notification/+state/notification.firestore';
 import { upsertWatermark, } from '../watermark';
 import { runChunks } from '../firebase-utils';
 import { OldImgRef, OldPublicOrganization, OldPublicUser, OldMovieImgRefDocument } from './old-types';

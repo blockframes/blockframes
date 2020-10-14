@@ -46,8 +46,33 @@ export class FileTypePipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: 'fileTypeImage'
+})
+export class FileTypeImagePipe implements PipeTransform {
+  transform(file: string): string {
+    const type = file.split('.').pop();
+    switch (type) {
+      case 'docx':
+      case 'doc':
+        return 'docx.webp';
+      case 'xls':
+      case 'xlsx':
+        return 'xls.webp';
+      case 'png':
+      case 'webp':
+      case 'jpg':
+        return 'image.webp';
+      case 'pdf':
+        return 'pdf.webp';
+      default:
+        return 'image.webp';
+    }
+  }
+}
+
 @NgModule({
-  exports: [FileNamePipe, FileTypePipe],
-  declarations: [FileNamePipe, FileTypePipe],
+  exports: [FileNamePipe, FileTypePipe, FileTypeImagePipe],
+  declarations: [FileNamePipe, FileTypePipe, FileTypeImagePipe],
 })
 export class FileNameModule { }

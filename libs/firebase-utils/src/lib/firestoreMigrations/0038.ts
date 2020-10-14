@@ -1,7 +1,6 @@
 import { Firestore } from '@blockframes/firebase-utils';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 import { createHostedVideo, Credit } from '@blockframes/movie/+state/movie.model';
-import { MovieDocument } from 'apps/backend-functions/src/data/types';
-
 
 /**
  * Replace the old value for unitBox in box office

@@ -1,4 +1,3 @@
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
@@ -20,7 +19,6 @@ import {
 } from '../../version/+state/contract-version.model';
 import { LegalRoles } from '@blockframes/utils/static-model/types';
 import { getKeyIfExists, toDate } from '@blockframes/utils/helpers';
-import { staticConsts } from '@blockframes/utils/static-model';
 
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
@@ -92,10 +90,10 @@ export function validateContract(contract: Contract): boolean {
     return false;
   }
   const licensees = contract.parties.filter(
-    p => p.party.role === getKeyIfExists(staticConsts.legalRoles, 'licensee')
+    p => p.party.role === getKeyIfExists('legalRoles', 'licensee')
   );
   const licensors = contract.parties.filter(
-    p => p.party.role === getKeyIfExists(staticConsts.legalRoles, 'licensor')
+    p => p.party.role === getKeyIfExists('legalRoles', 'licensor')
   );
 
   if (!licensees.length || !licensors.length) {
@@ -212,7 +210,7 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
  * @param legalRole
  */
 export function getContractParties(contract: Contract, legalRole: LegalRoles): ContractPartyDetail[] {
-  const roleCode = getKeyIfExists(staticConsts.legalRoles, legalRole)
+  const roleCode = getKeyIfExists('legalRoles', legalRole)
   return contract.parties.filter(p => p.party.role === roleCode);
 }
 

@@ -1,6 +1,6 @@
 import {
   TerritoriesSlug,
-  LanguagesSlug,
+  Languages,
   MediasValues,
   Scoring,
   Certifications,
@@ -64,9 +64,9 @@ interface MovieRaw<D> {
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
   keywords?: string[],
-  languages?: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+  languages?: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
   logline?: string,
-  originalLanguages: LanguagesSlug[], //! required
+  originalLanguages: Languages[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
   originCountries: TerritoriesSlug[], //! required
   poster?: string;
@@ -188,8 +188,8 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
-export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
-export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+export type MovieLanguageSpecificationContainer = Record<Languages, MovieLanguageSpecification>;
+export type LanguageRecord = Partial<{ [language in Languages]: MovieLanguageSpecification }>;
 
 
 export interface MovieOriginalReleaseRaw<D> {
