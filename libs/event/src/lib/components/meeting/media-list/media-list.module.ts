@@ -6,7 +6,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
-import { FileTypeImagePipeModule } from '@blockframes/media/pipes/file-type-image.pipe';
 
 import { MeetingMediaListComponent } from './media-list.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
@@ -28,7 +27,6 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
     FileNameModule,
     ImageReferenceModule,
     MaxLengthModule,
-    FileTypeImagePipeModule,
     CarouselModule,
     FlexLayoutModule,
 
