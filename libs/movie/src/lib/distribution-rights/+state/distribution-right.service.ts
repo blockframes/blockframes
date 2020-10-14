@@ -14,6 +14,7 @@ import { Movie } from '@blockframes/movie/+state';
 import { AvailsSearch } from '../form/search.form';
 import { Model } from '@blockframes/utils/static-model/staticModels';
 import { getFilterMatchingRights, getRightsInDateRange } from '../create/availabilities.util';
+import { Territories } from '@blockframes/utils/static-model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionRights' })
@@ -87,7 +88,7 @@ export class DistributionRightService extends CollectionService<DistributionRigh
   }
 
   /** Check if the formValue is valid to create a right, throw an error for each case. */
-  public verifyRight(formValue: AvailsSearch, territories: Model['TERRITORIES']) {
+  public verifyRight(formValue: AvailsSearch, territories: Territories[]) {
     if (!formValue.terms.start || !formValue.terms.end) {
       throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
     }
@@ -97,7 +98,7 @@ export class DistributionRightService extends CollectionService<DistributionRigh
     if (!formValue.licenseType.length) {
       throw new Error('Select at least one media to create an Exploitation Right');
     }
-    if (formValue.territory.some(territory => !territories.find(({ slug }) => slug === territory))) {
+    if (formValue.territory.some(territory => !territories.find((key) => key === territory))) {
       throw new Error('One or more selected territories are not available');
     }
     return true;

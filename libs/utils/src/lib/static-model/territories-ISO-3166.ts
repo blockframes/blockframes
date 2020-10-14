@@ -1,4 +1,4 @@
-import { TerritoriesSlug, TerritoriesLabel } from "./types";
+import { Territories, TerritoriesValues } from './types';
 
 export interface EnhancedISO3166Territory {
   slug: string,
@@ -278,7 +278,7 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
 export function getIsoCountries() {
   const iso = {};
 
-  for(const t of ISO3166TERRITORIES) {
+  for (const t of ISO3166TERRITORIES) {
     iso[t.slug] = t.label;
   }
 
@@ -304,19 +304,19 @@ export function IsoTerritoriesToSlugAndLabel(): { slug: string, label: string }[
  */
 export function getTerritoryFromGeoJson(
   code: string,
-  system: 'iso_a3' | 'iso_a3' = 'iso_a3'): { slug: TerritoriesSlug, label: TerritoriesLabel } {
+  system: 'iso_a3' | 'iso_a3' = 'iso_a3') {
   const territory = ISO3166TERRITORIES.find(i => i[system] === code.toUpperCase());
   if (!territory) {
     throw new Error(`Failed to retreive: ${code}.`);
   }
-  return territory;
+  return territory as { slug: Territories, label: TerritoriesValues };
 }
 
 /**
  * @param code
  * @param system
  */
-export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesSlug {
+export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): Territories {
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -328,7 +328,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  * @param code
  * @param system
  */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesLabel {
+export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesValues {
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
@@ -339,7 +339,7 @@ export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'i
 /**
  * @param slug
  */
-export function getISO3166TerritoryFromSlug(slug: TerritoriesSlug): EnhancedISO3166Territory {
+export function getISO3166TerritoryFromSlug(slug: Territories): EnhancedISO3166Territory {
   const territory = ISO3166TERRITORIES.find(i => i.slug.toLowerCase() === slug.toLowerCase());
   if (!territory) {
     throw new Error(`Failed to territory: ${slug}.`);

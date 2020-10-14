@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional
 import { MatTableDataSource } from '@angular/material/table';
 import { populateMovieLanguageSpecification, MovieService, } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { GetCode } from '@blockframes/utils/static-model/staticConsts';
+import { ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { GetCode, getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { SSF } from 'xlsx';
 import { createDistributionRight, createHoldback } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -151,7 +151,7 @@ export class ViewExtractedRightsComponent implements OnInit {
             if (spreadSheetRow[SpreadSheetDistributionRight.territories]) {
               distributionRight.territory = [];
               spreadSheetRow[SpreadSheetDistributionRight.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-                const territory = getCodeIfExists('TERRITORIES', c);
+                const territory = getValueByKey('territories', c);
                 if (territory) {
                   distributionRight.territory.push(territory);
                 } else {
@@ -170,7 +170,7 @@ export class ViewExtractedRightsComponent implements OnInit {
             if (spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded]) {
               distributionRight.territoryExcluded = [];
               spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-                const territory = getCodeIfExists('TERRITORIES', c);
+                const territory = getValueByKey('territories', c);
                 if (territory) {
                   distributionRight.territoryExcluded.push(territory);
                 } else {

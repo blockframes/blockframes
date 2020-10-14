@@ -1,5 +1,4 @@
 import {
-  TerritoriesSlug,
   Languages,
   MediasValues,
   Scoring,
@@ -18,7 +17,7 @@ import {
   UnitBox,
   ShootingPeriod,
   MovieCurrencies,
-  HostedVideoTypes
+  HostedVideoTypes, Territories
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -68,7 +67,7 @@ interface MovieRaw<D> {
   logline?: string,
   originalLanguages: Languages[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
-  originCountries: TerritoriesSlug[], //! required
+  originCountries: Territories[], //! required
   poster?: string;
   prizes?: Prize[],
   customPrizes?: Prize[],
@@ -174,7 +173,7 @@ export interface Title {
 export interface BoxOffice {
   unit: UnitBox,
   value?: number,
-  territory: TerritoriesSlug,
+  territory: Territories,
 }
 
 export interface MovieLanguageSpecification {
@@ -194,14 +193,14 @@ export type LanguageRecord = Partial<{ [language in Languages]: MovieLanguageSpe
 
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
-  country: TerritoriesSlug;
+  country: Territories;
   media?: MediasValues
 }
 
 export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
 
 export interface MovieRating {
-  country: TerritoriesSlug;
+  country: Territories;
   reason?: string,
   system?: Rating,
   value: string,
@@ -259,7 +258,7 @@ export interface MovieShooting extends MovieShootingRaw<Date> {}
 
 export interface MovieShootingLocations {
   cities?: string[],
-  country?: TerritoriesSlug,
+  country?: Territories,
 }
 
 export interface MovieShootingDateRaw<D> {

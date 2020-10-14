@@ -9,7 +9,8 @@ import { AuthQuery, createUser } from '@blockframes/auth/+state';
 import { createOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { Module } from '@blockframes/utils/apps';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import {  ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 // import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
 
 enum SpreadSheetOrganization {
@@ -165,7 +166,7 @@ export class ViewExtractedOrganizationsComponent implements OnInit {
         }
 
         if (spreadSheetRow[SpreadSheetOrganization.country]) {
-          const country = getCodeIfExists('TERRITORIES', spreadSheetRow[SpreadSheetOrganization.country] as ExtractCode<'TERRITORIES'>);
+          const country = getValueByKey('territories', spreadSheetRow[SpreadSheetOrganization.country] as ExtractCode<'TERRITORIES'>);
           if (country) {
             importErrors.org.addresses.main.country = country;
           } else {

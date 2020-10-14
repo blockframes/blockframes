@@ -3,11 +3,10 @@ import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
 import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
-  TerritoriesSlug,
   Languages,
   SubLicensorRoles,
   ContractStatus,
-  ContractType
+  ContractType, Territories
 } from "@blockframes/utils/static-model/types";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
@@ -143,7 +142,7 @@ export interface LegalDocument {
   label: string,
   media: string,
   language?: Languages,
-  country?: TerritoriesSlug,
+  country?: Territories,
 }
 
 export interface ContractDocumentWithDates extends ContractRaw<Date> {

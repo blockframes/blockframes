@@ -1,4 +1,4 @@
-import { CrewRolesValues, ProducerRolesValues, LegalRoles, TerritoriesSlug, SubLicensorRoles } from "@blockframes/utils/static-model/types";
+import { CrewRolesValues, ProducerRolesValues, LegalRoles, SubLicensorRoles, Territories } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -40,7 +40,7 @@ export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
   logo?: string;
-  countries?: TerritoriesSlug[],
+  countries?: Territories[],
 }
 
 

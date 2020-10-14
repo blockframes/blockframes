@@ -6,10 +6,11 @@ import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerrit
 import { DistributionRightService, DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
-import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
-import { staticModels, TerritoriesLabel } from '@blockframes/utils/static-model';
+import { getSlugByIsoA3, getIsoA3bySlug } from '@blockframes/utils/static-model/staticModels';
+import { Territories, TerritoriesValues } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
 import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
+import { territories } from '@blockframes/utils/static-model/staticConsts';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -20,12 +21,12 @@ import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms
 export class MarketplaceMovieAvailsComponent {
   public availsForm: AvailsSearchForm = new AvailsSearchForm();
   public movie: Movie = this.movieQuery.getActive();
-  public territories = staticModels['TERRITORIES'];
+  public territories = territories;
 
   /** List of world map territories */
-  public notLicensedTerritories: Model['TERRITORIES'] = [];
-  public rightsSoldTerritories: Model['TERRITORIES'] = [];
-  public availableTerritories: Model['TERRITORIES'] = [];
+  public notLicensedTerritories: Territories[] = [];
+  public rightsSoldTerritories: Territories[] = [];
+  public availableTerritories: Territories[] = [];
 
   public hoveredTerritory: {
     name: string;
@@ -38,7 +39,7 @@ export class MarketplaceMovieAvailsComponent {
     private marketplaceStore: MarketplaceStore,
     private marketplaceQuery: MarketplaceQuery,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: EnhancedISO3166Territory) {
@@ -131,8 +132,8 @@ export class MarketplaceMovieAvailsComponent {
   }
 
   /** Display the territories information in the tooltip */
-  public dislpayTerritoryTooltip(territory: TerritoriesLabel, status: string) {
-    this.hoveredTerritory = { name: territory, status}
+  public dislpayTerritoryTooltip(territory: TerritoriesValues, status: string) {
+    this.hoveredTerritory = { name: territory, status }
   }
 
   /** Clear the territories information */

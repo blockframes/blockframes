@@ -1,5 +1,5 @@
 
-import { Genres, Languages, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
+import { Genres, Languages, Territories, StoreType } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { FormControl } from '@angular/forms';
@@ -22,7 +22,7 @@ export interface MovieSearch extends AlgoliaSearch {
   storeType: StoreType[];
   storeConfig: StoreStatus[]
   genres: Genres[];
-  originCountries: TerritoriesSlug[];
+  originCountries: Territories[];
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;

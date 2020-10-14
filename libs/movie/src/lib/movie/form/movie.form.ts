@@ -1016,7 +1016,6 @@ type MovieShootingLocationsControl = ReturnType<typeof createShootingLocationsFo
 function createShootingLocations(params: Partial<MovieShootingLocations>): MovieShootingLocations {
   return {
     cities: [],
-    country: '',
     ...params
   }
 }

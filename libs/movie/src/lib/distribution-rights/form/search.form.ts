@@ -1,14 +1,13 @@
 import {
-  TerritoriesLabel,
   Languages,
   Genres,
   CertificationsValues,
   MediasValues,
-  TerritoriesSlug,
-  TERRITORIES_SLUG,
+  Territories,
   ProductionStatus,
   Certifications
 } from '@blockframes/utils/static-model/types';
+import { territories } from '@blockframes/utils/static-model/staticConsts';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
@@ -31,7 +30,7 @@ export interface CatalogSearch {
   salesAgent: string[];
   languages: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
   certifications: Certifications[];
-  originCountries: TerritoriesLabel[];
+  originCountries: Territories[];
   estimatedBudget: NumberRange[];
   storeType: StoreType[];
   searchbar: {
@@ -43,8 +42,8 @@ export interface CatalogSearch {
 
 export interface AvailsSearch {
   terms: Terms;
-  territory: TerritoriesSlug[];
-  territoryExcluded: TerritoriesSlug[];
+  territory: Territories[];
+  territoryExcluded: Territories[];
   licenseType: MediasValues[];
   exclusive: boolean;
   isActive: boolean;
@@ -253,11 +252,11 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     // check if media is already checked by the user
     if (!this.get('storeType').value.includes(staticConsts.storeType)) {
       this.get('storeType').setValue([...this.get('storeType').value, staticConsts.storeType]);
-    } else if ( this.get('storeType').value.includes(staticConsts.storeType)) {
-        const types = this.get('storeType').value.filter(
-          (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
-        );
-        this.get('storeType').setValue(types);
+    } else if (this.get('storeType').value.includes(staticConsts.storeType)) {
+      const types = this.get('storeType').value.filter(
+        (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
+      );
+      this.get('storeType').setValue(types);
     } else {
       throw new Error(`Store Type ${staticConsts.storeType[type]} doesn't exist`);
     }
@@ -301,9 +300,9 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     this.get('isActive').setValue(value);
   }
 
-  addTerritory(territory: TerritoriesSlug) {
+  addTerritory(territory: Territories) {
     // Check it's part of the list available
-    if (!TERRITORIES_SLUG.includes(territory)) {
+    if (!Object.keys(territories).includes(territory)) {
       throw new Error(
         `Territory ${getLabelBySlug('TERRITORIES', territory)} is not part of the list`
       );
