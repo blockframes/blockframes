@@ -1,4 +1,4 @@
-import { LanguagesSlug, TerritoriesSlug } from "@blockframes/utils/static-model";
+import { Languages, TerritoriesSlug } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
@@ -6,7 +6,7 @@ export interface OldPromotionalElement {
   size?: ResourceSizes,
   ratio?: ResourceRatios,
   media: OldImgRef,
-  language?: LanguagesSlug,
+  language?: Languages,
   country?: TerritoriesSlug,
 }
 
@@ -130,7 +130,7 @@ export interface OldNewPromotionalElement {
   size?: ResourceSizes,
   ratio?: ResourceRatios,
   media: OldHostedMedia,
-  language?: LanguagesSlug,
+  language?: Languages,
   country?: TerritoriesSlug,
 }
 

@@ -17,7 +17,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
   @Input() languagesFilterForm: FormEntity<LanguageVersionControl>; // FormGroup of FormArray
 
   /** list of selected language (chips), they can later be added in *'original'*, *'subtitle'*, etc... */
-  public selectedLanguages = FormList.factory<ExtractSlug<'LANGUAGES'>>([]);
+  public selectedLanguages = FormList.factory<GetKeys<'languages'>>([]);
 
   public versions = FormList.factory<GetKeys<'movieLanguageTypes'>>([]);
 
@@ -31,7 +31,7 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-      .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], GetKeys<'movieLanguageTypes'>[]]))
+      .pipe(startWith([[], []] as [GetKeys<'languages'>[], GetKeys<'movieLanguageTypes'>[]]))
       .subscribe(
         ([languages, versions]) => {
           this.rebuildingForm = true;

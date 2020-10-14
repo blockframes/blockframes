@@ -1,5 +1,5 @@
 
-import { Genres, LanguagesSlug, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
+import { Genres, Languages, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
 import { FormControl } from '@angular/forms';
@@ -11,10 +11,10 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
 
 export interface LanguagesSearch {
-  original: LanguagesSlug[];
-  dubbed: LanguagesSlug[];
-  subtitle: LanguagesSlug[];
-  caption: LanguagesSlug[];
+  original: Languages[];
+  dubbed: Languages[];
+  subtitle: Languages[];
+  caption: Languages[];
 }
 
 export interface MovieSearch extends AlgoliaSearch {
@@ -54,10 +54,10 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
 
 function createLanguageVersionControl(languages: LanguagesSearch) {
   return {
-    original: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.original),
-    dubbed: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.dubbed),
-    subtitle: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.subtitle),
-    caption: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.caption),
+    original: FormList.factory<GetKeys<'languages'>>(languages.original),
+    dubbed: FormList.factory<GetKeys<'languages'>>(languages.dubbed),
+    subtitle: FormList.factory<GetKeys<'languages'>>(languages.subtitle),
+    caption: FormList.factory<GetKeys<'languages'>>(languages.caption),
   }
 }
 export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
