@@ -5,7 +5,7 @@
     </ng-container>
     <div [hidden]="localVideoAudioIsOn.video" id="localVideo" #localVideo>
     </div>
-    <span>
+    <span class="mat-caption">
       {{localParticipant.festivalData | displayName}}
     </span>
     <mat-icon *ngIf="open" (click)="open = !open" svgIcon="close"></mat-icon>

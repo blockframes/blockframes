@@ -4,6 +4,7 @@
   padding: 32px 32px;
   background-color: var(--background);
   position: relative;
+  overflow: hidden;
 }
 
 section {
@@ -16,19 +17,18 @@ section {
 .article-buyer {
   width: 100%;
   height: 30%;
-  overflow-y: auto;
-  overflow-x: scroll;
-  mat-grid-list {
-    flex-grow: 1;
-    flex-wrap: nowrap;
-    transform: translateZ(0);
+  min-height: 100px;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  event-meeting-remote-participant{
+    flex: 0 1 33%;
+    flex-shrink: 0;
+    position: relative;
+    width: 100%;
     height: 100%;
-    mat-grid-tile {
-      event-meeting-remote-participant{
-        width: 100%;
-        height: 100%;
-      }
-    }
+    background-color: var(--background-hover);
   }
 }
 
@@ -40,7 +40,7 @@ section {
   justify-content: center;
   align-items: center;
   position: relative;
-  background-color: var(--whiteBackground);
+  background-color: var(--background-hover);
   border: 32px solid var(--background);
 }
 
@@ -52,9 +52,4 @@ section {
       height: 100%;
     }
   }
-}
-
-
-.container-remote-participant-Buyer {
-
 }
