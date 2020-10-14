@@ -13,7 +13,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {Participant, RemoteTrackPublication} from 'twilio-video';
 
 @Component({
-  selector: '[participant] event-meeting-remote-participant',
+  selector: '[participant] [twilioData] event-meeting-remote-participant',
   templateUrl: './remote.component.html',
   styleUrls: ['./remote.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

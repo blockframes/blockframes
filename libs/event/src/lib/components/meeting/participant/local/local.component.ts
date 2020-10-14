@@ -1,22 +1,17 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild
-} from '@angular/core';
+// Angular
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+
+// Blockframes
 import {meetingEventEnum, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {LocalTrackPublication, Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+
+// Twilio
+import {LocalTrackPublication, Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
 
 
 @Component({
-  selector: 'event-meeting-local-participant',
+  selector: '[localParticipant] [localPreviewTracks] [isSeller] [localVideoAudioIsOn] [twilioData] event-meeting-local-participant',
   templateUrl: './local.component.html',
   styleUrls: ['./local.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -55,13 +50,13 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
   setUpLocalParticipantEvent(localParticipant: Participant) {
 
     localParticipant.on(meetingEventEnum.TrackDisabled, (track: IRemoteTrackPublication) => {
+      console.log(this.localVideoAudioIsOn)
       this.setUpCamAndMic([track], false);
     })
 
     localParticipant.on(meetingEventEnum.TrackEnabled, (track: IRemoteTrackPublication) => {
       this.setUpCamAndMic([track], true);
       console.log(this.localVideoAudioIsOn)
-      this.makeLocalTrack();
     })
 
     localParticipant.on(meetingEventEnum.TrackStopped, (track: IRemoteTrackPublication) => {
@@ -85,6 +80,11 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
     this.attachTracks(this.localPreviewTracks, this.containerLocalVideo.nativeElement)
   }
 
+  /**
+   *
+   * @param tracks
+   * @param boolToChange
+   */
   setUpCamAndMic(tracks, boolToChange) {
     if (tracks.length < 1) {
       this.setUpVideoAndAudio('audio', false)

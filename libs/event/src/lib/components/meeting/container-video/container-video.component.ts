@@ -1,13 +1,20 @@
+// Angular
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+
+// Blockframes
 import {Event} from "@blockframes/event/+state";
-import {Observable} from "rxjs";
 import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+
+// Rxjs
+import {Observable} from "rxjs";
+
+// Twilio
 import {LocalAudioTrack, LocalDataTrack, LocalVideoTrack} from "twilio-video";
 
 @Component({
-  selector: 'event-meeting-container-video',
+  selector: '[event] event-meeting-container-video',
   templateUrl: './container-video.component.html',
   styleUrls: ['./container-video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

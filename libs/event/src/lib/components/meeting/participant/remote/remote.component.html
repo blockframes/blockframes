@@ -2,8 +2,8 @@
   <ng-container *ngIf="!((camMicIsOnRemote$ | async).video)">
     <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
   </ng-container>
-  <article [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" fxFlex>
-  </article>
+  <section [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" fxFlex>
+  </section>
   <span class="mat-caption">
       {{participant.festivalData | displayName}}
     </span>

@@ -3,8 +3,8 @@
     <ng-container *ngIf="!localVideoAudioIsOn.video">
       <event-meeting-avatar-initial [participant]="localParticipant"></event-meeting-avatar-initial>
     </ng-container>
-    <div [hidden]="localVideoAudioIsOn.video" id="localVideo" #localVideo>
-    </div>
+    <section [hidden]="!localVideoAudioIsOn.video" id="localVideo" #localVideo>
+    </section>
     <span class="mat-caption">
       {{localParticipant.festivalData | displayName}}
     </span>

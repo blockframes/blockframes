@@ -154,7 +154,7 @@ export class EventService extends CollectionService<EventState> {
    * @param eventId
    */
   public async getTwilioAccessToken(eventId: string){
-    const callDeploy = this.functions.httpsCallable('getTwilioAccessToken');
+    const callDeploy = this.functions.httpsCallable('getAccessToken');
     return await callDeploy({eventId: eventId}).toPromise();
   }
 }

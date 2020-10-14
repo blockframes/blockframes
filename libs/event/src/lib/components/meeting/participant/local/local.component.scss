@@ -9,7 +9,7 @@ section {
   bottom: 0;
   right: 0;
 
-  div, event-meeting-avatar-initial {
+  section, event-meeting-avatar-initial {
     display: none;
   }
 
@@ -33,7 +33,7 @@ section {
     right: 8px;
   }
 
-  div {
+  section {
     position: absolute;
     bottom: 0;
     display: flex;

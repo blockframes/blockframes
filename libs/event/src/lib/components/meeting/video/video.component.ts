@@ -70,7 +70,10 @@ export class VideoComponent  {
     return item.identity;
   }
 
-
+  /**
+   * Get Twilio Participant data by Uid
+   * @param participant
+   */
   doGetTwilioParticipantDataFromUid(participant): Participant{
     return this.getTwilioParticipantDataFromUid(participant.identity);
   }

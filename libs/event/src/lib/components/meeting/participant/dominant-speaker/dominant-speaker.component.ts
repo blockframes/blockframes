@@ -10,7 +10,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 import {Participant, RemoteAudioTrack, RemoteDataTrack, RemoteTrackPublication, RemoteVideoTrack} from 'twilio-video';
 
 @Component({
-  selector: 'event-meeting-dominant-speaker',
+  selector: '[participant] [twilioData] event-meeting-dominant-speaker',
   templateUrl: './dominant-speaker.component.html',
   styleUrls: ['./dominant-speaker.component.scss']
 })
