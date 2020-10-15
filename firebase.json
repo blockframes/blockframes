@@ -65,8 +65,7 @@
   "functions": {
     "predeploy": [
       "npm run lint backend-functions",
-      "npm run build:backend-functions",
-      "npm run deploy:functions:config"
+      "npm run build:backend-functions"
     ],
     "source": "dist/apps/backend-functions/"
   },
