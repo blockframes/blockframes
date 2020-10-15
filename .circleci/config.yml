@@ -322,6 +322,13 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
+  deploy-branch:
+    jobs:
+        - deploy-to-demo1:
+            filters:
+              branches:
+                only:
+                  - demo1
   main-workflow:
     jobs:
       # build only the PR
@@ -358,11 +365,11 @@ workflows:
             branches:
               only:
                 - ci
-      - deploy-to-demo1:
-          filters:
-            branches:
-              only:
-                - demo1
+      # - deploy-to-demo1:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - demo1
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
