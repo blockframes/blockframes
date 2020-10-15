@@ -10,7 +10,6 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 // Rxjs
 import {Observable} from "rxjs";
 
-// Twilio
 
 @Component({
   selector: '[event] event-meeting-container-video',

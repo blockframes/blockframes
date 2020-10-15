@@ -14,9 +14,9 @@ import {map} from "rxjs/operators";
 //Import Twilio-video
 import {
   connect,
-  ConnectOptions,
   createLocalAudioTrack,
   createLocalVideoTrack,
+  ConnectOptions,
   LocalAudioTrack,
   LocalDataTrack,
   LocalVideoTrack,
