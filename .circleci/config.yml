@@ -31,6 +31,14 @@ references:
       branches:
         only:
           - /release\/.*/
+  deployment_branches: &deployment_branches
+    - ci
+    - develop
+    - /release\/.*/
+    - master
+    - production
+    - staging
+    - demo1
 
 commands:
   checkout_project:
@@ -322,13 +330,6 @@ workflows:
       - test-e2e:
           requires:
             - build-and-test-all
-  deploy-branch:
-    jobs:
-        - deploy-to-demo1:
-            filters:
-              branches:
-                only:
-                  - demo1
   main-workflow:
     jobs:
       # build only the PR
@@ -336,13 +337,7 @@ workflows:
           filters:
             branches:
               ignore:
-                # TODO: factor this array
-                - ci
-                - develop
-                - /release\/.*/
-                - master
-                - production
-                - staging
+                <<: *deployment_branches
       # build EVERYTHING and trigger the rest of the deploy
       - build-and-test-all:
           filters:
@@ -365,11 +360,11 @@ workflows:
             branches:
               only:
                 - ci
-      # - deploy-to-demo1:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - demo1
+      - deploy-to-demo1:
+          filters:
+            branches:
+              only:
+                - demo1
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
