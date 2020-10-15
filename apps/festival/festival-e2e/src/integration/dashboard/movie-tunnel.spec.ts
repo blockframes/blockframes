@@ -5,6 +5,7 @@ import { clearDataAndPrepareTest, setForm, FormOptions,
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
+import { TO } from '@blockframes/e2e/utils';
 
 const userFixture = new User();
 const users = [ userFixture.getByUID(USER.Jean) ];
@@ -98,9 +99,20 @@ const Movie = {
     "original-version": false,
   },
   notesStatements: {
-    "": ''
+    "intent-note": JSON.stringify({type: 'app/pdf', filename: '1234.pdf'})
   }
 }
+
+const testSteps = [
+  {title: 'Main Information', selector: '', 
+    input: 'mainInfo', has_upload: false},
+  {title: 'Main Information', selector: '', 
+    input: 'mainInfo', has_upload: false},
+  {title: 'Main Information', selector: '', 
+    input: 'mainInfo', has_upload: false},
+  {title: 'Main Information', selector: '', 
+    input: 'mainInfo', has_upload: false},
+]
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
@@ -111,11 +123,37 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;
-    })
+    });
+
+    testSteps.forEach(step => {
+      cy.get('h1', {timeout: 30000}).contains(step.title);
+      setForm(step.selector, {inputValue: Movie[step.input]});
+      if (step.has_upload) {
+        //Click on Save button.
+      }
+      //Proceed to next step.
+      cy.get('', {timeout: TO.PAGE_ELEMENT})
+        .click();
+    });
+
+    //On Summary page, verify the details.
   });
 
-  // Notes & Statements
+  //Summary - Verification
   it.only('Complete Notes, go on Promotions', () => {
+    //mainTest();
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
+    cy.wait(3000);
+    acceptCookie();
+    cy.get('h1', {timeout: 30000}).contains('Summary Page');
+    // const formOpt: FormOptions = {
+    //   inputValue: Movie.notesStatements
+    // }
+
+  });  
+
+  // Notes & Statements
+  it.skip('Complete Notes, go on Promotions', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/media-notes');
     cy.wait(3000);
@@ -125,9 +163,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       inputValue: Movie.notesStatements
     }
     //setForm('movie-form-media-notes mat-radio-button, static-select, input', formOpt);
-    createFakeScript(`${randomID()}`).then(path => {
-      uploadFile(path, 'application/pdf', 'intent-note');
-    });
+    setForm('movie-form-media-notes file-upload', formOpt);
+    // createFakeScript(`${randomID()}`).then(path => {
+    //   uploadFile(path, 'application/pdf', 'intent-note');
+    // });
   });
 
   // Shooting Information

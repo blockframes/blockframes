@@ -118,6 +118,15 @@ function handleFormElement(el:any, id: string, value: string) {
   const cw = cy.wrap(el);
   let doClick = true;
 
+  //Handle file uploads
+  if (el.is('file-upload')) {
+    const uploadProps = JSON.parse(value);
+    const title =  uploadProps.title || randomID();
+    createFakeScript(title).then(path => {
+      uploadFile(path, uploadProps.type, id);
+    });    
+  }
+
   if (el.is('input') || el.is('textarea')) {
     cw.click()
       .type(value, {force: true});
