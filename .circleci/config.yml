@@ -30,7 +30,7 @@ references:
     filters:
       branches:
         only:
-          - /hotfix/release/1.9/
+          - /hotfix\/release\/.*/
           - /release\/.*/
 
 commands:
