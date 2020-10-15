@@ -1,10 +1,10 @@
-import { Territories } from '../static-model';
+import { Territory } from '../static-model';
 
 export interface Location {
   street: string;
   zipCode: string;
   city: string;
-  country?: Territories;
+  country?: Territory;
   region?: string;
   phoneNumber: string;
 }

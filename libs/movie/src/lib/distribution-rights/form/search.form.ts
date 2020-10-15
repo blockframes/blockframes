@@ -10,11 +10,10 @@ import {
 import { medias, territories } from '@blockframes/utils/static-model/staticConsts';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
-import { FormConstantArray, FormList, FormStaticValue, numberRangeValidator, FormEntity, FormConstantValue } from '@blockframes/utils/form';
+import { FormConstantArray, FormList, numberRangeValidator, FormEntity, FormConstantValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 import { StoreType, staticConsts } from '@blockframes/utils/static-model';
 import { getKeyIfExists } from '@blockframes/utils/helpers';

@@ -15,23 +15,18 @@
 </ng-template>
 
 <!-- Display projected content if provided -->
-<ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
+<ng-template #content [ngTemplateOutlet]="child || value"
+  [ngTemplateOutletContext]="{ $implicit: control?.value, control: control }">
 </ng-template>
 
 <!-- Display value if no projected content -->
 <ng-template #value>
-  <!-- If there is a static model -->
-  <ng-container *ngIf="(scope && !!control.value) else withType">
-    <span>{{ control.value | translateSlug: scope }}</span>
+  <!-- If there is a type string -->
+  <ng-container *ngIf="(type && !!control.value) else withoutType">
+    <span>{{ control.value | toLabel: type }}</span>
   </ng-container>
-  <ng-template #withType>
-    <!-- If there is a type string -->
-    <ng-container *ngIf="(type && !!control.value) else withoutType">
-      <span>{{ control.value | toLabel: type }}</span>
-    </ng-container>
-    <!-- if it's not a type string or a static model -->
-    <ng-template #withoutType>
-      <span>{{ control.value }}{{ isLast ? '' : ', ' }}</span>
-    </ng-template>
+  <!-- if it's not a type string or a static model -->
+  <ng-template #withoutType>
+    <span>{{ control.value }}{{ isLast ? '' : ', ' }}</span>
   </ng-template>
 </ng-template>

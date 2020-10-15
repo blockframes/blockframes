@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Modules
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
-import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 // Components
@@ -28,7 +28,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ImageReferenceModule,
     AppBarModule,
     ToLabelModule,
-    TranslateSlugModule,
     OrgNameModule,
     // Material
     MatTabsModule,

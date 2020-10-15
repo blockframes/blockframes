@@ -17,7 +17,7 @@ import {
   cleanContractVersion,
   createContractVersion
 } from '../../version/+state/contract-version.model';
-import { LegalRoles } from '@blockframes/utils/static-model/types';
+import { LegalRole } from '@blockframes/utils/static-model/types';
 import { getKeyIfExists, toDate } from '@blockframes/utils/helpers';
 
 export interface Contract extends ContractDocumentWithDates {
@@ -209,7 +209,7 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
  * @param contract
  * @param legalRole
  */
-export function getContractParties(contract: Contract, legalRole: LegalRoles): ContractPartyDetail[] {
+export function getContractParties(contract: Contract, legalRole: LegalRole): ContractPartyDetail[] {
   const roleCode = getKeyIfExists('legalRoles', legalRole)
   return contract.parties.filter(p => p.party.role === roleCode);
 }

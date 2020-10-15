@@ -1,4 +1,10 @@
-import { CrewRolesValues, ProducerRolesValues, LegalRoles, SubLicensorRoles, Territories } from "@blockframes/utils/static-model/types";
+import {
+  CrewRoleValue,
+  ProducerRoleValue,
+  LegalRole,
+  SubLicensorRole,
+  Territory
+} from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -40,7 +46,7 @@ export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
   logo?: string;
-  countries?: Territories[],
+  countries?: Territory[],
 }
 
 
@@ -62,7 +68,7 @@ export interface Filmography {
  * @dev interface to represent a producer credit
  */
 export interface Producer extends Credit {
-  role: ProducerRolesValues, // overrided role scope from Producer interface
+  role: ProducerRoleValue, // overrided role scope from Producer interface
 };
 
 /**
@@ -81,14 +87,14 @@ export type Cast = Credit;
  * @dev interface to represent a crew credit
  */
 export interface Crew extends Credit {
-  role: CrewRolesValues, // overrided role scope from Crew interface
+  role: CrewRoleValue, // overrided role scope from Crew interface
 };
 
 /**
  * @dev interface to represent an entity within contracts
  */
 export interface Party extends StakeholderRaw {
-  role: LegalRoles | SubLicensorRoles, // overrided role scope from Person interface
+  role: LegalRole | SubLicensorRole, // overrided role scope from Person interface
   address?: Location
 }
 

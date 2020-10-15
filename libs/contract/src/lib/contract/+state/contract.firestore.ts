@@ -3,10 +3,11 @@ import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
 import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
-  Languages,
-  SubLicensorRoles,
+  Language,
+  SubLicensorRole,
   ContractStatus,
-  ContractType, Territories
+  ContractType,
+  Territory
 } from "@blockframes/utils/static-model/types";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
@@ -51,7 +52,7 @@ interface ContractPartyDetailRaw<D> {
    * For example, the licensor for a movie can have to approve sub-sells of the license for this movie.
    * A more explicit naming would have been: rolesForChildContracts
    */
-  childRoles?: SubLicensorRoles[],
+  childRoles?: SubLicensorRole[],
 }
 
 /**
@@ -141,8 +142,8 @@ export interface LegalDocument {
   id: string,
   label: string,
   media: string,
-  language?: Languages,
-  country?: Territories,
+  language?: Language,
+  country?: Territory,
 }
 
 export interface ContractDocumentWithDates extends ContractRaw<Date> {

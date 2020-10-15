@@ -1,9 +1,9 @@
 import {
-  Territories,
-  TerritoriesISOA2,
-  TerritoriesISOA2Values,
-  TerritoriesISOA3,
-  TerritoriesISOA3Values
+  Territory,
+  TerritoryISOA2,
+  TerritoryISOA2Value,
+  TerritoryISOA3,
+  TerritoryISOA3Value
 } from './types'
 
 export const contractStatus = {
@@ -1874,7 +1874,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
   }
-  return system === 'iso_a3' ? territory as TerritoriesISOA3 : territory as TerritoriesISOA2;
+  return system === 'iso_a3' ? territory as TerritoryISOA3 : territory as TerritoryISOA2;
 }
 
 /**
@@ -1886,13 +1886,13 @@ export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'i
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
   }
-  return system === 'iso_a3' ? territoriesISOA3[territory] as TerritoriesISOA3Values : territoriesISOA2[territory] as TerritoriesISOA2Values;
+  return system === 'iso_a3' ? territoriesISOA3[territory] as TerritoryISOA3Value : territoriesISOA2[territory] as TerritoryISOA2Value;
 }
 
 /**
  * @param slug
  */
-export function getISO3166TerritoryFromSlug(slug: Territories) {
+export function getISO3166TerritoryFromSlug(slug: Territory) {
   const territory = Object.keys(territories).find(i => i.toLowerCase() === slug.toLowerCase());
   if (!territory) {
     throw new Error(`Failed to territory: ${slug}.`);
@@ -1905,5 +1905,3 @@ export function getISO3166TerritoryFromSlug(slug: Territories) {
     'fr': territoriesFR[territory],
   }
 }
-
-getKeyByValue('territories', 'Germany')

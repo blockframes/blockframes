@@ -44,11 +44,10 @@ import {
   createHostedVideos,
   createHostedVideo
 } from '../+state/movie.model';
-
 import { FormArray, FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { Filmography, createFilmography } from '@blockframes/utils/common-interfaces/identity';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { FormStaticValue, FormConstantValue } from '@blockframes/utils/form/forms/static-value.form';
+import { FormConstantValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
@@ -58,7 +57,7 @@ import { FormValue } from '@blockframes/utils/form';
 import { createCredit, Stakeholder, createStakeholder, Director } from '@blockframes/utils/common-interfaces/identity';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
-import { Languages } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/utils/static-model';
 
 // LEGAL DOCUMENTS
 
@@ -68,8 +67,8 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
     id: new FormControl(id),
     label: new FormControl(label),
     media: new HostedMediaForm(media),
-    language: new FormConstantValue(language, 'languages'),
-    country: new FormStaticValue(country, 'TERRITORIES')
+    language: new FormConstantValue<'languages'>(language, 'languages'),
+    country: new FormConstantValue<'territories'>(country, 'territories')
   };
 }
 
@@ -126,9 +125,11 @@ function createMovieControls(movie: Partial<Movie>) {
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
     isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormConstantValue(el, 'languages'), [Validators.required]),
+    originalLanguages: FormList.factory(entity.originalLanguages, el =>
+      new FormConstantValue<'languages'>(el, 'languages'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES'), [Validators.required]),
+    originCountries: FormList.factory(entity.originCountries, el =>
+      new FormConstantValue<'territories'>(el, 'territories'), [Validators.required]),
     poster: new HostedMediaForm(entity.poster),
     prizes: FormList.factory(entity.prizes, el => new MoviePrizeForm(el)),
     customPrizes: FormList.factory(entity.customPrizes, el => new MoviePrizeForm(el)),
@@ -503,7 +504,7 @@ function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
   const { displayName, countries } = createStakeholder(stakeholder);
   return {
     displayName: new FormControl(displayName, Validators.required),
-    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'), Validators.required)
+    countries: FormList.factory(countries, e => new FormConstantValue<'territories'>(e, 'territories'), Validators.required)
   }
 }
 
@@ -777,7 +778,7 @@ export function createMovieReview(params: Partial<MovieReview> = {}): MovieRevie
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
   return {
-    country: new FormStaticValue(country, 'TERRITORIES'),
+    country: new FormConstantValue<'territories'>(country, 'territories'),
     reason: new FormControl(reason),
     system: new FormControl(system),
     value: new FormControl(value),
@@ -807,7 +808,7 @@ export function createMovieRating(params: Partial<MovieRating> = {}): MovieRatin
 function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
   const { country, date, media } = createMovieOriginalRelease(entity);
   return {
-    country: new FormStaticValue(country, 'TERRITORIES'),
+    country: new FormConstantValue<'territories'>(country, 'territories'),
     date: new FormControl(date),
     media: new FormControl(media),
   }
@@ -836,7 +837,7 @@ export function createMovieOriginalRelease(
 // ------------------------------
 
 export function createLanguageControl(
-  versionInfo: Partial<{ [language in Languages]: MovieLanguageSpecification }>
+  versionInfo: Partial<{ [language in Language]: MovieLanguageSpecification }>
 ) {
   const controls = {};
   for (const language in versionInfo) {
@@ -847,17 +848,17 @@ export function createLanguageControl(
 
 export class MovieVersionInfoForm extends FormEntity<any> {
   constructor(
-    versionInfo: Partial<{ [language in Languages]: MovieLanguageSpecification }> = {}
+    versionInfo: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}
   ) {
     super(createLanguageControl(versionInfo));
   }
 
-  addLanguage(language: Languages, value?: Partial<MovieLanguageSpecification>) {
+  addLanguage(language: Language, value?: Partial<MovieLanguageSpecification>) {
     const spec = createMovieLanguageSpecification(value);
     this.setControl(language, new VersionSpecificationForm(spec));
   }
 
-  removeLanguage(language: Languages) {
+  removeLanguage(language: Language) {
     this.removeControl(language);
     this.updateValueAndValidity();
   }

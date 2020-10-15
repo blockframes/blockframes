@@ -2,7 +2,7 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { MovieShooting } from '../+state/movie.firestore';
 import { territories } from '@blockframes/utils/static-model/staticConsts';
-import { Territory } from '@blockframes/utils/static-model';
+import { TerritoryValue } from '@blockframes/utils/static-model';
 
 @Pipe({ name: 'shootingDates' })
 export class ShootingDatesPipe implements PipeTransform {
@@ -33,7 +33,7 @@ export class ShootingLocationsPipe implements PipeTransform {
       return 'No location provided';
     } else {
       return shooting.locations.map(({ cities, country }) => {
-        const territory: Territory = territories[country];
+        const territory: TerritoryValue = territories[country];
         const allCities = cities.join(', ');
         return allCities ? `${territory} (${allCities})` : territory;
       }).join(', ');

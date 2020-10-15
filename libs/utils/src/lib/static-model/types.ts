@@ -51,7 +51,7 @@ export type ContractStatus = keyof typeof contractStatus;
 export type ContractType = keyof typeof contractType;
 
 export type CrewRole = keyof typeof crewRoles;
-export type CrewRoleValues = typeof crewRoles[CrewRole];
+export type CrewRoleValue = typeof crewRoles[CrewRole];
 
 export type DistributionRightStatus = keyof typeof distributionRightStatus;
 

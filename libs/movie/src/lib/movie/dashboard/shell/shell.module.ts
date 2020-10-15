@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { DashboardTitleShellComponent } from './shell.component';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { MovieFeatureModule } from '../../pipes/movie-feature.pipe';
@@ -27,7 +26,6 @@ import { MatButtonModule } from '@angular/material/button';
     // Blockframes
     MovieFeatureModule,
     ToLabelModule,
-    TranslateSlugModule,
     DisplayNameModule,
     ImageReferenceModule,
     // Material
