@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { BehaviorSubject, Observable } from "rxjs";
-import { staticConsts } from './static-model';
-import { Scope } from "./static-model/staticConsts";
+import { staticModel, Scope } from './static-model';
+
 /**
  * This method is used before pushing data on db
  * to prevent "Unsupported field value: undefined" errors.
@@ -104,7 +104,7 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
 export function getKeyIfExists(base: Scope, code: string) {
   // Sanitized input to properly compare with base data
   const sanitizedCode = code.trim().toLowerCase();
-  const candidate = Object.entries(staticConsts[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
+  const candidate = Object.entries(staticModel[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
   return candidate ? candidate.shift() : undefined;
 }
 
