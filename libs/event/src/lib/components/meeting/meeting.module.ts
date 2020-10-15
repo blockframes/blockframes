@@ -9,15 +9,15 @@ import {MatListModule} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 
 // Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
-import { DisplayNameModule } from '@blockframes/utils/pipes';
+import {ImageReferenceModule} from '@blockframes/media/directives/image-reference/image-reference.module';
+import {EventInitialsModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
+import {DisplayNameModule} from '@blockframes/utils/pipes';
 
 // Components
 import {VideoComponent} from './video/video.component';
 import {RemoteComponent} from './participant/remote/remote.component';
 import {ContainerVideoComponent} from './container-video/container-video.component';
-import { AvatarInitialComponent } from './avatar-initial/avatar-initial.component';
+import {AvatarInitialComponent} from './avatar-initial/avatar-initial.component';
 
 
 @NgModule({
@@ -30,18 +30,19 @@ import { AvatarInitialComponent } from './avatar-initial/avatar-initial.componen
   exports: [
     ContainerVideoComponent,
   ],
-    imports: [
-      MatButtonModule,
-      MatIconModule,
-      MatSidenavModule,
-      MatListModule,
-      CommonModule,
-      MatGridListModule,
-      FlexModule,
-      EventInitialParticipantModule,
-      DisplayNameModule,
-      ImageReferenceModule
-    ]
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    CommonModule,
+    MatGridListModule,
+    FlexModule,
+    EventInitialsModule,
+    DisplayNameModule,
+    ImageReferenceModule
+  ]
 })
-export class MeetingModule { }
+export class MeetingModule {
+}
 

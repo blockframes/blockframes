@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 
 // Blockframes
 import {Event} from "@blockframes/event/+state";
-import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AuthQuery, User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
@@ -11,7 +11,6 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 import {Observable} from "rxjs";
 
 // Twilio
-import {LocalAudioTrack, LocalDataTrack, LocalVideoTrack} from "twilio-video";
 
 @Component({
   selector: '[event] event-meeting-container-video',
@@ -24,11 +23,8 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   //Input event meeting
   @Input() event: Event;
 
-  //All Participants in the room Twilio
-  arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
-
   //All Remote Participants in the room Twilio (all participant connected without local)
-  arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
+  remoteParticipants$: Observable<IParticipantMeeting[]>;
 
   user: User;
 
@@ -40,41 +36,36 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
-    console.log('1 ngOnInit')
-
-    this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
-    console.log('2 ngOnInit')
-    this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
-    console.log('3 ngOnInit')
+    this.remoteParticipants$ = this.meetingService.getParticipants();
     this.user = this.query.user;
-    console.log('4 ngOnInit')
     this.isSeller = this.event.isOwner;
-    console.log('5 ngOnInit')
 
-    await this.meetingService.doCreateLocalPreview();
-    console.log('6 ngOnInit')
-    await this.meetingService.doConnectToMeetingService(this.event);
-    console.log('7 ngOnInit')
+    const isAudio: boolean = await this.meetingService.isAudioAvailable();
+    const isVideo: boolean = await this.meetingService.isVideoAvailable();
+
+    await this.meetingService.createPreview(isAudio, isVideo);
+    await this.meetingService.connectToMeeting(this.event, this.user.uid, isAudio, isVideo);
   }
 
-  getTwilioParticipantDataFromUid = (uid: string) => {
-    return this.meetingService.getTwilioParticipantDataFromUid(uid);
+  getTwilioParticipant = (uid: string) => {
+    return this.meetingService.getTwilioParticipant(uid);
   }
 
   /**
    * Event come from child when audio or video is deactivated or activated
    *
+   * @param identity
    * @param kind
    * @param boolToChange
    */
-  doSetupLocalVideoAndAudio({kind, boolToChange}) {
-    this.meetingService.doSetupLocalVideoAndAudio(kind, boolToChange)
+  setupVideoAudio({identity, kind, boolToChange}) {
+    this.meetingService.setupVideoAudio(identity, kind, boolToChange)
   }
 
   /**
    * when ngDestroy we disconnect the local participant;
    */
   ngOnDestroy() {
-    this.meetingService.doDisconnected()
+    this.meetingService.disconnect()
   }
 }

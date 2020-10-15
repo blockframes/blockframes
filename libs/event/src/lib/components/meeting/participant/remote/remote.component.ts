@@ -1,13 +1,18 @@
 // Angular
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, Renderer2} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  Renderer2
+} from '@angular/core';
 
 // Blockframes
-import {IStatusVideoMic, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
-
-// Rxjs
-import {BehaviorSubject, Observable} from "rxjs";
+import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 // Twilio Video SDK
 import {Participant, RemoteTrackPublication} from 'twilio-video';
@@ -20,34 +25,29 @@ import {Participant, RemoteTrackPublication} from 'twilio-video';
 })
 export class RemoteComponent extends AbstractParticipant implements AfterViewInit {
 
-  // Observable to now when video/audio is disabled/enable
-  protected $camMicIsOnRemoteDataSource: BehaviorSubject<IStatusVideoMic> = new BehaviorSubject({
-    video: false,
-    audio: false
-  });
-  public camMicIsOnRemote$: Observable<IStatusVideoMic> = this.$camMicIsOnRemoteDataSource.asObservable();
-
   @Input() participant: IParticipantMeeting
   @Input() twilioData: Participant
+
+  @Output() eventSetupVideoAudio = new EventEmitter();
 
   constructor(private renderer: Renderer2, private elm: ElementRef) {
     super();
   }
 
   ngAfterViewInit() {
-    this.setUpRemoteParticipantEvent(this.twilioData);
-    this.mocDivVideo(this.twilioData);
+    this.setupParticipantEvent(this.twilioData);
+    this.videoMock(this.twilioData);
   }
 
   /**
    * Set up all event we need for meeting
    * @param participant
    */
-  setUpRemoteParticipantEvent(participant: Participant) {
-    const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
+  setupParticipantEvent(participant: Participant) {
+    const participantContainer = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
 
     participant.on(meetingEventEnum.TrackSubscribed, (track) => {
-      this.attachTracks([track], containerRemotParticipant)
+      this.attachTracks([track], participantContainer)
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
@@ -58,41 +58,28 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
       this.detachParticipantTracks(this.twilioData);
     })
 
-    participant.on(meetingEventEnum.TrackDisabled, (track: RemoteTrackPublication) => {
-      this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
-      this.setUpVideoAndAudio(track.kind, false)
+    participant.on(meetingEventEnum.TrackDisabled, (remoteTrack: RemoteTrackPublication) => {
+      this.detachTracks([remoteTrack.track])
+      this.setupVideoAudio(remoteTrack.kind, false)
     })
 
-    participant.on(meetingEventEnum.TrackEnabled, (track: RemoteTrackPublication) => {
-      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant)
-      this.setUpVideoAndAudio(track.kind, true)
+    participant.on(meetingEventEnum.TrackEnabled, (remoteTrack: RemoteTrackPublication) => {
+      this.attachTracks([remoteTrack.track], participantContainer)
+      this.setupVideoAudio(remoteTrack.kind, true)
     })
 
     participant.on(meetingEventEnum.TrackStarted, (track) => {
-      this.setUpVideoAndAudio(track.kind, true)
+      this.setupVideoAudio(track.kind, true)
     })
   }
 
-  /**
-   *
-   * @param participant: Participant
-   */
-  mocDivVideo(participant: Participant) {
-    const containerRemotParticipant = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
-    this.attachParticipantTracks(participant, containerRemotParticipant);
+  videoMock(participant: Participant) {
+    const participantContainer = this.elm.nativeElement.querySelector(`#container-video-${participant.identity}`);
+    this.attachParticipantTracks(participant, participantContainer);
 
   }
 
-  /**
-   *
-   * @param kind: string
-   * @param boolToChange: boolean
-   */
-  setUpVideoAndAudio(kind: string, boolToChange: boolean) {
-    if (kind === 'video') {
-      this.$camMicIsOnRemoteDataSource.next({...this.$camMicIsOnRemoteDataSource.getValue(), video: boolToChange});
-    } else {
-      this.$camMicIsOnRemoteDataSource.next({...this.$camMicIsOnRemoteDataSource.getValue(), audio: boolToChange});
-    }
+  setupVideoAudio(kind: string, boolToChange: boolean) {
+    this.eventSetupVideoAudio.emit({identity: this.participant.identity, kind, boolToChange})
   }
 }

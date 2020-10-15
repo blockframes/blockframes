@@ -2,18 +2,21 @@ import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Pipe({
-  name: 'eventInitialParticipant'
+  name: 'eventInitials'
 })
-export class EventInitialParticipantPipe implements PipeTransform {
+export class EventInitialsPipe implements PipeTransform {
 
+  /**
+   * Get initials from participant
+   * @param participant
+   */
   transform(participant: IParticipantMeeting): string {
     return `${participant.festivalData.firstName.charAt(0).toUpperCase()}${participant.festivalData.lastName.charAt(0).toUpperCase()}`
   }
-
 }
 
 @NgModule({
-  declarations: [EventInitialParticipantPipe],
-  exports: [EventInitialParticipantPipe],
+  declarations: [EventInitialsPipe],
+  exports: [EventInitialsPipe],
 })
-export class EventInitialParticipantModule {}
+export class EventInitialsModule {}

@@ -1,7 +1,7 @@
 <event-meeting-video
-  [arrayOfRemoteParticipantConnected$]="arrayOfRemoteParticipantConnected$"
+  [remoteParticipants]="remoteParticipants$ | async"
   [event]="event"
   [isSeller]="isSeller"
-  [getTwilioParticipantDataFromUid]="getTwilioParticipantDataFromUid"
-  (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"
-  ></event-meeting-video>
+  [getTwilioParticipant]="getTwilioParticipant"
+  (eventSetupVideoAudio)="setupVideoAudio($event)"
+></event-meeting-video>

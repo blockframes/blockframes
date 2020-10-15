@@ -1,3 +1,6 @@
+/**
+ * Interface of Participant festival
+ */
 export interface IParticipantMeeting {
   identity: string,
   isDominantSpeaker: boolean,
@@ -18,4 +21,21 @@ export interface IParticipantMeeting {
 export interface IStatusVideoMic {
   video: boolean,
   audio: boolean
+}
+
+
+/**
+ * Enum for all Event twilio we can get
+ */
+export enum meetingEventEnum {
+  ParticipantConnected = 'participantConnected',
+  ParticipantDisconnected = 'participantDisconnected',
+  TrackSubscribed = 'trackSubscribed',
+  TrackUnsubscribed = 'trackUnsubscribed',
+  Disconnected = 'disconnected',
+  TrackDisabled = 'trackDisabled',
+  DominantSpeakerChanged = 'dominantSpeakerChanged',
+  TrackEnabled = 'trackEnabled',
+  TrackStopped = 'trackStopped',
+  TrackStarted = 'trackStarted',
 }

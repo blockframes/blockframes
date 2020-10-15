@@ -1,60 +1,60 @@
 // Angular
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 // Blockframes
 import {Event} from "@blockframes/event/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 // RxJs
-import {Observable} from "rxjs";
-import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {Participant} from "twilio-video";
 
 @Component({
-  selector: '[arrayOfRemoteParticipantConnected$] [event] [getTwilioParticipantDataFromUid] [isSeller] event-meeting-video',
+  selector: '[remoteParticipants] [event] [getTwilioParticipant] [isSeller] event-meeting-video',
   templateUrl: './video.component.html',
-  styleUrls: ['./video.component.scss']
+  styleUrls: ['./video.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoComponent  {
+export class VideoComponent {
 
   // Input
-  @Input() arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
+  @Input() remoteParticipants: IParticipantMeeting[];
   @Input() event: Event;
-  @Input() getTwilioParticipantDataFromUid: (uid: string) => Participant;
+  @Input() getTwilioParticipant: (uid: string) => Participant;
   @Input() isSeller: boolean;
 
   // Outup
-  @Output() eventSetUpLocalVideoAndAudio = new EventEmitter;
+  @Output() eventSetupVideoAudio = new EventEmitter;
 
   /**
    * To know if local is alone in Connected participants
    */
-  getIfLocalIsAlone(arrayOfRemoteParticipantConnected) {
-    return arrayOfRemoteParticipantConnected.length === 0;
+  isRoomEmpty(remoteParticipants) {
+    return remoteParticipants.length === 0;
   }
 
   /**
    * Function to know how many column we need for mat-grid-list
-   * @param arrayOfRemoteParticipantConnected
+   * @param remoteParticipants
    */
-  numOfCols(arrayOfRemoteParticipantConnected) {
-    if(!!arrayOfRemoteParticipantConnected){
-      if(arrayOfRemoteParticipantConnected.length < 1){
+  getColumns(remoteParticipants) {
+    if (!!remoteParticipants) {
+      if (remoteParticipants.length < 1) {
         return 0;
       }
-      const allRemoteConnectedParticipants = arrayOfRemoteParticipantConnected.length;
-      return (allRemoteConnectedParticipants === 1) ? 1 : (allRemoteConnectedParticipants > 1 && allRemoteConnectedParticipants < 5) ? 2 : 3;
+      const remoteParticipantsLength = remoteParticipants.length;
+      return (remoteParticipantsLength === 1) ? 1 : (remoteParticipantsLength > 1 && remoteParticipantsLength < 5) ? 2 : 3;
     }
     return 0;
   }
 
   /**
-   * For the local video/audio we need that to know when the track is reel attach
+   * For the remote video/audio we need that to know when the track is reel attach
+   * @param identity
    * @param kind
    * @param boolToChange
    */
-  doSetupLocalVideoAndAudio({kind, boolToChange}) {
-    this.eventSetUpLocalVideoAndAudio.emit({kind, boolToChange})
+  setupVideoAudio({identity, kind, boolToChange}) {
+    this.eventSetupVideoAudio.emit({identity, kind, boolToChange})
   }
 
   /**
@@ -70,7 +70,7 @@ export class VideoComponent  {
    * Get Twilio Participant data by Uid
    * @param participant
    */
-  doGetTwilioParticipantDataFromUid(participant): Participant{
-    return this.getTwilioParticipantDataFromUid(participant.identity);
+  doGetTwilioParticipant(participant): Participant {
+    return this.getTwilioParticipant(participant.identity);
   }
 }
