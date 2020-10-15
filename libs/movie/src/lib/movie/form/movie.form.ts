@@ -59,7 +59,6 @@ import { createCredit, Stakeholder, createStakeholder, Director } from '@blockfr
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { Languages } from '@blockframes/utils/static-model';
-import { keys } from 'lodash';
 
 // LEGAL DOCUMENTS
 
