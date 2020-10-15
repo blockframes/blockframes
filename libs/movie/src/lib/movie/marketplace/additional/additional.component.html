@@ -7,7 +7,7 @@
     <h2>Release</h2>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
-      <!-- ! Switch to ToLabelPipe when we merge this into develop ! -->
+      <!-- ! #3980 Switch to ToLabelPipe when we merge this into develop ! -->
       <p>{{ release.media | translateSlug: 'MEDIAS'}} {{ release.date | date: 'shortDate' }}</p>
     </article>
 
@@ -89,7 +89,7 @@
       <h5>Original version</h5>
       <p>
         <ng-container *ngFor="let language of movie.originalLanguages; let isLast = last">
-          <!-- ! Switch to ToLabelPipe when we merge this into develop ! -->
+          <!-- ! #3980 Switch to ToLabelPipe when we merge this into develop ! -->
           {{ language | translateSlug: 'LANGUAGES' }}{{ isLast ? ' : ' : ', '}}
         </ng-container>
         {{ movie.isOriginalVersionAvailable ? 'Available' : 'Unavailable' }}
