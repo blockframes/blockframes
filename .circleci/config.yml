@@ -272,7 +272,7 @@ jobs:
           command: |
             npm run backend-ops displayCredentials &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions --parallel
+            npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions --parallel
       - run: npm run backend-ops upgrade
       - run:
           command: |
