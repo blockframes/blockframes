@@ -1,5 +1,7 @@
 import { File as GFile } from '@google-cloud/storage';
-import { MovieDocument, OrganizationDocument, PublicUser } from 'apps/backend-functions/src/data/types';  // @TODO (#3471) remove this call to backend-functions
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { OrganizationDocument } from '@blockframes/organization/+state/organization.firestore';
+import { PublicUser } from '@blockframes/user/types';
 import { getDocument, runChunks } from '@blockframes/firebase-utils';
 import { startMaintenance, endMaintenance } from '@blockframes/firebase-utils';
 

@@ -4,7 +4,7 @@ import { Party } from "@blockframes/utils/common-interfaces/identity";
 import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
-  LanguagesSlug,
+  Languages,
   SubLicensorRoles,
   ContractStatus,
   ContractType
@@ -142,7 +142,7 @@ export interface LegalDocument {
   id: string,
   label: string,
   media: string,
-  language?: LanguagesSlug,
+  language?: Languages,
   country?: TerritoriesSlug,
 }
 

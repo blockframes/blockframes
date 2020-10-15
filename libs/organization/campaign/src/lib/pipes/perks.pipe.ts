@@ -1,4 +1,5 @@
 import { NgModule, Pipe, PipeTransform } from "@angular/core";
+import { formatCurrency } from '@angular/common';
 import { Perk } from "../+state";
 
 @Pipe({ name: 'isUnlimited' })
@@ -8,8 +9,17 @@ export class IsUnlimitedPipe implements PipeTransform  {
   }
 }
 
+@Pipe({ name: 'minPledge' })
+export class MinPledgePipe implements PipeTransform  {
+  transform(minPledge: Perk['minPledge']) {
+    return minPledge
+      ? `from ${formatCurrency(minPledge, 'en', '$', 'USD')}`
+      : 'for any investment';
+  }
+}
+
 @NgModule({
-  declarations: [IsUnlimitedPipe],
-  exports: [IsUnlimitedPipe]
+  declarations: [IsUnlimitedPipe, MinPledgePipe],
+  exports: [IsUnlimitedPipe, MinPledgePipe]
 })
 export class PerksPipeModule {}

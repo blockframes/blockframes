@@ -273,6 +273,19 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
 /////////////////////
 
 /**
+ * @dev Simplify ISO3166TERRITORIES array by returning only key and value
+ */
+export function getIsoCountries() {
+  const iso = {};
+
+  for(const t of ISO3166TERRITORIES) {
+    iso[t.slug] = t.label;
+  }
+
+  return iso;
+}
+
+/**
  * @dev Simplify ISO3166TERRITORIES array by returning only slug and label
  */
 export function IsoTerritoriesToSlugAndLabel(): { slug: string, label: string }[] {

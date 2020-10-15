@@ -78,7 +78,7 @@
 
     <article *ngIf="movie.originalLanguages.length">
       <h5>Country of origin</h5>
-      <p>{{ movie.originalLanguages | translateSlug: 'LANGUAGES' }}</p>
+      <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
     </article>
 
     <article *ngIf="movie.genres.length">
@@ -112,7 +112,9 @@
   </section>
 
 
-  <h1 *ngIf="movie | hasKeys: keys.prizes">Selection & reviews</h1>
+  <h1 *ngIf="(movie | hasKeys: keys.prizes) && (movie | hasStatus: status.afterProd)">
+    Selection & reviews
+  </h1>
 
 
   <!-- Festival -->

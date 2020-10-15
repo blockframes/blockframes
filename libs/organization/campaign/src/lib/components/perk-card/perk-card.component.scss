@@ -1,0 +1,27 @@
+:host {
+  text-align: center;
+}
+
+img {
+  width: 120px;
+  margin-bottom: 16px;
+}
+
+p {
+  text-align: center;
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+mat-card p {
+  height: 120px;
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+
+
+a, button {
+  margin-top: 24px;
+} 

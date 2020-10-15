@@ -2,7 +2,7 @@ import { FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
-  LanguagesSlug
+  Languages
 } from '@blockframes/utils/static-model/types';
 import { Movie, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
@@ -111,7 +111,7 @@ export class DistributionRightForm extends FormEntity<DistributionRightControls>
   }
 
   addLanguage(
-    language: LanguagesSlug,
+    language: Languages,
     movie: Movie,
     value: Partial<MovieLanguageSpecification> = {}
   ) {
@@ -128,7 +128,7 @@ export class DistributionRightForm extends FormEntity<DistributionRightControls>
     );
   }
 
-  removeLanguage(language: LanguagesSlug) {
+  removeLanguage(language: Languages) {
     (<FormGroup>this.languages).removeControl(language);
     this.updateValueAndValidity();
   }

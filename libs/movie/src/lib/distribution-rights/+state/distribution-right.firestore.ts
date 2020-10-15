@@ -1,4 +1,4 @@
-import { TerritoriesSlug, LanguagesSlug, MediasValues, DistributionRightStatus } from '@blockframes/utils/static-model';
+import { TerritoriesSlug, Languages, MediasValues, DistributionRightStatus } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { TermsRaw } from '@blockframes/utils/common-interfaces/terms';
 import { firestore } from 'firebase/app';
@@ -20,7 +20,7 @@ interface DistributionRightRaw<D> {
   terms: TermsRaw<D>;
   territory: TerritoriesSlug[];
   territoryExcluded: TerritoriesSlug[];
-  assetLanguage: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
+  assetLanguage: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
   exclusive: boolean;
   titleInternalAlias: string;
   download: boolean;

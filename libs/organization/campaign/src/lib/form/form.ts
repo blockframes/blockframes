@@ -76,12 +76,17 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
 
   constructor(value?: Partial<Campaign>) {
     const controls = createCampaignControls(value);
-    super(controls);
+    super(controls, [compareMinPledge, compareReceived]);
+  }
+
+  setAllValue(campaign: Partial<Campaign> = {}) {
+    const controls = createCampaignControls(campaign);
+    for (const key in controls) {
+      if (key in this.controls) {
+        this.controls[key].patchValue(controls[key].value)
+      } else {
+        this.setControl(key as any, controls[key]);
+      }
+    }
   }
 }
-
-export const createCampaignForm = () => CampaignForm.factory(
-  createCampaign(),
-  createCampaignControls,
-  [compareMinPledge, compareReceived]
-);

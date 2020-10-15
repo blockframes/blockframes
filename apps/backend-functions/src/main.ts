@@ -29,13 +29,11 @@ import { getTwilioAccessToken } from './twilio';
 
 /**
  * Runtime options for heavy functions
- * @dev linked to #2531 (Changing functions REGION)
  */
 const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
-
 
 //--------------------------------
 //    Users Management          //
@@ -107,9 +105,15 @@ export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl)
  * Trigger: REST call to the /admin app
  *
  *  - Backups / Restore the database
- *  - Quorum Deploy & setup a movie smart-contract
+ * 
+ * Region:
+ * 
+ * If you are using HTTP functions to serve dynamic content for Firebase Hosting, you must use us-central1.
+ * @see https://firebase.google.com/docs/functions/locations
+ * @TODO #3973
+ * 
  */
-export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
+export const admin = functions.region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
 
 //--------------------------------
 //   Permissions  Management    //
