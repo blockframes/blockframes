@@ -71,7 +71,7 @@
         <ng-template let-shooting>
           <ng-container *ngFor="let location of shooting">
             <li>
-              {{ location.country | translateSlug: 'TERRITORIES' }} - {{ location.cities.join(', ') | titlecase }}
+              {{ location.country | toLabel: 'territories' }} - {{ location.cities.join(', ') | titlecase }}
             </li>
           </ng-container>
         </ng-template>

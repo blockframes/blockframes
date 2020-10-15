@@ -2,9 +2,8 @@
 import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Blockframes
-import { FormStaticValue } from '@blockframes/utils/form';
-import { Scope, SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
-import { staticModels } from '@blockframes/utils/static-model';
+import { Scope, staticConsts } from '@blockframes/utils/static-model';
+import { FormConstantValue } from '@blockframes/utils/form';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -17,41 +16,38 @@ import { startWith, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputAutocompleteComponent implements OnInit {
-  @Input() label?: string;
-
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  public _scope: SlugAndLabel[];
+  public state: any[];
 
-  @Input() set scope(value: string) {
-    this._scope = staticModels[value];
-  }
-  @Input() control: FormStaticValue<Scope>;
+  @Input() scope: Scope;
+  @Input() control: FormConstantValue<Scope>;
 
-  public filteredStates: Observable<SlugAndLabel[]>;
+  public filteredStates: Observable<Scope[]>;
 
   /**
    * Since we input the scope we need to initialize the function after the input gets handled,
-   * otherwise _scope is undefined and this will throw an error
+   * otherwise scope is undefined and this will throw an error
    */
   public displayFn: Function;
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
+    this.state = Object.keys(staticConsts[this.scope]);
     this.filteredStates = this.control.valueChanges
       .pipe(
         startWith(''),
-        map(state => state ? this.filterStates(state) : this._scope.slice()),
+        map(state => state ? this.filterStates(state) : this.state),
       );
     this.displayFn = (name: string) => {
-      const res = this._scope.find(entity => entity.slug === name)
-      return res ? res.label : '';
+      const res = this.state.find(entity => entity === name)
+      return res ? res : '';
     }
   }
 
   private filterStates(value: string) {
     const filterValue = value.toLowerCase();
-    return this._scope.filter(state => state.slug.toLowerCase().indexOf(filterValue) === 0);
+    return this.state.filter(state => state.toLowerCase().indexOf(filterValue) === 0);
   }
 }

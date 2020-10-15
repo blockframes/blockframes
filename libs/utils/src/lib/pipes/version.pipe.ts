@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { CommonModule } from '@angular/common';
-import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
+import { movieLanguageTypes } from '../static-model/staticConsts';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 
 @Pipe({
@@ -9,7 +9,7 @@ import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 })
 export class VersionPipe implements PipeTransform {
   transform(language: MovieLanguageSpecification) {
-    const formatKey = (key: string) => key ? getValueByKey('movieLanguageTypes', key.trim().toLocaleLowerCase()) : '';
+    const formatKey = (key: string) => key ? movieLanguageTypes[key.trim().toLocaleLowerCase()] : '';
 
     const versionArray = [];
     for (const [key, value] of Object.entries(language)) {

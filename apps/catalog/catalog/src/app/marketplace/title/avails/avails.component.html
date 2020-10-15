@@ -8,16 +8,12 @@
           <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
           <article fxLayoutAlign="center center" class="filter-buttons">
             <ng-container *ngIf="!availsForm.get('isActive').value; else active">
-              <button
-                mat-stroked-button color="primary"
-                (click)="applyAvailsFilter()">
+              <button mat-stroked-button color="primary" (click)="applyAvailsFilter()">
                 Apply Avails Filter
               </button>
             </ng-container>
             <ng-template #active>
-              <button
-                mat-stroked-button color="accent"
-                (click)="deactivateAvailsFilter()">
+              <button mat-stroked-button color="accent" (click)="deactivateAvailsFilter()">
                 Deactivate Avails Filter
               </button>
             </ng-template>
@@ -33,29 +29,20 @@
     <mat-card-content>
       <world-map>
         <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
-          <map-feature
-            [tag]="tag['iso_a3']"
-            color="color-3"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Not licensed')"
-            (mouseout)="clearTerritoryTooltip()">
+          <map-feature [tag]="tag['iso_a3']" color="color-3"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Not licensed')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
-          <map-feature
-            [tag]="tag['iso_a3']"
-            color="color-2"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Rights sold')"
-            (mouseout)="clearTerritoryTooltip()">
+          <map-feature [tag]="tag['iso_a3']" color="color-2"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Rights sold')" (mouseout)="clearTerritoryTooltip()">
           </map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature
-            [tag]="tag['iso_a3']"
-            color="color-1"
-            (click)="select($event)"
-            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Available')"
-            (mouseout)="clearTerritoryTooltip()"></map-feature>
-          </ng-container>
+          <map-feature [tag]="tag['iso_a3']" color="color-1" (click)="select($event)"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Available')" (mouseout)="clearTerritoryTooltip()">
+          </map-feature>
+        </ng-container>
         <ng-container *ngFor="let tag of territoriesIsoA3">
           <map-feature [tag]="tag" color="color-4"></map-feature>
         </ng-container>
@@ -73,19 +60,19 @@
           <mat-list>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--color-1)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--color-1)" x="0" y="0" width="100" height="100" />
               </svg>
               <span class="mat-caption">Available</span>
             </mat-list-item>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--color-2)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--color-2)" x="0" y="0" width="100" height="100" />
               </svg>
               <span class="mat-caption">Rights Sold</span>
             </mat-list-item>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--color-3)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--color-3)" x="0" y="0" width="100" height="100" />
               </svg>
               <span class="mat-caption">Not Licensed</span>
             </mat-list-item>
@@ -93,31 +80,29 @@
         </mat-card>
       </world-map>
 
-    <!-- Territories Input -->
-    <region-chips-autocomplete
-      [form]="availsForm.territory"
-      placeholder="Choose your territories"
-      [items]="territories"
-      store="slug" display="label">
-    </region-chips-autocomplete>
+      <!-- Territories Input -->
+      <region-chips-autocomplete [form]="availsForm.territory" placeholder="Choose your territories"
+        [items]="territories" store="slug" display="label">
+      </region-chips-autocomplete>
 
-    <!-- View of right in preparation -->
+      <!-- View of right in preparation -->
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
-        <ng-container *ngIf="!availsForm.territory.value.length && !availsForm.get('isActive').value; else displayRight">
+        <ng-container
+          *ngIf="!availsForm.territory.value.length && !availsForm.get('isActive').value; else displayRight">
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
         <ng-template #displayRight>
           <span class="mat-subheading-2">
-            {{ availsForm.territory.value | slice:0:4 | translateSlug: 'TERRITORIES' }}
+            {{ availsForm.territory.value | slice:0:4 | toLabel: 'territories' }}
           </span>
           <span *ngIf="availsForm.territory.value.length > 4" [widgetTooltip]="territories">...</span>
           <overlay-widget #territories>
             <widget-card>
               <span class="mat-body-2">
                 <ng-container *ngIf="availsForm.territory.value.length > 4">
-                  {{ availsForm.territory.value | slice:4:availsForm.territory.value.length | translateSlug: 'TERRITORIES' }}
+                  {{ availsForm.territory.value | slice:4:availsForm.territory.value.length | toLabel: 'territories' }}
                 </ng-container>
               </span>
             </widget-card>
@@ -126,7 +111,8 @@
             <li class="mat-body-1">
               <strong>Terms</strong>
               <span>
-                {{ availsForm.terms.value.start | date: 'shortDate'}} - {{ availsForm.terms.value.end | date: 'shortDate' }}
+                {{ availsForm.terms.value.start | date: 'shortDate'}} -
+                {{ availsForm.terms.value.end | date: 'shortDate' }}
               </span>
             </li>
             <li class="mat-body-1"><strong>Media</strong>

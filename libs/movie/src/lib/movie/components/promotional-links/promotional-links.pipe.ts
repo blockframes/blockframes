@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
+import { promotionalElementTypes } from '@blockframes/utils/static-model/staticConsts';
 
 @Pipe({
   name: 'promotionalLinks',
@@ -20,7 +20,7 @@ export class PromotionalLinksPipe implements PipeTransform {
       if (!!ref) {
         const url = useImgIx ? await this.mediaService.generateImgIxUrl(ref) : ref;
         if (!!url) {
-          const linkLabel = getValueByKey('promotionalElementTypes', link);
+          const linkLabel = promotionalElementTypes[link];
           const icon = useImgIx ? 'download' : 'play';
           const label = useImgIx ? `Download ${linkLabel}` : `Watch ${linkLabel}`;
           return { url, icon, label };

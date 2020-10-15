@@ -65,13 +65,13 @@
           <mat-divider></mat-divider>
           <ng-template matExpansionPanelContent>
             <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-              <img [ref]="movie.poster" asset="empty_poster.webp" alt="Movie poster" >
+              <img [ref]="movie.poster" asset="empty_poster.webp" alt="Movie poster">
               <div>
                 <p>
                   {{ getDirectors(movie) }}
                 </p>
                 <p class="mat-body-2">
-                  <span>{{ movie.originCountries | translateSlug: 'TERRITORIES'}}, </span>
+                  <span>{{ movie.originCountries | toLabel: 'territories'}}, </span>
                   <span> {{ movie.releaseYear }}</span>
                 </p>
               </div>

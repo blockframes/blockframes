@@ -21,10 +21,7 @@ import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
 import { RuntimeOptions } from 'firebase-functions';
-
 import { getTwilioAccessToken } from './twilio';
-
-
 
 //--------------------------------
 //    Configuration             //
@@ -32,13 +29,11 @@ import { getTwilioAccessToken } from './twilio';
 
 /**
  * Runtime options for heavy functions
- * @dev linked to #2531 (Changing functions REGION)
  */
 const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
-
 
 //--------------------------------
 //    Users Management          //

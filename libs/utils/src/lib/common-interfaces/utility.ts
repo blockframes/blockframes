@@ -1,10 +1,10 @@
-import { TerritoriesSlug } from "@blockframes/utils/static-model";
+import { Territory } from '../static-model';
 
 export interface Location {
   street: string;
   zipCode: string;
   city: string;
-  country: TerritoriesSlug;
+  country?: Territory;
   region?: string;
   phoneNumber: string;
 }
@@ -27,7 +27,6 @@ export function createLocation(params: Partial<Location> = {}): Location {
     street: '',
     zipCode: '',
     city: '',
-    country: '',
     phoneNumber: '',
     region: '',
     ...params

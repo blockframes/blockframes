@@ -11,7 +11,7 @@
       <mat-icon svgIcon="profile"></mat-icon>
     </ng-template>
     <div class="tab-content">
-      <p class="mat-caption">{{ (org.addresses.main.country | translateSlug: 'TERRITORIES') || "-" }}</p>
+      <p class="mat-caption">{{ (org.addresses.main.country | toLabel: 'territories') || "-" }}</p>
       <p class="mat-caption" i18n>
         {{ org.movieIds.length }} film{ org.movieIds.length, plural, =0 {} =1 {} other {s} } in line-up
       </p>
@@ -24,7 +24,7 @@
     <ng-template mat-tab-label>
       <mat-icon svgIcon="film"></mat-icon>
     </ng-template>
-      <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
+    <!-- We don't use ngFor and slice to be sure to have 3 elements/placeholders -->
     <div class="tab-content" *ngIf="org | orgMovies:0:3 | async as movies">
       <p class="mat-caption">{{ movies[0]?.title.international || "-"}}</p>
       <p class="mat-caption">{{ movies[1]?.title.international || "-"}}</p>

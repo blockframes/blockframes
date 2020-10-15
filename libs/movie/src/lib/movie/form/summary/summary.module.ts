@@ -16,7 +16,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Blockframes Utils
-import { MaxLengthModule, ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { VersionPipeModule } from '@blockframes/utils/pipes/version.pipe';
@@ -74,7 +74,6 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     FileNameModule,
     FlexLayoutModule,
     DurationModule,
-    TranslateSlugModule,
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,

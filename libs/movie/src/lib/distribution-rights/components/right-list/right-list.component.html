@@ -1,14 +1,11 @@
-<bf-table-filter
-  [source]="rightViews"
-  [columns]="columns"
-  [initialColumns]="initialColumns">
+<bf-table-filter [source]="rightViews" [columns]="columns" [initialColumns]="initialColumns">
   <ng-template colRef="territory" let-territory>
-    <b>{{ territory | slice:0:4 | translateSlug:'TERRITORIES' }}</b>
+    <b>{{ territory | slice:0:4 | toLabel:'territories' }}</b>
     <span *ngIf="territory.length > 4" [widgetTooltip]="territories"><b> ...</b></span>
     <overlay-widget #territories>
       <widget-card>
         <b *ngIf="territory.length > 4">
-          {{ territory | slice:4:territory.length | translateSlug: 'TERRITORIES' }}
+          {{ territory | slice:4:territory.length | toLabel: 'territories' }}
         </b>
       </widget-card>
     </overlay-widget>

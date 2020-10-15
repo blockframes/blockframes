@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MainComponent } from './main.component';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { TranslateSlugModule, DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
 
 import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
@@ -25,7 +25,6 @@ import { MatDividerModule } from '@angular/material/divider';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    TranslateSlugModule,
     DisplayNameModule,
     HasKeysModule,
     ToLabelModule,

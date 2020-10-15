@@ -8,10 +8,9 @@ import { MovieControl, MovieForm } from "./movie.form";
 import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
 import { FormShellConfig, FormSaveOptions } from './shell/shell.component';
 import { switchMap, startWith, filter } from "rxjs/operators";
-import { Subscription } from "rxjs";
+import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-
-
 
 const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
   development: {
@@ -45,30 +44,32 @@ function cleanPromotionalMedia(promotional: MoviePromotionalElements): MovieProm
 }
 
 @Injectable({ providedIn: 'root' })
-export class MovieShellConfig implements FormShellConfig<MovieControl, Movie>{
+export class MovieShellConfig implements FormShellConfig<MovieControl, Movie> {
   form = new MovieForm(this.query.getActive());
   constructor(
     private route: RouterQuery,
     private service: MovieService,
     private query: MovieQuery,
-    private mediaService: MediaService
+    private mediaService: MediaService,
   ) {}
 
-  onInit(): Subscription[] {
+  onInit(): Observable<any>[] {
     // Update form on change
     const onMovieChanges = this.route.selectParams('movieId').pipe(
       switchMap((id: string) => this.service.valueChanges(id)),
-    ).subscribe(movie => this.form.patchAllValue(movie));
+      tap(movie => this.form.setAllValue(movie))
+    );
 
     // Update form on status change
     const onStatusChanges = this.form.productionStatus.valueChanges.pipe(
       startWith(this.form.productionStatus.value),
-      filter(status => !!status)
-    ).subscribe(status => {
-      for (const path in valueByProdStatus[status]) {
-        this.form.get(path as any).setValue(valueByProdStatus[status][path]);
-      }
-    });
+      filter(status => !!status),
+      tap(status => {
+        for (const path in valueByProdStatus[status]) {
+          this.form.get(path as any).setValue(valueByProdStatus[status][path]);
+        }
+      })
+    );
     return [onMovieChanges, onStatusChanges];
   }
 

@@ -1,7 +1,7 @@
-<h3>{{ received | currency:'USD' }}</h3>
+<h3>{{ received | bigCurrency:'USD' }}</h3>
 <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
 <div class="steps" fxLayout fxLayoutAlign="space-between center">
   <span class="mat-caption" *ngFor="let step of steps">
-    {{ step | currency:'USD' }}
+    {{ step | bigCurrency:'USD' }}
   </span>
 </div>
