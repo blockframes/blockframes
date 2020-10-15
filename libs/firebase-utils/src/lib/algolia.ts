@@ -11,7 +11,7 @@ import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
 export const algolia = {
   ...algoliaClient,
-  adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia.api_key
+  adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia?.api_key
 };
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
