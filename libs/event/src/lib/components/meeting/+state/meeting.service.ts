@@ -13,7 +13,7 @@ import {map} from "rxjs/operators";
 
 //Import Twilio-video
 import {
-  connect,
+  connect, ConnectOptions,
   createLocalTracks,
   LocalAudioTrack,
   LocalDataTrack,
@@ -23,6 +23,7 @@ import {
   Room
 } from 'twilio-video';
 import {ErrorResultResponse} from "@blockframes/utils/utils";
+import {OrganizationService} from "@blockframes/organization/+state";
 
 
 /**
@@ -71,6 +72,9 @@ export class MeetingService {
   });
   public localVideoMicStatus$: Observable<IStatusVideoMic> = this.$localVideoMicStatusDataSource.asObservable();
 
+  // Twilio data (Participant)
+  private twilioParticipant: Map<String, Participant> = new Map<String, Participant>();
+
   // Active room twilio
   activeRoom: Room;
 
@@ -82,9 +86,17 @@ export class MeetingService {
 
   constructor(
     private userService: UserService,
-    private query: AuthQuery,
+    private orgService: OrganizationService,
     private eventService: EventService,
   ) {
+  }
+
+  /**
+   *
+   * @param uid: string
+   */
+  getTwilioParticipantDataFromUid(uid: string): Participant {
+    return this.twilioParticipant.get(uid);
   }
 
   /**
@@ -139,36 +151,26 @@ export class MeetingService {
     return this.localVideoMicStatus$;
   }
 
-  getActiveUser() {
-    return this.query.user;
+  async getIfAudioIsAvailable() {
+    const userMedia = await navigator.mediaDevices.getUserMedia({audio: true});
+    if(!!userMedia){
+      this.doSetupLocalVideoAndAudio('audio', true);
+      return true;
+    } else {
+      this.doSetupLocalVideoAndAudio('audio', false);
+      return false;
+    }
   }
 
-  getIfIsReelOwner(event: Event) {
-    return this.query.userId === event.organizedBy.uid;
-  }
-
-  getIfAudioIsAvailable() {
-    return navigator.mediaDevices.getUserMedia({audio: true})
-      .then( () => {
-        this.doSetupLocalVideoAndAudio('audio', true);
-        return true;
-      })
-      .catch( () => {
-        this.doSetupLocalVideoAndAudio('audio', false);
-        return false;
-      })
-  }
-
-  getIfVideoIsAvailable() {
-    return navigator.mediaDevices.getUserMedia({video: true})
-      .then( () => {
-        this.doSetupLocalVideoAndAudio('video', true);
-        return true;
-      })
-      .catch( () => {
-        this.doSetupLocalVideoAndAudio('video', false);
-        return false;
-      })
+  async getIfVideoIsAvailable() {
+    const userMedia = await navigator.mediaDevices.getUserMedia({video: true});
+    if(!!userMedia){
+      this.doSetupLocalVideoAndAudio('video', true);
+      return true;
+    } else {
+      this.doSetupLocalVideoAndAudio('video', false);
+      return false;
+    }
   }
 
   /**
@@ -212,27 +214,10 @@ export class MeetingService {
     if (response.error !== '') {
       throw new Error(response.error);
     } else {
-      const audio = await this.getIfAudioIsAvailable();
-      const video = await this.getIfVideoIsAvailable();
+      const audio: boolean = await this.getIfAudioIsAvailable();
+      const video: boolean = await this.getIfVideoIsAvailable();
       this.accessToken = response.result;
-      this._connectToTwilioRoom(this.accessToken,
-        {
-          name: event.id, dominantSpeaker: true,
-          audio,
-          video,
-          bandwidthProfile: {
-            video: {
-              renderDimensions: {
-                low: {width: 640, height: 480},
-                standard: {width: 640, height: 480},
-                high: {width: 640, height: 480},
-              }
-            },
-          },
-          networkQuality: {local: 1, remote: 1},
-          mode: 'grid',
-          width: 640, height: 480
-        }, event);
+      await this._connectToTwilioRoom(this.accessToken, audio, video, event);
     }
   }
 
@@ -240,19 +225,33 @@ export class MeetingService {
   /**
    * Connection to twilio with the access token and option of connection
    * @param accessToken - string - access Token for twilio
-   * @param options - object - option of connection for twilio
+   * @param audio - boolean
+   * @param video - boolean
    * @param event - string - All event we come from
    */
-  private _connectToTwilioRoom(accessToken: string, options, event: Event) {
+  private async _connectToTwilioRoom(accessToken: string, audio: boolean, video: boolean, event: Event) {
 
-    const connectOptions = options;
-    if (this.previewTracks) {
-      connectOptions.tracks = this.previewTracks;
-      connectOptions.enableDominantSpeaker = true;
-    }
+    const connectOptions: ConnectOptions = {
+      name: event.id,
+      dominantSpeaker: false,
+      audio: audio,
+      video: video,
+      bandwidthProfile: {
+        video: {
+          mode: 'grid',
+          renderDimensions: {
+            low: {width: 640, height: 480},
+            standard: {width: 640, height: 480},
+            high: {width: 640, height: 480},
+          },
+        },
+      },
+      tracks: (this.previewTracks) ?? null,
+      networkQuality: {local: 1, remote: 1}
+    };
 
-    connect(accessToken, connectOptions).then((r: Room) => this.roomJoined(r, event), (error) => {
-      console.log('error : ', error)
+    await connect(accessToken, connectOptions).then((r: Room) => this.roomJoined(r, event), (error) => {
+      throw new Error(error);
     });
   }
 
@@ -267,21 +266,27 @@ export class MeetingService {
     this.activeRoom = room;
 
     if (!!room.participants) {
-      const tracksOfParticipants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
-      if (!!tracksOfParticipants && tracksOfParticipants.length > 0) {
-        for (const indexParticipant in tracksOfParticipants) {
-          const remoteMeetingParticipant = await this.createIParticipantMeeting(tracksOfParticipants[indexParticipant], event);
-          this.addParticipantToConnectedParticipant(remoteMeetingParticipant);
-        }
+      const participants = this.getParticipantOfParticipantsMapAlreadyInRoom(room.participants);
+      // FIXME !!!!!!!!!
+      // const remoteMeetingParticipants = [];
+      // participants.forEach(participant => {
+      //   remoteMeetingParticipants.push([this.createIParticipantMeeting(participant.identity, event), participant]);
+      // })
+      // await Promise.all(remoteMeetingParticipants);
+      // remoteMeetingParticipants.forEach(participant => {
+      //   this.addParticipantToConnectedParticipant(remoteMeetingParticipant, participants);
+      // })
+
+      for (const indexParticipant in participants) {
+        const remoteMeetingParticipant = await this.createIParticipantMeeting(participants[indexParticipant].identity, event);
+        this.addParticipantToConnectedParticipant(remoteMeetingParticipant, participants[indexParticipant]);
       }
     }
 
-    const localMeetingParticipant = await this.createIParticipantMeeting(room.localParticipant, event, true );
+    this.localParticipant = await this.createIParticipantMeeting(room.localParticipant, event, true );
+    this.addParticipantToConnectedParticipant(this.localParticipant);
 
-    this.addParticipantToConnectedParticipant(localMeetingParticipant);
-    this.localParticipant = localMeetingParticipant;
-
-    await this.setUpRoomEvent(room, event);
+    this.setUpRoomEvent(room, event);
   }
 
 
@@ -292,10 +297,11 @@ export class MeetingService {
    * @param isLocalSpeaker
    * @private
    */
-  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isLocalSpeaker = false) {
-    const remoteUser = await this.userService.getUser(twilioParticipant.identity)
+  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isLocalSpeaker = false): IParticipantMeeting {
+    const remoteUser = await this.userService.getUser(twilioParticipant.identity);
+    const remoteOrg = await this.orgService.getValue(remoteUser.orgId);
 
-    const isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid
+    const isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid;
 
     return {
       identity: twilioParticipant.identity,
@@ -304,11 +310,11 @@ export class MeetingService {
         firstName: remoteUser.firstName,
         lastName: remoteUser.lastName,
         avatar: remoteUser.avatar,
-        organizationName: 'To Be Implemented',
+        organizationName: remoteOrg.denomination.full,
       },
       isDominantSpeaker: isDominantSpeaker,
       isLocalSpeaker: isLocalSpeaker,
-    } as IParticipantMeeting;
+    };
   }
 
 
@@ -352,9 +358,9 @@ export class MeetingService {
     let track: any;
     //get audio or video track
     if (kind === localTracks[0].kind) {
-      track = localTracks[0].track
+      track = localTracks[0].track;
     } else {
-      track = localTracks[1].track
+      track = localTracks[1].track;
     }
 
     if (mute) {
@@ -406,13 +412,13 @@ export class MeetingService {
       const arrayOfLocalTrack = [];
       activeRoom.localParticipant.tracks.forEach((track) => {
         arrayOfLocalTrack.push(track.track);
-        track.track.stop()
+        track.track.stop();
       });
       if(!!arrayOfLocalTrack && arrayOfLocalTrack.length > 0){
         activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
       }
       activeRoom.localParticipant.tracks.forEach((track) => {
-        track.track.detach()
+        track.track.detach();
       });
     }
   }

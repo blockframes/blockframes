@@ -5,11 +5,11 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 import {Event} from "@blockframes/event/+state";
 import {Observable} from "rxjs";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
-import {User} from "@blockframes/auth/+state";
+import {AuthQuery, User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 @Component({
-  selector: 'event-meeting-container-video',
+  selector: '[event] event-meeting-container-video',
   templateUrl: './container-video.component.html',
   styleUrls: ['./container-video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -26,16 +26,17 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   isSeller: boolean;
 
-  constructor(private meetingService: MeetingService) {
+  constructor(private meetingService: MeetingService,
+              private query: AuthQuery) {
   }
 
   async ngOnInit() {
 
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
 
-    this.user = this.meetingService.getActiveUser();
+    this.user = this.query.user;
 
-    this.isSeller = this.meetingService.getIfIsReelOwner(this.event);
+    this.isSeller = this.query.userId === this.event.organizedBy.uid;
 
     await this.meetingService.doCreateLocalPreview();
 
