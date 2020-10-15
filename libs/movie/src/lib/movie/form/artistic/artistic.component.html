@@ -27,8 +27,8 @@
               </mat-form-field>
             </div>
 
-            <static-select test-id="cast-status" scope="memberStatus" type="constant" [control]="castForm.get('status')"
-              fxFlex *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
+            <static-select test-id="cast-status" scope="memberStatus" [control]="castForm.get('status')" fxFlex
+              *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
               <mat-label>Status</mat-label>
               <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
             </static-select>
@@ -90,17 +90,16 @@
             </div>
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="crew-role" type="constant" [control]="crewForm.get('role')" scope="crewRoles"
-                fxFlex [withoutValues]="['']">
+              <static-select test-id="crew-role" [control]="crewForm.get('role')" scope="crewRoles" fxFlex
+                [withoutValues]="['']">
                 <mat-label>Role</mat-label>
                 <mat-hint align="start">
                   Please specify crew member's role in your project (director of photography, score composer, writer...)
                 </mat-hint>
               </static-select>
 
-              <static-select test-id="crew-status" scope="memberStatus" type="constant"
-                [control]="crewForm.get('status')" fxFlex *ngIf="form | hasStatus: ['development', 'shooting']"
-                [withoutValues]="['']">
+              <static-select test-id="crew-status" scope="memberStatus" [control]="crewForm.get('status')" fxFlex
+                *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
                 <mat-label>Status</mat-label>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
                 </mat-hint>

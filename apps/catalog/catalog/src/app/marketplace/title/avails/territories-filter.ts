@@ -2,17 +2,17 @@ import { DistributionRight, getRightTerritories } from '@blockframes/distributio
 import { AvailsSearch } from '@blockframes/distribution-rights/form/search.form';
 import { getExclusiveRights, getRightsInDateRange, getRightsWithMedias } from '@blockframes/distribution-rights/create/availabilities.util';
 import { inDateRange } from '@blockframes/utils/common-interfaces/terms';
-import { Territories } from '@blockframes/utils/static-model/types';
+import { Territory } from '@blockframes/utils/static-model/types';
 import { territories } from '@blockframes/utils/static-model/staticConsts';
 
-const TERRITORIES = Object.keys(territories) as Territories[];
+const TERRITORIES = Object.keys(territories) as Territory[];
 
 /**
  * Returns an array of unlicensed territories to display on the world map.
  * @param mandateRights Mandate rights from the movie
  * @param territories All the territories
  */
-export function getNotLicensedTerritories(filter: AvailsSearch, mandateRights: DistributionRight[]): Territories[] {
+export function getNotLicensedTerritories(filter: AvailsSearch, mandateRights: DistributionRight[]): Territory[] {
 
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateRights, filter)
 
@@ -31,7 +31,7 @@ export function getRightsSoldTerritories(
   filter: AvailsSearch,
   mandateRights: DistributionRight[],
   rights: DistributionRight[]
-): Territories[] {
+): Territory[] {
   // Grab the territorySlugs from all sales rights, filtered with licensed territories.
   const territorySlugsWithRights = getTerritorySlugsWithRights(filter, mandateRights, rights)
   // Filter again to only keep territories with ongoing sales.
@@ -50,7 +50,7 @@ export function getAvailableTerritories(
   filter: AvailsSearch,
   mandateRights: DistributionRight[],
   rights: DistributionRight[]
-): Territories[] {
+): Territory[] {
   // Grab the territorySlugs from all sales rights, filtered with licensed territories.
   const territorySlugsWithoutRights = getTerritorySlugsWithoutRights(filter, mandateRights, rights)
   // Filter again to only keep territories without any ongoing rights.
@@ -63,14 +63,14 @@ export function getAvailableTerritories(
  * @param territories All the territories
  * @param rights Sales rights from the movie
  */
-function getTerritorySlugsWithRights(filter: AvailsSearch, mandateRights: DistributionRight[], salesRights: DistributionRight[]): Territories[] {
+function getTerritorySlugsWithRights(filter: AvailsSearch, mandateRights: DistributionRight[], salesRights: DistributionRight[]): Territory[] {
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateRights, filter);
 
   const matchingExclusivityRights = getExclusiveRights(salesRights, filter.exclusive);
   const matchingRangeRights = getRightsInDateRange(filter.terms, matchingExclusivityRights);
   const matchingRights = getRightsWithMedias(filter.licenseType, matchingRangeRights);
 
-  const territorySlugsFromRights: Territories[] = [];
+  const territorySlugsFromRights: Territory[] = [];
   matchingRights.forEach(right => {
     const filteredTerritories = getRightTerritories(right);
     territorySlugsFromRights.push(...filteredTerritories);
@@ -86,14 +86,14 @@ function getTerritorySlugsWithRights(filter: AvailsSearch, mandateRights: Distri
  * @param territories All the territories
  * @param rights Sales rights from the movie
  */
-function getTerritorySlugsWithoutRights(filter: AvailsSearch, mandateRights: DistributionRight[], salesRights: DistributionRight[]): Territories[] {
+function getTerritorySlugsWithoutRights(filter: AvailsSearch, mandateRights: DistributionRight[], salesRights: DistributionRight[]): Territory[] {
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateRights, filter);
 
   const matchingExclusivityRights = getExclusiveRights(salesRights, filter.exclusive);
   const matchingRangeRights = getRightsInDateRange(filter.terms, matchingExclusivityRights);
   const matchingRights = getRightsWithMedias(filter.licenseType, matchingRangeRights);
 
-  const territorySlugsFromRights: Territories[] = [];
+  const territorySlugsFromRights: Territory[] = [];
   matchingRights.forEach(right => {
     const filteredTerritories = getRightTerritories(right);
     territorySlugsFromRights.push(...filteredTerritories);
@@ -107,8 +107,8 @@ function getTerritorySlugsWithoutRights(filter: AvailsSearch, mandateRights: Dis
  * Returns an array of slugs of eligible territories for a specific movie.
  * @param rights Mandate rights from the movie
  */
-function getLicensedTerritorySlugs(mandateRights: DistributionRight[], filter: AvailsSearch): Territories[] {
-  const licensedTerritorySlugs: Territories[] = [];
+function getLicensedTerritorySlugs(mandateRights: DistributionRight[], filter: AvailsSearch): Territory[] {
+  const licensedTerritorySlugs: Territory[] = [];
 
   // Iterate on every mandate rights of the movie
   mandateRights.forEach(right => {

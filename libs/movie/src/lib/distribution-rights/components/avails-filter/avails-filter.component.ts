@@ -1,7 +1,7 @@
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AvailsSearchForm } from '../../form/search.form';
-import { MediasValues } from '@blockframes/utils/static-model';
+import { MediaValue } from '@blockframes/utils/static-model';
 import { medias } from '@blockframes/utils/static-model/staticConsts';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { NativeDateModule } from '@angular/material/core'
@@ -15,7 +15,7 @@ import { NativeDateModule } from '@angular/material/core'
 export class AvailsFilterComponent {
   @Input() availsForm: AvailsSearchForm;
 
-  public movieMedias: MediasValues[] = Object.keys(medias).map(key => medias[key]);
+  public movieMedias: MediaValue[] = Object.keys(medias).map(key => medias[key]);
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;
@@ -40,7 +40,7 @@ export class AvailsFilterComponent {
   }
 
   /** Check media or uncheck it if it's already in the array. */
-  public checkMedia(media: MediasValues) {
+  public checkMedia(media: MediaValue) {
     if (this.movieMedias.includes(media)) {
       this.availsForm.checkMedia(media);
     }
