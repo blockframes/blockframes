@@ -1,4 +1,4 @@
-import { staticConsts } from '@blockframes/utils/static-model';
+import { medias } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { DistributionRightHoldbacksForm } from './holdbacks.form';
 
@@ -11,7 +11,7 @@ import { DistributionRightHoldbacksForm } from './holdbacks.form';
 export class DistributionRightHoldbacksComponent {
   @Input() form: DistributionRightHoldbacksForm;
 
-  public staticMedias = Object.values(staticConsts['medias']).filter(media => {
+  public staticMedias = Object.values(medias).filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];
     return wantedMedias.includes(media);
   });

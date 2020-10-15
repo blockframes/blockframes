@@ -1,5 +1,5 @@
 // Blockframes
-import { MediaValue, staticConsts } from '@blockframes/utils/static-model';
+import { medias, MediaValue } from '@blockframes/utils/static-model';
 import { DistributionRightForm } from '../distribution-right.form';
 
 // Angular
@@ -14,7 +14,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 export class DistributionRightRightsComponent {
   @Input() form: DistributionRightForm;
 
-  public staticMedias = Object.values(staticConsts['medias']).filter(media => {
+  public staticMedias = Object.values(medias).filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];
     return wantedMedias.includes(media);
   });

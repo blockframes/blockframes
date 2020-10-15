@@ -3,7 +3,7 @@ import { AvailsSearch } from '@blockframes/distribution-rights/form/search.form'
 import { getExclusiveRights, getRightsInDateRange, getRightsWithMedias } from '@blockframes/distribution-rights/create/availabilities.util';
 import { inDateRange } from '@blockframes/utils/common-interfaces/terms';
 import { Territory } from '@blockframes/utils/static-model/types';
-import { territories } from '@blockframes/utils/static-model/staticConsts';
+import { territories } from '@blockframes/utils/static-model';
 
 const TERRITORIES = Object.keys(territories) as Territory[];
 
