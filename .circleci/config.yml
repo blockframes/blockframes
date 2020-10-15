@@ -202,30 +202,32 @@ jobs:
     executor: blockframes-ci
     environment:
         ENV: staging
+        NG_CONFIG: staging
+        ENV_TS: env/env.staging.ts
+        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
+        PROJECT_ID: blockframes-staging
     steps:
-      - checkout_project
-      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
-      - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npx cypress install
-      - run: npm run build:all
       - slack/notify:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
+      - checkout_project
+      - prepare_gcloud
+      - run: cp $ENV_TS env/env.ts # required for the typechecking & file rewrite to work
+      - run: npx cypress install
       - run: |
-          npx firebase use staging &&
+          npm run backend-ops displayCredentials &&
+          npm run deploy:storage &&
+          npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions &&
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
-          npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-          npx firebase deploy --only firestore --force &&
-          npx firebase deploy --only functions --force
+          npm run deploy:firestore
       - run:
           name: prepare staging for testing
-          command: node dist/apps/backend-ops/main.js prepareForTesting
+          command: npm run backend-ops prepareForTesting
           when: always
       - run:
           command: |
             cp firestore.rules.regular firestore.rules &&
-            npx firebase use staging &&
-            npx firebase deploy --only firestore:rules
+            npm run deploy:firestore:rules
           when: always
       - run:
           name: catalog e2e tests
