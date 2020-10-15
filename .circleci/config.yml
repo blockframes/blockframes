@@ -75,7 +75,7 @@ commands:
         - run: gcloud --quiet config set project ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
-  deploy_and_upgrade:
+  build_deploy_upgrade:
     description: 'Build and deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
       - run:
@@ -97,6 +97,13 @@ commands:
             npm run deploy:firestore:rules
           when: always
       - slack/status
+  release_process:
+    description: 'Release to specified environment and upgrade if needed'
+    steps:
+      - checkout_project
+      - prepare_gcloud
+      - run: cp $ENV_TS ./env/env.ts
+      - build_deploy_upgrade
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -262,42 +269,28 @@ jobs:
   deploy-to-staging:
     executor: blockframes-ci
     environment:
-        ENV: staging
+        PROJECT_ID: blockframes-staging
+        NG_CONFIG: staging
+        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
+        ENV_TS: 'env/env.staging.ts'
     steps:
       - checkout_project
-      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - prepare_gcloud
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm run build:all
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
-      - run:
-          command: |
-            npx firebase use staging &&
-            npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only firestore --force &&
-            npx firebase deploy --only functions --force
-      - run: npm run backend-ops upgrade
-      - run:
-          command: |
-            npm run backend-ops restoreFirestoreRulesPostDeploy &&
-            npx firebase use staging &&
-            npx firebase deploy --only firestore:rules
-          when: always
-      - slack/status
+      - build_deploy_upgrade
   deploy-to-demo1:
     executor: blockframes-ci
     environment:
        PROJECT_ID: blockframes-demo-1
        SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
        NG_CONFIG: demo1
+       ENV_TS: './env/demo/env.demo1.ts'
     steps:
-      - checkout_project
-      - prepare_gcloud
-      - run: cp ./env/demo/env.demo1.ts ./env/env.ts
-      - deploy_and_upgrade
       - slack/notify:
           message: 'Deploying to demo1...'
+      - release_process
   push-anon-db-to-ci:
     executor: blockframes-ci
     environment:

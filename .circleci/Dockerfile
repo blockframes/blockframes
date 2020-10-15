@@ -44,3 +44,7 @@ RUN gcloud config set pass_credentials_to_gsutil true
 # Used in CI
 ENV GOOGLE_APPLICATION_CREDENTIALS creds.json
 ENV NODE_OPTIONS --max_old_space_size=7168
+ENV PROJECT_ID blockframes-ci
+ENV NG_CONFIG ci
+ENV SERVICE_ACCOUNT FIREBASE_STAGING_SERVICE_ACCOUNT
+ENV ENV_TS env/env.ci.ts
