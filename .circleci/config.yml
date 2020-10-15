@@ -336,8 +336,7 @@ workflows:
       - build-and-test-prs:
           filters:
             branches:
-              ignore:
-                <<: *deployment_branches
+              ignore: *deployment_branches
       # build EVERYTHING and trigger the rest of the deploy
       - build-and-test-all:
           filters:
