@@ -1,7 +1,7 @@
 import { DistributionRight, getRightTerritories } from '../+state/distribution-right.model';
 import { AvailsSearch } from '../form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
-import { MediasValues } from '@blockframes/utils/static-model';
+import { MediaValue } from '@blockframes/utils/static-model';
 import { Terms } from '@blockframes/utils/common-interfaces/terms';
 
 /**
@@ -81,7 +81,7 @@ export function getFilterMatchingRights(
     const rightTerritories = getRightTerritories(right);
 
     let mediasInCommon = false;
-    mediaLoop : for (const filterMedia of licenseType) {
+    mediaLoop: for (const filterMedia of licenseType) {
       for (const rightMedia of right.licenseType) {
         if (rightMedia === filterMedia) {
           mediasInCommon = true;
@@ -91,7 +91,7 @@ export function getFilterMatchingRights(
     }
 
     let territoriesInCommon = false;
-    territoryLoop : for (const filterTerritory of territory) {
+    territoryLoop: for (const filterTerritory of territory) {
       for (const rightTerritory of rightTerritories) {
         if (rightTerritory === filterTerritory) {
           territoriesInCommon = true;
@@ -116,13 +116,13 @@ export function getFilterMatchingRights(
  * @param medias The medias from the filter defined by the buyer
  * @param rights The array of rights from a movie in the previously specified date range
  */
-export function getRightsWithMedias(medias: MediasValues[], rights: DistributionRight[]): DistributionRight[] {
+export function getRightsWithMedias(medias: MediaValue[], rights: DistributionRight[]): DistributionRight[] {
   const rightsWithMediasInCommon: DistributionRight[] = [];
 
   for (const right of rights) {
 
     let mediasInCommon = false;
-    mediaLoop : for (const media of medias) {
+    mediaLoop: for (const media of medias) {
       for (const licenseType of right.licenseType) {
         if (licenseType === media) {
           mediasInCommon = true;
@@ -137,7 +137,7 @@ export function getRightsWithMedias(medias: MediasValues[], rights: Distribution
 
   return rightsWithMediasInCommon;
 
-  }
+}
 
 /**
  * Returns rights with same exclusivity value as the one passed as an argument.

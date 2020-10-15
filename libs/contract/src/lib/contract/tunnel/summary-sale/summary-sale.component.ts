@@ -5,7 +5,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { PriceControl } from '@blockframes/contract/version/form';
-import { MovieCurrencies } from '@blockframes/utils/static-model';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
 import { ContractQuery, ContractService } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
@@ -27,7 +27,7 @@ export class SummarySaleComponent implements OnInit {
   public terms: string;
   public price: PriceControl;
   public moviePrices: Record<string, FormControl> = {}
-  public currency: MovieCurrencies;
+  public currency: MovieCurrency;
   public payments: { type: string, list: string[] } = { type: '', list: [] };
 
   constructor(

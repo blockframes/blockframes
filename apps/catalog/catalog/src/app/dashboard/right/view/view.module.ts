@@ -8,7 +8,6 @@ import { ViewComponent } from './view.component';
 // Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
 import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';
 import { ToLabelModule } from '@blockframes/utils/pipes';
@@ -49,7 +48,6 @@ const routes = [
     FlexLayoutModule,
     TableFilterModule,
     ImageReferenceModule,
-    TranslateSlugModule,
     RightListModule,
     VersionTableModule,
     ToLabelModule,
@@ -67,4 +65,4 @@ const routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class RightViewModule {}
+export class RightViewModule { }

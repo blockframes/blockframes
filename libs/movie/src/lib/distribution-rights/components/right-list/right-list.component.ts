@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, OnInit } from '@angular/core';
 import { DistributionRight, getRightTerritories } from '../../+state';
 import { MatSort } from '@angular/material/sort';
-import { MediasValues } from '@blockframes/utils/static-model';
+import { MediaValue } from '@blockframes/utils/static-model';
 import { formatDate } from '@angular/common';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -23,7 +23,7 @@ interface RightView {
   territory: string[];
   startDate: string;
   endDate: string;
-  rights: MediasValues[];
+  rights: MediaValue[];
   languages: string;
   holdback: string;
   firstBroadcastDate: string;

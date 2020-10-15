@@ -1,4 +1,3 @@
-export * from './translate-slug.pipe';
 export * from './term-date.pipe';
 export * from './to-label.pipe';
 export * from './reverse.pipe';

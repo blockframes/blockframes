@@ -1,5 +1,5 @@
 // Blockframes
-import { MediasValues, staticConsts } from '@blockframes/utils/static-model';
+import { MediaValue, staticConsts } from '@blockframes/utils/static-model';
 import { DistributionRightForm } from '../distribution-right.form';
 
 // Angular
@@ -23,7 +23,7 @@ export class DistributionRightRightsComponent {
     return this.form.get('licenseType');
   }
 
-  public isChecked(media: MediasValues) {
+  public isChecked(media: MediaValue) {
     return this.licenseType.value.includes(media);
   }
 }

@@ -1,15 +1,14 @@
 import {
-  TerritoriesSlug,
-  Languages,
-  MediasValues,
+  Language,
+  MediaValue,
   Scoring,
-  Certifications,
-  Colors,
+  Certification,
+  Color,
   Rating,
   SoundFormat,
   MovieFormatQuality,
   MovieFormat,
-  Genres,
+  Genre,
   ContentType,
   ProductionStatus,
   StoreStatus,
@@ -17,8 +16,8 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrencies,
-  HostedVideoTypes
+  MovieCurrency,
+  HostedVideoType, Territory
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -49,8 +48,8 @@ interface MovieRaw<D> {
   banner?: string;
   boxOffice?: BoxOffice[],
   cast?: Cast[],
-  certifications?: Certifications[],
-  color?: Colors,
+  certifications?: Certification[],
+  color?: Color,
   contentType: ContentType; //! required
   crew?: Crew[],
   directors: Director[], //! required
@@ -58,17 +57,17 @@ interface MovieRaw<D> {
   expectedPremiere?: MovieExpectedPremiereRaw<D>,
   format?: MovieFormat,
   formatQuality?: MovieFormatQuality,
-  genres: Genres[], //! required
+  genres: Genre[], //! required
   customGenres?: string[],
   internalRef?: string,
   isOriginalVersionAvailable: boolean;
   keyAssets?: string,
   keywords?: string[],
-  languages?: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
+  languages?: Partial<{ [language in Language]: MovieLanguageSpecification }>;
   logline?: string,
-  originalLanguages: Languages[], //! required
+  originalLanguages: Language[], //! required
   originalRelease?: MovieOriginalReleaseRaw<D>[],
-  originCountries: TerritoriesSlug[], //! required
+  originCountries: Territory[], //! required
   poster?: string;
   prizes?: Prize[],
   customPrizes?: Prize[],
@@ -117,7 +116,7 @@ export interface HostedVideo {
   jwPlayerId: string,
   title?: string,
   description?: string,
-  type?: HostedVideoTypes
+  type?: HostedVideoType
 }
 
 ////////////////////
@@ -174,7 +173,7 @@ export interface Title {
 export interface BoxOffice {
   unit: UnitBox,
   value?: number,
-  territory: TerritoriesSlug,
+  territory: Territory,
 }
 
 export interface MovieLanguageSpecification {
@@ -188,20 +187,20 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
-export type MovieLanguageSpecificationContainer = Record<Languages, MovieLanguageSpecification>;
-export type LanguageRecord = Partial<{ [language in Languages]: MovieLanguageSpecification }>;
+export type MovieLanguageSpecificationContainer = Record<Language, MovieLanguageSpecification>;
+export type LanguageRecord = Partial<{ [language in Language]: MovieLanguageSpecification }>;
 
 
 export interface MovieOriginalReleaseRaw<D> {
   date: D;
-  country: TerritoriesSlug;
-  media?: MediasValues
+  country: Territory;
+  media?: MediaValue
 }
 
-export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {}
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> { }
 
 export interface MovieRating {
-  country: TerritoriesSlug;
+  country: Territory;
   reason?: string,
   system?: Rating,
   value: string,
@@ -255,11 +254,11 @@ export interface MovieShootingRaw<D> {
   locations?: MovieShootingLocations[]
 }
 
-export interface MovieShooting extends MovieShootingRaw<Date> {}
+export interface MovieShooting extends MovieShootingRaw<Date> { }
 
 export interface MovieShootingLocations {
   cities?: string[],
-  country?: TerritoriesSlug,
+  country?: Territory,
 }
 
 export interface MovieShootingDateRaw<D> {
@@ -268,7 +267,7 @@ export interface MovieShootingDateRaw<D> {
   planned?: MoviePlannedShootingDateRange
 }
 
-export interface MovieShootingDate extends MovieShootingDateRaw<Date> {}
+export interface MovieShootingDate extends MovieShootingDateRaw<Date> { }
 
 export interface MovieNote extends Person {
   ref: string,
@@ -290,7 +289,7 @@ export interface MovieExpectedPremiereRaw<D> {
   event?: string
 }
 
-export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> {}
+export interface MovieExpectedPremiere extends MovieExpectedPremiereRaw<Date> { }
 
 export interface MovieSalesPitch {
   description?: string,
@@ -304,7 +303,7 @@ export interface MovieGoalsAudience {
 
 export interface MovieTotalBudget {
   castCost?: number,
-  currency?: MovieCurrencies,
+  currency?: MovieCurrency,
   others?: number,
   postProdCost?: number,
   producerFees?: number,
