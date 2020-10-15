@@ -52,7 +52,6 @@ commands:
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
       - run: touch .env # dotenv will crash without this
       - run: npm install
-      - run: rm -f node_modules/@angular/compiler-cli/ngcc/__ngcc_lock_file__
       - save_cache:
           paths:
             - node_modules
@@ -76,6 +75,10 @@ commands:
         - run: gcloud --quiet config set project ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
+  deploy_and_upgrade:
+    description: 'Build and deploy Blockframes apps to Firebase & run upgrade if needed'
+    steps:
+        - run: echo test
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -279,11 +282,10 @@ jobs:
       - run:
           command: |
             npm run backend-ops displayCredentials &&
+            npm run deploy:storage &&
+            npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npx nx run-many --target=build --projects=festival,catalog,crm,financiers,backend-functions --parallel &&
-            npm run deploy:functions:config $PROJECT_ID &&
-            export SKIP_PREDEPLOY_HOOKS=true &&
-            npx firebase deploy --force
+            npm run deploy:firestore
       - run: npm run backend-ops upgrade
       - run:
           command: |
