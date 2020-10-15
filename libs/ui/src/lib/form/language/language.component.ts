@@ -20,7 +20,7 @@ export class FormLanguageComponent implements OnInit {
   ngOnInit() {
     this.filteredLanguages$ = this.form.valueChanges.pipe(
       startWith(undefined),
-      map(language => (language ? this.filter(language) : languages as any))
+      map(language => (language ? this.filter(language) : Object.keys(languages) as Language[]))
     );
   }
 
@@ -29,8 +29,8 @@ export class FormLanguageComponent implements OnInit {
     return languages[key];
   }
 
-  private filter(language: string): Language {
+  private filter(language: string) {
     const filterValue = language.toLowerCase();
-    return Object.values(languages).filter(label => label.toLowerCase().startsWith(filterValue)) as any;
+    return Object.keys(languages).filter(label => label.toLowerCase().startsWith(filterValue)) as Language[];
   }
 }

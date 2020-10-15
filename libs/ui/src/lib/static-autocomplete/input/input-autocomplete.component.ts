@@ -18,27 +18,23 @@ import { startWith, map } from 'rxjs/operators';
 export class InputAutocompleteComponent implements OnInit {
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  public state: Scope[];
+  public state: any[];
 
-  public _scope: Scope;
-
-  @Input() set scope(value: Scope) {
-    this._scope = value;
-  }
+  @Input() scope: Scope;
   @Input() control: FormConstantValue<Scope>;
 
   public filteredStates: Observable<Scope[]>;
 
   /**
    * Since we input the scope we need to initialize the function after the input gets handled,
-   * otherwise _scope is undefined and this will throw an error
+   * otherwise scope is undefined and this will throw an error
    */
   public displayFn: Function;
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
-    this.state = Object.keys(staticConsts[this._scope]) as Scope[];
+    this.state = Object.keys(staticConsts[this.scope]);
     this.filteredStates = this.control.valueChanges
       .pipe(
         startWith(''),

@@ -14,18 +14,18 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 })
 export class StaticSelectComponent {
 
-  public staticValue: Scope[];
+  public staticValue: any[];
   public option: Scope;
   @Input() set scope(value: Scope) {
     this.option = value;
-    this.staticValue = Object.keys(staticConsts[value]) as Scope[]
+    this.staticValue = Object.keys(staticConsts[value])
   };
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
-    this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue)) as Scope[];
+    this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue))
   }
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;

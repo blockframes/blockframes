@@ -6,7 +6,7 @@
       <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
       </ng-template>
       <ng-template #label>
-        {{ scope | toLabel: _scope }}
+        {{ scope | toLabel: scope }}
       </ng-template>
     </mat-option>
   </mat-autocomplete>
