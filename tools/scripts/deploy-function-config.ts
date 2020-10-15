@@ -7,6 +7,7 @@ import { loadSecretsFile, absSecretPath, absTemplatePath } from './lib';
 import { warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
+import camelcase from 'camelcase'
 
 const args = process.argv.slice(2);
 const [arg, ...flags] = args;
@@ -16,19 +17,19 @@ if (arg) console.log('The following args were detected:', args)
 /**
  * This tuple array maps field names to the environment variable key to set them to
  */
-const functionsConfigMap: [string, string][] = [
-  ['sendgrid.api_key', 'SENDGRID_API_KEY'],// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
-  ['relayer.mnemonic', 'ETHEREUM_MNEMONIC'],
-  ['jwplayer.key', 'JWPLAYER_KEY'],// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
-  ['jwplayer.secret', 'JWPLAYER_SECRET'],
-  ['algolia.api_key', 'ALGOLIA_API_KEY'],
-  ['admin.password', 'ADMIN_PASSWORD'],
-  ['admin.email', 'CASCADE8_ADMIN'],
-  ['imgix.token', 'IMGIX_TOKEN'],// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
-  ['twilio.account.sid', 'TWILIO_ACCOUNT_SID'],
-  ['twilio.api.key.secret', 'TWILIO_API_KEY_SECRET'],
-  ['twilio.api.key.sid', 'TWILIO_API_KEY_SID']
-]
+const functionsConfigMap: Record<string, string> = {
+  'sendgrid.api_key': 'SENDGRID_API_KEY',// @see https://www.notion.so/cascade8/Setup-SendGrid-c8c6011ad88447169cebe1f65044abf0
+  'relayer.mnemonic': 'ETHEREUM_MNEMONIC',
+  'jwplayer.key': 'JWPLAYER_KEY',// @see https://www.notion.so/cascade8/Setup-JWPlayer-2276fce57b464b329f0b6d2e7c6d9f1d
+  'jwplayer.secret': 'JWPLAYER_SECRET',
+  'algolia.api_key': 'ALGOLIA_API_KEY',
+  'admin.password': 'ADMIN_PASSWORD',
+  'admin.email': 'CASCADE8_ADMIN',
+  'imgix.token': 'IMGIX_TOKEN',// @see https://www.notion.so/cascade8/Setup-ImgIx-c73142c04f8349b4a6e17e74a9f2209a
+  'twilio.account.sid': 'TWILIO_ACCOUNT_SID',
+  'twilio.api.key.secret': 'TWILIO_API_KEY_SECRET',
+  'twilio.api.key.sid': 'TWILIO_API_KEY_SID'
+ }
 
 /**
  * This is temporary because key names are hardcoded.
@@ -36,14 +37,15 @@ const functionsConfigMap: [string, string][] = [
  * But need to figure out how to indicate nested objects (more underscores?)
  */
 function getKeyValFormat(env?: string): string[] {
+  const formatEnvKey = (key: string) => `${ env ? camelcase(env) : ''}_${key}`
   /**
    * This nested function will check to see if a key exists in process.env when prefixed
    * with a particular env name & default to base key if not set
    * @param key environment variable keyname
    */
   function getKeyName(key: string) {
-    if (env && process.env.hasOwnProperty(`${env}_${key}`) ) {
-      return `${env}_${key}`;
+    if (env && process.env.hasOwnProperty(formatEnvKey(key)) ) {
+      return formatEnvKey(key);
     }
     return key;
   }
@@ -55,7 +57,7 @@ function getKeyValFormat(env?: string): string[] {
     return `${fieldPath}="${process.env[getKeyName(envKey)]}"`
   }
 
-  return functionsConfigMap.map(getSettingStatement)
+  return Object.entries(functionsConfigMap).map(getSettingStatement)
 }
 
 async function setFirebaseConfig() {

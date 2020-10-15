@@ -1,5 +1,5 @@
 import { loadAdminServices, MIGRATIONS } from "@blockframes/firebase-utils";
-import { join } from "path";
+import { resolve } from "path";
 import { loadDBVersion } from "./migrations";
 import { firebase } from '@env'
 
@@ -23,14 +23,14 @@ export function disableMaintenanceMode() {
 }
 
 export async function displayCredentials() {
-  let GAP: any;
+  let GAP: { [key: string]: any };
   try {
     // If service account is a stringified json object
     GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
   } catch (e) {
     // If service account is a path
     // tslint:disable-next-line: no-eval
-    GAP = eval('require')(join(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS));
+    GAP = eval('require')(resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS));
   }
   delete GAP.privateKey;
   delete GAP.private_key;

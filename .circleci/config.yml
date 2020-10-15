@@ -43,6 +43,7 @@ commands:
             # fallback to using the latest cache if no exact match is found
             - dependencies-{{ .Environment.CACHE_VERSION }}
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: touch .env # dotenv will crash without this
       - run: npm install
       - save_cache:
           paths:
@@ -60,9 +61,10 @@ commands:
               exit 0
             fi
   prepare_gcloud:
-    description: 'Ensure gcloud and gsutil are correctly configured to execute commands'
+    description: 'Ensure gcloud and gsutil are correctly configured & prepare service account key'
     steps:
-        - run: gcloud auth activate-service-account --key-file=creds.json
+        - run: echo "${!SERVICE_ACCOUNT}" > ${GOOGLE_APPLICATION_CREDENTIALS}
+        - run: gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS}
         - run: gcloud --quiet config set project ${PROJECT_ID}
         - run: gcloud info
         - run: gsutil ls
@@ -79,9 +81,7 @@ jobs:
   build-and-test-all:
     executor: blockframes-ci
     environment:
-      - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: ci
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
@@ -101,9 +101,7 @@ jobs:
   build-and-test-prs:
     executor: blockframes-ci
     environment:
-      - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: ci
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
@@ -144,9 +142,7 @@ jobs:
   test-e2e:
     executor: blockframes-ci
     environment:
-      - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: ci
     steps:
       - checkout_project
       - run: echo "export ADMIN_PASSWORD=\"${CI_ADMIN_PASSWORD}\"" >> $BASH_ENV
@@ -169,9 +165,7 @@ jobs:
   test-e2e-release:
     executor: blockframes-ci
     environment:
-      - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: staging
     steps:
       - checkout_project
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
@@ -212,9 +206,7 @@ jobs:
   deploy-to-prod:
     executor: blockframes-ci
     environment:
-      - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: production
     steps:
       - checkout_project
       - run: echo "${FIREBASE_PRODUCTION_SERVICE_ACCOUNT}" > creds.json
@@ -241,9 +233,7 @@ jobs:
   deploy-to-staging:
     executor: blockframes-ci
     environment:
-      - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        ENV: staging
     steps:
       - checkout_project
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
@@ -269,28 +259,20 @@ jobs:
   deploy-to-demo1:
     executor: blockframes-ci
     environment:
-      - ENV: demo1
-      - PROJECT_ID: blockframes-demo-1
-      - NODE_OPTIONS: '--max_old_space_size=7168'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+       PROJECT_ID: blockframes-demo-1
+       SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT
+       NG_CONFIG: demo1
     steps:
       - checkout_project
-      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
       - prepare_gcloud
       - run: cp ./env/demo/env.demo1.ts ./env/env.ts
-      - run: touch .env
       - slack/notify:
           message: 'Deploying to demo1...'
       - run:
           command: |
             npm run backend-ops displayCredentials &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npm run deploy:catalog &&
-            npm run deploy:festival &&
-            npm run deploy:crm &&
-            npm run deploy:storage &&
-            npm run deploy:firestore &&
-            npm run deploy:functions
+            nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions --parallel
       - run: npm run backend-ops upgrade
       - run:
           command: |
@@ -301,8 +283,7 @@ jobs:
   push-anon-db-to-ci:
     executor: blockframes-ci
     environment:
-      - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=7168'
+        ENV: production
     steps:
       - checkout_project
       - run: npm run db:download-prod
@@ -311,16 +292,13 @@ jobs:
   copy-storage-from-prod:
     executor: blockframes-ci
     environment:
-      - PROJECT_ID: blockframes-ci
-      - NODE_OPTIONS: "--max_old_space_size=7168"
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+        PROJECT_ID: blockframes-ci
+        SERVICE_ACCOUNT: FIREBASE_CI_SERVICE_ACCOUNT
     steps:
-      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - prepare_gcloud
       - run: gsutil -m cp -r "gs://blockframes.appspot.com/*" "gs://blockframes-ci-storage-backup/storage-backup-$(date +%d-%m-%Y)/"
 workflows:
-  version: 2.1
-  push-anon-db-to-ci-weekly:
+  fetch-test-data-weekly:
     triggers:
       - schedule:
           cron: '0 0 * * 0'
@@ -330,7 +308,21 @@ workflows:
                 - develop
     jobs:
       - push-anon-db-to-ci
-  build-and-test:
+      - copy-storage-from-prod
+  nightly-tests:
+    triggers:
+      - schedule:
+          cron: '0 0 * * *'
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - build-and-test-all
+      - test-e2e:
+          requires:
+            - build-and-test-all
+  main-workflow:
     jobs:
       # build only the PR
       - build-and-test-prs:
@@ -355,10 +347,10 @@ workflows:
                 - master
                 - production
                 - staging
-      # - test-e2e-release:
-      #     <<: *release_only
-      #     requires:
-      #       - build-and-test-all
+      - test-e2e-release:
+          <<: *release_only
+          requires:
+            - build-and-test-all
       - test-e2e:
           requires:
             - build-and-test-all
@@ -375,26 +367,3 @@ workflows:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
-  nightly-e2e:
-    triggers:
-      - schedule:
-          cron: '0 0 * * *'
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
-      - build-and-test-all
-      - test-e2e:
-          requires:
-            - build-and-test-all
-  copy-storage-from-prod-weekly:
-    triggers:
-      - schedule:
-          cron: '0 0 * * 0'
-          filters:
-            branches:
-              only:
-                - develop
-    jobs:
-      - copy-storage-from-prod

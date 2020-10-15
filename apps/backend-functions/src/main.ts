@@ -106,14 +106,6 @@ export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery
 
 export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-/**
- * Trigger: REST call to the /admin app
- *
- *  - Backups / Restore the database
- *  - Quorum Deploy & setup a movie smart-contract
- */
-export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
-
 //--------------------------------
 //   Permissions  Management    //
 //--------------------------------
@@ -253,3 +245,11 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
+
+/**
+ * Trigger: REST call to the /admin app
+ *
+ *  - Backups / Restore the database
+ *  - Quorum Deploy & setup a movie smart-contract
+ */
+export const admin = functions.region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);

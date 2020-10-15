@@ -1,18 +1,15 @@
 import { execSync } from 'child_process';
 
-function logBuffer(b: Buffer) {
-  process.stdout.write(b);
+function execLog(cmd: string) {
+  const output = execSync(cmd);
+  console.log(output);
 }
 
 if (!process.env['SKIP_PREDEPLOY_HOOKS']) {
   // * run predeploy hooks
-  let output: Buffer;
-  output = execSync('npm run lint backend-functions');
-  logBuffer(output);
-  output = execSync('npm run build:backend-functions');
-  logBuffer(output);
-  output = execSync('npm run deploy:functions:config');
-  logBuffer(output);
+  execLog('npm run lint backend-functions');
+  execLog('npm run build:backend-functions');
+  execLog('npm run deploy:functions:config');
 } else {
   console.log('Env variable "SKIP_PREDEPLOY_HOOKS" is set, skipping pre-deploy hooks...');
 }
