@@ -38,7 +38,6 @@ references:
     - master
     - production
     - staging
-    - demo1
 
 commands:
   checkout_project:
@@ -332,22 +331,14 @@ workflows:
             - build-and-test-all
   main-workflow:
     jobs:
-      # build only the PR
-      - build-and-test-prs:
+      - build-and-test-prs: # build only PR related branches
           filters:
             branches:
               ignore: *deployment_branches
-      # build EVERYTHING and trigger the rest of the deploy
-      - build-and-test-all:
+      - build-and-test-all: # build EVERYTHING and trigger test release on deployment branch
           filters:
             branches:
-              only:
-                - ci
-                - develop
-                - /release\/.*/
-                - master
-                - production
-                - staging
+              only: *deployment_branches
       - test-e2e-release:
           <<: *release_only
           requires:
