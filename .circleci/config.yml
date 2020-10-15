@@ -44,6 +44,7 @@ commands:
             # fallback to using the latest cache if no exact match is found
             - dependencies-{{ .Environment.CACHE_VERSION }}
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: touch .env # dotenv will crash without this
       - run: npm install
       - save_cache:
           paths:
