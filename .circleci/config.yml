@@ -78,7 +78,25 @@ commands:
   deploy_and_upgrade:
     description: 'Build and deploy Blockframes apps to Firebase & run upgrade if needed'
     steps:
-        - run: echo test
+      - run:
+          name: 'Run Deployment'
+          command: |
+            npm run backend-ops displayCredentials &&
+            npm run deploy:storage &&
+            npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions
+      - run:
+          name: 'Deploy Firestore indexes & lock Firestore before running upgrade if required'
+          command: |
+            npm run backend-ops prepareFirestoreRulesPreDeploy &&
+            npm run deploy:firestore &&
+            npm run backend-ops upgrade
+      - run:
+          name: 'Unlock Firestore'
+          command: |
+            npm run backend-ops restoreFirestoreRulesPostDeploy &&
+            npm run deploy:firestore:rules
+          when: always
+      - slack/status
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -277,22 +295,9 @@ jobs:
       - checkout_project
       - prepare_gcloud
       - run: cp ./env/demo/env.demo1.ts ./env/env.ts
+      - deploy_and_upgrade
       - slack/notify:
           message: 'Deploying to demo1...'
-      - run:
-          command: |
-            npm run backend-ops displayCredentials &&
-            npm run deploy:storage &&
-            npx nx run-many --target=deploy --projects=festival,catalog,crm,financiers,backend-functions &&
-            npm run backend-ops prepareFirestoreRulesPreDeploy &&
-            npm run deploy:firestore
-      - run: npm run backend-ops upgrade
-      - run:
-          command: |
-            npm run backend-ops restoreFirestoreRulesPostDeploy &&
-            npm run deploy:firestore:rules
-          when: always
-      - slack/status
   push-anon-db-to-ci:
     executor: blockframes-ci
     environment:

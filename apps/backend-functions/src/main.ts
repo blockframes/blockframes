@@ -20,7 +20,7 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions } from 'firebase-functions';
+import { RuntimeOptions, region } from 'firebase-functions';
 import { getTwilioAccessToken } from './twilio';
 
 //--------------------------------
@@ -247,4 +247,4 @@ export const onFileUpload = functions.storage.object().onFinalize(skipInMaintena
  *  - Backups / Restore the database
  *  - Quorum Deploy & setup a movie smart-contract
  */
-export const admin = functions.region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
+export const admin = region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
