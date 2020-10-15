@@ -13,10 +13,9 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
-import { FormConstantArray, FormList, numberRangeValidator, FormEntity, FormConstantValue } from '@blockframes/utils/form';
+import { FormList, numberRangeValidator, FormEntity, FormStaticValueArray, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 import { StoreType, staticConsts } from '@blockframes/utils/static-model';
-import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -130,13 +129,13 @@ function createCatalogSearchControl(search: CatalogSearch) {
   );
   return {
     releaseYear: createTermsControl(search.releaseYear),
-    genres: new FormConstantArray(search.genres, 'genres', [Validators.required]),
+    genres: new FormStaticValue(search.genres, 'genres', [Validators.required]),
     productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     estimatedBudget: new FormControl(search.estimatedBudget),
-    originCountries: FormList.factory(search.originCountries, country => new FormConstantValue(country, 'territories')),
+    originCountries: FormList.factory(search.originCountries, country => new FormStaticValueArray(country, 'territories')),
     storeType: new FormControl(search.storeType),
     searchbar: new FormGroup({
       text: new FormControl(''),

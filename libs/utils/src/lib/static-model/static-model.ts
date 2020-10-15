@@ -1770,9 +1770,6 @@ export const territoriesFR = {
   'aland-islands': 'Åland(les Îles)'
 } as const
 
-
-/* https://basarat.gitbook.io/typescript/main-1/defaultisbad
-don't export by default! */
 const months = {
   january: 'January',
   february: 'February',
@@ -1788,7 +1785,7 @@ const months = {
   december: 'December'
 } as const
 
-export const constants = {
+export const staticModel = {
   contractStatus,
   contractType,
   legalDocumentTypes,
@@ -1837,7 +1834,7 @@ export const constants = {
 };
 
 
-export type Constants = typeof constants;
+export type Constants = typeof staticModel;
 export type Scope = keyof Constants;
 export type GetKeys<S extends Scope> = keyof Constants[S];
 export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
@@ -1846,7 +1843,7 @@ export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? Get
 
 /** Check if the given value is a key of a scope */
 export const isInKeys = (scope: Scope, givenValue: string) => {
-  return (Object.keys(constants[scope])).map((key) => key).includes(givenValue);
+  return (Object.keys(staticModel[scope])).map((key) => key).includes(givenValue);
 }
 
 /**
