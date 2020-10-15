@@ -1,12 +1,17 @@
 // Angular
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-//
+// Blockframes
 import {Event} from "@blockframes/event/+state";
-import {Observable} from "rxjs";
-import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {IStatusVideoMic, MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AuthQuery, User} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+
+// Rxjs
+import {Observable} from "rxjs";
+
+// Twilio
+import {LocalAudioTrack, LocalDataTrack, LocalVideoTrack} from "twilio-video";
 
 @Component({
   selector: '[event] event-meeting-container-video',
@@ -18,6 +23,9 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   //Input event meeting
   @Input() event: Event;
+
+  //All Participants in the room Twilio
+  arrayOfParticipantConnected$: Observable<IParticipantMeeting[]>;
 
   //All Remote Participants in the room Twilio (all participant connected without local)
   arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
@@ -32,6 +40,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
+    this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
 
     this.user = this.query.user;
@@ -41,6 +50,10 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
     await this.meetingService.doCreateLocalPreview();
 
     await this.meetingService.doConnectToMeetingService(this.event);
+  }
+
+  getTwilioParticipantDataFromUid = (uid: string) => {
+    return this.meetingService.getTwilioParticipantDataFromUid(uid);
   }
 
   /**

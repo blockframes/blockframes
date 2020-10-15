@@ -1,9 +1,13 @@
-import {BehaviorSubject, Observable} from "rxjs";
-import {Participant, RemoteAudioTrack, RemoteDataTrack, RemoteTrackPublication, RemoteVideoTrack} from 'twilio-video';
+// Blockframes
 import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
-import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
-export abstract class AbstractParticipant{
+// Rxjs
+import {BehaviorSubject, Observable} from "rxjs";
+
+// Twilio
+import {Participant, RemoteAudioTrack, RemoteDataTrack, RemoteTrackPublication, RemoteVideoTrack} from 'twilio-video';
+
+export abstract class AbstractParticipant {
 
   protected $camMicIsOnDataSource: BehaviorSubject<IStatusVideoMic> = new BehaviorSubject({video: false, audio: false});
   public camMicIsOn$: Observable<IStatusVideoMic> = this.$camMicIsOnDataSource.asObservable();
@@ -32,7 +36,7 @@ export abstract class AbstractParticipant{
    */
   attachParticipantTracks(participant: Participant, container) {
     const tracks = Array.from(participant.tracks.values()).map((
-      trackPublication : any
+      trackPublication: any
     ) => {
       return trackPublication.track;
     });
@@ -43,7 +47,7 @@ export abstract class AbstractParticipant{
    *  Detach the Tracks from the DOM.
    * @param tracks - track to detach of the DOM
    */
-  detachTracks(tracks ) {
+  detachTracks(tracks) {
     tracks.forEach((track) => {
       if (track) {
         this.setUpVideoAndAudio(track.kind, false);
@@ -58,9 +62,9 @@ export abstract class AbstractParticipant{
    * Detach the Participant's Tracks from the DOM.
    * @param participant - participant to detach track of the DOM
    */
-  detachParticipantTracks(participant: IParticipantMeeting) {
-    const tracks = Array.from(participant.twilioData.tracks.values()).map((
-      trackPublication : any
+  detachParticipantTracks(participant: Participant) {
+    const tracks = Array.from(participant.tracks.values()).map((
+      trackPublication: any
     ) => {
       return trackPublication.track;
     });
@@ -69,17 +73,22 @@ export abstract class AbstractParticipant{
 
   /**
    *
-   * @param trackPublication
+   * @param trackPublication:RemoteTrackPublication
    */
-  getTrackFromRemoteTrackPublication(trackPublication:RemoteTrackPublication): RemoteVideoTrack|RemoteAudioTrack|RemoteDataTrack {
+  getTrackFromRemoteTrackPublication(trackPublication: RemoteTrackPublication): RemoteVideoTrack | RemoteAudioTrack | RemoteDataTrack {
     return trackPublication.track;
   }
 
-  setUpVideoAndAudio(kind, boolToChange){
-    if(kind === 'video'){
-      this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), video: boolToChange});
+  /**
+   *
+   * @param kind: string
+   * @param boolToChange: boolean
+   */
+  setUpVideoAndAudio(kind: string, boolToChange: boolean) {
+    if (kind === 'video') {
+      this.$camMicIsOnDataSource.next({...this.$camMicIsOnDataSource.getValue(), video: boolToChange});
     } else {
-      this.$camMicIsOnDataSource.next( {...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
+      this.$camMicIsOnDataSource.next({...this.$camMicIsOnDataSource.getValue(), audio: boolToChange});
     }
   }
 }

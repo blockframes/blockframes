@@ -7,9 +7,11 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 
 // RxJs
 import {Observable} from "rxjs";
+import {IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Participant} from "twilio-video";
 
 @Component({
-  selector: '[arrayOfRemoteParticipantConnected$] [event] [isSeller] event-meeting-video',
+  selector: '[arrayOfRemoteParticipantConnected$] [event] [getTwilioParticipantDataFromUid] [isSeller] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
@@ -18,6 +20,7 @@ export class VideoComponent  {
   // Input
   @Input() arrayOfRemoteParticipantConnected$: Observable<IParticipantMeeting[]>;
   @Input() event: Event;
+  @Input() getTwilioParticipantDataFromUid: (uid: string) => Participant;
   @Input() isSeller: boolean;
 
   // Outup
@@ -61,5 +64,13 @@ export class VideoComponent  {
    */
   identify(index, item) {
     return item.identity;
+  }
+
+  /**
+   * Get Twilio Participant data by Uid
+   * @param participant
+   */
+  doGetTwilioParticipantDataFromUid(participant): Participant{
+    return this.getTwilioParticipantDataFromUid(participant.identity);
   }
 }

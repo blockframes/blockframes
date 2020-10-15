@@ -132,19 +132,21 @@ export class MeetingService {
     const roomArr: IParticipantMeeting[] = this.$participantsConnectedDataSource.getValue();
     const updatedParticipants = roomArr.filter((item:IParticipantMeeting) => item.identity !== participant.identity)
     this.$participantsConnectedDataSource.next(updatedParticipants);
+    this.twilioParticipant.delete(participant.identity);
   }
 
   /**
    * function to add a specific participant to the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to add
    */
-  addParticipantToConnectedParticipant(participant: IParticipantMeeting) {
+  addParticipantToConnectedParticipant(participant: IParticipantMeeting, participantTwilio: Participant) {
     const currentValue = this.$participantsConnectedDataSource.getValue();
     if(currentValue.some((item) => item.identity === participant.identity)){
       return;
     }
     const newCurrentValue = [...currentValue, participant]
     this.$participantsConnectedDataSource.next(newCurrentValue);
+    this.twilioParticipant.set(participant.identity, participantTwilio);
   }
 
   getLocalVideoMicStatus(): Observable<IStatusVideoMic> {
@@ -191,7 +193,12 @@ export class MeetingService {
    * @param participant - All participants connected in the room
    */
   getTracksOfParticipant(participant: Participant) {
-    return Array.from(participant.tracks.values())
+    return Array.from(participant.tracks).map((
+      track: any
+    ) => {
+      //participant[0] is the key
+      return track[1];
+    });
   }
 
   /**
@@ -283,8 +290,8 @@ export class MeetingService {
       }
     }
 
-    this.localParticipant = await this.createIParticipantMeeting(room.localParticipant, event, true );
-    this.addParticipantToConnectedParticipant(this.localParticipant);
+    this.localParticipant = await this.createIParticipantMeeting(room.localParticipant.identity, event, true );
+    this.addParticipantToConnectedParticipant(this.localParticipant, room.localParticipant);
 
     this.setUpRoomEvent(room, event);
   }
@@ -292,20 +299,19 @@ export class MeetingService {
 
   /**
    * Make a IParticipantMeeting
-   * @param twilioParticipant
+   * @param identity
    * @param event
    * @param isLocalSpeaker
    * @private
    */
-  private async createIParticipantMeeting(twilioParticipant: Participant, event: Event, isLocalSpeaker = false): IParticipantMeeting {
-    const remoteUser = await this.userService.getUser(twilioParticipant.identity);
+  private async createIParticipantMeeting(identity: string, event: Event, isLocalSpeaker = false): Promise<IParticipantMeeting> {
+    const remoteUser = await this.userService.getUser(identity);
     const remoteOrg = await this.orgService.getValue(remoteUser.orgId);
 
-    const isDominantSpeaker = twilioParticipant.identity === event.organizedBy.uid;
+    const isDominantSpeaker = identity === event.organizedBy.uid;
 
     return {
-      identity: twilioParticipant.identity,
-      twilioData: twilioParticipant,
+      identity: identity,
       festivalData: {
         firstName: remoteUser.firstName,
         lastName: remoteUser.lastName,
@@ -328,8 +334,8 @@ export class MeetingService {
     // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected,
       async (participant: Participant) => {
-        const meetingParticipant = await this.createIParticipantMeeting(participant, event);
-        this.addParticipantToConnectedParticipant(meetingParticipant);
+        const meetingParticipant = await this.createIParticipantMeeting(participant.identity, event);
+        this.addParticipantToConnectedParticipant(meetingParticipant, participant);
       });
 
     // When a Participant leaves the Room, detach its Tracks.
@@ -352,7 +358,9 @@ export class MeetingService {
    */
   muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
     //get local track
-    const localTracks = this.getTracksOfParticipant(this.localParticipant.twilioData);
+    const localTwilioData = this.getTwilioParticipantDataFromUid(this.localParticipant.identity)
+    const localTracks = this.getTracksOfParticipant(localTwilioData);
+    console.log('localTracks : ', localTracks)
     this.doSetupLocalVideoAndAudio(kind, !mute);
 
     let track: any;
@@ -395,10 +403,10 @@ export class MeetingService {
    */
   doDisconnected() {
     if (!!this.activeRoom) {
+      this.twilioParticipant.clear();
+      this.$participantsConnectedDataSource.next([]);
       this.deactiveLocalTracks(this.activeRoom);
-      if(this.activeRoom.disconnect()){
-        this.$participantsConnectedDataSource.next([]);
-      }
+      this.activeRoom.disconnect();
     }
   }
 
