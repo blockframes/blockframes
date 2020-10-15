@@ -6,7 +6,7 @@
         <div [formGroup]="note" fxLayout="column" fxLayoutGap="24px" class="note-form-container">
           <mat-form-field appearance="outline">
             <mat-label>Note title</mat-label>
-            <input matInput formControlName="title" >
+            <input matInput formControlName="title">
           </mat-form-field>
           <file-upload
             [form]="note.get('ref')"
@@ -14,7 +14,7 @@
             accept="['.pdf']"
             [filePrivacy]= "filePrivacy"
             [types]="['application/pdf']">
-              <h3 type>Upload Files</h3>
+              <h3 type>Upload File</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>
           </file-upload>
           <button *ngIf="!!note.get('ref').value.ref && !note.get('ref').value.blobOrFile"  mat-flat-button color="accent" (click)="download(note.get('ref'))">

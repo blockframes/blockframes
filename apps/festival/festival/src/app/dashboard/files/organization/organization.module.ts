@@ -9,6 +9,7 @@ import { OrganizationResourcesComponent } from './organization.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { AddFileDialogModule } from '@blockframes/media/components/dialog/add-file.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     TableFilterModule,
     FileNameModule,
     ImageReferenceModule,
+    AddFileDialogModule,
 
     // Material
     MatButtonModule,
