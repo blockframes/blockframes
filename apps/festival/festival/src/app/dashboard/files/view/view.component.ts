@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 const navLinks = [
   {
@@ -13,11 +13,8 @@ const navLinks = [
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilesViewComponent implements OnInit {
+export class FilesViewComponent {
 
   public navLinks = navLinks;
 
-  constructor() { }
-
-  ngOnInit() { }
 }
