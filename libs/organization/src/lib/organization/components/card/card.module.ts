@@ -6,7 +6,7 @@ import { OrganizationCardComponent } from './card.component';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { OrgNameModule } from '../../pipes/org-name.pipe';
 import { OrgAddressModule } from '../../pipes/org-address.pipe';
-import { ToLabelModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -27,7 +27,6 @@ import { OrgMoviesModule } from '@blockframes/organization/pipes/org-movies.pipe
     ToLabelModule,
     OrgNameModule,
     OrgAddressModule,
-    TranslateSlugModule,
     MatCardModule,
     MatTabsModule,
     MatIconModule,

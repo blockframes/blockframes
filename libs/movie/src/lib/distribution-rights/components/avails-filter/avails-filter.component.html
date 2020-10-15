@@ -43,13 +43,8 @@
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
-    <chips-autocomplete
-      [form]="territories"
-      scope="TERRITORIES"
-      placeholder="Territories"
-      type="model"
-      [disabled]="isFormDisabled"
-    ></chips-autocomplete>
+    <chips-autocomplete [form]="territories" scope="territories" placeholder="Territories" [disabled]="isFormDisabled">
+    </chips-autocomplete>
   </mat-expansion-panel>
 
   <!-- Media -->
@@ -58,7 +53,8 @@
       <span class="mat-body-1" test-id="mandate-medias-panel">Media</span>
     </mat-expansion-panel-header>
     <div fxLayout="column" fxLayoutAlign="start space-between" class="checkbox-padding">
-      <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary" [disabled]="availsForm.value.isActive">
+      <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary"
+        [disabled]="availsForm.value.isActive">
         {{  media | toLabel: 'medias' }}
       </mat-checkbox>
     </div>

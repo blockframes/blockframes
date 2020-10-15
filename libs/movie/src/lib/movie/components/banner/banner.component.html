@@ -4,7 +4,7 @@
     <h3 *ngIf="title.international">{{ title.international }}</h3>
     <p class="mat-caption" *ngIf="title.original">{{ title.original }}</p>
     <p class="mat-body-1" *ngIf="director">{{ director }}</p>
-    <p class="mat-body-2" *ngIf="countries.length">{{ countries | translateSlug: 'TERRITORIES' }} - {{ date }}</p>
+    <p class="mat-body-2" *ngIf="countries.length">{{ countries | toLabel: 'territories' }} - {{ date }}</p>
   </figcaption>
 </figure>
 

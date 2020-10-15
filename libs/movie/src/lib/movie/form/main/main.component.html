@@ -24,7 +24,7 @@
       </article>
 
       <article fxLayout fxLayoutGap="24px" fxLayoutAlign="start start">
-        <static-select test-id="content-type" scope="contentType" type="constant" [control]="form.contentType" fxFlex
+        <static-select test-id="content-type" scope="contentType" [control]="form.contentType" fxFlex
           [withoutValues]="['volume', 'episode', 'collection']">
           <mat-label>Content Type</mat-label>
           <mat-error *ngIf="form.contentType.hasError('required')">
@@ -93,7 +93,8 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select test-id="status" scope="screeningStatus" type="constant" [control]="form.release.get('status')" [withoutValues]="['tobedetermined']" required fxFlex>
+          <static-select test-id="status" scope="screeningStatus" [control]="form.release.get('status')"
+            [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the release date is estimated or confirmed.
@@ -103,7 +104,7 @@
 
       </article>
 
-      <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="TERRITORIES"  type="model"
+      <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="territories"
         placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
@@ -112,7 +113,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages" type="constant"
+      <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages"
         placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
@@ -121,7 +122,8 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)" type="constant" [withoutValues]="['']">
+      <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
+        [withoutValues]="['']">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
         <mat-hint>
@@ -157,7 +159,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select  test-id="screening-status" scope="screeningStatus" type="constant" [control]="form.runningTime.get('status')"
+          <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
             placeholder="To be determined/Estimated/Confirmed" [withoutValues]="['']" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
@@ -193,7 +195,8 @@
             <div fxLayout fxLayoutGap="24px">
 
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-                <static-select test-id="director-status" scope="memberStatus" type="constant" [control]="directorForm.get('status')" [withoutValues]="['']" fxFlex>
+                <static-select test-id="director-status" scope="memberStatus" [control]="directorForm.get('status')" [withoutValues]="['']"
+                  fxFlex>
                   <mat-label>Director's Status</mat-label>
                   <mat-hint>
                     Please specify if the director is confirmed for this project or not.
@@ -201,13 +204,8 @@
                 </static-select>
               </ng-container>
 
-              <static-select test-id="director-category" 
-              scope="directorCategory"
-              type="constant"
-              [control]="directorForm.get('category')"
-              placeholder="Director's Category"
-              [withoutValues]="['']"
-              fxFlex>
+              <static-select test-id="director-category" scope="directorCategory" [control]="directorForm.get('category')"
+                placeholder="Director's Category" [withoutValues]="['']" fxFlex>
                 <mat-label>Director's Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.

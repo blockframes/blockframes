@@ -1,3 +1,3 @@
 export { default as staticModels } from './staticModels';
-export { default as staticConsts } from './staticConsts';
+export { constants as staticConsts, Scope } from './staticConsts';
 export * from './types';

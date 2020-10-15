@@ -14,13 +14,6 @@ import {
 } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import {
-  MovieLanguageTypesValue,
-  UnitBoxValue,
-  staticConsts,
-} from '@blockframes/utils/static-model';
-import { GetCode } from '@blockframes/utils/static-model/staticConsts';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
@@ -31,6 +24,8 @@ import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { GenresValue, LanguageValue, MovieLanguageTypeValue, StakeholderRoleValue, TerritoryValue, UnitBoxValue } from '@blockframes/utils/static-model';
+import { productionStatus } from '@blockframes/utils/static-model/staticConsts';
 
 enum SpreadSheetMovie {
   internationalTitle,
@@ -194,12 +189,12 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRODUCTION COMPANIES (Production Companie(s))
         if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
-          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
+          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: StakeholderRoleValue) => {
             const stakeHolderParts = p.split(this.subSeparator);
             const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0].trim() });
             const role = getKeyIfExists('stakeholderRoles', stakeHolderParts[1]);
             if (stakeHolderParts[2]) {
-              const country = getCodeIfExists('TERRITORIES', stakeHolderParts[2] as ExtractCode<'TERRITORIES'>);
+              const country = getKeyIfExists('territories', stakeHolderParts[2])
               if (country) {
                 stakeHolder.countries.push(country);
               } else {
@@ -272,8 +267,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // ORIGIN COUNTRIES (Countries of Origin)
         if (spreadSheetRow[SpreadSheetMovie.originCountries]) {
           movie.originCountries = [];
-          spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-            const country = getCodeIfExists('TERRITORIES', c);
+          spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: string) => {
+            const country = getKeyIfExists('territories', c);
             if (country) {
               movie.originCountries.push(country);
             } else {
@@ -292,7 +287,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
           spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
             const ratingParts = r.split(this.subSeparator);
-            const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
+            const country = getKeyIfExists('territories', ratingParts[0])
             const movieRating = createMovieRating({ value: ratingParts[1].trim() });
 
             if (ratingParts[2]) { // System
@@ -438,7 +433,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
 
-          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: ExtractCode<'TERRITORIES'>) => {
+          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: string) => {
             const originalReleaseParts = o.split(this.subSeparator);
             const dateParts = originalReleaseParts[2].trim().match(this.deepDatesRegex)
             let date: Date;
@@ -446,7 +441,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
               date = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
             }
             const originalRelease = createMovieOriginalRelease({ date });
-            const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] as ExtractCode<'TERRITORIES'>);
+            const country = getKeyIfExists('territories', originalReleaseParts[0]);
             if (country) {
               originalRelease.country = country;
             }
@@ -464,7 +459,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
           movie.genres = [];
-          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: GetCode<'genres'>) => {
+          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: GenresValue) => {
             const genre = getKeyIfExists('genres', g);
             if (genre) {
               movie.genres.push(genre);
@@ -522,7 +517,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
           movie.originalLanguages = [];
-          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: GetCode<'languages'>) => {
+          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: LanguageValue) => {
             const language = getKeyIfExists('languages', g);
             if (language) {
               movie.originalLanguages.push(language);
@@ -549,7 +544,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             const parseErrors = [];
             if (language) {
-              versionParts.map(v => v.trim()).forEach((v: MovieLanguageTypesValue) => {
+              versionParts.map(v => v.trim()).forEach((v: MovieLanguageTypeValue) => {
                 const key = getKeyIfExists('movieLanguageTypes', v);
                 if (key) {
                   populateMovieLanguageSpecification(movie.languages, language, key, true);
@@ -649,7 +644,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          const movieStatus = staticConsts['productionStatus'][spreadSheetRow[SpreadSheetMovie.productionStatus]];
+          const movieStatus = productionStatus[spreadSheetRow[SpreadSheetMovie.productionStatus]];
           if (movieStatus) {
             movie.productionStatus = movieStatus;
           } else {
@@ -709,7 +704,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 {
                   unit,
                   value: boxOfficeParts[1] ? parseInt(boxOfficeParts[1], 10) : 0,
-                  territory: getCodeIfExists('TERRITORIES', 'world')
+                  territory: getKeyIfExists('territories', 'world')
                 }
               ));
             } else {
@@ -729,7 +724,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
           spreadSheetRow[SpreadSheetMovie.nationalBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
 
-            const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
+            const territory = getKeyIfExists('territories', boxOfficeParts[0].trim());
             if (territory) {
               const unit = getKeyIfExists('unitBox', boxOfficeParts[1] as UnitBoxValue);
               if (unit) {
@@ -826,8 +821,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
           // TERRITORIES
           if (spreadSheetRow[SpreadSheetMovie.territories]) {
             distributionRight.territory = [];
-            spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-              const territory = getCodeIfExists('TERRITORIES', c);
+            spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: TerritoryValue) => {
+              const territory = getKeyIfExists('territories', c);
               if (territory) {
                 distributionRight.territory.push(territory);
               } else {
@@ -845,8 +840,8 @@ export class ViewExtractedMoviesComponent implements OnInit {
           // TERRITORIES EXCLUDED
           if (spreadSheetRow[SpreadSheetMovie.territoriesExcluded]) {
             distributionRight.territoryExcluded = [];
-            spreadSheetRow[SpreadSheetMovie.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-              const territory = getCodeIfExists('TERRITORIES', c);
+            spreadSheetRow[SpreadSheetMovie.territoriesExcluded].split(this.separator).forEach((c: TerritoryValue) => {
+              const territory = getKeyIfExists('territories', c);
               if (territory) {
                 distributionRight.territoryExcluded.push(territory);
               } else {

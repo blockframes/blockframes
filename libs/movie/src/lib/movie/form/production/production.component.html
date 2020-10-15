@@ -8,7 +8,7 @@
 
       <bf-form-list [form]="productionCompany" buttonText="Add Production Company">
         <ng-template itemRef let-productionCompany>
-          {{ productionCompany.displayName }} - {{ productionCompany.countries | translateSlug: 'TERRITORIES' }}
+          {{ productionCompany.displayName }} - {{ productionCompany.countries | toLabel: 'territories' }}
         </ng-template>
         <ng-template formView let-productionForm>
           <article [formGroup]="productionForm" fxLayout fxLayoutGap="24px">
@@ -19,7 +19,7 @@
                 placeholder="Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="production-country" [form]="productionForm.get('countries')" scope="TERRITORIES" type="model"
+            <chips-autocomplete test-id="production-country" [form]="productionForm.get('countries')" scope="territories"
               placeholder="Type and select Country." fxFlex>
               <mat-label>Production Country</mat-label>
               <mat-error>Please specify Production Country.</mat-error>
@@ -34,7 +34,7 @@
       <h6 class="mat-caption">Co-Production Company</h6>
       <bf-form-list [form]="coProductionCompany" buttonText="Add Co-Production Company">
         <ng-template itemRef let-coProductionCompany>
-          {{ coProductionCompany.displayName }} - {{ coProductionCompany.countries | translateSlug: 'TERRITORIES' }}
+          {{ coProductionCompany.displayName }} - {{ coProductionCompany.countries | toLabel: 'territories' }}
         </ng-template>
         <ng-template formView let-coProductionForm>
           <article [formGroup]="coProductionForm" fxLayout fxLayoutGap="24px">
@@ -45,7 +45,7 @@
                 placeholder="Co-Production Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="co-production-country" [form]="coProductionForm.get('countries')" scope="TERRITORIES" type="model"
+            <chips-autocomplete test-id="co-production-country" [form]="coProductionForm.get('countries')" scope="territories"
               placeholder="Type and select Country" fxFlex>
               <mat-label>Co-Production Country</mat-label>
               <mat-error>Please specify Co-Production Country.</mat-error>
@@ -67,7 +67,7 @@
 
             <form-display-name [form]="producerForm" labelSuffix="Producer's"></form-display-name>
 
-            <static-select test-id="producer-role" type="constant" [control]="producerForm.get('role')" scope="producerRoles" [withoutValues]="['']">
+            <static-select test-id="producer-role" [control]="producerForm.get('role')" scope="producerRoles" [withoutValues]="['']">
               <mat-label>Role</mat-label>
               <mat-hint>Please specify producer's role: executive, associate...</mat-hint>
             </static-select>
@@ -85,7 +85,7 @@
       <bf-form-list [form]="distributors" buttonText="Add Distribution Company">
         <ng-template itemRef let-distributor>
           {{ distributor.displayName }} -
-          {{ distributor.countries | translateSlug: 'TERRITORIES' }}
+          {{ distributor.countries | toLabel: 'territories' }}
         </ng-template>
         <ng-template formView let-distributorForm>
           <article [formGroup]="distributorForm" fxLayout fxLayoutGap="24px">
@@ -96,7 +96,7 @@
                 placeholder="Distribution Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="distribution-country" [form]="distributorForm.get('countries')" scope="TERRITORIES" type="model"
+            <chips-autocomplete test-id="distribution-country" [form]="distributorForm.get('countries')" scope="territories"
               placeholder="Enter Distribution Country/ies" fxFlex>
               <mat-label>Enter Distribution Country/ies.</mat-label>
               <mat-error>Please specify Distribution Country.</mat-error>
@@ -113,7 +113,7 @@
     <section id="sales">
 
       <bf-form-list [form]="internationalSales" buttonText="Add Sales Company">
-        <ng-template itemRef let-sales> {{ sales.displayName }} - {{ sales.countries | translateSlug: 'TERRITORIES' }}
+        <ng-template itemRef let-sales> {{ sales.displayName }} - {{ sales.countries | toLabel: 'territories' }}
         </ng-template>
         <ng-template formView let-salesForm>
           <article [formGroup]="salesForm" fxLayout fxLayoutGap="24px">
@@ -124,7 +124,7 @@
                 placeholder="Sales Company Name" />
             </mat-form-field>
 
-            <chips-autocomplete test-id="sales-country" [form]="salesForm.get('countries')" scope="TERRITORIES" type="model"
+            <chips-autocomplete test-id="sales-country" [form]="salesForm.get('countries')" scope="territories"
               placeholder="Type and select Country" fxFlex type="model">
               <mat-label>Sales Company's Nationality</mat-label>
               <mat-error>Please specify Sales Company's Country.</mat-error>

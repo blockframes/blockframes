@@ -1,24 +1,22 @@
 import {
-  TerritoriesLabel,
-  Languages,
-  Genres,
-  CertificationsValues,
-  MediasValues,
-  TerritoriesSlug,
-  TERRITORIES_SLUG,
+  Language,
+  Genre,
+  CertificationValue,
+  MediaValue,
+  Territory,
   ProductionStatus,
-  Certifications
+  Certification
 } from '@blockframes/utils/static-model/types';
+import { medias, territories } from '@blockframes/utils/static-model/staticConsts';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
-import { FormConstantArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
+import { FormConstantArray, FormList, numberRangeValidator, FormEntity, FormConstantValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 import { StoreType, staticConsts } from '@blockframes/utils/static-model';
-import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -26,12 +24,12 @@ import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
 
 export interface CatalogSearch {
   releaseYear: DateRange;
-  genres: Genres[];
+  genres: Genre[];
   productionStatus: string[];
   salesAgent: string[];
-  languages: Partial<{ [language in Languages]: MovieLanguageSpecification }>;
-  certifications: Certifications[];
-  originCountries: TerritoriesLabel[];
+  languages: Partial<{ [language in Language]: MovieLanguageSpecification }>;
+  certifications: Certification[];
+  originCountries: Territory[];
   estimatedBudget: NumberRange[];
   storeType: StoreType[];
   searchbar: {
@@ -43,9 +41,9 @@ export interface CatalogSearch {
 
 export interface AvailsSearch {
   terms: Terms;
-  territory: TerritoriesSlug[];
-  territoryExcluded: TerritoriesSlug[];
-  licenseType: MediasValues[];
+  territory: Territory[];
+  territoryExcluded: Territory[];
+  licenseType: MediaValue[];
   exclusive: boolean;
   isActive: boolean;
 }
@@ -138,7 +136,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     estimatedBudget: new FormControl(search.estimatedBudget),
-    originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
+    originCountries: FormList.factory(search.originCountries, country => new FormConstantValue(country, 'territories')),
     storeType: new FormControl(search.storeType),
     searchbar: new FormGroup({
       text: new FormControl(''),
@@ -197,12 +195,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('estimatedBudget');
   }
 
-  addLanguage(language: Languages, value: Partial<MovieLanguageSpecification> = {}) {
+  addLanguage(language: Language, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 
-  removeLanguage(language: Languages) {
+  removeLanguage(language: Language) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
   }
@@ -228,7 +226,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     }
   }
 
-  checkCertification(certificationChecked: CertificationsValues) {
+  checkCertification(certificationChecked: CertificationValue) {
     // check if certification is already checked by the user
     if (
       Object.keys(staticConsts.certifications).includes(certificationChecked) &&
@@ -253,11 +251,11 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     // check if media is already checked by the user
     if (!this.get('storeType').value.includes(staticConsts.storeType)) {
       this.get('storeType').setValue([...this.get('storeType').value, staticConsts.storeType]);
-    } else if ( this.get('storeType').value.includes(staticConsts.storeType)) {
-        const types = this.get('storeType').value.filter(
-          (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
-        );
-        this.get('storeType').setValue(types);
+    } else if (this.get('storeType').value.includes(staticConsts.storeType)) {
+      const types = this.get('storeType').value.filter(
+        (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
+      );
+      this.get('storeType').setValue(types);
     } else {
       throw new Error(`Store Type ${staticConsts.storeType[type]} doesn't exist`);
     }
@@ -301,11 +299,11 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     this.get('isActive').setValue(value);
   }
 
-  addTerritory(territory: TerritoriesSlug) {
+  addTerritory(territory: Territory) {
     // Check it's part of the list available
-    if (!TERRITORIES_SLUG.includes(territory)) {
+    if (!Object.keys(territories).includes(territory)) {
       throw new Error(
-        `Territory ${getLabelBySlug('TERRITORIES', territory)} is not part of the list`
+        `Territory ${territories[territory]} is not part of the list`
       );
     }
     // Check it's not already in the form control
@@ -320,7 +318,7 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     this.get('territory').removeAt(index);
   }
 
-  checkMedia(checkedMedia: MediasValues) {
+  checkMedia(checkedMedia: MediaValue) {
     // check if media is already checked by the user
     if (Object.keys(staticConsts.medias).includes(checkedMedia) && !this.get('licenseType').value.includes(checkedMedia)) {
       this.get('licenseType').setValue([...this.get('licenseType').value, checkedMedia]);
@@ -329,11 +327,11 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
       this.get('licenseType').value.includes(checkedMedia)
     ) {
       const checkedMedias = this.get('licenseType').value.filter(
-        (alreadyCheckedMedia: MediasValues) => alreadyCheckedMedia !== checkedMedia
+        (alreadyCheckedMedia: MediaValue) => alreadyCheckedMedia !== checkedMedia
       );
       this.get('licenseType').setValue(checkedMedias);
     } else {
-      throw new Error(`Media ${getValueByKey('medias', checkedMedia)} doesn't exist`);
+      throw new Error(`Media ${medias[checkedMedia]} doesn't exist`);
     }
   }
 }

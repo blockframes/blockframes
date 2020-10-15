@@ -8,10 +8,10 @@
         <h1>{{ movie.title.international }}</h1>
         <h6>{{ movie.directors | displayName }}</h6>
         <span>
-          {{ movie.originCountries | translateSlug: 'TERRITORIES'}}
-          <ng-container *ngIf="movie.originCountries && movie.release.year">,</ng-container>
-          {{ movie.release.year }}
+          {{ movie.originCountries | toLabel: 'territories'}}
         </span>
+        <ng-container *ngIf="movie.originCountries.length && movie.release.year">,</ng-container>
+        {{ movie.release.year }}
 
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="pencil"></mat-icon>

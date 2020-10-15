@@ -1,11 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { languages } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/utils/static-model';
 import { FormConstantValue } from '@blockframes/utils/form';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
-
-type LANGUAGES = typeof languages;
+import { GetKeys, languages } from '@blockframes/utils/static-model/staticConsts';
 
 @Component({
   selector: 'form-language',
@@ -17,14 +15,12 @@ export class FormLanguageComponent implements OnInit {
   @Input() public form: FormConstantValue<'languages'>;
   @Output() selected = new EventEmitter<GetKeys<'languages'>>();
 
-  public languages = languages;
-
-  filteredLanguages$: Observable<LANGUAGES>;
+  filteredLanguages$: Observable<Language[]>;
 
   ngOnInit() {
     this.filteredLanguages$ = this.form.valueChanges.pipe(
-      startWith(''),
-      map(language => (language ? this.filter(language) : this.languages))
+      startWith(undefined),
+      map(language => (language ? this.filter(language) : Object.keys(languages) as Language[]))
     );
   }
 
@@ -33,8 +29,8 @@ export class FormLanguageComponent implements OnInit {
     return languages[key];
   }
 
-  private filter(language: string): LANGUAGES {
+  private filter(language: string) {
     const filterValue = language.toLowerCase();
-    return Object.values(this.languages).filter(label => label.toLowerCase().startsWith(filterValue)) as any;
+    return Object.keys(languages).filter(label => label.toLowerCase().startsWith(filterValue)) as Language[];
   }
 }

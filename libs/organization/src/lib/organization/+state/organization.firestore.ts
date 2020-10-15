@@ -25,7 +25,7 @@ export interface OrgMedias {
 
 /** Document model of an Organization */
 interface OrganizationBase<D> extends PublicOrganization {
-  activity: OrgActivity;
+  activity?: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
   bankAccounts?: BankAccount[]; // @TODO (#2692)
@@ -87,7 +87,6 @@ export function createOrganizationBase(
 ): OrganizationBase<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    activity: '',
     bankAccounts: [],
     cart: [],
     created: new Date(),

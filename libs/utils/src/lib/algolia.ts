@@ -2,11 +2,10 @@ import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
-import { ExtractSlug } from './static-model/staticModels';
 import { GetKeys } from './static-model/staticConsts';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
-import { ProductionStatus } from './static-model';
+import { ProductionStatus, Territory } from './static-model';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -89,7 +88,7 @@ export interface AlgoliaMovie {
   directors: string[],
   keywords: string[],
   genres: GetKeys<'genres'>[],
-  originCountries: ExtractSlug<'TERRITORIES'>[],
+  originCountries: Territory[],
   languages: {
     original: GetKeys<'languages'>[],
     dubbed: GetKeys<'languages'>[],
