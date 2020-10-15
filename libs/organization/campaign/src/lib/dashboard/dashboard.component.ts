@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CampaignService } from '../+state';
-import { createCampaignForm } from '../form/form';
+import { CampaignForm } from '../form/form';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 export class DashboardComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   movieId$ = this.route.selectParams('movieId');
-  form = createCampaignForm();
+  form = new CampaignForm();
 
   constructor(
     private service: CampaignService,
@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const orgId = this.orgQuery.getActiveId();
     this.sub = this.movieId$.pipe(
       switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
-    ).subscribe(campaign => this.form.patchAllValue(campaign));
+    ).subscribe(campaign => this.form.setAllValue(campaign));
   }
 
   ngOnDestroy() {

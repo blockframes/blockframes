@@ -51,8 +51,12 @@ export class TitleStatusComponent implements OnInit {
     disabled: false
   }]
 
-  constructor(private shell: MovieFormShellComponent, private routerQuery: RouterQuery,
-    @Optional() private intercom: Intercom, private dynTitle: DynamicTitleService) { }
+  constructor(
+    private shell: MovieFormShellComponent,
+    private routerQuery: RouterQuery,
+    private dynTitle: DynamicTitleService,
+    @Optional() private intercom: Intercom,
+  ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Title Status')
@@ -69,7 +73,7 @@ export class TitleStatusComponent implements OnInit {
     /* If status is defined via the router data object, we don't want to change
     the status via the click event from the image */
     if (!this.routerQuery.getData()?.disabled?.includes(value)) {
-      this.form.productionStatus.setValue(value)
+      this.form.productionStatus.setValue(value);
     }
   }
 
