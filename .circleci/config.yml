@@ -360,6 +360,7 @@ workflows:
                 - ci
                 - develop
                 - /release\/.*/
+                - /hotfix\/release\/.*/
                 - master
                 - production
                 - staging
