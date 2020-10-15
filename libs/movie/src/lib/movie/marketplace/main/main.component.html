@@ -28,7 +28,7 @@
       <h5>Keywords</h5>
       <mat-chip-list fxLayout="row" fxLayoutGap="8px">
         <ng-container *ngFor="let keyword of movie.keywords">
-          <mat-chip>{{ keyword }}</mat-chip>
+          <mat-chip>{{ keyword | titlecase }}</mat-chip>
         </ng-container>
       </mat-chip-list>
     </article>

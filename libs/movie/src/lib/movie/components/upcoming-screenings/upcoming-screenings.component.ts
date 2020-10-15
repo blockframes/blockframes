@@ -1,4 +1,4 @@
-// Angular 
+// Angular
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
@@ -54,4 +54,4 @@ export class UpcomingScreeningsComponent {
     if (a.start.getTime() > b.start.getTime()) return 1
     return 0
   }
-} 
+}

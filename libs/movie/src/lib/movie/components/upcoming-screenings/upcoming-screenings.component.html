@@ -26,7 +26,7 @@
       <mat-label>Choose screening session</mat-label>
       <mat-select [formControl]="sessionCtrl">
         <mat-option value="first">First Session</mat-option>
-        <mat-option value="second">Second Session</mat-option>
+        <mat-option value="second" [disabled]="screenings.length <= 1">Second Session</mat-option>
       </mat-select>
     </mat-form-field>
     <button mat-flat-button color="accent" (click)="askForInvitation(screenings)" [disabled]="invitationWasSent">Ask for
@@ -40,4 +40,4 @@
       questions.</span>
     <a mat-flat-button color="accent" [href]="'mailto:'+ org[0].email">Contact Sales Agent</a>
   </ng-container>
-</ng-template> 
+</ng-template>
