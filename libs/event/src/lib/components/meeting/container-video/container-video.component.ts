@@ -1,4 +1,7 @@
+// Angular
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+
+//
 import {Event} from "@blockframes/event/+state";
 import {Observable} from "rxjs";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
@@ -24,11 +27,11 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   isSeller: boolean;
 
   constructor(private meetingService: MeetingService) {
-    this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
   }
 
   async ngOnInit() {
 
+    this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
 
     this.user = this.meetingService.getActiveUser();
 
@@ -36,7 +39,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
     await this.meetingService.doCreateLocalPreview();
 
-    this.meetingService.doConnectToMeetingService(this.event);
+    await this.meetingService.doConnectToMeetingService(this.event);
   }
 
   /**
@@ -53,7 +56,6 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
    * when ngDestroy we disconnect the local participant;
    */
   ngOnDestroy() {
-    console.log('ngOnDestroy')
     this.meetingService.doDisconnected()
   }
 }

@@ -8,7 +8,7 @@ import {AuthQuery} from "@blockframes/auth/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 // Rxjs
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {map} from "rxjs/operators";
 
 //Import Twilio-video
@@ -78,7 +78,7 @@ export class MeetingService {
 
   localParticipant: IParticipantMeeting;
 
-  accessToken: string = null;
+  accessToken: string;
 
   constructor(
     private userService: UserService,
@@ -113,18 +113,13 @@ export class MeetingService {
   }
 
   /**
-   * function to remove a specific participant to the array of participant connected (participantConnected$)
+   * function to remove a specific participant from the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to remove
    */
   removeParticipantFromConnectedParticipant(participant: IParticipantMeeting | Participant) {
-    const roomArr: any[] = this.$participantsConnectedDataSource.getValue();
-
-    roomArr.forEach((item, index) => {
-      if (item.identity === participant.identity) {
-        roomArr.splice(index, 1);
-      }
-    });
-    this.$participantsConnectedDataSource.next(roomArr);
+    const roomArr: IParticipantMeeting[] = this.$participantsConnectedDataSource.getValue();
+    const updatedParticipants = roomArr.filter((item:IParticipantMeeting) => item.identity !== participant.identity)
+    this.$participantsConnectedDataSource.next(updatedParticipants);
   }
 
   /**
@@ -133,19 +128,13 @@ export class MeetingService {
    */
   addParticipantToConnectedParticipant(participant: IParticipantMeeting) {
     const currentValue = this.$participantsConnectedDataSource.getValue();
-    currentValue.forEach((item) => {
-      if (item.identity === participant.identity) {
-        // Participant already in room
-        return;
-      }
-    });
+    if(currentValue.some((item) => item.identity === participant.identity)){
+      return;
+    }
     const newCurrentValue = [...currentValue, participant]
     this.$participantsConnectedDataSource.next(newCurrentValue);
   }
 
-  /**
-   *
-   */
   getLocalVideoMicStatus(): Observable<IStatusVideoMic> {
     return this.localVideoMicStatus$;
   }
@@ -187,20 +176,11 @@ export class MeetingService {
    */
   async doCreateLocalPreview() {
 
-    //get local track if here or recreate local track for twilio
-    const localTracksPromise = this.previewTracks
-      ? Promise.resolve(this.previewTracks)
-      : createLocalTracks();
+    if (!this.previewTracks || this.previewTracks.length === 0) {
+      this.previewTracks = await createLocalTracks();
+    }
 
-    localTracksPromise.then(
-      (tracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[]) => {
-        this.previewTracks = tracks;
-        this.$localPreviewTracksDataSource.next(tracks);
-      },
-      () => {
-
-      }
-    );
+    this.$localPreviewTracksDataSource.next(this.previewTracks);
   }
 
 
@@ -209,12 +189,7 @@ export class MeetingService {
    * @param participant - All participants connected in the room
    */
   getTracksOfParticipant(participant: Participant) {
-    return Array.from(participant.tracks).map((
-      track: any
-    ) => {
-      //participant[0] is the key
-      return track[1];
-    });
+    return Array.from(participant.tracks.values())
   }
 
   /**
@@ -222,12 +197,7 @@ export class MeetingService {
    * @param participants - All participants connected in the room
    */
   getParticipantOfParticipantsMapAlreadyInRoom(participants: Map<string, RemoteParticipant>) {
-    return Array.from(participants).map((
-      participant: any
-    ) => {
-      //participant[0] is theprivate key
-      return participant[1];
-    });
+    return Array.from(participants.values())
   }
 
 
@@ -237,35 +207,33 @@ export class MeetingService {
    * Second we connect to the room with the access token
    * @param event
    */
-  doConnectToMeetingService(event) {
-    this.eventService.getTwilioAccessToken(event.id)
-      .then(async (value: ErrorResultResponse) => {
-        if (value.error !== '') {
-          //TODO Make error
-        } else {
-          const audio = await this.getIfAudioIsAvailable();
-          const video = await this.getIfVideoIsAvailable();
-          this.accessToken = value.result;
-          this._connectToTwilioRoom(this.accessToken,
-            {
-              name: event.id, dominantSpeaker: true,
-              audio,
-              video,
-              bandwidthProfile: {
-                video: {
-                  renderDimensions: {
-                    low: {width: 640, height: 480},
-                    standard: {width: 640, height: 480},
-                    high: {width: 640, height: 480},
-                  }
-                },
-              },
-              networkQuality: {local: 1, remote: 1},
-              mode: 'grid',
-              width: 640, height: 480
-            }, event);
-        }
-      })
+  async doConnectToMeetingService(event) {
+    const response = await this.eventService.getTwilioAccessToken(event.id)
+    if (response.error !== '') {
+      throw new Error(response.error);
+    } else {
+      const audio = await this.getIfAudioIsAvailable();
+      const video = await this.getIfVideoIsAvailable();
+      this.accessToken = response.result;
+      this._connectToTwilioRoom(this.accessToken,
+        {
+          name: event.id, dominantSpeaker: true,
+          audio,
+          video,
+          bandwidthProfile: {
+            video: {
+              renderDimensions: {
+                low: {width: 640, height: 480},
+                standard: {width: 640, height: 480},
+                high: {width: 640, height: 480},
+              }
+            },
+          },
+          networkQuality: {local: 1, remote: 1},
+          mode: 'grid',
+          width: 640, height: 480
+        }, event);
+    }
   }
 
 
