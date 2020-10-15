@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MediaService } from '@blockframes/media/+state/media.service';
-import { promotionalElementTypes } from '@blockframes/utils/static-model/staticConsts';
+import { promotionalElementTypes } from '@blockframes/utils/static-model/static-model';
 
 @Pipe({
   name: 'promotionalLinks',

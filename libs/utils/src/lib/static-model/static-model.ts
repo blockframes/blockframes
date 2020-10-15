@@ -1770,7 +1770,7 @@ export const territoriesFR = {
   'aland-islands': 'Åland(les Îles)'
 } as const
 
-const months = {
+export const months = {
   january: 'January',
   february: 'February',
   march: 'March',
