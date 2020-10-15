@@ -34,9 +34,6 @@ import {
   territories, territoriesISOA3, territoriesISOA2, territoriesNUMCODE, territoriesFR
 } from './static-model';
 
-// TYPE FOR CONSTANTS
-// If a type got `& string` it means that it needs to support the usual string operations
-
 export type CartStatus = keyof typeof cartStatus;
 
 export type Certification = keyof typeof certifications;

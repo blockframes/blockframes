@@ -1833,11 +1833,10 @@ export const staticModel = {
   territoriesFR
 };
 
-
-export type Constants = typeof staticModel;
-export type Scope = keyof Constants;
-export type GetKeys<S extends Scope> = keyof Constants[S];
-export type GetLabel<S extends Scope> = Constants[S][GetKeys<S>]
+export type StaticModel = typeof staticModel;
+export type Scope = keyof StaticModel;
+export type GetKeys<S extends Scope> = keyof StaticModel[S];
+export type GetLabel<S extends Scope> = StaticModel[S][GetKeys<S>]
 export type GetCode<S extends Scope> = GetKeys<S> | GetLabel<S>;
 export type GetCodeOrNull<S extends Scope, Code> = Code extends GetCode<S> ? GetKeys<S> : null;
 
