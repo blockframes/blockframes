@@ -1,7 +1,7 @@
-<mat-card class="container">
+<mat-card class="container" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
   <img asset="empty_news.webp" alt="News brand logo">
   <h5>{{ review.journalName }}</h5>
-  <p class="mat-body-2">"{{ review.criticQuote | maxLength: 300 }}"</p>
+  <p class="mat-body-1">"{{ review.criticQuote | maxLength: 130 }}"</p>
   <caption class="mat-caption">{{ review.criticName }}</caption>
 
   <a *ngIf="review.revueLink" mat-button [href]="review.revueLink" target="_blank">
@@ -14,7 +14,7 @@
 
 
 <ng-template #dialogRef>
-  <div class="container">
+  <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
     <img asset="empty_news.webp" alt="News brand logo">
     <h5>{{ review.journalName }}</h5>
     <p class="mat-body-2">"{{ review.criticQuote }}"</p>
