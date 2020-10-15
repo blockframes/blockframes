@@ -81,7 +81,7 @@
                   {{ movie.directors | displayName }}
                 </p>
                 <p class="mat-body-2">
-                  <span>{{ movie.originCountries | translateSlug: 'TERRITORIES'}}, </span>
+                  <span>{{ movie.originCountries | toLabel: 'territories'}}, </span>
                   <span> {{ movie.releaseYear }}</span>
                 </p>
               </div>

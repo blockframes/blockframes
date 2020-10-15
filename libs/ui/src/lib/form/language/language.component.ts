@@ -19,7 +19,7 @@ export class FormLanguageComponent implements OnInit {
 
   ngOnInit() {
     this.filteredLanguages$ = this.form.valueChanges.pipe(
-      startWith('' as Language),
+      startWith(undefined),
       map(language => (language ? this.filter(language) : languages as any))
     );
   }

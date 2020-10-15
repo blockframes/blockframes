@@ -22,8 +22,8 @@
 <!-- Display value if no projected content -->
 <ng-template #value>
   <!-- If there is a type string -->
-  <ng-container *ngIf="(type && !!control.value) else withoutType">
-    <span>{{ control.value | toLabel: type }}</span>
+  <ng-container *ngIf="(scope && !!control.value) else withoutType">
+    <span>{{ control.value | toLabel: scope }}</span>
   </ng-container>
   <!-- if it's not a type string or a static model -->
   <ng-template #withoutType>

@@ -8,7 +8,7 @@ import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
 import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
-import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
+import {  ToLabelModule } from '@blockframes/utils/pipes';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
 // Material
@@ -28,7 +28,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     MapModule,
     RegionChipsAutocompleteModule,
-    TranslateSlugModule,
     ToLabelModule,
     OverlayWidgetModule,
 

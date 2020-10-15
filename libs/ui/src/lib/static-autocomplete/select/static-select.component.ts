@@ -3,9 +3,8 @@ import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef } 
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { staticModels, staticConsts } from '@blockframes/utils/static-model';
+import { Scope, staticConsts } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[scope][control] static-select',
@@ -15,18 +14,18 @@ import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 })
 export class StaticSelectComponent {
 
-  public staticValue: string[] | SlugAndLabel[] = [];
-  public option: string;
-  @Input() set scope(value: string) {
+  public staticValue: Scope[];
+  public option: Scope;
+  @Input() set scope(value: Scope) {
     this.option = value;
-    this.staticValue = staticModels[value]
+    this.staticValue = Object.keys(staticConsts[value]) as Scope[]
   };
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() set withoutValues(toFilterValue: any[]) {
-    this.option = staticModels[this.option].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
+    this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue)) as Scope[];
   }
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;

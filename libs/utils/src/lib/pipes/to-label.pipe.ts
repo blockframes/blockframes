@@ -11,7 +11,7 @@ export class ToLabelPipe implements PipeTransform {
     try {
       return Array.isArray(value) ? value.map(val => staticConsts[scope][val]).join(', ') : staticConsts[scope][value];
     } catch (error) {
-      console.error(`Could not find label for ${value}`)
+      console.error(`Could not find label for key "${value}" in scope "${scope}"`)
       return value;
     }
   }

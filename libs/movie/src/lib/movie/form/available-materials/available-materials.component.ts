@@ -33,7 +33,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Available Material')
-   }
+  }
 
   ngOnInit() {
     this.formIsEmpty ? this.showButtons = true : this.showButtons = false;
@@ -59,7 +59,7 @@ export class MovieFormAvailableMaterialsComponent implements OnInit, OnDestroy {
 
   addLanguage() {
     const spec = createMovieLanguageSpecification({});
-    this.form.languages.addControl(this.languageCtrl.value as Language, new VersionSpecificationForm(spec));
+    this.form.languages.addControl(this.languageCtrl.value, new VersionSpecificationForm(spec));
     this.languageCtrl.reset();
     this.showButtons = true;
   }
