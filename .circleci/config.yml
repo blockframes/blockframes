@@ -30,8 +30,8 @@ references:
     filters:
       branches:
         only:
+          - /hotfix/release/1.9/
           - /release\/.*/
-          - hotfix/release/1.9
 
 commands:
   checkout_project:
