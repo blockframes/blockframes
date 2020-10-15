@@ -138,6 +138,7 @@ export class MeetingService {
   /**
    * function to add a specific participant to the array of participant connected (participantConnected$)
    * @param participant: IParticipantMeeting : Participant to add
+   * @param participantTwilio: Participant : Participant twilio
    */
   addParticipantToConnectedParticipant(participant: IParticipantMeeting, participantTwilio: Participant) {
     const currentValue = this.$participantsConnectedDataSource.getValue();
@@ -153,26 +154,28 @@ export class MeetingService {
     return this.localVideoMicStatus$;
   }
 
-  async getIfAudioIsAvailable() {
-    const userMedia = await navigator.mediaDevices.getUserMedia({audio: true});
-    if(!!userMedia){
-      this.doSetupLocalVideoAndAudio('audio', true);
-      return true;
-    } else {
-      this.doSetupLocalVideoAndAudio('audio', false);
-      return false;
-    }
+  getIfAudioIsAvailable() {
+    return navigator.mediaDevices.getUserMedia({audio: true})
+      .then( () => {
+        this.doSetupLocalVideoAndAudio('audio', true);
+        return true;
+      })
+      .catch( () => {
+        this.doSetupLocalVideoAndAudio('audio', false);
+        return false;
+      })
   }
 
-  async getIfVideoIsAvailable() {
-    const userMedia = await navigator.mediaDevices.getUserMedia({video: true});
-    if(!!userMedia){
-      this.doSetupLocalVideoAndAudio('video', true);
-      return true;
-    } else {
-      this.doSetupLocalVideoAndAudio('video', false);
-      return false;
-    }
+  getIfVideoIsAvailable() {
+    return navigator.mediaDevices.getUserMedia({video: true})
+      .then( () => {
+        this.doSetupLocalVideoAndAudio('video', true);
+        return true;
+      })
+      .catch( () => {
+        this.doSetupLocalVideoAndAudio('video', false);
+        return false;
+      })
   }
 
   /**
@@ -180,11 +183,21 @@ export class MeetingService {
    */
   async doCreateLocalPreview() {
 
-    if (!this.previewTracks || this.previewTracks.length === 0) {
-      this.previewTracks = await createLocalTracks();
-    }
+    //get local track if here or recreate local track for twilio
+    const localTracksPromise = this.previewTracks
+      ? Promise.resolve(this.previewTracks)
+      : createLocalTracks();
 
-    this.$localPreviewTracksDataSource.next(this.previewTracks);
+    localTracksPromise.then(
+      (tracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[]) => {
+        console.log('tracks : ', tracks)
+        this.previewTracks = tracks;
+        this.$localPreviewTracksDataSource.next(tracks);
+      },
+      (err) => {
+        console.log('err : ', err)
+      }
+    );
   }
 
 
@@ -237,6 +250,8 @@ export class MeetingService {
    * @param event - string - All event we come from
    */
   private async _connectToTwilioRoom(accessToken: string, audio: boolean, video: boolean, event: Event) {
+
+    console.log({audio, video})
 
     const connectOptions: ConnectOptions = {
       name: event.id,
@@ -312,6 +327,10 @@ export class MeetingService {
 
     return {
       identity: identity,
+      statusMedia: {
+        audio: false,
+        video: false,
+      },
       festivalData: {
         firstName: remoteUser.firstName,
         lastName: remoteUser.lastName,

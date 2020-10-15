@@ -40,16 +40,21 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
+    console.log('1 ngOnInit')
+
     this.arrayOfParticipantConnected$ = this.meetingService.getConnectedAllParticipants();
+    console.log('2 ngOnInit')
     this.arrayOfRemoteParticipantConnected$ = this.meetingService.getConnectedRemoteParticipants();
-
+    console.log('3 ngOnInit')
     this.user = this.query.user;
-
-    this.isSeller = this.query.userId === this.event.organizedBy.uid;
+    console.log('4 ngOnInit')
+    this.isSeller = this.event.isOwner;
+    console.log('5 ngOnInit')
 
     await this.meetingService.doCreateLocalPreview();
-
+    console.log('6 ngOnInit')
     await this.meetingService.doConnectToMeetingService(this.event);
+    console.log('7 ngOnInit')
   }
 
   getTwilioParticipantDataFromUid = (uid: string) => {
