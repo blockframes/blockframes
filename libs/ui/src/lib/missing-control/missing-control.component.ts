@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, T
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
-import { Scope } from '@blockframes/utils/static-model/staticModels';
+import { Scope } from '@blockframes/utils/static-model/staticConsts';
 
 // RxJs
 import { Subscription } from 'rxjs';

@@ -1,4 +1,4 @@
-import { Languages, Territories } from "@blockframes/utils/static-model";
+import { Language, Territory } from "@blockframes/utils/static-model";
 import { Cast, Crew, Producer, Credit } from "@blockframes/utils/common-interfaces";
 
 export interface OldPromotionalElement {
@@ -6,8 +6,8 @@ export interface OldPromotionalElement {
   size?: ResourceSizes,
   ratio?: ResourceRatios,
   media: OldImgRef,
-  language?: Languages,
-  country?: Territories,
+  language?: Language,
+  country?: Territory,
 }
 
 export interface OldImgRef {
@@ -59,7 +59,7 @@ interface Stakeholder {
   lastName?: string,
   avatar?: OldImgRef,
   logo?: OldImgRef;
-  countries?: Territories[],
+  countries?: Territory[],
 }
 
 export interface OldMovieImgRefDocument {
@@ -130,8 +130,8 @@ export interface OldNewPromotionalElement {
   size?: ResourceSizes,
   ratio?: ResourceRatios,
   media: OldHostedMedia,
-  language?: Languages,
-  country?: Territories,
+  language?: Language,
+  country?: Territory,
 }
 
 export function createOldNewPromotionalElement(

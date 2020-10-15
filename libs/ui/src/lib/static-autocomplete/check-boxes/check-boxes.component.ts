@@ -32,7 +32,7 @@ export class StaticCheckBoxesComponent implements OnInit {
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
 
-  public items: unknown;
+  public items: any;
 
   ngOnInit() {
     this.items = staticConsts[this.scope];
