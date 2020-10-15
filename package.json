@@ -162,6 +162,7 @@
     "angular-prerender": "^5.4.0",
     "babel-loader": "8.0.6",
     "bundlesize": "^0.18.0",
+    "camelcase": "^6.1.0",
     "codelyzer": "^6.0.0",
     "concurrently": "^5.0.0",
     "cross-env": "^7.0.2",

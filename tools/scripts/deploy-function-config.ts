@@ -7,6 +7,7 @@ import { loadSecretsFile, absSecretPath, absTemplatePath } from './lib';
 import { warnMissingVars } from '@blockframes/firebase-utils';
 import { existsSync } from 'fs';
 import { execSync } from 'child_process'
+import camelcase from 'camelcase'
 
 const args = process.argv.slice(2);
 const [arg, ...flags] = args;
@@ -36,14 +37,15 @@ const functionsConfigMap: [string, string][] = [
  * But need to figure out how to indicate nested objects (more underscores?)
  */
 function getKeyValFormat(env?: string): string[] {
+  const formatEnvKey = (key: string) => `${ env ? camelcase(env) : ''}_${key}`
   /**
    * This nested function will check to see if a key exists in process.env when prefixed
    * with a particular env name & default to base key if not set
    * @param key environment variable keyname
    */
   function getKeyName(key: string) {
-    if (env && process.env.hasOwnProperty(`${env}_${key}`) ) {
-      return `${env}_${key}`;
+    if (env && process.env.hasOwnProperty(formatEnvKey(key)) ) {
+      return formatEnvKey(key);
     }
     return key;
   }
