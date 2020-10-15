@@ -7,7 +7,7 @@
       <section id="release">
 
         <bf-form-list [form]="form.originalRelease" buttonText="Add a Release">
-          <ng-template itemRef let-release>{{ release.country | translateSlug: 'TERRITORIES' }} -
+          <ng-template itemRef let-release>{{ release.country | toLabel: 'territories' }} -
             {{ release.media | toLabel: 'medias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
@@ -15,7 +15,8 @@
               <div fxLayout="row" fxLayoutGap="24px">
                 <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
 
-                <static-select test-id="release-media" type="constant" [control]="releaseForm.get('media')" scope="medias" fxFlex
+                <static-select test-id="release-media" type="constant" [control]="releaseForm.get('media')"
+                  scope="medias" fxFlex
                   [withoutValues]="['payTv', 'freeTv', 'payPerView', 'est', 'nVod','aVod', 'fVod', 'sVod', 'planes', 'boats']">
                   <mat-label>Release Media</mat-label>
                 </static-select>
@@ -54,7 +55,7 @@
         <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
           <ng-template itemRef let-boxOffice>
             <span>
-              {{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
+              {{ boxOffice.territory | toLabel: 'territories' }} -
               <ng-container *ngIf="boxOffice.unit !== 'admissions' else admissions">
                 <mat-icon [svgIcon]="boxOffice.unit | toLabel: 'unitBox'" class="currency-icon"></mat-icon>
                 {{ boxOffice.value }}
@@ -108,7 +109,7 @@
       <h3>Rating</h3>
       <section id="rating">
         <bf-form-list [form]="form.rating" buttonText="Add a Rating">
-          <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | translateSlug: 'TERRITORIES'}}
+          <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | toLabel: 'territories'}}
           </ng-template>
           <ng-template formView let-ratingForm>
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">

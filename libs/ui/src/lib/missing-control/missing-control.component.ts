@@ -19,7 +19,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
 
   @Input() control: AbstractControl;
   @Input() scope: Scope;
-  @Input() type: string;
+  @Input() type: Scope;
   @Input() link: string | string[];
   @Input() fragment: string;
   @Input() isLast = true;
