@@ -52,7 +52,7 @@ commands:
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
       - run: touch .env # dotenv will crash without this
       - run: npm install
-      - run: rm -f node_modules/@angular/compiler-cli/ngcc/ngcc_lock_file
+      - run: rm -f node_modules/@angular/compiler-cli/ngcc/__ngcc_lock_file__
       - save_cache:
           paths:
             - node_modules
