@@ -160,7 +160,11 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
   setAllValue(movie: Partial<Movie> = {}) {
     const controls = createMovieControls(movie);
     for (const key in controls) {
-      this.setControl(key as any, controls[key]);
+      if (key in this.controls) {
+        this.controls[key].patchValue(controls[key].value)
+      } else {
+        this.setControl(key as any, controls[key]);
+      }
     }
   }
 
