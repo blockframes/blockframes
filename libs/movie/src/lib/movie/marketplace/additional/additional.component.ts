@@ -16,7 +16,7 @@ export class AdditionalComponent implements OnInit {
     finished: ['finished', 'released']
   };
   public keys = {
-    additional: ['estimatedBudget', 'originalRelease', 'boxOffice', 'rating', 'certifications'],
+    additional: ['estimatedBudget', 'certifications', 'boxOffice', 'rating'],
     formats: ['format', 'formatQuality', 'color', 'soundFormat']
   };
 

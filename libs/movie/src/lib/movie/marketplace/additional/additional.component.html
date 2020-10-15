@@ -7,7 +7,8 @@
     <h2>Release</h2>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | translateSlug : 'TERRITORIES'}}</h5>
-      <p>{{ release.media }} {{ release.date | date: 'shortDate' }}</p>
+      <!-- ! Switch to ToLabelPipe when we merge this into develop ! -->
+      <p>{{ release.media | translateSlug: 'MEDIAS'}} {{ release.date | date: 'shortDate' }}</p>
     </article>
 
     <mat-divider></mat-divider>
@@ -86,7 +87,13 @@
     <h2>Available Versions</h2>
     <article>
       <h5>Original version</h5>
-      <p>{{ movie.isOriginalVersionAvailable ? 'AUTHORIZED' : 'UNAUTHORIZED' }}</p>
+      <p>
+        <ng-container *ngFor="let language of movie.originalLanguages; let isLast = last">
+          <!-- ! Switch to ToLabelPipe when we merge this into develop ! -->
+          {{ language | translateSlug: 'LANGUAGES' }}{{ isLast ? ' : ' : ', '}}
+        </ng-container>
+        {{ movie.isOriginalVersionAvailable ? 'Available' : 'Unavailable' }}
+      </p>
     </article>
     <article *ngIf="movie | hasKeys: 'languages'">
       <h5>Versions</h5>
