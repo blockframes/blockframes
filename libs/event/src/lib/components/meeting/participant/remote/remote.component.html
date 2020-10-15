@@ -4,7 +4,9 @@
   </ng-container>
   <section [hidden]="!participant.statusMedia.video" [id]="'container-video-' + participant.identity" fxFlex>
   </section>
-  <span class="mat-caption">
-      {{participant.festivalData | displayName}}
+  <article>
+    <span class="mat-caption">
+    {{participant.festivalData | displayName}}
     </span>
+  </article>
 </section>

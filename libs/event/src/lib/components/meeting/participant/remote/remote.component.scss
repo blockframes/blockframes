@@ -10,7 +10,7 @@ section {
     }
   }
 
-  span {
+  article {
     position: absolute;
     bottom: 8px;
     left: 8px;
@@ -18,6 +18,5 @@ section {
     background: var(--background-disabled-button);
     border-radius: 5px;
     padding: 8px;
-    font-size: small;
   }
 }
