@@ -29,14 +29,15 @@ import {
 })
 export class MeetingService {
 
-  // BehaviorSubject of all Participant connected to room twilio
-  // Type of participant : IParticipantMeeting
+  /**
+   * BehaviorSubject of all Participant connected to room twilio
+   * Type of participant : IParticipantMeeting
+   * @private
+   */
   private connectedParticipants$: BehaviorSubject<IParticipantMeeting[]> = new BehaviorSubject([]);
 
-  // Twilio data (Participant)
   private twilioParticipants: Map<String, Participant> = new Map<String, Participant>();
 
-  // Active room twilio
   activeRoom: Room;
 
   previewTracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[];
@@ -192,7 +193,6 @@ export class MeetingService {
    * @param video: boolean
    */
   async roomJoined(room: Room, event: Event, audio: boolean, video: boolean) {
-    //save activeRoom
     this.activeRoom = room;
 
     if (!!room.participants) {
@@ -255,20 +255,16 @@ export class MeetingService {
    */
   setUpRoomEvent(room: Room, event: Event) {
 
-    // When a Participant joins the Room, log the event.
     room.on(meetingEventEnum.ParticipantConnected,
       async (participant: Participant) => {
         const meetingParticipant = await this.createIParticipantMeeting(participant.identity, event);
         this.addParticipant(meetingParticipant, participant);
       });
 
-    // When a Participant leaves the Room, detach its Tracks.
     room.on(meetingEventEnum.ParticipantDisconnected, (participant: Participant) => {
       this.removeParticipant(participant);
     });
 
-    // Once the LocalParticipant leaves the room, detach the Tracks
-    // of all Participants, including that of the LocalParticipant.
     room.on(meetingEventEnum.Disconnected, () => {
       this.disconnect();
     });

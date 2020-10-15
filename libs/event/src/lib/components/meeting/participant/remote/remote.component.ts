@@ -14,7 +14,7 @@ import {
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
-// Twilio Video SDK
+// Twilio
 import {Participant, RemoteTrackPublication} from 'twilio-video';
 
 @Component({

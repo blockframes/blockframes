@@ -16,13 +16,11 @@ import {Participant} from "twilio-video";
 })
 export class VideoComponent {
 
-  // Input
   @Input() remoteParticipants: IParticipantMeeting[];
   @Input() event: Event;
   @Input() getTwilioParticipant: (uid: string) => Participant;
   @Input() isSeller: boolean;
 
-  // Outup
   @Output() eventSetupVideoAudio = new EventEmitter;
 
   /**
