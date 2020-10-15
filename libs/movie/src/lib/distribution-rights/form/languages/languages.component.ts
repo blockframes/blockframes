@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
 import { FormConstantValue } from '@blockframes/utils/form';
-import { Languages } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] distribution-form-languages',
@@ -28,7 +28,7 @@ export class DistributionRightLanguagesComponent implements OnInit {
     }
   }
 
-  public removeLanguage(language: Languages) {
+  public removeLanguage(language: Language) {
     if (language === 'all') {
       this.stateOfForm(false);
     }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ContractListComponent } from './contract-list.component';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
@@ -23,7 +23,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     CommonModule,
     ReactiveFormsModule,
     OverlayWidgetModule,
-    TranslateSlugModule,
+    ToLabelModule,
     FlexLayoutModule,
     RouterModule,
 
@@ -39,4 +39,4 @@ import { MatPaginatorModule } from '@angular/material/paginator';
   ],
   exports: [ContractListComponent]
 })
-export class ContractListModule {}
+export class ContractListModule { }

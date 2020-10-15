@@ -1,7 +1,7 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<ng-container *ngIf="(movie$ | async) as movie;" test-id="content" >
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
 
   <mat-card *ngIf="hasBudget(movie)">
     <mat-card-header>
@@ -24,7 +24,7 @@
               <ng-container *ngIf="boxOffice.unit === 'admissions'">
                 Admissions
               </ng-container>
-              ({{ boxOffice.territory  | translateSlug: 'TERRITORIES'}})
+              ({{ boxOffice.territory  | toLabel: 'territories'}})
             </span>
           </li>
         </ng-container>
@@ -34,7 +34,7 @@
         </li>
         <li *ngIf="movie.rating.length > 0"><strong>Rating </strong>
           <span *ngFor="let rating of movie.rating; let isLast = last">
-            {{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}
+            {{ rating.country | toLabel: 'territories' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}
           </span>
         </li>
         <li *ngIf="movie.review.length > 0"><strong>Film Review </strong>

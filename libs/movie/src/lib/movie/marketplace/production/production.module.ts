@@ -6,7 +6,7 @@ import { ProductionComponent } from './production.component';
 import { ShootingModule } from '../../pipes/shooting.pipe';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
-import { HasKeysModule, DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { HasKeysModule, DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -18,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatLayoutModule,
     ShootingModule,
     HasKeysModule,
-    TranslateSlugModule,
+    ToLabelModule,
     DisplayNameModule,
     MatDividerModule,
     RouterModule.forChild([{ path: '', component: ProductionComponent }])

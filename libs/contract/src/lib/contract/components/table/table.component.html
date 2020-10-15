@@ -8,10 +8,10 @@
   <!-- territories -->
   <ng-template colRef="territories" let-territories>
     <ng-container *ngIf="territories.length < 4 else shortenTerritories">
-      {{ territories | translateSlug: 'TERRITORIES'}}
+      {{ territories | toLabel: 'territories'}}
     </ng-container>
-    <ng-template #shortenTerritories >
-      {{ territories.splice(0, 3) | translateSlug: 'TERRITORIES'}}
+    <ng-template #shortenTerritories>
+      {{ territories.splice(0, 3) | toLabel: 'territories'}}
       <b [widgetTooltip]="territories" class="tooltip">...</b>
     </ng-template>
   </ng-template>

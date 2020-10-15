@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { getValueByKey } from '@blockframes/utils/static-model/staticConsts';
+import { genres as staticGenres, languages } from '@blockframes/utils/static-model/staticConsts';
 
 
 @Pipe({
@@ -12,11 +12,11 @@ export class MovieFeaturePipe implements PipeTransform {
     const { contentType, runningTime, genres, originalLanguages, release } = value;
 
     let displayedGenres = '';
-    if (genres.length > 0) displayedGenres += getValueByKey('genres', genres[0]);
+    if (genres.length > 0) displayedGenres += staticGenres[genres[0]];
     if (genres.length > 1) displayedGenres += ', ...';
 
     let displayedLanguages = '';
-    if (originalLanguages.length > 0) displayedLanguages += getValueByKey('languages', originalLanguages[0]);
+    if (originalLanguages.length > 0) displayedLanguages += languages[originalLanguages[0]];
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
     const isTBC = (runningTime.time && release.status !== 'TBC') ? `${runningTime.time}'` : 'TBC';

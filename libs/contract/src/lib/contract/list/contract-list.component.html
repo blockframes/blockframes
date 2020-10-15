@@ -34,13 +34,13 @@
       <td mat-cell *matCellDef="let contract">
         <ng-container *ngIf="getContractTerritories(contract).length < 4">
           <span *ngFor="let territory of getContractTerritories(contract); let i=index; let last=last" class="mat-body-2">
-            {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ',' }}
+            {{ territory | toLabel: 'territories'}}{{ last? '' : ',' }}
           </span>
         </ng-container>
         <ng-container *ngIf="getContractTerritories(contract).length >= 4;">
           <span *ngFor="let territory of getContractTerritories(contract);let i=index; let last=last" class="mat-body-2">
             <ng-container *ngIf="i<4">
-              {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ','}}
+              {{ territory | toLabel: 'territories'}}{{ last? '' : ','}}
             </ng-container>
             </span>
             <p [widgetTooltip]="territories" class="tooltip">...</p>
@@ -49,7 +49,7 @@
           <widget-card>
             <span *ngFor="let territory of getContractTerritories(contract);let i=index; let last=last" class="mat-body-2">
               <ng-container *ngIf="i>4">
-                {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ','}}
+                {{ territory | toLabel: 'territories'}}{{ last? '' : ','}}
               </ng-container>
             </span>
           </widget-card>

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Components
 import { ChipsAutocompleteComponent } from './chips-autocomplete.component';
@@ -18,7 +18,6 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    TranslateSlugModule,
     ToLabelModule,
     // Material
     MatFormFieldModule,

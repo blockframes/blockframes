@@ -1,6 +1,6 @@
 <!-- Currency -->
 <h5>CONTRACT CURRENCY</h5>
-<static-select scope="movieCurrencies" type="constant" [control]="currencyCtrl" [withoutValues]="['']">
+<static-select scope="movieCurrencies" [control]="currencyCtrl" [withoutValues]="['']">
   <mat-label>Currency</mat-label>
   <ng-template let-currency>
     <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
@@ -15,7 +15,8 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price for the entire package or one for each title.
   </span>
-  <algolia-autocomplete [index]="algoliaMovieIndex" keyToDisplay="title.international" (selectionChange)="addMovie($event)">
+  <algolia-autocomplete [index]="algoliaMovieIndex" keyToDisplay="title.international"
+    (selectionChange)="addMovie($event)">
     <ng-template let-result>
       <span>{{ result ? result.title.international : '--' }}</span>
     </ng-template>
@@ -66,7 +67,7 @@
   <ng-template #currency>
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Package Price</mat-label>
-      <input test-id="price" matInput [formControl]="totalAmount" type="number"  min="0">
+      <input test-id="price" matInput [formControl]="totalAmount" type="number" min="0">
       <mat-hint *ngIf="totalPrice$ | async">
         Your Package Price must be equal to the sum of each Title Price.
       </mat-hint>
