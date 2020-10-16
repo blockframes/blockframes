@@ -1,7 +1,6 @@
 <event-meeting-video
   [remoteParticipants]="remoteParticipants$ | async"
   [event]="event"
-  [isSeller]="isSeller"
   [getTwilioParticipant]="getTwilioParticipant"
   (eventSetupVideoAudio)="setupVideoAudio($event)"
 ></event-meeting-video>

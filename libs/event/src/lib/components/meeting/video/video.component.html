@@ -1,4 +1,4 @@
-<ng-container *ngIf="isSeller && remoteParticipants">
+<ng-container *ngIf="event.isOwner && remoteParticipants">
   <ng-container *ngIf="isRoomEmpty(remoteParticipants)">
     <section>
       <span>

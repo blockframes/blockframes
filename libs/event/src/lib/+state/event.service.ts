@@ -10,6 +10,7 @@ import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import {ErrorResultResponse} from "@blockframes/utils/utils";
 
 const eventQuery = (id: string) => ({
   path: `events/${id}`,
@@ -144,16 +145,11 @@ export class EventService extends CollectionService<EventState> {
   }
 
 
-
-  ///////////////////
-  // Partie Twilio //
-  ///////////////////
-
   /**
    * Get the token from firebase cloud function the connect user to twilio room
    * @param eventId
    */
-  public async getTwilioAccessToken(eventId: string){
+  public async getTwilioAccessToken(eventId: string): Promise<ErrorResultResponse> {
     const callDeploy = this.functions.httpsCallable('getAccessToken');
     return await callDeploy({eventId: eventId}).toPromise();
   }
