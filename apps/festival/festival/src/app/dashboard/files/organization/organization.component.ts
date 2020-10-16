@@ -46,12 +46,12 @@ export class OrganizationResourcesComponent {
     await this.organizationService.update(org.id, { documents: { notes: notes } });
   }
 
-  public openDialog(note?: Partial<HostedMediaWithMetadata>) {
+  public openDialog(item?: Partial<HostedMediaWithMetadata>) {
     const org = this.query.getActive();
     const documentsForm = new OrganizationMediasForm(org.documents);
     let noteForm: HostedMediaWithMetadataForm;
-    if (note) {
-      noteForm = documentsForm.get('notes').controls.find(ctrl => ctrl.value.title === note.title);
+    if (item) {
+      noteForm = documentsForm.get('notes').controls.find(ctrl => ctrl.value.title === item.title);
     } else {
       noteForm = documentsForm.get('notes').add();
     }
