@@ -1,8 +1,7 @@
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, Input, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth/+state";
-import { EventQuery } from "@blockframes/event/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { ImageParameters } from "@blockframes/media/directives/image-reference/imgix-helpers";
@@ -18,6 +17,9 @@ declare const jwplayer: any;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideoViewerComponent implements AfterViewInit {
+
+  @ViewChild('container') playerContainer: ElementRef<HTMLDivElement>;
+  fullScreen = false;
 
   private player: any;
   private signalPlayerReady: () => void;
@@ -52,7 +54,6 @@ export class VideoViewerComponent implements AfterViewInit {
   ) { }
 
   async initPlayer() {
-
 
     const privateVideo = this.functions.httpsCallable('privateVideo');
     const { error, result } = await privateVideo({ eventId: this.eventId, ref: this.ref }).toPromise();
@@ -103,4 +104,21 @@ export class VideoViewerComponent implements AfterViewInit {
     this.control.isPlaying ? this.player.play() : this.player.pause();
   }
 
+  /** Toggle the full screen mode depending on the current full screen state */
+  toggleFullScreen() {
+
+    if (!this.fullScreen) {
+      this.playerContainer.nativeElement.requestFullscreen();
+    } else {
+      this.document.exitFullscreen();
+    }
+  }
+
+  /** Keep track of wether the player is in full screen or not.
+   * We cannot trust the `toggleFullScreen()` function for that because
+   * full screen can be exited without our button (Escape key, etc...)
+   */
+  trackFullScreenMode() {
+    this.fullScreen = !this.fullScreen;
+  }
 }

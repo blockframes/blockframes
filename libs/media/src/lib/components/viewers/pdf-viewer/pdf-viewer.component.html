@@ -1,10 +1,16 @@
+<div fxLayout="column" (fullscreenchange)="trackFullScreenMode()" #container>
+  <ng-container *ngIf="!(loading$ | async); else loading">
 
-<ng-container *ngIf="!(loading$ | async); else loading">
+    <!-- This is not a regular image, don't use the ImageDirective on it -->
+    <img [src]="pdfUrl$ | async" />
 
-  <!-- This is not a regular image, don't use the ImageDirective on it -->
-  <img [src]="pdfUrl$ | async" />
-  
-</ng-container>
-<ng-template #loading>
-  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-</ng-template>
+    <button fxFlexAlign="end" mat-icon-button (click)="toggleFullScreen()" [class]="fullScreen ? 'fullscreen' : ''" >
+      <mat-icon *ngIf="!fullScreen" svgIcon="fullscreen"></mat-icon>
+      <mat-icon *ngIf="fullScreen" svgIcon="fullscreen_exit"></mat-icon>
+    </button>
+
+  </ng-container>
+  <ng-template #loading>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </ng-template>
+</div>
