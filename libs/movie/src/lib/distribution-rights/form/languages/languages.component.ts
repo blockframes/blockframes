@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieVersionInfoForm } from '@blockframes/movie/form/movie.form';
-import { FormConstantValue } from '@blockframes/utils/form';
+import { FormStaticValue } from '@blockframes/utils/form';
 import { Language } from '@blockframes/utils/static-model';
 
 @Component({
@@ -13,7 +13,7 @@ import { Language } from '@blockframes/utils/static-model';
 export class DistributionRightLanguagesComponent implements OnInit {
   @Input() form: MovieVersionInfoForm;
 
-  public languageCtrl = new FormConstantValue(null, 'languages');
+  public languageCtrl = new FormStaticValue(null, 'languages');
 
   public toggleCtrl = new FormControl();
 

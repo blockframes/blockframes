@@ -1,7 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
-import { getISO3166TerritoryFromSlug, languages } from '@blockframes/utils/static-model/staticConsts';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { productionStatus, contentType, getISO3166TerritoryFromSlug, languages } from '@blockframes/utils/static-model';
 
 interface TitleFeature {
   view: string,
@@ -14,9 +13,9 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const convertedRunTime = typeof runningTime.time === "string" ? runningTime.time : `${runningTime.time}min`;
   const convertedOriginalLanguages = originalLanguages.map(language => languages[language]);
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
-  const statusLabel = staticConsts.productionStatus[movie.productionStatus];
+  const statusLabel = productionStatus[movie.productionStatus];
   const features = [
-    staticConsts.contentType[movie.contentType],
+    contentType[movie.contentType],
     convertedRunTime,
     convertedGenres,
     convertedOriginalLanguages,

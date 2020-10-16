@@ -2,8 +2,8 @@
 import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Blockframes
-import { Scope, staticConsts } from '@blockframes/utils/static-model';
-import { FormConstantValue } from '@blockframes/utils/form';
+import { Scope, staticModel } from '@blockframes/utils/static-model';
+import { FormStaticValueArray } from '@blockframes/utils/form';
 
 // RxJs
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ export class InputAutocompleteComponent implements OnInit {
   public state: any[];
 
   @Input() scope: Scope;
-  @Input() control: FormConstantValue<Scope>;
+  @Input() control: FormStaticValueArray<Scope>;
 
   public filteredStates: Observable<Scope[]>;
 
@@ -34,11 +34,11 @@ export class InputAutocompleteComponent implements OnInit {
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
-    this.state = Object.keys(staticConsts[this.scope]);
+    this.state = Object.keys(staticModel[this.scope]);
     this.filteredStates = this.control.valueChanges
       .pipe(
         startWith(''),
-        map(state => state ? this.filterStates(state) : this.state),
+        map((state: string) => state ? this.filterStates(state) : this.state),
       );
     this.displayFn = (name: string) => {
       const res = this.state.find(entity => entity === name)

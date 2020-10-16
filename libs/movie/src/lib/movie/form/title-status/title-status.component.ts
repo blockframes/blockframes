@@ -9,7 +9,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Intercom } from 'ng-intercom';
 
 // Blockframes
-import { staticConsts } from '@blockframes/utils/static-model'
+import { productionStatus } from '@blockframes/utils/static-model'
 import { getAppName } from '@blockframes/utils/apps';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
@@ -63,7 +63,7 @@ export class TitleStatusComponent implements OnInit {
     this.appInformation.disabledStatus = this.routerQuery.getData()?.disabled || [];
     this.status = this.status.map(s => ({ ...s, disabled: this.appInformation.disabledStatus.includes(s.value) }))
     if (this.appInformation.disabledStatus.length) {
-      const value = Object.keys(staticConsts.productionStatus).filter(status => status === 'released')
+      const value = Object.keys(productionStatus).filter(status => status === 'released')
       this.form.productionStatus.setValue(value[0])
     }
     this.appInformation.appName = getAppName(this.routerQuery.getData().app)

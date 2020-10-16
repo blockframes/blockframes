@@ -2,7 +2,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AvailsSearchForm } from '../../form/search.form';
 import { MediaValue } from '@blockframes/utils/static-model';
-import { medias } from '@blockframes/utils/static-model/staticConsts';
+import { medias } from '@blockframes/utils/static-model';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { NativeDateModule } from '@angular/material/core'
 
