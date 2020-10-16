@@ -207,10 +207,7 @@ service cloud.firestore {
         allow delete: if isOrgAdmin(userOrgId());
       }
 
-      match /campaigns/{movieId} {
-        allow read: if isSignedIn();
-        allow write: if isOrgMember(orgId);
-      }
+
     }
 
     /// FUNCTIONS ///
@@ -361,6 +358,15 @@ service cloud.firestore {
           || ( existingData().ownerId == userOrgId() && isOrgMember(userOrgId()) ) // Or Org of current user is the event owner and current user is isOrgMember
         );
 		}
+
+    ////////////////////////////////
+    // CAMPAIGN RULES             //
+    ////////////////////////////////
+
+    match /campaigns/{movieId} {
+      allow read: if isSignedIn();
+      allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId);
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////////

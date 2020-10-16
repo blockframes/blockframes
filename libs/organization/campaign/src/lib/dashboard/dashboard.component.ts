@@ -24,9 +24,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const orgId = this.orgQuery.getActiveId();
     this.sub = this.movieId$.pipe(
-      switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
+      switchMap((id: string) => this.service.valueChanges(id))
     ).subscribe(campaign => this.form.setAllValue(campaign));
   }
 

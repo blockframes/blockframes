@@ -21,7 +21,7 @@
           </div>
           <bf-carousel flex>
             <ng-container *ngFor="let movie of section.movies$ | async">
-              <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
+              <movie-card [movie]="movie" size="banner" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
                 carouselItem>
               </movie-card>
             </ng-container>

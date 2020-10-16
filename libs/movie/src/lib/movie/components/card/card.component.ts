@@ -17,7 +17,7 @@ export class CardComponent {
 
   @Input() size: 'banner' | 'poster' | 'avatar';
   @Input() movie: Movie;
-  @Input() link = "..";
+  @Input() link: string | string[] = "..";
 
   constructor(private breakpointsService: BreakpointsService) {}
 
