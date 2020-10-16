@@ -8,7 +8,7 @@ import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { TerritoryValue, Territory } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
 import { areTermsValid } from '@blockframes/distribution-rights/form/terms/terms.form';
-import { territories } from '@blockframes/utils/static-model/staticConsts';
+import { territories } from '@blockframes/utils/static-model';
 import { getIsoA3bySlug, getSlugByIsoA3 } from '@blockframes/utils/static-model/staticModels';
 
 @Component({

@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormList, FormEntity } from '@blockframes/utils/form';
-import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
+import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { Subscription, combineLatest } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { LanguageVersionControl } from '@blockframes/movie/form/search.form';

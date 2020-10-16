@@ -20,7 +20,7 @@ import { Observable, Subscription } from 'rxjs';
 import { startWith, map, distinctUntilChanged } from 'rxjs/operators';
 
 // Blockframes
-import { staticConsts, Scope } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { FormList } from '@blockframes/utils/form';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
@@ -71,8 +71,8 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = this.withoutValues.length
-      ? Object.keys(staticConsts[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
-      : Object.keys(staticConsts[this.scope]);
+      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
+      : Object.keys(staticModel[this.scope]);
 
     this.filteredItems$ = this.ctrl.valueChanges.pipe(
       startWith(''),

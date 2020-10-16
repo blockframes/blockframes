@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { premiereType } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormReviewscComponent {
   form = this.shell.getForm('movie');
 
-  public premieres = Object.keys(staticConsts['premiereType']);
+  public premieres = Object.keys(premiereType);
 
   constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
     this.dynTitle.setPageTitle('Selection & Reviews')

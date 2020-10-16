@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { genres as staticGenres, languages } from '@blockframes/utils/static-model/staticConsts';
+import { genres as staticGenres, languages } from '@blockframes/utils/static-model/static-model';
 
 
 @Pipe({

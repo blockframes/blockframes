@@ -1,9 +1,9 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { Scope, staticConsts } from '@blockframes/utils/static-model';
+import { Scope, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
@@ -12,20 +12,20 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   styleUrls: ['./static-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticSelectComponent {
+export class StaticSelectComponent implements OnInit {
 
   public staticValue: any[];
-  public option: Scope;
-  @Input() set scope(value: Scope) {
-    this.option = value;
-    this.staticValue = Object.keys(staticConsts[value])
-  };
+  @Input() scope: Scope
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
-  @Input() set withoutValues(toFilterValue: any[]) {
-    this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue))
+  @Input() withoutValues: string[] = []
+
+  ngOnInit() {
+    this.staticValue = this.withoutValues.length
+      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
+      : Object.keys(staticModel[this.scope]);
   }
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;

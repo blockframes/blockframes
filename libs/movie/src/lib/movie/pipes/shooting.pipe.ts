@@ -1,7 +1,7 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { formatDate } from '@angular/common';
 import { MovieShooting } from '../+state/movie.firestore';
-import { territories } from '@blockframes/utils/static-model/staticConsts';
+import { territories } from '@blockframes/utils/static-model/static-model';
 import { TerritoryValue } from '@blockframes/utils/static-model';
 
 @Pipe({ name: 'shootingDates' })
