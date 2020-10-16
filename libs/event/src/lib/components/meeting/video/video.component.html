@@ -1,22 +1,20 @@
-<ng-container *ngIf="isSeller">
-  <ng-container *ngIf="remoteParticipants">
-    <ng-container *ngIf="isRoomEmpty(remoteParticipants)">
-      <section>
-        <span>
-          Waiting for the participants
-        </span>
-      </section>
-    </ng-container>
-    <mat-grid-list [cols]="getColumns(remoteParticipants)" rowHeight="fit" [gutterSize]="'8px'">
-      <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
-        <mat-grid-tile>
-          <event-meeting-remote-participant [participant]="participant"
-                                            [twilioData]="doGetTwilioParticipant(participant)"
-                                            (eventSetupVideoAudio)="setupVideoAudio($event)"></event-meeting-remote-participant>
-        </mat-grid-tile>
-      </ng-container>
-    </mat-grid-list>
+<ng-container *ngIf="isSeller && remoteParticipants">
+  <ng-container *ngIf="isRoomEmpty(remoteParticipants)">
+    <section>
+      <span>
+        Waiting for the participants
+      </span>
+    </section>
   </ng-container>
+  <mat-grid-list [cols]="getColumns(remoteParticipants)" rowHeight="fit" [gutterSize]="'8px'">
+    <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
+      <mat-grid-tile>
+        <event-meeting-remote-participant [participant]="participant"
+                                          [twilioData]="doGetTwilioParticipant(participant)"
+                                          (eventSetupVideoAudio)="setupVideoAudio($event)"></event-meeting-remote-participant>
+      </mat-grid-tile>
+    </ng-container>
+  </mat-grid-list>
 </ng-container>
 
 

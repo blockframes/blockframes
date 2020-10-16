@@ -77,8 +77,8 @@ export class MeetingService {
   removeParticipant(participant: IParticipantMeeting | Participant) {
     const roomArr: IParticipantMeeting[] = this.connectedParticipants$.getValue();
     const updatedParticipants = roomArr.filter((item: IParticipantMeeting) => item.identity !== participant.identity)
-    this.connectedParticipants$.next(updatedParticipants);
     this.twilioParticipants.delete(participant.identity);
+    this.connectedParticipants$.next(updatedParticipants);
   }
 
   /**
@@ -91,9 +91,9 @@ export class MeetingService {
     if (currentValue.some((item) => item.identity === participant.identity)) {
       return;
     }
-    const newCurrentValue = [...currentValue, participant]
-    this.connectedParticipants$.next(newCurrentValue);
+    const newCurrentValue = [...currentValue, participant];
     this.twilioParticipants.set(participant.identity, participantTwilio);
+    this.connectedParticipants$.next(newCurrentValue);
   }
 
   isAudioAvailable() {
@@ -121,13 +121,9 @@ export class MeetingService {
    * get local track if here or recreate local track for twilio
    */
   async createPreview(audio, video) {
-    let audioTrack, videoTrack;
-    if (!!audio) {
-      audioTrack = createLocalAudioTrack();
-    }
-    if (!!video) {
-      videoTrack = createLocalVideoTrack();
-    }
+    const audioTrack = (!!audio) ? createLocalAudioTrack() : null;
+    const videoTrack = (!!video) ? createLocalVideoTrack() : null;
+
     const tracks = await Promise.all([audioTrack, videoTrack]);
     this.previewTracks = tracks.filter(value => !!value);
   }
@@ -277,9 +273,9 @@ export class MeetingService {
    * @param boolToChange: boolean
    */
   setupVideoAudio(identity: string, kind: string, boolToChange: boolean) {
-    const participant: IParticipantMeeting[] = this.connectedParticipants$.getValue();
-    const updatedParticipant = participant.find(value => value.identity === identity);
-    const otherParticipant = participant.filter(value => value.identity !== identity);
+    const participants: IParticipantMeeting[] = this.connectedParticipants$.getValue();
+    const updatedParticipant = participants.find(value => value.identity === identity);
+    const otherParticipant = participants.filter(value => value.identity !== identity);
 
     if (kind === 'video') {
       updatedParticipant.statusMedia.video = boolToChange;
