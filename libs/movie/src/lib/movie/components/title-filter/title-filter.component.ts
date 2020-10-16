@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
   OnInit
 } from '@angular/core';
-import { AbstractControl, FormArray } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
