@@ -11,6 +11,7 @@ import { FormList } from '@blockframes/utils/form';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: '[form][scope] static-check-boxes',
@@ -40,11 +41,9 @@ export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.items = staticModel[this.scope];
-    this.sub = this.form.valueChanges.subscribe(value => {
-      if (!value.length) {
-        this.checkboxes.forEach(box => box.checked = false)
-      }
-    })
+    this.sub = this.form.valueChanges.pipe(
+      filter(value => !value.length) // Only trigger when value is empty
+    ).subscribe(_ => this.checkboxes.forEach(box => box.checked = false))
   }
 
   public handleChange({ checked, source }: MatCheckboxChange) {
