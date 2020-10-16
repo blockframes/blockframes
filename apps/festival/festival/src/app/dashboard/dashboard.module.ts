@@ -95,7 +95,7 @@ const routes: Routes = [{
     },
     {
       path: 'files',
-      loadChildren: () => import('./files/view/view.module').then(m => m.FilesViewModule)
+      loadChildren: () => import('./files/files.module').then(m => m.FilesViewModule)
     },
     {
       path: 'contact',

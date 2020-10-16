@@ -1,0 +1,46 @@
+<section fxLayout>
+  <article class="drawer mat-list-base" id="dashboard-navbar">
+    
+    <ng-container *ngFor="let directory of directories">
+      <div fxLayout class="directory" fxLayoutAlign="start center">
+        <mat-icon matListIcon svgIcon="folder"></mat-icon>
+        <span matLine>{{ directory.name | maxLength: 20 }}</span>        
+      </div>
+      <mat-selection-list matLine [multiple]="false" (selectionChange)="selectItem($event)">
+        <mat-list-option *ngFor="let sub of directory.subDirectories" [selected]="sub.selected" [value]="sub">
+          <mat-icon matListIcon [svgIcon]="sub.icon"></mat-icon>
+          <span matLine>{{ sub.name | maxLength: 15 }}</span>
+        </mat-list-option>
+      </mat-selection-list>
+    </ng-container>
+  </article>
+  <article class="view surface">
+    <div fxLayout fxLayoutAlign="space-between center" class="header">
+      <span class="breadcrumb">{{ (org$ | async).denomination.full | maxLength: 10 }}{{ ' > ' + activeDirectory.name }}</span>
+      <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
+        <mat-icon svgIcon="add"></mat-icon>
+        <span>Upload file</span>
+      </button>
+    </div>
+    
+    <ng-container *ngIf="org$ | async | deepKey:'documents.notes' as notes">
+      <bf-table-filter [source]="notes" [columns]="columns" [initialColumns]="initialColumns">
+        <ng-template colRef="ref" let-ref>
+          <img [asset]="ref | fileTypeImage">
+        </ng-template>
+        <ng-template colRef="title" let-name>{{ name }}</ng-template>
+        <ng-template colRef="edit" let-item="item">
+          <button mat-button (click)="openDialog(item)">
+            <mat-icon svgIcon="pencil"></mat-icon>
+          </button>
+        </ng-template>
+        <ng-template colRef="delete" let-item="item">
+          <button mat-button (click)="deleteFile(item)">
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+        </ng-template>
+      </bf-table-filter>
+    </ng-container>
+
+  </article>
+</section>

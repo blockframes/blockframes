@@ -1,35 +1,46 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-
-// Blockframes
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
-import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
-
-import { AddFileDialogComponent } from '@blockframes/media/components/dialog/add-file.component';
-
-// Material
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
+import { MatSelectionListChange } from '@angular/material/list';
+import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { MediaService } from '@blockframes/media/+state/media.service';
+import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
+
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
+import { AddFileDialogComponent } from '../dialog/add-file.component';
 
 const columns = { 
   ref: 'Type',
   title: 'Document Name',
   edit: 'Edit',
   delete: 'Delete'
- };
+};
+
+interface Directory {
+  name: string,
+  subDirectories: SubDirectory[]
+}
+
+interface SubDirectory {
+  icon: 'folder' | 'template',
+  name: string,
+  path: string,
+  selected?: boolean
+}
 
 @Component({
-  selector: 'festival-dashboard-organization-resources',
-  templateUrl: 'organization.component.html',
-  styleUrls: ['./organization.component.scss'],
+  selector: 'file-explorer',
+  templateUrl: 'file-explorer.component.html',
+  styleUrls: ['./file-explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationResourcesComponent {
-  public org$ = this.query.selectActive();
+export class FileExplorerComponent implements OnInit {
+  org$ = this.query.selectActive();
 
+  directories: Directory[] = []
+  activeDirectory: SubDirectory;
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
@@ -38,7 +49,34 @@ export class OrganizationResourcesComponent {
     private mediaService: MediaService,
     private organizationService: OrganizationService,
     private query: OrganizationQuery,
-  ) {}
+    ) { }
+
+  ngOnInit() {
+    const org = this.query.getActive();
+    this.directories.push({
+      name: org.denomination.full,
+      subDirectories: [
+        {
+          icon: 'folder',
+          name: 'Documents',
+          path: 'documents.path',
+          selected: true
+        },
+        // {
+        //   icon: 'template',
+        //   name: 'Logo',
+        //   path: 'logo'
+        // }
+      ]
+    })
+    this.activeDirectory = this.directories[0].subDirectories[0];
+  }
+
+  public selectItem(event: MatSelectionListChange) {
+    const selected = event.source.selectedOptions.selected;
+    const [ selectedValues ] = selected.map(x => x.value);
+    this.activeDirectory = selectedValues;
+  }
 
   public async deleteFile(note: HostedMediaWithMetadata) {
     const org = this.query.getActive()
