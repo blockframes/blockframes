@@ -17,15 +17,6 @@ export class PdfViewerComponent {
   @ViewChild('container') pdfContainer: ElementRef<HTMLDivElement>;
   fullScreen = false;
 
-  /** Keep track of wether the player is in full screen or not.
-   * We cannot trust the `toggleFullScreen()` function for that because
-   * full screen can be exited without our button (Escape key, etc...)
-   */
-  @HostListener('fullscreenchange')
-  trackFullScreenMode() {
-    this.fullScreen = !this.fullScreen;
-  }
-
   private _ref: string;
   get ref() { return this._ref; }
   @Input() set ref(value: string) {
@@ -42,6 +33,15 @@ export class PdfViewerComponent {
 
   pdfUrl$ = new BehaviorSubject('');
   loading$ = new BehaviorSubject(true);
+
+  /** Keep track of wether the player is in full screen or not.
+   * We cannot trust the `toggleFullScreen()` function for that because
+   * full screen can be exited without our button (Escape key, etc...)
+   */
+  @HostListener('fullscreenchange')
+  trackFullScreenMode() {
+    this.fullScreen = !this.fullScreen;
+  }
 
   constructor(
     private mediaService: MediaService,
