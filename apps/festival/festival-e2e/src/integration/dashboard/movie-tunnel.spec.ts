@@ -3,7 +3,8 @@
 import { clearDataAndPrepareTest, setForm, FormOptions, 
          acceptCookie, uploadFile, createFakeScript, randomID } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
-import { mainTest } from '../../support/movie-tunnel-tests';
+//TODO: Cleanup
+//import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
 
@@ -154,7 +155,7 @@ const testSteps = [
     input: 'shootingInformation', has_upload: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
     input: 'techSpec', has_upload: false},
-  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input-autocomplete', 
+  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input', 
     input: 'availableMaterials', has_upload: false},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
     input: 'salesPitch', has_upload: false},
@@ -179,42 +180,29 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       movieURL = url;
     });
 
-    testSteps.forEach(step => {
-      cy.get('h1', {timeout: 30000}).contains(step.title);
-      setForm(step.selector, {inputValue: Movie[step.input]});
-      if (step.has_upload) {
-        //Click on Save button.
-      }
-      //Proceed to next step.
-      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
-        .click();
-    });
-
-    //On Summary page, verify the details.
   });
 
   //Summary - Verification
   it.only('Verify Summary', () => {
+    //TODO: Refactor to remove maintest & URL hard-coding.
     //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/available-materials');
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
     cy.wait(3000);
     acceptCookie();
 
     testSteps.forEach(step => {
       cy.get('h1', {timeout: 30000}).contains(step.title);
       setForm(step.selector, {inputValue: Movie[step.input]});
-      if (step.has_upload) {
-        //Click on Save button.
-      }
+      cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
+        .click();
+      cy.wait(TO.WAIT_1SEC);
+
       //Proceed to next step.
       cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
         .click();
     });
 
-    cy.get('h1', {timeout: 30000}).contains('Summary Page');
-    // const formOpt: FormOptions = {
-    //   inputValue: Movie.notesStatements
-    // }
+    cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
 
     cy.get('#main-information [test-id]').each(el => {
       console.log(el);
@@ -222,137 +210,6 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       cy.wrap(el).contains(Movie.mainInfo[key])      
     })
 
-    /*
-    testSteps.forEach(step => {
-      cy.get('h1', {timeout: 30000}).contains(step.title);
-      setForm(step.selector, {inputValue: Movie[step.input]});
-      if (step.has_upload) {
-        //Click on Save button.
-      }
-      //Proceed to next step.
-      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
-        .click();
-    });
-    */
   });
 
-  // Notes & Statements
-  it.skip('Complete Notes, go on Promotions', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/media-notes');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Notes and Statements');
-    const formOpt: FormOptions = {
-      inputValue: Movie.notesStatements
-    }
-    //setForm('movie-form-media-notes mat-radio-button, static-select, input', formOpt);
-    setForm('movie-form-media-notes file-upload', formOpt);
-    // createFakeScript(`${randomID()}`).then(path => {
-    //   uploadFile(path, 'application/pdf', 'intent-note');
-    // });
-  });
-
-  // Shooting Information
-  it.skip('Complete Shooting Information, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/shooting-information');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Shooting Information');
-    const formOpt: FormOptions = {
-      inputValue: Movie.shootingInformation
-    }
-    setForm('movie-shooting-information mat-radio-button, static-select, input', formOpt);
-  });
-
-  // Storyline Elements
-  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/story-elements');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Storyline Elements');
-    const formOpt: FormOptions = {
-      inputValue: Movie.storyElements
-    }
-    setForm('movie-form-story-elements textarea, input', formOpt);
-  });
-
-  // Available Materials
-  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/available-materials');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Available Materials');
-    const formOpt: FormOptions = {
-      inputValue: Movie.availableMaterials
-    }
-    setForm('movie-form-available-materials mat-slide-toggle, input-autocomplete', formOpt);
-  });
-
-  // Additional Information
-  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/additional-information');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Additional Information');
-    const formOpt: FormOptions = {
-      inputValue: Movie.additionalInfo
-    }
-    setForm('movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', formOpt);
-  });
-
-  // Technical Spec
-  it.skip('Complete Technical Specs, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/technical-spec');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Technical Specification');
-    const formOpt: FormOptions = {
-      inputValue: Movie.techSpec
-    }
-    setForm('movie-form-technical-info static-select', formOpt);
-  });
-
-  // Artistic Team
-  it.skip('Complete main fields, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/artistic');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Artistic Team');
-    const formOpt: FormOptions = {
-      inputValue: Movie.artisticTeam
-    }
-    setForm('movie-form-artistic input, textarea, static-select', formOpt);
-  });
-
-  // Production page
-  it.skip('Complete main fields, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/production');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Production Information');
-    const formOpt: FormOptions = {
-      inputValue: Movie.production
-    }    
-    setForm('movie-form-production input, mat-select, chips-autocomplete', formOpt);
-  });
-
-  it.skip('Complete main fields, go on movie tunnel storyline page', () => {
-    //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
-    cy.wait(3000);
-    acceptCookie();
-    cy.get('h1', {timeout: 30000}).contains('Main Information');
-    const formOpt: FormOptions = {
-      inputValue: Movie.mainInfo
-    }    
-    setForm('movie-form-main input, static-select, chips-autocomplete', formOpt);
-  });  
 });
