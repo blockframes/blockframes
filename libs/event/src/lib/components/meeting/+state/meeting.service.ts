@@ -194,7 +194,7 @@ export class MeetingService {
     if (!!room.participants) {
       const participants = Array.from(room.participants.values());
       const tracks = [];
-      participants.forEach(participant => {
+      participants.forEach((participant: Participant) => {
         tracks.push(
           this.createIParticipantMeeting(participant.identity, event)
             .then(remoteParticipant => {
