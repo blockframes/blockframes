@@ -13,7 +13,7 @@ import { MovieState, MovieStore } from './movie.store';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable, combineLatest, of } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -68,8 +68,8 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
 
-    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, { '_meta.createdAt': new Date() });
+    const ref = this.getRef(movie.id);
+    write.update(ref, { '_meta.createdAt': new Date() });
 
     // We need to update the organisation here, because of the route navigation in the movie tunnel.
     // If we do it in the backend functions, the org isn't updated fast enough to allow a good navigation in the movie tunnel
