@@ -19,14 +19,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: CampaignService,
-    private orgQuery: OrganizationQuery,
     private route: RouterQuery,
   ) { }
 
   ngOnInit(): void {
-    const orgId = this.orgQuery.getActiveId();
     this.sub = this.movieId$.pipe(
-      switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
+      switchMap((id: string) => this.service.valueChanges(id))
     ).subscribe(campaign => this.form.setAllValue(campaign));
   }
 

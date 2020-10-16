@@ -1,5 +1,5 @@
 import { App, Module } from '@blockframes/utils/apps';
-import { Territory } from '@blockframes/utils/static-model';
+import { SocialGoal, Territory } from '@blockframes/utils/static-model';
 
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
@@ -39,6 +39,7 @@ export interface AlgoliaRecordMovie extends AlgoliaRecord {
   orgName: string,
   storeType: string,
   appAccess: App[],
+  socialGoals: SocialGoal[]
 }
 
 export interface AlgoliaRecordUser extends AlgoliaRecord {

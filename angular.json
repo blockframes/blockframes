@@ -287,7 +287,6 @@
             "buildLibsFromSource": true
           },
           "configurations": {
-            "dev": {},
             "production": {
               "maxWorkers": 2,
               "optimization": true,
@@ -329,6 +328,22 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.ci.ts"
+                },
+                {
+                  "replace": "apps/backend-functions/src/environments/environment.ts",
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
+                }
+              ]
+            },
+            "demo1": {
+              "maxWorkers": 2,
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
@@ -360,6 +375,35 @@
             "jestConfig": "apps/backend-functions/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build backend-functions --configuration=$NG_CONFIG",
+              "npx cross-env npm run deploy:functions:config $PROJECT_ID",
+              "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=$PROJECT_ID --force --only functions"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                "npx nx build backend-functions --configuration=demo1",
+                "npx npm run deploy:functions:config blockframes-demo-1",
+                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=blockframes-demo-1 --force --only functions"
+              ]
+            },
+            "staging": {
+              "commands": [
+                "npx nx build backend-functions --configuration=staging",
+                "npx npm run deploy:functions:config blockframes-staging",
+                "npx cross-env SKIP_PREDEPLOY_HOOKS=true firebase deploy --project=blockframes-staging --force --only functions"
+              ]
+            }
+          }
         }
       }
     },
@@ -378,36 +422,6 @@
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
             "assets": [],
             "buildLibsFromSource": true
-          },
-          "configurations": {
-            "dev": {},
-            "ci": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                }
-              ]
-            },
-            "production": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                }
-              ]
-            },
-            "staging": {
-              "maxWorkers": 2,
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                }
-              ]
-            }
           }
         },
         "serve": {
@@ -562,7 +576,6 @@
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
-            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -651,6 +664,24 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": false
             }
           }
         },
@@ -687,6 +718,32 @@
             "jestConfig": "apps/catalog/catalog/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build catalog --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:catalog"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                "npx nx build catalog --configuration=demo1",
+                "npx firebase deploy --project=blockframes-demo-1 --only hosting:catalog"
+              ]
+            },
+            "staging": {
+              "commands": [
+                "npx nx build catalog --configuration=staging",
+                "npx firebase deploy --project=blockframes-staging --only hosting:catalog"
+              ]
+            }
+          }
         }
       }
     },
@@ -703,7 +760,6 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
-            "dev": {},
             "production": {
               "devServerTarget": "catalog:serve:production"
             },
@@ -763,7 +819,6 @@
             "scripts": []
           },
           "configurations": {
-            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -849,6 +904,24 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": false
             }
           }
         },
@@ -929,6 +1002,32 @@
               "optimization": true
             }
           }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build festival --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:festival"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                "npx nx build festival --configuration=demo1",
+                "npx firebase deploy --project=blockframes-demo-1 --only hosting:festival"
+              ]
+            },
+            "staging": {
+              "commands": [
+                "npx nx build festival --configuration=staging",
+                "npx firebase deploy --project=blockframes-staging --only hosting:festival"
+              ]
+            }
+          }
         }
       }
     },
@@ -945,7 +1044,6 @@
             "baseUrl": "http://localhost:4200"
           },
           "configurations": {
-            "dev": {},
             "production": {
               "devServerTarget": "festival:serve:production"
             },
@@ -1194,7 +1292,6 @@
             "scripts": []
           },
           "configurations": {
-            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -1280,6 +1377,24 @@
                 }
               ],
               "serviceWorker": false
+            },
+            "demo1": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "serviceWorker": false
             }
           }
         },
@@ -1312,6 +1427,32 @@
           "options": {
             "jestConfig": "apps/crm/crm/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build crm --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project=$PROJECT_ID --only hosting:crm"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                "npx nx build crm --configuration=demo1",
+                "npx firebase deploy --project=blockframes-demo-1 --only hosting:crm"
+              ]
+            },
+            "staging": {
+              "commands": [
+                "npx nx build crm --configuration=staging",
+                "npx firebase deploy --project=blockframes-staging --only hosting:crm"
+              ]
+            }
           }
         }
       }
@@ -1523,6 +1664,26 @@
                   "with": "apps/financiers/financiers/src/environments/environment.staging.ts"
                 }
               ]
+            },
+            "demo1": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                },
+                {
+                  "replace": "apps/financiers/financiers/src/environments/environment.ts",
+                  "with": "apps/financiers/financiers/src/environments/environment.staging.ts"
+                }
+              ]
             }
           }
         },
@@ -1560,6 +1721,32 @@
             "tsConfig": "apps/financiers/financiers/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "apps/financiers/financiers/src/test-setup.ts"
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "envFile": ".env",
+            "commands": [
+              "npx cross-env nx build financiers --configuration=$NG_CONFIG",
+              "npx cross-env firebase deploy --project $PROJECT_ID --only hosting:financiers"
+            ],
+            "parallel": false,
+            "color": true
+          },
+          "configurations": {
+            "demo1": {
+              "commands": [
+                "npx nx build financiers --configuration=demo1",
+                "npx firebase deploy --project blockframes-demo-1 --only hosting:financiers"
+              ]
+            },
+            "staging": {
+              "commands": [
+                "npx nx build financiers --configuration=staging",
+                "npx firebase deploy --project blockframes-staging --only hosting:financiers"
+              ]
+            }
           }
         }
       }
