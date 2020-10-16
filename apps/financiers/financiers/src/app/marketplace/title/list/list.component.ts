@@ -41,11 +41,12 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private dynTitle: DynamicTitleService,
-  ) { }
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
     this.searchForm.storeConfig.add('accepted');
     // On financiers, we want only movie available for financiers
@@ -62,9 +63,9 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
+      switchMap((ids: string[]) => ids.length ? this.movieService.valueChanges(ids) : of([])),
       /*  map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), */
-    ).subscribe(movies => {
+    ).subscribe((movies: Movie[]) => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
         this.loadMoreToggle = false;

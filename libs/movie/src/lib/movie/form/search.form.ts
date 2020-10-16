@@ -127,7 +127,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   search() {
-    console.log(this.socialGoals.value)
     return this.movieIndex.search({
       hitsPerPage: 50,
       query: this.query.value,
