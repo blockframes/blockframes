@@ -12,10 +12,10 @@ import { map } from 'rxjs/operators';
 // env
 import { centralOrgID } from '@env';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { QueryFn } from '@angular/fire/firestore';
 
 interface CarouselSection {
   title: string;
-  movieCount$: Observable<number>;
   movies$: Observable<Movie[]>;
 }
 
@@ -25,51 +25,32 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
 
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;
 
   public featuredOrg$: Observable<Organization>;
 
-  private sub: Subscription;
-
   constructor(
     private movieService: MovieService,
-    private movieQuery: MovieQuery,
     private organizationService: OrganizationService,
     private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
-    const selectMovies = (status: Movie['productionStatus']) => {
-      return this.movieQuery.selectAll({
-        filterBy: movies => movies.productionStatus === status && movies.storeConfig.appAccess.financiers && movies.storeConfig.status === "accepted"
-      });
-    }
+    
+    const queryFn: QueryFn = ref => ref.where('storeConfig.appAccess.financiers', '==', true).where('storeConfig.status', '==', 'accepted');
     this.sections = [
       {
         title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.financiers }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.financiers })
-      },
-      {
-        title: 'In production',
-        movieCount$: selectMovies('shooting').pipe(map(movies => movies.length)),
-        movies$: selectMovies('shooting')
-      },
-      {
-        title: 'Completed films',
-        movieCount$: selectMovies('finished').pipe(map(movies => movies.length)),
-        movies$: selectMovies('finished')
+        movies$: this.movieService.valueChanges(ref => queryFn(ref))
       },
       {
         title: 'In development',
-        movieCount$: selectMovies('development').pipe(map(movies => movies.length)),
-        movies$: selectMovies('development')
-      },
+        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development'))
+      }
     ];
 
     this.orgs$ = this.organizationService
@@ -83,9 +64,5 @@ export class HomeComponent implements OnInit, OnDestroy {
       map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
     );
 
-  }
-
-  ngOnDestroy() {
-    if (this.sub) this.sub.unsubscribe();
   }
 }
