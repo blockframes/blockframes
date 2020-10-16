@@ -101,15 +101,11 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
  * @param base
  * @param code
  */
-type Code<T> = keyof T | T[keyof T];
-type Key<T, K extends Code<T>> = K extends keyof T ? K : keyof T;
-export function getKeyIfExists<T, K extends Code<T>>(base: Scope, code: string): Key<T, K> {
+export function getKeyIfExists(base: Scope, code: string) {
   // Sanitized input to properly compare with base data
-  const sanitizedCode = (code as string).trim().toLowerCase();
-  const candidate = Object.entries(staticConsts[base]).find(([key, value]) => {
-    return [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode)
-  })
-  return candidate ? candidate.shift() as any : undefined;
+  const sanitizedCode = code.trim().toLowerCase();
+  const candidate = Object.entries(staticConsts[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
+  return candidate ? candidate.shift() : undefined;
 }
 
 /**

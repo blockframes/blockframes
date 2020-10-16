@@ -90,10 +90,10 @@ export function validateContract(contract: Contract): boolean {
     return false;
   }
   const licensees = contract.parties.filter(
-    p => p.party.role === getKeyIfExists('legalRoles', 'licensee')
+    p => p.party.role === 'licensee'
   );
   const licensors = contract.parties.filter(
-    p => p.party.role === getKeyIfExists('legalRoles', 'licensor')
+    p => p.party.role === 'licensor'
   );
 
   if (!licensees.length || !licensors.length) {
