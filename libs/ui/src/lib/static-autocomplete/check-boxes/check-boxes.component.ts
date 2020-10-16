@@ -24,7 +24,6 @@ export class StaticCheckBoxesComponent implements OnInit {
    * <static-check-boxes scope="territories" ...
    */
   @Input() scope: Scope;
-  @Input() type: 'constant' | 'model' = 'model';
 
   // The form to connect to
   @Input() form: FormList<string>;

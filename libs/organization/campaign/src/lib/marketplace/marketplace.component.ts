@@ -16,14 +16,12 @@ export class MarketplaceComponent implements OnInit {
 
   constructor(
     private service: CampaignService,
-    private orgQuery: OrganizationQuery,
     private route: RouterQuery,
   ) { }
 
   ngOnInit(): void {
-    const orgId = this.orgQuery.getActiveId();
     this.campaign$ = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }}))
+      switchMap((id: string) => this.service.valueChanges(id))
     )
   }
 

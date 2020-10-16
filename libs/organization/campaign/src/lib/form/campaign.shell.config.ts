@@ -13,13 +13,11 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   constructor(
     private route: RouterQuery,
     private service: CampaignService,
-    private orgQuery: OrganizationQuery,
   ) {}
 
   onInit(): Observable<any>[] {
-    const orgId = this.orgQuery.getActiveId();
     const sub = this.route.selectParams('movieId').pipe(
-      switchMap((id: string) => this.service.valueChanges(id, { params: { orgId }})),
+      switchMap((id: string) => this.service.valueChanges(id)),
       tap(campaign => this.form.setAllValue(campaign))
     );
     return [sub];

@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
 
@@ -25,6 +25,7 @@ export interface MovieSearch extends AlgoliaSearch {
   productionStatus: ProductionStatus[];
   minBudget: number;
   sellers: AlgoliaRecordOrganization[];
+  socialGoals: SocialGoal[];
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -46,6 +47,7 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     productionStatus: [],
     minBudget: 0,
     sellers: [],
+    socialGoals: [],
     ...search,
   };
 }
@@ -73,6 +75,7 @@ function createMovieSearchControl(search: MovieSearch) {
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
+    socialGoals: FormList.factory(search.socialGoals),
   };
 }
 
@@ -101,6 +104,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
   get appAccess() { return this.get('appAccess') };
+  get socialGoals() { return this.get('socialGoals'); }
 
 
   isEmpty() {
@@ -117,11 +121,13 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.minBudget?.value === 0 &&
       this.sellers?.value.length === 0 &&
       this.storeType?.value.length === 0 &&
-      this.appAccess?.value.length === 0
+      this.appAccess?.value.length === 0 &&
+      this.socialGoals?.value.length === 0
     );
   }
 
   search() {
+    console.log(this.socialGoals.value)
     return this.movieIndex.search({
       hitsPerPage: 50,
       query: this.query.value,
@@ -139,7 +145,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgName:${seller.name}`),
         this.storeType.value.map(type => `storeType:${type}`),
         this.storeConfig.value.map(config => `storeConfig:${config}`),
-        this.appAccess.value.map(access => `appAccess:${access}`)
+        this.appAccess.value.map(access => `appAccess:${access}`),
+        this.socialGoals.value.map(goal => `socialGoals:${goal}`)
       ],
       filters: `budget >= ${this.minBudget.value ?? 0}`,
     });

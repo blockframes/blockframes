@@ -6,7 +6,7 @@ import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'orgs/:orgId/campaigns' })
+@CollectionConfig({ path: 'campaigns' })
 export class CampaignService extends CollectionService<CampaignState> {
 
   constructor(protected store: CampaignStore, private orgQuery: OrganizationQuery) {
@@ -21,11 +21,11 @@ export class CampaignService extends CollectionService<CampaignState> {
   create(movieId: string) {
     const orgId = this.orgQuery.getActiveId();
     const id = movieId; // We use the movieId to index the campaign in the org
-    return this.add({ id, movieId }, { params: { orgId } });
+    return this.add({ id, movieId, orgId });
   }
 
   async save(id: string, updates: Partial<Campaign>) {
     const orgId = this.orgQuery.getActiveId();
-    return this.upsert({ id, ...updates }, { params: { orgId } });
+    return this.upsert({ id, orgId, ...updates });
   }
 }
