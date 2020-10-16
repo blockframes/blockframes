@@ -11,7 +11,7 @@ export abstract class AbstractParticipant {
   attachTracks(tracks, container) {
     tracks.forEach((track) => {
       if (track) {
-        container.appendChild(track.attach());
+        container.appendChild(track.attach()).setAttribute('style', 'flex:1;width: 100%;');
       }
     });
   }

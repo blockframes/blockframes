@@ -5,10 +5,6 @@ section {
 
   section {
     display: flex;
-    ::ng-deep video {
-      flex: 1;
-      width: 100%;
-    }
   }
 
   article {
