@@ -141,7 +141,7 @@ const Movie = {
 }
 
 const testSteps = [
-  {title: 'Production Status', selector: 'movie-form-main mat-radio-button', 
+  {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button', 
     input: 'productionStatus', has_upload: false},  
   {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
     input: 'mainInfo', has_upload: false},
