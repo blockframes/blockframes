@@ -9,8 +9,9 @@ import { Observable, combineLatest, of, Subscription, BehaviorSubject } from 'rx
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, filter } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { CampaignService } from '@blockframes/campaign/+state';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -38,14 +39,18 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
+
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-  ) { }
+    private campaignService: CampaignService
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
+
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
     this.searchForm.storeConfig.add('accepted');
     // On financiers, we want only movie available for financiers
@@ -62,9 +67,11 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
+      switchMap(ids => ids.length ? this.campaignService.valueChanges(ids) : of([])),
+      map(campaigns => campaigns.map(campaign => campaign?.id).filter(id => !!id)),
+      switchMap((ids: string[]) => ids.length ? this.movieService.valueChanges(ids) : of([])),
       /*  map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), */
-    ).subscribe(movies => {
+    ).subscribe((movies: Movie[]) => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
         this.loadMoreToggle = false;
