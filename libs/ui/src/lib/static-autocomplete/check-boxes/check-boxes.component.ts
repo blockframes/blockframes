@@ -6,10 +6,14 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckbox } from '@angular/material/checkbox';
 import { staticModels, staticConsts } from '@blockframes/utils/static-model';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: '[form][scope][type] static-check-boxes',
@@ -19,7 +23,8 @@ import { staticModels, staticConsts } from '@blockframes/utils/static-model';
 })
 export class StaticCheckBoxesComponent implements OnInit {
 
-
+  private sub: Subscription;
+  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>
   /**
    * The static scope or constant to display
    * @example
@@ -42,6 +47,10 @@ export class StaticCheckBoxesComponent implements OnInit {
     } else {
       this.items = staticModels[this.scope];
     }
+
+    this.sub = this.form.valueChanges.pipe(
+      filter(value => !value.length) // Only trigger when value is empty
+    ).subscribe(_ => this.checkboxes.forEach(box => box.checked = false))
   }
 
   public handleChange({checked, source}: MatCheckboxChange) {
