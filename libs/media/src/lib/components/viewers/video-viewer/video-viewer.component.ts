@@ -1,5 +1,5 @@
 import { DOCUMENT } from "@angular/common";
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Inject, Input, ViewChild, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth/+state";
 import { MeetingVideoControl } from "@blockframes/event/+state/event.firestore";
@@ -45,6 +45,15 @@ export class VideoViewerComponent implements AfterViewInit {
   }
 
   @Input() eventId: string;
+
+  /** Keep track of wether the player is in full screen or not.
+   * We cannot trust the `toggleFullScreen()` function for that because
+   * full screen can be exited without our button (Escape key, etc...)
+   */
+  @HostListener('fullscreenchange')
+  trackFullScreenMode() {
+    this.fullScreen = !this.fullScreen;
+  }
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -112,13 +121,5 @@ export class VideoViewerComponent implements AfterViewInit {
     } else {
       this.document.exitFullscreen();
     }
-  }
-
-  /** Keep track of wether the player is in full screen or not.
-   * We cannot trust the `toggleFullScreen()` function for that because
-   * full screen can be exited without our button (Escape key, etc...)
-   */
-  trackFullScreenMode() {
-    this.fullScreen = !this.fullScreen;
   }
 }

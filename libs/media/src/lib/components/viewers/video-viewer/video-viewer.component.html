@@ -1,4 +1,4 @@
-<div fxLayout="column" (fullscreenchange)="trackFullScreenMode()" #container>
+<div fxLayout="column" #container>
 
   <div id="puppet-player" >
     <!-- everything in the div will be destroyed when the player is loaded -->
@@ -7,8 +7,12 @@
     </div>
   </div>
 
-  <button fxFlexAlign="end" mat-icon-button (click)="toggleFullScreen()" [class]="fullScreen ? 'fullscreen' : ''" >
-    <mat-icon *ngIf="!fullScreen" svgIcon="fullscreen"></mat-icon>
-    <mat-icon *ngIf="fullScreen" svgIcon="fullscreen_exit"></mat-icon>
+  <button *ngIf="!fullScreen" fxFlexAlign="end" (click)="toggleFullScreen()" mat-icon-button>
+    <mat-icon svgIcon="fullscreen"></mat-icon>
   </button>
+
+  <button *ngIf="fullScreen" fxFlexAlign="end" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+    <mat-icon svgIcon="fullscreen_exit"></mat-icon>
+  </button>
+
 </div>
