@@ -9,9 +9,8 @@ import { Observable, combineLatest, of, Subscription, BehaviorSubject } from 'rx
 import { MovieService, Movie } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap, filter } from 'rxjs/operators';
+import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { CampaignService } from '@blockframes/campaign/+state';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -43,8 +42,7 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private dynTitle: DynamicTitleService,
-    private campaignService: CampaignService
+    private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -67,8 +65,6 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.campaignService.valueChanges(ids) : of([])),
-      map(campaigns => campaigns.map(campaign => campaign?.id).filter(id => !!id)),
       switchMap((ids: string[]) => ids.length ? this.movieService.valueChanges(ids) : of([])),
       /*  map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), */
     ).subscribe((movies: Movie[]) => {
