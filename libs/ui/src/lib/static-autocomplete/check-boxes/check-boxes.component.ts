@@ -5,10 +5,12 @@ import {
   Output,
   EventEmitter,
   OnInit,
+  OnDestroy, QueryList, ViewChildren
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { staticModel, Scope } from '@blockframes/utils/static-model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[form][scope] static-check-boxes',
@@ -16,7 +18,10 @@ import { staticModel, Scope } from '@blockframes/utils/static-model';
   styleUrls: ['./check-boxes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticCheckBoxesComponent implements OnInit {
+export class StaticCheckBoxesComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
+
+  @ViewChildren(MatCheckbox) checkboxes: QueryList<MatCheckbox>
 
   /**
    * The static scope or constant to display
@@ -35,6 +40,11 @@ export class StaticCheckBoxesComponent implements OnInit {
 
   ngOnInit() {
     this.items = staticModel[this.scope];
+    this.sub = this.form.valueChanges.subscribe(value => {
+      if (!value.length) {
+        this.checkboxes.forEach(box => box.checked = false)
+      }
+    })
   }
 
   public handleChange({ checked, source }: MatCheckboxChange) {
@@ -46,5 +56,9 @@ export class StaticCheckBoxesComponent implements OnInit {
       this.form.removeAt(index);
       this.removed.emit(index);
     }
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe()
   }
 }
