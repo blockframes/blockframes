@@ -2,7 +2,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
 import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
@@ -38,7 +37,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieService: MovieService,
-    private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private scrollable: CdkScrollable
   ) { }
