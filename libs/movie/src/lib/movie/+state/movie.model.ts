@@ -272,9 +272,10 @@ export function createMovieLegalDocuments(
   }
 }
 
-export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
+export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
   return {
     createdBy: '',
+    createdAt: new Date(),
     ...meta
   }
 }
