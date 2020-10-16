@@ -1,8 +1,8 @@
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { CookiesConsent } from "../cookie-form/cookie.form";
 import { IntercomService } from '@blockframes/utils/intercom/intercom.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Injectable({ providedIn: 'root' })
 export class GDPRService {
@@ -11,7 +11,6 @@ export class GDPRService {
     private analytics: FireAnalytics,
     private intercom: IntercomService,
     private yandex: YandexMetricaService,
-    @Inject(YM_CONFIG) private ymConfig: number,
   ) {}
 
   get cookieConsent(): CookiesConsent {
@@ -36,6 +35,6 @@ export class GDPRService {
 
   enableYandex(enable: boolean) {
     this.enable('yandex', enable);
-    if (enable) this.yandex.insertMetrika(this.ymConfig);
+    if (enable) this.yandex.insertMetrika();
   }
 }

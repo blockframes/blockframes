@@ -1,16 +1,16 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Injectable, Inject, InjectionToken, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 
-export const YM_CONFIG = new InjectionToken('ngx-metrika Config');
+import { yandexId } from '@env';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class YandexMetricaService {
   constructor(
     @Inject(DOCUMENT) private document: Document
   ) {}
 
-  public insertMetrika(config: number) {
-    if (!isPlatformBrowser(PLATFORM_ID)) {
+  public insertMetrika() {
+    if (!isPlatformBrowser(PLATFORM_ID) || !yandexId) {
       return;
     }
 
@@ -27,7 +27,7 @@ export class YandexMetricaService {
         m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(${config}, "init", {
+        ym(${yandexId}, "init", {
              clickmap:true,
              trackLinks:true,
              accurateTrackBounce:true,
