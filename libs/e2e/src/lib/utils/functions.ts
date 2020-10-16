@@ -222,7 +222,5 @@ export function setForm(selector: string, formOpt: FormOptions) {
     }
     formData.push(formelData);
   })
-  .then(() => {
-    console.table(formData);
-  });
+  .then(_ => console.table(formData));
 }

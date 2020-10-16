@@ -22,11 +22,17 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
 
   cy.log('->Click: Add New Title');
-  cy.get('a[mattooltip="Add a new title"]', {timeout: TO.THREE_SEC})
-    .click();
-
-  cy.log('->Reach New Title Interstitial & start');
-  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
+  cy.get('a[mattooltip="Add a new title"]', {timeout: TO.FIFTEEN_SEC})
     .click();
   cy.wait(TO.WAIT_1SEC);
+
+  cy.log('->Reach New Title Interstitial & start');
+  cy.wait(TO.ONE_SEC);
+  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_ELEMENT })
+    .click()
+    .wait(TO.THREE_SEC);
+
+  cy.wait(TO.THREE_SEC);
+
+  cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 }

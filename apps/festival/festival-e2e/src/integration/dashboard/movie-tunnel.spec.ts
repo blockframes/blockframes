@@ -1,7 +1,6 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm, FormOptions, 
-         acceptCookie, uploadFile, createFakeScript, randomID } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 //TODO: Cleanup
 //import { mainTest } from '../../support/movie-tunnel-tests';
@@ -13,6 +12,9 @@ const users = [ userFixture.getByUID(USER.Jean) ];
 let movieURL: string;
 
 const Movie = {
+  productionStatus: {
+    status5: true
+  },
   mainInfo : {
     "international-title": 'Lagerfeld Confidential',
     "original-title": 'Lagerfeld Confidential',
@@ -139,6 +141,8 @@ const Movie = {
 }
 
 const testSteps = [
+  {title: 'Production Status', selector: 'movie-form-main mat-radio-button', 
+    input: 'productionStatus', has_upload: false},  
   {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
     input: 'mainInfo', has_upload: false},
   {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input', 
@@ -183,15 +187,16 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   //Summary - Verification
-  it.only('Verify Summary', () => {
+  it('Fill all fields and verify it in Summary Page', () => {
     //TODO: Refactor to remove maintest & URL hard-coding.
     //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
-    cy.wait(3000);
-    acceptCookie();
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
+    //cy.wait(3000);
+    //acceptCookie();
 
     testSteps.forEach(step => {
-      cy.get('h1', {timeout: 30000}).contains(step.title);
+      cy.log(`=> Step : [${step.title}]`);
+      cy.get('h1', {timeout: TO.PAGE_ELEMENT}).contains(step.title);
       setForm(step.selector, {inputValue: Movie[step.input]});
       cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
         .click();
@@ -202,8 +207,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
         .click();
     });
 
+    cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
 
+    cy.log('[Summary - Main fields]');
     cy.get('#main-information [test-id]').each(el => {
       console.log(el);
       const key = el.attr('test-id');
