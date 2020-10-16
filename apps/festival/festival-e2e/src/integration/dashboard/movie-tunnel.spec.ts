@@ -77,8 +77,8 @@ const Movie = {
     "quote": 'Best film of the year. Can drive away your Corona Blues'
   },
   additionalInfo: {
-    "release-country": 'World',
-    "release-media": 'N-VOD',
+    "release-country": 'United States of America (the)',
+    "release-media": 'Video',
     "boxoffice-territory": 'France',
     "release-date": '01/01/2020',
     "budget-range": '$10 - 20 millions',
@@ -108,14 +108,14 @@ const Movie = {
     "original-version": false,
   },
   salesPitch : {
-    "description": '',
-    "target-audience": '',
-    "goal": ''
+    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama. It analyzes the life of Lea, a woman in her early 30\’s, who has been heavily influenced by pop culture since childhood.',
+    //"target-audience": '',
+    //"goal": ''
   },
   files: {
-    "presentation-deck": '',
-    "scenario": '',
-    "moodboard": ''
+    //"presentation-deck": '',
+    //"scenario": '',
+    //"moodboard": ''
   },
   notesStatements: {
     "first-name": 'Rodolphe',
@@ -127,13 +127,13 @@ const Movie = {
 
   },
   videos: {
-    "teaserLink": '',
-    "trailerLink": '',
-    "promoReelLink": '',
-    "screenerLink": '',
-    "clipLink": '',
-    "otherLinkName": '',
-    "otherLinkUrl": ''
+    "teaserLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "trailerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "promoReelLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "screenerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "clipLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "otherLinkName": 'Best Scene',
+    "otherLinkUrl": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew'
   }
 }
 
@@ -196,9 +196,21 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   //Summary - Verification
   it.only('Verify Summary', () => {
     //mainTest();
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/available-materials');
     cy.wait(3000);
     acceptCookie();
+
+    testSteps.forEach(step => {
+      cy.get('h1', {timeout: 30000}).contains(step.title);
+      setForm(step.selector, {inputValue: Movie[step.input]});
+      if (step.has_upload) {
+        //Click on Save button.
+      }
+      //Proceed to next step.
+      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
+        .click();
+    });
+
     cy.get('h1', {timeout: 30000}).contains('Summary Page');
     // const formOpt: FormOptions = {
     //   inputValue: Movie.notesStatements

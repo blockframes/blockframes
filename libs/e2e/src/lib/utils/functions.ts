@@ -124,7 +124,8 @@ function handleFormElement(el:any, id: string, value: string) {
     const title =  uploadProps.title || randomID();
     createFakeScript(title).then(path => {
       uploadFile(path, uploadProps.type, id);
-    });    
+    });
+    return;
   }
 
   if (el.is('input') || el.is('textarea')) {
