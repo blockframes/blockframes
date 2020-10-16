@@ -86,7 +86,6 @@ export class ListComponent implements OnInit, OnDestroy {
   clear() {
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
     this.filterForm.reset(initial);
-    this.cdr.markForCheck();
   }
 
   async loadMore() {
@@ -103,5 +102,5 @@ export class ListComponent implements OnInit, OnDestroy {
   scrollToScrollOffset() {
     this.scrollable.scrollTo({ top: this.scrollOffsetTop });
   }
-  
+
 }

@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
   OnInit
 } from '@angular/core';
-import { AbstractControl } from '@angular/forms';
+import { AbstractControl, FormArray } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -45,4 +45,12 @@ export class FilterDirective implements OnInit {
 export class TitleFilterComponent {
   @ContentChildren(FilterDirective) filters: QueryList<FilterDirective>;
   constructor(private cdr: ChangeDetectorRef) {}
+
+  reset(filter) {
+    if(filter.form instanceof FormArray) {
+      filter.form.reset([], {onlySelf: false});
+    } else {
+      filter.form.reset();
+    }
+  }
 }

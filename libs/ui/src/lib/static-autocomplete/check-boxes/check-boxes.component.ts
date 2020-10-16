@@ -47,10 +47,14 @@ export class StaticCheckBoxesComponent implements OnInit {
   public handleChange({checked, source}: MatCheckboxChange) {
     if (checked) {
       this.form.add(source.value);
+      this.form.markAsDirty();
       this.added.emit(source.value);
     } else {
       const index = this.form.controls.findIndex(control => control.value === source.value);
       this.form.removeAt(index);
+      if (!this.form.controls.length) {
+        this.form.markAsPristine();
+      }
       this.removed.emit(index);
     }
   }
