@@ -67,6 +67,15 @@ const Movie = {
     "crew-film1": 'Love Comedy',
     "crew-year1": '1989'
   },
+  reviews: {
+    "festival-name": 'Oscar Academy Awards',
+    "prize": 'Filmfare Award',
+    "prize-year": '2020',
+    "critic-name": 'Aunt Agony',
+    "journal-name": 'Bharka Dutt\'s Blog',
+    "link": 'useless-blog.wordpress.com',
+    "quote": 'Best film of the year. Can drive away your Corona Blues'
+  },
   additionalInfo: {
     "release-country": 'World',
     "release-media": 'N-VOD',
@@ -98,21 +107,66 @@ const Movie = {
     "languages": 'English',
     "original-version": false,
   },
+  salesPitch : {
+    "description": '',
+    "target-audience": '',
+    "goal": ''
+  },
+  files: {
+    "presentation-deck": '',
+    "scenario": '',
+    "moodboard": ''
+  },
   notesStatements: {
+    "first-name": 'Rodolphe',
+    "last-name": 'Marconi',    
+    "role": 'Other',
     "intent-note": JSON.stringify({type: 'app/pdf', filename: '1234.pdf'})
+  },
+  promoElements: {
+
+  },
+  videos: {
+    "teaserLink": '',
+    "trailerLink": '',
+    "promoReelLink": '',
+    "screenerLink": '',
+    "clipLink": '',
+    "otherLinkName": '',
+    "otherLinkUrl": ''
   }
 }
 
 const testSteps = [
-  {title: 'Main Information', selector: '', 
+  {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
     input: 'mainInfo', has_upload: false},
-  {title: 'Main Information', selector: '', 
-    input: 'mainInfo', has_upload: false},
-  {title: 'Main Information', selector: '', 
-    input: 'mainInfo', has_upload: false},
-  {title: 'Main Information', selector: '', 
-    input: 'mainInfo', has_upload: false},
-]
+  {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input', 
+    input: 'storyElements', has_upload: false},
+  {title: 'Production Information', selector: 'movie-form-production input, mat-select, chips-autocomplete', 
+    input: 'production', has_upload: false},
+  {title: 'Artistic Team', selector: 'movie-form-artistic input, textarea, static-select', 
+    input: 'artisticTeam', has_upload: false},
+  {title: 'Selection & Reviews', selector: 'movie-form-reviews static-select, input, textarea', 
+    input: 'reviews', has_upload: false},
+  {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', 
+    input: 'additionalInfo', has_upload: false},
+  {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input', 
+    input: 'shootingInformation', has_upload: false},
+  {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
+    input: 'techSpec', has_upload: false},
+  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input-autocomplete', 
+    input: 'availableMaterials', has_upload: false},
+  {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
+    input: 'salesPitch', has_upload: false},
+  {title: 'Files', selector: 'movie-form-media-files file-upload', 
+    input: 'files', has_upload: false},
+  {title: 'Notes and Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
+    input: 'notesStatements', has_upload: false},
+  {title: 'Promotional Elements', selector: 'movie-form-media-images', 
+    input: 'promoElements', has_upload: false},
+  {title: 'Videos', selector: 'movie-form-media-videos textarea, input', 
+    input: 'videos', has_upload: false}
+];
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
@@ -132,7 +186,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
         //Click on Save button.
       }
       //Proceed to next step.
-      cy.get('', {timeout: TO.PAGE_ELEMENT})
+      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
         .click();
     });
 
@@ -140,7 +194,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   //Summary - Verification
-  it.only('Complete Notes, go on Promotions', () => {
+  it.only('Verify Summary', () => {
     //mainTest();
     cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
     cy.wait(3000);
@@ -150,7 +204,25 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     //   inputValue: Movie.notesStatements
     // }
 
-  });  
+    cy.get('#main-information [test-id]').each(el => {
+      console.log(el);
+      const key = el.attr('test-id');
+      cy.wrap(el).contains(Movie.mainInfo[key])      
+    })
+
+    /*
+    testSteps.forEach(step => {
+      cy.get('h1', {timeout: 30000}).contains(step.title);
+      setForm(step.selector, {inputValue: Movie[step.input]});
+      if (step.has_upload) {
+        //Click on Save button.
+      }
+      //Proceed to next step.
+      cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
+        .click();
+    });
+    */
+  });
 
   // Notes & Statements
   it.skip('Complete Notes, go on Promotions', () => {
