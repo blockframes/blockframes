@@ -1,6 +1,5 @@
 
 <ng-container *ngIf="event.meta?.files?.length; else noFiles">
-  <p>Select a file to display</p>
   <bf-carousel flex>
     <ng-container *ngFor="let file of event.meta.files">
       <button mat-button (click)="select(file)" [disabled]="isSelected(file)" carouselItem>

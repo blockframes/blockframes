@@ -1,6 +1,18 @@
-<div id="puppet-player">
-  <!-- everything in the div will be destroyed when the player is loaded -->
-  <div class="loader">
-    <mat-spinner></mat-spinner>
+<div fxLayout="column" #container>
+
+  <div id="puppet-player" >
+    <!-- everything in the div will be destroyed when the player is loaded -->
+    <div class="loader">
+      <mat-spinner></mat-spinner>
+    </div>
   </div>
+
+  <button *ngIf="!fullScreen" fxFlexAlign="end" (click)="toggleFullScreen()" mat-icon-button>
+    <mat-icon svgIcon="fullscreen"></mat-icon>
+  </button>
+
+  <button *ngIf="fullScreen" fxFlexAlign="end" (click)="toggleFullScreen()" class="fullscreen" mat-icon-button>
+    <mat-icon svgIcon="fullscreen_exit"></mat-icon>
+  </button>
+
 </div>
