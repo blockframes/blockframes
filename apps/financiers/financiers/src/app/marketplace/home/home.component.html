@@ -1,6 +1,6 @@
 <div test-id="content">
   <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" class="dark-contrast-theme">
-    <h4>Welcome to Archipel Market</h4>
+    <h4>Welcome to Media Financiers</h4>
     <h1 class="mat-display-2">The ongoing<br/> film market</h1>
     <div fxLayout="row" fxLayoutGap="24px">
       <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the market today</a>
@@ -10,8 +10,8 @@
 
   <section fxLayout="column" fxLayoutGap="48px">
     <ng-container *ngFor="let section of sections; let i = index">
-      <ng-container *ngIf="section.movieCount$ | async as size">
-        <article fxLayout="column" *ngIf="size >= 4">
+      <ng-container *ngIf="section.movies$ | async as movies">
+        <article fxLayout="column" *ngIf="movies.length">
           <div fxLayout="row" fxLayoutAlign="space-between start" flex>
             <h1>{{ section.title }}</h1>
             <a mat-button routerLink="../title" color="primary">
@@ -19,12 +19,14 @@
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>
           </div>
-          <bf-carousel flex>
+          <bf-carousel flex [min]="4">
             <ng-container *ngFor="let movie of section.movies$ | async">
               <movie-card [movie]="movie" size="banner" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
                 carouselItem>
                 <ng-container *ngIf="movie.id | getCampaign | async as campaign">
-                  <span>{{ campaign.minPledge | currency }}</span>
+                  <span matTooltip="Minimum investment amount">
+                    {{ campaign.minPledge | bigCurrency:'USD' }}
+                  </span>
                 </ng-container>
               </movie-card>
             </ng-container>
@@ -38,7 +40,7 @@
                 <mat-icon svgIcon="arrow_forward"></mat-icon>
               </a>
             </div>
-            <bf-carousel flex>
+            <bf-carousel flex [min]="4">
               <ng-container *ngFor="let org of orgs$ | async">
                 <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
               </ng-container>
