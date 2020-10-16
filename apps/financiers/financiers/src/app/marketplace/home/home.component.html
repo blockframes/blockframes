@@ -23,6 +23,9 @@
             <ng-container *ngFor="let movie of section.movies$ | async">
               <movie-card [movie]="movie" size="banner" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
                 carouselItem>
+                <ng-container *ngIf="movie.id | getCampaign | async as campaign">
+                  <span>{{ campaign.minPledge | currency }}</span>
+                </ng-container>
               </movie-card>
             </ng-container>
           </bf-carousel>

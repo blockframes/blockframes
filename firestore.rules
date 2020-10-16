@@ -363,6 +363,7 @@ service cloud.firestore {
     // CAMPAIGN RULES             //
     ////////////////////////////////
 
+    // note: campaign is using the movieId as id
     match /campaigns/{movieId} {
       allow read: if isSignedIn();
       allow write: if isOrgMember(incomingData().orgId) && orgCan('update', incomingData().orgId, movieId);

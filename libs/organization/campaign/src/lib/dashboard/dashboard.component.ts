@@ -19,7 +19,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: CampaignService,
-    private orgQuery: OrganizationQuery,
     private route: RouterQuery,
   ) { }
 
