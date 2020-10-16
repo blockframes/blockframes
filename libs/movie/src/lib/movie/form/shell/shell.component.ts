@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 // RxJs
 import { switchMap, map, startWith } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { Observable, of, Subscription, combineLatest } from 'rxjs';
 import { ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
@@ -116,7 +116,7 @@ export interface FormSaveOptions {
 
 export interface FormShellConfig<Control extends EntityControl<Entity>, Entity> {
   form: FormEntity<Control, Entity>;
-  onInit(): Subscription[];
+  onInit(): Observable<any>[];
   onSave(options: FormSaveOptions): Promise<any>
 }
 
@@ -134,7 +134,7 @@ export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form manage
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
-  private sub: Subscription[] = [];
+  private sub: Subscription;
   steps: TunnelStep[];
   exitRoute: string;
 
@@ -144,14 +144,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private route: RouterQuery
+    private route: RouterQuery,
   ) { }
 
   ngOnInit() {
-    for (const form in this.configs) {
-      const formSubs = this.configs[form].onInit();
-      this.sub.concat(formSubs);
-    }
+    const subs = Object.values(this.configs).map(config => config.onInit()).flat();
+    this.sub = combineLatest(subs).subscribe();
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
     this.steps = getSteps(movieForm.get('productionStatus'), appSteps);
@@ -167,11 +165,11 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
         inline: 'start',
       });
     });
-    this.sub.push(routerSub);
+    this.sub.add(routerSub);
   }
 
   ngOnDestroy() {
-    this.sub.forEach(sub => sub.unsubscribe());
+    this.sub?.unsubscribe();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {

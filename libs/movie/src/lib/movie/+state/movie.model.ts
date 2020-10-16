@@ -32,7 +32,7 @@ import { DistributionRight } from '@blockframes/distribution-rights/+state/distr
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
-import { LanguagesSlug, MovieLanguageTypes } from '@blockframes/utils/static-model';
+import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 
 // Export for other files
@@ -138,12 +138,12 @@ export function createSalesPitch(params: Partial<MovieSalesPitch> = {}): MovieSa
   }
 }
 
-export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
+export function createLanguageKey(languages: Partial<{ [language in Language]: MovieLanguageSpecification }> = {}): LanguageRecord {
   const languageSpecifications = {}
   for (const language in languages) {
     languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
   }
-  return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
+  return (languageSpecifications as Partial<{ [language in Language]: MovieLanguageSpecification }>)
 }
 
 export function createMovieLanguageSpecification(
@@ -251,8 +251,8 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
 
 export function populateMovieLanguageSpecification(
   spec: Partial<MovieLanguageSpecificationContainer>,
-  slug: LanguagesSlug,
-  type: MovieLanguageTypes,
+  slug: Language,
+  type: MovieLanguageType,
   value: boolean = true
 ) {
   if (!spec[slug]) {

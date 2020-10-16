@@ -3,6 +3,7 @@ import {
   HoldbackWithDates as Holdback
 } from './distribution-right.firestore';
 import { createTerms, formatTerms } from '@blockframes/utils/common-interfaces/terms';
+import { Territory } from '@blockframes/utils/static-model';
 
 export { DistributionRightDocumentWithDates as DistributionRight } from './distribution-right.firestore';
 
@@ -42,7 +43,7 @@ export function formatDistributionRight(right: any): DistributionRight {
 }
 
 /** Returns only eligible territories for a right. */
-export function getRightTerritories(right: DistributionRight): string[] {
+export function getRightTerritories(right: DistributionRight): Territory[] {
   if (!right.territory) {
     return [];
   }

@@ -4,13 +4,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// Blockframes
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.pipe';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes';
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.pipe';
-
 // Components
 import { TitleViewComponent } from './view.component';
 import { DashboardTitleShellModule } from '@blockframes/movie/dashboard/shell/shell.module';
@@ -60,16 +53,11 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
-    ImageReferenceModule,
-    TranslateSlugModule,
-    DurationModule,
-    ToLabelModule,
     DashboardTitleShellModule,
-    DisplayNameModule,
     // Material
     MatProgressSpinnerModule,
     // Routes
     RouterModule.forChild(routes)
   ]
 })
-export class TitleViewModule {}
+export class TitleViewModule { }

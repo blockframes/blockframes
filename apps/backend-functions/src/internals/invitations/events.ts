@@ -313,6 +313,7 @@ export async function isUserInvitedToEvent(userId: string, eventOrMovieId: strin
   return !(invitations.size === 0 && requests.size === 0);
 }
 
+
 /**
  * Return true if userId has accepted invitation for eventId
  * @param userId : string - Id of user

@@ -73,12 +73,12 @@
 
     <article *ngIf="movie.originCountries.length">
       <h5>Country of origin</h5>
-      <p>{{ movie.originCountries | translateSlug: 'TERRITORIES' }}</p>
+      <p>{{ movie.originCountries | toLabel: 'territories' }}</p>
     </article>
 
     <article *ngIf="movie.originalLanguages.length">
       <h5>Country of origin</h5>
-      <p>{{ movie.originalLanguages | translateSlug: 'LANGUAGES' }}</p>
+      <p>{{ movie.originalLanguages | toLabel: 'languages' }}</p>
     </article>
 
     <article *ngIf="movie.genres.length">

@@ -10,7 +10,7 @@ import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contr
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { contractStatus, contractType } from '@blockframes/utils/static-model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
@@ -30,8 +30,8 @@ export class ContractComponent implements OnInit {
   public contract$: Observable<Contract>;
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
-  public contractStatus = staticConsts.contractStatus;
-  public contractType = staticConsts.contractType;
+  public contractStatus = contractStatus;
+  public contractType = contractType;
   public publicContract$: Observable<PublicContract>;
 
   // Tables

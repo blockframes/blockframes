@@ -1,42 +1,31 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ContentChild, TemplateRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes
-import { staticModels, staticConsts } from '@blockframes/utils/static-model';
+import { Scope, staticModel } from '@blockframes/utils/static-model';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
-  selector: '[scope][type][control] static-select',
+  selector: '[scope][control] static-select',
   templateUrl: './static-select.component.html',
   styleUrls: ['./static-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticSelectComponent {
+export class StaticSelectComponent implements OnInit {
 
-  @Input() type: 'constant' | 'model';
-
-  public staticValue: string[] | SlugAndLabel[] = [];
-  public option: string;
-  @Input() set scope(value: string) {
-    this.option = value;
-    if (this.type === 'constant') {
-      this.staticValue = Object.keys(staticConsts[value])
-    } else {
-      this.staticValue = staticModels[value]
-    }
-  };
+  public staticValue: any[];
+  @Input() scope: Scope
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
-  @Input() set withoutValues(toFilterValue: any[]) {
-    if (this.type === 'constant') {
-      this.staticValue = Object.keys(staticConsts[this.option]).filter(scopeValue => !toFilterValue.includes(scopeValue));
-    } else {
-      this.option = staticModels[this.option].filter(scopeValue => !toFilterValue.includes(scopeValue.slug))
-    }
+  @Input() withoutValues: string[] = []
+
+  ngOnInit() {
+    this.staticValue = this.withoutValues.length
+      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
+      : Object.keys(staticModel[this.scope]);
   }
 
   @ContentChild(TemplateRef) template: TemplateRef<any>;

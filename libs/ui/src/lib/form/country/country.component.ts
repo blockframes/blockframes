@@ -1,11 +1,9 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { default as staticModel } from '@blockframes/utils/static-model/staticModels'
 import { FormStaticValue } from '@blockframes/utils/form';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-
-type TERRITORIES = typeof staticModel.TERRITORIES;
+import { territories, Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] form-country',
@@ -14,33 +12,33 @@ type TERRITORIES = typeof staticModel.TERRITORIES;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormCountryComponent implements OnInit {
-  @Input() form: FormStaticValue<'TERRITORIES'>;
+  @Input() form: FormStaticValue<'territories'>;
   @Input() @boolean noWorld = false
 
-  countries: TERRITORIES;
-  filteredCountries$: Observable<TERRITORIES>;
+  territories = territories;
+  countries: Territory[];
+  filteredCountries$: Observable<Territory[]>;
 
   ngOnInit() {
     this.countries = this.noWorld
-      ? staticModel.TERRITORIES.filter(country => country.slug !== 'world')
-      : staticModel.TERRITORIES;
+      ? Object.keys(territories).filter(country => country !== 'world') as Territory[]
+      : Object.keys(territories) as Territory[];
     this.filteredCountries$ = this.form.valueChanges
       .pipe(
         startWith(''),
-        map(country => country ? this._filter(country) : this.countries)
+        map((country: Territory) => country ? this._filter(country) : this.countries)
       );
   }
 
   // @dev displayFn "this" is the MatAutocomplete, not the component
   displayFn(key: string) {
     if (key) {
-      const value = staticModel.TERRITORIES.find(({ slug }) => slug === key);
-      return typeof value === 'undefined' ? '' : value.label;
+      return territories[key];
     }
   }
 
-  private _filter(country: string): TERRITORIES {
+  private _filter(country: string) {
     const filterValue = country.toLowerCase();
-    return this.countries.filter(({ label }) => label.toLowerCase().indexOf(filterValue) === 0) as any
+    return this.countries.filter(territory => territory.toLowerCase().indexOf(filterValue) === 0) as Territory[]
   }
 }

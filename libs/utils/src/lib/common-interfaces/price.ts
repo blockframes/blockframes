@@ -1,7 +1,6 @@
-import { MovieCurrencies } from "@blockframes/utils/static-model/types";
+import { MovieCurrency } from "@blockframes/utils/static-model/types";
 import { firestore } from "firebase";
 import { toDate } from "@blockframes/utils/helpers"
-import { getKeyIfExists } from '@blockframes/utils/helpers';
 
 type Timestamp = firestore.Timestamp;
 
@@ -58,7 +57,7 @@ export type PaymentStatusValue = typeof paymentStatus[PaymentStatus];
 
 export interface PriceRaw<D> {
   amount: number;
-  currency?: MovieCurrencies;
+  currency?: MovieCurrency;
   /**
    * @dev percentage
    */

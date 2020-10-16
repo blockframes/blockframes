@@ -1,6 +1,6 @@
 import { firestore } from "firebase/app";
-import { keys } from "lodash";
 import { BehaviorSubject, Observable } from "rxjs";
+import { staticModel, Scope } from './static-model';
 
 /**
  * This method is used before pushing data on db
@@ -101,13 +101,11 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
  * @param base
  * @param code
  */
-type Code<T> = keyof T | T[keyof T];
-type Key<T, K extends Code<T>> = K extends keyof T ? K : keyof T;
-export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K> {
+export function getKeyIfExists(base: Scope, code: string) {
   // Sanitized input to properly compare with base data
-  const sanitizedCode = (code as string).trim().toLowerCase();
-  const candidate = Object.entries(base).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
-  return candidate ? candidate.shift() as any : undefined;
+  const sanitizedCode = code.trim().toLowerCase();
+  const candidate = Object.entries(staticModel[base]).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
+  return candidate ? candidate.shift() : undefined;
 }
 
 /**
@@ -189,8 +187,8 @@ export function debounceFactory(func: (...params) => any, wait: number) {
 
 
 
-/** 
- * Remove all undefined fields 
+/**
+ * Remove all undefined fields
  * @param value anything
  */
 export function removeUndefined(value: any) {

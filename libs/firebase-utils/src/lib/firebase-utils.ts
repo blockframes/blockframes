@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
 import { tempUploadDir, privacies } from "@blockframes/utils/file-sanitizer";
@@ -98,3 +99,14 @@ export async function runChunks(rows: any[], cb: any, rowsConcurrency?: number, 
     await Promise.all(promises);
   }
 }
+
+/**
+ * Helper to work in local / remote dev mode:
+ * in local the function config will be empty and this function will return an undefined value.
+ * Later, when we test the backend functions code, we'll let dev define env variables
+ * for local testing.
+ *
+ * @param path the field path to look for, ['x', 'y'] will look for config.x.y
+ */
+export const mockConfigIfNeeded = (...path: string[]): any =>
+  path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config());

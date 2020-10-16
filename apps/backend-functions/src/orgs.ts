@@ -5,12 +5,10 @@ import { difference } from 'lodash';
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { functions, db, getUser } from './internals/firebase';
-import { deleteObject, storeSearchableOrg } from './internals/algolia';
+import { db, getUser } from './internals/firebase';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
-import { algolia } from './environments/environment';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, module, getAppName } from '@blockframes/utils/apps';
@@ -18,6 +16,7 @@ import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganiza
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
+import { algolia, deleteObject, storeSearchableOrg } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {

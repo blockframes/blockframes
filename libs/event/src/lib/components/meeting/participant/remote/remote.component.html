@@ -1,10 +1,12 @@
 <section id="remote-participant" fxFlex fxLayoutAlign="center center">
-  <ng-container *ngIf="!((camMicIsOnRemote$ | async).video)">
+  <ng-container *ngIf="!participant.statusMedia.video">
     <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
   </ng-container>
-  <section [hidden]="!((camMicIsOnRemote$ | async).video)" [id]="'container-video-' + participant.identity" fxFlex>
+  <section [hidden]="!participant.statusMedia.video" [id]="'container-video-' + participant.identity" fxFlex>
   </section>
-  <span class="mat-caption">
-      {{participant.festivalData | displayName}}
+  <article>
+    <span class="mat-caption">
+    {{participant.festivalData | displayName}}
     </span>
+  </article>
 </section>

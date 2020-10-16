@@ -42,8 +42,8 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
     id: new FormControl(id),
     label: new FormControl(label),
     media: new HostedMediaForm(media),
-    language: new FormStaticValue(language, 'LANGUAGES'),
-    country: new FormStaticValue(country, 'TERRITORIES')
+    language: new FormStaticValue(language, 'languages'),
+    country: new FormStaticValue(country, 'territories')
   };
 }
 

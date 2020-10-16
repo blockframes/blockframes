@@ -110,13 +110,13 @@
       <h6 class="mat-caption">Shooting Locations</h6>
       <bf-form-list [form]="form.shooting.get('locations')" buttonText="Add a Location">
         <ng-template itemRef let-location>
-          {{ location.country | translateSlug: 'TERRITORIES' }} -
+          {{ location.country | toLabel: 'territories' }} -
           {{ location.cities.join(', ') | titlecase }}
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-            <static-select scope="TERRITORIES" type="model" [control]="locationForm.get('country')"
-              [withoutValues]="['world']" fxFlex>
+            <static-select scope="territories" [control]="locationForm.get('country')" [withoutValues]="['world']"
+              fxFlex>
               <mat-label>Country</mat-label>
             </static-select>
 

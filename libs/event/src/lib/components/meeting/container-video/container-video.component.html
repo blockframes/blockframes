@@ -1,13 +1,9 @@
 <event-meeting-participants-nav [participants]="arrayOfParticipantConnected$ | async">
   <event-meeting-video
-    [arrayOfRemoteParticipantConnected$]="arrayOfRemoteParticipantConnected$"
-    [localParticipantConnected$]="localParticipantConnected$"
-    [dominantParticipantForBuyer$]="dominantParticipantForBuyer$"
-    [localPreviewTracks$]="localPreviewTracks$"
-    [localVideoAudioIsOn$]="localVideoAudioIsOn$"
+    [remoteParticipants]="remoteParticipants$ | async"
     [event]="event"
     [isSeller]="isSeller"
-    [getTwilioParticipantDataFromUid]="getTwilioParticipantDataFromUid"
-    (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"
-    ></event-meeting-video>
+    [getTwilioParticipant]="getTwilioParticipant"
+    (eventSetupVideoAudio)="setupVideoAudio($event)"
+  ></event-meeting-video>
 </event-meeting-participants-nav>

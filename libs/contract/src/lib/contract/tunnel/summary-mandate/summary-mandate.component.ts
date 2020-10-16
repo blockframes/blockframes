@@ -7,7 +7,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormControl } from '@angular/forms';
 import { PriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
-import { MovieCurrencies } from '@blockframes/utils/static-model';
+import { MovieCurrency } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { ContractQuery, ContractService } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -28,7 +28,7 @@ export class SummaryMandateComponent implements OnInit {
   public terms: string;
   public price: PriceControl;
   public rights: Record<string, string> = {}
-  public currency: MovieCurrencies;
+  public currency: MovieCurrency;
   public payments: { type: string, list: string[] };
 
   constructor(

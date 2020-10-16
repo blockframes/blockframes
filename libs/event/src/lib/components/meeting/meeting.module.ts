@@ -6,22 +6,18 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
-import {VideoComponent} from './video/video.component';
 import {FlexModule} from "@angular/flex-layout";
 
-import {ParticipantsNavComponent} from "@blockframes/event/components/meeting/participant-nav/participants-nav.component";
-import {ControlVideoComponent} from "@blockframes/event/components/meeting/control-media/video/video.component";
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+// Blockframes
+import {ImageReferenceModule} from '@blockframes/media/directives/image-reference/image-reference.module';
+import {EventInitialsModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
+import {DisplayNameModule} from '@blockframes/utils/pipes';
 
-import {LocalComponent} from './participant/local/local.component';
+// Components
+import {VideoComponent} from './video/video.component';
 import {RemoteComponent} from './participant/remote/remote.component';
-import {DominantSpeakerComponent} from './participant/dominant-speaker/dominant-speaker.component';
 import {ContainerVideoComponent} from './container-video/container-video.component';
-import {ControlAudioComponent} from './control-media/audio/audio.component';
-
-import {EventInitialParticipantModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
-import { DisplayNameModule } from '@blockframes/utils/pipes';
-import { AvatarInitialComponent } from './avatar-initial/avatar-initial.component';
+import {AvatarInitialComponent} from './avatar-initial/avatar-initial.component';
 
 
 @NgModule({
@@ -42,18 +38,19 @@ import { AvatarInitialComponent } from './avatar-initial/avatar-initial.componen
     ControlAudioComponent,
     ControlVideoComponent
   ],
-    imports: [
-      MatButtonModule,
-      MatIconModule,
-      MatSidenavModule,
-      MatListModule,
-      CommonModule,
-      MatGridListModule,
-      FlexModule,
-      EventInitialParticipantModule,
-      DisplayNameModule,
-      ImageReferenceModule
-    ]
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    CommonModule,
+    MatGridListModule,
+    FlexModule,
+    EventInitialsModule,
+    DisplayNameModule,
+    ImageReferenceModule
+  ]
 })
-export class MeetingModule { }
+export class MeetingModule {
+}
 

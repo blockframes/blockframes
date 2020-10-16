@@ -6,3 +6,4 @@ export * from './lib/copy-db-from-ci';
 export * from './lib/util';
 export * from './lib/restore-storage-from-ci';
 export * from './lib/types'
+export * from './lib/algolia'

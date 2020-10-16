@@ -27,7 +27,7 @@ import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 import { MovieFormAdditionalInformationComponent } from './additional-information.component';
 
@@ -51,7 +51,6 @@ import { MovieFormAdditionalInformationComponent } from './additional-informatio
     FormCountryModule,
     FormListModule,
     HasStatusModule,
-    TranslateSlugModule,
     ToLabelModule,
 
     // Material

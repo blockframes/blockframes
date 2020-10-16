@@ -6,7 +6,7 @@ import { HostedVideos } from '@blockframes/movie/+state/movie.firestore';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { hostedVideoTypes } from '@blockframes/utils/static-model';
 import { allowedVideoFilesExtensions as extensions, allowedVideoFilesTypes as types } from '@blockframes/utils/utils';
 
 @Component({
@@ -22,7 +22,7 @@ export class MovieVideoUploadComponent implements OnInit {
   @Input() movie: Movie;
   public allowedFilesTypes = types;
   public allowedFilesExtensions =  extensions;
-  public hostedVideoTypes = Object.keys(staticConsts['hostedVideoTypes']);
+  public hostedVideoTypes = Object.keys(hostedVideoTypes);
 
   constructor(
     private snackBar: MatSnackBar,

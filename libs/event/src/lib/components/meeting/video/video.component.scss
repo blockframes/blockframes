@@ -44,6 +44,15 @@ section {
   border: 32px solid var(--background);
 }
 
+mat-grid-list {
+  flex-grow: 1;
+}
+
+event-meeting-remote-participant{
+  width: 100%;
+  height: 100%;
+}
+
 .grid-list-Seller {
   flex-grow: 1;
   mat-grid-tile {

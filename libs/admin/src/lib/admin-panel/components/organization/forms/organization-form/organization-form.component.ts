@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 // Blockframes
-import { staticConsts } from '@blockframes/utils/static-model';
+import { organizationStatus } from '@blockframes/utils/static-model';
 import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
 import { app } from '@blockframes/utils/apps';
 import { FormControl } from '@angular/forms';
@@ -22,7 +22,7 @@ export class AdminOrganizationFormComponent {
   // TODO#2914 Re-enable the cropper here when we found a solution
   @Input() @boolean disableCropper = false;
 
-  public organizationStatus = staticConsts.organizationStatus;
+  public organizationStatus = organizationStatus;
   public app = app;
   public notifyCheckbox = new FormControl(false);
   public storagePath: string;
