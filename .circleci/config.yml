@@ -30,7 +30,6 @@ references:
     filters:
       branches:
         only:
-          - /hotfix\/release\/.*/
           - /release\/.*/
 
 commands:
@@ -360,7 +359,6 @@ workflows:
                 - ci
                 - develop
                 - /release\/.*/
-                - /hotfix\/release\/.*/
                 - master
                 - production
                 - staging
