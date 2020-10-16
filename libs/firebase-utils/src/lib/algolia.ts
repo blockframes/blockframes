@@ -100,7 +100,7 @@ export function storeSearchableMovie(
       genres: !!movie.genres ? movie.genres : [],
       originCountries: !!movie.originCountries ? movie.originCountries : [],
       languages: {
-        original: !!movie.originalLanguages ? movie.originalLanguages: [],
+        original: !!movie.originalLanguages ? movie.originalLanguages : [],
         dubbed: !!movie.languages ?
           Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.dubbed) :
           [],
@@ -119,6 +119,7 @@ export function storeSearchableMovie(
       appAccess: movieAppAccess ?
         app.filter(a => movie.storeConfig?.appAccess[a]) :
         [],
+      socialGoals: movie.socialGoals
     };
 
     return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);
