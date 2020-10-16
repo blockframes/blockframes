@@ -38,7 +38,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
-
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
@@ -46,7 +45,6 @@ export class ListComponent implements OnInit, OnDestroy {
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
-
 
   ngOnInit() {
     // Implicitly we only want accepted movies
