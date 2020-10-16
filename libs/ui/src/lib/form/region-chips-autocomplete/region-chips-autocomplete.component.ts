@@ -16,7 +16,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { territories } from '@blockframes/utils/static-model/staticConsts';
+import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
   selector: '[form]region-chips-autocomplete',

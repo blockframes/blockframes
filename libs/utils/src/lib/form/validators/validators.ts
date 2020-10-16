@@ -7,8 +7,7 @@ import {
   Validators,
   FormArray
 } from '@angular/forms';
-import { isInKeys, Scope } from '../../static-model/staticConsts';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { languages, isInKeys, Scope, staticModel } from '@blockframes/utils/static-model';
 
 export const urlValidators = Validators.pattern(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/);
 
@@ -77,7 +76,7 @@ export function validPercentage(control: FormControl): ValidationErrors {
  * Checks if the language exists
  */
 export function languageValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  return !Object.keys(staticConsts.languages).includes(control.value.trim().toLowerCase())
+  return !Object.keys(languages).includes(control.value.trim().toLowerCase())
     ? { languageNotSupported: true }
     : null;
 }
@@ -120,7 +119,7 @@ export function validRange(): ValidatorFn {
  */
 export function valueIsInConstantValidator(scope: Scope): ValidatorFn {
   return (parent: FormGroup | FormArray): ValidationErrors => {
-    if (parent.value.filter(val => staticConsts[scope][val]).length) {
+    if (parent.value.filter(val => staticModel[scope][val]).length) {
       return null;
     } else {
       return { invalidValue: true };

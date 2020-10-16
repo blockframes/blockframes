@@ -3,7 +3,7 @@ import { extractMediaFromDocumentBeforeUpdate } from "@blockframes/media/+state/
 import { MediaService } from "@blockframes/media/+state/media.service";
 import { App, getMoviePublishStatus } from "@blockframes/utils/apps";
 import { mergeDeep } from "@blockframes/utils/helpers";
-import { staticConsts } from "@blockframes/utils/static-model";
+import { ProductionStatus } from "@blockframes/utils/static-model";
 import { MovieControl, MovieForm } from "./movie.form";
 import { Movie, MoviePromotionalElements, MovieQuery, MovieService } from "../+state";
 import { FormShellConfig, FormSaveOptions } from './shell/shell.component';
@@ -12,7 +12,7 @@ import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-const valueByProdStatus: Record<keyof typeof staticConsts['productionStatus'], Record<string, string>> = {
+const valueByProdStatus: Record<ProductionStatus, Record<string, string>> = {
   development: {
     'release.status': '',
     "runningTime.status": ''

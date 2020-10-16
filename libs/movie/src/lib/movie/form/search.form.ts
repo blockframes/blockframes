@@ -1,5 +1,5 @@
 
-import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
+import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';

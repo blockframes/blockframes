@@ -1,5 +1,5 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormConstantValue, FormEntity } from "@blockframes/utils/form";
+import { FormStaticValue, FormEntity } from "@blockframes/utils/form";
 import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
@@ -22,7 +22,7 @@ function createLoactionControls(location: Partial<Location> = {}) {
     street: new FormControl(entity.street),
     zipCode: new FormControl(entity.zipCode),
     city: new FormControl(entity.city),
-    country: new FormConstantValue<'territories'>(entity.country, 'territories'),
+    country: new FormStaticValue<'territories'>(entity.country, 'territories'),
     phoneNumber: new FormControl(entity.phoneNumber),
     region: new FormControl(entity.phoneNumber),
   }

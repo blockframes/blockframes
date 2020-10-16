@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { storeType, storeStatus, staticModel } from '@blockframes/utils/static-model';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { app } from '@blockframes/utils/apps';
@@ -20,9 +20,9 @@ export class MovieComponent implements OnInit {
   public movie: Movie;
   public movieForm: MovieAdminForm;
   public movieAppAccessForm: MovieAppAccessAdminForm;
-  public storeType = staticConsts.storeType;
-  public storeStatus = staticConsts.storeStatus;
-  public staticConsts = staticConsts;
+  public storeType = storeType;
+  public storeStatus = storeStatus;
+  public staticConsts = staticModel;
   public rows: any[] = [];
   public app = app;
 

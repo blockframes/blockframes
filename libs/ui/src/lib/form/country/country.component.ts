@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormConstantValue } from '@blockframes/utils/form';
+import { FormStaticValue } from '@blockframes/utils/form';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { boolean } from '@blockframes/utils/decorators/decorators';
-import { territories } from '@blockframes/utils/static-model/staticConsts';
-import { Territory } from '@blockframes/utils/static-model';
+import { territories, Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] form-country',
@@ -13,7 +12,7 @@ import { Territory } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormCountryComponent implements OnInit {
-  @Input() form: FormConstantValue<'territories'>;
+  @Input() form: FormStaticValue<'territories'>;
   @Input() @boolean noWorld = false
 
   territories = territories;

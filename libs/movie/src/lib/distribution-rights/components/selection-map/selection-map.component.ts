@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
-import { getTerritorySlugFromGeoJson } from '@blockframes/utils/static-model/staticConsts';
+import { getTerritorySlugFromGeoJson } from '@blockframes/utils/static-model/static-model';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 

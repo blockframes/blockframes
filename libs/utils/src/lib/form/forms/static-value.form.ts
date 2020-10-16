@@ -1,10 +1,9 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import { Scope as ConstantScope, GetKeys } from '../../static-model/staticConsts'
+import { Scope, GetKeys } from '../../static-model/static-model'
 import { isKeyValidator, isKeyArrayValidator } from '../validators';
 import { Observable } from 'rxjs';
 
-// Form for static constant until we delete every static model
-export class FormConstantValue<S extends ConstantScope> extends FormControl {
+export class FormStaticValue<S extends Scope> extends FormControl {
   value: GetKeys<S>;
   valueChanges: Observable<GetKeys<S>>;
   constructor(value: GetKeys<S>, scope: S, validators: ValidatorFn[] = []) {
@@ -12,8 +11,7 @@ export class FormConstantValue<S extends ConstantScope> extends FormControl {
   }
 }
 
-// Form array for static constant until we delete every static model
-export class FormConstantArray<S extends ConstantScope> extends FormControl {
+export class FormStaticValueArray<S extends Scope> extends FormControl {
   value: GetKeys<S>[];
   valueChanges: Observable<GetKeys<S>[]>;
   constructor(value: GetKeys<S>[], scope: S, validators: ValidatorFn[] = []) {
