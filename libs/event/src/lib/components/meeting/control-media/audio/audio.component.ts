@@ -1,25 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import {MeetingService, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {Observable} from "rxjs";
+import {IParticipantMeeting, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
   selector: 'event-meeting-control-audio',
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss']
 })
-export class ControlAudioComponent implements OnInit {
+export class ControlAudioComponent {
 
-  localVideoMicStatus$: Observable<IStatusVideoMic>;
+  participant$: Observable<IParticipantMeeting>;
 
   constructor(private meetingService: MeetingService) {
-    this.localVideoMicStatus$ = this.meetingService.getLocalVideoMicStatus()
+    this.participant$ = this.meetingService.getLocalParticipants()
   }
 
-  ngOnInit(): void {
-  }
-
-  muteAudio(localVideoMicStatus: IStatusVideoMic){
-    console.log('muteAudio :', {localVideoMicStatus})
-    this.meetingService.muteOrUnmuteYourLocalMediaPreview('audio', localVideoMicStatus.audio);
+  muteAudio(participant: IParticipantMeeting){
+    this.meetingService.setupVideoAudio(participant.identity, 'audio', !participant.statusMedia.audio);
   }
 }

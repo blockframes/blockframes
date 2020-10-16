@@ -2,9 +2,12 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 // Blockframes
-import {meetingEventEnum, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
 import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
-import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {
+  IParticipantMeeting,
+  IStatusVideoMic,
+  meetingEventEnum
+} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
 // Twilio
 import {LocalTrackPublication, Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';

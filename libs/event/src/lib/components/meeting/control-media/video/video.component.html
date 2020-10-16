@@ -1,5 +1,5 @@
-<div *ngIf="localVideoMicStatus$ | async as localVideoMicStatus" class="container-btn-mute-unmute-local-video">
-  <div (click)="muteVideo(localVideoMicStatus)" class="btn-mute-unmute-local-video" [ngStyle]="{'background-color':localVideoMicStatus.video ? 'green' : 'red' }">
+<div *ngIf="participant$ | async as participant" class="container-btn-mute-unmute-local-video">
+  <div (click)="muteVideo(participant)" class="btn-mute-unmute-local-video" [ngStyle]="{'background-color':participant.statusMedia.video ? 'green' : 'red' }">
     <img src="assets/icons/cam.svg" alt="Video">
   </div>
 </div>

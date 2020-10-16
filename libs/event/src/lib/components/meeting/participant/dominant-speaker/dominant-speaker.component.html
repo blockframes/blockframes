@@ -1,12 +1,10 @@
 <section fxFlex fxLayoutAlign="center center">
-  <ng-container *ngIf="camMicIsOn$ | async as camMicIsOn">
-    <ng-container *ngIf="!camMicIsOn.video">
-      <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
-    </ng-container>
+  <ng-container *ngIf="!participant.statusMedia.video">
+    <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
   </ng-container>
-  <section [hidden]="!(camMicIsOn$ | async).video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
+  <section [hidden]="!participant.statusMedia.video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
   </section>
   <span class="mat-caption">
-        {{participant.festivalData | displayName}}
-    </span>
+    {{participant.festivalData | displayName}}
+  </span>
 </section>

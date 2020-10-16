@@ -14,11 +14,15 @@ import {EventInitialsModule} from "@blockframes/event/pipes/event-initial-partic
 import {DisplayNameModule} from '@blockframes/utils/pipes';
 
 // Components
-import {VideoComponent} from './video/video.component';
-import {RemoteComponent} from './participant/remote/remote.component';
-import {ContainerVideoComponent} from './container-video/container-video.component';
-import {AvatarInitialComponent} from './avatar-initial/avatar-initial.component';
-
+import {VideoComponent} from "@blockframes/event/components/meeting/video/video.component";
+import {LocalComponent} from "@blockframes/event/components/meeting/participant/local/local.component";
+import {RemoteComponent} from "@blockframes/event/components/meeting/participant/remote/remote.component";
+import {DominantSpeakerComponent} from "@blockframes/event/components/meeting/participant/dominant-speaker/dominant-speaker.component";
+import {ParticipantsNavComponent} from "@blockframes/event/components/meeting/participant-nav/participants-nav.component";
+import {ContainerVideoComponent} from "@blockframes/event/components/meeting/container-video/container-video.component";
+import {ControlAudioComponent} from "@blockframes/event/components/meeting/control-media/audio/audio.component";
+import {ControlVideoComponent} from "@blockframes/event/components/meeting/control-media/video/video.component";
+import {AvatarInitialComponent} from "@blockframes/event/components/meeting/avatar-initial/avatar-initial.component";
 
 @NgModule({
   declarations: [

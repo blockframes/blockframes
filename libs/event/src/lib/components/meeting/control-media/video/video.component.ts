@@ -1,27 +1,22 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {MeetingService, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
+import {IParticipantMeeting, IStatusVideoMic} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
   selector: 'event-meeting-control-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
-export class ControlVideoComponent implements OnInit {
+export class ControlVideoComponent {
 
-  localVideoMicStatus$: Observable<IStatusVideoMic>;
+  participant$: Observable<IParticipantMeeting>;
 
   constructor(private meetingService: MeetingService) {
-    this.localVideoMicStatus$ = this.meetingService.getLocalVideoMicStatus()
+    this.participant$ = this.meetingService.getLocalParticipants();
   }
 
-  ngOnInit(): void {
-  }
-
-  muteVideo(localVideoMicStatus: IStatusVideoMic){
-    this.meetingService.muteOrUnmuteYourLocalMediaPreview('video', localVideoMicStatus.video)
-  }
-
-  getControlVideo(localVideoMicStatus: IStatusVideoMic){
+  muteVideo(participant: IParticipantMeeting){
+    this.meetingService.setupVideoAudio(participant.identity, 'video', !participant.statusMedia.video);
   }
 }

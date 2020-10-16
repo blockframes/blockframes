@@ -34,6 +34,13 @@ export class VideoComponent {
   }
 
   /**
+   * To know if the room as Dominant in Connected participants
+   */
+  isRoomAsDominant(remoteParticipants: IParticipantMeeting[]) {
+    return !!remoteParticipants.find(participant => !!participant.isDominantSpeaker);
+  }
+
+  /**
    * Function to know how many column we need for mat-grid-list
    * @param remoteParticipants
    */

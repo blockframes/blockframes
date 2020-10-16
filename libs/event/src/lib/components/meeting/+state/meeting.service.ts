@@ -52,14 +52,6 @@ export class MeetingService {
   }
 
   /**
-   *
-   * @param uid: string
-   */
-  getTwilioParticipantDataFromUid(uid: string): Participant {
-    return this.twilioParticipants.get(uid);
-  }
-
-  /**
    * Get Twilio participant from uid of User
    * @param uid: string
    */
@@ -74,6 +66,17 @@ export class MeetingService {
     return this.connectedParticipants$
       .pipe(
         map(participants => participants.filter(participant => !participant.isLocalSpeaker)
+        )
+      );
+  }
+
+  /**
+   * Get all participant of the twilio room without the local participant
+   */
+  getLocalParticipants(): Observable<IParticipantMeeting> {
+    return this.connectedParticipants$
+      .pipe(
+        map(participants => participants.find(participant => participant.isLocalSpeaker)
         )
       );
   }
@@ -232,7 +235,7 @@ export class MeetingService {
     const remoteUser = await this.userService.getUser(identity);
     const remoteOrg = await this.orgService.getValue(remoteUser.orgId);
 
-    const isDominantSpeaker = event.isOwner;
+    const isDominantSpeaker = remoteUser.orgId === event.ownerId;
 
     return {
       identity: identity,
@@ -293,6 +296,39 @@ export class MeetingService {
     this.connectedParticipants$.next([...otherParticipant, updatedParticipant])
   }
 
+
+
+  /**
+   * Mute/unmute your local media.
+   * @param kind: string = 'video' || 'audio'  - The type of media you want to mute/unmute
+   * @param mute - bool - mute/unmute
+   */
+  muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
+    //get local track
+    const localTwilioData = this.getTwilioParticipantDataFromUid(this.localParticipant.identity)
+    const localTracks = this.getTracksOfParticipant(localTwilioData);
+    this.doSetupLocalVideoAndAudio(kind, !mute);
+
+    let track: any;
+    //get audio or video track
+    if (kind === localTracks[0].kind) {
+      track = localTracks[0].track
+    } else {
+      track = localTracks[1].track
+    }
+
+    if (mute) {
+      track.disable();
+      track.stop();
+    } else {
+      track.enable();
+      track.restart();
+    }
+  }
+
+  muteUnmute(identity: string, kind: string, boolToChange: boolean){
+    this.setupVideoAudio(identity, kind, boolToChange);
+  }
 
   /**
    * Function call when local participant leave the room
