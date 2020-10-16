@@ -12,13 +12,13 @@
             <form-display-name [form]="noteForm"></form-display-name>
             <mat-form-field appearance="outline">
               <mat-label>Role</mat-label>
-              <mat-select [formControl]="noteForm.get('role')">
+              <mat-select test-id="role" [formControl]="noteForm.get('role')">
                 <mat-option *ngFor="let role of roles" [value]="role">
                   {{ role | titlecase }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <file-upload [form]="noteForm.get('ref')" [storagePath]="getPath()" accept="['.pdf']"
+            <file-upload test-id="intent-note" [form]="noteForm.get('ref')" [storagePath]="getPath()" accept="['.pdf']"
               [types]="['application/pdf']" filePrivacy="protected">
               <h3 type>Upload Files</h3>
               <p class="mat-caption" format>Accepted Formats: .pdf</p>

@@ -19,7 +19,7 @@
       </p>
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Description</mat-label>
-        <textarea matInput [formControl]="salesPitch.get('description')" cdkTextareaAutosize
+        <textarea test-id="description" matInput [formControl]="salesPitch.get('description')" cdkTextareaAutosize
           cdkAutosizeMinRows="10"></textarea>
       </mat-form-field>
     </section>
@@ -32,7 +32,7 @@
           <div fxLayout>
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Target Audience (optional)</mat-label>
-              <input matInput type="text" placeholder="Target Audience" [formControl]="targetForm" />
+              <input test-id="target-audience" matInput type="text" placeholder="Target Audience" [formControl]="targetForm" />
             </mat-form-field>
           </div>
         </ng-template>
@@ -40,7 +40,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Social Responsability Goals (optional)</mat-label>
-        <mat-select [formControl]="audience.get('goals')" multiple>
+        <mat-select test-id="goal" [formControl]="audience.get('goals')" multiple>
           <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
         </mat-select>
       </mat-form-field>
