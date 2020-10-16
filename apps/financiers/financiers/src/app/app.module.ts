@@ -28,8 +28,7 @@ import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
 // Yandex Metrika
-import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
-import { YandexMetricaService, YM_CONFIG } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
+import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 import { yandexId } from '@env';
 
 // Intercom
@@ -80,9 +79,6 @@ import { firebase } from '@env';
     // Akita
     AkitaNgRouterStoreModule,
 
-    // Yandex Metrika
-    YandexMetricaModule.forRoot(yandexId),
-
     // Router
     FinanciersModule,
 
@@ -104,12 +100,11 @@ export class AppModule {
     intercomService: IntercomService,
     yandexService: YandexMetricaService,
     gdprService: GDPRService,
-    @Inject(YM_CONFIG) ymConfig: number
   ) {
 
     const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
     if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
-    if (yandex) yandexService.insertMetrika(ymConfig);
+    if (yandex) yandexService.insertMetrika();
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
