@@ -62,6 +62,7 @@ export async function upgradeAlgoliaMovies() {
       'searchable(orgName)',
 
       // other facets
+      'socialGoals',
       'genres',
       'languages.original',
       'languages.dubbed',
@@ -74,6 +75,7 @@ export async function upgradeAlgoliaMovies() {
       'appAccess'
     ],
   };
+
   await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameMovies, process.env['ALGOLIA_API_KEY']);
 
