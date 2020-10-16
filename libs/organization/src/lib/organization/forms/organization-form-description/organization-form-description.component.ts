@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { orgActivity } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[fiscalNumber] [activity] organization-form-description',
@@ -9,7 +9,7 @@ import { staticConsts } from '@blockframes/utils/static-model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormDescriptionComponent {
-  activities = staticConsts.orgActivity;
+  activities = orgActivity;
   @Input() fiscalNumber: FormControl;
   @Input() activity: FormControl;
 

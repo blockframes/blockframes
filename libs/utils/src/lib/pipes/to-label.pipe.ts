@@ -1,7 +1,6 @@
 import { NgModule, Pipe, PipeTransform } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { staticConsts } from '@blockframes/utils/static-model';
-import { Scope } from '../static-model/staticConsts';
+import { staticModel, Scope } from '@blockframes/utils/static-model';
 
 @Pipe({
   name: 'toLabel'
@@ -9,7 +8,7 @@ import { Scope } from '../static-model/staticConsts';
 export class ToLabelPipe implements PipeTransform {
   transform(value: string | string[], scope: Scope): string | string[] {
     try {
-      return Array.isArray(value) ? value.map(val => staticConsts[scope][val]).join(', ') : staticConsts[scope][value];
+      return Array.isArray(value) ? value.map(val => staticModel[scope][val]).join(', ') : staticModel[scope][value];
     } catch (error) {
       console.error(`Could not find label for key "${value}" in scope "${scope}"`)
       return value;

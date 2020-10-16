@@ -2,7 +2,7 @@ import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
-import { GetKeys } from './static-model/staticConsts';
+import { GetKeys } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 import { ProductionStatus, Territory } from './static-model';

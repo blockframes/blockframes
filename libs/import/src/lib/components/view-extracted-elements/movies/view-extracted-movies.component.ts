@@ -24,8 +24,16 @@ import { MovieImportState } from '../../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { GenresValue, LanguageValue, MovieLanguageTypeValue, StakeholderRoleValue, TerritoryValue, UnitBoxValue } from '@blockframes/utils/static-model';
-import { productionStatus } from '@blockframes/utils/static-model/staticConsts';
+import {
+  GenresValue,
+  LanguageValue,
+  MovieLanguageTypeValue,
+  StakeholderRoleValue,
+  TerritoryValue,
+  UnitBoxValue,
+  productionStatus
+} from '@blockframes/utils/static-model';
+
 
 enum SpreadSheetMovie {
   internationalTitle,

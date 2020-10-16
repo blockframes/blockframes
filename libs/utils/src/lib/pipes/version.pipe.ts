@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { movieLanguageTypes } from '../static-model/staticConsts';
+import { movieLanguageTypes } from '../static-model/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 
