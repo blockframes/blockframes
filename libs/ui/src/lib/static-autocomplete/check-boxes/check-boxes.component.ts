@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { staticConsts, Scope } from '@blockframes/utils/static-model';
+import { staticModel, Scope } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form][scope] static-check-boxes',
@@ -35,7 +35,7 @@ export class StaticCheckBoxesComponent implements OnInit {
   public items: any;
 
   ngOnInit() {
-    this.items = staticConsts[this.scope];
+    this.items = staticModel[this.scope];
   }
 
   public handleChange({ checked, source }: MatCheckboxChange) {

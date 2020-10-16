@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { genres as staticGenre } from '@blockframes/utils/static-model/staticConsts';
+import { genres as staticGenre } from '@blockframes/utils/static-model';
 
 interface CarouselSection {
   title: string;

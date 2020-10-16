@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 
 // Blockframes
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { productionStatus } from '@blockframes/utils/static-model/staticConsts'
+import { productionStatus } from '@blockframes/utils/static-model/static-model'
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 
 export const tunnelRoutes: Routes = [

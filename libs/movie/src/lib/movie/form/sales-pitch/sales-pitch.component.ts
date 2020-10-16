@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { ActivatedRoute } from '@angular/router';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { SocialGoal, socialGoals } from '@blockframes/utils/static-model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class MovieFormSalesPitchComponent {
   form = this.shell.getForm('movie');
-  public staticGoals = Object.keys(staticConsts['socialGoals']);
+  public staticGoals = Object.keys(socialGoals) as SocialGoal[];
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
     private dynTitle: DynamicTitleService) {

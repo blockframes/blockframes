@@ -3,7 +3,7 @@ import { algolia } from '@env';
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { FormConstantValue } from '@blockframes/utils/form';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 // Angular
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
@@ -30,7 +30,7 @@ export class PriceComponent implements OnInit {
 
   public algoliaMovieIndex = algolia.indexNameMovies;
 
-  public currencyCtrl: FormConstantValue<'movieCurrencies'>;
+  public currencyCtrl: FormStaticValue<'movieCurrencies'>;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;

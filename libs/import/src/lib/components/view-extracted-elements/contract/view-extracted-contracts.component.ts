@@ -14,8 +14,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../../import-utils';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { GetCode } from '@blockframes/utils/static-model/staticConsts';
-
+import { GetCode } from '@blockframes/utils/static-model/static-model';
 
 enum SpreadSheetContract {
   licensors,

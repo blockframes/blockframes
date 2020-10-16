@@ -31,9 +31,7 @@
     <ng-container matColumnDef="originCountry">
       <th mat-header-cell *matHeaderCellDef>Country of origin</th>
       <td mat-cell *matCellDef="let element">
-        <span *ngFor="let country of element.originCountries | slice: 0:2; let isLast = last">
-          {{ country | toLabel: 'territories' }}{{ isLast ? '' : ', ' }}
-        </span>
+        <span>{{ element.originCountries | slice: 0:2 | toLabel: 'territories' }}</span>
       </td>
     </ng-container>
 
