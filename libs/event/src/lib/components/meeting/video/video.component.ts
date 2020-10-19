@@ -1,5 +1,5 @@
 // Angular
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 // Blockframes
 import {Event} from "@blockframes/event/+state";
@@ -19,8 +19,6 @@ export class VideoComponent {
   @Input() remoteParticipants: IParticipantMeeting[];
   @Input() event: Event;
   @Input() getTwilioParticipant: (uid: string) => Participant;
-
-  @Output() eventSetupVideoAudio = new EventEmitter;
 
   /**
    * To know if local is alone in Connected participants
@@ -42,16 +40,6 @@ export class VideoComponent {
       return (remoteParticipantsLength === 1) ? 1 : (remoteParticipantsLength > 1 && remoteParticipantsLength < 5) ? 2 : 3;
     }
     return 0;
-  }
-
-  /**
-   * For the remote video/audio we need that to know when the track is reel attach
-   * @param identity
-   * @param kind
-   * @param boolToChange
-   */
-  setupVideoAudio({identity, kind, boolToChange}): void {
-    this.eventSetupVideoAudio.emit({identity, kind, boolToChange});
   }
 
   /**

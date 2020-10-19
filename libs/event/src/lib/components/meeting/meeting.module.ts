@@ -6,6 +6,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatListModule} from "@angular/material/list";
+import {MatCardModule} from "@angular/material/card";
 import {FlexModule} from "@angular/flex-layout";
 
 // Blockframes
@@ -35,6 +36,7 @@ import {AvatarInitialComponent} from './avatar-initial/avatar-initial.component'
     MatIconModule,
     MatSidenavModule,
     MatListModule,
+    MatCardModule,
     CommonModule,
     MatGridListModule,
     FlexModule,

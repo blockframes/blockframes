@@ -49,17 +49,6 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Event come from child when audio or video is deactivated or activated
-   *
-   * @param identity: string
-   * @param kind: string
-   * @param boolToChange: boolean
-   */
-  setupVideoAudio({identity, kind, boolToChange}): void {
-    this.meetingService.setupVideoAudio(identity, kind, boolToChange)
-  }
-
-  /**
    * when ngDestroy we disconnect the local participant;
    */
   ngOnDestroy(): void {
