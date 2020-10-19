@@ -94,6 +94,10 @@ const routes: Routes = [{
       ],
     },
     {
+      path: 'files',
+      loadChildren: () => import('./files/files.module').then(m => m.FilesViewModule)
+    },
+    {
       path: 'contact',
       loadChildren: () => import('@blockframes/ui/static-informations/contact/contact.module').then(m => m.ContactModule)
     },
