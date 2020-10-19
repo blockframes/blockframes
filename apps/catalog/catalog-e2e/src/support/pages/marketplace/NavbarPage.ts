@@ -44,7 +44,7 @@ export default abstract class NavbarPage {
     let movieCount = 0;
     cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
       .then(countEl => {
-        movieCount = parseInt(countEl[0].innerText);
+        movieCount = parseInt(countEl[0].innerText, 10);
         cy.log(`>>Wishes count:${movieCount}`);
         cy.wrap(movieCount).as('movieCount');
       })
