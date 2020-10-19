@@ -33,7 +33,7 @@ describe('Media Service Test Suite', () => {
         })},
         { provide: Overlay, useFactory: () => ({
             create: () => ({attach: _ => ({}), detach: _ => ({})}),
-            position: () => ({ global: _ => ({ bottom: _ => ({ left: _ => true }) }) })
+            position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
         })},
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
