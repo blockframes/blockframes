@@ -50,10 +50,6 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
     return this.meetingService.getTwilioParticipant(uid);
   }
 
-  getTwilioParticipantDataFromUid = (uid: string) => {
-    return this.meetingService.getTwilioParticipantDataFromUid(uid);
-  }
-
   /**
    * Event come from child when audio or video is deactivated or activated
    *

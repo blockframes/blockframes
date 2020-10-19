@@ -44,7 +44,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.setupParticipantEvent(this.twilioData);
-    this.videoMock(this.twilioData);
+    this.meetingService.attachParticipantTracks(this.twilioData, this.containerRemoteVideo.nativeElement);
   }
 
   /**
@@ -79,12 +79,6 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     participant.on(meetingEventEnum.TrackStarted, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
       this.setupVideoAudio(track.kind, true);
     })
-  }
-
-  videoMock(participant: Participant): void {
-    const participantContainer = this.containerRemoteVideo.nativeElement;
-    this.meetingService.attachParticipantTracks(participant, participantContainer);
-
   }
 
   setupVideoAudio(kind: keyof IStatusVideoAudio, boolToChange: boolean): void {

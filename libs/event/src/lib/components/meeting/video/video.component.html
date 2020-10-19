@@ -18,7 +18,7 @@
   </ng-container>
 
 
-  <ng-container *ngIf="!isSeller && remoteParticipants">
+  <ng-container *ngIf="!event.isOwner && remoteParticipants">
     <section fxFlex fxLayout="column">
       <article class="article-dominant">
         <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
@@ -34,7 +34,7 @@
       </article>
       <article class="article-buyer">
           <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
-            <ng-container  *ngIf="!participant.isDominantSpeaker">
+            <ng-container >
                 <event-meeting-remote-participant [participant]="participant" [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-remote-participant>
             </ng-container>
           </ng-container>

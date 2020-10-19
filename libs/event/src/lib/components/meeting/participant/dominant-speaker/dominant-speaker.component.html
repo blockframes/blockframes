@@ -1,10 +1,12 @@
-<section fxFlex fxLayoutAlign="center center">
-  <ng-container *ngIf="!participant.statusMedia.video">
-    <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
-  </ng-container>
-  <section [hidden]="!participant.statusMedia.video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
-  </section>
-  <span class="mat-caption">
-    {{participant.festivalData | displayName}}
-  </span>
-</section>
+<mat-card fxFlex fxLayoutAlign="center center">
+  <mat-card-content>
+    <ng-container *ngIf="!participant.statusMedia.video">
+      <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
+    </ng-container>
+    <section [hidden]="!participant.statusMedia.video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
+    </section>
+    <span class="mat-caption">
+      {{participant.festivalData | displayName}}
+    </span>
+  </mat-card-content>
+</mat-card>

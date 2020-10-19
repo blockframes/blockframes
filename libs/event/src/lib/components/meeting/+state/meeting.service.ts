@@ -48,6 +48,8 @@ export class MeetingService {
 
   accessToken: string;
 
+  localParticipant: IParticipantMeeting;
+
   constructor(
     private userService: UserService,
     private orgService: OrganizationService,
@@ -219,8 +221,8 @@ export class MeetingService {
       await Promise.all(tracks);
     }
 
-    const localParticipant = await this.createIParticipantMeeting(room.localParticipant.identity, event, true, video, audio);
-    this.addParticipant(localParticipant, room.localParticipant);
+    this.localParticipant = await this.createIParticipantMeeting(room.localParticipant.identity, event, true, video, audio);
+    this.addParticipant(this.localParticipant, room.localParticipant);
     this.setUpRoomEvent(room, event);
   }
 
@@ -303,34 +305,53 @@ export class MeetingService {
 
 
   /**
+   * Get track of one participant
+   * @param participant - All participants connected in the room
+   */
+  getTracksOfParticipant(participant: Participant) {
+    return Array.from(participant.tracks).map((
+      track: any
+    ) => {
+      //participant[0] is the key
+      return track[1];
+    });
+  }
+
+  /**
    * Mute/unmute your local media.
    * @param kind: string = 'video' || 'audio'  - The type of media you want to mute/unmute
    * @param mute - bool - mute/unmute
    */
-  muteOrUnmuteYourLocalMediaPreview(kind: string, mute: boolean) {
+  muteOrUnmuteYourLocalMediaPreview(kind: keyof IStatusVideoAudio, mute: boolean) {
     //get local track
-    const localTwilioData = this.getTwilioParticipantDataFromUid(this.localParticipant.identity)
-    const localTracks = this.getTracksOfParticipant(localTwilioData);
-    this.doSetupLocalVideoAndAudio(kind, !mute);
+    const localTwilioData = this.getTwilioParticipant(this.localParticipant.identity)
+    const localTracks1 = this.getTracksOfParticipant(localTwilioData);
+    const localTracks = Array.from(localTwilioData.tracks.values());
 
-    let track: any;
-    //get audio or video track
-    if (kind === localTracks[0].kind) {
-      track = localTracks[0].track
-    } else {
-      track = localTracks[1].track
-    }
+    console.log('kind : ', kind)
+    console.log('localTracks1 : ', localTracks1)
+    console.log('localTracks : ', localTracks)
 
-    if (mute) {
-      track.disable();
-      track.stop();
-    } else {
-      track.enable();
-      track.restart();
-    }
+    // this.muteUnmute(this.localParticipant.identity, kind, !mute);
+    //
+    // let track: any;
+    // //get audio or video track
+    // if (kind === localTracks[0].kind) {
+    //   track = localTracks[0].track
+    // } else {
+    //   track = localTracks[1].track
+    // }
+    //
+    // if (mute) {
+    //   track.disable();
+    //   track.stop();
+    // } else {
+    //   track.enable();
+    //   track.restart();
+    // }
   }
 
-  muteUnmute(identity: string, kind: string, boolToChange: boolean){
+  muteUnmute(identity: string, kind: keyof IStatusVideoAudio, boolToChange: boolean){
     this.setupVideoAudio(identity, kind, boolToChange);
   }
 
@@ -401,7 +422,7 @@ export class MeetingService {
    *  Detach the Tracks from the DOM.
    * @param tracks - track to detach of the DOM
    */
-  detachTracks(tracks): void {
+  detachTracks(tracks: (RemoteAudioTrack | RemoteVideoTrack)[]): void {
     tracks.forEach((track) => {
       if (track) {
         track.detach().forEach((detachedElement) => {

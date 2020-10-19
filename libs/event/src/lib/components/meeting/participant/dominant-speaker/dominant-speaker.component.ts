@@ -2,28 +2,33 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 
 //Blockframes
-import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 // Twilio
-import {Participant, RemoteAudioTrack, RemoteDataTrack, RemoteTrackPublication, RemoteVideoTrack} from 'twilio-video';
+import {
+  Participant,
+  RemoteAudioTrack,
+  RemoteAudioTrackPublication,
+  RemoteVideoTrack,
+  RemoteVideoTrackPublication
+} from 'twilio-video';
 
 @Component({
   selector: '[participant] [twilioData] event-meeting-dominant-speaker',
   templateUrl: './dominant-speaker.component.html',
   styleUrls: ['./dominant-speaker.component.scss']
 })
-export class DominantSpeakerComponent extends AbstractParticipant implements AfterViewInit {
+export class DominantSpeakerComponent implements AfterViewInit {
 
   @Input() participant: IParticipantMeeting
   @Input() twilioData: Participant
 
   @Output() eventSetupVideoAudio = new EventEmitter();
 
-  @ViewChild('dominantSpeakerVideo') containerDominantSpeakerVideo;
+  @ViewChild('dominantSpeakerVideo') containerDominantSpeakerVideo: ElementRef;
 
-  constructor(private elm: ElementRef) {
-    super();
+  constructor(private meetingService: MeetingService) {
   }
 
   ngAfterViewInit() {
@@ -36,41 +41,33 @@ export class DominantSpeakerComponent extends AbstractParticipant implements Aft
    * @param participant
    */
   setUpRemoteParticipantEvent(participant: Participant) {
-    const containerRemotParticipant = this.elm.nativeElement.querySelector(`#dominantSpeakerVideo`);
+    const containerDominantParticipant = this.containerDominantSpeakerVideo.nativeElement;
 
-    participant.on(meetingEventEnum.TrackSubscribed, (track) => {
-      this.attachTracks([track], containerRemotParticipant)
+    participant.on(meetingEventEnum.TrackSubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
+      this.meetingService.attachTracks([track], containerDominantParticipant);
     })
 
-    participant.on(meetingEventEnum.TrackUnsubscribed, (track) => {
-      this.detachTracks([track])
+    participant.on(meetingEventEnum.TrackUnsubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
+      this.meetingService.detachTracks([track]);
     })
 
     participant.on(meetingEventEnum.Disconnected, () => {
-      this.detachParticipantTracks(this.twilioData);
+      this.meetingService.detachParticipantTracks(this.twilioData);
     })
 
-    participant.on(meetingEventEnum.TrackDisabled, (track: RemoteTrackPublication) => {
-      this.detachTracks([this.getTrackFromRemoteTrackPublication(track)])
-      this.setupVideoAudio(track.kind, false)
+    participant.on(meetingEventEnum.TrackDisabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
+      this.meetingService.detachTracks([remoteTrack.track])
+      this.setupVideoAudio(remoteTrack.kind, false);
     })
 
-    participant.on(meetingEventEnum.TrackEnabled, (track: RemoteTrackPublication) => {
-      this.attachTracks([this.getTrackFromRemoteTrackPublication(track)], containerRemotParticipant)
-      this.setupVideoAudio(track.kind, true)
+    participant.on(meetingEventEnum.TrackEnabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
+      this.meetingService.attachTracks([remoteTrack.track], containerDominantParticipant)
+      this.setupVideoAudio(remoteTrack.kind, true);
     })
 
-    participant.on(meetingEventEnum.TrackStarted, (track: RemoteTrackPublication) => {
-      this.setupVideoAudio(track.kind, true)
+    participant.on(meetingEventEnum.TrackStarted, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
+      this.setupVideoAudio(track.kind, true);
     })
-  }
-
-  /**
-   *
-   * @param trackPublication:RemoteTrackPublication
-   */
-  getTrackFromRemoteTrackPublication(trackPublication: RemoteTrackPublication): RemoteVideoTrack | RemoteAudioTrack | RemoteDataTrack {
-    return trackPublication.track;
   }
 
   /**
@@ -78,11 +75,16 @@ export class DominantSpeakerComponent extends AbstractParticipant implements Aft
    * @param participants: Participant
    */
   makeDominantSpeakerTrack(participants: Participant) {
-    this.attachParticipantTracks(participants, this.containerDominantSpeakerVideo.nativeElement)
+    this.meetingService.attachParticipantTracks(participants, this.containerDominantSpeakerVideo.nativeElement)
   }
 
 
   setupVideoAudio(kind: string, boolToChange: boolean) {
     this.eventSetupVideoAudio.emit({identity: this.participant.identity, kind, boolToChange})
+  }
+
+  ngOnDestroy() {
+    this.meetingService.detachParticipantTracks(this.twilioData);
+    this.twilioData.removeAllListeners();
   }
 }

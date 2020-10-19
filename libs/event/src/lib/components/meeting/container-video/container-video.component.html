@@ -1,4 +1,4 @@
-<event-meeting-participants-nav [participants]="arrayOfParticipantConnected$ | async">
+<event-meeting-participants-nav [participants]="remoteParticipants$ | async">
   <event-meeting-video
     [remoteParticipants]="remoteParticipants$ | async"
     [event]="event"

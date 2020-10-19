@@ -1,15 +1,15 @@
-<ng-container>
-  <section [ngClass]="{'section-open': open, 'section-close': !open}" fxFlex fxLayoutAlign="center center">
-    <ng-container *ngIf="!localVideoAudioIsOn.video">
+<mat-card [ngClass]="{'section-open': open, 'section-close': !open}" fxFlex fxLayoutAlign="center center">
+  <mat-card-content>
+    <ng-container *ngIf="!localParticipant.statusMedia.video">
       <event-meeting-avatar-initial [participant]="localParticipant"></event-meeting-avatar-initial>
     </ng-container>
-    <section [hidden]="!localVideoAudioIsOn.video" id="localVideo" #localVideo>
+    <section [hidden]="!localParticipant.statusMedia.video" id="localVideo" #localVideo>
     </section>
     <span class="mat-caption">
-      {{localParticipant.festivalData | displayName}}
-    </span>
+    {{localParticipant.festivalData | displayName}}
+  </span>
     <mat-icon *ngIf="open" (click)="open = !open" svgIcon="close"></mat-icon>
     <mat-icon *ngIf="!open" (click)="open = !open" svgIcon="open_to"></mat-icon>
-  </section>
-</ng-container>
+  </mat-card-content>
+</mat-card>
 
