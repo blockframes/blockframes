@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RxJs
 import { switchMap, map, startWith } from 'rxjs/operators';
 import { Observable, of, Subscription, combineLatest } from 'rxjs';
-import { ProductionStatus } from '@blockframes/utils/static-model';
+import { movieFormat, ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';

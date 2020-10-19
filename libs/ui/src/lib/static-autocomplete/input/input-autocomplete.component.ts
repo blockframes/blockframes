@@ -41,8 +41,7 @@ export class InputAutocompleteComponent implements OnInit {
         map((state: string) => state ? this.filterStates(state) : this.state),
       );
     this.displayFn = (name: string) => {
-      const res = this.state.find(entity => entity === name)
-      return res ? res : '';
+      return staticModel[this.scope][name];
     }
   }
 

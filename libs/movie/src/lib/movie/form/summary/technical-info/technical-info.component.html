@@ -7,23 +7,23 @@
 <ul>
   <li>
     <strong>Shooting Format </strong>
-    <missing-control [control]="movie.get('format')" type="movieFormat" [link]="link" fragment="technical-info">
+    <missing-control [control]="movie.get('format')" [link]="link" fragment="technical-info" scope="movieFormat">
     </missing-control>
   </li>
   <li>
     <strong>Format Quality </strong>
-    <missing-control [control]="movie.get('formatQuality')" type="movieFormatQuality" [link]="link"
-      fragment="technical-info">
+    <missing-control [control]="movie.get('formatQuality')" [link]="link" fragment="technical-info"
+      scope="movieFormatQuality">
     </missing-control>
   </li>
   <li>
     <strong>Color </strong>
-    <missing-control [control]="movie.get('color')" type="colors" [link]="link" fragment="technical-info">
+    <missing-control [control]="movie.get('color')" [link]="link" fragment="technical-info" scope="colors">
     </missing-control>
   </li>
   <li>
     <strong>Sound Format </strong>
-    <missing-control [control]="movie.get('soundFormat')" type="soundFormat" [link]="link" fragment="technical-info">
+    <missing-control [control]="movie.get('soundFormat')" [link]="link" fragment="technical-info" scope="soundFormat">
     </missing-control>
   </li>
 </ul>
