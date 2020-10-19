@@ -15,7 +15,7 @@
     <p class="mat-caption" format>Accepted Formats: .pdf</p>
   </file-upload>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <button mat-flat-button color="primary" (click)="upload()">
+    <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.note.valid">
       <span>Add file</span>
       <mat-icon svgIcon="send"></mat-icon>
     </button>
