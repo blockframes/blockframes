@@ -40,6 +40,16 @@ export default abstract class NavbarPage {
     cy.get('catalog-marketplace a[test-id=heart-icon]').should('not.contain', count || 0);
   }
 
+  public getWishListCount() {
+    let movieCount = 0;
+    cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
+      .then(countEl => {
+        movieCount = parseInt(countEl[0].innerText);
+        cy.log(`>>Wishes count:${movieCount}`);
+        cy.wrap(movieCount).as('movieCount');
+      })
+  }
+
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();

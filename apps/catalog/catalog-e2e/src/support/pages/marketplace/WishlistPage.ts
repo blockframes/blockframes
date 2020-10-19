@@ -48,8 +48,13 @@ export default class WishlistPage extends NavbarPage {
    *    clears all the movies if called without parameter
    * @param movieNames : an array of movies to search and remove
    */
-  public removeMovieFromWishlist(movieNames: string[] = []) {
-    cy.get("catalog-wishlist").then($table => {
+  public removeMovieFromWishlist(movieCount: number = 0, movieNames: string[] = []) {
+    if (movieCount === 0) {
+      return;
+    }
+
+    cy.wait(TO.FIFTEEN_SEC);
+    cy.get("catalog-wishlist section", {timeout: TO.VSLOW_UPDATE}).then($table => {
       if ($table.find("tr").length === 0) {
         cy.log("Wishlist empty...");
         return;

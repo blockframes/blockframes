@@ -2,7 +2,7 @@
 
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
-import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
+import { acceptCookie, clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 import { TO } from '@blockframes/e2e/utils/env';
 
 const BINGE_WATCH_COUNT = 5;
@@ -14,6 +14,7 @@ const users  =  [ userFixture.getByUID(USER.Vincent) ];
 beforeEach(() => {
   clearDataAndPrepareTest();
   signIn(users[0]);
+  acceptCookie();
 });
 
 describe('Test wishlist features from library, detail page',  () => {
@@ -24,14 +25,16 @@ describe('Test wishlist features from library, detail page',  () => {
     cy.get('catalog-wishlist', {timeout: TO.PAGE_LOAD});
     cy.wait(TO.THREE_SEC);
     cy.log('Clear WatchList');
-    p4.removeMovieFromWishlist();
-    p4.checkWishListCount(0);
+    p4.getWishListCount()
+    cy.get('@movieCount').then((numMovies) => {
+      p4.removeMovieFromWishlist(numMovies as any);
+      p4.checkWishListCount(0);
+    });
   });
   
   it('User logs in, (dis)likes from library page, verifies wishlist.', () => {
     const p1 = new HomePage();
     const p3: SearchPage = p1.clickViewTheLibrary();
-    p3.clearAllFilters('All films');
     cy.wait(TO.FIFTEEN_SEC);
 
     let movieViewCount = BINGE_WATCH_COUNT;
@@ -71,7 +74,6 @@ describe('Test wishlist features from library, detail page',  () => {
       cy.wait(TO.FIFTEEN_SEC);
       cy.log(`B: Updating WishList: [${JSON.stringify(movieList2)}]`);
       movieList2.forEach(movieName => {
-        //p3.clearAllFilters('All films');
         const p5: ViewPage = p3.selectMovie(movieName);
         p5.clickWishListButton();
         p5.openSideNav();
@@ -84,7 +86,6 @@ describe('Test wishlist features from library, detail page',  () => {
       */
 
       //5. Remove a movie from Line view
-      //p3.clearAllFilters('All films');
       p4.openSideNav();
       p4.clickLibrary();
       cy.wait(TO.FIFTEEN_SEC);
