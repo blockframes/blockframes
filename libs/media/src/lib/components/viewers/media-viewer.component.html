@@ -1,6 +1,5 @@
 
 <ng-container *ngIf="!!event.meta.selectedFile; else noFile">
-  <p>{{ event.meta.selectedFile | fileName }}</p>
   <ng-container [ngSwitch]="event.meta.selectedFile | fileType">
     <ng-container *ngSwitchCase="'image'">
       <img [ref]="event.meta.selectedFile" asset="no_titles.webp" />

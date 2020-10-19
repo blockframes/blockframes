@@ -20,7 +20,7 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions } from 'firebase-functions';
+import { RuntimeOptions, region } from 'firebase-functions';
 import { getTwilioAccessToken } from './twilio';
 
 //--------------------------------
@@ -101,20 +101,6 @@ export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery
 
 export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-/**
- * Trigger: REST call to the /admin app
- *
- *  - Backups / Restore the database
- *
- * Region:
- *
- * If you are using HTTP functions to serve dynamic content for Firebase Hosting, you must use us-central1.
- * @see https://firebase.google.com/docs/functions/locations
- * @TODO #3973
- *
- */
-export const admin = functions.region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
-
 //--------------------------------
 //   Permissions  Management    //
 //--------------------------------
@@ -156,6 +142,7 @@ export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUs
 
 /** Trigger: REST call to create the access token for connection to twilio */
 export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
+
 
 //--------------------------------
 //   Notifications Management   //
@@ -253,3 +240,11 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
+
+/**
+ * Trigger: REST call to the /admin app
+ *
+ *  - Backups / Restore the database
+ *  - Quorum Deploy & setup a movie smart-contract
+ */
+export const admin = region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);

@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
@@ -17,7 +20,10 @@ import { VideoViewerComponent } from './video-viewer/video-viewer.component';
   imports: [
     CommonModule,
 
+    FlexLayoutModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
+    MatIconModule,
 
     FileNameModule,
     ImageReferenceModule,

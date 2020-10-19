@@ -63,11 +63,7 @@
     }
   ],
   "functions": {
-    "predeploy": [
-      "npm run lint backend-functions",
-      "npm run build:backend-functions",
-      "npm run deploy:functions:config"
-    ],
+    "predeploy": ["npx ts-node -P tools/tsconfig.tools.json tools/scripts/functions-pre-deploy.ts "],
     "source": "dist/apps/backend-functions/"
   },
   "firestore": {

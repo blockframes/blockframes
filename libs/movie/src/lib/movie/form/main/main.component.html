@@ -84,7 +84,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
-          <input matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
+          <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
           <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
           </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
@@ -93,7 +93,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select scope="screeningStatus" [control]="form.release.get('status')"
+          <static-select test-id="status" scope="screeningStatus" [control]="form.release.get('status')"
             [withoutValues]="['tobedetermined']" required fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
@@ -104,7 +104,7 @@
 
       </article>
 
-      <chips-autocomplete [form]="form.get('originCountries')" scope="territories"
+      <chips-autocomplete test-id="country" [form]="form.get('originCountries')" scope="territories"
         placeholder="Enter Country/ies of Origin" [withoutValues]="['world']">
         <mat-label>Country of Origin *</mat-label>
         <mat-error>Please specify your project's country of origin.</mat-error>
@@ -113,7 +113,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('originalLanguages')" scope="languages"
+      <chips-autocomplete test-id="language" [form]="form.get('originalLanguages')" scope="languages"
         placeholder="Enter Original Language(s)" [withoutValues]="['all']">
         <mat-label>Original Language(s) *</mat-label>
         <mat-error>Please specify your project's original language(s).</mat-error>
@@ -122,7 +122,7 @@
         </mat-hint>
       </chips-autocomplete>
 
-      <chips-autocomplete [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
+      <chips-autocomplete test-id="genres" [form]="form.get('genres')" scope="genres" placeholder="Enter Genre(s)"
         [withoutValues]="['']">
         <mat-label>Genre(s) *</mat-label>
         <mat-error>Please specify your project's genre(s).</mat-error>
@@ -141,7 +141,7 @@
             </mat-chip>
           </ng-container>
         </mat-chip-list>
-        <input matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
+        <input test-id="other-genres" matInput [formControl]="customGenreCtrl" [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCustomGenre($event)"
           placeholder="Please specify if you did not find any genre above." />
         <mat-hint>Please specify if you did not find any genre above.</mat-hint>
@@ -151,7 +151,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
+          <input test-id="run-time" matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error>
             Please specify your project's runtime.
@@ -159,7 +159,7 @@
         </mat-form-field>
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-          <static-select scope="screeningStatus" [control]="form.runningTime.get('status')"
+          <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
             placeholder="To be determined/Estimated/Confirmed" [withoutValues]="['']" fxFlex>
             <mat-label>Status</mat-label>
             <mat-hint>
@@ -195,7 +195,7 @@
             <div fxLayout fxLayoutGap="24px">
 
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-                <static-select scope="memberStatus" [control]="directorForm.get('status')" [withoutValues]="['']"
+                <static-select test-id="director-status" scope="memberStatus" [control]="directorForm.get('status')" [withoutValues]="['']"
                   fxFlex>
                   <mat-label>Director's Status</mat-label>
                   <mat-hint>
@@ -204,7 +204,7 @@
                 </static-select>
               </ng-container>
 
-              <static-select scope="directorCategory" [control]="directorForm.get('category')"
+              <static-select test-id="director-category" scope="directorCategory" [control]="directorForm.get('category')"
                 placeholder="Director's Category" [withoutValues]="['']" fxFlex>
                 <mat-label>Director's Category</mat-label>
                 <mat-hint>
@@ -215,7 +215,7 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Director's Description</mat-label>
-              <textarea matInput formControlName="description"></textarea>
+              <textarea test-id="director-desc" matInput formControlName="description"></textarea>
               <mat-hint>
                 Director's biography, remarkable elements...
               </mat-hint>
@@ -225,11 +225,11 @@
                 <div [formGroup]="filmography" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input matInput formControlName="title">
+                    <input test-id="film-title" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
-                    <input matInput formControlName="year" type="number">
+                    <input test-id="film-year" matInput formControlName="year" type="number">
                     <mat-error *ngIf="filmography.get('year').hasError('invalidYear')">Please enter a 4 digit date (e.g.
                       2020)
                     </mat-error>

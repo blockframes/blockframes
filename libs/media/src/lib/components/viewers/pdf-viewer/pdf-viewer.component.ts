@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, Inject, Input, ViewChild } from '@angular/core';
 
 import { MeetingPdfControl } from '@blockframes/event/+state/event.firestore';
 import { MediaService } from '@blockframes/media/+state/media.service';
@@ -12,6 +13,9 @@ import { BehaviorSubject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PdfViewerComponent {
+
+  @ViewChild('container') pdfContainer: ElementRef<HTMLDivElement>;
+  fullScreen = false;
 
   private _ref: string;
   get ref() { return this._ref; }
@@ -30,8 +34,18 @@ export class PdfViewerComponent {
   pdfUrl$ = new BehaviorSubject('');
   loading$ = new BehaviorSubject(true);
 
+  /** Keep track of wether the player is in full screen or not.
+   * We cannot trust the `toggleFullScreen()` function for that because
+   * full screen can be exited without our button (Escape key, etc...)
+   */
+  @HostListener('fullscreenchange')
+  trackFullScreenMode() {
+    this.fullScreen = !this.fullScreen;
+  }
+
   constructor(
     private mediaService: MediaService,
+    @Inject(DOCUMENT) private document: Document,
   ) { }
 
   async generatePdfUrl() {
@@ -46,6 +60,16 @@ export class PdfViewerComponent {
       const url = await this.mediaService.generateImgIxUrl(this.ref, param);
       this.pdfUrl$.next(url);
       this.loading$.next(false);
+    }
+  }
+
+  /** Toggle the full screen mode depending on the current full screen state */
+  toggleFullScreen() {
+
+    if (!this.fullScreen) {
+      this.pdfContainer.nativeElement.requestFullscreen();
+    } else {
+      this.document.exitFullscreen();
     }
   }
 }
