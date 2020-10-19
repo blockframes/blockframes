@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSelectionListChange } from '@angular/material/list';
+
+// Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { MediaService } from '@blockframes/media/+state/media.service';
-import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
-
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
 import { AddFileDialogComponent } from '../dialog/add-file.component';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
+import { MediaService } from '@blockframes/media/+state/media.service';
+
+// Material
+import { MatDialog } from '@angular/material/dialog';
+import { MatSelectionListChange } from '@angular/material/list';
 
 const columns = { 
   ref: 'Type',
@@ -79,9 +83,20 @@ export class FileExplorerComponent implements OnInit {
   }
 
   public async deleteFile(note: HostedMediaWithMetadata) {
-    const org = this.query.getActive()
-    const notes = org.documents.notes.filter(n => n.title !== note.title);
-    await this.organizationService.update(org.id, { documents: { notes: notes } });
+
+    this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Are you sure you want to delete this file?',
+        question: ' ',
+        buttonName: 'Yes',
+        onConfirm: async () => {
+          const org = this.query.getActive()
+          const notes = org.documents.notes.filter(n => n.title !== note.title);
+          await this.organizationService.update(org.id, { documents: { notes: notes } });
+        }
+      }
+    });
+
   }
 
   public openDialog(item?: Partial<HostedMediaWithMetadata>) {

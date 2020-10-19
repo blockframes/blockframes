@@ -11,6 +11,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { AddFileDialogModule } from '@blockframes/media/components/dialog/add-file.module';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
+import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     AddFileDialogModule,
     MaxLengthModule,
     DeepKeyPipeModule,
+    ConfirmModule,
 
     // Material
     MatListModule,
