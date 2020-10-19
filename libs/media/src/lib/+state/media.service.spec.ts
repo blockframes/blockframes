@@ -9,7 +9,7 @@ import { clearFirestoreData } from '@firebase/testing';
 import { ImageParameters, formatParameters } from "../directives/image-reference/imgix-helpers";
 import { firebase } from '@env';
 
-describe('Notifications Test Suite', () => {
+describe('Media Service Test Suite', () => {
   let service: MediaService;
   let db: AngularFirestore;
   let storage: AngularFireStorage;
@@ -33,7 +33,7 @@ describe('Notifications Test Suite', () => {
         })},
         { provide: Overlay, useFactory: () => ({
             create: () => ({attach: _ => ({}), detach: _ => ({})}),
-            position: () => ({ global: () => ({ bottom: () => ({ left: () => true }) }) })
+            position: () => ({ global: _ => ({ bottom: _ => ({ left: _ => true }) }) })
         })},
         { provide: SETTINGS, useValue: { host: 'localhost:8080', ssl: false } }
       ],
