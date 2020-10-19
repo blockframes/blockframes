@@ -41,10 +41,10 @@ interface SubDirectory {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileExplorerComponent implements OnInit {
-  org$ = this.query.selectActive();
+  public org$ = this.query.selectActive();
 
-  directories: Directory[] = []
-  activeDirectory: SubDirectory;
+  public directories: Directory[] = []
+  public activeDirectory: SubDirectory;
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
@@ -83,7 +83,6 @@ export class FileExplorerComponent implements OnInit {
   }
 
   public async deleteFile(note: HostedMediaWithMetadata) {
-
     this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure you want to delete this file?',
@@ -96,7 +95,6 @@ export class FileExplorerComponent implements OnInit {
         }
       }
     });
-
   }
 
   public openDialog(item?: Partial<HostedMediaWithMetadata>) {
