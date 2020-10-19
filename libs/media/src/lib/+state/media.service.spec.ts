@@ -1,13 +1,12 @@
-﻿import {TestBed} from '@angular/core/testing';
+﻿import { TestBed } from '@angular/core/testing';
 import { Overlay } from '@angular/cdk/overlay';
 import { MediaService } from './media.service';
 import { UploadData } from "./media.firestore";
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorage } from "@angular/fire/storage";
 import { SETTINGS, AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
-import { loadFirestoreRules, clearFirestoreData } from '@firebase/testing';
+import { clearFirestoreData } from '@firebase/testing';
 import { ImageParameters, formatParameters } from "../directives/image-reference/imgix-helpers";
-import { readFileSync } from 'fs';
 import { firebase } from '@env';
 
 describe('Notifications Test Suite', () => {
@@ -42,11 +41,6 @@ describe('Notifications Test Suite', () => {
     db = TestBed.inject(AngularFirestore);
     storage = TestBed.inject(AngularFireStorage);
     service = TestBed.inject(MediaService);
-
-    await loadFirestoreRules({
-      projectId: "test",
-      rules: readFileSync('./firestore.test.rules', "utf8")
-    });
   });
 
   afterEach(() => clearFirestoreData({projectId: 'test'}))
@@ -85,5 +79,4 @@ describe('Notifications Test Suite', () => {
     const genURL = await service.generateBackgroundImageUrl('test', {})
     expect(genURL).toBe(expURL);
   });
-
 });
