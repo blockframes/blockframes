@@ -27,30 +27,32 @@
               </mat-form-field>
             </div>
 
-            <static-select test-id="cast-status" scope="memberStatus" type="constant" [control]="castForm.get('status')"
-              fxFlex *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
+            <static-select test-id="cast-status" scope="memberStatus" [control]="castForm.get('status')" fxFlex
+              *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
               <mat-label>Status</mat-label>
               <mat-hint align="start">Please specify if the cast member is confirmed for this project or not.</mat-hint>
             </static-select>
 
             <mat-form-field appearance="outline">
               <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description"
+              <textarea test-id="cast-description" matInput formControlName="description"
                 placeholder="e.g. Kate Winslet is the youngest person to acquire six Academy Award nominations, with seven nominations in total, and won the Academy Award for Best Actress for The Reader (2008)."></textarea>
               <mat-hint>Additional information about the cast member.</mat-hint>
             </mat-form-field>
 
             <div fxLayout="column" fxLayoutAlign="start ">
               <h6 class="mat-caption">Filmography</h6>
-              <ng-container *ngFor="let cast of castForm.get('filmography').controls">
+              <ng-container *ngFor="let cast of castForm.get('filmography').controls; index as i">
                 <div [formGroup]="cast" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Film Title</mat-label>
-                    <input matInput formControlName="title">
+                    <input [attr.test-id]= "'cast-film' + (i + 1)" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Release Year</mat-label>
-                    <input matInput formControlName="year" type="number">
+                    <input [attr.test-id]= "'cast-year' + (i + 1)" matInput formControlName="year" type="number">
+                    <mat-error *ngIf="cast.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>
@@ -88,17 +90,16 @@
             </div>
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="crew-role" type="constant" [control]="crewForm.get('role')" scope="crewRoles"
-                fxFlex [withoutValues]="['']">
+              <static-select test-id="crew-role" [control]="crewForm.get('role')" scope="crewRoles" fxFlex
+                [withoutValues]="['']">
                 <mat-label>Role</mat-label>
                 <mat-hint align="start">
                   Please specify crew member's role in your project (director of photography, score composer, writer...)
                 </mat-hint>
               </static-select>
 
-              <static-select test-id="crew-status" scope="memberStatus" type="constant"
-                [control]="crewForm.get('status')" fxFlex *ngIf="form | hasStatus: ['development', 'shooting']"
-                [withoutValues]="['']">
+              <static-select test-id="crew-status" scope="memberStatus" [control]="crewForm.get('status')" fxFlex
+                *ngIf="form | hasStatus: ['development', 'shooting']" [withoutValues]="['']">
                 <mat-label>Status</mat-label>
                 <mat-hint align="start">Please specify if the crew member is confirmed for this project or not.
                 </mat-hint>
@@ -115,15 +116,17 @@
 
             <div fxLayout="column" fxLayoutAlign="start">
               <h6 class="mat-caption">Filmography</h6>
-              <ng-container *ngFor="let crew of crewForm.get('filmography').controls">
+              <ng-container *ngFor="let crew of crewForm.get('filmography').controls; index as i">
                 <div [formGroup]="crew" fxLayout="row" fxLayoutGap="24px">
                   <mat-form-field appearance="outline" fxFlex>
-                    <mat-label>Crew's Filmography</mat-label>
-                    <input matInput formControlName="title">
+                    <mat-label>Film Title</mat-label>
+                    <input [attr.test-id]= "'crew-film' + (i + 1)" matInput formControlName="title">
                   </mat-form-field>
                   <mat-form-field appearance="outline" fxFlex>
                     <mat-label>Crew's Filmography</mat-label>
-                    <input matInput formControlName="year" type="number">
+                    <input [attr.test-id]= "'crew-year' + (i + 1)" matInput formControlName="year" type="number">
+                    <mat-error *ngIf="crew.hasError('invalidYear', 'year')">Please enter a 4 digit date (e.g. 2020)
+                    </mat-error>
                   </mat-form-field>
                 </div>
               </ng-container>

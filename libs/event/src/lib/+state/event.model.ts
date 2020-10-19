@@ -55,7 +55,6 @@ export interface MeetingEvent extends Event<Meeting> {
 export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event?.type === 'meeting';
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
-    callUrl: '',
     organizerId: '',
     description: '',
     files: [],

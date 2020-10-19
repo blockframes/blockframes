@@ -20,8 +20,8 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions } from 'firebase-functions';
-
+import { RuntimeOptions, region } from 'firebase-functions';
+import { getTwilioAccessToken } from './twilio';
 
 //--------------------------------
 //    Configuration             //
@@ -29,13 +29,11 @@ import { RuntimeOptions } from 'firebase-functions';
 
 /**
  * Runtime options for heavy functions
- * @dev linked to #2531 (Changing functions REGION)
  */
 const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
-
 
 //--------------------------------
 //    Users Management          //
@@ -103,14 +101,6 @@ export const getAnalyticsActiveUsers = functions.https.onCall(logErrors(bigQuery
 
 export const privateVideo = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-/**
- * Trigger: REST call to the /admin app
- *
- *  - Backups / Restore the database
- *  - Quorum Deploy & setup a movie smart-contract
- */
-export const admin = functions.runWith(heavyConfig).https.onRequest(adminApp);
-
 //--------------------------------
 //   Permissions  Management    //
 //--------------------------------
@@ -145,6 +135,14 @@ export const onEventDeleteEvent = onDocumentDelete(
 
 /** Trigger: REST call to invite a list of users by email. */
 export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUsers));
+
+//--------------------------------
+//      Twilio Access           //
+//--------------------------------
+
+/** Trigger: REST call to create the access token for connection to twilio */
+export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
+
 
 //--------------------------------
 //   Notifications Management   //
@@ -242,3 +240,11 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 //--------------------------------
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
+
+/**
+ * Trigger: REST call to the /admin app
+ *
+ *  - Backups / Restore the database
+ *  - Quorum Deploy & setup a movie smart-contract
+ */
+export const admin = region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);

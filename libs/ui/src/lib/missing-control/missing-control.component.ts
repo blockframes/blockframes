@@ -1,10 +1,9 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild, OnDestroy } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
-import { FormStaticValue } from '@blockframes/utils/form';
 
 // Blockframes
-import { Scope } from '@blockframes/utils/static-model/staticModels';
+import { Scope } from '@blockframes/utils/static-model/static-model';
 
 // RxJs
 import { Subscription } from 'rxjs';
@@ -20,8 +19,7 @@ export class MissingControlComponent implements OnInit, OnDestroy {
 
   @Input() control: AbstractControl;
   @Input() scope: Scope;
-  @Input() type: string;
-  @Input() link: string;
+  @Input() link: string | string[];
   @Input() fragment: string;
   @Input() isLast = true;
 

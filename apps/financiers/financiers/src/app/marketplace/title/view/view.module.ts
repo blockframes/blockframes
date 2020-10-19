@@ -14,7 +14,7 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
-
+import { CampaignProgressModule } from '@blockframes/campaign/components/progress/progress.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -53,6 +53,11 @@ const routes = [
         path: 'finance',
         loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
         data: { animation: 4 }
+      },
+      {
+        path: 'campaign',
+        loadChildren: () => import('@blockframes/campaign/marketplace/marketplace.module').then(m => m.MarketplaceModule),
+        data: { animation: 5 }
       }
     ]
   }
@@ -69,6 +74,7 @@ const routes = [
     OrgChipModule,
     WishlistButtonModule,
     PromotionalLinksModule,
+    CampaignProgressModule,
     // Material
     MatButtonModule,
     MatIconModule,

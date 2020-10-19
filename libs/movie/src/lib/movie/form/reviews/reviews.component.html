@@ -11,7 +11,8 @@
           <article [formGroup]="prizesForm" fxLayout="column" fxLayoutGap="24px">
 
             <div fxLayout="row" fxLayoutGap="24px">
-              <static-select test-id="prize-name" [control]="prizesForm.get('name')" type="constant" scope="festival" [withoutValues]="['']" fxFlex>
+              <static-select test-id="festival-name" [control]="prizesForm.get('name')" scope="festival"
+                [withoutValues]="['']" fxFlex>
                 <mat-label>Festival Name</mat-label>
                 <mat-hint>If you can't find the festival you're looking for, go to 'Custom Festival' section.</mat-hint>
               </static-select>

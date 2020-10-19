@@ -1,0 +1,28 @@
+<ng-container *ngIf="(campaign$ | async) as campaign;">
+  <h1>Investment Campaign</h1>
+
+  <section id="proposal" *ngIf="campaign | hasKeys: ['cap', 'minPledge']">
+    <h2>Investment Proposal</h2>
+    <article fxLayout *ngIf="campaign.cap">
+      <h5>Total investment needed</h5>
+      <p>{{ campaign.cap | currency:'USD' }}</p>
+    </article>
+    <article fxLayout *ngIf="campaign.minPledge">
+      <h5>Minimum investment amount</h5>
+      <p>{{ campaign.minPledge | currency:'USD' }}</p>
+    </article>
+    <mat-divider></mat-divider>
+  </section>
+
+  <section *ngIf="campaign.perks.length">
+    <h2>Privileges</h2>
+    <article grid>
+      <ng-container *ngFor="let perk of campaign.perks">
+        <campaign-perk-card [col]="3" [perk]="perk"></campaign-perk-card>
+      </ng-container>
+    </article>
+
+  </section>
+
+</ng-container>
+

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieFormShellComponent } from '../shell/shell.component';
 
 @Component({
@@ -10,7 +11,9 @@ import { MovieFormShellComponent } from '../shell/shell.component';
 export class MovieFormTechnicalInfoComponent {
     form = this.shell.getForm('movie');
 
-    constructor(private shell: MovieFormShellComponent) { }
+    constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+        this.dynTitle.setPageTitle('Technical Information')
+    }
 
     get soundFormat() {
         return this.form.get('soundFormat');

@@ -7,7 +7,7 @@
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected.emit($event)">
-  <mat-option *ngFor="let language of filteredLanguages$ | async" [value]="language.slug">
-    {{ language.label }}
+  <mat-option *ngFor="let language of filteredLanguages$ | async" [value]="language">
+    {{ language }}
   </mat-option>
 </mat-autocomplete>

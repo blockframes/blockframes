@@ -1,11 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { staticModels } from '@blockframes/utils/static-model';
+import { Language } from '@blockframes/utils/static-model';
 import { FormStaticValue } from '@blockframes/utils/form';
-import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
-type LANGUAGES = typeof staticModels.LANGUAGES;
+import { GetKeys, languages } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'form-language',
@@ -14,31 +12,25 @@ type LANGUAGES = typeof staticModels.LANGUAGES;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormLanguageComponent implements OnInit {
-  @Input() public form: FormStaticValue<'LANGUAGES'>;
-  @Output() selected = new EventEmitter<ExtractSlug<'LANGUAGES'>>();
+  @Input() public form: FormStaticValue<'languages'>;
+  @Output() selected = new EventEmitter<GetKeys<'languages'>>();
 
-  public languages = staticModels.LANGUAGES;
-
-  filteredLanguages$: Observable<LANGUAGES>;
+  filteredLanguages$: Observable<Language[]>;
 
   ngOnInit() {
     this.filteredLanguages$ = this.form.valueChanges.pipe(
-      startWith(''),
-      map(language => (language ? this.filter(language) : this.languages))
+      startWith(undefined),
+      map(language => (language ? this.filter(language) : Object.keys(languages) as Language[]))
     );
   }
 
   // @dev displayFn "this" is the MatAutocomplete, not the component
   displayFn(key: string) {
-    if (key) {
-      return staticModels.LANGUAGES.find(({ slug }) => slug === key).label;
-    }
+    return languages[key];
   }
 
-  private filter(language: string): LANGUAGES {
+  private filter(language: string) {
     const filterValue = language.toLowerCase();
-    return this.languages.filter(
-      ({ label }) => label.toLowerCase().indexOf(filterValue) === 0
-    ) as any;
+    return Object.keys(languages).filter(label => label.toLowerCase().startsWith(filterValue)) as Language[];
   }
 }

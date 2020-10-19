@@ -14,19 +14,21 @@
         </p>
       </ng-container>
       <ng-template #oneStatus>
-        <p class="mat-body-2">{{appInformation.appName.label}} only accepts released projects. Please make sure that
-          your project is
-          released before filling the following form. If you have any questions, <a (click)="openIntercom()">contact
-            us</a>.</p>
+        <p class="mat-body-2">
+          {{appInformation.appName.label}} only accepts released projects. Please make sure that
+          your project is released before filling the following form. If you have any questions,
+          <a (click)="openIntercom()">contact us</a>.
+          </p>
       </ng-template>
 
       <mat-radio-group [formControl]="form.get('productionStatus')" fxLayout="row wrap" fxLayoutAlign="start center"
         fxLayoutGap="16px">
 
-        <ng-container *ngFor="let status of status">
+        <ng-container *ngFor="let status of status; index as i">
           <mat-card [ngClass]="{ disabled: status.disabled }">
             <img (click)="setValue(status.value)" [asset]="status.image" />
-            <mat-radio-button [value]="status.value" color="primary" [disabled]="status.disabled">{{status.name}}
+            <mat-radio-button [attr.test-id]= "'status' + (i + 1)" [value]="status.value" color="primary" [disabled]="status.disabled">
+              {{status.name}}
             </mat-radio-button>
           </mat-card>
         </ng-container>

@@ -4,7 +4,7 @@ import { CatalogCart, createCart } from './cart.model';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { MovieCurrencies } from '@blockframes/utils/static-model/types';
+import { MovieCurrency } from '@blockframes/utils/static-model/types';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
@@ -52,7 +52,7 @@ export class CartService extends CollectionService<CartState> {
    * @param currency
    * @param name
    */
-  public async submitCart(amount: number, currency: MovieCurrencies, name: string = 'default') {
+  public async submitCart(amount: number, currency: MovieCurrency, name: string = 'default') {
     const cart = await this.getCart(name);
     const updatedCart: CatalogCart = {
       ...cart,

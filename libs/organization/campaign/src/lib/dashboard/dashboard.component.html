@@ -1,0 +1,6 @@
+<article *ngIf="movieId$ | async as movieId">
+  <h3>Investment Campaign</h3>
+  <campaign-summary-proposal [form]="form" [link]="['/c/o/dashboard/tunnel/movie', movieId, 'proposal']"></campaign-summary-proposal>
+        
+  <campaign-summary-perks [form]="form" [link]="['/c/o/dashboard/tunnel/movie', movieId, 'proposal']"></campaign-summary-perks>
+</article>

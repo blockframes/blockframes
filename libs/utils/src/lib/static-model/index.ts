@@ -1,3 +1,3 @@
 export { default as staticModels } from './staticModels';
-export { default as staticConsts } from './staticConsts';
+export * from './static-model';
 export * from './types';

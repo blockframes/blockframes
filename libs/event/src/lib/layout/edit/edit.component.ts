@@ -21,7 +21,6 @@ export class EventEditComponent implements OnInit {
   progress: Observable<number>;
   sending = new BehaviorSubject(false);
   eventLink: string;
-  limit = Infinity;
 
   private duration: number;
 
@@ -32,9 +31,6 @@ export class EventEditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.form.value.type === 'meeting') {
-      this.limit = MEETING_MAX_INVITATIONS_NUMBER;
-    }
     this.eventLink = `/c/o/marketplace/event/${this.form.value.id}/session`;
 
     const { start, end } = this.form.value;

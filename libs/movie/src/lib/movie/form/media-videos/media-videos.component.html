@@ -8,7 +8,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Teaser Link</mat-label>
-        <input matInput type="url" [formControl]="form.promotional.get('teaser_link')" name="teaserLink"
+        <input test-id="teaserLink" matInput type="url" [formControl]="form.promotional.get('teaser_link')" name="teaserLink"
           placeholder="https://example.com" />
         <mat-error>
           Please enter a valid url.
@@ -17,7 +17,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Trailer Link</mat-label>
-        <input matInput type="url" [formControl]="form.promotional.get('trailer_link')" name="trailerLink"
+        <input test-id="trailerLink" matInput type="url" [formControl]="form.promotional.get('trailer_link')" name="trailerLink"
           placeholder="https://example.com" />
         <mat-error>
           Please enter a valid url.
@@ -26,7 +26,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Promo Reel</mat-label>
-        <input matInput type="url" [formControl]="form.promotional.get('promo_reel_link')" name="promoReelLink"
+        <input test-id="promoReelLink" matInput type="url" [formControl]="form.promotional.get('promo_reel_link')" name="promoReelLink"
           placeholder="https://example.com" />
         <mat-error>
           Please enter a valid url.
@@ -35,7 +35,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Screener</mat-label>
-        <input matInput type="url" [formControl]="form.promotional.get('screener_link')" name="screenerLink"
+        <input test-id="screenerLink" matInput type="url" [formControl]="form.promotional.get('screener_link')" name="screenerLink"
           placeholder="https://example.com" />
         <mat-error>
           Please enter a valid url.
@@ -44,7 +44,7 @@
 
       <mat-form-field appearance="outline" fxFlex>
         <mat-label>Clip Link</mat-label>
-        <input matInput type="url" [formControl]="form.promotional.get('clip_link')" name="clipLink"
+        <input test-id="clipLink" matInput type="url" [formControl]="form.promotional.get('clip_link')" name="clipLink"
           placeholder="https://example.com" />
         <mat-error>
           Please enter a valid url.
@@ -63,7 +63,7 @@
 
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Link Name</mat-label>
-              <input matInput type="text" formControlName="name" name="otherLinkName" />
+              <input test-id="otherLinkName" matInput type="text" formControlName="name" name="otherLinkName" />
               <mat-hint>
                 Give a name to your video.
               </mat-hint>
@@ -71,7 +71,7 @@
 
             <mat-form-field appearance="outline" fxFlex>
               <mat-label>Link Url</mat-label>
-              <input matInput type="url" formControlName="url" name="otherLinkUrl" placeholder="https://example.com" />
+              <input test-id="otherLinkUrl" matInput type="url" formControlName="url" name="otherLinkUrl" placeholder="https://example.com" />
               <mat-error *ngIf="otherLinkForm.get('url').hasError('pattern')">
                 Please enter a valid url.
               </mat-error>

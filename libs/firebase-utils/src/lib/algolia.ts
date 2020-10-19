@@ -1,10 +1,18 @@
 import algoliasearch, { IndexSettings } from 'algoliasearch';
-import { algolia } from '../environments/environment';
-import { MovieDocument, PublicUser, OrganizationDocument } from '../data/types';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { algolia as algoliaClient, dev } from '@env';
+import * as functions from 'firebase-functions';
+import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
-import { orgName } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
+import { mockConfigIfNeeded } from './firebase-utils';
+import { PublicUser } from '@blockframes/user/types';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+
+export const algolia = {
+  ...algoliaClient,
+  adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia?.api_key
+};
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -73,7 +81,7 @@ export function storeSearchableMovie(
   }
 
   try {
-    const movieAppAccess = movie.storeConfig!.appAccess;
+    const movieAppAccess = movie.storeConfig.appAccess;
 
     const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
@@ -92,15 +100,15 @@ export function storeSearchableMovie(
       genres: !!movie.genres ? movie.genres : [],
       originCountries: !!movie.originCountries ? movie.originCountries : [],
       languages: {
-        original: !!movie.originalLanguages ? movie.originalLanguages: [],
+        original: !!movie.originalLanguages ? movie.originalLanguages : [],
         dubbed: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.dubbed) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.dubbed) :
           [],
         subtitle: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.subtitle) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.subtitle) :
           [],
         caption: !!movie.languages ?
-          Object.keys(movie.languages).filter(lang => movie.languages![lang as LanguagesSlug]?.caption) :
+          Object.keys(movie.languages).filter(lang => movie.languages[lang as Language]?.caption) :
           [],
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
@@ -111,6 +119,7 @@ export function storeSearchableMovie(
       appAccess: movieAppAccess ?
         app.filter(a => movie.storeConfig?.appAccess[a]) :
         [],
+      socialGoals: movie.socialGoals
     };
 
     return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);

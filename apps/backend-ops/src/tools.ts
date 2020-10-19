@@ -1,5 +1,7 @@
 import { loadAdminServices, MIGRATIONS } from "@blockframes/firebase-utils";
+import { resolve } from "path";
 import { loadDBVersion } from "./migrations";
+import { firebase } from '@env'
 
 export function showHelp() {
   console.log('TODO: write a documentation');
@@ -18,4 +20,21 @@ export async function isMigrationRequired() {
 export function disableMaintenanceMode() {
   process.env.BLOCKFRAMES_MAINTENANCE_DISABLED = 'true';
   console.warn('Maintenance mode is disabled!')
+}
+
+export async function displayCredentials() {
+  let GAP: { [key: string]: any };
+  try {
+    // If service account is a stringified json object
+    GAP = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  } catch (e) {
+    // If service account is a path
+    // tslint:disable-next-line: no-eval
+    GAP = eval('require')(resolve(process.env.GOOGLE_APPLICATION_CREDENTIALS));
+  }
+  delete GAP.privateKey;
+  delete GAP.private_key;
+  console.log('Using default service account:\n', GAP);
+
+  console.log('Local env.ts:\n', firebase)
 }

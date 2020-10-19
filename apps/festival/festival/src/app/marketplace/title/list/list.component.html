@@ -3,7 +3,7 @@
   <!-- App Bar Search -->
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm">
-      <input type="text" formControlName="query" [value]="searchForm.query">
+      <input type="text" formControlName="query" [value]="searchForm.query.value">
     </form>
   </list-page-app-bar>
 
@@ -28,7 +28,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').valueChanges | async">
+        <input matInput type="text" formControlName="query" [value]="searchForm.get('query').value">
       </mat-form-field>
     </form>
   </list-page-search>
@@ -44,11 +44,11 @@
     </ng-template>
 
     <ng-template filter label="Genres" [form]="searchForm.genres">
-      <chips-autocomplete [form]="searchForm.genres" scope="genres" type="constant"></chips-autocomplete>
+      <chips-autocomplete [form]="searchForm.genres" scope="genres"></chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Country of Origin" [form]="searchForm.originCountries">
-      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES" type="model">
+      <chips-autocomplete [form]="searchForm.originCountries" placeholder="Country of Origin" scope="territories">
       </chips-autocomplete>
     </ng-template>
 
@@ -57,8 +57,8 @@
     </ng-template>
 
     <ng-template filter label="Production Status" [form]="searchForm.productionStatus">
-      <static-check-boxes fxLayout="column" [form]="searchForm.productionStatus" scope="productionStatus"
-        type="constant"></static-check-boxes>
+      <static-check-boxes fxLayout="column" [form]="searchForm.productionStatus" scope="productionStatus">
+      </static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Budget" [form]="searchForm.minBudget">

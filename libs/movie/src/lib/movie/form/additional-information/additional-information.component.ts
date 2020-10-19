@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieFormShellComponent } from '../shell/shell.component';
 import { Observable } from 'rxjs';
-import { staticConsts, UnitBox } from '@blockframes/utils/static-model';
+import { unitBox, UnitBox, certifications } from '@blockframes/utils/static-model';
 import { startWith, map } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 function toUnit(unit: UnitBox) {
   switch (unit) {
@@ -21,9 +22,9 @@ type Unit = ReturnType<typeof toUnit>;
 })
 export class MovieFormAdditionalInformationComponent implements OnInit {
   form = this.shell.getForm('movie');
-  unitBox = staticConsts.unitBox;
+  unitBox = unitBox;
   units$: Observable<Unit[]>;
-  certifications = Object.keys(staticConsts.certifications).filter(cert =>
+  certifications = Object.keys(certifications).filter(cert =>
     (cert !== 'awardedFilm' && cert !== 'aListCast'));
 
 
@@ -31,7 +32,9 @@ export class MovieFormAdditionalInformationComponent implements OnInit {
     certifications: "Qualifications",
   }
 
-  constructor(private shell: MovieFormShellComponent) { }
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Additional Information')
+  }
 
   ngOnInit() {
     this.units$ = this.form.boxOffice.valueChanges.pipe(

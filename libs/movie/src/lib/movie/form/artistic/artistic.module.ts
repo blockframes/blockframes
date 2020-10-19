@@ -18,7 +18,7 @@ import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chi
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe'
 import { FilmographyPipeModule} from '@blockframes/movie/pipes/filmography.pipe';
-import { TranslateSlugModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 import { MovieFormArtisticComponent } from './artistic.component';
 
@@ -37,7 +37,6 @@ import { MovieFormArtisticComponent } from './artistic.component';
     FlexLayoutModule,
     HasStatusModule,
     ToLabelModule,
-    TranslateSlugModule,
     FilmographyPipeModule,
 
     // Material

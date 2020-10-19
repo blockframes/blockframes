@@ -39,3 +39,12 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
 RUN sudo apt-get install apt-transport-https ca-certificates gnupg -q -y
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN sudo apt-get update -q -y && sudo apt-get install google-cloud-sdk -q -y
+RUN gcloud config set pass_credentials_to_gsutil true
+
+# Used in CI
+ENV GOOGLE_APPLICATION_CREDENTIALS creds.json
+ENV NODE_OPTIONS --max_old_space_size=7168
+ENV PROJECT_ID blockframes-ci
+ENV NG_CONFIG ci
+ENV SERVICE_ACCOUNT FIREBASE_CI_SERVICE_ACCOUNT
+ENV ENV_TS env/env.ci.ts

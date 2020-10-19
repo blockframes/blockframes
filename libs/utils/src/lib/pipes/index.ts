@@ -1,4 +1,3 @@
-export * from './translate-slug.pipe';
 export * from './term-date.pipe';
 export * from './to-label.pipe';
 export * from './reverse.pipe';
@@ -13,3 +12,5 @@ export * from './has-keys.pipe';
 export * from './fileName.pipe';
 export * from './sanitize.pipe';
 export * from './app.pipe';
+export * from './form.pipe';
+export * from './number.pipe';

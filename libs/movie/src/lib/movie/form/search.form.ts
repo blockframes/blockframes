@@ -1,32 +1,31 @@
 
-import { Genres, LanguagesSlug, TerritoriesSlug, StoreType } from '@blockframes/utils/static-model';
-import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { GetKeys } from '@blockframes/utils/static-model/staticConsts';
+import { GetKeys } from '@blockframes/utils/static-model/static-model';
 import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus, ProductionStatus } from '@blockframes/utils/static-model/types';
+import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
 
 export interface LanguagesSearch {
-  original: LanguagesSlug[];
-  dubbed: LanguagesSlug[];
-  subtitle: LanguagesSlug[];
-  caption: LanguagesSlug[];
+  original: Language[];
+  dubbed: Language[];
+  subtitle: Language[];
+  caption: Language[];
 }
 
 export interface MovieSearch extends AlgoliaSearch {
   appAccess: (keyof MovieAppAccess)[],
   storeType: StoreType[];
   storeConfig: StoreStatus[]
-  genres: Genres[];
-  originCountries: TerritoriesSlug[];
+  genres: Genre[];
+  originCountries: Territory[];
   languages: LanguagesSearch;
   productionStatus: ProductionStatus[];
   minBudget: number;
   sellers: AlgoliaRecordOrganization[];
+  socialGoals: SocialGoal[];
 }
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
@@ -48,16 +47,17 @@ export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearc
     productionStatus: [],
     minBudget: 0,
     sellers: [],
+    socialGoals: [],
     ...search,
   };
 }
 
 function createLanguageVersionControl(languages: LanguagesSearch) {
   return {
-    original: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.original),
-    dubbed: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.dubbed),
-    subtitle: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.subtitle),
-    caption: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.caption),
+    original: FormList.factory<GetKeys<'languages'>>(languages.original),
+    dubbed: FormList.factory<GetKeys<'languages'>>(languages.dubbed),
+    subtitle: FormList.factory<GetKeys<'languages'>>(languages.subtitle),
+    caption: FormList.factory<GetKeys<'languages'>>(languages.caption),
   }
 }
 export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
@@ -70,11 +70,12 @@ function createMovieSearchControl(search: MovieSearch) {
     storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
     genres: FormList.factory<GetKeys<'genres'>>(search.genres),
-    originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
+    originCountries: FormList.factory<Territory>(search.originCountries),
     languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ProductionStatus>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<AlgoliaRecordOrganization>(search.sellers),
+    socialGoals: FormList.factory(search.socialGoals),
   };
 }
 
@@ -103,6 +104,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
   get appAccess() { return this.get('appAccess') };
+  get socialGoals() { return this.get('socialGoals'); }
 
 
   isEmpty() {
@@ -119,7 +121,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.minBudget?.value === 0 &&
       this.sellers?.value.length === 0 &&
       this.storeType?.value.length === 0 &&
-      this.appAccess?.value.length === 0
+      this.appAccess?.value.length === 0 &&
+      this.socialGoals?.value.length === 0
     );
   }
 
@@ -141,7 +144,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgName:${seller.name}`),
         this.storeType.value.map(type => `storeType:${type}`),
         this.storeConfig.value.map(config => `storeConfig:${config}`),
-        this.appAccess.value.map(access => `appAccess:${access}`)
+        this.appAccess.value.map(access => `appAccess:${access}`),
+        this.socialGoals.value.map(goal => `socialGoals:${goal}`)
       ],
       filters: `budget >= ${this.minBudget.value ?? 0}`,
     });

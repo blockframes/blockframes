@@ -33,13 +33,6 @@
         <h2>Meeting</h2>
         <mat-card [formGroup]="form.meta" fxLayout="column">
           <mat-form-field appearance="outline">
-            <mat-label>Link to a video call</mat-label>
-            <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
-            <mat-error *ngIf="form.meta.hasError('pattern', 'callUrl')">
-              Please fill in a url (e.g. https://meet.google.com/xyz)
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
               <ng-container *ngFor="let member of members$ | async">

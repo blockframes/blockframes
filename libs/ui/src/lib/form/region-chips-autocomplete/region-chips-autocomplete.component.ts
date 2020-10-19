@@ -1,4 +1,3 @@
-import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import {
   Component,
   OnInit,
@@ -17,7 +16,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { territories } from '@blockframes/utils/static-model/static-model';
 
 @Component({
   selector: '[form]region-chips-autocomplete',
@@ -52,7 +51,7 @@ export class RegionChipsAutocompleteComponent implements OnInit, OnDestroy {
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.sub = this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
@@ -78,12 +77,12 @@ export class RegionChipsAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   /** Get the value of the item to store */
-  public getKey(item: SlugAndLabel) {
+  public getKey(item: string) {
     return this.store ? item[this.store] : item;
   }
 
   /** Get the value of the item to display */
-  public getDisplay(item: SlugAndLabel) {
+  public getDisplay(item: string) {
     return this.store ? item[this.display] : item;
   }
 
@@ -91,8 +90,8 @@ export class RegionChipsAutocompleteComponent implements OnInit, OnDestroy {
   public add({ input, value }: MatChipInputEvent) {
     if (this.matAutocomplete.isOpen) return;
     if ((value || '').trim()) {
-      if ((value || '').trim() ===' world') {
-        ISO3166TERRITORIES.forEach(tag => this.form.push(new FormControl(tag.slug)))
+      if ((value || '').trim() === ' world') {
+        Object.keys(territories).forEach(tag => this.form.push(new FormControl(tag)))
       } else {
         this.form.push(new FormControl(value))
       }
@@ -105,7 +104,7 @@ export class RegionChipsAutocompleteComponent implements OnInit, OnDestroy {
   public selected({ option }: MatAutocompleteSelectedEvent): void {
     this.added.emit(option.viewValue);
     if (option.value === 'world') {
-      ISO3166TERRITORIES.forEach(tag => this.form.push(new FormControl(tag.slug)))
+      Object.keys(territories).forEach(tag => this.form.push(new FormControl(tag)))
     } else {
       this.form.push(new FormControl(option.value));
     }

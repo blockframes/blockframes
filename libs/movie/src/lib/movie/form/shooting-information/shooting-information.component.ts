@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/
 import { FormControl } from '@angular/forms';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { MovieFormShellComponent } from '../shell/shell.component';
-import { staticConsts } from '@blockframes/utils/static-model';
+import { shootingPeriod, months } from '@blockframes/utils/static-model';
 import { hasValue } from '@blockframes/utils/pipes/has-keys.pipe';
 import { Subscription } from 'rxjs';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'movie-shooting-information',
@@ -19,13 +20,15 @@ export class MovieFormShootingInformationComponent implements OnInit, OnDestroy 
 
   form = this.shell.getForm('movie');
   disabledForm = new FormControl();
-  public periods = Object.keys(staticConsts['shootingPeriod']);
-  public months = Object.keys(staticConsts['months']);
+  public periods = Object.keys(shootingPeriod);
+  public months = Object.keys(months);
   public separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private keys = ['completed', 'planned', 'progress'] as const;
 
-  constructor(private shell: MovieFormShellComponent) {}
+  constructor(private shell: MovieFormShellComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Shooting Information')
+  }
 
   ngOnInit() {
     this.enableForm();

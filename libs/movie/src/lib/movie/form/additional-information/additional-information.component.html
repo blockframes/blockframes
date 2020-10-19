@@ -7,7 +7,7 @@
       <section id="release">
 
         <bf-form-list [form]="form.originalRelease" buttonText="Add a Release">
-          <ng-template itemRef let-release>{{ release.country | translateSlug: 'TERRITORIES' }} -
+          <ng-template itemRef let-release>{{ release.country | toLabel: 'territories' }} -
             {{ release.media | toLabel: 'medias' }} - {{ release.date | date: 'shortDate' }}</ng-template>
           <ng-template formView let-releaseForm>
             <article [formGroup]="releaseForm" fxLayout="column" fxLayoutGap="24px">
@@ -15,7 +15,7 @@
               <div fxLayout="row" fxLayoutGap="24px">
                 <form-country test-id="release-country" [form]="releaseForm.get('country')" fxFlex></form-country>
 
-                <static-select test-id="release-media" type="constant" [control]="releaseForm.get('media')" scope="medias" fxFlex
+                <static-select test-id="release-media" [control]="releaseForm.get('media')" scope="medias" fxFlex
                   [withoutValues]="['payTv', 'freeTv', 'payPerView', 'est', 'nVod','aVod', 'fVod', 'sVod', 'planes', 'boats']">
                   <mat-label>Release Media</mat-label>
                 </static-select>
@@ -42,7 +42,7 @@
 
     <h3>Budget Range</h3>
     <section id="budget-range">
-      <movie-form-budget-range [form]="form.estimatedBudget"></movie-form-budget-range>
+      <movie-form-budget-range test-id="budget-range" [form]="form.estimatedBudget"></movie-form-budget-range>
     </section>
 
     <mat-divider></mat-divider>
@@ -54,7 +54,7 @@
         <bf-form-list [form]="form.boxOffice" buttonText="Add a Box Office">
           <ng-template itemRef let-boxOffice>
             <span>
-              {{ boxOffice.territory | translateSlug: 'TERRITORIES' }} -
+              {{ boxOffice.territory | toLabel: 'territories' }} -
               <ng-container *ngIf="boxOffice.unit !== 'admissions' else admissions">
                 <mat-icon [svgIcon]="boxOffice.unit | toLabel: 'unitBox'" class="currency-icon"></mat-icon>
                 {{ boxOffice.value }}
@@ -108,13 +108,13 @@
       <h3>Rating</h3>
       <section id="rating">
         <bf-form-list [form]="form.rating" buttonText="Add a Rating">
-          <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | translateSlug: 'TERRITORIES'}}
+          <ng-template itemRef let-rating> {{ rating.value }} - {{ rating.country | toLabel: 'territories'}}
           </ng-template>
           <ng-template formView let-ratingForm>
             <div fxLayout fxLayoutGap="24px" [formGroup]="ratingForm">
               <mat-form-field appearance="outline" fxFlex>
                 <mat-label>Rating</mat-label>
-                <input matInput formControlName="value" />
+                <input test-id="rating" matInput formControlName="value" />
                 <mat-hint>Please specify your title's rating, if existing.</mat-hint>
               </mat-form-field>
 
@@ -134,8 +134,9 @@
       <article>
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
-          <ng-container *ngFor="let certification of certifications">
-            <mat-button-toggle [value]="certification">
+          <ng-container *ngFor="let certification of certifications; index as i">
+            <mat-button-toggle [attr.test-id]= "'certification' + (i + 1)" [value]="certification" [matTooltip]="certification?.hint"
+              [matTooltipDisabled]="!certification?.hint">
               {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
           </ng-container>
