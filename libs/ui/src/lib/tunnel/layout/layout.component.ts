@@ -7,28 +7,35 @@ import { map, shareReplay, filter, take } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
-import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 
 /**
  * @description returns the next or previous page where the router should go to
- * @param current current url
+ * @param steps all the possible steps
+ * @param url current url
  * @param arithmeticOperator plus or minus
  */
-function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): RouteDescription {
-  const allRoutes = steps.map(({ routes }) => routes);
-  const allPath = allRoutes.flat();
-  const current = parseUrlWithoutFragment(url)
-  const index = allPath.map((route, i) => route.path === current ? i : undefined).filter(i => !!i);
-  if (index[0] >= 0) {
-    // TODO MF, check next or prev if also has conditional rendering, maybe you souldnt access the next two or three pages
+function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): string {
+  const allSections = steps.map(({ routes }) => routes);
+  const allPath = allSections.flat();
+  const currentPath = parseUrlWithoutFragment(url)
+  const currentIndex = allPath.map((route, i) => route.path === currentPath ? i : undefined).filter(i => !!i);
+  const allPathsThatShouldBeHidden = allPath.map((path, i) => {
     let shouldSkip: boolean;
-    allPath[index[0] + arithmeticOperator]?.shouldDisplay?.pipe(take(1)).subscribe(value => shouldSkip = value)
+    path.shouldDisplay?.pipe(take(1)).subscribe(value => shouldSkip = value)
     if (shouldSkip) {
-      return allPath[index[0] + arithmeticOperator + arithmeticOperator]
+      return i
     }
-    return allPath[index[0] + arithmeticOperator];
+  }).filter(i => !!i);
+  if (currentIndex[0] >= 0) {
+    if (allPathsThatShouldBeHidden.includes(currentIndex[0] + arithmeticOperator)) {
+      /* One big issue persists and this is if two forbidden routes comes just one after the other
+      then this `+ arithmeticOperator` would not do the trick */
+      return allPath[currentIndex[0] + arithmeticOperator + arithmeticOperator].path
+    }
+    return allPath[currentIndex[0] + arithmeticOperator].path;
   }
 }
+
 
 function parseUrlWithoutFragment(url: string): string {
   return url.includes('#') ? url.split('#')[0].split('/').pop() : url.split('/').pop();
@@ -52,8 +59,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   private url$ = this.routerQuery.select(({ state }) => state.url);
   public steps$ = this.navigation.asObservable();
   public urlBynav$: Observable<[string, TunnelStep[]]>;
-  public next$: Observable<RouteDescription>;
-  public previous$: Observable<RouteDescription>;
+  public next$: Observable<string>;
+  public previous$: Observable<string>;
   public ltMd$ = this.breakpointsService.ltMd;
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
