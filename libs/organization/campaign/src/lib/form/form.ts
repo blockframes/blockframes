@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.model';
 
@@ -82,10 +82,14 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
   setAllValue(campaign: Partial<Campaign> = {}) {
     const controls = createCampaignControls(campaign);
     for (const key in controls) {
-      if (key in this.controls) {
-        this.controls[key].patchValue(controls[key].value)
+      if (this.contains(key)) {
+        const control = this.get(key as keyof CampaignControls);
+        const value = controls[key].value;
+        'patchAllValue' in control
+          ? control.patchAllValue(value)
+          : control.patchValue(value);
       } else {
-        this.setControl(key as any, controls[key]);
+        this.addControl(key, controls[key]);
       }
     }
   }

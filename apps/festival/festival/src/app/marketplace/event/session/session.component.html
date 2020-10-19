@@ -36,8 +36,6 @@
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
 
-      <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
-
       <!-- WORK IN PROGRESS -->
       <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
@@ -53,8 +51,6 @@
           <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
       </article>
-
-      <img asset="meeting.webp" alt="Meeting room">
 
     </section>
   </ng-container>

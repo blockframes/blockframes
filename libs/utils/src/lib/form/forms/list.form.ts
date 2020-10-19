@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';

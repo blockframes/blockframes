@@ -17,7 +17,9 @@ import {
   UnitBox,
   ShootingPeriod,
   MovieCurrency,
-  HostedVideoType, Territory
+  HostedVideoType,
+  Territory,
+  SocialGoal
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
@@ -85,6 +87,7 @@ interface MovieRaw<D> {
   synopsis: string, //! required
   title: Title, //! required
   totalBudget?: MovieTotalBudget,
+  socialGoals: SocialGoal[]
 
 
   // New Data
