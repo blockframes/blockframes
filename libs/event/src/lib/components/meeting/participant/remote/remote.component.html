@@ -1,12 +1,14 @@
-<section id="remote-participant" fxFlex fxLayoutAlign="center center">
-  <ng-container *ngIf="!participant.statusMedia.video">
-    <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
-  </ng-container>
-  <section [hidden]="!participant.statusMedia.video" [id]="'container-video-' + participant.identity" fxFlex>
-  </section>
-  <article>
+<mat-card id="remote-participant" fxFlex fxLayoutAlign="center center">
+  <mat-card-content>
+    <ng-container *ngIf="!participant.statusMedia.video">
+      <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
+    </ng-container>
+    <section [hidden]="!participant.statusMedia.video" #remoteVideo fxFlex>
+    </section>
+    <article>
     <span class="mat-caption">
     {{participant.festivalData | displayName}}
     </span>
-  </article>
-</section>
+    </article>
+  </mat-card-content>
+</mat-card>

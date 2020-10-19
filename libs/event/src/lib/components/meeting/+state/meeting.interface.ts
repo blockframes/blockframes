@@ -5,7 +5,7 @@ export interface IParticipantMeeting {
   identity: string,
   isDominantSpeaker: boolean,
   isLocalSpeaker: boolean,
-  statusMedia: IStatusVideoMic,
+  statusMedia: IStatusVideoAudio,
   festivalData: {
     firstName: string,
     lastName: string,
@@ -18,7 +18,7 @@ export interface IParticipantMeeting {
 /**
  * Interface for the status of video and audio
  */
-export interface IStatusVideoMic {
+export interface IStatusVideoAudio {
   video: boolean,
   audio: boolean
 }

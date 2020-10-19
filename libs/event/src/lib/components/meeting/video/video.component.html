@@ -1,5 +1,5 @@
 <ng-container>
-  <ng-container *ngIf="isSeller && remoteParticipants">
+  <ng-container *ngIf="event.isOwner && remoteParticipants">
     <ng-container *ngIf="isRoomEmpty(remoteParticipants)">
       <section>
       <span>
@@ -11,15 +11,14 @@
       <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
         <mat-grid-tile>
           <event-meeting-remote-participant [participant]="participant"
-                                            [twilioData]="doGetTwilioParticipant(participant)"
-                                            (eventSetupVideoAudio)="setupVideoAudio($event)"></event-meeting-remote-participant>
+                                            [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-remote-participant>
         </mat-grid-tile>
       </ng-container>
     </mat-grid-list>
   </ng-container>
 
 
-  <ng-container *ngIf="!isSeller">
+  <ng-container *ngIf="!isSeller && remoteParticipants">
     <section fxFlex fxLayout="column">
       <article class="article-dominant">
         <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
