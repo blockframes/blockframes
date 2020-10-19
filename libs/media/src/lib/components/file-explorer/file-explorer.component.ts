@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
 import { AddFileDialogComponent } from '../dialog/add-file.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
+import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
 
 // Material
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +19,7 @@ import { MatSelectionListChange } from '@angular/material/list';
 const columns = { 
   ref: 'Type',
   title: 'Document Name',
+  download: 'Download',
   edit: 'Edit',
   delete: 'Delete'
 };
@@ -35,28 +37,14 @@ interface SubDirectory {
 }
 
 @Component({
-  selector: 'file-explorer',
+  selector: '[org] file-explorer',
   templateUrl: 'file-explorer.component.html',
   styleUrls: ['./file-explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileExplorerComponent implements OnInit {
-  public org$ = this.query.selectActive();
+export class FileExplorerComponent {
 
-  public directories: Directory[] = []
-  public activeDirectory: SubDirectory;
-  public columns = columns;
-  public initialColumns = Object.keys(columns);
-
-  constructor(
-    private dialog: MatDialog,
-    private mediaService: MediaService,
-    private organizationService: OrganizationService,
-    private query: OrganizationQuery,
-    ) { }
-
-  ngOnInit() {
-    const org = this.query.getActive();
+  @Input() set org(org: OrganizationDocumentWithDates) {
     this.directories.push({
       name: org.denomination.full,
       subDirectories: [
@@ -72,9 +60,24 @@ export class FileExplorerComponent implements OnInit {
         //   path: 'logo'
         // }
       ]
-    })
+    });
     this.activeDirectory = this.directories[0].subDirectories[0];
-  }
+    this.orgId = org.id;
+    this.org$ = this.organizationService.valueChanges(org.id);
+  };
+
+  private orgId: string;
+  public org$: Observable<OrganizationDocumentWithDates>;
+  public directories: Directory[] = [];
+  public activeDirectory: SubDirectory;
+  public columns = columns;
+  public initialColumns = Object.keys(columns);
+
+  constructor(
+    private dialog: MatDialog,
+    private mediaService: MediaService,
+    private organizationService: OrganizationService
+  ) {}
 
   public selectItem(event: MatSelectionListChange) {
     const selected = event.source.selectedOptions.selected;
@@ -83,22 +86,22 @@ export class FileExplorerComponent implements OnInit {
   }
 
   public async deleteFile(note: HostedMediaWithMetadata) {
+    const org = await this.organizationService.getValue(this.orgId);
     this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure you want to delete this file?',
         question: ' ',
         buttonName: 'Yes',
         onConfirm: async () => {
-          const org = this.query.getActive()
           const notes = org.documents.notes.filter(n => n.title !== note.title);
-          await this.organizationService.update(org.id, { documents: { notes: notes } });
+          await this.organizationService.update(this.orgId, { documents: { notes: notes } });
         }
       }
     });
   }
 
-  public openDialog(item?: Partial<HostedMediaWithMetadata>) {
-    const org = this.query.getActive();
+  public async openDialog(item?: Partial<HostedMediaWithMetadata>) {
+    const org = await this.organizationService.getValue(this.orgId);
     const documentsForm = new OrganizationMediasForm(org.documents);
     let noteForm: HostedMediaWithMetadataForm;
     if (item) {
@@ -110,14 +113,20 @@ export class FileExplorerComponent implements OnInit {
     const dialog = this.dialog.open(AddFileDialogComponent, { width: '60vw', data: {
       note: noteForm,
       privacy: 'protected',
-      storagePath: `orgs/${org.id}/documents/notes/`
+      storagePath: `orgs/${this.orgId}/documents/notes/`
     }});
     dialog.afterClosed().subscribe(async note => {
       if (!!note) {
         const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(documentsForm);
-        await this.organizationService.update(org.id, { documents: documentToUpdate });
+        await this.organizationService.update(this.orgId, { documents: documentToUpdate });
         this.mediaService.uploadMedias(mediasToUpload);
       }
     });
+  }
+
+  public async downloadFile(item: Partial<HostedMediaWithMetadata>) {
+    if (!item.ref) return;
+    const url = await this.mediaService.generateImgIxUrl(item.ref);
+    window.open(url);
   }
 }
