@@ -56,6 +56,11 @@ export function formatParameters(parameters: ImageParameters): string {
   return query;
 }
 
+/**
+ * getImgIxResourceUrl : Generate ImgIx resource URL
+ * @param ref 
+ * @param parameters 
+ */
 export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
   /**
    * @dev This is the directory that must be set in imgIx source config.
