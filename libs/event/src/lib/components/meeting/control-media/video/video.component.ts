@@ -17,6 +17,6 @@ export class ControlVideoComponent {
   }
 
   muteVideo(participant: IParticipantMeeting){
-    this.meetingService.setupVideoAudio(participant.identity, 'video', !participant.statusMedia.video);
+    this.meetingService.muteUnmuteLocal(participant.identity, 'video', participant.statusMedia.video);
   }
 }

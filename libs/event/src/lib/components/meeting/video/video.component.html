@@ -42,8 +42,8 @@
     </section>
   </ng-container>
 
-<!--  <ng-container *ngIf="localParticipantConnected$ | async as localParticipant">-->
-<!--      <event-meeting-local-participant [isSeller]="isSeller" [localParticipant]="localParticipant" [localVideoAudioIsOn]="localVideoAudioIsOn$ | async" [twilioData]="doGetTwilioParticipantDataFromUid(localParticipant)" [localPreviewTracks]="localPreviewTracks$ | async" (eventSetUpLocalVideoAndAudio)="doSetupLocalVideoAndAudio($event)"></event-meeting-local-participant>-->
-<!--  </ng-container>-->
+  <ng-container *ngIf="localParticipant">
+      <event-meeting-local-participant [isOpen]="!event.isOwner" [localParticipant]="localParticipant" [twilioData]="doGetTwilioParticipant(localParticipant)"></event-meeting-local-participant>
+  </ng-container>
 
 </ng-container>

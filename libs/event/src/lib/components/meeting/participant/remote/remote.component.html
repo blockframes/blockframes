@@ -3,7 +3,7 @@
     <ng-container *ngIf="!participant.statusMedia.video">
       <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
     </ng-container>
-    <section #remoteVideo fxFlex>
+    <section [hidden]="!participant.statusMedia.video" #remoteVideo fxFlex>
     </section>
     <article>
     <span class="mat-caption">

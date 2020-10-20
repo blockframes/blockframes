@@ -1,5 +1,5 @@
 // Angular
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core';
 
 //Blockframes
 import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
@@ -19,7 +19,7 @@ import {
   templateUrl: './dominant-speaker.component.html',
   styleUrls: ['./dominant-speaker.component.scss']
 })
-export class DominantSpeakerComponent implements AfterViewInit {
+export class DominantSpeakerComponent implements AfterViewInit, OnDestroy {
 
   @Input() participant: IParticipantMeeting
   @Input() twilioData: Participant

@@ -1,6 +1,7 @@
 <event-meeting-participants-nav [participants]="remoteParticipants$ | async">
   <event-meeting-video
     [remoteParticipants]="remoteParticipants$ | async"
+    [localParticipant]="localParticipant$ | async"
     [event]="event"
     [getTwilioParticipant]="getTwilioParticipant"
   ></event-meeting-video>

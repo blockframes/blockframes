@@ -23,13 +23,13 @@ import {Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'tw
 
 
 @Component({
-  selector: '[localParticipant] [localPreviewTracks] [isSeller] [localVideoAudioIsOn] [twilioData] event-meeting-local-participant',
+  selector: '[isOpen] [localParticipant] [twilioData] event-meeting-local-participant',
   templateUrl: './local.component.html',
-  styleUrls: ['./local.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./local.component.scss']
 })
 export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @Input() isOpen: boolean;
   @Input() localParticipant: IParticipantMeeting;
   @Input() twilioData: Participant
 

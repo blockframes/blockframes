@@ -12,7 +12,7 @@ import {Observable} from "rxjs";
 import {Participant} from "twilio-video";
 
 @Component({
-  selector: '[remoteParticipants] [event] [getTwilioParticipant] event-meeting-video',
+  selector: '[localParticipant] [remoteParticipants] [event] [getTwilioParticipant] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +20,7 @@ import {Participant} from "twilio-video";
 export class VideoComponent {
 
   @Input() remoteParticipants: IParticipantMeeting[];
+  @Input() localParticipant: IParticipantMeeting;
   @Input() event: Event;
   @Input() getTwilioParticipant: (uid: string) => Participant;
 

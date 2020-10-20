@@ -12,4 +12,5 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 export class AvatarInitialComponent {
 
   @Input() participant: IParticipantMeeting;
+  @Input() padding = 32;
 }

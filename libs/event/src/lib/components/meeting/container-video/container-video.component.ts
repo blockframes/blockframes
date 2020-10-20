@@ -27,7 +27,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   remoteParticipants$: Observable<IParticipantMeeting[]>;
 
   //Local Participants in the room Twilio (all participant connected without local)
-  localParticipants$: Observable<IParticipantMeeting>;
+  localParticipant$: Observable<IParticipantMeeting>;
 
   user: User;
 
@@ -36,7 +36,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
   async ngOnInit() {
 
     this.remoteParticipants$ = this.meetingService.getParticipants();
-    this.localParticipants$ = this.meetingService.getLocalParticipants();
+    this.localParticipant$ = this.meetingService.getLocalParticipants();
     this.user = this.query.user;
 
     const isAudio: boolean = await this.meetingService.isAudioAvailable();

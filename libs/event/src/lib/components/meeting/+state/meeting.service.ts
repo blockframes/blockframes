@@ -313,46 +313,31 @@ export class MeetingService {
       track: any
     ) => {
       //participant[0] is the key
-      return track[1];
+      return track[1].track;
     });
   }
 
   /**
    * Mute/unmute your local media.
+   * @param identity: string
    * @param kind: string = 'video' || 'audio'  - The type of media you want to mute/unmute
    * @param mute - bool - mute/unmute
    */
-  muteOrUnmuteYourLocalMediaPreview(kind: keyof IStatusVideoAudio, mute: boolean) {
-    //get local track
+  muteUnmuteLocal(identity: string, kind: keyof IStatusVideoAudio, mute: boolean) {
     const localTwilioData = this.getTwilioParticipant(this.localParticipant.identity)
-    const localTracks1 = this.getTracksOfParticipant(localTwilioData);
-    const localTracks = Array.from(localTwilioData.tracks.values());
+    const localTracks = this.getTracksOfParticipant(localTwilioData);
 
-    console.log('kind : ', kind)
-    console.log('localTracks1 : ', localTracks1)
-    console.log('localTracks : ', localTracks)
+    this.setupVideoAudio(identity, kind, !mute);
 
-    // this.muteUnmute(this.localParticipant.identity, kind, !mute);
-    //
-    // let track: any;
-    // //get audio or video track
-    // if (kind === localTracks[0].kind) {
-    //   track = localTracks[0].track
-    // } else {
-    //   track = localTracks[1].track
-    // }
-    //
-    // if (mute) {
-    //   track.disable();
-    //   track.stop();
-    // } else {
-    //   track.enable();
-    //   track.restart();
-    // }
-  }
+    const track: LocalAudioTrack | LocalVideoTrack = (kind === localTracks[0].kind) ? localTracks[0] : localTracks[1];
 
-  muteUnmute(identity: string, kind: keyof IStatusVideoAudio, boolToChange: boolean){
-    this.setupVideoAudio(identity, kind, boolToChange);
+    if (mute) {
+      track.disable();
+      track.stop();
+    } else {
+      track.enable();
+      track.restart();
+    }
   }
 
   /**
@@ -415,6 +400,8 @@ export class MeetingService {
     ) => {
       return trackPublication.track;
     });
+    console.log('tracks : ', tracks)
+    console.log('container : ', container)
     this.attachTracks(tracks, container);
   }
 
