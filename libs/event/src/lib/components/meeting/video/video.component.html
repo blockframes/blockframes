@@ -34,7 +34,7 @@
       </article>
       <article class="article-buyer">
           <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
-            <ng-container >
+            <ng-container *ngIf="!participant.isDominantSpeaker">
                 <event-meeting-remote-participant [participant]="participant" [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-remote-participant>
             </ng-container>
           </ng-container>

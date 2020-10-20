@@ -18,14 +18,16 @@ import {map} from "rxjs/operators";
 // Twilio-video
 import {
   connect,
+  ConnectOptions,
   createLocalAudioTrack,
   createLocalVideoTrack,
-  ConnectOptions,
   LocalAudioTrack,
+  LocalAudioTrackPublication,
   LocalDataTrack,
   LocalVideoTrack,
+  LocalVideoTrackPublication,
   Participant,
-  Room, LocalAudioTrackPublication, LocalVideoTrackPublication, RemoteAudioTrack, RemoteVideoTrack
+  Room
 } from 'twilio-video';
 
 @Injectable({
@@ -63,6 +65,13 @@ export class MeetingService {
    */
   getTwilioParticipant(uid: string): Participant {
     return this.twilioParticipants.get(uid);
+  }
+
+  /**
+   * Get all participant of the twilio room without the local participant
+   */
+  getAllParticipants(): Observable<IParticipantMeeting[]> {
+    return this.connectedParticipants$.asObservable();
   }
 
   /**
@@ -303,7 +312,6 @@ export class MeetingService {
   }
 
 
-
   /**
    * Get track of one participant
    * @param participant - All participants connected in the room
@@ -373,62 +381,5 @@ export class MeetingService {
         track.track.detach();
       });
     }
-  }
-
-
-  /**
-   * Attach the Tracks to the DOM.
-   * @param tracks - track to attach in the container
-   * @param container - container from DOM to attach the track
-   */
-  attachTracks(tracks: (RemoteAudioTrack | RemoteVideoTrack)[], container): void {
-    tracks.forEach((track) => {
-      if (track) {
-        container.appendChild(track.attach()).setAttribute('style', 'flex:1;width: 100%;');
-      }
-    });
-  }
-
-  /**
-   * Attach the Participant's Tracks to the DOM.
-   * @param participant - participant to attach in the container
-   * @param container - container of participant in DOM
-   */
-  attachParticipantTracks(participant: Participant, container): void {
-    const tracks = Array.from(participant.tracks.values()).map((
-      trackPublication: any
-    ) => {
-      return trackPublication.track;
-    });
-    console.log('tracks : ', tracks)
-    console.log('container : ', container)
-    this.attachTracks(tracks, container);
-  }
-
-  /**
-   *  Detach the Tracks from the DOM.
-   * @param tracks - track to detach of the DOM
-   */
-  detachTracks(tracks: (RemoteAudioTrack | RemoteVideoTrack)[]): void {
-    tracks.forEach((track) => {
-      if (track) {
-        track.detach().forEach((detachedElement) => {
-          detachedElement.remove();
-        });
-      }
-    });
-  }
-
-  /**
-   * Detach the Participant's Tracks from the DOM.
-   * @param participant - participant to detach track of the DOM
-   */
-  detachParticipantTracks(participant: Participant): void {
-    const tracks = Array.from(participant.tracks.values()).map((
-      trackPublication: any
-    ) => {
-      return trackPublication.track;
-    });
-    this.detachTracks(tracks);
   }
 }

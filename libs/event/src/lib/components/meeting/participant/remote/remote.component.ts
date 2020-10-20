@@ -1,13 +1,5 @@
 // Angular
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 
 // Blockframes
 import {
@@ -16,6 +8,7 @@ import {
   meetingEventEnum
 } from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 
 // Twilio
 import {
@@ -31,7 +24,7 @@ import {
   templateUrl: './remote.component.html',
   styleUrls: ['./remote.component.scss']
 })
-export class RemoteComponent implements AfterViewInit, OnDestroy {
+export class RemoteComponent extends AbstractParticipant implements AfterViewInit, OnDestroy {
 
   @Input() participant: IParticipantMeeting;
   @Input() twilioData: Participant;
@@ -39,11 +32,12 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   @ViewChild('remoteVideo') containerRemoteVideo: ElementRef;
 
   constructor(private meetingService: MeetingService) {
+    super();
   }
 
   ngAfterViewInit() {
     this.setupParticipantEvent(this.twilioData);
-    this.meetingService.attachParticipantTracks(this.twilioData, this.containerRemoteVideo.nativeElement);
+    this.attachParticipantTracks(this.twilioData, this.containerRemoteVideo.nativeElement);
   }
 
   /**
@@ -54,24 +48,24 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     const participantContainer = this.containerRemoteVideo.nativeElement;
 
     participant.on(meetingEventEnum.TrackSubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
-      this.meetingService.attachTracks([track], participantContainer);
+      this.attachTracks([track], participantContainer);
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
-      this.meetingService.detachTracks([track]);
+      this.detachTracks([track]);
     })
 
     participant.on(meetingEventEnum.Disconnected, () => {
-      this.meetingService.detachParticipantTracks(this.twilioData);
+      this.detachParticipantTracks(this.twilioData);
     })
 
     participant.on(meetingEventEnum.TrackDisabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
-      this.meetingService.detachTracks([remoteTrack.track])
+      this.detachTracks([remoteTrack.track])
       this.setupVideoAudio(remoteTrack.kind, false);
     })
 
     participant.on(meetingEventEnum.TrackEnabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
-      this.meetingService.attachTracks([remoteTrack.track], participantContainer)
+      this.attachTracks([remoteTrack.track], participantContainer)
       this.setupVideoAudio(remoteTrack.kind, true);
     })
 
@@ -85,7 +79,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.meetingService.detachParticipantTracks(this.twilioData);
+    this.detachParticipantTracks(this.twilioData);
     this.twilioData.removeAllListeners();
   }
 }

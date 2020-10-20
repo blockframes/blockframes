@@ -1,22 +1,10 @@
 // Angular
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 // Blockframes
-import {
-  IParticipantMeeting,
-  IStatusVideoAudio,
-  meetingEventEnum
-} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 
 // Twilio
 import {Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
@@ -27,7 +15,7 @@ import {Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'tw
   templateUrl: './local.component.html',
   styleUrls: ['./local.component.scss']
 })
-export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
+export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() isOpen: boolean;
   @Input() localParticipant: IParticipantMeeting;
@@ -38,6 +26,7 @@ export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
   open = true;
 
   constructor(private meetingService: MeetingService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -47,7 +36,7 @@ export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.setUpLocalParticipantEvent(this.twilioData);
-    this.meetingService.attachParticipantTracks(this.twilioData, this.containerLocalVideo.nativeElement);
+    this.attachParticipantTracks(this.twilioData, this.containerLocalVideo.nativeElement);
   }
 
   /**
@@ -57,28 +46,24 @@ export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
   setUpLocalParticipantEvent(localParticipant: Participant) {
 
     localParticipant.on(meetingEventEnum.TrackDisabled, (track: IRemoteTrackPublication) => {
-      this.setUpCamAndMic(track.kind, false);
+      this.setupVideoAudio(track.kind, false);
     })
 
     localParticipant.on(meetingEventEnum.TrackEnabled, (track: IRemoteTrackPublication) => {
-      this.setUpCamAndMic(track.kind, true);
+      this.setupVideoAudio(track.kind, true);
     })
 
     localParticipant.on(meetingEventEnum.TrackStopped, (track: IRemoteTrackPublication) => {
-      this.setUpCamAndMic(track.kind, false);
+      this.setupVideoAudio(track.kind, false);
     })
   }
 
-  setupVideoAudio(kind: keyof IStatusVideoAudio, boolToChange: boolean): void {
-    this.meetingService.setupVideoAudio(this.localParticipant.identity, kind, boolToChange);
-  }
-
-  setUpCamAndMic(kind, boolToChange) {
+  setupVideoAudio(kind, boolToChange) {
     this.meetingService.setupVideoAudio(this.localParticipant.identity, kind, boolToChange);
   }
 
   ngOnDestroy() {
-    this.meetingService.detachParticipantTracks(this.twilioData);
+    this.detachParticipantTracks(this.twilioData);
     this.twilioData.removeAllListeners();
   }
 }
