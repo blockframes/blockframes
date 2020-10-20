@@ -148,7 +148,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ) { }
 
   ngOnInit() {
-    const subs = Object.values(this.configs).map(config => config.onInit()).flat();
+    const subs: Observable<any>[] = Object.values(this.configs).map(config => config.onInit()).flat();
     this.sub = combineLatest(subs).subscribe();
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');

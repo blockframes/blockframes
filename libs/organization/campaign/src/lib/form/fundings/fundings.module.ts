@@ -1,33 +1,34 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FundingsComponent } from './fundings.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-
-import { CampaignFormPerksComponent } from './perks.component';
-import { PerksPipeModule } from '../../pipes/perks.pipe';
-
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 
+
+
 @NgModule({
-  declarations: [CampaignFormPerksComponent],
+  declarations: [FundingsComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
     TunnelPageModule,
-    PerksPipeModule,
     FormTableModule,
+    UploadModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule,
+    MatSelectModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: CampaignFormPerksComponent }])
+    RouterModule.forChild([{ path: '', component: FundingsComponent }])
   ]
 })
-export class PerksModule { }
+export class FundingsModule { }

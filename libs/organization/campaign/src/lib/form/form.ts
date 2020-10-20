@@ -1,6 +1,7 @@
 import { FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { FormEntity, FormList } from '@blockframes/utils/form';
-import { Campaign, createCampaign, Perk, createPerk } from '../+state/campaign.model';
+import { Campaign, createCampaign, Perk, createPerk, Funding } from '../+state/campaign.model';
 
 ///////////////
 // VALIDATOR //
@@ -53,6 +54,29 @@ export class PerkForm extends FormEntity<PerkControls, Perk> {
   }
 }
 
+
+/////////////
+// FUNDING //
+/////////////
+function createFundingControls(funding: Partial<Funding> = {}) {
+  return {
+    name: new FormControl(funding.name),
+    amount: new FormControl(funding.amount),
+    kind: new FormControl(funding.kind),
+    status: new FormControl(funding.status),
+  }
+}
+
+type FundingControls = ReturnType<typeof createFundingControls>;
+
+export class FundingForm extends FormEntity<FundingControls, Funding> {
+  constructor(value?: Partial<Funding>) {
+    const controls = createFundingControls(value);
+    super(controls);
+  }
+}
+
+
 //////////////
 // CAMPAIGN //
 //////////////
@@ -67,6 +91,11 @@ function createCampaignControls(value?: Partial<Campaign>) {
       campaign.perks,
       (perk?: Partial<Perk>) => new PerkForm(perk),
     ),
+    fundings: FormList.factory(
+      campaign.fundings,
+      (funding?: Partial<Funding>) => new FundingForm(funding),
+    ),
+    financingPlan: new HostedMediaForm(campaign.financingPlan)
   }
 }
 
@@ -85,9 +114,11 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
       if (this.contains(key)) {
         const control = this.get(key as keyof CampaignControls);
         const value = controls[key].value;
-        'patchAllValue' in control
-          ? control.patchAllValue(value)
-          : control.patchValue(value);
+        if (control instanceof FormList) {
+          control.patchAllValue(value);
+        } else {
+          control.patchValue(value);
+        }
       } else {
         this.addControl(key, controls[key]);
       }
