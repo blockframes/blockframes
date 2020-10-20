@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
-
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     TunnelPageModule,
     FormTableModule,
+    UploadModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,

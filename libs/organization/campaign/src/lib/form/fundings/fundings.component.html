@@ -53,7 +53,12 @@
     </section>
 
     <section id="financing-plan">
-      
+      <file-upload
+        [form]="form.get('financingPlan')"
+        [storagePath]="storagePath"
+        accept="['.pdf']"
+        [types]="['application/pdf']"
+      ></file-upload>
     </section>
   </ng-container>
 </tunnel-page>
