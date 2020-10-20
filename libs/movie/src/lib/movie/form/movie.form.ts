@@ -112,7 +112,7 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
-    directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
+    directors: FormList.factory(entity.directors, el => new DirectorForm(el), [Validators.required]),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
