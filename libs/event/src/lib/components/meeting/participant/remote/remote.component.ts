@@ -29,8 +29,7 @@ import {
 @Component({
   selector: '[participant] [twilioData] event-meeting-remote-participant',
   templateUrl: './remote.component.html',
-  styleUrls: ['./remote.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./remote.component.scss']
 })
 export class RemoteComponent implements AfterViewInit, OnDestroy {
 
