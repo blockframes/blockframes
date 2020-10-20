@@ -1,11 +1,12 @@
 import { HostedMediaFormValue, clearHostedMediaFormValue } from './media.firestore';
 import { isSafari } from '@blockframes/utils/safari-banner/safari.utils';
 import { cloneDeep } from 'lodash';
-import { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
-import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
-import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
-import { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
+import type { MovieForm, MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
+import type { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
+import type { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import type { OrganizationAdminForm } from '@blockframes/admin/admin-panel/forms/organization-admin.form';
+import type { OrganizationMediasForm } from '@blockframes/organization/forms/medias.form';
+import type { CampaignForm } from '@blockframes/campaign/form/form'
 
 /**
  * This function prepare media references in db documents before updating it in firestore.
@@ -17,7 +18,8 @@ export function extractMediaFromDocumentBeforeUpdate(
     OrganizationForm |
     OrganizationAdminForm |
     OrganizationMediasForm |
-    MovieHostedVideosForm
+    MovieHostedVideosForm |
+    CampaignForm
 ): { documentToUpdate: any, mediasToUpload: HostedMediaFormValue[] } {
 
   const cleanedDocument = cloneDeep(form.value);
