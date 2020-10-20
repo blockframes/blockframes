@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { FormSaveOptions, FormShellConfig } from '@blockframes/movie/form/shell/shell.component';
-import { OrganizationQuery } from "@blockframes/organization/+state";
 import { CampaignControls, CampaignForm } from './form';
 import { Campaign, CampaignService } from '../+state';
+import { MediaService, extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state';
 import { switchMap, tap } from 'rxjs/operators';
 import { Observable } from "rxjs";
 
@@ -13,6 +13,7 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   constructor(
     private route: RouterQuery,
     private service: CampaignService,
+    private mediaService: MediaService
   ) {}
 
   onInit(): Observable<any>[] {
@@ -27,8 +28,11 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     const id: string = this.route.getParams('movieId');
 
     // TODO (DON'T LET ME MERGE): extract media from form value
-
-    await this.service.save(id, this.form.value);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
+    await Promise.all([
+      this.mediaService.uploadMedias(mediasToUpload),
+      this.service.save(id, documentToUpdate)
+    ]);
     this.form.markAsPristine();
     return id;
   }
