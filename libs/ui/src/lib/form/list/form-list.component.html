@@ -33,10 +33,10 @@
   <ng-template [ngTemplateOutlet]="formView" [ngTemplateOutletContext]="{ $implicit: formItem }">
   </ng-template>
   <div fxLayout="row" fxLayoutAlign="space-between start">
-    <button mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
+    <button test-id="row-cancel" mat-stroked-button *ngIf="form.controls.length" (click)="cancel()">
       <mat-icon svgIcon="cross"></mat-icon><span>Cancel</span>
     </button>
-    <button mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
+    <button test-id="row-save" mat-stroked-button [disabled]="formItem.invalid" (click)="save()">
       <mat-icon svgIcon="floppy"></mat-icon>
       <span>{{ saveButtonText }}</span>
     </button>
@@ -46,7 +46,7 @@
 <footer *ngIf="!formItem" fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
   <mat-divider></mat-divider>
   <span class="mat-caption text-primary">{{ buttonText }}</span>
-  <button mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
+  <button test-id="list-save" mat-mini-fab color="primary" (click)="add()" [disabled]="formItem?.invalid && !formItem?.dirty">
     <mat-icon svgIcon="add"></mat-icon>
   </button>
 </footer>

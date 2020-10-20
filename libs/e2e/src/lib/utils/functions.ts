@@ -114,6 +114,55 @@ interface FormData {
   value: string;
 }
 
+function handleFormElement(el:any, id: string, value: string) {
+  const cw = cy.wrap(el);
+  let doClick = true;
+
+  //Handle file uploads
+  if (el.is('file-upload')) {
+    const uploadProps = JSON.parse(value);
+    const title =  uploadProps.title || randomID();
+    createFakeScript(title).then(path => {
+      uploadFile(path, uploadProps.type, id);
+    });
+    return;
+  }
+
+  if (el.is('input') || el.is('textarea')) {
+    cw.click()
+      .type(value, {force: true});
+    return;
+  }
+
+  if (el.is('mat-button-toggle') || el.is('mat-slide-toggle') ||
+      el.is('mat-radio-button')) {
+    if (value) {
+      cy.get(`[test-id="${id}"]`, {timeout: 1000})
+        .click();
+    }
+    return;
+  }
+
+  if (el.is('chips-autocomplete') || el.is('input-autocomplete')) {
+    cy.get(`[test-id="${id}"] input`, {timeout: 1000})
+      .type(value, {force: true});
+  }
+  
+  if (el.is('static-select')) {
+    cy.get(`[test-id="${id}"] .mat-form-field-outline`, {timeout: 1000})
+      .first()
+      .click({force: true});
+      doClick = false;
+  }
+
+  if (doClick) {
+    cw.click();
+  }
+
+  cy.get('mat-option', {timeout: 1000})
+    .contains(value).click({force: true});  
+}
+
 /**
  * setForm : helper function to set the form with given values
  * @param selector : string to identify the form set
@@ -127,11 +176,22 @@ interface FormData {
  */
 export function setForm(selector: string, formOpt: FormOptions) {
   const formData:FormData[] = [];
+  const formElements = [];
 
   cy.get(selector).each(($formEl) => {
     const keyBag = $formEl.attr('test-id');
     const formelData = {name: $formEl[0].localName, id: $formEl.attr('id'),
                  testId: $formEl.attr('test-id'), value: 'skipped'}
+
+    if (formElements.length) {
+      const lastElement = formElements[formElements.length - 1];
+      if (lastElement && lastElement.has($formEl).length) {
+        cy.log(`~skipping : ${formelData.name}-id:${formelData.id}`);
+        console.log(`~>skipped : ${formelData.name}-id:${formelData.id}`);
+        return;
+      }
+    }
+    formElements.push($formEl);
 
     if (keyBag === undefined) {
       formelData.testId = `undefined-[${$formEl.attr('formcontrolname') || 
@@ -142,7 +202,7 @@ export function setForm(selector: string, formOpt: FormOptions) {
       formData.push(formelData);
       return;
     }
-    const keyBunch = keyBag.split('-');
+    const keyBunch = keyBag.split(':');
     let vault: any = formOpt.inputValue;
     for (let i = 0 ; vault && (i < keyBunch.length); i++) {
       vault = vault[keyBunch[i]];
@@ -158,16 +218,9 @@ export function setForm(selector: string, formOpt: FormOptions) {
     formelData.value = vault;
     if (needsHandling && (vault !== undefined)) {
       //Set the form field..
-      cy.wrap($formEl).click().type(vault);
-      if ($formEl.is('mat-select') || ($formEl.attr('role') === 'combobox')) {
-        cy.get('mat-option')
-          .contains(vault).click();
-      }
+      handleFormElement($formEl, keyBag, vault);
     }
     formData.push(formelData);
   })
-  .last().then(() => {
-    console.table(formData);
-  });
+  .then(_ => console.table(formData));
 }
-

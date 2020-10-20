@@ -5,7 +5,7 @@ import { TO, User } from '@blockframes/e2e/utils';
 export function signInAndNavigateToMain(user: Partial<User>) {
   cy.log('Reach LandingPage and accept cookies');
   const p1 = new LandingPage();
-  acceptCookie();
+  //acceptCookie();
     
   //Note: Here we click sign-up because inside signIn
   //we switchmode to Login.
@@ -13,6 +13,7 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   p1.clickSignup();   
   signIn(user);
   cy.get('festival-marketplace', {timeout: TO.PAGE_LOAD});
+  acceptCookie();
 
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');
@@ -21,11 +22,17 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
 
   cy.log('->Click: Add New Title');
-  cy.get('a[mattooltip="Add a new title"]', {timeout: TO.THREE_SEC})
-    .click();
-
-  cy.log('->Reach New Title Interstitial & start');
-  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
+  cy.get('a[mattooltip="Add a new title"]', {timeout: TO.FIFTEEN_SEC})
     .click();
   cy.wait(TO.WAIT_1SEC);
+
+  cy.log('->Reach New Title Interstitial & start');
+  cy.wait(TO.ONE_SEC);
+  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_ELEMENT })
+    .click()
+    .wait(TO.THREE_SEC);
+
+  cy.wait(TO.THREE_SEC);
+
+  cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 }

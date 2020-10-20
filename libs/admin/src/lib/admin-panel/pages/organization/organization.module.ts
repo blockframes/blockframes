@@ -26,7 +26,7 @@ import { MemberAddModule } from '@blockframes/organization/components/member-add
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { GoToModule } from '../../components/go-to/go-to.module';
 import { AdminOrganizationFormModule } from '../../components/organization/forms/organization-form/organization-form.module';
-import { OrganizationFilesModule } from '@blockframes/organization/components/files/files.module';
+import { FileExplorerModule } from '@blockframes/media/components/file-explorer/file-explorer.module';
 
 @NgModule({
   imports: [
@@ -52,7 +52,7 @@ import { OrganizationFilesModule } from '@blockframes/organization/components/fi
     OrgNameModule,
     GoToModule,
     AdminOrganizationFormModule,
-    OrganizationFilesModule,
+    FileExplorerModule,
   ],
   declarations: [
     OrganizationComponent,

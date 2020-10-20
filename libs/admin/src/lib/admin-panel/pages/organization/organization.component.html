@@ -67,7 +67,7 @@
     </article>
   </section>
   <hr />
-  <section  fxLayout="row" fxLayoutAlign="space-around start">
+  <section fxLayout="row" fxLayoutAlign="space-around start">
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Movies</h2>
       <bf-table-filter
@@ -95,10 +95,15 @@
         </ng-template>
       </bf-table-filter>
     </article>
+  </section>
+  <section fxLayout fxLayoutAlign="space-around start">
     <article fxLayout="column" fxLayoutAlign="space-between start" *ngIf="org">
-      <organization-files [org]="org" ></organization-files>
+      <mat-card>
+        <mat-card-title>Organization's resources</mat-card-title>
+        <mat-card-content>
+          <file-explorer [org]="org"></file-explorer>
+        </mat-card-content>
+      </mat-card>
     </article>
-
-    
   </section>
 </main>
