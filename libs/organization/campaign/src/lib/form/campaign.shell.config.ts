@@ -27,7 +27,6 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
   async onSave(options: FormSaveOptions): Promise<any> {
     const id: string = this.route.getParams('movieId');
 
-    // TODO (DON'T LET ME MERGE): extract media from form value
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
     await Promise.all([
       this.mediaService.uploadMedias(mediasToUpload),

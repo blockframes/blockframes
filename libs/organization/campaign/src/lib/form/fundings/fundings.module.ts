@@ -11,6 +11,7 @@ import { UploadModule } from '@blockframes/media/components/upload/upload.module
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -26,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: FundingsComponent }])
   ]
 })

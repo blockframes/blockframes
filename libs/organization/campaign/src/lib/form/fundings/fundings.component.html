@@ -5,7 +5,7 @@
     <section id="fundings">
       <h3>Financing plan</h3>
       <p>
-        Please fill in the form below to inform your future investors of the main sources of funding for this project.
+        Please <b>fill in the form below</b> to inform your future investors of the main sources of funding for this project and choose the currency that will be applied to your financing plan.
       </p>
       <bf-form-table [columns]="columns" [form]="form.get('fundings')" buttonText="Add an Organization">
         <!-- Columns -->
@@ -21,7 +21,7 @@
             <div fxLayout fxLayoutGap="16px">
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Organization Name</mat-label>
-                <input matInput formControlName="name" required/>
+                <input matInput formControlName="name"/>
               </mat-form-field>
   
               <mat-form-field fxFlex appearance="outline">
@@ -34,7 +34,8 @@
             <div fxLayout fxLayoutGap="16px">
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount</mat-label>
-                <input type="number" matInput formControlName="amount" required min="0"/>
+                <input type="number" matInput formControlName="amount" min="0"/>
+                <mat-icon matSuffix svgIcon="USD"></mat-icon>
               </mat-form-field>
   
               <mat-form-field fxFlex appearance="outline">
@@ -53,6 +54,15 @@
     </section>
 
     <section id="financing-plan">
+      <h3 fxLayout fxLayoutAlign="start center">
+        <mat-icon svgIcon="upload"></mat-icon>
+        <span>Upload document</span>
+      </h3>
+      <p>
+        Please <b>upload your detailed financing plan</b>
+        <br/>
+        This upload is optional, but this information might be very helpful to your potential investors.
+      </p>
       <file-upload
         [form]="form.get('financingPlan')"
         [storagePath]="storagePath"
