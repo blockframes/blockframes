@@ -69,4 +69,7 @@
       </ng-container>
     </ng-container>
   </event-edit>
+  <ng-container *ngIf="isEventStarted()">
+    <festival-event-analytics [eventId]="form.id.value"></festival-event-analytics>
+  </ng-container>
 </ng-container>
