@@ -4,6 +4,23 @@ export interface Campaign {
   minPledge?: number;
   received?: number;
   perks: Perk[];
+  fundings: Funding[];
+  profits: {
+    low: number,
+    middle: number,
+    hight: number
+  };
+  financingPlan?: string;
+  waterfall?: string;
+  // budget
+}
+
+
+export interface Funding {
+  name?: string;
+  amount?: number;
+  kind?: string;
+  status?: 'estimated' | 'confirmed';
 }
 
 export interface Perk {
@@ -20,6 +37,12 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
   return {
     id: '',
     perks: [],
+    fundings: [],
+    profits: {
+      low: 100,
+      middle: 100,
+      hight: 100
+    },
     ...params
   }
 }

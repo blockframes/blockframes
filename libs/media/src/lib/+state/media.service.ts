@@ -129,7 +129,7 @@ export class MediaService {
   }
 
   /**
-   *
+   * generateImgIxUrl : Generate a ImgIx URL
    * @param ref string
    * @param parameters ImageParameters
    */

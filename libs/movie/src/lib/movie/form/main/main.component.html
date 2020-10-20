@@ -174,7 +174,7 @@
     <mat-divider></mat-divider>
 
     <section id="directors">
-      <h3>Directors</h3>
+      <h3>Director(s)*</h3>
 
       <bf-form-table [columns]="displayedColumns" [form]="form.directors" buttonText="Add new Director"
         saveButtonText="Save Director">
@@ -190,7 +190,7 @@
         <ng-template formView let-directorForm>
           <article [formGroup]="directorForm">
 
-            <form-display-name [form]="directorForm" labelSuffix="Director's"></form-display-name>
+            <form-display-name [form]="directorForm" labelSuffix="Director's" required></form-display-name>
 
             <div fxLayout fxLayoutGap="24px">
 
