@@ -40,9 +40,7 @@ export class InputAutocompleteComponent implements OnInit {
         startWith(''),
         map((state: string) => state ? this.filterStates(state) : this.state),
       );
-    this.displayFn = (name: string) => {
-      return staticModel[this.scope][name];
-    }
+    this.displayFn = (name: string) => staticModel[this.scope][name];
   }
 
   private filterStates(value: string) {

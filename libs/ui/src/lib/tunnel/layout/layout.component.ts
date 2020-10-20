@@ -18,7 +18,7 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
   const allSections = steps.map(({ routes }) => routes);
   const allPath = allSections.flat();
   const currentPath = parseUrlWithoutFragment(url)
-  const currentIndex = allPath.map((route, i) => route.path === currentPath ? i : undefined).filter(i => !!i);
+  const index = allPath.findIndex(route => route.path === currentPath)
   const allPathsThatShouldBeHidden = allPath.map((path, i) => {
     let shouldSkip: boolean;
     path.shouldDisplay?.pipe(take(1)).subscribe(value => shouldSkip = value)
@@ -26,13 +26,13 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
       return i
     }
   }).filter(i => !!i);
-  if (currentIndex[0] >= 0) {
-    if (allPathsThatShouldBeHidden.includes(currentIndex[0] + arithmeticOperator)) {
+  if (index >= 0) {
+    if (allPathsThatShouldBeHidden.includes(index + arithmeticOperator)) {
       /* One big issue persists and this is if two forbidden routes comes just one after the other
       then this `+ arithmeticOperator` would not do the trick */
-      return allPath[currentIndex[0] + arithmeticOperator + arithmeticOperator].path
+      return allPath[index + arithmeticOperator + arithmeticOperator].path
     }
-    return allPath[currentIndex[0] + arithmeticOperator].path;
+    return allPath[index + arithmeticOperator].path;
   }
 }
 
