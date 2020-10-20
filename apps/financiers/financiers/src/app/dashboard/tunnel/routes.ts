@@ -4,11 +4,12 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { TunnelStep } from '@blockframes/ui/tunnel';
 
 const appSteps: TunnelStep[] = [{
-  title: 'Estimated Budget',
+  title: 'Financial Conditions',
   icon: 'CAD',
   time: 1,
   routes: [
-    { path: 'financial-details', label: 'Estimated Budget' }
+    { path: 'financial-details', label: 'Estimated Budget' },
+    { path: 'fundings', label: 'Financing Plan' },
   ],
 }, {
   title: 'Investment Campaign',
@@ -94,9 +95,15 @@ export const titleTunnelRoutes: Routes = [
         path: 'media-videos',
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
+
+      // Financial Conditions
       {
         path: 'financial-details',
         loadChildren: () => import('./financial-details/financial-details.module').then(m => m.MovieFormFinancialDetailsModule)
+      },
+      {
+        path: 'fundings',
+        loadChildren: () => import('@blockframes/campaign/form/fundings/fundings.module').then(m => m.FundingsModule)
       },
 
       // Campaign
