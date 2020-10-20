@@ -12,6 +12,8 @@ import {
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { JsonlDbRecord } from '@blockframes/firebase-utils';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -85,6 +87,20 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
+function updateScreener(screener: HostedVideo): HostedVideo {
+  const jwPlayerId = 'Ek2LPn3W';
+  return {
+    ...screener,
+    jwPlayerId
+  }
+}
+
+function processMovie(movie: Movie): Movie {
+  const screener = movie.promotional?.videos?.screener;
+  if (screener) movie.promotional.videos.screener = updateScreener(screener);
+  return movie;
+}
+
 function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
   const ignorePaths = [
     '_META/',
@@ -92,7 +108,6 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
     'contracts/',
     'docsIndex/',
     'events/',
-    'movies/',
     'permissions/',
     'publicContracts/',
   ];
@@ -107,6 +122,9 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
       return { docPath, content: processInvitation(doc) };
     } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
+    } else if (docPath.includes('movies/') ) {
+      if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
+      return { docPath, content: doc };
     }
   } catch (e) {
     throw [Error(`Error docPath: ${docPath}`), e];
