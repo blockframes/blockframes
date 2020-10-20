@@ -40,7 +40,7 @@
     "affected:libs": "nx affected:libs --base=origin/master",
     "affected:build": "nx affected:build --base=origin/master",
     "affected:e2e": "nx affected:e2e --base=origin/master",
-    "affected:test": "firebase emulators:exec 'nx affected:test --base=origin/develop'",
+    "affected:test": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:exec 'nx affected:test --base=origin/develop'",
     "affected:lint": "nx affected:lint --base=origin/master",
     "affected:dep-graph": "nx affected:dep-graph --base=origin/master",
     "format": "nx format:write",

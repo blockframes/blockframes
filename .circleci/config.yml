@@ -158,9 +158,8 @@ jobs:
         ENV: ci
     steps:
       - prepare_environment
-      - *start_firestore_emulator
       - run: npm run build:all
-      - run: npm run test
+      - run: npm run affected:test
       - run: npm run lint
       - run:
           name: Check size of apps being build
@@ -177,7 +176,6 @@ jobs:
         ENV: ci
     steps:
       - prepare_environment
-      - *start_firestore_emulator
       - run:
           # npm run affected:build tries to build the libs which are broken,
           # the following command only build affected apps.
@@ -190,7 +188,7 @@ jobs:
               npm run build:${app};
             done;
       - run: npm run affected:lint --base=origin/develop
-      - run: npm run test
+      - run: npm run affected:test
       - run:
           name: Check size of apps being build
           command: |
