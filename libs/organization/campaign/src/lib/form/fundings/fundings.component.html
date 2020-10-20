@@ -1,5 +1,5 @@
 <tunnel-page>
-  <h4 title>Financing Conditions</h4>
+  <h4 title>Financing Elements</h4>
   <h1 subtitle>Financing plan</h1>
   <ng-container tunnel-form>
     <section id="fundings">
@@ -68,7 +68,10 @@
         [storagePath]="storagePath"
         accept="['.pdf']"
         [types]="['application/pdf']"
-      ></file-upload>
+      >
+        <h3 type>Upload Files</h3>
+        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      </file-upload>
     </section>
   </ng-container>
 </tunnel-page>

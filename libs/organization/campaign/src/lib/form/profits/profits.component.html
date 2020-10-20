@@ -1,0 +1,60 @@
+<tunnel-page>
+  <h4 title>Financing Elements</h4>
+  <h1 subtitle>Return on investment</h1>
+  <ng-container tunnel-form>
+    <section id="profits">
+      <h3>Return on investment</h3>
+      <p>
+        Please specify the return on investment for your future investors for the minimum ticket  if the sales estmates are respected. 
+      </p>
+      
+      <form [formGroup]="form.get('profits')" id="profits" fxLayout="column">
+        <div fxLayout fxLayoutGap="16px">
+          <mat-form-field appearance="outline">
+            <mat-label>ROI low</mat-label>
+            <input type="number" matInput formControlName="low" min="0"/>
+            <mat-icon matSuffix svgIcon="percent"></mat-icon>
+          </mat-form-field>
+          <mat-icon class="info" svgIcon="info" matTooltip="If the movie Crash"></mat-icon>
+        </div>
+        <div fxLayout fxLayoutGap="16px">
+          <mat-form-field appearance="outline">
+            <mat-label>ROI medium</mat-label>
+            <input type="number" matInput formControlName="medium" min="0"/>
+            <mat-icon matSuffix svgIcon="percent"></mat-icon>
+          </mat-form-field>
+          <mat-icon class="info" svgIcon="info" matTooltip="If the movie is a success"></mat-icon>
+        </div>
+        <div fxLayout fxLayoutGap="16px">
+          <mat-form-field appearance="outline">
+            <mat-label>ROI high</mat-label>
+            <input type="number" matInput formControlName="high" min="0"/>
+            <mat-icon matSuffix svgIcon="percent"></mat-icon>
+          </mat-form-field>
+          <mat-icon class="info" svgIcon="info" matTooltip="If the movie outpreform our expectations"></mat-icon>
+        </div>
+      </form>
+    </section>
+
+    <section id="waterfall">
+      <h3 fxLayout fxLayoutAlign="start center">
+        <mat-icon svgIcon="upload"></mat-icon>
+        <span>Upload document</span>
+      </h3>
+      <p>
+        Please <b>upload your detailed revenue waterfall</b>
+        <br/>
+        This upload is optional, but this information might be very helpful to your potential investors.
+      </p>
+      <file-upload
+        [form]="form.get('waterfall')"
+        [storagePath]="storagePath"
+        accept="['.pdf']"
+        [types]="['application/pdf']"
+      >
+        <h3 type>Upload Files</h3>
+        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      </file-upload>
+    </section>
+  </ng-container>
+</tunnel-page>

@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Campaign, createCampaign, Perk, createPerk, Funding } from '../+state/campaign.model';
@@ -76,7 +76,6 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
   }
 }
 
-
 //////////////
 // CAMPAIGN //
 //////////////
@@ -87,6 +86,11 @@ function createCampaignControls(value?: Partial<Campaign>) {
     cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
     minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
+    profits: new FormGroup({
+      low: new FormControl(campaign.profits.low),
+      medium: new FormControl(campaign.profits.medium),
+      high: new FormControl(campaign.profits.high),
+    }),
     perks: FormList.factory(
       campaign.perks,
       (perk?: Partial<Perk>) => new PerkForm(perk),
@@ -95,7 +99,8 @@ function createCampaignControls(value?: Partial<Campaign>) {
       campaign.fundings,
       (funding?: Partial<Funding>) => new FundingForm(funding),
     ),
-    financingPlan: new HostedMediaForm(campaign.financingPlan)
+    financingPlan: new HostedMediaForm(campaign.financingPlan),
+    waterfall: new HostedMediaForm(campaign.waterfall),
   }
 }
 
