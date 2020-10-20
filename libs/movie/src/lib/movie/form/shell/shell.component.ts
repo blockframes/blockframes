@@ -19,6 +19,7 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { RouteDescription } from '@blockframes/utils/common-interfaces';
 
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
@@ -104,7 +105,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   }].map(step => {
     return {
       ...step,
-      routes: step.routes.filter(route => !(route?.shouldDisplay) || !route.shouldDisplay)
+      routes: step.routes.filter((route: RouteDescription) => (!(route?.shouldDisplay) || !route.shouldDisplay))
     }
   })
 }
