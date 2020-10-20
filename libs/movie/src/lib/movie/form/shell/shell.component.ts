@@ -1,8 +1,7 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Inject, AfterViewInit, OnDestroy, InjectionToken } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state';
@@ -15,21 +14,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // RxJs
 import { switchMap, map, startWith } from 'rxjs/operators';
 import { Observable, of, Subscription, combineLatest } from 'rxjs';
-import { movieFormat, ProductionStatus } from '@blockframes/utils/static-model';
+import { ProductionStatus } from '@blockframes/utils/static-model';
 import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 
-function isStatus(prodStatusCtrl: FormControl, acceptableStatus: ProductionStatus[]) {
-  return prodStatusCtrl.valueChanges.pipe(
-    startWith(prodStatusCtrl.value),
-    map(prodStatus => acceptableStatus.includes(prodStatus))
-  )
+function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
+  return acceptableStatus.includes(prodStatus)
 }
 
-function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelStep[] {
+function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): TunnelStep[] {
   return [{
     title: 'First Step',
     icon: 'home',
@@ -61,14 +57,14 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
     }, {
       path: 'shooting-information',
       label: 'Shooting Information',
-      shouldDisplay: isStatus(statusCtrl, ['released'])
+      shouldDisplay: isStatus(status, ['released'])
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: isStatus(statusCtrl, ['development'])
+      shouldDisplay: isStatus(status, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -78,14 +74,14 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
       {
         path: 'sales-pitch',
         label: 'Sales Pitch',
-        shouldDisplay: isStatus(statusCtrl, ['released'])
+        shouldDisplay: isStatus(status, ['released'])
       }, {
         path: 'media-files',
         label: 'Files'
       }, {
         path: 'media-notes',
         label: 'Notes & Statements',
-        shouldDisplay: isStatus(statusCtrl, ['post_production', 'finished', 'released'])
+        shouldDisplay: isStatus(status, ['post_production', 'finished', 'released'])
       },
       {
         path: 'media-images',
@@ -105,10 +101,13 @@ function getSteps(statusCtrl: FormControl, appSteps: TunnelStep[] = []): TunnelS
       path: 'summary',
       label: 'Summary & Submission'
     }]
-  }]
+  }].map(step => {
+    return {
+      ...step,
+      routes: step.routes.filter(route => !(route?.shouldDisplay) || !route.shouldDisplay)
+    }
+  })
 }
-
-
 
 export interface FormSaveOptions {
   publishing: boolean;
@@ -135,7 +134,7 @@ export const FORMS_CONFIG = new InjectionToken<ShellConfig>('List of form manage
 })
 export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
-  steps: TunnelStep[];
+  steps$: Observable<TunnelStep[]>;
   exitRoute: string;
 
   constructor(
@@ -152,7 +151,10 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     this.sub = combineLatest(subs).subscribe();
     const appSteps = this.route.getData<TunnelStep[]>('appSteps');
     const movieForm = this.getForm('movie');
-    this.steps = getSteps(movieForm.get('productionStatus'), appSteps);
+    this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
+      startWith(movieForm.get('productionStatus').value),
+      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps)
+      ));
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
   }
 

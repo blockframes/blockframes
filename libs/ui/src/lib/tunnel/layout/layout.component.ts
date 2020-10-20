@@ -3,7 +3,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep } from '../tunnel.model';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { map, shareReplay, filter, take } from 'rxjs/operators';
+import { filter, map, shareReplay } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
@@ -14,25 +14,14 @@ import { Router, NavigationEnd } from '@angular/router';
  * @param url current url
  * @param arithmeticOperator plus or minus
  */
-function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): string {
+function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): string | boolean {
   const allSections = steps.map(({ routes }) => routes);
   const allPath = allSections.flat();
   const currentPath = parseUrlWithoutFragment(url)
   const index = allPath.findIndex(route => route.path === currentPath)
-  const allPathsThatShouldBeHidden = allPath.map((path, i) => {
-    let shouldSkip: boolean;
-    path.shouldDisplay?.pipe(take(1)).subscribe(value => shouldSkip = value)
-    if (shouldSkip) {
-      return i
-    }
-  }).filter(i => !!i);
   if (index >= 0) {
-    if (allPathsThatShouldBeHidden.includes(index + arithmeticOperator)) {
-      /* One big issue persists and this is if two forbidden routes comes just one after the other
-      then this `+ arithmeticOperator` would not do the trick */
-      return allPath[index + arithmeticOperator + arithmeticOperator].path
-    }
-    return allPath[index + arithmeticOperator].path;
+    const filteredPath = allPath[index + arithmeticOperator]
+    return filteredPath?.path ? filteredPath.path : false;
   }
 }
 
@@ -55,19 +44,15 @@ function parseUrlWithoutFragment(url: string): string {
 })
 export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
-  private navigation = new BehaviorSubject<TunnelStep[]>([]);
-  private url$ = this.routerQuery.select(({ state }) => state.url);
-  public steps$ = this.navigation.asObservable();
+  private url$ = this.routerQuery.select('state').pipe(map(({ url }) => url))
   public urlBynav$: Observable<[string, TunnelStep[]]>;
-  public next$: Observable<string>;
-  public previous$: Observable<string>;
+  public next: string | boolean;
+  public previous: string | boolean;
   public ltMd$ = this.breakpointsService.ltMd;
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
-  @Input() set steps(steps: TunnelStep[]) {
-    this.navigation.next(steps || []);
-  }
+  @Input() steps: TunnelStep[];
 
   /** Fallback link to redirect on exit */
   @Input() exitRedirect: string;
@@ -81,14 +66,22 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Share the url by navigation plan
-    this.urlBynav$ = combineLatest([this.url$, this.steps$]).pipe(shareReplay());
-    this.next$ = this.urlBynav$.pipe(map(([url, steps]) => getPage(steps, url, 1)));
-    this.previous$ = this.urlBynav$.pipe(map(([url, steps]) => getPage(steps, url, -1)));
+    this.urlBynav$ = combineLatest([this.url$, new BehaviorSubject(this.steps).asObservable()]).pipe(shareReplay(1))
+
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
-      .subscribe(() => this.sidenavContent.scrollTo({ top: 0 }))
+      .subscribe(() => {
+        this.sidenavContent.scrollTo({ top: 0 })
+        this.getRoute();
+      })
+    this.getRoute();
+  }
+
+  private getRoute() {
+    const url = this.routerQuery.getValue().state.url;
+    this.next = getPage(this.steps, url, 1)
+    this.previous = getPage(this.steps, url, -1)
   }
 
   ngOnDestroy() {
