@@ -25,10 +25,6 @@ function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T 
   return keys.every((key) => key in doc);
 }
 
-function assertType<T extends object>(doc: any, ...keys: (keyof T)[]): asserts doc is T {
-  if (!hasKeys<T>(doc, ...keys)) throw Error('WRONG OBJECT TYPE!');
-}
-
 function processUser<T extends User | PublicUser>(u: T): T {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
