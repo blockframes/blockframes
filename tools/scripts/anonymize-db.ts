@@ -4,16 +4,13 @@ import * as faker from 'faker';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
-import {
-  Organization,
-  createPublicOrganization,
-  PublicOrganization,
-} from '@blockframes/organization/+state';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { JsonlDbRecord } from '@blockframes/firebase-utils';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};

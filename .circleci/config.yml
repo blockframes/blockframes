@@ -159,7 +159,6 @@ jobs:
     steps:
       - prepare_environment
       - run: npm run build:all
-      - run: npm run affected:test
       - run: npm run lint
       - run:
           name: Check size of apps being build
@@ -188,7 +187,6 @@ jobs:
               npm run build:${app};
             done;
       - run: npm run affected:lint --base=origin/develop
-      - run: npm run affected:test
       - run:
           name: Check size of apps being build
           command: |
@@ -220,6 +218,7 @@ jobs:
       - build_deploy_prepare
       - run: sleep 500 # TODO instead of wait, disable maintenance with command
       - test_e2e_all
+      - run: npm run affected:test
       - run:
           name: send stability data
           command: ./.circleci/submit-stability.sh dist/test-reports
@@ -240,6 +239,7 @@ jobs:
       - build_deploy_prepare
       - run: sleep 500 # TODO instead of wait, disable maintenance with command
       - test_e2e_all
+      - run: npm run affected:test
       - slack/status
   deploy-to-prod:
     executor: blockframes-ci

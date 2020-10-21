@@ -6,7 +6,7 @@ import { yandexId } from '@env';
 @Injectable({ providedIn: 'root' })
 export class YandexMetricaService {
   constructor(
-    @Inject(DOCUMENT) private document: any
+    @Inject(DOCUMENT) private document: Document
   ) {}
 
   public insertMetrika() {
