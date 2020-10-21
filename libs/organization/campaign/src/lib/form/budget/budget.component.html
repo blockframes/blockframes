@@ -8,7 +8,7 @@
       <h3>Estimated Budget</h3>
       <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
 
-      <static-select scope="movieCurrencies" [control]="budget.get('currency')">
+      <static-select class="currency" scope="movieCurrencies" [control]="budget.get('currency')">
         <mat-label>Currency</mat-label>
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
