@@ -2,14 +2,14 @@
 import {Injectable} from '@angular/core';
 
 // Blockframes
-import {UserService} from "@blockframes/user/+state";
+import {User, UserService} from "@blockframes/user/+state";
 import {Event, EventService} from "@blockframes/event/+state";
 import {
   IParticipantMeeting,
   IStatusVideoAudio,
   meetingEventEnum
 } from "@blockframes/event/components/meeting/+state/meeting.interface";
-import {OrganizationService} from "@blockframes/organization/+state";
+import {Organization, OrganizationService} from "@blockframes/organization/+state";
 
 // Rxjs
 import {BehaviorSubject, Observable} from "rxjs";
@@ -26,7 +26,7 @@ import {
   LocalDataTrack, LocalTrack,
   LocalVideoTrack,
   LocalVideoTrackPublication,
-  Participant,
+  Participant, RemoteAudioTrack, RemoteVideoTrack,
   Room
 } from 'twilio-video';
 import {ErrorResultResponse} from "@blockframes/utils/utils";
@@ -50,6 +50,8 @@ export class MeetingService {
   previewTracks: (LocalAudioTrack | LocalVideoTrack | LocalDataTrack)[];
 
   accessToken: string;
+
+  localParticipant: IParticipantMeeting;
 
   constructor(
     private userService: UserService,
@@ -206,8 +208,8 @@ export class MeetingService {
       await Promise.all(tracks);
     }
 
-    const localParticipant = await this.createIParticipantMeeting(room.localParticipant.identity, event, true, video, audio);
-    this.addParticipant(localParticipant, room.localParticipant);
+    this.localParticipant = await this.createIParticipantMeeting(room.localParticipant.identity, event, true, video, audio);
+    this.addParticipant(this.localParticipant, room.localParticipant);
     this.setUpRoomEvent(room, event);
   }
 
@@ -228,10 +230,10 @@ export class MeetingService {
     video: boolean = false,
     audio: boolean = false
   ): Promise<IParticipantMeeting> {
-    const remoteUser = await this.userService.getUser(identity);
-    const remoteOrg = await this.orgService.getValue(remoteUser.orgId);
+    const remoteUser: User = await this.userService.getUser(identity);
+    const remoteOrg: Organization = await this.orgService.getValue(remoteUser.orgId);
 
-    const isDominantSpeaker = event.isOwner;
+    const isDominantSpeaker = remoteUser.orgId === event.ownerId;
 
     return {
       identity: identity,
@@ -281,8 +283,8 @@ export class MeetingService {
    */
   setupVideoAudio(identity: string, kind: keyof IStatusVideoAudio, boolToChange: boolean): void {
     const participants: IParticipantMeeting[] = this.connectedParticipants$.getValue();
-    const updatedParticipant = participants.find(value => value.identity === identity);
-    const otherParticipant = participants.filter(value => value.identity !== identity);
+    const updatedParticipant: IParticipantMeeting = participants.find(value => value.identity === identity);
+    const otherParticipant: IParticipantMeeting[] = participants.filter(value => value.identity !== identity);
     updatedParticipant.statusMedia[kind] = boolToChange;
     this.connectedParticipants$.next([...otherParticipant, updatedParticipant])
   }
@@ -309,7 +311,7 @@ export class MeetingService {
    */
   deactivateLocalTracks(activeRoom: Room): void {
     if (!!activeRoom) {
-      const arrayOfLocalTrack = [];
+      const arrayOfLocalTrack: (LocalAudioTrack | LocalVideoTrack)[] = [];
       activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
         arrayOfLocalTrack.push(track.track);
         track.track.stop();
