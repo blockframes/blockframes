@@ -27,8 +27,9 @@ import {
   LocalVideoTrack,
   LocalVideoTrackPublication,
   Participant,
-  Room
+  Room, TrackPublication
 } from 'twilio-video';
+import SID = Participant.SID;
 
 @Injectable({
   providedIn: 'root'
@@ -318,7 +319,7 @@ export class MeetingService {
    */
   getTracksOfParticipant(participant: Participant) {
     return Array.from(participant.tracks).map((
-      track: any
+      track
     ) => {
       //participant[0] is the key
       return track[1].track;
