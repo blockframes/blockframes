@@ -87,6 +87,10 @@ const routes: Routes = [{
           canActivate: [SessionGuard],
           loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
         },
+        {
+          path: 'lobby',
+          loadChildren: () => import('./event/lobby/lobby.module').then(m => m.LobbyModule),
+        },
         ]
       }]
     },

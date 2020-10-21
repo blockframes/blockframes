@@ -13,7 +13,7 @@
           <ng-container *ngIf="producer.get('countries').value.length">
             <strong *ngIf="producer.get('countries').value.length">
               <missing-control [control]="producer.get('countries')" [link]="link" fragment="company"
-                scope="TERRITORIES"></missing-control>
+                scope="territories"></missing-control>
             </strong>
           </ng-container>
           <span>&nbsp;</span>
@@ -39,7 +39,7 @@
         <li *ngFor="let coProducer of coProdCompany.controls; let isLast = last">
           <strong>
             <missing-control [control]="coProducer.get('countries')" [link]="link" fragment="co-company"
-              scope="TERRITORIES"></missing-control>
+              scope="territories"></missing-control>
           </strong>
           <span>&nbsp;</span>
           <missing-control [control]="coProducer.get('displayName')"></missing-control>
@@ -89,7 +89,7 @@
       <ng-template let-distributors="control">
         <li *ngFor="let distributor of distributors.controls; let isLast = last">
           <strong>
-            <missing-control [control]="distributor.get('countries')" scope="TERRITORIES" [link]="link">
+            <missing-control [control]="distributor.get('countries')" scope="territories" [link]="link">
             </missing-control>
           </strong>
           <span>&nbsp;</span>
@@ -114,7 +114,7 @@
       <ng-template let-salesAgents="control">
         <li *ngFor="let saleAgent of salesAgents.controls; let isLast = last">
           <strong>
-            <missing-control [control]="saleAgent.get('countries')" scope="TERRITORIES" [link]="link"></missing-control>
+            <missing-control [control]="saleAgent.get('countries')" scope="territories" [link]="link"></missing-control>
           </strong>
           <span>&nbsp;</span>
           <span>{{ saleAgent.get('displayName').value }}</span>

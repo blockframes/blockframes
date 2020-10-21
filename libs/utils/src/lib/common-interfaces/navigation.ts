@@ -4,7 +4,7 @@ export interface RouteDescription {
   path: string;
   label: string;
   icon?: string;
-  shouldDisplay?: Observable<boolean>;
+  shouldDisplay?: boolean;
   /** List of the keys required by the movie or organization to display the page */
   requireKeys?: string[]
 }
