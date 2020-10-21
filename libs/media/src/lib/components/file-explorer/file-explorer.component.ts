@@ -78,8 +78,6 @@ export class FileExplorerComponent {
     this.activeDirectory = this.directories[0].subDirectories[0];
     this.orgId = org.id;
 
-    // ORG WITH MOVIES TO GET ACCESS TO THE MOVIE FILES TOOO :D:D
-
     this.org$ = this.organizationService.valueChanges(org.id);
   };
 
@@ -118,7 +116,6 @@ export class FileExplorerComponent {
             await this.organizationService.update(this.orgId, { documents: { notes: notes } });
           } else {
             orgForm.logo.markForDelete();
-            console.log('org form resetting: ', orgForm.value);
             const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(orgForm);
             await this.organizationService.update(this.orgId, documentToUpdate );
           }

@@ -7,7 +7,6 @@ import { MediaRatioType } from '../../cropper/cropper.component';
   selector: 'image-dialog',
   templateUrl: 'image.component.html'
 })
-
 export class ImageDialogComponent {
 
   constructor(
