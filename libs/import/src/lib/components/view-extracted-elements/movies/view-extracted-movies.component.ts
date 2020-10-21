@@ -30,7 +30,7 @@ import {
   StakeholderRoleValue,
   TerritoryValue,
   UnitBoxValue,
-  productionStatus, budgetRange, NumberRange
+  productionStatus
 } from '@blockframes/utils/static-model';
 
 
@@ -679,8 +679,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetMovie.budget].indexOf('-') !== -1) {
             const budgetParts = spreadSheetRow[SpreadSheetMovie.budget].split('-');
             const currency = budgetParts[0].slice(0, 1);
-            const from = parseInt(budgetParts[0].slice(1).trim(), 10);
-            const to = parseInt(budgetParts[1].replace('millions', '').trim(), 10);
 
             switch (currency) {
               case '$':
@@ -691,7 +689,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 movie.totalBudget.currency = 'EUR';
                 break;
             }
-            movie.estimatedBudget = getKeyIfExists('budgetRange', spreadSheetRow[SpreadSheetMovie.budget])
+            movie.estimatedBudget = getKeyIfExists('budgetRange', spreadSheetRow[SpreadSheetMovie.budget]);
           } else {
             movie.totalBudget = {
               others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10),
