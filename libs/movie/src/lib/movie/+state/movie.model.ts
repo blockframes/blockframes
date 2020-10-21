@@ -31,7 +31,6 @@ import {
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { createMovieAppAccess } from '@blockframes/utils/apps';
-import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { Language, MovieLanguageType } from '@blockframes/utils/static-model';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -92,11 +91,10 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     isOriginalVersionAvailable: null,
     totalBudget: {},
     socialGoals: [],
-
+    estimatedBudget: null,
     ...params,
     banner: params.banner ?? '',
     audience: createAudienceGoals(params.audience),
-    estimatedBudget: createRange<number>(params.estimatedBudget),
     languages: createLanguageKey(params.languages ? params.languages : {}),
     poster: params.poster ?? '',
     promotional: createMoviePromotional(params.promotional),
