@@ -1,8 +1,9 @@
-import { firestore } from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 export interface IMaintenanceDoc {
-  endedAt: firestore.Timestamp
-  startedAt: firestore.Timestamp
+  endedAt: firebase.firestore.Timestamp
+  startedAt: firebase.firestore.Timestamp
 }
 
 /** Delay before considering the maintenance over */
@@ -12,7 +13,7 @@ export const MAINTENANCE_DOCUMENT_NAME = '_MAINTENANCE';
 
 export function _isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc, delay = EIGHT_MINUTES_IN_MS): boolean {
   try {
-    const now = firestore.Timestamp.now();
+    const now = firebase.firestore.Timestamp.now();
 
     if (startedAt) {
       return true;
