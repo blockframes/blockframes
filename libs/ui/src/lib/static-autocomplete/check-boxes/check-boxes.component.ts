@@ -5,7 +5,9 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  OnDestroy, QueryList, ViewChildren
+  OnDestroy,
+  QueryList,
+  ViewChildren
 } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';

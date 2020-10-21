@@ -35,7 +35,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     'screener_link',
     'teaser_link',
     'presentation_deck',
-    'trailer_link'
+    'trailer_link',
+    'moodboard'
   ];
 
   constructor(
