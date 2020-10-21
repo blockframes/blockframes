@@ -1,13 +1,5 @@
 // Angular
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild} from '@angular/core';
 
 // Blockframes
 import {
@@ -22,6 +14,7 @@ import {
   Participant,
   RemoteAudioTrack,
   RemoteAudioTrackPublication,
+  RemoteTrack,
   RemoteVideoTrack,
   RemoteVideoTrackPublication
 } from 'twilio-video';
@@ -29,15 +22,15 @@ import {
 @Component({
   selector: '[participant] [twilioData] event-meeting-remote-participant',
   templateUrl: './remote.component.html',
-  styleUrls: ['./remote.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./remote.component.scss']
 })
 export class RemoteComponent implements AfterViewInit, OnDestroy {
 
   @Input() participant: IParticipantMeeting;
   @Input() twilioData: Participant;
 
-  @ViewChild('remoteVideo') containerRemoteVideo: ElementRef;
+  @ViewChild('video') video: ElementRef;
+  @ViewChild('audio') audio: ElementRef;
 
   constructor(private meetingService: MeetingService) {
   }
@@ -48,14 +41,28 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Function to attach track video or audio to html element video or audio
+   * @param tracks
+   */
+  attachTracks(tracks: RemoteTrack[]): void {
+    if (tracks) {
+      tracks.forEach((track: (RemoteAudioTrack | RemoteVideoTrack)) => {
+        if (track) {
+          track.attach((track.kind === 'video') ? this.video.nativeElement : this.audio.nativeElement);
+        }
+      });
+    }
+  }
+
+  /**
    * Set up all event we need for meeting
    * @param participant
    */
   setupParticipantEvent(participant: Participant): void {
-    const participantContainer = this.containerRemoteVideo.nativeElement;
+    // const participantContainer = this.containerRemoteVideo.nativeElement;
 
     participant.on(meetingEventEnum.TrackSubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
-      this.meetingService.attachTracks([track], participantContainer);
+      this.attachTracks([track]);
     })
 
     participant.on(meetingEventEnum.TrackUnsubscribed, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {
@@ -72,7 +79,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     })
 
     participant.on(meetingEventEnum.TrackEnabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
-      this.meetingService.attachTracks([remoteTrack.track], participantContainer)
+      this.attachTracks([remoteTrack.track])
       this.setupVideoAudio(remoteTrack.kind, true);
     })
 
@@ -82,9 +89,8 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   }
 
   videoMock(participant: Participant): void {
-    const participantContainer = this.containerRemoteVideo.nativeElement;
-    this.meetingService.attachParticipantTracks(participant, participantContainer);
-
+    const tracks: RemoteTrack[] = this.meetingService.attachParticipantTracks(participant);
+    this.attachTracks(tracks)
   }
 
   setupVideoAudio(kind: keyof IStatusVideoAudio, boolToChange: boolean): void {

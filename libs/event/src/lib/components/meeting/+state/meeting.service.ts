@@ -18,14 +18,20 @@ import {map} from "rxjs/operators";
 // Twilio-video
 import {
   connect,
+  ConnectOptions,
   createLocalAudioTrack,
   createLocalVideoTrack,
-  ConnectOptions,
   LocalAudioTrack,
+  LocalAudioTrackPublication,
   LocalDataTrack,
   LocalVideoTrack,
+  LocalVideoTrackPublication,
   Participant,
-  Room, LocalAudioTrackPublication, LocalVideoTrackPublication, RemoteAudioTrack, RemoteVideoTrack
+  RemoteAudioTrack,
+  RemoteTrack,
+  RemoteTrackPublication,
+  RemoteVideoTrack,
+  Room
 } from 'twilio-video';
 
 @Injectable({
@@ -329,28 +335,23 @@ export class MeetingService {
   /**
    * Attach the Tracks to the DOM.
    * @param tracks - track to attach in the container
-   * @param container - container from DOM to attach the track
    */
-  attachTracks(tracks: (RemoteAudioTrack | RemoteVideoTrack)[], container): void {
-    tracks.forEach((track) => {
+  attachTracks(tracks: RemoteTrack[]) {
+    const elements: HTMLMediaElement[] = [];
+    tracks.forEach((track: (RemoteAudioTrack | RemoteVideoTrack)) => {
       if (track) {
-        container.appendChild(track.attach()).setAttribute('style', 'flex:1;width: 100%;');
+        elements.push(track.attach());
       }
     });
+    return elements;
   }
 
   /**
    * Attach the Participant's Tracks to the DOM.
    * @param participant - participant to attach in the container
-   * @param container - container of participant in DOM
    */
-  attachParticipantTracks(participant: Participant, container): void {
-    const tracks = Array.from(participant.tracks.values()).map((
-      trackPublication: any
-    ) => {
-      return trackPublication.track;
-    });
-    this.attachTracks(tracks, container);
+  attachParticipantTracks(participant: Participant): RemoteTrack[] {
+    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication) => trackPublication.track);
   }
 
   /**
