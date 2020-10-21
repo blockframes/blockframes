@@ -1786,13 +1786,13 @@ export const months = {
 } as const
 
 export const budgetRange = {
-  f0_t1000000: 'Less than $1 million',
-  f1000000_t2000000: '$1 - 2 millions',
-  f2000000_t3500000: '$2 - 3.5 millions',
-  f3500000_t5000000: '$3.5 - 5 millions',
-  f5000000_t10000000: '$5 - 10 millions',
-  f10000000_t20000000: '$10 - 20 millions',
-  f20000000_t999999999: 'More than $20 millions'
+  10000000: 'Less than $1 million',
+  20000000: '$1 - 2 millions',
+  35000000: '$2 - 3.5 millions',
+  50000000: '$3.5 - 5 millions',
+  100000000: '$5 - 10 millions',
+  200000000: '$10 - 20 millions',
+  999999999: 'More than $20 millions'
 } as const;
 
 export const staticModel = {
