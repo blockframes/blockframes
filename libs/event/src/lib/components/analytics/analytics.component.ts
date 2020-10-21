@@ -8,7 +8,7 @@ const columns = {
 };
 
 @Component({
-  selector: 'festival-event-analytics',
+  selector: 'event-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
