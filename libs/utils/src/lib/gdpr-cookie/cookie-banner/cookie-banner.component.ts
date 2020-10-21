@@ -46,7 +46,6 @@ export class CookieBannerComponent implements OnInit {
   public acceptCookies() {
     this.confirmCookies();
     this.enableIntercom();
-    this.enableAnalytics();
     this.enableYandex();
   }
 
@@ -55,7 +54,6 @@ export class CookieBannerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(settings => {
       if (!!settings) {
         this.confirmCookies();
-        if (settings.google) this.enableAnalytics();
         if (settings.intercom) this.enableIntercom();
         if (settings.yandex) this.enableYandex();
       }
@@ -71,11 +69,6 @@ export class CookieBannerComponent implements OnInit {
   enableIntercom() {
     this.gdpr.enable('intercom', true);
     this.intercom.enable();
-  }
-
-  enableAnalytics() {
-    this.gdpr.enable('googleAnalytics', true);
-    this.analytics.analytics.setAnalyticsCollectionEnabled(true);
   }
 
   enableYandex() {

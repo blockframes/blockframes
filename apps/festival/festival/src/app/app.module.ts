@@ -99,10 +99,9 @@ export class AppModule {
     @Inject(YM_CONFIG) ymConfig: number
   ) {
 
-    const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
-    if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
+    const { intercom, yandex } = gdprService.cookieConsent;
     if (yandex) yandexService.insertMetrika(ymConfig);
-    intercom && intercomId ? intercomService.enable() : intercomService.disable(); 
+    intercom && intercomId ? intercomService.enable() : intercomService.disable();
 
     const navEnds = router.events.pipe(filter(event => event instanceof NavigationEnd));
     navEnds.subscribe((event: NavigationEnd) => {
