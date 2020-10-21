@@ -3,23 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
-const columns = {
-  name: 'Organization name',
-  kind: 'Nature',
-  amount: 'Amount',
-  status: 'Status',
-}
-
-
 @Component({
-  selector: 'campaign-form-fundings',
-  templateUrl: './fundings.component.html',
-  styleUrls: ['./fundings.component.scss'],
+  selector: 'campaign-form-profits',
+  templateUrl: './profits.component.html',
+  styleUrls: ['./profits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CampaignFormFundingsComponent implements OnInit {
+export class CampaignFormProfitsComponent implements OnInit {
   storagePath: string;
-  columns = columns;
   form = this.shell.getForm('campaign');
   
   constructor(
@@ -27,11 +18,12 @@ export class CampaignFormFundingsComponent implements OnInit {
     private route: ActivatedRoute,
     private dynTitle: DynamicTitleService
   ) {
-    this.dynTitle.setPageTitle('Financing plan')
+    this.dynTitle.setPageTitle('Return on Investment')
   }
 
+  
   ngOnInit() {
     const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/financingPlan/`;
+    this.storagePath = `campaigns/${movieId}/waterfall/`;
   }
 }

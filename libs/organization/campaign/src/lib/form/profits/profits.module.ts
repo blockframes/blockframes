@@ -3,31 +3,30 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { CampaignFormProfitsComponent } from './profits.component';
+
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-
-import { CampaignFormPerksComponent } from './perks.component';
-import { PerksPipeModule } from '../../pipes/perks.pipe';
-
-import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
+
 @NgModule({
-  declarations: [CampaignFormPerksComponent],
+  declarations: [CampaignFormProfitsComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
     TunnelPageModule,
-    PerksPipeModule,
-    FormTableModule,
+    UploadModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule,
+    MatTooltipModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: CampaignFormPerksComponent }])
+    RouterModule.forChild([{ path: '', component: CampaignFormProfitsComponent }])
   ]
 })
-export class CampaignFormPerksModule { }
+export class CampaignFormProfitsModule { }
