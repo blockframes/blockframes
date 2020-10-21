@@ -80,7 +80,7 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
-function updateScreener(screener: HostedVideo): HostedVideo {
+function updateHostedVideo(screener: HostedVideo): HostedVideo {
   const jwPlayerId = 'Ek2LPn3W';
   return {
     ...screener,
@@ -89,8 +89,12 @@ function updateScreener(screener: HostedVideo): HostedVideo {
 }
 
 function processMovie(movie: Movie): Movie {
-  const screener = movie.promotional?.videos?.screener;
-  if (screener) movie.promotional.videos.screener = updateScreener(screener);
+  if (movie.promotional?.videos?.screener) {
+    movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
+  }
+  if (movie.promotional?.videos?.otherVideos) {
+    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
+  }
   return movie;
 }
 
