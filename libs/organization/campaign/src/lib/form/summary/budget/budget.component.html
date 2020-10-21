@@ -1,6 +1,6 @@
 <article>
   <h6>
-    Financing Plan
+    Estimated Budget
     <a mat-icon-button [routerLink]="link" fragment="financial-details">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
@@ -8,7 +8,7 @@
   <ul>
     <li>
       <strong>Total Amount </strong>
-      <span>{{ budget.value | budget | bigCurrency: budget.get('currency').value }}</span>
+      <span>{{ budget.value | budget | bigCurrency: budget.get('currency').value || 'USD' }}</span>
     </li>
     <li>
       <strong>Producer's Fees </strong>

@@ -47,7 +47,7 @@
 
       <p class="mat-body-2 total">
         Your total estimated budget is :
-        {{ budget.value | budget | currency: budget.get('currency').value }}
+        {{ budget.value | budget | currency: budget.get('currency').value || 'USD' }}
       </p>
 
       <h5>2. Please upload your total estimated budget</h5>
