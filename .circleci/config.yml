@@ -43,6 +43,7 @@ commands:
             # fallback to using the latest cache if no exact match is found
             - dependencies-{{ .Environment.CACHE_VERSION }}
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: touch .env # dotenv will crash without this
       - run: npm install
       - save_cache:
           paths:
@@ -59,6 +60,13 @@ commands:
             else
               exit 0
             fi
+  prepare_gcloud:
+    description: 'Ensure gcloud and gsutil are correctly configured to execute commands'
+    steps:
+        - run: gcloud auth activate-service-account --key-file=creds.json
+        - run: gcloud --quiet config set project ${PROJECT_ID}
+        - run: gcloud info
+        - run: gsutil ls
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -163,11 +171,13 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
+      - PROJECT_ID: blockframes-staging
       - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - prepare_gcloud
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npx cypress install
       - run: npm run build:all
@@ -178,6 +188,7 @@ jobs:
           cp firestore.rules firestore.rules.regular &&
           cp firestore.maintenance.rules firestore.rules &&
           npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
+          npm run deploy:functions:config $PROJECT_ID &&
           npx firebase deploy --only functions --force &&
           npx firebase deploy --only firestore --force
       - run:
@@ -235,11 +246,13 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
+      - PROJECT_ID: blockframes-staging
       - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
       - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - prepare_gcloud
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
@@ -249,7 +262,8 @@ jobs:
             npx firebase use staging &&
             npm run backend-ops prepareFirestoreRulesPreDeploy &&
             npx firebase deploy --only hosting:catalog,hosting:festival,hosting:crm,storage &&
-            npx firebase deploy --only functions --force &&
+            npm run deploy:functions:config $PROJECT_ID &&
+            npx firebase deploy --only functions --force && 
             npx firebase deploy --only firestore --force
       - run: npm run backend-ops upgrade
       - run:
@@ -348,10 +362,10 @@ workflows:
                 - master
                 - production
                 - staging
-      # - test-e2e-release:
-      #     <<: *release_only
-      #     requires:
-      #       - build-and-test-all
+      - test-e2e-release:
+          <<: *release_only
+          requires:
+            - build-and-test-all
       - test-e2e:
           requires:
             - build-and-test-all

@@ -82,6 +82,12 @@ export class EditComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Will be used to show event statistics only if event started
+  isEventStarted() {
+    const start = this.form.get('start').value as Date;
+    return start.getTime() < Date.now();
+  }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
     this.formSub.unsubscribe();

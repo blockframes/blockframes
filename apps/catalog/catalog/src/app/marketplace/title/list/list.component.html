@@ -46,11 +46,15 @@
     </ng-template>
 
     <ng-template filter label="Genres" [form]="filterForm.genres">
-      <chips-autocomplete [form]="filterForm.genres" scope="GENRES"></chips-autocomplete>
+      <chips-autocomplete [form]="filterForm.genres" scope="GENRES">
+        <mat-label>Genres</mat-label>
+      </chips-autocomplete>
     </ng-template>
 
-    <ng-template filter label="Country of Origin" [form]="filterForm.originCountries">
-      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES"></chips-autocomplete>
+    <ng-template filter label="Country of Origin" [form]="filterForm.originCountries" >
+      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" scope="TERRITORIES">
+        <mat-label>Country of Origin</mat-label>
+      </chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Language & Version" [form]="filterForm.languages">
