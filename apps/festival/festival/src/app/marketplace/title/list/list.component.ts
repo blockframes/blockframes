@@ -2,7 +2,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
 import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
@@ -38,7 +37,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private movieService: MovieService,
-    private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private scrollable: CdkScrollable
   ) { }
@@ -86,7 +84,6 @@ export class ListComponent implements OnInit, OnDestroy {
   clear() {
     const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
     this.filterForm.reset(initial);
-    this.cdr.markForCheck();
   }
 
   async loadMore() {
@@ -103,5 +100,5 @@ export class ListComponent implements OnInit, OnDestroy {
   scrollToScrollOffset() {
     this.scrollable.scrollTo({ top: this.scrollOffsetTop });
   }
-  
+
 }
