@@ -5,7 +5,8 @@
 
     <h3>Original Version</h3>
     <article fxLayout="column" fxLayoutGap="16px">
-      <mat-slide-toggle test-id="original-version" [formControl]="form.get('isOriginalVersionAvailable')" color="primary">Original Version
+      <mat-slide-toggle test-id="original-version" [formControl]="form.get('isOriginalVersionAvailable')"
+        color="primary">Original Version
         Authorized</mat-slide-toggle>
       <span class="mat-caption">Please specify if original version is available or not.</span>
     </article>
@@ -35,7 +36,9 @@
     <!-- Buttons -->
 
     <div *ngIf="!showButtons">
-      <input-autocomplete test-id="languages" scope="LANGUAGES" [control]="languageCtrl" label="Language"></input-autocomplete>
+      <input-autocomplete test-id="languages" scope="languages" [control]="languageCtrl">
+        <mat-label>Languages</mat-label>
+      </input-autocomplete>
       <div fxLayout="row" fxLayoutAlign="space-between start">
         <button mat-stroked-button [disabled]="languageCtrl.invalid" (click)="addLanguage()"
           [disabled]="!languageCtrl.value">

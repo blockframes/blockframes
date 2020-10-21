@@ -490,8 +490,7 @@ export const festival = {
 } as const
 
 export const territories = {
-  world: '',
-  ambia: "Zambia",
+  world: 'World',
   "aland-islands": "Åland Islands",
   afghanistan: "Afghanistan",
   albania: "Albania",
@@ -744,6 +743,7 @@ export const territories = {
   "western-sahara": "Western Sahara*",
   yemen: "Yemen",
   zimbabwe: "Zimbabwe",
+  zambia: "Zambia"
 } as const
 
 export const territoriesISOA2 = {
