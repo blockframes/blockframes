@@ -8,7 +8,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./perks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PerksComponent {
+export class SummaryPerksComponent {
   @Input() link: string | string[];
   @Input() form: CampaignForm;
 

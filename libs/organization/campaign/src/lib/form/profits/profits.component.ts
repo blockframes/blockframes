@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./profits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfitsComponent implements OnInit {
+export class CampaignFormProfitsComponent implements OnInit {
   storagePath: string;
   form = this.shell.getForm('campaign');
   

@@ -7,7 +7,7 @@ import { CampaignForm } from '../../form';
   styleUrls: ['./profits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfitsComponent implements OnInit {
+export class SummaryProfitsComponent implements OnInit {
   @Input() form: CampaignForm;
   @Input() link: string | string[];
   constructor() { }

@@ -15,7 +15,7 @@ const columns = {
   styleUrls: ['./fundings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FundingsComponent {
+export class SummaryFundingsComponent {
   @Input() link: string | string[];
   @Input() form: CampaignForm;
   columns = columns;

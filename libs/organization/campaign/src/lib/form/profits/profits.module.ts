@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ProfitsComponent } from './profits.component';
+import { CampaignFormProfitsComponent } from './profits.component';
 
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
-  declarations: [ProfitsComponent],
+  declarations: [CampaignFormProfitsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,7 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatTooltipModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: ProfitsComponent }])
+    RouterModule.forChild([{ path: '', component: CampaignFormProfitsComponent }])
   ]
 })
-export class ProfitsModule { }
+export class CampaignFormProfitsModule { }

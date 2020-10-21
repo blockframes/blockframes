@@ -104,21 +104,21 @@ export const titleTunnelRoutes: Routes = [
       },
       {
         path: 'fundings',
-        loadChildren: () => import('@blockframes/campaign/form/fundings/fundings.module').then(m => m.FundingsModule)
+        loadChildren: () => import('@blockframes/campaign/form/fundings/fundings.module').then(m => m.CampaignFormFundingsModule)
       },
       {
         path: 'profits',
-        loadChildren: () => import('@blockframes/campaign/form/profits/profits.module').then(m => m.ProfitsModule)
+        loadChildren: () => import('@blockframes/campaign/form/profits/profits.module').then(m => m.CampaignFormProfitsModule)
       },
 
       // Campaign
       {
         path: 'proposal',
-        loadChildren: () => import('@blockframes/campaign/form/proposal/proposal.module').then(m => m.ProposalModule)
+        loadChildren: () => import('@blockframes/campaign/form/proposal/proposal.module').then(m => m.CampaignFormProposalModule)
       },
       {
         path: 'perks',
-        loadChildren: () => import('@blockframes/campaign/form/perks/perks.module').then(m => m.PerksModule)
+        loadChildren: () => import('@blockframes/campaign/form/perks/perks.module').then(m => m.CampaignFormPerksModule)
       },
 
       // Summary
