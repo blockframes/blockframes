@@ -9,7 +9,7 @@
         </div>
         <mat-selection-list matLine [multiple]="false" (selectionChange)="selectItem($event)">
           <mat-list-option *ngFor="let sub of directory.subDirectories" [selected]="sub.selected" [value]="sub">
-            <mat-icon matListIcon [svgIcon]="sub.icon"></mat-icon>
+            <mat-icon matListIcon [svgIcon]="sub.multiple ? 'folder' : 'template'"></mat-icon>
             <span matLine>{{ sub.name | maxLength: 15 }}</span>
           </mat-list-option>
         </mat-selection-list>
@@ -17,19 +17,19 @@
     </article>
     <article class="view surface">
       <div fxLayout fxLayoutAlign="space-between center" class="header">
-        <span class="breadcrumb">{{ org | orgName | maxLength: 10 }}{{ ' > ' + activeDirectory.name }}</span>
+        <span class="breadcrumb">{{ org | orgName | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
         <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
           <mat-icon svgIcon="add"></mat-icon>
           <span>Upload file</span>
         </button>
       </div>
 
-      <ng-container *ngIf="org | deepKey:'documents.notes' as notes">
-        <bf-table-filter [source]="notes" [columns]="columns" [initialColumns]="initialColumns">
-          <ng-template colRef="ref" let-ref>
-            <img [asset]="ref | fileTypeImage">
+      <ng-container *ngIf="org | deepKey:activeDirectory.path as directory">
+        <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
+          <ng-template colRef="ref" let-item="item">
+            <img [asset]="item[activeDirectory.fileRefField] | fileTypeImage">
           </ng-template>
-          <ng-template colRef="title" let-name>{{ name }}</ng-template>
+          <ng-template colRef="name" let-item="item">{{ item[activeDirectory.docNameField] | fileName }}</ng-template>
           <ng-template colRef="edit" let-item="item">
             <button mat-button (click)="openDialog(item)">
               <mat-icon svgIcon="pencil"></mat-icon>

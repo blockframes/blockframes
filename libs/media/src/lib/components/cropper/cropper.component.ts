@@ -11,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 type CropStep = 'drop' | 'crop' | 'hovering' | 'show';
 
 type MediaRatio = typeof mediaRatio;
-type MediaRatioType = keyof MediaRatio;
+export type MediaRatioType = keyof MediaRatio;
 const mediaRatio = {
   square: 1 / 1,
   banner: 16 / 9,
