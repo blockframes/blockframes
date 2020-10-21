@@ -33,7 +33,6 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 export class TableFilterComponent implements OnInit, AfterViewInit {
 
   @Input() @boolean showFilter: boolean;
-
   @Input() @boolean showPaginator: boolean;
 
   // Name of the column headers
