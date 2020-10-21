@@ -7,6 +7,7 @@ import { filter, map, shareReplay } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
+import { RouteDescription } from '@blockframes/utils/common-interfaces';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -14,14 +15,13 @@ import { Router, NavigationEnd } from '@angular/router';
  * @param url current url
  * @param arithmeticOperator plus or minus
  */
-function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): string | boolean {
+function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): RouteDescription {
   const allSections = steps.map(({ routes }) => routes);
   const allPath = allSections.flat();
   const currentPath = parseUrlWithoutFragment(url)
   const index = allPath.findIndex(route => route.path === currentPath)
   if (index >= 0) {
-    const filteredPath = allPath[index + arithmeticOperator]
-    return filteredPath?.path ? filteredPath.path : false;
+    return allPath[index + arithmeticOperator];
   }
 }
 
@@ -46,8 +46,8 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   private url$ = this.routerQuery.select('state').pipe(map(({ url }) => url))
   public urlBynav$: Observable<[string, TunnelStep[]]>;
-  public next: string | boolean;
-  public previous: string | boolean;
+  public next: RouteDescription;
+  public previous: RouteDescription;
   public ltMd$ = this.breakpointsService.ltMd;
 
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
