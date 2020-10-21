@@ -21,7 +21,7 @@ import {
   Territory,
   SocialGoal
 } from "@blockframes/utils/static-model";
-import { NumberRange } from "@blockframes/utils/common-interfaces/range";
+import { NumberRange } from "@blockframes/utils/static-model/types";
 import { Producer, Crew, Cast, Stakeholder, Director, Person } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';

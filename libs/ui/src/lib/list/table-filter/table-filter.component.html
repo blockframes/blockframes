@@ -1,6 +1,6 @@
-<article fxLayout="row" fxLayoutAlign="end center">
-  <mat-icon *ngIf="showFilter" svgIcon="search_table" class="icon-filter"></mat-icon>
-  <mat-form-field *ngIf="showFilter">
+<article fxLayout="row" fxLayoutAlign="end center"  *ngIf="showFilter">
+  <mat-icon svgIcon="search_table" class="icon-filter"></mat-icon>
+  <mat-form-field>
     <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
     <!-- TODO issue#1819 -->
   </mat-form-field>

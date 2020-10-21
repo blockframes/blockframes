@@ -55,7 +55,8 @@
         ],
         "crm": [
           "blockframes-ci-crm"
-        ]
+        ],
+        "financiers": ["blockframes-ci-financiers"]
       }
     },
     "blockframes-test": {

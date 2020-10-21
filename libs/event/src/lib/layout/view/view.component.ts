@@ -16,6 +16,7 @@ export class EventViewComponent implements OnInit {
   event$ = this._event.asObservable();
   invitation$: Observable<Invitation>;
   editMeeting: string;
+  accessRoute: string;
 
   @Input()
   get event() {
@@ -34,6 +35,7 @@ export class EventViewComponent implements OnInit {
   ngOnInit(): void {
 
     this.editMeeting = `/c/o/dashboard/event/${this.event.id}/edit`;
+    this.accessRoute = `/c/o/marketplace/event/${this.event.id}/${this.event.type === 'meeting' ? 'lobby' : 'session'}`;
 
     this.invitation$ = this.invitationQuery.selectAll().pipe(
       map(invits => invits.find(e => e.docId === this.event.id))

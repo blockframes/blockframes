@@ -73,18 +73,18 @@
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
-      <missing-control test-id="country" [control]="movie.originCountries" [link]="link" fragment="general-information" scope="TERRITORIES">
+      <missing-control test-id="country" [control]="movie.originCountries" [link]="link" fragment="general-information" scope="territories">
       </missing-control>
     </li>
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
       <missing-control test-id="language" [control]="movie.originalLanguages" [link]="link" fragment="general-information"
-        type="languages">
+        scope="languages">
       </missing-control>
     </li>
     <li>
       <strong>Genre{ movie.genres.controls.length, plural, =0 {} =1 {} other {s}} </strong>
-      <missing-control test-id="genres" [control]="movie.genres" [link]="link" fragment="general-information" type="genres">
+      <missing-control test-id="genres" [control]="movie.genres" [link]="link" fragment="general-information" scope="genres">
       </missing-control>
     </li>
     <li>
@@ -112,7 +112,7 @@
             <missing-control test-id="first-name" [control]="director.get('firstName')" [isLast]="false"></missing-control>
             <span>&nbsp;</span>
             <missing-control test-id="last-name" [control]="director.get('lastName')"></missing-control>
-            (<missing-control test-id="director-category" [control]="director.get('category')" type="directorCategory"></missing-control>)
+            (<missing-control test-id="director-category" [control]="director.get('category')" scope="directorCategory"></missing-control>)
           </strong>
           <ng-container *ngFor="let film of director.filmography.controls">
             <span>{{ film | filmography }}</span>

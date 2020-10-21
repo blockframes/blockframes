@@ -14,7 +14,7 @@
           <ng-container *ngFor="let release of release.controls">
             <li>
               <strong>
-                <missing-control [control]="release.get('country')" [link]="link" scope="TERRITORIES"></missing-control>
+                <missing-control [control]="release.get('country')" [link]="link" scope="territories"></missing-control>
               </strong>
               <span>&nbsp;</span>
               <missing-control [control]="release.get('media')" [link]="link" type="medias"></missing-control> -
@@ -44,7 +44,7 @@
           <ng-container *ngFor="let office of boxOffice.controls">
             <li>
               <strong>
-                <missing-control [control]="office.get('territory')" [link]="link" scope="TERRITORIES"></missing-control>
+                <missing-control [control]="office.get('territory')" [link]="link" scope="territories"></missing-control>
               </strong>
               <span>&nbsp;</span>
               <missing-control [control]="office.get('unit')" [link]="link">
@@ -85,7 +85,7 @@
           <ng-container *ngFor="let rating of ratings.controls">
             <li>
               <strong>
-                <missing-control [control]="rating.get('country')" [link]="link" fragment="rating" scope="TERRITORIES"></missing-control>
+                <missing-control [control]="rating.get('country')" [link]="link" fragment="rating" scope="territories"></missing-control>
               </strong>
               <span>&nbsp;</span>
               <missing-control [control]="rating.get('value')" [link]="link" fragment="rating"></missing-control>
