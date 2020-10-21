@@ -28,11 +28,6 @@ export class GDPRService {
     enable ? this.intercom.enable() : this.intercom.disable();
   }
 
-  enableAnalytics(enable: boolean) {
-    this.enable('googleAnalytics', enable);
-    this.analytics.analytics.setAnalyticsCollectionEnabled(enable);
-  }
-
   enableYandex(enable: boolean) {
     this.enable('yandex', enable);
     if (enable) this.yandex.insertMetrika();
