@@ -30,7 +30,7 @@ export function getImgSize(ref: string) {
   } else if (ref.includes('banner')) {
     return [300, 600, 1200];
   } else if (ref.includes('still')) {
-    return [50, 100, 200];
+    return [300, 600, 1200];
   } else {
     return [1024];
   }

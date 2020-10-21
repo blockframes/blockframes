@@ -1,0 +1,38 @@
+<ng-container *ngIf="eventId">
+  <h2>Statistics</h2>
+  <ng-container *ngIf="analytics as analytics; else loading">
+    <ng-container *ngIf="analytics.length else noAnalytics">
+      <section class="analytics">
+        <mat-card class="attendees">
+          <span fxLayout="row" fxLayoutAlign="start center">
+            <mat-icon svgIcon="group"></mat-icon>
+            <span class="mat-body-2">Number of attendees</span>
+          </span>
+          <h2>{{ analytics.length }}</h2>
+        </mat-card>
+        <mat-card>
+          <h3>Attendees</h3>
+          <bf-table-filter
+            showFilter
+            showPaginator
+            [initialColumns]="initialColumns"
+            [columns]="columns"
+            [source]="analytics">
+            <ng-template colRef="name" let-name>{{ name | titlecase }}</ng-template>
+          </bf-table-filter>
+        </mat-card>
+      </section>
+    </ng-container>
+  </ng-container>
+  <ng-template #noAnalytics>
+    <article class="no-analytics" fxLayout="column" fxLayoutAlign="center center">
+      <img asset="wait.webp" alt="waiting">
+      <p class="mat-body-2">There is no statistics available here yet.</p>
+    </article>
+  </ng-template>
+  <ng-template #loading>
+    <article fxLayout="row" fxLayoutAlign="center">
+      <mat-spinner></mat-spinner>
+    </article>
+  </ng-template>
+</ng-container>
