@@ -51,7 +51,7 @@
 
     <mat-divider></mat-divider>
 
-    <section id="estimated-budget" >
+    <section id="file" >
       <h3 fxLayout fxLayoutAlign="start center">
         <mat-icon svgIcon="upload"></mat-icon>
         <span>Upload document</span>
@@ -61,7 +61,7 @@
         <br/>
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-upload [form]="form.get('estimatedBudget')" [storagePath]="getPath()" accept="['.pdf']" [types]="['application/pdf']">
+      <file-upload [form]="form.get('files').get('budget')" [storagePath]="storagePath" accept="['.pdf']" [types]="['application/pdf']">
         <h3 type>Upload Files</h3>
         <p class="mat-caption" format>Accepted Formats: .pdf</p>
       </file-upload>

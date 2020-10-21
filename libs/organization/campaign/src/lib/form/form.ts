@@ -124,9 +124,11 @@ function createCampaignControls(value?: Partial<Campaign>) {
       (funding?: Partial<Funding>) => new FundingForm(funding),
     ),
     budget: new BudgetForm(campaign.budget),
-    financingPlan: new HostedMediaForm(campaign.financingPlan),
-    waterfall: new HostedMediaForm(campaign.waterfall),
-    estimatedBudget: new HostedMediaForm(campaign.estimatedBudget),
+    files: new FormGroup({
+      financingPlan: new HostedMediaForm(campaign.files.financingPlan),
+      waterfall: new HostedMediaForm(campaign.files.waterfall),
+      budget: new HostedMediaForm(campaign.files.budget),
+    })
   }
 }
 

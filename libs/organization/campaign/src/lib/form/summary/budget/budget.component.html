@@ -50,17 +50,12 @@
         </ng-template>
       </missing-control>
     </li>
-    <li>
-      <mat-icon svgIcon="eye" color="primary"></mat-icon>
-      <strong> Your Detailed Financing Plan </strong>
-      <ng-container *ngIf="(form.get('estimatedBudget').value.ref | isEmptyImgRef) else financialDetails">
-        <a [routerLink]="link" fragment="estimated-budget" class="missing-control">
-          Missing
-        </a>
-      </ng-container>
-      <ng-template #financialDetails>
-        {{ form.get('estimatedBudget').value.fileName }}
-      </ng-template>
+    <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+      <mat-icon svgIcon="eye"></mat-icon>
+      <strong>Detailed financing plan:</strong>
+      <missing-control [control]="form.get('files').get('budget.ref')">
+        <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>
+      </missing-control>
     </li>
 
   </ul>

@@ -13,9 +13,11 @@ export interface Campaign {
     high?: number
   };
   budget?: Budget,
-  financingPlan?: string;
-  waterfall?: string;
-  estimatedBudget?: string;
+  files: {
+    financingPlan?: string;
+    waterfall?: string;
+    budget?: string;
+  }
 }
 
 
@@ -51,6 +53,7 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
     perks: [],
     fundings: [],
     profits: {},
+    files: {},
     ...params
   }
 }
