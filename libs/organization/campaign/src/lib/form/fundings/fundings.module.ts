@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FundingsComponent } from './fundings.component';
+import { CampaignFormFundingsComponent } from './fundings.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
-  declarations: [FundingsComponent],
+  declarations: [CampaignFormFundingsComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -28,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatSelectModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: FundingsComponent }])
+    RouterModule.forChild([{ path: '', component: CampaignFormFundingsComponent }])
   ]
 })
-export class FundingsModule { }
+export class CampaignFormFundingsModule { }

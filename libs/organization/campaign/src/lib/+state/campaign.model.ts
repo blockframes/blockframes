@@ -6,9 +6,9 @@ export interface Campaign {
   perks: Perk[];
   fundings: Funding[];
   profits: {
-    low: number,
-    middle: number,
-    hight: number
+    low?: number,
+    medium?: number,
+    high?: number
   };
   financingPlan?: string;
   waterfall?: string;
@@ -38,11 +38,7 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
     id: '',
     perks: [],
     fundings: [],
-    profits: {
-      low: 100,
-      middle: 100,
-      hight: 100
-    },
+    profits: {},
     ...params
   }
 }
