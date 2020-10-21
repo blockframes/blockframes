@@ -15,7 +15,6 @@ import {
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 // import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
@@ -31,7 +30,7 @@ import {
   StakeholderRoleValue,
   TerritoryValue,
   UnitBoxValue,
-  productionStatus
+  productionStatus, budgetRange, NumberRange
 } from '@blockframes/utils/static-model';
 
 
@@ -692,8 +691,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
                 movie.totalBudget.currency = 'EUR';
                 break;
             }
-
-            movie.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
+            movie.estimatedBudget = getKeyIfExists('budgetRange', spreadSheetRow[SpreadSheetMovie.budget])
           } else {
             movie.totalBudget = {
               others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10),
