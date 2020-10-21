@@ -28,6 +28,7 @@ export async function upgrade(db: Firestore) {
       default: newMovie.estimatedBudget = null;
         break;
     }
+    delete newMovie.totalBudget;
     batch.set(movieDoc.ref, newMovie)
   })
   console.log('New Budget Range set')
