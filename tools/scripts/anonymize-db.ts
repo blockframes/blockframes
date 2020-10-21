@@ -126,9 +126,10 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
   } catch (e) {
     throw [Error(`Error docPath: ${docPath}`), e];
   }
-  throw Error(
-    `CRITICAL: could not clean this document! Path: ${docPath} \ncontent:\n${JSON.stringify(doc, null, 4)}`
-  );
+  const error = 'CRITICAL: could not clean a document, docPath not handled';
+  const location = `Document path: ${docPath}`;
+  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  throw new Error([error, location, solution].join('/n'));
 }
 
 function getPathOrder(path: string): number {
