@@ -86,7 +86,6 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
-  totalBudget?: MovieTotalBudget,
   socialGoals: SocialGoal[]
 
 
@@ -304,14 +303,6 @@ export interface MovieGoalsAudience {
   goals: string[]
 }
 
-export interface MovieTotalBudget {
-  castCost?: number,
-  currency?: MovieCurrency,
-  others?: number,
-  postProdCost?: number,
-  producerFees?: number,
-  shootCost?: number,
-}
 
 /////////////////////
 // MOVIE ANALYTICS //

@@ -1,3 +1,5 @@
+import { MovieCurrency } from "@blockframes/utils/static-model"
+
 export interface Campaign {
   id: string;
   cap?: number;
@@ -10,11 +12,21 @@ export interface Campaign {
     medium?: number,
     high?: number
   };
+  budget?: Budget,
   financingPlan?: string;
   waterfall?: string;
-  // budget
+  estimatedBudget?: string;
 }
 
+
+export interface Budget {
+  castCost?: number,
+  currency?: MovieCurrency,
+  others?: number,
+  postProdCost?: number,
+  producerFees?: number,
+  shootCost?: number,
+}
 
 export interface Funding {
   name?: string;

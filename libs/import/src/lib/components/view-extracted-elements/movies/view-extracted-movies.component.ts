@@ -674,29 +674,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
-        // BUDGET
-        if (spreadSheetRow[SpreadSheetMovie.budget]) {
-          if (spreadSheetRow[SpreadSheetMovie.budget].indexOf('-') !== -1) {
-            const budgetParts = spreadSheetRow[SpreadSheetMovie.budget].split('-');
-            const currency = budgetParts[0].slice(0, 1);
-
-            switch (currency) {
-              case '$':
-                movie.totalBudget.currency = 'USD';
-                break;
-              case '€':
-              default:
-                movie.totalBudget.currency = 'EUR';
-                break;
-            }
-            movie.estimatedBudget = getKeyIfExists('budgetRange', spreadSheetRow[SpreadSheetMovie.budget]);
-          } else {
-            movie.totalBudget = {
-              others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10),
-            };
-          }
-        }
-
         movie.boxOffice = [];
         // WORLDWIDE BOX OFFICE
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
@@ -1170,16 +1147,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'languages',
         name: 'Dubbings | Subtitles | Captions ',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.totalBudget === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'totalBudget',
-        name: 'Budget',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

@@ -4,25 +4,25 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'financiers-form-financial-details',
-  templateUrl: './financial-details.component.html',
-  styleUrls: ['./financial-details.component.scss'],
+  selector: 'campaign-form-budget',
+  templateUrl: './budget.component.html',
+  styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormFinancialDetailsComponent {
-  form = this.shell.getForm('movie');
+export class CampaignFormBudgetComponent {
+  form = this.shell.getForm('campaign');
 
   constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
     private dynTitle: DynamicTitleService) { 
-      this.dynTitle.setPageTitle('Financial Details')
+      this.dynTitle.setPageTitle('Estimated budget')
     }
 
-  get totalBudget() {
-    return this.form.get('totalBudget');
+  get budget() {
+    return this.form.get('budget');
   }
 
   public getPath() {
     const { movieId } = this.route.snapshot.params;
-    return `movies/${movieId}/promotional.financialDetails/`;
+    return `movies/${movieId}/estimatedBudget/`;
   }
 }

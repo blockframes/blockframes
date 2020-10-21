@@ -18,7 +18,6 @@ import {
   MovieSalesPitch,
   MovieNote,
   MovieShooting,
-  MovieTotalBudget,
   HostedVideo,
   HostedVideos
 } from '../+state/movie.firestore';
@@ -146,7 +145,6 @@ function createMovieControls(movie: Partial<Movie>) {
     storeConfig: new StoreConfigForm(entity.storeConfig),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
-    totalBudget: new TotalBudgetForm(entity.totalBudget),
   }
 }
 
@@ -470,29 +468,6 @@ export type FilmographyFormControl = ReturnType<typeof createFilmographyFormCont
 export class FilmographyForm extends FormEntity<FilmographyFormControl> {
   constructor(filmography?: Partial<Filmography>) {
     super(createFilmographyFormControl(filmography));
-  }
-}
-
-// ------------------------------
-//          TOTAL BUDGET
-// ------------------------------
-
-function createTotalBudgetFormControl(totalBudget: Partial<MovieTotalBudget> = {}) {
-  return {
-    castCost: new FormControl(totalBudget.castCost),
-    currency: new FormStaticValue(totalBudget.currency, 'movieCurrencies'),
-    postProdCost: new FormControl(totalBudget.postProdCost),
-    producerFees: new FormControl(totalBudget.producerFees),
-    shootCost: new FormControl(totalBudget.shootCost),
-    others: new FormControl(totalBudget.others),
-  }
-}
-
-export type TotalBudgetFormControl = ReturnType<typeof createTotalBudgetFormControl>;
-
-export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
-  constructor(totalBudget?: Partial<MovieTotalBudget>) {
-    super(createTotalBudgetFormControl(totalBudget));
   }
 }
 
