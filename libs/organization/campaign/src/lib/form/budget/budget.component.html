@@ -1,13 +1,14 @@
 <tunnel-page>
   <h4 title>Financial Elements</h4>
   <h1 subtitle>Estimated Budget</h1>
+  <p description>Please pay attention that these (*) are mandatory fields </p>
   <ng-container tunnel-form>
 
-    <section id="financial-details" fxLayout="column">
-      <h3>Currency</h3>
+    <section id="budget" fxLayout="column">
+      <h3>Estimated Budget</h3>
       <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
 
-      <static-select scope="movieCurrencies" [control]="budget.get('currency')" [withoutValues]="['']">
+      <static-select scope="movieCurrencies" [control]="budget.get('currency')">
         <mat-label>Currency</mat-label>
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
@@ -15,10 +16,7 @@
         </ng-template>
       </static-select>
 
-      <mat-divider></mat-divider>
       <!-- TODO 3788 update hint, error, etc -->
-      <h3>Estimated Budget</h3>
-      <h5>1. Please fill in the general information</h5>
       <mat-form-field appearance="outline">
         <mat-label>Producer's Fees</mat-label>
         <input matInput type="number" [formControl]="budget.get('producerFees')" placeholder="" />
@@ -44,21 +42,31 @@
         <input matInput type="number" [formControl]="budget.get('others')" placeholder="" />
         <mat-hint>Other charges include insurance, research screenings, general expense...</mat-hint>
       </mat-form-field>
-
       <p class="mat-body-2 total">
-        Your total estimated budget is :
-        {{ budget.value | budget | currency: budget.get('currency').value || 'USD' }}
+        <b>
+          Your total estimated budget is :
+          {{ budget.value | budget | currency: budget.get('currency').value || 'USD' }}
+        </b>
       </p>
+    </section>
 
-      <h5>2. Please upload your total estimated budget</h5>
-      <p class="mat-body-2">This upload is optional but can help future investors*</p>
+    <mat-divider></mat-divider>
 
+    <section id="estimated-budget" >
+      <h3 fxLayout fxLayoutAlign="start center">
+        <mat-icon svgIcon="upload"></mat-icon>
+        <span>Upload document</span>
+      </h3>
+      <p>
+        Please <b>upload your total estimated budget</b>
+        <br/>
+        This upload is optional, but this information might be very helpful to your potential investors.
+      </p>
       <file-upload [form]="form.get('estimatedBudget')" [storagePath]="getPath()" accept="['.pdf']" [types]="['application/pdf']">
         <h3 type>Upload Files</h3>
         <p class="mat-caption" format>Accepted Formats: .pdf</p>
       </file-upload>
       <span class="mat-caption">Upload a complete document.</span>
     </section>
-
   </ng-container>
 </tunnel-page>

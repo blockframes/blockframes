@@ -1,7 +1,7 @@
 <article>
   <h6>
     Estimated Budget
-    <a mat-icon-button [routerLink]="link" fragment="financial-details">
+    <a mat-icon-button [routerLink]="link" fragment="budget">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
   </h6>
@@ -12,7 +12,7 @@
     </li>
     <li>
       <strong>Producer's Fees </strong>
-      <missing-control [control]="budget.get('producerFees')" [link]="link" fragment="reviews">
+      <missing-control [control]="budget.get('producerFees')" [link]="link" fragment="budget">
         <ng-template let-fees>
           {{ fees | currency: budget.get('currency').value }}
         </ng-template>
@@ -20,7 +20,7 @@
     </li>
     <li>
       <strong>Cast Cost </strong>
-      <missing-control [control]="budget.get('castCost')" [link]="link" fragment="reviews">
+      <missing-control [control]="budget.get('castCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: budget.get('currency').value }}
         </ng-template>
@@ -28,7 +28,7 @@
     </li>
     <li>
       <strong>Shoot Cost </strong>
-      <missing-control [control]="budget.get('shootCost')" [link]="link" fragment="reviews">
+      <missing-control [control]="budget.get('shootCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: budget.get('currency').value }}
         </ng-template>
@@ -36,7 +36,7 @@
     </li>
     <li>
       <strong>Post-Production Cost </strong>
-      <missing-control [control]="budget.get('postProdCost')" [link]="link" fragment="reviews">
+      <missing-control [control]="budget.get('postProdCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
           {{ cost | currency: budget.get('currency').value }}
         </ng-template>
@@ -44,7 +44,7 @@
     </li>
     <li>
       <strong>Others Charges </strong>
-      <missing-control [control]="budget.get('others')" [link]="link" fragment="reviews">
+      <missing-control [control]="budget.get('others')" [link]="link" fragment="budget">
         <ng-template let-others>
           {{ others | currency: budget.get('currency').value }}
         </ng-template>
@@ -54,7 +54,7 @@
       <mat-icon svgIcon="eye" color="primary"></mat-icon>
       <strong> Your Detailed Financing Plan </strong>
       <ng-container *ngIf="(form.get('estimatedBudget').value.ref | isEmptyImgRef) else financialDetails">
-        <a [routerLink]="link" fragment="files" class="missing-control">
+        <a [routerLink]="link" fragment="estimated-budget" class="missing-control">
           Missing
         </a>
       </ng-container>
