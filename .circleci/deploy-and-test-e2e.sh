@@ -21,8 +21,8 @@ npx firebase deploy --non-interactive --only hosting:catalog,hosting:festival
 
 npx firebase deploy --non-interactive --only functions --force || true
 
-echo "building for env: $ENV"
-npx ng build backend-ops --configuration=$ENV
+echo "building for env: $NG_CONFIG"
+npx ng build backend-ops --configuration=$NG_CONFIG
 
 echo "prepare the ci for testing"
 npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
