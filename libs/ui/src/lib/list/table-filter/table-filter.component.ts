@@ -19,7 +19,6 @@ import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 import { ColRef } from '@blockframes/utils/directives/col-ref.directive';
 import { boolean } from '@blockframes/utils/decorators/decorators';

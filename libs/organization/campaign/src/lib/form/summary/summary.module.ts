@@ -9,6 +9,8 @@ import { ToLabelModule, NumberPipeModule, FileNameModule, MaxLengthModule } from
 import { PerksPipeModule, FundingsPipeModule } from '../../pipes';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FundingsComponent } from './fundings/fundings.component';
@@ -26,6 +28,7 @@ import { ProfitsComponent } from './profits/profits.component';
     PerksPipeModule,
     FundingsPipeModule,
     FlexLayoutModule,
+    TableFilterModule,
     MissingControlModule,
     MatButtonModule,
     MatIconModule,

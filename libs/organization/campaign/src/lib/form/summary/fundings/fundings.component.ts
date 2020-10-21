@@ -6,6 +6,7 @@ const columns = {
   kind: 'Nature',
   amount: 'Amount',
   status: 'Status',
+  edit: ''
 }
 
 @Component({
@@ -18,6 +19,7 @@ export class FundingsComponent {
   @Input() link: string | string[];
   @Input() form: CampaignForm;
   columns = columns;
+  initialColumns = Object.keys(columns);
 
   get fundings() {
     return this.form.get('fundings').value;
