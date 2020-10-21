@@ -7,9 +7,10 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 
 // RxJs
 import {Participant} from "twilio-video";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
-  selector: '[remoteParticipants] [event] [getTwilioParticipant] event-meeting-video',
+  selector: '[remoteParticipants] [event] event-meeting-video',
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,7 +19,9 @@ export class VideoComponent {
 
   @Input() remoteParticipants: IParticipantMeeting[];
   @Input() event: Event;
-  @Input() getTwilioParticipant: (uid: string) => Participant;
+
+  constructor(private meetingService: MeetingService) {
+  }
 
   /**
    * To know if local is alone in Connected participants
@@ -55,7 +58,7 @@ export class VideoComponent {
    * Get Twilio Participant data by Uid
    * @param participant
    */
-  doGetTwilioParticipant(participant: IParticipantMeeting): Participant {
-    return this.getTwilioParticipant(participant.identity);
+  getTwilioParticipant(participant: IParticipantMeeting): Participant {
+    return this.meetingService.getTwilioParticipant(participant.identity);
   }
 }

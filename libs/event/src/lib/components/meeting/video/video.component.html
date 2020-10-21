@@ -10,7 +10,7 @@
     <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
       <mat-grid-tile>
         <event-meeting-remote-participant [participant]="participant"
-                                          [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-remote-participant>
+                                          [twilioData]="getTwilioParticipant(participant)"></event-meeting-remote-participant>
       </mat-grid-tile>
     </ng-container>
   </mat-grid-list>

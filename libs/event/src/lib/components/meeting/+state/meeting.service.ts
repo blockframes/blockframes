@@ -23,16 +23,13 @@ import {
   createLocalVideoTrack,
   LocalAudioTrack,
   LocalAudioTrackPublication,
-  LocalDataTrack,
+  LocalDataTrack, LocalTrack,
   LocalVideoTrack,
   LocalVideoTrackPublication,
   Participant,
-  RemoteAudioTrack,
-  RemoteTrack,
-  RemoteTrackPublication,
-  RemoteVideoTrack,
   Room
 } from 'twilio-video';
+import {ErrorResultResponse} from "@blockframes/utils/utils";
 
 @Injectable({
   providedIn: 'root'
@@ -86,7 +83,7 @@ export class MeetingService {
    */
   removeParticipant(participant: IParticipantMeeting | Participant): void {
     const roomArr: IParticipantMeeting[] = this.connectedParticipants$.getValue();
-    const updatedParticipants = roomArr.filter((item: IParticipantMeeting) => item.identity !== participant.identity)
+    const updatedParticipants: IParticipantMeeting[] = roomArr.filter((item: IParticipantMeeting) => item.identity !== participant.identity)
     this.twilioParticipants.delete(participant.identity);
     this.connectedParticipants$.next(updatedParticipants);
   }
@@ -97,11 +94,11 @@ export class MeetingService {
    * @param participantTwilio: Participant : Participant twilio
    */
   addParticipant(participant: IParticipantMeeting, participantTwilio: Participant): void {
-    const currentValue = this.connectedParticipants$.getValue();
+    const currentValue: IParticipantMeeting[] = this.connectedParticipants$.getValue();
     if (currentValue.some((item) => item.identity === participant.identity)) {
       return;
     }
-    const newCurrentValue = [...currentValue, participant];
+    const newCurrentValue: IParticipantMeeting[] = [...currentValue, participant];
     this.twilioParticipants.set(participant.identity, participantTwilio);
     this.connectedParticipants$.next(newCurrentValue);
   }
@@ -129,10 +126,10 @@ export class MeetingService {
    * get local track if here or recreate local track for twilio
    */
   async createPreview(audio: boolean, video: boolean): Promise<void> {
-    const audioTrack = (!!audio) ? createLocalAudioTrack() : null;
-    const videoTrack = (!!video) ? createLocalVideoTrack() : null;
+    const audioTrack: Promise<LocalAudioTrack|null> = (!!audio) ? createLocalAudioTrack() : null;
+    const videoTrack: Promise<LocalVideoTrack|null> = (!!video) ? createLocalVideoTrack() : null;
 
-    const tracks = await Promise.all([audioTrack, videoTrack]);
+    const tracks: LocalTrack[] = await Promise.all([audioTrack, videoTrack]);
     this.previewTracks = tracks.filter(value => !!value);
   }
 
@@ -146,7 +143,7 @@ export class MeetingService {
    * @param video
    */
   async connectToMeeting(event: Event, identity: string, audio: boolean, video: boolean): Promise<void> {
-    const response = await this.eventService.getTwilioAccessToken(event.id)
+    const response: ErrorResultResponse = await this.eventService.getTwilioAccessToken(event.id)
     if (response.error !== '') {
       throw new Error(response.error);
     } else {
@@ -171,12 +168,7 @@ export class MeetingService {
       video: video,
       bandwidthProfile: {
         video: {
-          mode: 'grid',
-          renderDimensions: {
-            low: {width: 640, height: 480},
-            standard: {width: 640, height: 480},
-            high: {width: 640, height: 480},
-          },
+          mode: 'grid'
         },
       },
       tracks: (this.previewTracks) ?? [],
@@ -201,8 +193,8 @@ export class MeetingService {
     this.activeRoom = room;
 
     if (!!room.participants) {
-      const participants = Array.from(room.participants.values());
-      const tracks = [];
+      const participants: Participant[] = Array.from(room.participants.values());
+      const tracks: (Promise<void|Participant>)[] = [];
       participants.forEach((participant: Participant) => {
         tracks.push(
           this.createIParticipantMeeting(participant.identity, event)
@@ -329,55 +321,5 @@ export class MeetingService {
         track.track.detach();
       });
     }
-  }
-
-
-  /**
-   * Attach the Tracks to the DOM.
-   * @param tracks - track to attach in the container
-   */
-  attachTracks(tracks: RemoteTrack[]) {
-    const elements: HTMLMediaElement[] = [];
-    tracks.forEach((track: (RemoteAudioTrack | RemoteVideoTrack)) => {
-      if (track) {
-        elements.push(track.attach());
-      }
-    });
-    return elements;
-  }
-
-  /**
-   * Attach the Participant's Tracks to the DOM.
-   * @param participant - participant to attach in the container
-   */
-  attachParticipantTracks(participant: Participant): RemoteTrack[] {
-    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication) => trackPublication.track);
-  }
-
-  /**
-   *  Detach the Tracks from the DOM.
-   * @param tracks - track to detach of the DOM
-   */
-  detachTracks(tracks): void {
-    tracks.forEach((track) => {
-      if (track) {
-        track.detach().forEach((detachedElement) => {
-          detachedElement.remove();
-        });
-      }
-    });
-  }
-
-  /**
-   * Detach the Participant's Tracks from the DOM.
-   * @param participant - participant to detach track of the DOM
-   */
-  detachParticipantTracks(participant: Participant): void {
-    const tracks = Array.from(participant.tracks.values()).map((
-      trackPublication: any
-    ) => {
-      return trackPublication.track;
-    });
-    this.detachTracks(tracks);
   }
 }
