@@ -1,6 +1,6 @@
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
 
 // Event
@@ -47,7 +47,7 @@ export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
     organizerId: new FormControl(meeting.organizerId),
-    description: new FormControl(meeting.description),
+    description: new FormControl(meeting.description, [Validators.maxLength(500)]),
     files: FormList.factory(meeting.files, el => new FormControl(el)),
   }
 }
@@ -68,7 +68,8 @@ export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
 export function createScreeningControl(params?: Partial<Screening>) {
   const screening = createScreening(params);
   return {
-    titleId: new FormControl(screening.titleId)
+    titleId: new FormControl(screening.titleId),
+    description: new FormControl(screening.description, [Validators.maxLength(500)])
   }
 }
 
