@@ -27,7 +27,7 @@ function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStat
 }
 
 function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): TunnelStep[] {
-  return [{
+  const steps: TunnelStep[] = [{
     title: 'First Step',
     icon: 'home',
     time: 2,
@@ -102,10 +102,11 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       path: 'summary',
       label: 'Summary & Submission'
     }]
-  }].map(step => {
+  }];
+  return steps.map(step => {
     return {
       ...step,
-      routes: step.routes.filter((route: RouteDescription) => (!(route?.shouldDisplay) || !route.shouldDisplay))
+      routes: step.routes.filter((route: any) => (!(route?.shouldDisplay) || !route.shouldDisplay))
     }
   })
 }
