@@ -37,7 +37,7 @@ const Movie = {
   },
   storyElements: {
     "logline": 'An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.',
-    "synopsis": 'I saw this film at the Stockholm Film festival. Before watching I read some reviews on other websites and found criticisms for the lack of depth and how much you really get to know the man. Well I was pleasantly surprised. You don\'t get to know his childhood story and how he became such an icon, but what you do get is a glimpse into his world and some of his philosophies. I actually preferred this rather than knowing in what year he did this or why he did that. He has a tremendous grip on life and there is a good chance you will walk away after watching this film and reflect on some of his insights.\nThe shots are interesting and the pace of the movie is excellent. I was not bored. The only disappointing thing was how abruptly the movie finished.\nOverall very good though.',
+    "synopsis": 'I saw this film at the Stockholm Film festival. Before watching I read some reviews on other websites and found criticisms for the lack of depth. \nOverall very good though.',
     "key-assets": 'One of the few films presenting Karl Lagerfeld.',
     "keyword": 'Karl Lagerfeld, Fashion{enter}'
   },
@@ -58,14 +58,14 @@ const Movie = {
     "cast-first-name": 'Nicole',
     "cast-last-name": 'Kidman',
     "cast-status": 'Confirmed',
-    "cast-description": 'Elegant Nicole Kidman, known as one of Hollywood\'s top Australian imports, was actually born in Honolulu, Hawaii, while her Australian parents were there on educational visas. Kidman is the daughter of Janelle Ann (Glenny), a nursing instructor, and Antony David Kidman, a biochemist and clinical psychologist.',
+    "cast-description": 'Elegant Nicole Kidman is known as one of Hollywood\'s top Australian imports.',
     "cast-film1": 'Bombshell',
     "cast-year1": '2018',    
     "crew-first-name": 'Karl',
     "crew-last-name": 'Lagerfeld',
     "crew-role": 'Costume Designer',
     "crew-status": 'Confirmed',
-    "crew-description": 'Karl Lagerfeld was born on September 10, 1933 in Hamburg, Germany as Karl Otto Lagerfeldt. He was a costume designer and actor, known for The Tale of a Fairy (2011), The Return (2013) and Reincarnation (2014). He died on February 19, 2019 in Neuilly-sur-Seine, Hauts-de-Seine, France.',
+    "crew-description": 'Karl Otto Lagerfeldt was a costume designer and actor, known for The Tale of a Fairy (2011).',
     "crew-film1": 'Love Comedy',
     "crew-year1": '1989'
   },
@@ -110,7 +110,7 @@ const Movie = {
     "original-version": false,
   },
   salesPitch : {
-    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama. It analyzes the life of Lea, a woman in her early 30\’s, who has been heavily influenced by pop culture since childhood.',
+    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama.',
     //"target-audience": '',
     //"goal": ''
   },
@@ -129,13 +129,13 @@ const Movie = {
 
   },
   videos: {
-    "teaserLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "trailerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "promoReelLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "screenerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "clipLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "teaserLink": 'https://www.youtube.com/watch?v=1',
+    "trailerLink": 'https://www.youtube.com/watch?v=2',
+    "promoReelLink": 'https://www.youtube.com/watch?v=3',
+    "screenerLink": 'https://www.youtube.com/watch?v=4',
+    "clipLink": 'https://www.youtube.com/watch?v=5',
     "otherLinkName": 'Best Scene',
-    "otherLinkUrl": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew'
+    "otherLinkUrl": 'https://www.youtube.com/watch?v=6'
   }
 }
 
@@ -179,6 +179,13 @@ const testSteps = [
     input: 'videos', comp_save: [], save_form: false}
 ];
 
+const MovieFormSummary = [
+  {title: 'Main Information', selector: '#main-information [test-id]', 
+    input: Movie.mainInfo },
+  {title: 'Production Information', selector: '#production-information [test-id]', 
+    input: Movie.production },
+];
+
 describe('User can navigate to the movie tunnel pages start and main.', () => {
   // Log in and create a new movie
   it('User logs in, can navigate to add new title page', () => {
@@ -187,29 +194,19 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   //Summary - Verification
-  it.only('Fill all fields and verify it in Summary Page', () => {
-    /*
-    testPromise().then(d => {
-      cy.log('Promise resoved');
-      cy.log(d as string);
-    });
-    cy.log('Promise done');
-    return;
-    */
+  it('Fill all fields & navigate to Summary Page', () => {
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/title-status');
+    //cy.wait(3000);
+    //acceptCookie();
 
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/production');
-    cy.wait(3000);
-    acceptCookie();
-
-    /*
     cy.wait(TO.FIFTEEN_SEC);
     cy.url().then(url => {
       cy.log(`Adding new movie url: ${url}`);
       movieURL = url;
       console.log("movie :", url);
-    });  */
+    });
 
-    //cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
+    cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 
     testSteps.forEach(step => {
       cy.log(`=> Step : [${step.title}]`);
@@ -226,8 +223,6 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
       })
 
-      //cy.get('button[test-id="row-savedxx"]');
-
       //Save this step
       if (step.save_form) {
         cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
@@ -238,26 +233,28 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
       //Proceed to next step.
       cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
         .click();
+      cy.wait(TO.WAIT_1SEC);
     });
 
-    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
-    cy.wait(3000);
+    cy.log('=>Reach Summary Page');
+  });
+
+  //Verify Summary sheet fields are correct
+  it('Verify fields in Summary Page', () => {
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
+    //cy.wait(3000);
 
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
 
-    cy.log('[Summary - Main fields]');
-    // cy.get('#main-information [test-id]').each(el => {
-    //   console.log(el);
-    //   const key = el.attr('test-id');
-    //   cy.wrap(el).contains(Movie.mainInfo[key])      
-    // })
-
-    cy.get('#production-information [test-id]').each(el => {
-      console.log(el);
-      const key = el.attr('test-id');
-      cy.wrap(el).contains(Movie.production[key])      
-    })    
+    MovieFormSummary.forEach(section => {
+      cy.log(`=>[${section.title}]`);
+      cy.get(section.selector).each(el => {
+        console.log(el);
+        const key = el.attr('test-id');
+        cy.wrap(el).contains(section.input[key]);
+      })
+    })
   });
 
 });
