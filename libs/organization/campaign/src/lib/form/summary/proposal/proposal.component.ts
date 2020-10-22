@@ -7,7 +7,7 @@ import { CampaignForm } from '../../form';
   styleUrls: ['./proposal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProposalComponent {
+export class SummaryProposalComponent {
   @Input() form: CampaignForm;
   @Input() link: string | string[];
 }

@@ -1,9 +1,9 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 // Blockframes  Utils
-import { BUDGET_LIST } from './budget-range.form';
+import { budgetRange } from '@blockframes/utils/static-model/static-model';
 
 @Component({
   selector: '[form]movie-form-budget-range',
@@ -11,20 +11,11 @@ import { BUDGET_LIST } from './budget-range.form';
   styleUrls: ['./budget-range.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormBudgetRangeComponent implements OnInit {
+export class MovieFormBudgetRangeComponent {
   @Input() form: FormControl;
   @Input() placeholder?: String;
   @Input() appearance = 'outline'
 
-  optionsBudget = BUDGET_LIST;
-
-  ngOnInit() {
-    if (this.form.value?.from) {
-      this.optionsBudget.forEach(option => {
-        if (option.to === this.form.value?.to) {
-          this.form.setValue(option)
-        }
-      })
-    }
-  }
+  /* Need to transform it into an array otherwise the order is messed up for the values */
+  optionsBudget = Object.keys(budgetRange);
 }

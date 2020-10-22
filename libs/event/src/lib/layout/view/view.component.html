@@ -10,6 +10,7 @@
         <ng-container *ngSwitchCase="'early'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
+          <p class="mat-caption">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event</h3>
             <p>You can invite members and edit the event config in your dashboard</p>
@@ -25,7 +26,7 @@
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
           <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner">
-            <a test-id="event-room" mat-flat-button routerLink="./session" color="accent">Access {{ event.type | titlecase }} Room</a>
+            <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
           </ng-container>
         </ng-container>
 

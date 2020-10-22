@@ -1,5 +1,5 @@
 <tunnel-page>
-  <h4 title>Financing Conditions</h4>
+  <h4 title>Financing Elements</h4>
   <h1 subtitle>Financing plan</h1>
   <ng-container tunnel-form>
     <section id="fundings">
@@ -53,6 +53,8 @@
       </bf-form-table>
     </section>
 
+    <mat-divider></mat-divider>
+
     <section id="financing-plan">
       <h3 fxLayout fxLayoutAlign="start center">
         <mat-icon svgIcon="upload"></mat-icon>
@@ -63,12 +65,10 @@
         <br/>
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-upload
-        [form]="form.get('financingPlan')"
-        [storagePath]="storagePath"
-        accept="['.pdf']"
-        [types]="['application/pdf']"
-      ></file-upload>
+      <file-upload [form]="form.get('files').get('financingPlan')" [storagePath]="storagePath" accept="['.pdf']" [types]="['application/pdf']">
+        <h3 type>Upload Files</h3>
+        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      </file-upload>
     </section>
   </ng-container>
 </tunnel-page>

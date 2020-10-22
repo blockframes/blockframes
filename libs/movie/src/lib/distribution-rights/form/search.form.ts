@@ -21,7 +21,8 @@ import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.fire
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { DistributionRightTermsForm } from '../form/terms/terms.form';
 import { FormList, numberRangeValidator, FormEntity, FormStaticValueArray, FormStaticValue } from '@blockframes/utils/form';
-import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
+import { DateRange, Terms } from '@blockframes/utils/common-interfaces';
+import { NumberRange } from '@blockframes/utils/static-model/types';
 
 /////////////////////////
 // CatalogGenresFilter //

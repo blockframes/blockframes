@@ -1,12 +1,14 @@
 <mat-form-field [appearance]="mode">
-  <ng-content select="mat-select"></ng-content>
+  <mat-label>
+    <ng-content select="mat-label"></ng-content>
+  </mat-label>
   <input matInput type="text" autocomplete="off" [formControl]="control" [matAutocomplete]="auto">
   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-    <mat-option *ngFor="let scope of filteredStates | async" [value]="scope">
-      <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
+    <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+      <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: state }">
       </ng-template>
       <ng-template #label>
-        {{ scope | toLabel: scope }}
+        {{ state | toLabel: scope }}
       </ng-template>
     </mat-option>
   </mat-autocomplete>

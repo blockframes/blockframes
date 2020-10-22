@@ -42,6 +42,9 @@
         ],
         "crm": [
           "blockframes-crm"
+        ],
+        "financiers": [
+          "blockframes-financiers"
         ]
       }
     },
@@ -55,6 +58,9 @@
         ],
         "crm": [
           "blockframes-ci-crm"
+        ],
+        "financiers": [
+          "blockframes-ci-financiers"
         ]
       }
     },
@@ -75,13 +81,9 @@
         ],
         "crm": [
           "staging-blockframes-crm"
-        ]
-      }
-    },
-    "blockframes-laurent": {
-      "hosting": {
-        "catalog": [
-          "blockframes-laurent"
+        ],
+        "financiers": [
+          "staging-blockframes-financiers"
         ]
       }
     },
@@ -102,20 +104,9 @@
         ],
         "crm": [
           "crm-blockframes-bruce"
-        ]
-      }
-    },
-    "blockframes-hugo": {
-      "hosting": {
-        "catalog": [
-          "blockframes-hugo"
-        ]
-      }
-    },
-    "blockframes-yohann": {
-      "hosting": {
-        "catalog": [
-          "blockframes-yohann"
+        ],
+        "financiers": [
+          "financiers-blockframes-bruce"
         ]
       }
     },
@@ -193,13 +184,6 @@
         ]
       }
     },
-    "blockframes-victor": {
-      "hosting": {
-        "catalog": [
-          "blockframes-victor"
-        ]
-      }
-    },
     "blockframes-clelia": {
       "hosting": {
         "catalog": [
@@ -213,13 +197,6 @@
         ]
       }
     },
-    "blockframes-dajung": {
-      "hosting": {
-        "catalog": [
-          "blockframes-dajung"
-        ]
-      }
-    },
     "blockframes-remco": {
       "hosting": {
         "catalog": [
@@ -227,16 +204,6 @@
         ],
         "festival": [
           "blockframes-remco"
-        ]
-      }
-    },
-    "blockframes-sebastian": {
-      "hosting": {
-        "catalog": [
-          "blockframes-sebastian"
-        ],
-        "festival": [
-          "blockframes-sebastian"
         ]
       }
     },
@@ -263,16 +230,6 @@
         ],
         "festival": [
           "blockframes-mano-festival"
-        ]
-      }
-    },
-    "blockframes-hugo-2": {
-      "hosting": {
-        "catalog": [
-          "blockframes-hugo-2"
-        ],
-        "festival": [
-          "blockframes-hugo-2"
         ]
       }
     }

@@ -1,3 +1,5 @@
+import { MovieCurrency } from "@blockframes/utils/static-model"
+
 export interface Campaign {
   id: string;
   cap?: number;
@@ -6,15 +8,27 @@ export interface Campaign {
   perks: Perk[];
   fundings: Funding[];
   profits: {
-    low: number,
-    middle: number,
-    hight: number
+    low?: number,
+    medium?: number,
+    high?: number
   };
-  financingPlan?: string;
-  waterfall?: string;
-  // budget
+  budget?: Budget,
+  files: {
+    financingPlan?: string;
+    waterfall?: string;
+    budget?: string;
+  }
 }
 
+
+export interface Budget {
+  castCost?: number,
+  currency?: MovieCurrency,
+  others?: number,
+  postProdCost?: number,
+  producerFees?: number,
+  shootCost?: number,
+}
 
 export interface Funding {
   name?: string;
@@ -38,11 +52,8 @@ export function createCampaign(params: Partial<Campaign> = {}): Campaign {
     id: '',
     perks: [],
     fundings: [],
-    profits: {
-      low: 100,
-      middle: 100,
-      hight: 100
-    },
+    profits: {},
+    files: {},
     ...params
   }
 }

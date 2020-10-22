@@ -17,7 +17,7 @@ const columns = {
   styleUrls: ['./fundings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FundingsComponent implements OnInit {
+export class CampaignFormFundingsComponent implements OnInit {
   storagePath: string;
   columns = columns;
   form = this.shell.getForm('campaign');
