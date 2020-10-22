@@ -21,6 +21,7 @@ export class StaticSelectComponent implements OnInit {
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
   @Input() withoutValues: string[] = []
+  @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
     this.staticValue = this.withoutValues.length
@@ -28,5 +29,4 @@ export class StaticSelectComponent implements OnInit {
       : Object.keys(staticModel[this.scope]);
   }
 
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
 }

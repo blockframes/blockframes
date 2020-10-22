@@ -30,7 +30,7 @@ export function getImgSize(ref: string) {
   } else if (ref.includes('banner')) {
     return [300, 600, 1200];
   } else if (ref.includes('still')) {
-    return [50, 100, 200];
+    return [300, 600, 1200];
   } else {
     return [1024];
   }
@@ -68,7 +68,7 @@ export function getImgIxResourceUrl(ref: string, parameters: ImageParameters) {
    * If parameters contains "s" attribute, the file is protected and then the protected imgix source
    * must be used (it should be "blockframes-firstName-protected")
    */
-  const protectedMediaDir : Privacy = 'protected';
+  const protectedMediaDir: Privacy = 'protected';
   const query = formatParameters(parameters);
   const imgixSource = parameters.s ? `${firebase.projectId}-${protectedMediaDir}` : firebase.projectId;
   return `https://${imgixSource}.imgix.net/${ref}?${query}`;

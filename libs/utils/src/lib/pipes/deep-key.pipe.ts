@@ -6,7 +6,7 @@ export class DeepKeyPipe implements PipeTransform {
   transform(value: Object, deepKey: string) {
 
     try {
-      if (!value || !deepKey) return;
+      if (!value || !deepKey) return value;
 
       const conditions = deepKey.split('||').map(p => p.trim());
       const getDeepValue = (val: Object, condition: string) => condition.split('.').reduce((result, key) => result?.[key], val);

@@ -10,7 +10,6 @@ import { CampaignSummaryModule } from '@blockframes/campaign/form/summary/summar
 import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
 import { FromCamelCasePipeModule } from '@blockframes/utils/pipes/from-camel-calse.pipe';
 import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
-import { SummaryFinancialDetailsModule } from './financial-details/financial-details.module'
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +29,6 @@ import { MatDividerModule } from '@angular/material/divider';
     GetPathModule,
     FromCamelCasePipeModule,
     HasStatusModule,
-    SummaryFinancialDetailsModule,
     // Materials
     MatCardModule,
     MatIconModule,

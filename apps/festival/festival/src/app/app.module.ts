@@ -1,6 +1,6 @@
 ﻿// Angular
 import { BrowserModule } from '@angular/platform-browser';
-import { Inject, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,7 +29,6 @@ import { sentryDsn } from '@env';
 
 // Yandex Metrika
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { yandexId } from '@env';
 
 // Intercom
 import { IntercomModule } from 'ng-intercom';
@@ -97,8 +96,7 @@ export class AppModule {
     yandexService: YandexMetricaService,
     gdprService: GDPRService,
   ) {
-    const { googleAnalytics, intercom, yandex } = gdprService.cookieConsent;
-    if (!googleAnalytics) analytics.analytics.setAnalyticsCollectionEnabled(false);
+    const { intercom, yandex } = gdprService.cookieConsent;
     if (yandex) yandexService.insertMetrika();
     intercom && intercomId ? intercomService.enable() : intercomService.disable();
 

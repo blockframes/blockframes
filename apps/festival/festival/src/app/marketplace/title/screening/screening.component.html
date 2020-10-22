@@ -1,14 +1,13 @@
 <ng-container *ngIf="events$ | async as events">
-  <ng-container *ngIf="events.length; else empty">
+  <article *ngIf="events.length" class="screeningEvent">
     <h1>Screening Schedule</h1>
     <event-list [events]="events">
       <ng-template let-event>
         <event-screening-item [event]="event"></event-screening-item>
       </ng-template>
     </event-list>
-  </ng-container>
+  </article>
+
+  <movie-screening></movie-screening>
 </ng-container>
 
-<ng-template #empty>
-  <event-empty type="screening"></event-empty>
-</ng-template>

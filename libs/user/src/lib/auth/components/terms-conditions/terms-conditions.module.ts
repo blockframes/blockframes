@@ -1,6 +1,7 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 // Component
 import { TermsConditionsComponent } from './terms-conditions.component';
@@ -21,6 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
     AppPipeModule,
     MatIconModule,
+    RouterModule
   ],
   exports: [TermsConditionsComponent]
 })

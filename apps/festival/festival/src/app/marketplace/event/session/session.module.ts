@@ -13,6 +13,7 @@ import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
 import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
+import { MeetingModule } from '@blockframes/event/components/meeting/meeting.module';
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
@@ -36,6 +37,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     FileNameModule,
     MediaControlModule,
     MediaViewerModule,
+    MeetingModule,
 
     // Materials
     MatButtonModule,

@@ -1,10 +1,10 @@
 <form [formGroup]="form" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
   <mat-form-field appearance="outline">
     <mat-label>{{ labelSuffix }}&nbsp;First Name</mat-label>
-    <input test-id="first-name" matInput formControlName="firstName" />
+    <input test-id="first-name" matInput formControlName="firstName" [required]="required" />
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>{{ labelSuffix }}&nbsp;Last Name</mat-label>
-    <input test-id="last-name" matInput formControlName="lastName" />
+    <input test-id="last-name" matInput formControlName="lastName" [required]="required" />
   </mat-form-field>
 </form>

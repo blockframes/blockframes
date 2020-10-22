@@ -18,7 +18,6 @@ import {
   MovieSalesPitch,
   MovieNote,
   MovieShooting,
-  MovieTotalBudget,
   HostedVideo,
   HostedVideos
 } from '../+state/movie.firestore';
@@ -112,7 +111,7 @@ function createMovieControls(movie: Partial<Movie>) {
     contentType: new FormControl(entity.contentType, [Validators.required]),
     crew: FormList.factory(entity.crew, el => new CreditForm(el)),
     customGenres: FormList.factory(entity.customGenres, el => new FormControl(el)),
-    directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
+    directors: FormList.factory(entity.directors, el => new DirectorForm(el), [Validators.required]),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(entity.estimatedBudget),
     expectedPremiere: new ExpectedPremiereForm(entity.expectedPremiere),
@@ -146,7 +145,6 @@ function createMovieControls(movie: Partial<Movie>) {
     storeConfig: new StoreConfigForm(entity.storeConfig),
     synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1500)]),
     title: new TitleForm(entity.title),
-    totalBudget: new TotalBudgetForm(entity.totalBudget),
   }
 }
 
@@ -163,9 +161,11 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
       if (this.contains(key)) {
         const control = this.get(key as keyof MovieControl);
         const value = controls[key].value;
-        'patchAllValue' in control
-          ? control.patchAllValue(value)
-          : control.patchValue(value);
+        if (control instanceof FormList) {
+          control.patchAllValue(value);
+        } else {
+          control.patchValue(value);
+        }
       } else {
         this.addControl(key, controls[key]);
       }
@@ -468,29 +468,6 @@ export type FilmographyFormControl = ReturnType<typeof createFilmographyFormCont
 export class FilmographyForm extends FormEntity<FilmographyFormControl> {
   constructor(filmography?: Partial<Filmography>) {
     super(createFilmographyFormControl(filmography));
-  }
-}
-
-// ------------------------------
-//          TOTAL BUDGET
-// ------------------------------
-
-function createTotalBudgetFormControl(totalBudget: Partial<MovieTotalBudget> = {}) {
-  return {
-    castCost: new FormControl(totalBudget.castCost),
-    currency: new FormStaticValue(totalBudget.currency, 'movieCurrencies'),
-    postProdCost: new FormControl(totalBudget.postProdCost),
-    producerFees: new FormControl(totalBudget.producerFees),
-    shootCost: new FormControl(totalBudget.shootCost),
-    others: new FormControl(totalBudget.others),
-  }
-}
-
-export type TotalBudgetFormControl = ReturnType<typeof createTotalBudgetFormControl>;
-
-export class TotalBudgetForm extends FormEntity<TotalBudgetFormControl> {
-  constructor(totalBudget?: Partial<MovieTotalBudget>) {
-    super(createTotalBudgetFormControl(totalBudget));
   }
 }
 

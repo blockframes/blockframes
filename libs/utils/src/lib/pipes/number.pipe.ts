@@ -36,6 +36,7 @@ export class BigNumberPipe implements PipeTransform {
   ) {}
 
   transform(value: number, digitInfo: string) {
+    if (value === null || value === undefined) return '';
     const locale = this._locale;
     const num = strToNumber(value);
     const { result, symbol } = toBigNumber(num);
@@ -52,6 +53,7 @@ export class BigCurrencyPipe implements PipeTransform {
   ) {}
 
   transform(value: number, currencyCode: string = this._defaultCurrencyCode) {
+    if (value === null || value === undefined) return '';
     const locale = this._locale;
     const currency = getCurrencySymbol(currencyCode, 'wide', locale);
     const num = strToNumber(value);

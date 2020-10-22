@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
+import { EventAnalyticsModule } from '@blockframes/event/components/analytics/analytics.module';
 
 @NgModule({
   declarations: [EditComponent],
@@ -24,6 +25,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     FlexLayoutModule,
     ReactiveFormsModule,
     LayoutEventEditModule,
+    EventAnalyticsModule,
     DisplayNameModule,
     FileSelectorModule,
     FormListModule,
