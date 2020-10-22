@@ -5,10 +5,12 @@
   <section id="budget" *ngIf="campaign.budget | apexBudget as options" >
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>Estimated Budget</h2>
-      <a mat-button [href]="campaign.files.budget" target="_blank">
-        <mat-icon svgIcon="arrow_downward"></mat-icon>
-        <span>Download Estimated Budget</span>
-      </a>
+      <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
+        <a mat-button [href]="file" target="_blank">
+          <mat-icon svgIcon="arrow_downward"></mat-icon>
+          <span>Download Estimated Budget</span>
+        </a>
+      </ng-container>
     </header>
   
     <article fxLayout fxLayoutAlign="space-between stretch" fxLayoutGap="40px">
@@ -46,10 +48,12 @@
   <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
     <header fxLayout fxLayoutAlign="space-between center">
       <h2>Financing Plan</h2>
-      <a mat-button [href]="campaign.files.financingPlan" target="_blank">
-        <mat-icon svgIcon="arrow_downward"></mat-icon>
-        <span>Download Financing Plan</span>
-      </a>
+      <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
+        <a mat-button [href]="file" target="_blank">
+          <mat-icon svgIcon="arrow_downward"></mat-icon>
+          <span>Download Financing Plan</span>
+        </a>
+      </ng-container>
     </header>
   
     <article fxLayout fxLayoutAlign="space-between stretch" fxLayoutGap="40px">
@@ -90,10 +94,12 @@
     <section id="budget" *ngIf="campaign.profits | apexProfits as options">
       <header fxLayout fxLayoutAlign="space-between center">
         <h2>Return on Investment</h2>
-        <a mat-button [href]="campaign.files.waterfall" target="_blank">
-          <mat-icon svgIcon="arrow_downward"></mat-icon>
-          <span>Download distributed Waterfall</span>
-        </a>
+        <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
+          <a mat-button [href]="file" target="_blank">
+            <mat-icon svgIcon="arrow_downward"></mat-icon>
+            <span>Download distributed Waterfall</span>
+          </a>
+        </ng-container>
       </header>
     
       <article fxLayout fxLayoutAlign="space-between stretch" fxLayoutGap="40px">

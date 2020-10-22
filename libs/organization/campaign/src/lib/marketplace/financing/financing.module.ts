@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MarketplaceFinancingComponent, ApexBudgetPipe, ApexFundingPipe, ApexProfitsPipe } from './financing.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
 import { BudgetPipeModule, FundingsPipeModule } from '../../pipes';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,6 +20,7 @@ import { MatDividerModule } from '@angular/material/divider';
     NumberPipeModule,
     BudgetPipeModule,
     FundingsPipeModule,
+    DownloadModule,
     NgApexchartsModule,
     MatIconModule,
     MatButtonModule,
