@@ -14,7 +14,8 @@ import {
   Participant,
   RemoteAudioTrack,
   RemoteAudioTrackPublication,
-  RemoteTrack, RemoteTrackPublication,
+  RemoteTrack,
+  RemoteTrackPublication,
   RemoteVideoTrack,
   RemoteVideoTrackPublication
 } from 'twilio-video';

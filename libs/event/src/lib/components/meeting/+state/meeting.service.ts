@@ -10,6 +10,7 @@ import {
   meetingEventEnum
 } from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {Organization, OrganizationService} from "@blockframes/organization/+state";
+import {ErrorResultResponse} from "@blockframes/utils/utils";
 
 // Rxjs
 import {BehaviorSubject, Observable} from "rxjs";
@@ -18,18 +19,18 @@ import {map} from "rxjs/operators";
 // Twilio-video
 import {
   connect,
-  ConnectOptions,
   createLocalAudioTrack,
   createLocalVideoTrack,
+  ConnectOptions,
   LocalAudioTrack,
   LocalAudioTrackPublication,
-  LocalDataTrack, LocalTrack,
+  LocalDataTrack,
+  LocalTrack,
   LocalVideoTrack,
   LocalVideoTrackPublication,
-  Participant, RemoteAudioTrack, RemoteVideoTrack,
+  Participant,
   Room
 } from 'twilio-video';
-import {ErrorResultResponse} from "@blockframes/utils/utils";
 
 @Injectable({
   providedIn: 'root'
@@ -74,7 +75,7 @@ export class MeetingService {
   getParticipants(): Observable<IParticipantMeeting[]> {
     return this.connectedParticipants$
       .pipe(
-        map(participants => participants.filter(participant => !participant.isLocalSpeaker)
+        map((participants) => participants.filter((participant) => !participant.isLocalSpeaker)
         )
       );
   }
@@ -128,11 +129,11 @@ export class MeetingService {
    * get local track if here or recreate local track for twilio
    */
   async createPreview(audio: boolean, video: boolean): Promise<void> {
-    const audioTrack: Promise<LocalAudioTrack|null> = (!!audio) ? createLocalAudioTrack() : null;
-    const videoTrack: Promise<LocalVideoTrack|null> = (!!video) ? createLocalVideoTrack() : null;
+    const audioTrack: Promise<LocalAudioTrack | null> = (!!audio) ? createLocalAudioTrack() : null;
+    const videoTrack: Promise<LocalVideoTrack | null> = (!!video) ? createLocalVideoTrack() : null;
 
     const tracks: LocalTrack[] = await Promise.all([audioTrack, videoTrack]);
-    this.previewTracks = tracks.filter(value => !!value);
+    this.previewTracks = tracks.filter((track) => !!track);
   }
 
   /**
@@ -150,39 +151,26 @@ export class MeetingService {
       throw new Error(response.error);
     } else {
       this.accessToken = response.result;
-      await this._connectToTwilioRoom(this.accessToken, audio, video, event);
-    }
-  }
-
-
-  /**
-   * Connection to twilio with the access token and option of connection
-   * @param accessToken - string - access Token for twilio
-   * @param audio - boolean
-   * @param video - boolean
-   * @param event - string - All event we come from
-   */
-  private async _connectToTwilioRoom(accessToken: string, audio: boolean, video: boolean, event: Event): Promise<void> {
-    const connectOptions: ConnectOptions = {
-      name: event.id,
-      dominantSpeaker: false,
-      audio: audio,
-      video: video,
-      bandwidthProfile: {
-        video: {
-          mode: 'grid'
+      const connectOptions: ConnectOptions = {
+        name: event.id,
+        dominantSpeaker: false,
+        audio: audio,
+        video: video,
+        bandwidthProfile: {
+          video: {
+            mode: 'grid'
+          },
         },
-      },
-      tracks: (this.previewTracks) ?? [],
-      networkQuality: {local: 1, remote: 1}
-    };
+        tracks: (this.previewTracks) ?? [],
+        networkQuality: {local: 1, remote: 1}
+      };
 
-    const room: Room = await connect(accessToken, connectOptions);
-    if (!!room) {
-      await this.roomJoined(room, event, audio, video);
+      const room: Room = await connect(this.accessToken, connectOptions);
+      if (!!room) {
+        await this.roomJoined(room, event, audio, video);
+      }
     }
   }
-
 
   /**
    * When successfully connected to room.
@@ -196,7 +184,7 @@ export class MeetingService {
 
     if (!!room.participants) {
       const participants: Participant[] = Array.from(room.participants.values());
-      const tracks: (Promise<void|Participant>)[] = [];
+      const tracks: (Promise<void | Participant>)[] = [];
       participants.forEach((participant: Participant) => {
         tracks.push(
           this.createIParticipantMeeting(participant.identity, event)
