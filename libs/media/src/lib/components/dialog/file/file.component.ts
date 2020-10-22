@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { Validators } from '@angular/forms';
 
 // Material
@@ -13,14 +13,16 @@ import { Privacy } from '@blockframes/utils/file-sanitizer';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FileDialogComponent {
+export class FileDialogComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<FileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { form: HostedMediaWithMetadataForm, privacy: Privacy, storagePath: string }
-  ) {
-    data.form.get('ref').get('ref').setValidators(Validators.required);
-    data.form.get('title').setValidators(Validators.required);
+  ) {}
+
+  ngOnInit() {
+    this.data.form.get('ref').get('ref').setValidators(Validators.required);
+    this.data.form.get('title').setValidators(Validators.required);
   }
 
   upload() {

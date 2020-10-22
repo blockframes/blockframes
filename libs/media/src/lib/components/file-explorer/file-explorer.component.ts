@@ -92,7 +92,7 @@ export class FileExplorerComponent {
   private orgId: string;
   public org$: Observable<OrganizationDocumentWithDates>;
   public directories: Directory[] = [];
-  public activeDirectory: SubDirectory;
+  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
@@ -140,8 +140,6 @@ export class FileExplorerComponent {
             formList.removeAt(index);
             const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(orgForm);
             await this.organizationService.update(this.orgId, documentToUpdate);
-          } else {
-            console.warn('Control not found');
           }
         }
       }
