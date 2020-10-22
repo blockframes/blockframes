@@ -56,7 +56,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     })
 
     participant.on(meetingEventEnum.Disconnected, () => {
-      this.detachParticipantTracks(this.twilioData);
+      this.detachTracks(this.getParticipantTracks(this.participant));
     })
 
     participant.on(meetingEventEnum.TrackDisabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
@@ -117,17 +117,8 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  /**
-   * Detach the Participant's Tracks from the DOM.
-   * @param participant - participant to detach track of the DOM
-   */
-  detachParticipantTracks(participant: Participant): void {
-    const tracks: RemoteTrack[] = this.getParticipantTracks(participant);
-    this.detachTracks(tracks);
-  }
-
   ngOnDestroy() {
-    this.detachParticipantTracks(this.twilioData);
+    this.detachTracks(this.getParticipantTracks(this.participant));
     this.twilioData.removeAllListeners();
   }
 }
