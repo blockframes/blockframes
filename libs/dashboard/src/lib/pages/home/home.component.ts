@@ -12,7 +12,7 @@ import { map, switchMap, shareReplay, filter, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'festival-dashboard-home',
+  selector: 'dashboard-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

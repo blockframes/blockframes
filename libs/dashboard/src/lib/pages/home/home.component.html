@@ -18,7 +18,6 @@
     </section>
   </ng-container>
 
-  <!-- @TODO (#2891) -->
   <ng-template #noAcceptedMovies>
     <!-- @TODO (#3337) Create specific component !-->
     <section fxLayout="column" fxLayoutAlign="center center">
@@ -37,12 +36,7 @@
 
       </ng-container>
       <ng-template #noMovies>
-        <h1>You have no title yet.</h1>
-        <p class="mat-body-1">
-          You haven't imported titles yet.
-          <br>
-          You may add several titles at once through bulk import, or just one at a time.
-        </p>
+        <dashboard-no-title></dashboard-no-title>
       </ng-template>
       <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
         <!-- Should only be shown for noAcceptedMovies && !noMovies -->

@@ -97,6 +97,9 @@
     },
     "campaign": {
       "tags": []
+    },
+    "dashboard": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {
