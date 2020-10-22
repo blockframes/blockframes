@@ -258,6 +258,7 @@ export const icons = [
   { name: 'twitter', url: 'assets/icons/twitter.svg' },
   { name: 'unicorn', url: 'assets/icons/unicorn.svg' },
   { name: 'update', url: 'assets/icons/update.svg' },
+  { name: 'upload', url: 'assets/icons/upload.svg' },
   {
     name: 'validation_required',
     url: 'assets/icons/validation_required.svg'

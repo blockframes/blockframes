@@ -27,4 +27,9 @@ export class HostedMediaForm extends FormEntity<HostedMediaControl> {
   get ref() { return this.get('ref') }
   get blobOrFile() { return this.get('blobOrFile') }
   get fileName() { return this.get('fileName') }
+
+  markForDelete() {
+    this.get('ref').patchValue('');
+    this.markAsDirty();
+  }
 }

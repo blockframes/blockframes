@@ -4,7 +4,8 @@ import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import type { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
-import { endMaintenance, META_COLLECTION_NAME, startMaintenance, runChunks } from '@blockframes/firebase-utils';
+import { endMaintenance, startMaintenance, runChunks } from '@blockframes/firebase-utils';
+import { META_COLLECTION_NAME } from '@blockframes/utils/maintenance';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;

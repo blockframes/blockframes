@@ -7,7 +7,6 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 
 import { CampaignFormPerksComponent } from './perks.component';
 import { PerksPipeModule } from '../../pipes/perks.pipe';
-import { FormPipeModule } from '@blockframes/utils/pipes';
 
 import { FormTableModule } from '@blockframes/ui/form/table/form-table.module';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    FormPipeModule,
     TunnelPageModule,
     PerksPipeModule,
     FormTableModule,
@@ -32,4 +30,4 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule.forChild([{ path: '', component: CampaignFormPerksComponent }])
   ]
 })
-export class PerksModule { }
+export class CampaignFormPerksModule { }

@@ -1,6 +1,20 @@
 rules_version = '2';
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                                           DATABASE  MAINTENANCE RULES                               ///
+///                              This document describes the maintenance database rules                 ///
+///  Documentation @see https://www.notion.so/cascade8/Database-rules-80024b4805b74e1a98ac154f4afeaad7  ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    allow read, write: if false;
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /_META/_MAINTENANCE {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }

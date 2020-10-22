@@ -8,5 +8,6 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilesViewComponent {
+  public org = this.query.getActive();
   constructor(public query: OrganizationQuery) {}
 }

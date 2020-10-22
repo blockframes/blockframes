@@ -15,7 +15,6 @@ import {
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 // import { ImageUploader } from '@blockframes/media/+state/image-uploader.service'; TODO issue #3091
@@ -675,32 +674,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           });
         }
 
-        // BUDGET
-        if (spreadSheetRow[SpreadSheetMovie.budget]) {
-          if (spreadSheetRow[SpreadSheetMovie.budget].indexOf('-') !== -1) {
-            const budgetParts = spreadSheetRow[SpreadSheetMovie.budget].split('-');
-            const currency = budgetParts[0].slice(0, 1);
-            const from = parseInt(budgetParts[0].slice(1).trim(), 10);
-            const to = parseInt(budgetParts[1].replace('millions', '').trim(), 10);
-
-            switch (currency) {
-              case '$':
-                movie.totalBudget.currency = 'USD';
-                break;
-              case '€':
-              default:
-                movie.totalBudget.currency = 'EUR';
-                break;
-            }
-
-            movie.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
-          } else {
-            movie.totalBudget = {
-              others: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10),
-            };
-          }
-        }
-
         movie.boxOffice = [];
         // WORLDWIDE BOX OFFICE
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
@@ -1174,16 +1147,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
         type: 'warning',
         field: 'languages',
         name: 'Dubbings | Subtitles | Captions ',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.totalBudget === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'totalBudget',
-        name: 'Budget',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
