@@ -1,0 +1,6 @@
+<article *ngIf="movieId$ | async as movieId">
+  <h3>Financial Elements</h3>
+  <campaign-summary-budget [form]="form" [link]="['/c/o/dashboard/tunnel/movie', movieId, 'budget']"></campaign-summary-budget>
+  <campaign-summary-fundings [form]="form" [link]="['/c/o/dashboard/tunnel/movie', movieId, 'fundings']"></campaign-summary-fundings>
+  <campaign-summary-profits [form]="form" [link]="['/c/o/dashboard/tunnel/movie', movieId, 'profits']"></campaign-summary-profits>
+</article>

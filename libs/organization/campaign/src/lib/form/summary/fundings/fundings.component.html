@@ -28,7 +28,7 @@
     <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
       <mat-icon svgIcon="eye"></mat-icon>
       <strong>Detailed financing plan:</strong>
-      <missing-control [control]="form.get('financingPlan').get('ref')">
+      <missing-control [control]="form.get('files').get('financingPlan.ref')">
         <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>
       </missing-control>
     </li>

@@ -1,7 +1,7 @@
 import { FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { FormEntity, FormList } from '@blockframes/utils/form';
-import { Campaign, createCampaign, Perk, createPerk, Funding } from '../+state/campaign.model';
+import { FormEntity, FormList, FormStaticValue } from '@blockframes/utils/form';
+import { Campaign, createCampaign, Perk, createPerk, Funding, Budget } from '../+state/campaign.model';
 
 ///////////////
 // VALIDATOR //
@@ -76,6 +76,30 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
   }
 }
 
+
+////////////
+// BUDGET //
+////////////
+function createBudgetFormControl(budget: Partial<Budget> = {}) {
+  return {
+    castCost: new FormControl(budget.castCost),
+    currency: new FormStaticValue(budget.currency, 'movieCurrencies'),
+    postProdCost: new FormControl(budget.postProdCost),
+    producerFees: new FormControl(budget.producerFees),
+    shootCost: new FormControl(budget.shootCost),
+    others: new FormControl(budget.others),
+  }
+}
+
+export type BudgetFormControl = ReturnType<typeof createBudgetFormControl>;
+
+export class BudgetForm extends FormEntity<BudgetFormControl> {
+  constructor(budget?: Partial<Budget>) {
+    super(createBudgetFormControl(budget));
+  }
+}
+
+
 //////////////
 // CAMPAIGN //
 //////////////
@@ -99,8 +123,12 @@ function createCampaignControls(value?: Partial<Campaign>) {
       campaign.fundings,
       (funding?: Partial<Funding>) => new FundingForm(funding),
     ),
-    financingPlan: new HostedMediaForm(campaign.financingPlan),
-    waterfall: new HostedMediaForm(campaign.waterfall),
+    budget: new BudgetForm(campaign.budget),
+    files: new FormGroup({
+      financingPlan: new HostedMediaForm(campaign.files.financingPlan),
+      waterfall: new HostedMediaForm(campaign.files.waterfall),
+      budget: new HostedMediaForm(campaign.files.budget),
+    })
   }
 }
 
