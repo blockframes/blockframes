@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 
-import { AddFileDialogComponent } from './add-file.component';
+import { FileDialogComponent } from './file.component';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [AddFileDialogComponent],
+  declarations: [FileDialogComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -33,4 +33,4 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule
   ],
 })
-export class AddFileDialogModule { }
+export class FileDialogModule { }
