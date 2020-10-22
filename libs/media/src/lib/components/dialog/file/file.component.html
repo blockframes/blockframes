@@ -1,0 +1,24 @@
+<h1>Add File</h1>
+<mat-divider></mat-divider>
+<form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
+  <mat-form-field appearance="outline">
+    <mat-label>Note title</mat-label>
+    <input matInput formControlName="title">
+  </mat-form-field>
+  <file-upload
+    [form]="data.form.get('ref')"
+    [storagePath]="data.storagePath"
+    [accept]="['.pdf']"
+    [filePrivacy]="data.privacy"
+    [types]="['application/pdf']">
+    <h3 type>Upload File</h3>
+    <p class="mat-caption" format>Accepted Formats: .pdf</p>
+  </file-upload>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
+      <span>Add file</span>
+      <mat-icon svgIcon="send"></mat-icon>
+    </button>
+    <button mat-button (click)="cancel()">Cancel</button>
+  </section>
+</form>

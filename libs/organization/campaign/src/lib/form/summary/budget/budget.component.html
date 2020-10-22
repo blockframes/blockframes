@@ -1,0 +1,62 @@
+<article>
+  <h6>
+    Estimated Budget
+    <a mat-icon-button [routerLink]="link" fragment="budget">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li>
+      <strong>Total Amount </strong>
+      <span>{{ budget.value | budget | bigCurrency: budget.get('currency').value || 'USD' }}</span>
+    </li>
+    <li>
+      <strong>Producer's Fees </strong>
+      <missing-control [control]="budget.get('producerFees')" [link]="link" fragment="budget">
+        <ng-template let-fees>
+          {{ fees | currency: budget.get('currency').value }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Cast Cost </strong>
+      <missing-control [control]="budget.get('castCost')" [link]="link" fragment="budget">
+        <ng-template let-cost>
+          {{ cost | currency: budget.get('currency').value }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Shoot Cost </strong>
+      <missing-control [control]="budget.get('shootCost')" [link]="link" fragment="budget">
+        <ng-template let-cost>
+          {{ cost | currency: budget.get('currency').value }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Post-Production Cost </strong>
+      <missing-control [control]="budget.get('postProdCost')" [link]="link" fragment="budget">
+        <ng-template let-cost>
+          {{ cost | currency: budget.get('currency').value }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li>
+      <strong>Others Charges </strong>
+      <missing-control [control]="budget.get('others')" [link]="link" fragment="budget">
+        <ng-template let-others>
+          {{ others | currency: budget.get('currency').value }}
+        </ng-template>
+      </missing-control>
+    </li>
+    <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+      <mat-icon svgIcon="eye"></mat-icon>
+      <strong>Detailed financing plan:</strong>
+      <missing-control [control]="form.get('files').get('budget.ref')">
+        <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>
+      </missing-control>
+    </li>
+
+  </ul>
+</article>

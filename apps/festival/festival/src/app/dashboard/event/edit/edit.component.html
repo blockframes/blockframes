@@ -6,6 +6,7 @@
         <h2>Screening</h2>
         <mat-card [formGroup]="form.meta" fxLayout="column">
           <ng-container *ngIf="(titles$ | async) as titles else loading">
+            <!-- Title -->
             <mat-form-field appearance="outline">
               <mat-label>Select the title to display</mat-label>
               <mat-select formControlName="titleId">
@@ -20,6 +21,19 @@
                   </ng-template>
                 </mat-option>
               </mat-select>
+            </mat-form-field>
+
+            <!-- Description -->
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <textarea matInput
+                placeholder="Add a description"
+                formControlName="description"
+                cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="4"
+                maxlength="500"></textarea>
+              <mat-hint>Limited to 500 characters.</mat-hint>
             </mat-form-field>
           </ng-container>
           <ng-template #loading>
@@ -42,7 +56,14 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Description</mat-label>
-            <textarea matInput placeholder="Add a message" formControlName="description"></textarea>
+            <textarea matInput
+              placeholder="Add a message"
+              formControlName="description"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="4"
+              maxlength="500"></textarea>
+            <mat-hint>Limited to 500 characters.</mat-hint>
           </mat-form-field>
 
           <h6>Files</h6>
@@ -62,4 +83,7 @@
       </ng-container>
     </ng-container>
   </event-edit>
+  <ng-container *ngIf="isEventStarted()">
+    <event-analytics [eventId]="form.id.value"></event-analytics>
+  </ng-container>
 </ng-container>

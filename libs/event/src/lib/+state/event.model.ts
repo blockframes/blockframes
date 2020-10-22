@@ -77,6 +77,7 @@ export const isScreening = (event: Partial<Event>): event is ScreeningEvent => e
 export function createScreening(screening: Partial<Screening>): Screening {
   return {
     titleId: '',
+    description: '',
     ...screening
   }
 }

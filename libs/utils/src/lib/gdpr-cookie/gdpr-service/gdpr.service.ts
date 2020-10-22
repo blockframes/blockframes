@@ -17,7 +17,7 @@ export class GDPRService {
     return JSON.parse(localStorage.getItem('gdpr')) ?? {};
   }
 
-  enable(service: 'googleAnalytics' | 'intercom' | 'yandex', enabled: boolean) {
+  enable(service: 'intercom' | 'yandex', enabled: boolean) {
     const cookieConsent = this.cookieConsent;
     cookieConsent[service] = enabled;
     localStorage.setItem('gdpr', JSON.stringify(cookieConsent));
@@ -26,11 +26,6 @@ export class GDPRService {
   enableIntercom(enable: boolean) {
     this.enable('intercom', enable);
     enable ? this.intercom.enable() : this.intercom.disable();
-  }
-
-  enableAnalytics(enable: boolean) {
-    this.enable('googleAnalytics', enable);
-    this.analytics.analytics.setAnalyticsCollectionEnabled(enable);
   }
 
   enableYandex(enable: boolean) {

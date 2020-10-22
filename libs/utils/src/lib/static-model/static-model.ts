@@ -490,8 +490,7 @@ export const festival = {
 } as const
 
 export const territories = {
-  world: '',
-  ambia: "Zambia",
+  world: 'World',
   "aland-islands": "Åland Islands",
   afghanistan: "Afghanistan",
   albania: "Albania",
@@ -744,6 +743,7 @@ export const territories = {
   "western-sahara": "Western Sahara*",
   yemen: "Yemen",
   zimbabwe: "Zimbabwe",
+  zambia: "Zambia"
 } as const
 
 export const territoriesISOA2 = {
@@ -1785,7 +1785,18 @@ export const months = {
   december: 'December'
 } as const
 
+export const budgetRange = {
+  10000000: 'Less than $1 million',
+  20000000: '$1 - 2 millions',
+  35000000: '$2 - 3.5 millions',
+  50000000: '$3.5 - 5 millions',
+  100000000: '$5 - 10 millions',
+  200000000: '$10 - 20 millions',
+  999999999: 'More than $20 millions'
+} as const;
+
 export const staticModel = {
+  budgetRange,
   contractStatus,
   contractType,
   legalDocumentTypes,

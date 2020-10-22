@@ -39,7 +39,7 @@
     },
     {
       "target": "financiers",
-      "public": "dist/apps/festival",
+      "public": "dist/apps/financiers",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [{
         "source": "**",

@@ -36,19 +36,25 @@
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
 
+      <h3 *ngIf="event.isOwner">You are the owner of this meeting</h3>
+
       <!-- WORK IN PROGRESS -->
       <article fxLayout="column" class="meeting">
         <div fxLayout="row" class="meeting-container">
           <div [fxFlex]="mediaContainerSize">
             <media-viewer [event]="event"></media-viewer>
           </div>
-          <div [fxFlex]="visioContainerSize" class="visio">VIDEO CONFERENCE</div>
+          <div [fxFlex]="visioContainerSize" class="visio">
+            <event-meeting-container-video [event]="event"></event-meeting-container-video>
+          </div>
         </div>
         <ng-container *ngIf="event.isOwner">
           <media-control [event]="event"></media-control>
           <event-meeting-media-list fxFlex="35%" [event]="event"></event-meeting-media-list>
         </ng-container>
       </article>
+
+      <img asset="meeting.webp" alt="Meeting room">
 
     </section>
   </ng-container>
@@ -60,3 +66,4 @@
     <mat-spinner></mat-spinner>
   </section>
 </ng-template>
+

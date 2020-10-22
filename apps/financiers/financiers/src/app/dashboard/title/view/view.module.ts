@@ -41,13 +41,13 @@ const routes = [{
       data: { animation: 2 }
     },
     {
-      path: 'financial-details',
-      loadChildren: () => import('../financial-details/financial-details.module').then(m => m.MovieViewFinancialDetailModule),
+      path: 'financing',
+      loadChildren: () => import('@blockframes/campaign/dashboard/financing/financing.module').then(m => m.FinancingModule),
       data: { animation: 3 }
     },
     {
       path: 'campaign',
-      loadChildren: () => import('@blockframes/campaign/dashboard/dashboard.module').then(m => m.DashboardModule),
+      loadChildren: () => import('@blockframes/campaign/dashboard/investment/investment.module').then(m => m.InvestmentModule),
       data: { animation: 4 }
     }
   ]

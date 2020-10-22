@@ -1,0 +1,24 @@
+<ng-container *ngIf="(event$ | async) as event; else loading">
+
+
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <h1>Meeting Lobby</h1>
+    <h2>{{event.title}}</h2>
+
+    <!-- TODO REPLACE THIS DIV BY THE VISIO PREVIEW -->
+    <div>
+      VISIO PREVIEW
+    </div>
+
+    <a mat-flat-button routerLink="./session" color="accent">Access {{ event.type | titlecase }} Room</a>
+
+    <img asset="meeting.webp" alt="Meeting room">
+  </section>
+
+</ng-container>
+
+<ng-template #loading>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </section>
+</ng-template>
