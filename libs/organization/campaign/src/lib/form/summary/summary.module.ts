@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 import { SummaryProposalComponent } from './proposal/proposal.component';
 import { SummaryPerksComponent } from './perks/perks.component';
 
-import { MissingControlModule} from '@blockframes/ui/missing-control/missing-control.module';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 import { ToLabelModule, NumberPipeModule, FileNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
-import { PerksPipeModule, FundingsPipeModule } from '../../pipes';
+import { PerksPipeModule, FundingsPipeModule, BudgetPipeModule } from '../../pipes';
+import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
+
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
@@ -15,10 +17,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SummaryFundingsComponent } from './fundings/fundings.component';
 import { SummaryProfitsComponent } from './profits/profits.component';
+import { SummaryBudgetComponent } from './budget/budget.component';
 
 @NgModule({
-  declarations: [SummaryProposalComponent, SummaryPerksComponent, SummaryFundingsComponent, SummaryProfitsComponent],
-  exports: [SummaryProposalComponent, SummaryPerksComponent, SummaryFundingsComponent, SummaryProfitsComponent],
+  declarations: [SummaryProposalComponent, SummaryPerksComponent, SummaryFundingsComponent, SummaryProfitsComponent, SummaryBudgetComponent],
+  exports: [SummaryProposalComponent, SummaryPerksComponent, SummaryFundingsComponent, SummaryProfitsComponent, SummaryBudgetComponent],
   imports: [
     CommonModule,
     ToLabelModule,
@@ -27,6 +30,8 @@ import { SummaryProfitsComponent } from './profits/profits.component';
     MaxLengthModule,
     PerksPipeModule,
     FundingsPipeModule,
+    EmptyImagePipeModule,
+    BudgetPipeModule,
     FlexLayoutModule,
     TableFilterModule,
     MissingControlModule,
