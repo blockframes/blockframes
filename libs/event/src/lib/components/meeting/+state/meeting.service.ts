@@ -71,6 +71,17 @@ export class MeetingService {
   }
 
   /**
+   * Get all participant of the twilio room
+   */
+  getAllParticipants(): Observable<IParticipantMeeting[]> {
+    return this.connectedParticipants$
+      .pipe(
+        map((participants) => participants.filter((participant) => !participant.isLocalSpeaker)
+        )
+      );
+  }
+
+  /**
    * Get all participant of the twilio room without the local participant
    */
   getAllParticipants(): Observable<IParticipantMeeting[]> {
@@ -204,10 +215,10 @@ export class MeetingService {
     if (!!room.participants) {
       const participants: Participant[] = Array.from(room.participants.values());
       const tracks: (Promise<void | Participant>)[] = [];
-      participants.forEach((participant: Participant) => {
+      participants.forEach((participant) => {
         tracks.push(
           this.createIParticipantMeeting(participant.identity, event)
-            .then(remoteParticipant => {
+            .then((remoteParticipant) => {
               this.addParticipant(remoteParticipant, participant)
             })
         );
@@ -290,10 +301,9 @@ export class MeetingService {
    */
   setupVideoAudio(identity: string, kind: keyof IStatusVideoAudio, boolToChange: boolean): void {
     const participants: IParticipantMeeting[] = this.connectedParticipants$.getValue();
-    const updatedParticipant: IParticipantMeeting = participants.find(value => value.identity === identity);
-    const otherParticipant: IParticipantMeeting[] = participants.filter(value => value.identity !== identity);
-    updatedParticipant.statusMedia[kind] = boolToChange;
-    this.connectedParticipants$.next([...otherParticipant, updatedParticipant])
+    const updatedParticipant = participants.findIndex(value => value.identity === identity);
+    participants[updatedParticipant].statusMedia[kind] = boolToChange;
+    this.connectedParticipants$.next(participants)
   }
 
   /**
@@ -348,16 +358,13 @@ export class MeetingService {
   deactivateLocalTracks(activeRoom: Room): void {
     if (!!activeRoom) {
       const arrayOfLocalTrack: (LocalAudioTrack | LocalVideoTrack)[] = [];
-      activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
-        arrayOfLocalTrack.push(track.track);
-        track.track.stop();
+      activeRoom.localParticipant.tracks.forEach((trackPublication: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
+        arrayOfLocalTrack.push(trackPublication.track);
+        trackPublication.track.stop();
+        trackPublication.track.detach();
       });
-      if (!!arrayOfLocalTrack && arrayOfLocalTrack.length > 0) {
-        activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
-      }
-      activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
-        track.track.detach();
-      });
+
+      activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
     }
   }
 }

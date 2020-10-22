@@ -129,7 +129,6 @@
     "tmp": "0.1.0",
     "twilio-video": "^2.7.2",
     "twilio": "3.49.2",
-    "twilio-video": "^2.7.2",
     "xlsx": "^0.15.1",
     "zone.js": "^0.10.2"
   },
