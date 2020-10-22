@@ -1,19 +1,16 @@
 import * as admin from 'firebase-admin';
+import {
+  EIGHT_MINUTES_IN_MS,
+  IMaintenanceDoc,
+  MAINTENANCE_DOCUMENT_NAME,
+  META_COLLECTION_NAME,
+  _isInMaintenance
+} from '@blockframes/utils/maintenance';
 
-type Timestamp = admin.firestore.Timestamp;
-
-const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000;
-
-interface IMaintenanceDoc {
-  startedAt: Timestamp | null;
-  endedAt: Timestamp | null;
-}
-
-export const META_COLLECTION_NAME = '_META';
 
 const maintenanceRef = () => {
   const db = admin.firestore();
-  return db.collection(META_COLLECTION_NAME).doc('_MAINTENANCE');
+  return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
 
 export async function startMaintenance() {
@@ -37,29 +34,22 @@ export async function endMaintenance() {
  * @param delay 8 min by default. This delay is a security to
  * be sure that every process is stopped before continuing
  */
-export async function isInMaintenance(delay = EIGHT_MINUTES_IN_MS) {
-  const ref = maintenanceRef();
-  const doc = await ref.get();
+export async function isInMaintenance(delay = EIGHT_MINUTES_IN_MS): Promise<boolean> {
+  try {
+    const ref = maintenanceRef();
+    const doc = await ref.get();
 
-  // we've never seen any maintenance
-  if (!doc.exists) {
-    return false;
+    // if document doesn't exist, it means that there is something not normal,
+    // we force maintenance mode to true.
+    if (!doc.exists) {
+      return true;
+    }
+
+    return _isInMaintenance(doc.data() as IMaintenanceDoc, delay);
+  } catch (e) {
+    throw new Error(`Error while checking if app is in maintenance mode: ${e.message}`);
   }
 
-  const { startedAt, endedAt } = doc.data() as IMaintenanceDoc;
-  const now = admin.firestore.Timestamp.now();
-
-  if (endedAt) {
-    return endedAt.toMillis() + delay > now.toMillis();
-  }
-
-  if (startedAt) {
-    return true;
-  }
-
-  throw new Error(
-    'Unexpected cases for maintenance check! please check the _META/_MAINTENANCE document.'
-  );
 }
 
 // TODO: take the time to fix the types,

@@ -29,6 +29,10 @@ export class EventForm extends FormEntity<EventControl, Event> {
   get meta() {
     return this.get('meta');
   }
+
+  get id() {
+    return this.get('id');
+  }
 }
 
 // Meta

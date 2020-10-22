@@ -109,8 +109,7 @@
       <ng-template let-directors="control">
         <li *ngFor="let director of directors.controls">
           <strong>
-            <missing-control test-id="first-name" [control]="director.get('firstName')" [isLast]="false"></missing-control>
-            <span>&nbsp;</span>
+            <missing-control test-id="first-name" [control]="director.get('firstName')"></missing-control>
             <missing-control test-id="last-name" [control]="director.get('lastName')"></missing-control>
             (<missing-control test-id="director-category" [control]="director.get('category')" scope="directorCategory"></missing-control>)
           </strong>

@@ -22,7 +22,6 @@ export class ProfileCookieComponent {
     const settings = this.form.value;
 
     if (settings) {
-      this.gdpr.enableAnalytics(settings.googleAnalytics);
       this.gdpr.enableIntercom(settings.intercom);
       this.gdpr.enableYandex(settings.yandex);
     }
