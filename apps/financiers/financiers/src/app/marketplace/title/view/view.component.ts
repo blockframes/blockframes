@@ -31,7 +31,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     additionalRoute,
     {
       path: 'financing',
-      label: 'Financing Elements'
+      label: 'Financial Elements'
     },
     {
       path: 'campaign',
