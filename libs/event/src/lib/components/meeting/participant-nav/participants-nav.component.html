@@ -1,0 +1,31 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav position="end" mode="over">
+    <header fxLayout fxLayoutAlign="space-between center">
+      <span fxLayout fxLayoutAlign="space-between center">
+        <mat-icon svgIcon="group"></mat-icon>
+        <span>List of participants</span>
+      </span>
+      <button mat-icon-button (click)="sidenav.close()">
+        <mat-icon svgIcon="cross"></mat-icon>
+      </button>
+    </header>
+    <mat-list role="list" fxLayout="column" fxLayoutAlign="space-around start">
+      <ng-container *ngFor="let participant of participants">
+        <mat-list-item>
+          <span matListAvatar class="avatar-text ">{{participant | eventInitialParticipant}}</span>
+          <h3 matLine>{{participant.festivalData | displayName}}</h3>
+          <span class="mat-caption" matLine>{{ participant.festivalData.organizationName }}</span>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <ng-container *ngIf="!sidenav.opened">
+      <button mat-icon-button (click)="sidenav.open()">
+        <mat-icon svgIcon="group"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

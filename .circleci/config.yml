@@ -158,9 +158,7 @@ jobs:
         ENV: ci
     steps:
       - prepare_environment
-      - *start_firestore_emulator
       - run: npm run build:all
-      - run: npm run test
       - run: npm run lint
       - run:
           name: Check size of apps being build
@@ -177,7 +175,6 @@ jobs:
         ENV: ci
     steps:
       - prepare_environment
-      - *start_firestore_emulator
       - run:
           # npm run affected:build tries to build the libs which are broken,
           # the following command only build affected apps.
@@ -190,7 +187,6 @@ jobs:
               npm run build:${app};
             done;
       - run: npm run affected:lint --base=origin/develop
-      - run: npm run test
       - run:
           name: Check size of apps being build
           command: |
@@ -222,6 +218,7 @@ jobs:
       - build_deploy_prepare
       - run: sleep 500 # TODO instead of wait, disable maintenance with command
       - test_e2e_all
+      - run: npm run test
       - run:
           name: send stability data
           command: ./.circleci/submit-stability.sh dist/test-reports
@@ -242,6 +239,7 @@ jobs:
       - build_deploy_prepare
       - run: sleep 500 # TODO instead of wait, disable maintenance with command
       - test_e2e_all
+      - run: npm run test
       - slack/status
   deploy-to-prod:
     executor: blockframes-ci

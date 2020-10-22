@@ -42,7 +42,7 @@ export class EditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
@@ -80,6 +80,12 @@ export class EditComponent implements OnInit, OnDestroy {
 
       this.cdr.markForCheck();
     });
+  }
+
+  // Will be used to show event statistics only if event started
+  isEventStarted() {
+    const start = this.form.get('start').value as Date;
+    return start.getTime() < Date.now();
   }
 
   ngOnDestroy() {

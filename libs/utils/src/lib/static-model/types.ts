@@ -31,8 +31,15 @@ import {
   storeType,
   subLicensorRoles,
   unitBox,
-  territories, territoriesISOA3, territoriesISOA2, territoriesNUMCODE, territoriesFR
+  territories,
+  territoriesISOA3,
+  territoriesISOA2,
+  territoriesNUMCODE,
+  territoriesFR,
+  budgetRange
 } from './static-model';
+
+export type NumberRange = keyof typeof budgetRange;
 
 export type CartStatus = keyof typeof cartStatus;
 

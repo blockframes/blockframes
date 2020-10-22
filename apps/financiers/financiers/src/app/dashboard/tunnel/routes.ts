@@ -4,16 +4,18 @@ import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.com
 import { TunnelStep } from '@blockframes/ui/tunnel';
 
 const appSteps: TunnelStep[] = [{
-  title: 'Estimated Budget',
+  title: 'Financial Elements',
   icon: 'CAD',
-  time: 1,
+  time: 10,
   routes: [
-    { path: 'financial-details', label: 'Estimated Budget' }
+    { path: 'budget', label: 'Estimated Budget' },
+    { path: 'fundings', label: 'Financing Plan' },
+    { path: 'profits', label: 'Return on Investment' },
   ],
 }, {
   title: 'Investment Campaign',
   icon: 'campaign',
-  time: 15,
+  time: 10,
   routes: [
     { path: 'proposal', label: 'Investment Proposal' },
     { path: 'perks', label: 'Privileges' }
@@ -94,19 +96,29 @@ export const titleTunnelRoutes: Routes = [
         path: 'media-videos',
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
+
+      // Financial Elements
       {
-        path: 'financial-details',
-        loadChildren: () => import('./financial-details/financial-details.module').then(m => m.MovieFormFinancialDetailsModule)
+        path: 'budget',
+        loadChildren: () => import('@blockframes/campaign/form/budget/budget.module').then(m => m.CampaignFormBudgetModule)
+      },
+      {
+        path: 'fundings',
+        loadChildren: () => import('@blockframes/campaign/form/fundings/fundings.module').then(m => m.CampaignFormFundingsModule)
+      },
+      {
+        path: 'profits',
+        loadChildren: () => import('@blockframes/campaign/form/profits/profits.module').then(m => m.CampaignFormProfitsModule)
       },
 
       // Campaign
       {
         path: 'proposal',
-        loadChildren: () => import('@blockframes/campaign/form/proposal/proposal.module').then(m => m.ProposalModule)
+        loadChildren: () => import('@blockframes/campaign/form/proposal/proposal.module').then(m => m.CampaignFormProposalModule)
       },
       {
         path: 'perks',
-        loadChildren: () => import('@blockframes/campaign/form/perks/perks.module').then(m => m.PerksModule)
+        loadChildren: () => import('@blockframes/campaign/form/perks/perks.module').then(m => m.CampaignFormPerksModule)
       },
 
       // Summary

@@ -18,10 +18,6 @@ const navLinks = [
   {
     path: 'members',
     label: 'Members'
-  },
-  {
-    path: 'documents',
-    label: 'Documents'
   }
 ];
 

@@ -113,7 +113,7 @@ export function storeSearchableMovie(
       },
       status: !!movie.productionStatus ? movie.productionStatus : '',
       storeConfig: movie.storeConfig?.status || '',
-      budget: movie.estimatedBudget?.from || 0,
+      budget: movie.estimatedBudget || null,
       orgName: organizationName,
       storeType: movie.storeConfig?.storeType || '',
       appAccess: movieAppAccess ?
