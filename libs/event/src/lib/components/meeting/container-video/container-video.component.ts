@@ -9,7 +9,6 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 
 // Rxjs
 import {Observable} from "rxjs";
-import {Participant} from "twilio-video";
 
 @Component({
   selector: '[event] event-meeting-container-video',
@@ -52,10 +51,6 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
     await this.meetingService.createPreview(isAudio, isVideo);
     await this.meetingService.connectToMeeting(this.event, this.user.uid, isAudio, isVideo);
-  }
-
-  getTwilioParticipant = (uid: string): Participant => {
-    return this.meetingService.getTwilioParticipant(uid);
   }
 
   /**
