@@ -8,7 +8,6 @@ import {
   meetingEventEnum
 } from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
-import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 
 // Twilio
 import {
@@ -26,7 +25,7 @@ import {
   templateUrl: './remote.component.html',
   styleUrls: ['./remote.component.scss']
 })
-export class RemoteComponent extends AbstractParticipant implements AfterViewInit, OnDestroy {
+export class RemoteComponent implements AfterViewInit, OnDestroy {
 
   @Input() participant: IParticipantMeeting;
   @Input() twilioData: Participant;
@@ -35,12 +34,11 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
   @ViewChild('audio') audio: ElementRef;
 
   constructor(private meetingService: MeetingService) {
-    super();
   }
 
   ngAfterViewInit() {
     this.setupParticipantEvent(this.twilioData);
-    this.attachParticipantTracks(this.twilioData, this.containerRemoteVideo.nativeElement);
+    this.videoMock(this.twilioData);
   }
 
   /**
@@ -83,14 +81,6 @@ export class RemoteComponent extends AbstractParticipant implements AfterViewIni
 
   setupVideoAudio(kind: keyof IStatusVideoAudio, boolToChange: boolean): void {
     this.meetingService.setupVideoAudio(this.participant.identity, kind, boolToChange);
-  }
-
-  /**
-   * Attach the Participant's Tracks to the DOM.
-   * @param participant - participant to attach in the container
-   */
-  getParticipantTracks(participant: Participant): RemoteTrack[] {
-    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication) => trackPublication.track);
   }
 
   /**

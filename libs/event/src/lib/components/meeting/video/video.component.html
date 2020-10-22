@@ -23,7 +23,7 @@
       <article class="article-dominant">
         <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
           <ng-container *ngIf="participant.isDominantSpeaker">
-            <event-meeting-dominant-speaker [participant]="participant" [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-dominant-speaker>
+            <event-meeting-dominant-speaker [participant]="participant" [twilioData]="getTwilioParticipant(participant)"></event-meeting-dominant-speaker>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="!isRoomAsDominant(remoteParticipants)">
@@ -35,7 +35,7 @@
       <article class="article-buyer">
           <ng-container *ngFor="let participant of remoteParticipants; trackBy: identify">
             <ng-container *ngIf="!participant.isDominantSpeaker">
-                <event-meeting-remote-participant [participant]="participant" [twilioData]="doGetTwilioParticipant(participant)"></event-meeting-remote-participant>
+                <event-meeting-remote-participant [participant]="participant" [twilioData]="getTwilioParticipant(participant)"></event-meeting-remote-participant>
             </ng-container>
           </ng-container>
       </article>
@@ -43,7 +43,7 @@
   </ng-container>
 
   <ng-container *ngIf="localParticipant">
-      <event-meeting-local-participant [isOpen]="!event.isOwner" [localParticipant]="localParticipant" [twilioData]="doGetTwilioParticipant(localParticipant)"></event-meeting-local-participant>
+      <event-meeting-local-participant [isOpen]="!event.isOwner" [localParticipant]="localParticipant" [twilioData]="getTwilioParticipant(localParticipant)"></event-meeting-local-participant>
   </ng-container>
 
 </ng-container>

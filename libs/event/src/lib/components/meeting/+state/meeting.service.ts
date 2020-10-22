@@ -28,10 +28,10 @@ import {
   LocalTrack,
   LocalVideoTrack,
   LocalVideoTrackPublication,
+  RemoteTrack,
   Participant,
-  Room
+  Room, RemoteTrackPublication
 } from 'twilio-video';
-import SID = Participant.SID;
 
 @Injectable({
   providedIn: 'root'
@@ -296,18 +296,12 @@ export class MeetingService {
     this.connectedParticipants$.next([...otherParticipant, updatedParticipant])
   }
 
-
   /**
-   * Get track of one participant
-   * @param participant - All participants connected in the room
+   * Attach the Participant's Tracks to the DOM.
+   * @param participant - participant to attach in the container
    */
-  getTracksOfParticipant(participant: Participant) {
-    return Array.from(participant.tracks).map((
-      track
-    ) => {
-      //participant[0] is the key
-      return track[1].track;
-    });
+  getParticipantTracks(participant: Participant): RemoteTrack[] {
+    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication) => trackPublication.track);
   }
 
   /**
@@ -318,7 +312,7 @@ export class MeetingService {
    */
   muteUnmuteLocal(identity: string, kind: keyof IStatusVideoAudio, mute: boolean) {
     const localTwilioData = this.getTwilioParticipant(this.localParticipant.identity)
-    const localTracks = this.getTracksOfParticipant(localTwilioData);
+    const localTracks = this.getParticipantTracks(localTwilioData);
 
     this.setupVideoAudio(identity, kind, !mute);
 
@@ -346,7 +340,6 @@ export class MeetingService {
       this.connectedParticipants$.next([]);
     }
   }
-
 
   /**
    * Deactive local track of active Room
