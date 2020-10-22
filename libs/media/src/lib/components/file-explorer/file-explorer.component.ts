@@ -109,10 +109,7 @@ export class FileExplorerComponent {
     const selected = event.source.selectedOptions.selected;
     const [ selectedValues ] = selected.map(x => x.value);
 
-    if ((selectedValues as SubDirectory).multiple) {
-      this.singleFileForm = undefined;
-    } else {
-      // get form of single media
+    if (!(selectedValues as SubDirectoryFile | SubDirectoryImage).multiple) {
       const org = await this.organizationService.getValue(this.orgId);
       this.singleFileForm = new OrganizationForm(org);
       this.cdr.markForCheck();
@@ -130,14 +127,15 @@ export class FileExplorerComponent {
         onConfirm: async () => {
           const org = await this.organizationService.getValue(this.orgId);
           const orgForm = new OrganizationForm(org);
-          const formList = this.getFormList(orgForm)
+          const formList = this.getFormList(orgForm);
           const index = formList.controls.findIndex(form => {
             if (determineFormType(form)) {
               return form.get('title').value === row.title;
             } else {
               return form.get('ref').value === row.ref;
             }
-          })
+          });
+
           if (index > -1) {
             formList.removeAt(index);
             const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(orgForm);
@@ -172,7 +170,7 @@ export class FileExplorerComponent {
       form: mediaForm,
       privacy: 'protected',
       storagePath: this.activeDirectory.storagePath
-    }})
+    }});
 
     dialog.afterClosed().subscribe(async result => {
       if (!!result) {
@@ -184,7 +182,7 @@ export class FileExplorerComponent {
   }
 
   public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>) {
-    const ref = item[this.activeDirectory.fileRefField]
+    const ref = item[this.activeDirectory.fileRefField];
     const url = await this.mediaService.generateImgIxUrl(ref);
     window.open(url);
   }
