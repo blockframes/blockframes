@@ -2,10 +2,11 @@ import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
-import { MEETING_MAX_INVITATIONS_NUMBER } from '../../+state/event.firestore';
 import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 
 @Component({
   selector: 'event-edit',
@@ -28,6 +29,7 @@ export class EventEditComponent implements OnInit {
     private service: EventService,
     private router: Router,
     private route: ActivatedRoute,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -54,8 +56,17 @@ export class EventEditComponent implements OnInit {
   }
 
   async remove() {
-    this.router.navigate(['../..'], { relativeTo: this.route })
-    this.service.remove(this.form.value.id);
+    this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Are you sure you want to delete this event ?',
+        question: 'All of the invitations and requests associated to it will be deleted.',
+        buttonName: 'Delete',
+        onConfirm: async () => {
+          this.service.remove(this.form.value.id);
+          this.router.navigate(['../..'], { relativeTo: this.route })
+        }
+      }
+    })
   }
 
   onEventChange(key: 'start' | 'end') {

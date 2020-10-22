@@ -1,6 +1,14 @@
+:host {
+  padding: 80px;
+}
+
 div[mat-dialog-content] {
   text-align: center;
   h3, p {
     padding: 0;
   }
+}
+
+p {
+  max-width: 70%;
 }
