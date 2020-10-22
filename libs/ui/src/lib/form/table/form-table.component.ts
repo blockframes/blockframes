@@ -92,7 +92,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.form?.pristine && this.formItem.dirty) this.save()
+    if (this.formItem?.pristine && this.formItem.dirty) this.save()
     this.sub?.unsubscribe();
   }
 
