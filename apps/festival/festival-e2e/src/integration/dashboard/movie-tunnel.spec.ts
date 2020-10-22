@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm, testPromise } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
@@ -139,7 +139,7 @@ const Movie = {
   }
 }
 
-let val = Movie.production;
+const val = Movie.production;
 val['prod-co-summary'] = `${val['production-country'].toLowerCase()} ${val['production-company-name']}`;
 val['coprod-co-summary'] = `${val['co-production-country'].toLowerCase()} ${val['co-production-company-name']}`;
 val['producer-summary'] = `${val['producer-role'].toLowerCase()} ${val['first-name']} ${val['last-name']}`;
