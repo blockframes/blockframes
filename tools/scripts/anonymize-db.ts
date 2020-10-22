@@ -4,14 +4,13 @@ import * as faker from 'faker';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { User, PublicUser, createPublicUser } from '@blockframes/user/types';
-import {
-  Organization,
-  createPublicOrganization,
-  PublicOrganization,
-} from '@blockframes/organization/+state';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { Invitation } from '@blockframes/invitation/+state';
 import { JsonlDbRecord } from '@blockframes/firebase-utils';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
+import { createPublicOrganization, Organization } from '@blockframes/organization/+state/organization.model';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 
 const userCache: { [uid: string]: User | PublicUser } = {};
 const orgCache: { [id: string]: Organization | PublicOrganization } = {};
@@ -24,10 +23,6 @@ const fakeEmail = (name: string) =>
 
 function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
-}
-
-function assertType<T extends object>(doc: any, ...keys: (keyof T)[]): asserts doc is T {
-  if (!hasKeys<T>(doc, ...keys)) throw Error('WRONG OBJECT TYPE!');
 }
 
 function processUser<T extends User | PublicUser>(u: T): T {
@@ -85,6 +80,24 @@ function updateOrg(org: Organization | PublicOrganization) {
   throw Error(`Unable to process org: ${JSON.stringify(org, null, 4)}`);
 }
 
+function updateHostedVideo(screener: HostedVideo): HostedVideo {
+  const jwPlayerId = 'Ek2LPn3W';
+  return {
+    ...screener,
+    jwPlayerId
+  }
+}
+
+function processMovie(movie: Movie): Movie {
+  if (movie.promotional?.videos?.screener) {
+    movie.promotional.videos.screener = updateHostedVideo(movie.promotional.videos.screener);
+  }
+  if (movie.promotional?.videos?.otherVideos) {
+    movie.promotional.videos.otherVideos = movie.promotional.videos.otherVideos.map(updateHostedVideo);
+  }
+  return movie;
+}
+
 function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
   const ignorePaths = [
     '_META/',
@@ -92,7 +105,6 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
     'contracts/',
     'docsIndex/',
     'events/',
-    'movies/',
     'permissions/',
     'publicContracts/',
   ];
@@ -107,13 +119,17 @@ function anonymizeDocument({ docPath, content: doc }: JsonlDbRecord) {
       return { docPath, content: processInvitation(doc) };
     } else if (docPath.includes('notifications/') && hasKeys<NotificationDocument>(doc, 'isRead')) { // NOTIFICATIONS
       return { docPath, content: processNotification(doc) };
+    } else if (docPath.includes('movies/') ) {
+      if (hasKeys<Movie>(doc, 'title')) return { docPath, content: processMovie(doc) };
+      return { docPath, content: doc };
     }
   } catch (e) {
     throw [Error(`Error docPath: ${docPath}`), e];
   }
-  throw Error(
-    `CRITICAL: could not clean this document! Path: ${docPath} \ncontent:\n${JSON.stringify(doc, null, 4)}`
-  );
+  const error = 'CRITICAL: could not clean a document, docPath not handled';
+  const location = `Document path: ${docPath}`;
+  const solution = 'The collection name might be missing in the anonymisation script. Update file tools/scripts/anonymize-db.ts';
+  throw new Error([error, location, solution].join('/n'));
 }
 
 function getPathOrder(path: string): number {

@@ -1,15 +1,17 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
-import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { GetPathModule } from '@blockframes/utils/pipes/get-path.pipe';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { SummaryFinancialDetailsComponent } from './financial-details.component';
-import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
-import { BudgetPipeModule } from '@blockframes/movie/pipes/budget.pipe';
-import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
+import { CampaignFormBudgetComponent } from './budget.component';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { BudgetPipeModule } from '../../pipes/budget.pipe';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.pipe';
 
 // Materials
 import { MatIconModule } from '@angular/material/icon';
@@ -19,16 +21,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
-  declarations: [SummaryFinancialDetailsComponent],
-  exports: [SummaryFinancialDetailsComponent],
+  declarations: [CampaignFormBudgetComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     TunnelPageModule,
-    GetPathModule,
-    MissingControlModule,
+    StaticSelectModule,
+    UploadModule,
     BudgetPipeModule,
-    EmptyImagePipeModule,
+    ToLabelModule,
 
     // Material
     MatIconModule,
@@ -36,7 +38,8 @@ import { MatDividerModule } from '@angular/material/divider';
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
-    RouterModule.forChild([])
+    RouterModule.forChild([{ path: '', component: CampaignFormBudgetComponent }])
+
   ],
 })
-export class SummaryFinancialDetailsModule { }
+export class CampaignFormBudgetModule { }

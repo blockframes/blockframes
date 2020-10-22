@@ -30,4 +30,4 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule.forChild([{ path: '', component: CampaignFormPerksComponent }])
   ]
 })
-export class PerksModule { }
+export class CampaignFormPerksModule { }

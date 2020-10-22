@@ -24,4 +24,4 @@ import { MatIconModule } from '@angular/material/icon';
     RouterModule.forChild([{ path: '', component: CampaignFormProposalComponent }])
   ]
 })
-export class ProposalModule { }
+export class CampaignFormProposalModule { }

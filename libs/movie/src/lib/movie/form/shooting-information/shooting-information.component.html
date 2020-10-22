@@ -121,7 +121,7 @@
             </static-select>
 
             <mat-form-field appearance="outline" fxFlex>
-              <mat-label>City</mat-label>
+              <mat-label>Cities</mat-label>
               <mat-chip-list #chipList>
                 <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">
                   <mat-chip removable="true" (removed)="remove(i, locationForm.get('cities'))">

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { TunnelStepData, TunnelStep } from '../../tunnel.model';
 import { TunnelLayoutComponent } from '../layout.component';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * Set the position of the page on the current panel
