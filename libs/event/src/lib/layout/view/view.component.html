@@ -10,6 +10,7 @@
         <ng-container *ngSwitchCase="'early'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
+          <p class="mat-caption">{{ event.meta.description }}</p>
           <ng-container *ngIf="event.isOwner; else notOwner">
             <h3>You are the owner of this event</h3>
             <p>You can invite members and edit the event config in your dashboard</p>
