@@ -4,6 +4,9 @@
 
   .mat-dialog-container {
     position: relative;
+    display: flex;
+    height: 100%;
+    padding: 80px;
     .mat-dialog-close {
       position: absolute;
       top: 0;
