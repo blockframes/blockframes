@@ -224,3 +224,11 @@ export function setForm(selector: string, formOpt: FormOptions) {
   })
   .then(_ => console.table(formData));
 }
+
+export function testPromise() {
+  cy.log("In testPromise..");
+  return new Cypress.Promise((resolve) => {
+    cy.log("exec Promise");
+    resolve("done");
+  });
+}

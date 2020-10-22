@@ -1,11 +1,10 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, setForm, testPromise } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
-//TODO: Cleanup
-//import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
+import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
 
 const userFixture = new User();
 const users = [ userFixture.getByUID(USER.Jean) ];
@@ -140,37 +139,44 @@ const Movie = {
   }
 }
 
+let val = Movie.production;
+val['prod-co-summary'] = `${val['production-country'].toLowerCase()} ${val['production-company-name']}`;
+val['coprod-co-summary'] = `${val['co-production-country'].toLowerCase()} ${val['co-production-company-name']}`;
+val['producer-summary'] = `${val['producer-role'].toLowerCase()} ${val['first-name']} ${val['last-name']}`;
+val['distributor-summary'] = `${val['distribution-country'].toLowerCase()} ${val['distribution-company-name']}`;
+val['salesAgent-summary'] = `${val['sales-country'].toLowerCase()} ${val['sales-agent-name']}`;
+
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button', 
-    input: 'productionStatus', has_upload: false},  
+    input: 'productionStatus', comp_save: [], save_form: false},  
   {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
-    input: 'mainInfo', has_upload: false},
+    input: 'mainInfo', comp_save: [], save_form: false},
   {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input', 
-    input: 'storyElements', has_upload: false},
-  {title: 'Production Information', selector: 'movie-form-production input, mat-select, chips-autocomplete', 
-    input: 'production', has_upload: false},
+    input: 'storyElements', comp_save: [], save_form: false},
+  {title: 'Production Information', selector: 'movie-form-production input, static-select, mat-select, chips-autocomplete', 
+    input: 'production', comp_save: ['row-save'], save_form: false}, 
   {title: 'Artistic Team', selector: 'movie-form-artistic input, textarea, static-select', 
-    input: 'artisticTeam', has_upload: false},
+    input: 'artisticTeam', comp_save: ['table-save'], save_form: false},
   {title: 'Selection & Reviews', selector: 'movie-form-reviews static-select, input, textarea', 
-    input: 'reviews', has_upload: false},
+    input: 'reviews', comp_save: [], save_form: false},
   {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', 
-    input: 'additionalInfo', has_upload: false},
+    input: 'additionalInfo', comp_save: [], save_form: false},
   {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input', 
-    input: 'shootingInformation', has_upload: false},
+    input: 'shootingInformation', comp_save: [], save_form: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
-    input: 'techSpec', has_upload: false},
+    input: 'techSpec', comp_save: [], save_form: false},
   {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input', 
-    input: 'availableMaterials', has_upload: false},
+    input: 'availableMaterials', comp_save: [], save_form: false},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
-    input: 'salesPitch', has_upload: false},
+    input: 'salesPitch', comp_save: [], save_form: false},
   {title: 'Files', selector: 'movie-form-media-files file-upload', 
-    input: 'files', has_upload: false},
+    input: 'files',  comp_save: [], save_form: false},
   {title: 'Notes and Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
-    input: 'notesStatements', has_upload: false},
+    input: 'notesStatements', comp_save: [], save_form: false},
   {title: 'Promotional Elements', selector: 'movie-form-media-images', 
-    input: 'promoElements', has_upload: false},
+    input: 'promoElements', comp_save: [], save_form: false},
   {title: 'Videos', selector: 'movie-form-media-videos textarea, input', 
-    input: 'videos', has_upload: false}
+    input: 'videos', comp_save: [], save_form: false}
 ];
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
@@ -178,45 +184,80 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
     signInAndNavigateToMain(users[0]);
-
-    cy.url().then(url => {
-      cy.log(`Adding new movie url: ${url}`);
-      movieURL = url;
-    });
-
   });
 
   //Summary - Verification
-  it('Fill all fields and verify it in Summary Page', () => {
-    //TODO: Refactor to remove maintest & URL hard-coding.
-    //mainTest();
-    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
-    //cy.wait(3000);
-    //acceptCookie();
+  it.only('Fill all fields and verify it in Summary Page', () => {
+    /*
+    testPromise().then(d => {
+      cy.log('Promise resoved');
+      cy.log(d as string);
+    });
+    cy.log('Promise done');
+    return;
+    */
+
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/production');
+    cy.wait(3000);
+    acceptCookie();
+
+    /*
+    cy.wait(TO.FIFTEEN_SEC);
+    cy.url().then(url => {
+      cy.log(`Adding new movie url: ${url}`);
+      movieURL = url;
+      console.log("movie :", url);
+    });  */
+
+    //cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 
     testSteps.forEach(step => {
       cy.log(`=> Step : [${step.title}]`);
       cy.get('h1', {timeout: TO.PAGE_ELEMENT}).contains(step.title);
       setForm(step.selector, {inputValue: Movie[step.input]});
-      cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
-        .click();
-      cy.wait(TO.WAIT_1SEC);
+
+      //cy.pause();
+      //If there are component saves, click them..
+      step.comp_save.forEach(comp => {
+        cy.get(`button[test-id=${comp}]`).each(el => {
+          cy.wrap(el).click();
+          cy.wait(800);
+        });
+
+      })
+
+      //cy.get('button[test-id="row-savedxx"]');
+
+      //Save this step
+      if (step.save_form) {
+        cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
+          .click();
+        cy.wait(TO.WAIT_1SEC);
+      }
 
       //Proceed to next step.
       cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
         .click();
     });
 
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
+    cy.wait(3000);
+
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
 
     cy.log('[Summary - Main fields]');
-    cy.get('#main-information [test-id]').each(el => {
+    // cy.get('#main-information [test-id]').each(el => {
+    //   console.log(el);
+    //   const key = el.attr('test-id');
+    //   cy.wrap(el).contains(Movie.mainInfo[key])      
+    // })
+
+    cy.get('#production-information [test-id]').each(el => {
       console.log(el);
       const key = el.attr('test-id');
-      cy.wrap(el).contains(Movie.mainInfo[key])      
-    })
-
+      cy.wrap(el).contains(Movie.production[key])      
+    })    
   });
 
 });

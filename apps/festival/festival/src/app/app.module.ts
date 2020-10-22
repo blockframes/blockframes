@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule, REGION } from '@angular/fire/functions';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirestoreModule, SETTINGS } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule, PerformanceMonitoringService } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
@@ -85,6 +85,7 @@ import { GDPRService } from '@blockframes/utils/gdpr-cookie/gdpr-service/gdpr.se
     ScreenTrackingService,
     UserTrackingService,
     PerformanceMonitoringService,
+    { provide: SETTINGS, useValue:  {experimentalForceLongPolling: true } },
     { provide: REGION, useValue: 'europe-west1' },
   ],
   bootstrap: [AppComponent],
