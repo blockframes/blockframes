@@ -9,7 +9,7 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 
 // RxJs
 import { map, switchMap, shareReplay, filter, tap } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public hasAcceptedMovies$: Observable<boolean>;
   public hasMovies$: Observable<boolean>;
+  public isDataLoaded$: Observable<boolean>;
+
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
@@ -31,6 +33,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    const _isDataLoaded$ = new BehaviorSubject<boolean>(false);
+    this.isDataLoaded$ = _isDataLoaded$.asObservable();
 
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
 
@@ -39,7 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       filter(movies => !!movies && movies.length >= 1),
       map(movies => movies.filter(movie => !!movie)),
       map(movies => movies.filter(movie => movie.storeConfig?.status === 'accepted')),
-      shareReplay(1)
+      shareReplay(1),
+      tap(_ => _isDataLoaded$.next(true))
     );
 
     this.hasAcceptedMovies$ = allMoviesFromOrg$.pipe(

@@ -17,10 +17,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { WishlistComponent } from './wishlist.component';
-
-
 
 @NgModule({
   declarations: [WishlistComponent],
@@ -39,7 +38,7 @@ import { WishlistComponent } from './wishlist.component';
     MatIconModule,
     MatRippleModule,
     MatSnackBarModule,
-
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: WishlistComponent }])
   ]
 })

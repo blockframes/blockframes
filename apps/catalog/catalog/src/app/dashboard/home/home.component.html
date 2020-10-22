@@ -1,4 +1,4 @@
-<ng-container *ngIf="!(moviesLoading$ | async)">
+<!--TODO #3858 --><ng-container *ngIf="!(moviesLoading$ | async)">
   <ng-container *ngIf="(movies$ | async).length else noMovie">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
