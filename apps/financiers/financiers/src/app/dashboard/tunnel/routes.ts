@@ -6,16 +6,16 @@ import { TunnelStep } from '@blockframes/ui/tunnel';
 const appSteps: TunnelStep[] = [{
   title: 'Financial Elements',
   icon: 'CAD',
-  time: 1,
+  time: 10,
   routes: [
-    { path: 'financial-details', label: 'Estimated Budget' },
+    { path: 'budget', label: 'Estimated Budget' },
     { path: 'fundings', label: 'Financing Plan' },
     { path: 'profits', label: 'Return on Investment' },
   ],
 }, {
   title: 'Investment Campaign',
   icon: 'campaign',
-  time: 15,
+  time: 10,
   routes: [
     { path: 'proposal', label: 'Investment Proposal' },
     { path: 'perks', label: 'Privileges' }
@@ -97,10 +97,10 @@ export const titleTunnelRoutes: Routes = [
         loadChildren: () => import('@blockframes/movie/form/media-videos/media-videos.module').then(m => m.MediaFormVideosModule)
       },
 
-      // Financial Conditions
+      // Financial Elements
       {
-        path: 'financial-details',
-        loadChildren: () => import('./financial-details/financial-details.module').then(m => m.MovieFormFinancialDetailsModule)
+        path: 'budget',
+        loadChildren: () => import('@blockframes/campaign/form/budget/budget.module').then(m => m.CampaignFormBudgetModule)
       },
       {
         path: 'fundings',

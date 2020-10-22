@@ -1,5 +1,6 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { getAppName, getCurrentApp } from '@blockframes/utils/apps';
 
 // Blockframes
 import { getAppLocation } from '@blockframes/utils/helpers';
@@ -16,11 +17,14 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent implements OnInit {
+  public appName: string;
   public section$: Observable<'dashboard' | 'marketplace'>;
 
   constructor(private routerQuery: RouterQuery) { }
 
   ngOnInit() {
+    const app = getCurrentApp(this.routerQuery);
+    this.appName = getAppName(app).label;
     this.section$ = this.routerQuery.select('state').pipe(map(data => getAppLocation(data.url)));
   }
 }

@@ -298,7 +298,8 @@ service cloud.firestore {
     function isAllowedToUpdateMovie() {
       return isOrgMember(userOrgId())
         && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', '_createdBy'])
+        && isNotUpdatingField(['_meta', 'createdBy'])
+        && isNotUpdatingField(['_meta', 'createdAt'])
         && isNotUpdatingField(['_type'])
         && ( isNotUpdatingField(['storeConfig','status'])
           || ( existingData().storeConfig.appAccess.festival == true && incomingData().storeConfig.status in ['submitted', 'accepted', 'draft'] )

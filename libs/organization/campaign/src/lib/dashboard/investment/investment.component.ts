@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { CampaignService } from '../+state';
-import { CampaignForm } from '../form/form';
+import { CampaignService } from '../../+state';
+import { CampaignForm } from '../../form/form';
 import { switchMap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'campaign-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  selector: 'campaign-dashboard-investment',
+  templateUrl: './investment.component.html',
+  styleUrls: ['./investment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class InvestmentComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   movieId$ = this.route.selectParams('movieId');
   form = new CampaignForm();

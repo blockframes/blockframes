@@ -13,11 +13,17 @@
 
 <section>
   <h5>CASCADE 8</h5>
-  <div fxLayout="row" fxLayoutAlign="space-between">
+  <div fxLayout fxLayoutAlign="space-between">
     <p>Information storage and access</p>
     <mat-slide-toggle checked disabled></mat-slide-toggle>
   </div>
   <p class="mat-caption">The storage of information, such as images, content or credentials for better performances and automatic log in.</p>
+
+  <h5>GOOGLE</h5>
+  <div fxLayout fxLayoutAlign="space-between">
+    <p class="mat-caption">Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services, which include giving accurate statistics to sales agents based on that cookie.</p>
+    <mat-slide-toggle checked disabled></mat-slide-toggle>
+  </div>
 </section>
 
 <section class="divider">
@@ -32,11 +38,6 @@
     <mat-radio-button [value]="true" [checked]="masterToggleStatus === 'accept'">Accept All</mat-radio-button>
   </mat-radio-group>
 
-  <h6>GOOGLE</h6>
-  <div fxLayout fxLayoutAlign="space-between">
-    <p>Google Tag Manager and Google Analytics are used to monitor users’ behavior on our services. It enables us to understand how our services are used and craft better experiences.</p>
-    <mat-slide-toggle [checked]="form.get('googleAnalytics').value" name="googleAnalytics" (change)="toggleCookie($event)"></mat-slide-toggle>
-  </div>
   <h6>INTERCOM</h6>
   <div fxLayout fxLayoutAlign="space-between">
     <p>Intercom is used as a communication service to enable users to discuss directly with the Cascade8 team.</p>

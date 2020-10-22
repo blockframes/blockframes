@@ -12,6 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatInputModule,
     MatTooltipModule,
     MatIconModule,
+    MatDividerModule,
     RouterModule.forChild([{ path: '', component: CampaignFormProfitsComponent }])
   ]
 })

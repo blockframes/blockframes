@@ -24,7 +24,8 @@ export class MemberRequestComponent {
   public invitationColumns = {
     firstName: 'FirstName',
     lastName: 'Lastname',
-    email: 'Email Address'
+    email: 'Email Address',
+    uid: 'Actions'
   };
 
   get initialColumns() {

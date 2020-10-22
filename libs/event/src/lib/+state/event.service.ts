@@ -137,8 +137,8 @@ export class EventService extends CollectionService<EventState> {
 
   public filterScreeningsByMovieId(movieId: string) {
     return this.queryByType(['screening']).pipe(map(screenings => screenings.filter(screening => {
-      /* We only want upcoming screenings */
-      if (screening.start.getTime() > new Date().getTime()) {
+      /* We only want upcoming screenings or screenings already started */
+      if (screening.end.getTime() > new Date().getTime()) {
         return screening.movie?.id === movieId;
       }
     })))

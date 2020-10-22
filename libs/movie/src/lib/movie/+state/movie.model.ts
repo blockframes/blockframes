@@ -89,7 +89,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     scoring: null,
     soundFormat: null,
     isOriginalVersionAvailable: null,
-    totalBudget: {},
     socialGoals: [],
     estimatedBudget: null,
     ...params,
@@ -271,9 +270,10 @@ export function createMovieLegalDocuments(
   }
 }
 
-export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
+export function createDocumentMeta(meta: Partial<DocumentMeta<Date>> = {}): DocumentMeta<Date> {
   return {
     createdBy: '',
+    createdAt: new Date(),
     ...meta
   }
 }

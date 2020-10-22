@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { CampaignForm } from '../../form';
 
 @Component({
@@ -7,11 +7,7 @@ import { CampaignForm } from '../../form';
   styleUrls: ['./profits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SummaryProfitsComponent implements OnInit {
+export class SummaryProfitsComponent {
   @Input() form: CampaignForm;
   @Input() link: string | string[];
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 }
