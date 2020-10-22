@@ -7,7 +7,8 @@ import {
   ContentChild,
   TemplateRef,
   Directive,
-  ChangeDetectorRef, OnDestroy
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 
 // RxJs
@@ -48,7 +49,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   ngOnInit() {
     this.list$ = this.form.valueChanges.pipe(
       startWith(this.form.value),
-      distinctUntilChanged(),)
+      distinctUntilChanged())
 
     this.add();
   }
