@@ -19,9 +19,9 @@ import {map} from "rxjs/operators";
 // Twilio-video
 import {
   connect,
+  ConnectOptions,
   createLocalAudioTrack,
   createLocalVideoTrack,
-  ConnectOptions,
   LocalAudioTrack,
   LocalAudioTrackPublication,
   LocalDataTrack,
@@ -185,10 +185,10 @@ export class MeetingService {
     if (!!room.participants) {
       const participants: Participant[] = Array.from(room.participants.values());
       const tracks: (Promise<void | Participant>)[] = [];
-      participants.forEach((participant: Participant) => {
+      participants.forEach((participant) => {
         tracks.push(
           this.createIParticipantMeeting(participant.identity, event)
-            .then(remoteParticipant => {
+            .then((remoteParticipant) => {
               this.addParticipant(remoteParticipant, participant)
             })
         );
@@ -271,10 +271,9 @@ export class MeetingService {
    */
   setupVideoAudio(identity: string, kind: keyof IStatusVideoAudio, boolToChange: boolean): void {
     const participants: IParticipantMeeting[] = this.connectedParticipants$.getValue();
-    const updatedParticipant: IParticipantMeeting = participants.find(value => value.identity === identity);
-    const otherParticipant: IParticipantMeeting[] = participants.filter(value => value.identity !== identity);
-    updatedParticipant.statusMedia[kind] = boolToChange;
-    this.connectedParticipants$.next([...otherParticipant, updatedParticipant])
+    const updatedParticipant = participants.findIndex(value => value.identity === identity);
+    participants[updatedParticipant].statusMedia[kind] = boolToChange;
+    this.connectedParticipants$.next(participants)
   }
 
 
@@ -303,13 +302,12 @@ export class MeetingService {
       activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
         arrayOfLocalTrack.push(track.track);
         track.track.stop();
+        track.track.detach();
+
       });
       if (!!arrayOfLocalTrack && arrayOfLocalTrack.length > 0) {
         activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
       }
-      activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
-        track.track.detach();
-      });
     }
   }
 }
