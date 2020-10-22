@@ -92,7 +92,8 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.form?.valid) this.save()
+    this.sub?.unsubscribe();
   }
 
   get isFormEmpty() {
@@ -104,7 +105,7 @@ export class FormTableComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   }
 
   save() {
-    if (this.formItem.valid) {
+    if (this.formItem?.valid) {
       /* If active index is below 0 we want to push the formItem otherwise we are stuck where the table is not shown
       and also no form */
       if (typeof this.activeIndex === 'number' && !this.isFormEmpty && this.activeIndex >= 0) {

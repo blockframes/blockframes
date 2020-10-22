@@ -7,7 +7,7 @@ import {
   ContentChild,
   TemplateRef,
   Directive,
-  ChangeDetectorRef
+  ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 
 // RxJs
@@ -29,7 +29,7 @@ export class ItemRefDirective { }
   styleUrls: ['./form-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormListComponent<T> implements OnInit {
+export class FormListComponent<T> implements OnInit, OnDestroy {
 
   @Input() form: FormList<T>;
   @Input() buttonText = 'Add';
@@ -48,9 +48,13 @@ export class FormListComponent<T> implements OnInit {
   ngOnInit() {
     this.list$ = this.form.valueChanges.pipe(
       startWith(this.form.value),
-      distinctUntilChanged())
+      distinctUntilChanged(),)
 
-      this.add();
+    this.add();
+  }
+
+  ngOnDestroy() {
+    if (this.form?.valid) this.save()
   }
 
   get isFormEmpty() {
@@ -63,7 +67,7 @@ export class FormListComponent<T> implements OnInit {
   }
 
   save() {
-    if (this.formItem.valid) {
+    if (this.formItem?.valid) {
       /* If active index is below 0 we want to push the formItem otherwise we are stuck where the table is not shown
       and also no form */
       if (typeof this.activeIndex === 'number' && !this.isFormEmpty) {
