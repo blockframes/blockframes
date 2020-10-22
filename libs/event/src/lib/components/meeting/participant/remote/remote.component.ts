@@ -59,14 +59,14 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
       this.detachTracks(this.getParticipantTracks(this.twilioData));
     })
 
-    participant.on(meetingEventEnum.TrackDisabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
-      this.detachTracks([remoteTrack.track]);
-      this.setupVideoAudio(remoteTrack.kind, false);
+    participant.on(meetingEventEnum.TrackDisabled, (remoteTrackPublication: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
+      this.detachTracks([remoteTrackPublication.track]);
+      this.setupVideoAudio(remoteTrackPublication.kind, false);
     })
 
-    participant.on(meetingEventEnum.TrackEnabled, (remoteTrack: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
-      this.attachTracks([remoteTrack.track]);
-      this.setupVideoAudio(remoteTrack.kind, true);
+    participant.on(meetingEventEnum.TrackEnabled, (remoteTrackPublication: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
+      this.attachTracks([remoteTrackPublication.track]);
+      this.setupVideoAudio(remoteTrackPublication.kind, true);
     })
 
     participant.on(meetingEventEnum.TrackStarted, (track: (RemoteAudioTrack | RemoteVideoTrack)) => {

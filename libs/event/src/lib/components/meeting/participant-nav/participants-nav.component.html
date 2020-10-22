@@ -12,7 +12,7 @@
     <mat-list role="list" fxLayout="column" fxLayoutAlign="space-around start">
       <ng-container *ngFor="let participant of participants">
         <mat-list-item>
-          <span matListAvatar class="avatar-text ">{{participant | eventInitialParticipant}}</span>
+          <span matListAvatar class="avatar-text ">{{participant | eventInitials}}</span>
           <h3 matLine>{{participant.festivalData | displayName}}</h3>
           <span class="mat-caption" matLine>{{ participant.festivalData.organizationName }}</span>
         </mat-list-item>

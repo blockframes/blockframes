@@ -10,6 +10,7 @@ import {MatCardModule} from "@angular/material/card";
 import {FlexModule} from "@angular/flex-layout";
 
 // Blockframes
+import {ParticipantsNavComponent} from "@blockframes/event/components/meeting/participant-nav/participants-nav.component";
 import {ImageReferenceModule} from '@blockframes/media/directives/image-reference/image-reference.module';
 import {EventInitialsModule} from "@blockframes/event/pipes/event-initial-participant.pipe";
 import {DisplayNameModule} from '@blockframes/utils/pipes';
@@ -25,6 +26,7 @@ import {AvatarInitialComponent} from './avatar-initial/avatar-initial.component'
   declarations: [
     VideoComponent,
     RemoteComponent,
+    ParticipantsNavComponent,
     ContainerVideoComponent,
     AvatarInitialComponent
   ],

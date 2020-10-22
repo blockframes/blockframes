@@ -25,6 +25,11 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
    */
   remoteParticipants$: Observable<IParticipantMeeting[]>;
 
+  /**
+   * All Remote Participants in the room Twilio (all participant connected)
+   */
+  participants$: Observable<IParticipantMeeting[]>;
+
   user: User;
 
   constructor(private meetingService: MeetingService, private query: AuthQuery) {
@@ -33,6 +38,7 @@ export class ContainerVideoComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
 
+    this.participants$ = this.meetingService.getAllParticipants();
     this.remoteParticipants$ = this.meetingService.getParticipants();
     this.user = this.query.user;
 

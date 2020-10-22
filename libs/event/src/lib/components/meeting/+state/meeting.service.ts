@@ -70,6 +70,17 @@ export class MeetingService {
   }
 
   /**
+   * Get all participant of the twilio room
+   */
+  getAllParticipants(): Observable<IParticipantMeeting[]> {
+    return this.connectedParticipants$
+      .pipe(
+        map((participants) => participants.filter((participant) => !participant.isLocalSpeaker)
+        )
+      );
+  }
+
+  /**
    * Get all participant of the twilio room without the local participant
    */
   getParticipants(): Observable<IParticipantMeeting[]> {
@@ -299,15 +310,13 @@ export class MeetingService {
   deactivateLocalTracks(activeRoom: Room): void {
     if (!!activeRoom) {
       const arrayOfLocalTrack: (LocalAudioTrack | LocalVideoTrack)[] = [];
-      activeRoom.localParticipant.tracks.forEach((track: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
-        arrayOfLocalTrack.push(track.track);
-        track.track.stop();
-        track.track.detach();
-
+      activeRoom.localParticipant.tracks.forEach((trackPublication: (LocalAudioTrackPublication | LocalVideoTrackPublication)) => {
+        arrayOfLocalTrack.push(trackPublication.track);
+        trackPublication.track.stop();
+        trackPublication.track.detach();
       });
-      if (!!arrayOfLocalTrack && arrayOfLocalTrack.length > 0) {
-        activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
-      }
+
+      activeRoom.localParticipant.unpublishTracks(arrayOfLocalTrack);
     }
   }
 }
