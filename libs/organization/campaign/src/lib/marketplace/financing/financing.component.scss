@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
+mat-divider {
+  margin: 24px 0;
+}
+
+header {
+  margin-bottom: 40px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+article > * {
+  width: 40%;
+}
+
+table {
+  border-collapse: collapse;
+  .color {
+    border-radius: 4px;
+    width: 24px;
+    height: 24px;
+  }
+  td {
+    padding: 8px;
+  }
+  tfoot tr {
+    border-top: solid 1px var(--foreground-divider);
+  }
+}
+
+p {
+  text-align: justify;
+}

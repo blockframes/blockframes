@@ -1,0 +1,6 @@
+@mixin apex-chart-theme($theme) {
+  // Apex specific style
+  .apexcharts-menu-item {
+    width: max-content;
+  }
+}
