@@ -84,9 +84,7 @@
     <article>
       <h5>Original version</h5>
       <p>
-        <ng-container *ngFor="let language of movie.originalLanguages; let isLast = last">
-          {{ language | toLabel: 'languages' }}{{ isLast ? ' : ' : ', '}}
-        </ng-container>
+        {{ movie.originalLanguages | toLabel: 'languages' }}
         {{ movie.isOriginalVersionAvailable ? 'Available' : 'Unavailable' }}
       </p>
     </article>
