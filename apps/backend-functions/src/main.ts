@@ -143,6 +143,7 @@ export const inviteUsers = functions.https.onCall(logErrors(invitations.inviteUs
 /** Trigger: REST call to create the access token for connection to twilio */
 export const getAccessToken = functions.https.onCall(logErrors(getTwilioAccessToken));
 
+
 //--------------------------------
 //   Notifications Management   //
 //--------------------------------
