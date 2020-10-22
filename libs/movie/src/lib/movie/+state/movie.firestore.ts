@@ -38,7 +38,7 @@ import { MovieAppAccess } from "@blockframes/utils/apps";
 interface MovieRaw<D> {
   // Every field concerning the document
   _type: 'movies';
-  _meta?: DocumentMeta;
+  _meta?: DocumentMeta<D>;
   id: string;
   documents: MovieLegalDocuments;
 
@@ -215,10 +215,13 @@ export interface MovieReview {
   revueLink?: string,
 }
 
-export interface DocumentMeta {
-  createdBy: string;
+export interface DocumentMeta<D> {
+  createdBy: string,
   updatedBy?: string,
-  deletedBy?: string
+  deletedBy?: string,
+  createdAt: D,
+  updatedAt?: D,
+  deletedAt?: D,
 }
 
 export interface MovieLegalDocuments {
