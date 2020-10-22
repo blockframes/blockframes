@@ -53,7 +53,7 @@
       </ng-container>
 
       <ng-template #single>
-        <ng-container *ngIf="activeDirectory.type === 'image'">
+        <ng-container *ngIf="activeDirectory.type === 'image' && !!this.singleFileForm">
           <div fxLayout="column" fxLayoutGap="24px">
             <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
               <h3 type>Logo</h3>
