@@ -9,7 +9,7 @@
   <ul>
     <missing-control [control]="movie.stakeholders.get('productionCompany')" [link]="link" fragment="company">
       <ng-template let-prodCompany="control">
-        <li *ngFor="let producer of prodCompany.controls; let isLast = last">
+        <li test-id="prod-co-summary" *ngFor="let producer of prodCompany.controls; let isLast = last">
           <ng-container *ngIf="producer.get('countries').value.length">
             <strong *ngIf="producer.get('countries').value.length">
               <missing-control [control]="producer.get('countries')" [link]="link" fragment="company"
@@ -36,7 +36,7 @@
   <ul>
     <missing-control [control]="movie.stakeholders.get('coProductionCompany')" [link]="link" fragment="co-company">
       <ng-template let-coProdCompany="control">
-        <li *ngFor="let coProducer of coProdCompany.controls; let isLast = last">
+        <li test-id="coprod-co-summary" *ngFor="let coProducer of coProdCompany.controls; let isLast = last">
           <strong>
             <missing-control [control]="coProducer.get('countries')" [link]="link" fragment="co-company"
               scope="territories"></missing-control>
@@ -61,7 +61,7 @@
   <ul>
     <missing-control [control]="movie.producers" [link]="link" fragment="producers">
       <ng-template let-producers="control">
-        <li *ngFor="let producer of producers.controls; let isLast = last">
+        <li test-id="producer-summary" *ngFor="let producer of producers.controls; let isLast = last">
           <strong>
             <missing-control [control]="producer.get('role')" [link]="link" type="producerRoles"></missing-control>
           </strong>
@@ -87,7 +87,7 @@
   <ul>
     <missing-control [control]="movie.stakeholders.get('distributor')" [link]="link" fragment="distributors">
       <ng-template let-distributors="control">
-        <li *ngFor="let distributor of distributors.controls; let isLast = last">
+        <li test-id="distributor-summary" *ngFor="let distributor of distributors.controls; let isLast = last">
           <strong>
             <missing-control [control]="distributor.get('countries')" scope="territories" [link]="link">
             </missing-control>
@@ -112,7 +112,7 @@
   <ul>
     <missing-control [control]="movie.stakeholders.get('salesAgent')" [link]="link" fragment="sales">
       <ng-template let-salesAgents="control">
-        <li *ngFor="let saleAgent of salesAgents.controls; let isLast = last">
+        <li test-id="salesAgent-summary" *ngFor="let saleAgent of salesAgents.controls; let isLast = last">
           <strong>
             <missing-control [control]="saleAgent.get('countries')" scope="territories" [link]="link"></missing-control>
           </strong>

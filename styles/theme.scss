@@ -21,6 +21,7 @@
 @import './components/mat-dialog.scss';
 @import './components/mat-slider.scss';
 @import 'footer';
+@import './components/apex-chart.scss';
 @import './components/bf-widget.scss';
 @import './components/bf-tunnel.scss';
 @import './components/bf-table.scss';
@@ -59,6 +60,7 @@
   @include bf-table-theme($theme);
   @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
+  @include apex-chart-theme($theme);
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);

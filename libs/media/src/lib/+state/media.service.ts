@@ -134,6 +134,9 @@ export class MediaService {
    * @param parameters ImageParameters
    */
   async generateImgIxUrl(ref: string, parameters: ImageParameters = {}): Promise<string> {
+    if (!ref) {
+      return '';
+    }
     ref = encodeURI(ref); // For accentuated files names
 
     const refParts = ref.split('/');
