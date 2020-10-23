@@ -23,10 +23,10 @@ export class ConfirmComponent {
 
     public confirm() {
       this.data.onConfirm();
-      this.close();
+      this.dialogRef.close(true);
     }
 
     public close(): void {
-      this.dialogRef.close();
+      this.dialogRef.close(false);
     }
 }
