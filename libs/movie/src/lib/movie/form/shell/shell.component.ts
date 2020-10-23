@@ -94,7 +94,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   },
   ...appSteps,
   {
-    title: 'Summary',
+    title: 'Last Step',
     icon: 'send',
     time: 3,
     routes: [{
@@ -154,8 +154,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
-      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps)
-      ));
+      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
+    );
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
   }
 
