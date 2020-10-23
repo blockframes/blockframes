@@ -2,10 +2,9 @@
 
 import { clearDataAndPrepareTest, setForm } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
-//TODO: Cleanup
-//import { mainTest } from '../../support/movie-tunnel-tests';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
+import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
 
 const userFixture = new User();
 const users = [ userFixture.getByUID(USER.Jean) ];
@@ -38,7 +37,7 @@ const Movie = {
   },
   storyElements: {
     "logline": 'An up-close-and-personal portrait of the fashion icon, Karl Lagerfeld.',
-    "synopsis": 'I saw this film at the Stockholm Film festival. Before watching I read some reviews on other websites and found criticisms for the lack of depth and how much you really get to know the man. Well I was pleasantly surprised. You don\'t get to know his childhood story and how he became such an icon, but what you do get is a glimpse into his world and some of his philosophies. I actually preferred this rather than knowing in what year he did this or why he did that. He has a tremendous grip on life and there is a good chance you will walk away after watching this film and reflect on some of his insights.\nThe shots are interesting and the pace of the movie is excellent. I was not bored. The only disappointing thing was how abruptly the movie finished.\nOverall very good though.',
+    "synopsis": 'I saw this film at the Stockholm Film festival. Before watching I read some reviews on other websites and found criticisms for the lack of depth. \nOverall very good though.',
     "key-assets": 'One of the few films presenting Karl Lagerfeld.',
     "keyword": 'Karl Lagerfeld, Fashion{enter}'
   },
@@ -59,14 +58,14 @@ const Movie = {
     "cast-first-name": 'Nicole',
     "cast-last-name": 'Kidman',
     "cast-status": 'Confirmed',
-    "cast-description": 'Elegant Nicole Kidman, known as one of Hollywood\'s top Australian imports, was actually born in Honolulu, Hawaii, while her Australian parents were there on educational visas. Kidman is the daughter of Janelle Ann (Glenny), a nursing instructor, and Antony David Kidman, a biochemist and clinical psychologist.',
+    "cast-description": 'Elegant Nicole Kidman is known as one of Hollywood\'s top Australian imports.',
     "cast-film1": 'Bombshell',
     "cast-year1": '2018',    
     "crew-first-name": 'Karl',
     "crew-last-name": 'Lagerfeld',
     "crew-role": 'Costume Designer',
     "crew-status": 'Confirmed',
-    "crew-description": 'Karl Lagerfeld was born on September 10, 1933 in Hamburg, Germany as Karl Otto Lagerfeldt. He was a costume designer and actor, known for The Tale of a Fairy (2011), The Return (2013) and Reincarnation (2014). He died on February 19, 2019 in Neuilly-sur-Seine, Hauts-de-Seine, France.',
+    "crew-description": 'Karl Otto Lagerfeldt was a costume designer and actor, known for The Tale of a Fairy (2011).',
     "crew-film1": 'Love Comedy',
     "crew-year1": '1989'
   },
@@ -111,7 +110,7 @@ const Movie = {
     "original-version": false,
   },
   salesPitch : {
-    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama. It analyzes the life of Lea, a woman in her early 30\’s, who has been heavily influenced by pop culture since childhood.',
+    "description": 'Lagerfeld Confidential was created with a delicate balance between comedy and drama.',
     //"target-audience": '',
     //"goal": ''
   },
@@ -130,47 +129,61 @@ const Movie = {
 
   },
   videos: {
-    "teaserLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "trailerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "promoReelLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "screenerLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
-    "clipLink": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew',
+    "teaserLink": 'https://www.youtube.com/watch?v=1',
+    "trailerLink": 'https://www.youtube.com/watch?v=2',
+    "promoReelLink": 'https://www.youtube.com/watch?v=3',
+    "screenerLink": 'https://www.youtube.com/watch?v=4',
+    "clipLink": 'https://www.youtube.com/watch?v=5',
     "otherLinkName": 'Best Scene',
-    "otherLinkUrl": 'https://www.youtube.com/watch?v=ZZDWGlZmrjI&list=RDAPkHkrk9Eew'
+    "otherLinkUrl": 'https://www.youtube.com/watch?v=6'
   }
 }
 
+const val = Movie.production;
+val['prod-co-summary'] = `${val['production-country'].toLowerCase()} ${val['production-company-name']}`;
+val['coprod-co-summary'] = `${val['co-production-country'].toLowerCase()} ${val['co-production-company-name']}`;
+val['producer-summary'] = `${val['producer-role'].toLowerCase()} ${val['first-name']} ${val['last-name']}`;
+val['distributor-summary'] = `${val['distribution-country'].toLowerCase()} ${val['distribution-company-name']}`;
+val['salesAgent-summary'] = `${val['sales-country'].toLowerCase()} ${val['sales-agent-name']}`;
+
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button', 
-    input: 'productionStatus', has_upload: false},  
+    input: 'productionStatus', comp_save: [], save_form: false},  
   {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
-    input: 'mainInfo', has_upload: false},
+    input: 'mainInfo', comp_save: [], save_form: false},
   {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input', 
-    input: 'storyElements', has_upload: false},
-  {title: 'Production Information', selector: 'movie-form-production input, mat-select, chips-autocomplete', 
-    input: 'production', has_upload: false},
+    input: 'storyElements', comp_save: [], save_form: false},
+  {title: 'Production Information', selector: 'movie-form-production input, static-select, mat-select, chips-autocomplete', 
+    input: 'production', comp_save: ['row-save'], save_form: false}, 
   {title: 'Artistic Team', selector: 'movie-form-artistic input, textarea, static-select', 
-    input: 'artisticTeam', has_upload: false},
+    input: 'artisticTeam', comp_save: ['table-save'], save_form: false},
   {title: 'Selection & Reviews', selector: 'movie-form-reviews static-select, input, textarea', 
-    input: 'reviews', has_upload: false},
+    input: 'reviews', comp_save: [], save_form: false},
   {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', 
-    input: 'additionalInfo', has_upload: false},
+    input: 'additionalInfo', comp_save: [], save_form: false},
   {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input', 
-    input: 'shootingInformation', has_upload: false},
+    input: 'shootingInformation', comp_save: [], save_form: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
-    input: 'techSpec', has_upload: false},
+    input: 'techSpec', comp_save: [], save_form: false},
   {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input', 
-    input: 'availableMaterials', has_upload: false},
+    input: 'availableMaterials', comp_save: [], save_form: false},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
-    input: 'salesPitch', has_upload: false},
+    input: 'salesPitch', comp_save: [], save_form: false},
   {title: 'Files', selector: 'movie-form-media-files file-upload', 
-    input: 'files', has_upload: false},
+    input: 'files',  comp_save: [], save_form: false},
   {title: 'Notes and Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
-    input: 'notesStatements', has_upload: false},
+    input: 'notesStatements', comp_save: [], save_form: false},
   {title: 'Promotional Elements', selector: 'movie-form-media-images', 
-    input: 'promoElements', has_upload: false},
+    input: 'promoElements', comp_save: [], save_form: false},
   {title: 'Videos', selector: 'movie-form-media-videos textarea, input', 
-    input: 'videos', has_upload: false}
+    input: 'videos', comp_save: [], save_form: false}
+];
+
+const MovieFormSummary = [
+  {title: 'Main Information', selector: '#main-information [test-id]', 
+    input: Movie.mainInfo },
+  {title: 'Production Information', selector: '#production-information [test-id]', 
+    input: Movie.production },
 ];
 
 describe('User can navigate to the movie tunnel pages start and main.', () => {
@@ -178,45 +191,70 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   it('User logs in, can navigate to add new title page', () => {
     clearDataAndPrepareTest('/');
     signInAndNavigateToMain(users[0]);
-
-    cy.url().then(url => {
-      cy.log(`Adding new movie url: ${url}`);
-      movieURL = url;
-    });
-
   });
 
   //Summary - Verification
-  it('Fill all fields and verify it in Summary Page', () => {
-    //TODO: Refactor to remove maintest & URL hard-coding.
-    //mainTest();
-    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/main');
+  it('Fill all fields & navigate to Summary Page', () => {
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/title-status');
     //cy.wait(3000);
     //acceptCookie();
+
+    cy.wait(TO.FIFTEEN_SEC);
+    cy.url().then(url => {
+      cy.log(`Adding new movie url: ${url}`);
+      movieURL = url;
+      console.log("movie :", url);
+    });
+
+    cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 
     testSteps.forEach(step => {
       cy.log(`=> Step : [${step.title}]`);
       cy.get('h1', {timeout: TO.PAGE_ELEMENT}).contains(step.title);
       setForm(step.selector, {inputValue: Movie[step.input]});
-      cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
-        .click();
-      cy.wait(TO.WAIT_1SEC);
+
+      //cy.pause();
+      //If there are component saves, click them..
+      step.comp_save.forEach(comp => {
+        cy.get(`button[test-id=${comp}]`).each(el => {
+          cy.wrap(el).click();
+          cy.wait(800);
+        });
+
+      })
+
+      //Save this step
+      if (step.save_form) {
+        cy.get('button[test-id="tunnel-step-save"]', {timeout: TO.PAGE_ELEMENT})
+          .click();
+        cy.wait(TO.WAIT_1SEC);
+      }
 
       //Proceed to next step.
       cy.get('a[test-id="next"]', {timeout: TO.PAGE_ELEMENT})
         .click();
+      cy.wait(TO.WAIT_1SEC);
     });
+
+    cy.log('=>Reach Summary Page');
+  });
+
+  //Verify Summary sheet fields are correct
+  it('Verify fields in Summary Page', () => {
+    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
+    //cy.wait(3000);
 
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
 
-    cy.log('[Summary - Main fields]');
-    cy.get('#main-information [test-id]').each(el => {
-      console.log(el);
-      const key = el.attr('test-id');
-      cy.wrap(el).contains(Movie.mainInfo[key])      
+    MovieFormSummary.forEach(section => {
+      cy.log(`=>[${section.title}]`);
+      cy.get(section.selector).each(el => {
+        console.log(el);
+        const key = el.attr('test-id');
+        cy.wrap(el).contains(section.input[key]);
+      })
     })
-
   });
 
 });

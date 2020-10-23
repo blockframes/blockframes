@@ -1592,7 +1592,7 @@
               }
             ],
             "styles": ["apps/financiers/financiers/src/styles.scss"],
-            "scripts": [],
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"],
             "stylePreprocessorOptions": {
               "includePaths": ["styles"]
             }

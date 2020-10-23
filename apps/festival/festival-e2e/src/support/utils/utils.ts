@@ -18,21 +18,19 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');
   clickOnMenu(['festival-marketplace', 'festival-dashboard'], 'menu', 'dashboard/home');
-
+  cy.wait(TO.WAIT_1SEC);
   clickOnMenu(['festival-dashboard', 'festival-dashboard'], 'menu', 'title');
+  cy.wait(TO.WAIT_1SEC);
 
   cy.log('->Click: Add New Title');
   cy.get('a[mattooltip="Add a new title"]', {timeout: TO.FIFTEEN_SEC})
     .click();
-  cy.wait(TO.WAIT_1SEC);
+  cy.wait(TO.THREE_SEC);
 
   cy.log('->Reach New Title Interstitial & start');
   cy.wait(TO.ONE_SEC);
-  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_ELEMENT })
-    .click()
-    .wait(TO.THREE_SEC);
+  cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
+    .click();
 
-  cy.wait(TO.THREE_SEC);
 
-  cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 }
