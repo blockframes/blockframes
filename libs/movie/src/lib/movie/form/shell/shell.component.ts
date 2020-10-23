@@ -19,7 +19,6 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { RouteDescription } from '@blockframes/utils/common-interfaces';
 
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
@@ -31,7 +30,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     title: 'First Step',
     icon: 'home',
     time: 2,
-    routes: [{ path: 'title-status', label: 'First Step' }],
+    routes: [{ path: 'title-status', label: 'Production Status' }],
   },
   {
     title: 'Title Information',
@@ -95,7 +94,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   },
   ...appSteps,
   {
-    title: 'Summary',
+    title: 'Last Step',
     icon: 'send',
     time: 3,
     routes: [{
@@ -155,8 +154,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
-      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps)
-      ));
+      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
+    );
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
   }
 
