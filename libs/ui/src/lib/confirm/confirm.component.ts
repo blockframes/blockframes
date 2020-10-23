@@ -16,13 +16,15 @@ export class ConfirmComponent {
           title: string,
           question: string,
           buttonName: string,
-          onConfirm: () => void
+          onConfirm?: () => void
         },
       public dialogRef: MatDialogRef<ConfirmComponent>,
       ) {}
 
     public confirm() {
-      this.data.onConfirm();
+      if (this.data.onConfirm) {
+        this.data.onConfirm();
+      }
       this.dialogRef.close(true);
     }
 

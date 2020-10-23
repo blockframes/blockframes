@@ -45,7 +45,6 @@ export class SessionGuard implements CanActivate, CanDeactivate<any> {
           title: 'Are you sure ?',
           question: 'You might not be able to come back to this screening as its access is time-limited.',
           buttomName: 'Yes',
-          onConfirm: () => true,
         }
       })
       return dialogRef.afterClosed();
