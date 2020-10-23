@@ -13,7 +13,7 @@ import { MovieService } from '@blockframes/movie/+state';
 
 
 @Component({
-  selector: 'financiers-wishlist',
+  selector: 'marketplace-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss'],
   // The table needs to be updated when user deletes a movie
@@ -33,6 +33,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ];
 
   private sub: Subscription
+  public isDataLoaded = false;
 
   constructor(
     private router: Router,
@@ -47,7 +48,6 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-
     this.sub = this.orgQuery.selectActive().pipe(
       map(org => org.wishlist.find(wish => wish.status === 'pending')),
       switchMap(org => this.movieService.valueChanges(org.movieIds))
@@ -59,6 +59,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
         this.dynTitle.setPageTitle('Wishlist') :
         this.dynTitle.setPageTitle('Wishlist', 'Empty');
       this.dataSource = new MatTableDataSource(movies);
+      this.isDataLoaded = true;
       this.cdr.markForCheck();
     });
   }
