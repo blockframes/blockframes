@@ -196,7 +196,7 @@ export const icons = [
   },
   { name: 'NZD', url: 'assets/icons/NZD.svg' },
   { name: 'open_to', url: 'assets/icons/open_to.svg' },
-  { name: 'pdf', url: 'assets/icons/PDF.webp' },
+  { name: 'pdf', url: 'assets/icons/PDF.svg' },
   { name: 'padlock', url: 'assets/icons/padlock.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' },
   { name: 'pause_circle', url: 'assets/icons/pause_circle.svg' },

@@ -68,17 +68,26 @@
 
           <h6>Files</h6>
           <p>
-            Select files you want to share during the meeting.
-            Every member of the meeting will be able to see and download the selected files.
+            Add the files you want to share during meeting.
+            If you didn’t upload the needed files, please add them on <a routerLink="/c/o/dashboard/files">My Files</a> page.
           </p>
-          <bf-form-list [form]="files" buttonText="Add a File" saveButtonText="Select">
-            <ng-template itemRef let-file>
-              {{file | fileName}}
-            </ng-template>
-            <ng-template formView let-fileSelectorForm>
-              <media-file-selector [form]="fileSelectorForm"></media-file-selector>
-            </ng-template>
-          </bf-form-list>
+
+          <div fxLayout="row" fxLayoutAlign="end">
+            <button mat-stroked-button color="primary" (click)="openFileSelector()">
+              <mat-icon svgIcon="folder"></mat-icon>
+              Add Files
+            </button>
+          </div>
+
+          <p>Selected Files ({{files.value.length}})</p>
+          <mat-divider></mat-divider>
+
+          <mat-list>
+            <mat-list-item *ngFor="let file of files.value">
+              <mat-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
+              {{file | filePath: ' > ' | async}}
+            </mat-list-item>
+          </mat-list>
         </mat-card>
       </ng-container>
     </ng-container>

@@ -2,3 +2,13 @@ event-analytics {
   display: block;
   padding: 24px;
 }
+
+mat-card {
+  button {
+    width: 30%;
+  }
+
+  mat-divider {
+    position: static;
+  }
+}

@@ -13,6 +13,8 @@ import { switchMap, pluck, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
 
 @Component({
   selector: 'festival-event-edit',
@@ -42,7 +44,8 @@ export class EditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-  ) { }
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.dynTitle.setPageTitle('Add an event', 'Screening info');
@@ -95,5 +98,19 @@ export class EditComponent implements OnInit, OnDestroy {
 
   get files() {
     return (this.form.meta as MeetingForm).get('files');
+  }
+
+  openFileSelector() {
+    this.dialog.open(FileSelectorComponent, {
+      width: '80%',
+      height: '80%',
+      disableClose: true,
+      data: {
+        selectedFiles: this.files.value,
+      }
+    }).afterClosed().subscribe(result => {
+      this.files.patchAllValue(result);
+      this.cdr.markForCheck();
+    });
   }
 }

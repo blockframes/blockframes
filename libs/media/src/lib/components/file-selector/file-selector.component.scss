@@ -1,18 +1,28 @@
 
-mat-icon {
-  margin-right: 4px;
+section {
+  button {
+    margin-right: 24px;
+  }
 }
 
-mat-expansion-panel.selector {
-  margin: 24px 0;
-  border: solid 1px #dbdce0;
-  mat-accordion {
-    mat-expansion-panel.folder {
-      margin: 0 24px;
+mat-expansion-panel {
+  mat-expansion-panel-header {
+    mat-icon {
+      margin-right: 12px;
     }
   }
 }
 
-button {
-  width: 100%;
+mat-list {
+  margin-left: 42px;
+  mat-list-item {
+    div {
+      width: 100%;
+      span {
+        mat-icon {
+          margin-right: 12px;
+        }
+      }
+    }
+  }
 }

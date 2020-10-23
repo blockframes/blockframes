@@ -1,14 +1,10 @@
 
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
-
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 
 import { Movie, MovieService } from '@blockframes/movie/+state';
-import { OrganizationDocumentWithDates, OrganizationQuery } from '@blockframes/organization/+state';
-import { FormControl } from '@angular/forms';
-import { MatExpansionPanel } from '@angular/material/expansion';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: '[form] media-file-selector',
@@ -18,43 +14,55 @@ import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
 })
 export class FileSelectorComponent implements OnInit {
 
-  public org$: Observable<OrganizationDocumentWithDates>;
-  public movies$: Observable<Movie[]>;
-  public movieFiles$ = new BehaviorSubject<string[]>(null);
-  public selectedFile$: Observable<string>;
+  orgFiles: string[];
+  movies: Movie[];
+  moviesFiles: Record<string, string[]>;
+  selectedFiles: string[];
 
-  @Input() form: FormControl;
-
-  @ViewChild('fileSelector') fileSelector: MatExpansionPanel;
+  escapeHandler = (event: KeyboardEvent) => {
+    if (event.code === 'Escape') {
+      this.closeDialog();
+    }
+  }
 
   constructor(
     private orgQuery: OrganizationQuery,
     private movieService: MovieService,
+    private dialogRef: MatDialogRef<FileSelectorComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: { selectedFiles: string[] }
   ) { }
 
-  ngOnInit() {
-    this.selectedFile$ = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      map(value => typeof value === 'string' ? value : ''),
-    );
-    this.org$ = this.orgQuery.selectActive();
-    this.movies$ = this.org$.pipe(
-      switchMap(org => this.movieService.valueChanges(org.movieIds)),
-    );
+  async ngOnInit() {
+    this.selectedFiles = this.data.selectedFiles ?? [];
+
+    const org = this.orgQuery.getActive();
+    this.orgFiles = recursivelyListFiles(org);
+    this.movies = await this.movieService.getValue(org.movieIds);
+    this.moviesFiles = {};
+    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie));
+
+    // we set disableClose to `true` on the dialog, so we have to fake the exits events
+    this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog
+    window.addEventListener('keyup', this.escapeHandler); // user press the escape key
   }
 
-  async getFilesOfMovie(movie: Movie) {
-    const files = recursivelyListFiles(movie);
-    this.movieFiles$.next(files);
-  }
-
-  clearFiles() {
-    this.movieFiles$.next(null);
+  isSelected(file: string) {
+    return this.selectedFiles.some(selected => selected === file);
   }
 
   select(file: string) {
-    this.form.setValue(file);
-    this.fileSelector.close();
+    this.selectedFiles.push(file);
+  }
+
+  unSelect(file: string) {
+    const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
+    this.selectedFiles = newSelectedFiles;
+  }
+
+  closeDialog() {
+    // remove the event handler to avoid having it triggered elsewhere in the app
+    window.removeEventListener('keyup', this.escapeHandler);
+    this.dialogRef.close(this.selectedFiles);
   }
 
 }

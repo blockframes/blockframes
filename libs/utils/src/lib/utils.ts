@@ -16,15 +16,51 @@ export const clamp = (value: number, clamps: number[]): number => {
 }
 
 
-export const allowedVideoFilesTypes = ['video/x-msvideo', 'video/x-matroska', 'video/mp4'];
-export const allowedVideoFilesExtensions =  ['.avi', '.mkv', '.mp4'];
+export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls'] as const;
+type AllowedFileType = typeof allowedFileType[number];
 
-export function isAllowedVideoFileType(type: string) {
-  return allowedVideoFilesTypes.some(fileType => fileType === type);
+export interface FileDefinition { mime: string[], extension: string[] };
+export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
+  pdf: {
+    mime: ['application/pdf'],
+    extension: ['pdf'],
+  },
+  image: {
+    mime: ['image/jpeg', 'image/png', 'image/webp'],
+    extension: ['jpg', 'jpeg', 'png', 'webp'],
+  },
+  video: {
+    mime: ['video/x-msvideo', 'video/x-matroska', 'video/mp4'],
+    extension: ['avi', 'mkv', 'mp4'],
+  },
+  docx: {
+    mime: ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+    extension: ['doc', 'docx'],
+  },
+  xls: {
+    mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+    extension: ['xls', 'xlsx'],
+  }
 }
 
-export function isAllowedVideoFileExtension(extension: string) {
-  return allowedVideoFilesExtensions.some(fileExtension => fileExtension === extension);
+/**
+ * Convert a file extension into teh corresponding file type.
+ * @example
+ * extensionToFileType('png'); // 'image'
+ * extensionToFileType('mp4'); // 'video'
+ * extensionToFileType('docx'); // 'docx'
+ * @note if the function doesn't find any matching file type it will return `'unknown'`
+ */
+export function extensionToType(extension: string): AllowedFileType | 'unknown' {
+
+  // we use a for in loop so we can directly return when a match is found
+  // (returning in a forEach just end the current iteration)
+  for(const type in allowedFiles) {
+    const match = allowedFiles[type].extension.some(fileExtension => fileExtension === extension);
+    if (match) return type as AllowedFileType;
+  }
+
+  return 'unknown';
 }
 
 export async function loadJWPlayerScript(document: Document) {
