@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TunnelLayoutComponent } from '../layout/layout.component';
 
 @Component({
@@ -6,7 +6,6 @@ import { TunnelLayoutComponent } from '../layout/layout.component';
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
 })
 
 export class TunnelPageComponent {
