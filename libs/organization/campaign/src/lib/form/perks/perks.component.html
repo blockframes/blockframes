@@ -1,12 +1,9 @@
 <tunnel-page>
-  <h4 title>Investment Campaign</h4>
-  <h1 subtitle>Privileges</h1>
-  <p description class="mat-body-1">
-    Privileges are the bonuses that are offered to an investor due to his / hers contribution.
-    For example, it can be tickets for your projetc’s premiere, or goodies. 
-  </p>
-
   <ng-container tunnel-form>
+    <p class="mat-body-1">
+      Privileges are the bonuses that are offered to an investor due to his / hers contribution.
+      For example, it can be tickets for your projetc’s premiere, or goodies. 
+    </p>
     <bf-form-table [columns]="columns" [form]="form.get('perks')" buttonText="Add a new Privilege">
       <!-- Columns -->
       <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
