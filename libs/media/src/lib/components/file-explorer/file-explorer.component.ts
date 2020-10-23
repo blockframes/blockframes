@@ -18,11 +18,13 @@ import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ImageDialogComponent } from '../dialog/image/image.component';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
 
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
-import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm>
 
@@ -40,7 +42,6 @@ interface Directory {
 }
 
 interface SubDirectory {
-  // maybe replace multiple by types 'image' / 'images' / 'file' / 'files'
   multiple: boolean,
   name: string,
   docNameField: string,
@@ -100,12 +101,11 @@ export class FileExplorerComponent {
     this.active$ = this.organizationService.valueChanges(org.id);
 
     this.getTitleDirectories(org);
-
   };
 
   private orgId: string;
 
-  // 💀 if org doesnt have document.notes, then nothing is displayed. This issue probably doesn't happen if it's based on a Form
+  // 💀 if org doesnt have document.notes, then nothing is displayed. This issue probably doesn't happen if it's based on a Form - but forms dont update
   public org$: Observable<OrganizationDocumentWithDates>;
 
   public directories: Directory[] = [];
@@ -121,7 +121,8 @@ export class FileExplorerComponent {
     private mediaService: MediaService,
     private movieService: MovieService,
     private organizationService: OrganizationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private routerQuery: RouterQuery
   ) {}
 
   public async selectDirectory(event: MatSelectionListChange) {
@@ -189,17 +190,15 @@ export class FileExplorerComponent {
   public async openDialog(row?: HostedMediaWithMetadata | string) {
 
     let formList: MediaFormList;
-    // probably possible to remove activeForm here and use this.activeForm instead
-    let activeForm: OrganizationForm | MovieForm;
-    const collection = this.getCollection()
+    const collection = this.getCollection();
     if (collection === 'orgs') {
       const org = await this.organizationService.getValue(this.orgId);
-      activeForm = new OrganizationForm(org);
-      formList = this.getFormList(activeForm);
+      this.activeForm = new OrganizationForm(org);
+      formList = this.getFormList(this.activeForm);
     } else {
       const movie = await this.movieService.getValue(this.getId());
-      activeForm = new MovieForm(movie);
-      formList = this.getFormList(activeForm)
+      this.activeForm = new MovieForm(movie);
+      formList = this.getFormList(this.activeForm);
     }
 
     let mediaForm: HostedMediaWithMetadataForm | HostedMediaForm;
@@ -234,11 +233,11 @@ export class FileExplorerComponent {
 
     dialog.afterClosed().subscribe(async result => {
       if (!!result) {
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(activeForm);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.activeForm);
         if (collection === 'orgs') {
           await this.organizationService.update(this.orgId, documentToUpdate);
         } else {
-          documentToUpdate.id = this.getId()
+          documentToUpdate.id = this.getId();
           await this.movieService.update(documentToUpdate);
         }
         this.mediaService.uploadMedias(mediasToUpload);
@@ -266,9 +265,9 @@ export class FileExplorerComponent {
   }
 
   private async getTitleDirectories(org: OrganizationDocumentWithDates) {
-    const titlesRaw = await this.movieService.getValue(org.movieIds)
-    // festival only now - fix it to be dynamic
-    const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess.festival);
+    const titlesRaw = await this.movieService.getValue(org.movieIds);
+    const currentApp: App = this.routerQuery.getData('app');
+    const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
     for (const title of titles) {
       this.directories.push({
