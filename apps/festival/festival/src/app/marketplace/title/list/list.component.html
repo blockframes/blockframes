@@ -36,7 +36,6 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-    <!-- TODO issue#2576 -->
     <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"
