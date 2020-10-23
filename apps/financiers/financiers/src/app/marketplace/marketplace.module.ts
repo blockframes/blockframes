@@ -35,7 +35,7 @@ const routes: Routes = [{
     },
     {
       path: 'wishlist',
-      loadChildren: () => import('@blockframes/ui/marketplace/wishlist/wishlist.module').then(m => m.WishlistModule)
+      loadChildren: () => import('@blockframes/ui/marketplace/pages/wishlist/wishlist.module').then(m => m.WishlistModule)
     },
     {
       path: 'title',

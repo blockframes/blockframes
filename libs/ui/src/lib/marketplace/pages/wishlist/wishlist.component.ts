@@ -28,7 +28,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     'director',
     'productionStatus',
     'originCountry',
-    'totalRunTime',
+    'runningTime',
     'delete'
   ];
 
