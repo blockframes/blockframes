@@ -32,7 +32,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
     'delete'
   ];
 
-  private sub: Subscription
+  private sub: Subscription;
   public isDataLoaded = false;
 
   constructor(
