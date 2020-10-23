@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { TunnelLayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'tunnel-page',
@@ -8,4 +9,10 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
   encapsulation: ViewEncapsulation.None
 })
 
-export class TunnelPageComponent{}
+export class TunnelPageComponent {
+  constructor(private layout: TunnelLayoutComponent) {}
+
+  get page() {
+    return this.layout.currenStep;
+  }
+}
