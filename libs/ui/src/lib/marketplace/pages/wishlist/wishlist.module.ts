@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +30,7 @@ import { WishlistComponent } from './wishlist.component';
     ImageReferenceModule,
     DurationModule,
     ToLabelModule,
+    DisplayNameModule,
     // Material
     MatButtonModule,
     MatDividerModule,

@@ -42,7 +42,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
       filter(movies => !!movies && movies.length >= 1),
       map(movies => movies.filter(movie => !!movie)),
-      map(movies => movies.filter(movie => movie.storeConfig?.status === 'accepted')),
       shareReplay(1),
       tap(_ => _isDataLoaded$.next(true))
     );
