@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 
 function execLog(cmd: string) {
   const output = execSync(cmd);
-  console.log(output);
+  process.stdout.write(output);
 }
 
 if (!process.env['SKIP_PREDEPLOY_HOOKS']) {

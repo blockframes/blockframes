@@ -105,7 +105,7 @@ export async function restore(req: any, resp: any) {
   try {
     await restoreFromBackupBucket(bucket, db)
     return resp.status(200).send('success');
-  } catch (e: unknown) {
+  } catch (e) {
     return resp.status(200).send(`Error: ${(e as Error).message}`);
   }
 
