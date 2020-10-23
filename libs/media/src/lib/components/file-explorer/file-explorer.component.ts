@@ -22,6 +22,7 @@ import { ImageDialogComponent } from '../dialog/image/image.component';
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
 
 type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm>
 
@@ -39,11 +40,13 @@ interface Directory {
 }
 
 interface SubDirectory {
+  // maybe replace multiple by types 'image' / 'images' / 'file' / 'files'
   multiple: boolean,
   name: string,
   docNameField: string,
   fileRefField: string,
   storagePath: string,
+  privacy: Privacy
   selected?: boolean
 }
 
@@ -75,6 +78,7 @@ export class FileExplorerComponent {
           docNameField: 'title',
           fileRefField: 'ref',
           storagePath: `orgs/${org.id}/documents/notes`,
+          privacy: 'protected',
           selected: true
         },
         {
@@ -84,7 +88,8 @@ export class FileExplorerComponent {
           multiple: false,
           docNameField: 'logo',
           fileRefField: 'logo',
-          storagePath: `orgs/${org.id}/logo`
+          storagePath: `orgs/${org.id}/logo`,
+          privacy: 'public'
         }
       ]
     });
@@ -109,7 +114,7 @@ export class FileExplorerComponent {
 
   public active$: Observable<Movie | OrganizationDocumentWithDates>
   public activeDirectory: SubDirectoryImage | SubDirectoryFile;
-  private activeForm: OrganizationForm | MovieForm;
+  public activeForm: OrganizationForm | MovieForm;
 
   constructor(
     private dialog: MatDialog,
@@ -184,6 +189,7 @@ export class FileExplorerComponent {
   public async openDialog(row?: HostedMediaWithMetadata | string) {
 
     let formList: MediaFormList;
+    // probably possible to remove activeForm here and use this.activeForm instead
     let activeForm: OrganizationForm | MovieForm;
     const collection = this.getCollection()
     if (collection === 'orgs') {
@@ -275,7 +281,8 @@ export class FileExplorerComponent {
             multiple: false,
             docNameField: 'poster',
             fileRefField: 'poster',
-            storagePath: `movies/${title.id}/poster`
+            storagePath: `movies/${title.id}/poster`,
+            privacy: 'public'
           },
           {
             name: 'Banner',
@@ -284,7 +291,8 @@ export class FileExplorerComponent {
             multiple: false,
             docNameField: 'banner',
             fileRefField: 'banner',
-            storagePath: `movies/${title.id}/banner`
+            storagePath: `movies/${title.id}/banner`,
+            privacy: 'public'
           },
           {
             name: 'Still Photo',
@@ -293,13 +301,45 @@ export class FileExplorerComponent {
             docNameField: '',
             fileRefField: '',
             ratio: 'still',
-            storagePath: `movies/${title.id}/promotional.still_photo`
-          }
-          // NOTES & STATEMENTS = promotional.notes[].ref
-          // PRESENTATION_DECK = promotional.other_links.presentation_deck
-          // SALES PITCH = promotional.salesPitch.file
-          // SCENARIO = promotional.scenario
-          // STILL_PHOTO = promotional.still_photo[]
+            storagePath: `movies/${title.id}/promotional.still_photo`,
+            privacy: 'public'
+          },
+          {
+            name: 'Presentation Deck',
+            type: 'file',
+            multiple: false,
+            docNameField: 'presentation_deck',
+            fileRefField: 'presentation_deck',
+            storagePath: `movies/${title.id}/promotional.presentation_deck`,
+            privacy: 'public'
+          },
+          {
+            name: 'Sales Pitch',
+            type: 'file',
+            multiple: false,
+            docNameField: 'file',
+            fileRefField: 'file',
+            storagePath: `movies/${title.id}/promotional.moodboard`,
+            privacy: 'public'
+          },
+          {
+            name: 'Scenario',
+            type: 'file',
+            multiple: false,
+            docNameField: 'scenario',
+            fileRefField: 'scenario',
+            storagePath: `movies/${title.id}/promotional.scenario`,
+            privacy: 'public'
+          },
+          // {
+          //   name: 'Notes & Statements',
+          //   type: 'file',
+          //   multiple: true,
+          //   docNameField: 'ref',
+          //   fileRefField: 'ref',
+          //   storagePath: `movies/${title.id}/promotional.notes`,
+          //   privacy: 'protected'
+          // }
         ]
       })
     }
@@ -308,7 +348,15 @@ export class FileExplorerComponent {
   }
 
   public getSingleMediaForm(): HostedMediaForm {
-    return this.activeForm.controls[this.activeDirectory.fileRefField];
+    const path = this.activeDirectory.storagePath.split('/').pop();
+    let form: HostedMediaForm | HostedMediaWithMetadataForm;
+    if (!!path) {
+      form = path.split('.').reduce((res, key) => res?.controls?.[key], this.activeForm);
+    } else {
+      // probably possible to remove fileRefField
+      form = this.activeForm.controls[this.activeDirectory.fileRefField];
+    }
+    return determineFormType(form) ? form.get('ref') : form;
   }
 
   /**

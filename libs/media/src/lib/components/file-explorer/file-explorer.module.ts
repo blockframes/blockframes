@@ -10,6 +10,7 @@ import { CropperModule } from '../cropper/cropper.module';
 import { FileDialogModule } from '@blockframes/media/components/dialog/file/file.module';
 import { ImageDialogModule } from '@blockframes/media/components/dialog/image/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
 
 // Blockframes Pipes
 import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
@@ -38,6 +39,7 @@ import { MatButtonModule } from '@angular/material/button';
     FileDialogModule,
     ImageDialogModule,
     TableFilterModule,
+    UploadModule,
 
     // Pipes
     DeepKeyPipeModule,
