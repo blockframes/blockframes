@@ -1,13 +1,13 @@
 // Angular
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { DurationModule }from '@blockframes/utils/pipes/duration.pipe'
-import { ToLabelModule } from '@blockframes/utils/pipes';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+import { DisplayNameModule, ToLabelModule } from '@blockframes/utils/pipes';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -17,8 +17,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-// Components
 import { WishlistComponent } from './wishlist.component';
 
 @NgModule({
@@ -26,12 +26,11 @@ import { WishlistComponent } from './wishlist.component';
   imports: [
     CommonModule,
     FlexLayoutModule,
-
     // Blockframes
     ImageReferenceModule,
     DurationModule,
     ToLabelModule,
-
+    DisplayNameModule,
     // Material
     MatButtonModule,
     MatDividerModule,
@@ -40,13 +39,8 @@ import { WishlistComponent } from './wishlist.component';
     MatIconModule,
     MatRippleModule,
     MatSnackBarModule,
-
-    RouterModule.forChild([
-      {
-        path: '',
-        component: WishlistComponent
-      }
-    ])
+    MatProgressSpinnerModule,
+    RouterModule.forChild([{ path: '', component: WishlistComponent }])
   ]
 })
-export class WishlistModule {}
+export class WishlistModule { }
