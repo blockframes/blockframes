@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
@@ -12,16 +11,19 @@ import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
 import { MovieService } from '@blockframes/movie/+state';
-import { createMovie, Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormList } from '@blockframes/utils/form';
 import { MediaRatioType } from '../cropper/cropper.component';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { ImageDialogComponent } from '../dialog/image/image.component';
 
 // Material
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
+
+type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm>
 
 const columns = { 
   ref: 'Type',
@@ -90,28 +92,24 @@ export class FileExplorerComponent {
     this.orgId = org.id;
 
     this.org$ = this.organizationService.valueChanges(org.id);
+    this.active$ = this.organizationService.valueChanges(org.id);
 
     this.getTitleDirectories(org);
 
-    this.titles$ = this.movieService.valueChanges(org.movieIds).pipe(
-      map(movies => movies.filter(movie => !!movie)),
-      // festival only now - fix it to be dynamic
-      map(movies => movies.filter(movie => movie.storeConfig.appAccess.festival)),
-    )
   };
 
   private orgId: string;
 
   // 💀 if org doesnt have document.notes, then nothing is displayed. This issue probably doesn't happen if it's based on a Form
   public org$: Observable<OrganizationDocumentWithDates>;
-  public titles$: Observable<Movie[]>;
 
   public directories: Directory[] = [];
-  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
-  public singleFileForm: OrganizationForm | MovieForm;
+  public active$: Observable<Movie | OrganizationDocumentWithDates>
+  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
+  private activeForm: OrganizationForm | MovieForm;
 
   constructor(
     private dialog: MatDialog,
@@ -125,24 +123,32 @@ export class FileExplorerComponent {
     // needed in order to manage the selected selection list; since there are many lists
     this.activeDirectory.selected = false;
     // needed to re-render the cropper component.
-    this.singleFileForm = undefined;
-
+    this.activeForm = undefined;
 
     const selected = event.source.selectedOptions.selected;
     const [ selectedValues ] = selected.map(x => x.value);
     this.activeDirectory = selectedValues;
 
-    if (!(selectedValues as SubDirectoryFile | SubDirectoryImage).multiple) {
-      const collection = this.getCollection();
-      if (collection === 'movies') {
-        const id = this.getId();
+    const multiple = (selectedValues as SubDirectoryFile | SubDirectoryImage).multiple;
+    const collection = this.getCollection();
+
+    if (collection === 'movies') {
+      const id = this.getId()
+      if (multiple) {
+        this.active$ = this.movieService.valueChanges(id);
+      } else {
         const movie = await this.movieService.getValue(id);
-        this.singleFileForm = new MovieForm(movie);
-      } else if (collection === 'orgs') {
+        this.activeForm = new MovieForm(movie);
+      }
+    } else {
+      if (multiple) {
+        this.active$ = this.organizationService.valueChanges(this.orgId);
+      } else {
         const org = await this.organizationService.getValue(this.orgId);
-        this.singleFileForm = new OrganizationForm(org);
+        this.activeForm = new OrganizationForm(org);
       }
     }
+
     this.activeDirectory.selected = true;
     this.cdr.markForCheck();
   }
@@ -175,34 +181,60 @@ export class FileExplorerComponent {
     });
   }
 
-  public async openDialog(row?: HostedMediaWithMetadata) {
-    const org = await this.organizationService.getValue(this.orgId);
-    const orgForm = new OrganizationForm(org);
-    const formList = this.getFormList(orgForm);
+  public async openDialog(row?: HostedMediaWithMetadata | string) {
+
+    let formList: MediaFormList;
+    let activeForm: OrganizationForm | MovieForm;
+    const collection = this.getCollection()
+    if (collection === 'orgs') {
+      const org = await this.organizationService.getValue(this.orgId);
+      activeForm = new OrganizationForm(org);
+      formList = this.getFormList(activeForm);
+    } else {
+      const movie = await this.movieService.getValue(this.getId());
+      activeForm = new MovieForm(movie);
+      formList = this.getFormList(activeForm)
+    }
 
     let mediaForm: HostedMediaWithMetadataForm | HostedMediaForm;
     if (!!row) {
       mediaForm = formList.controls.find(ctrl => {
         if (determineFormType(ctrl)) {
-          return ctrl.get('title').value === row.title;
+          const title = typeof(row) === "string" ? row : row.title;
+          return ctrl.get('title').value === title;
         } else {
-          return ctrl.get('ref').value === row.ref;
+          const ref = typeof(row) === "string" ? row : row.ref;
+          return ctrl.get('ref').value === ref;
         }
       })
     } else {
       mediaForm = formList.add();
     }
 
-    const dialog = this.dialog.open(FileDialogComponent, { width: '60vw', data: {
-      form: mediaForm,
-      privacy: 'protected',
-      storagePath: this.activeDirectory.storagePath
-    }});
+    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
+    if (this.activeDirectory.type === 'file') {
+      dialog = this.dialog.open(FileDialogComponent, { width: '60vw', data: {
+        form: mediaForm,
+        privacy: 'protected',
+        storagePath: this.activeDirectory.storagePath
+      }});
+    } else {
+      dialog = this.dialog.open(ImageDialogComponent, { width: '60vw', data: {
+        form: mediaForm,
+        ratio: this.activeDirectory.ratio,
+        storagePath: this.activeDirectory.storagePath
+      }});
+    }
 
     dialog.afterClosed().subscribe(async result => {
       if (!!result) {
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(orgForm);
-        await this.organizationService.update(this.orgId, documentToUpdate);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(activeForm);
+        if (collection === 'orgs') {
+          await this.organizationService.update(this.orgId, documentToUpdate);
+        } else {
+          documentToUpdate.id = this.getId()
+          await this.movieService.update(documentToUpdate);
+        }
         this.mediaService.uploadMedias(mediasToUpload);
       }
     });
@@ -215,21 +247,16 @@ export class FileExplorerComponent {
   }
 
   public async updateImage() {
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.singleFileForm);
-    console.log('doc to update: ', documentToUpdate);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.activeForm);
     
     const collection = this.getCollection();
     if (collection === 'movies') {
-      const id = this.getId()
-      console.log('to movie id: ', id);
-      const movie = createMovie(documentToUpdate);
-      console.log('movie: ', movie);
-      delete movie.id;
-      this.movieService.update(id, movie)
+      documentToUpdate.id = this.getId();
+      this.movieService.update(documentToUpdate);
     } else if (collection === 'orgs') {
       await this.organizationService.update(this.orgId, documentToUpdate);
     }
-      this.mediaService.uploadMedias(mediasToUpload);
+    this.mediaService.uploadMedias(mediasToUpload);
   }
 
   private async getTitleDirectories(org: OrganizationDocumentWithDates) {
@@ -249,7 +276,30 @@ export class FileExplorerComponent {
             docNameField: 'poster',
             fileRefField: 'poster',
             storagePath: `movies/${title.id}/poster`
+          },
+          {
+            name: 'Banner',
+            type: 'image',
+            ratio: 'banner',
+            multiple: false,
+            docNameField: 'banner',
+            fileRefField: 'banner',
+            storagePath: `movies/${title.id}/banner`
+          },
+          {
+            name: 'Still Photo',
+            type: 'image',
+            multiple: true,
+            docNameField: '',
+            fileRefField: '',
+            ratio: 'still',
+            storagePath: `movies/${title.id}/promotional.still_photo`
           }
+          // NOTES & STATEMENTS = promotional.notes[].ref
+          // PRESENTATION_DECK = promotional.other_links.presentation_deck
+          // SALES PITCH = promotional.salesPitch.file
+          // SCENARIO = promotional.scenario
+          // STILL_PHOTO = promotional.still_photo[]
         ]
       })
     }
@@ -258,7 +308,7 @@ export class FileExplorerComponent {
   }
 
   public getSingleMediaForm(): HostedMediaForm {
-    return this.singleFileForm.controls[this.activeDirectory.fileRefField];
+    return this.activeForm.controls[this.activeDirectory.fileRefField];
   }
 
   /**
@@ -272,11 +322,19 @@ export class FileExplorerComponent {
     return this.activeDirectory.storagePath.split('/')[1];
   }
 
-  private getCollection() {
+  public getCollection() {
     return this.activeDirectory.storagePath.split('/').shift() as 'movies' | 'orgs';
   }
 
-  private getFormList(form: OrganizationForm | MovieForm): FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm> {
+  public getFileRef(row: HostedMediaWithMetadata | string) {
+    return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
+  }
+
+  public getTitleRef(row: HostedMediaWithMetadata | string) {
+    return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+  }
+
+  private getFormList(form: OrganizationForm | MovieForm): MediaFormList {
     return this.getDeepPath().split('.').reduce((res, key) => res?.controls?.[key], form);
   }
 }

@@ -1,7 +1,6 @@
 <section fxLayout>
   <ng-container *ngIf="org$ | async as org">
     <article class="drawer mat-list-base" id="dashboard-navbar">
-
       <ng-container *ngFor="let directory of directories">
         <div fxLayout class="directory" fxLayoutAlign="start center">
           <mat-icon matListIcon svgIcon="folder"></mat-icon>
@@ -15,61 +14,70 @@
         </mat-selection-list>
       </ng-container>
     </article>
+
     <article class="view surface">
-      <div fxLayout fxLayoutAlign="space-between center" class="header">
-        <span class="breadcrumb">{{ org | orgName | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
-        <ng-container *ngIf="activeDirectory.multiple">
-          <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
-            <mat-icon svgIcon="add"></mat-icon>
-            <span>Upload file</span>
-          </button>
-        </ng-container>
-      </div>
+      <ng-container *ngIf="active$ | async as active">
 
-      <ng-container *ngIf="activeDirectory.multiple else single">
-        <ng-container *ngIf="org | deepKey:getDeepPath() as directory">
-          <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
-            <ng-template colRef="ref" let-item="item">
-              <img [asset]="item[activeDirectory.fileRefField] | fileTypeImage">
-            </ng-template>
-            <ng-template colRef="name" let-item="item">{{ item[activeDirectory.docNameField] | fileName }}</ng-template>
-            <ng-template colRef="edit" let-item="item">
-              <button mat-button (click)="openDialog(item)">
-                <mat-icon svgIcon="pencil"></mat-icon>
-              </button>
-            </ng-template>
-            <ng-template colRef="delete" let-item="item">
-              <button mat-button (click)="deleteFile(item)">
-                <mat-icon svgIcon="trash"></mat-icon>
-              </button>
-            </ng-template>
-            <ng-template colRef="download" let-item="item">
-              <button mat-button (click)="downloadFile(item)">
-                <mat-icon svgIcon="download"></mat-icon>
-              </button>
-            </ng-template>
-          </bf-table-filter>
-        </ng-container>
-      </ng-container>
+        <div fxLayout fxLayoutAlign="space-between center" class="header">
+          <ng-container *ngIf="getCollection() === 'movies'">
+            <span class="breadcrumb">{{ active.title.original | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
+          </ng-container>
+          <ng-container *ngIf="getCollection() === 'orgs'">
+            <span class="breadcrumb">{{ active | orgName | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
+          </ng-container>
+          <ng-container *ngIf="activeDirectory.multiple">
+            <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
+              <mat-icon svgIcon="add"></mat-icon>
+              <span>Upload file</span>
+            </button>
+          </ng-container>
+        </div>
 
-      <ng-template #single>
-        <ng-container *ngIf="activeDirectory.type === 'image' && !!this.singleFileForm">
-          <div fxLayout="column" fxLayoutGap="24px">
-            <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
-              <h3 type>Logo</h3>
-              <p class="mat-body-2">Recommended : 512 x 512 px</p>
-              <p class="mat-caption">Accepted Formats : jpg, png</p>
-            </drop-cropper>
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <button mat-flat-button color="primary" (click)="updateImage()">
-                <span>Update</span>
-                <mat-icon svgIcon="send"></mat-icon>
-              </button>
+        <ng-container *ngIf="activeDirectory.multiple else single">
+          <ng-container *ngIf="active | deepKey:getDeepPath() as directory">
+            <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
+              <ng-template colRef="ref" let-item="item">
+                <img [asset]="getFileRef(item) | fileTypeImage">
+              </ng-template>
+              <ng-template colRef="name" let-item="item">{{ getTitleRef(item) | fileName }}</ng-template>
+              <ng-template colRef="edit" let-item="item">
+                <button mat-button (click)="openDialog(item)">
+                  <mat-icon svgIcon="pencil"></mat-icon>
+                </button>
+              </ng-template>
+              <ng-template colRef="delete" let-item="item">
+                <button mat-button (click)="deleteFile(item)">
+                  <mat-icon svgIcon="trash"></mat-icon>
+                </button>
+              </ng-template>
+              <ng-template colRef="download" let-item="item">
+                <button mat-button (click)="downloadFile(item)">
+                  <mat-icon svgIcon="download"></mat-icon>
+                </button>
+              </ng-template>
+            </bf-table-filter>
+          </ng-container>
+        </ng-container>
+
+        <ng-template #single>
+          <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
+            <div fxLayout="column" fxLayoutGap="24px">
+              <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
+                <h3 type>Logo</h3>
+                <p class="mat-body-2">Recommended : 512 x 512 px</p>
+                <p class="mat-caption">Accepted Formats : jpg, png</p>
+              </drop-cropper>
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <button mat-flat-button color="primary" (click)="updateImage()">
+                  <span>Update</span>
+                  <mat-icon svgIcon="send"></mat-icon>
+                </button>
+              </div>
             </div>
-          </div>
-        </ng-container>
-      </ng-template>
+          </ng-container>
+        </ng-template>
 
+      </ng-container>
     </article>
   </ng-container>
 </section>
