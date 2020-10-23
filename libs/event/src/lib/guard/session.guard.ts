@@ -35,11 +35,7 @@ export class SessionGuard implements CanActivate, CanDeactivate<any> {
     return true;
   }
 
-  canDeactivate(
-    component: any,
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-    ): Observable<boolean> {
+  canDeactivate(): Observable<boolean> {
       const dialogRef = this.dialog.open(ConfirmComponent, {
         data: {
           title: 'Are you sure ?',
