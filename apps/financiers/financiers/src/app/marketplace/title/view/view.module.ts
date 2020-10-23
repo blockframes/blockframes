@@ -50,18 +50,13 @@ const routes = [
         data: { animation: 3 }
       },
       {
-        path: 'finance',
-        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
-        data: { animation: 4 }
-      },
-      {
         path: 'financing',
         loadChildren: () => import('@blockframes/campaign/marketplace/financing/financing.module').then(m => m.MarketplaceFinancingModule),
         data: { animation: 4 }
       },
       {
-        path: 'campaign',
-        loadChildren: () => import('@blockframes/campaign/marketplace/marketplace.module').then(m => m.MarketplaceModule),
+        path: 'investment',
+        loadChildren: () => import('@blockframes/campaign/marketplace/investment/investment.module').then(m => m.MarketplaceInvestmentModule),
         data: { animation: 5 }
       }
     ]

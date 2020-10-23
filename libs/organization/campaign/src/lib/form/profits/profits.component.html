@@ -3,7 +3,7 @@
     <section id="profits">
       <h3>Return on investment</h3>
       <p>
-        Please specify the return on investment for your future investors for the minimum ticket if the sales estmates are respected. 
+        Please add your estimated return on invest (in %) for each case.
       </p>
       
       <form [formGroup]="form.get('profits')" id="profits" fxLayout="column">
@@ -13,7 +13,7 @@
             <input type="number" matInput formControlName="low" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="If the movie crash"></mat-icon>
+          <mat-icon class="info" svgIcon="info" matTooltip="Low case is the profitability in the worst case"></mat-icon>
         </div>
         <div fxLayout fxLayoutGap="16px">
           <mat-form-field appearance="outline">
@@ -21,7 +21,7 @@
             <input type="number" matInput formControlName="medium" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="If the movie is a success"></mat-icon>
+          <mat-icon class="info" svgIcon="info" matTooltip="Target case is the reasonable profitability you are targetting"></mat-icon>
         </div>
         <div fxLayout fxLayoutGap="16px">
           <mat-form-field appearance="outline">
@@ -29,7 +29,7 @@
             <input type="number" matInput formControlName="high" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="If the movie outpreform our expectations"></mat-icon>
+          <mat-icon class="info" svgIcon="info" matTooltip="Upside case is the best profitability you could expect"></mat-icon>
         </div>
       </form>
     </section>
