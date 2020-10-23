@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 :host {
   display: block;
   padding: 24px;
@@ -15,9 +17,18 @@ header {
   }
 }
 
-article > * {
-  width: 40%;
+article {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  & > *:first-child {
+    margin-right: 40px;
+  }
+  & > * {
+    width: 40%;
+  }
 }
+
 
 table {
   border-collapse: collapse;
@@ -37,3 +48,37 @@ table {
 p {
   text-align: justify;
 }
+
+
+
+
+@include layout-bp(lt-md) {
+  article {
+    flex-direction: column;
+    align-items: center;
+    & > *:first-child {
+      margin-bottom: 24px;
+    }
+    & > * {
+      width: 100%;
+    }
+  }
+}
+
+@include layout-bp(md) {
+  article > * {
+    width: 60%;
+  }
+}
+
+@include layout-bp(sm) {
+  article > *{
+    width: 80%;
+  }
+}
+@include layout-bp(xs) {
+  article > *{
+    width: 100%;
+  }
+}
+
