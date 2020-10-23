@@ -6,7 +6,7 @@ import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'marketplace-campaign-investment',
+  selector: 'campaign-marketplace-investment',
   templateUrl: './investment.component.html',
   styleUrls: ['./investment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
