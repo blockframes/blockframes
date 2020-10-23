@@ -16,7 +16,6 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrency,
   HostedVideoType,
   Territory,
   SocialGoal

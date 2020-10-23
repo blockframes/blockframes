@@ -14,6 +14,12 @@ export interface TunnelStepData {
   time?: number;
 }
 
+export interface TunnelStepSnapshot {
+  title: string;
+  icon: string;
+  route: RouteDescription;
+}
+
 export interface TunnelRoot {
   confirmExit: () => Observable<boolean>;
 }
