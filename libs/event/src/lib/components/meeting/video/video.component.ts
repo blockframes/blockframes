@@ -5,9 +5,6 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Event} from "@blockframes/event/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 
-// RxJs
-import {Observable} from "rxjs";
-
 // Twilio
 import {LocalParticipant, Participant} from "twilio-video";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
