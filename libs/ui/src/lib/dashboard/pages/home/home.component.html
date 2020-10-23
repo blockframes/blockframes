@@ -19,7 +19,6 @@
   </ng-container>
 
   <ng-template #noAcceptedMovies>
-    <!-- @TODO (#3337) Create specific component !-->
     <section fxLayout="column" fxLayoutAlign="center center">
       <ng-container *ngIf="(hasMovies$ | async) else noMovies">
         <h1>You have no title published yet.</h1>

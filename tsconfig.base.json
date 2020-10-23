@@ -59,8 +59,7 @@
       "@blockframes/media/*": ["libs/media/src/lib/*"],
       "@blockframes/testing/*": ["libs/testing/src/lib/*"],
       "@blockframes/firebase-utils": ["libs/firebase-utils/src/index.ts"],
-      "@blockframes/campaign/*": ["libs/organization/campaign/src/lib/*"],
-      "@blockframes/dashboard/*": ["libs/dashboard/src/lib/*"]
+      "@blockframes/campaign/*": ["libs/organization/campaign/src/lib/*"]
     }
   },
   "angularCompilerOptions": {

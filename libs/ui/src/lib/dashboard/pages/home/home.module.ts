@@ -19,7 +19,7 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { NoTitleModule } from '@blockframes/dashboard/components/no-title/no-title.module';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 @NgModule({
   declarations: [HomeComponent],

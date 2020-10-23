@@ -14,7 +14,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
-import { NoTitleModule } from '@blockframes/dashboard/components/no-title/no-title.module';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

@@ -41,7 +41,7 @@ const routes: Routes = [{
     },
     {
       path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('@blockframes/dashboard/pages/home/home.module').then(m => m.HomeModule),
+      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
     },
     {
       path: 'notifications',
