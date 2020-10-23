@@ -11,14 +11,14 @@ mat-card {
         width: 100%;
       }
     }
-  }
 
-  article {
-    position: absolute;
-    bottom: 8px;
-    left: 8px;
-    background: var(--background);
-    border-radius: 5px;
-    padding: 8px;
+    article {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: var(--background);
+      border-radius: 5px;
+      padding: 8px;
+    }
   }
 }

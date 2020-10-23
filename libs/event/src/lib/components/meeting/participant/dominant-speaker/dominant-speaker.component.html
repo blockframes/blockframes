@@ -3,10 +3,14 @@
     <ng-container *ngIf="!participant.statusMedia.video">
       <event-meeting-avatar-initial [participant]="participant"></event-meeting-avatar-initial>
     </ng-container>
-    <section [hidden]="!participant.statusMedia.video" id="dominantSpeakerVideo" #dominantSpeakerVideo>
+    <section [hidden]="!participant.statusMedia.video">
+      <video #video></video>
+      <audio #audio></audio>
     </section>
-    <span class="mat-caption">
-      {{participant.festivalData | displayName}}
-    </span>
+    <article>
+      <span class="mat-caption">
+        {{participant.festivalData | displayName}}
+      </span>
+    </article>
   </mat-card-content>
 </mat-card>

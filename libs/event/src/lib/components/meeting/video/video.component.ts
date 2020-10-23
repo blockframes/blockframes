@@ -9,7 +9,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 import {Observable} from "rxjs";
 
 // Twilio
-import {Participant} from "twilio-video";
+import {LocalParticipant, Participant} from "twilio-video";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 @Component({
@@ -69,7 +69,7 @@ export class VideoComponent {
    * Get Twilio Participant data by Uid
    * @param participant
    */
-  getTwilioParticipant(participant: IParticipantMeeting): Participant {
+  getTwilioParticipant(participant: IParticipantMeeting): Participant|LocalParticipant {
     return this.meetingService.getTwilioParticipant(participant.identity);
   }
 }

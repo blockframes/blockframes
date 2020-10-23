@@ -44,16 +44,18 @@
       position: absolute;
       bottom: 0;
       display: flex;
+      video {
+        width: 100%;
+      }
     }
 
-    span {
+    article {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      color: white;
-      background: rgba(0, 0, 0, 0.5);
+      bottom: 8px;
+      left: 8px;
+      background: var(--background);
       border-radius: 5px;
-      padding: 5px;
+      padding: 8px;
     }
   }
 }

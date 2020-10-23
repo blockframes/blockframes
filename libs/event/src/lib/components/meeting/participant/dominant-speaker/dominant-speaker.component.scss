@@ -3,12 +3,11 @@ mat-card {
   height: 100%;
   padding: 0 !important;
 
-  span {
+  article {
     position: absolute;
     bottom: 8px;
     left: 8px;
-    color: white;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--background);
     border-radius: 5px;
     padding: 8px;
   }

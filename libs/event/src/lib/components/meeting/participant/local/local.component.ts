@@ -4,10 +4,9 @@ import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChil
 // Blockframes
 import {IParticipantMeeting, meetingEventEnum} from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
-import {AbstractParticipant} from "@blockframes/event/components/meeting/participant/participant.abstract";
 
 // Twilio
-import {Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'twilio-video';
+import {LocalAudioTrack, LocalParticipant, LocalTrack, LocalTrackPublication, LocalVideoTrack} from 'twilio-video';
 
 
 @Component({
@@ -15,18 +14,18 @@ import {Participant, RemoteTrackPublication as IRemoteTrackPublication} from 'tw
   templateUrl: './local.component.html',
   styleUrls: ['./local.component.scss']
 })
-export class LocalComponent extends AbstractParticipant implements OnInit, AfterViewInit, OnDestroy {
+export class LocalComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() isOpen: boolean;
   @Input() localParticipant: IParticipantMeeting;
-  @Input() twilioData: Participant
+  @Input() twilioData: LocalParticipant
 
-  @ViewChild('localVideo') containerLocalVideo: ElementRef;
+  @ViewChild('video') video: ElementRef;
+  @ViewChild('audio') audio: ElementRef;
 
   open = true;
 
   constructor(private meetingService: MeetingService) {
-    super();
   }
 
   ngOnInit(): void {
@@ -36,24 +35,24 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
 
   ngAfterViewInit() {
     this.setUpLocalParticipantEvent(this.twilioData);
-    this.attachParticipantTracks(this.twilioData, this.containerLocalVideo.nativeElement);
+    this.attachTracks(this.meetingService.getParticipantTracks(this.twilioData) as LocalTrack[]);
   }
 
   /**
    *
    * @param localParticipant
    */
-  setUpLocalParticipantEvent(localParticipant: Participant) {
+  setUpLocalParticipantEvent(localParticipant: LocalParticipant) {
 
-    localParticipant.on(meetingEventEnum.TrackDisabled, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackDisabled, (track: LocalTrackPublication) => {
       this.setupVideoAudio(track.kind, false);
     })
 
-    localParticipant.on(meetingEventEnum.TrackEnabled, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackEnabled, (track: LocalTrackPublication) => {
       this.setupVideoAudio(track.kind, true);
     })
 
-    localParticipant.on(meetingEventEnum.TrackStopped, (track: IRemoteTrackPublication) => {
+    localParticipant.on(meetingEventEnum.TrackStopped, (track: LocalTrackPublication) => {
       this.setupVideoAudio(track.kind, false);
     })
   }
@@ -62,8 +61,32 @@ export class LocalComponent extends AbstractParticipant implements OnInit, After
     this.meetingService.setupVideoAudio(this.localParticipant.identity, kind, boolToChange);
   }
 
+  /**
+   * Attach the Tracks to the DOM.
+   * @param tracks - track to attach in the container
+   */
+  attachTracks(tracks: LocalTrack[]): void {
+    tracks.forEach((track: (LocalAudioTrack | LocalVideoTrack)) => {
+      if (track) {
+        track.attach((track.kind === 'video') ? this.video.nativeElement : this.audio.nativeElement);
+      }
+    });
+  }
+
+  /**
+   *  Detach the Tracks from the DOM.
+   * @param tracks - track to detach of the DOM
+   */
+  detachTracks(tracks: LocalTrack[]): void {
+    tracks.forEach((track: (LocalAudioTrack | LocalVideoTrack)) => {
+      if (track) {
+        track.detach((track.kind === 'video') ? this.video.nativeElement : this.audio.nativeElement);
+      }
+    });
+  }
+
   ngOnDestroy() {
-    this.detachParticipantTracks(this.twilioData);
+    this.detachTracks(this.meetingService.getParticipantTracks(this.twilioData) as LocalTrack[]);
     this.twilioData.removeAllListeners();
   }
 }

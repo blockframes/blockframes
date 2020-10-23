@@ -3,11 +3,15 @@
     <ng-container *ngIf="!localParticipant.statusMedia.video">
       <event-meeting-avatar-initial [padding]="0" [participant]="localParticipant"></event-meeting-avatar-initial>
     </ng-container>
-    <section [style.display]="open && localParticipant.statusMedia.video ? 'flex':'none'" id="localVideo" #localVideo>
+    <section [style.display]="open && localParticipant.statusMedia.video ? 'flex':'none'">
+      <video #video></video>
+      <audio #audio></audio>
     </section>
-    <span class="mat-caption">
-      {{localParticipant.festivalData | displayName}}
-    </span>
+    <article>
+      <span class="mat-caption">
+        {{localParticipant.festivalData | displayName}}
+      </span>
+    </article>
     <mat-icon *ngIf="open" (click)="open = !open" svgIcon="close"></mat-icon>
     <mat-icon *ngIf="!open" (click)="open = !open" svgIcon="open_to"></mat-icon>
   </mat-card-content>

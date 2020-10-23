@@ -15,7 +15,6 @@ import {
   RemoteAudioTrack,
   RemoteAudioTrackPublication,
   RemoteTrack,
-  RemoteTrackPublication,
   RemoteVideoTrack,
   RemoteVideoTrackPublication
 } from 'twilio-video';
@@ -56,7 +55,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
     })
 
     participant.on(meetingEventEnum.Disconnected, () => {
-      this.detachTracks(this.getParticipantTracks(this.twilioData));
+      this.detachTracks(this.meetingService.getParticipantTracks(this.twilioData) as RemoteTrack[]);
     })
 
     participant.on(meetingEventEnum.TrackDisabled, (remoteTrackPublication: (RemoteAudioTrackPublication | RemoteVideoTrackPublication)) => {
@@ -75,7 +74,7 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   }
 
   videoMock(participant: Participant): void {
-    const tracks: RemoteTrack[] = this.getParticipantTracks(participant);
+    const tracks: (RemoteAudioTrack | RemoteVideoTrack)[] = this.meetingService.getParticipantTracks(participant) as (RemoteAudioTrack | RemoteVideoTrack)[];
     this.attachTracks(tracks);
   }
 
@@ -102,13 +101,13 @@ export class RemoteComponent implements AfterViewInit, OnDestroy {
   detachTracks(tracks: RemoteTrack[]): void {
     tracks.forEach((track: (RemoteAudioTrack | RemoteVideoTrack)) => {
       if (track) {
-        track.detach().forEach((detachedElement) => detachedElement.remove());
+        track.detach((track.kind === 'video') ? this.video.nativeElement : this.audio.nativeElement);
       }
     });
   }
 
   ngOnDestroy() {
-    this.detachTracks(this.getParticipantTracks(this.twilioData));
+    this.detachTracks(this.meetingService.getParticipantTracks(this.twilioData) as RemoteTrack[]);
     this.twilioData.removeAllListeners();
   }
 }

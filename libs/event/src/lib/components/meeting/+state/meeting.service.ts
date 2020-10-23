@@ -30,7 +30,7 @@ import {
   LocalVideoTrackPublication,
   RemoteTrack,
   Participant,
-  Room, RemoteTrackPublication
+  Room, RemoteTrackPublication, LocalParticipant, LocalTrackPublication
 } from 'twilio-video';
 
 @Injectable({
@@ -66,7 +66,7 @@ export class MeetingService {
    * Get Twilio participant from uid of User
    * @param uid: string
    */
-  getTwilioParticipant(uid: string): Participant {
+  getTwilioParticipant(uid: string): Participant|LocalParticipant {
     return this.twilioParticipants.get(uid);
   }
 
@@ -79,13 +79,6 @@ export class MeetingService {
         map((participants) => participants.filter((participant) => !participant.isLocalSpeaker)
         )
       );
-  }
-
-  /**
-   * Get all participant of the twilio room without the local participant
-   */
-  getAllParticipants(): Observable<IParticipantMeeting[]> {
-    return this.connectedParticipants$.asObservable();
   }
 
   /**
@@ -251,7 +244,7 @@ export class MeetingService {
     const remoteUser: User = await this.userService.getUser(identity);
     const remoteOrg: Organization = await this.orgService.getValue(remoteUser.orgId);
 
-    const isDominantSpeaker = remoteUser.orgId === event.ownerId;
+    const isDominantSpeaker = remoteUser.uid === event.organizedBy.uid;
 
     return {
       identity: identity,
@@ -310,8 +303,8 @@ export class MeetingService {
    * Attach the Participant's Tracks to the DOM.
    * @param participant - participant to attach in the container
    */
-  getParticipantTracks(participant: Participant): RemoteTrack[] {
-    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication) => trackPublication.track);
+  getParticipantTracks(participant: Participant|LocalParticipant) {
+    return Array.from(participant.tracks.values()).map((trackPublication: RemoteTrackPublication|LocalTrackPublication) => trackPublication.track);
   }
 
   /**
@@ -326,7 +319,7 @@ export class MeetingService {
 
     this.setupVideoAudio(identity, kind, !mute);
 
-    const track: LocalAudioTrack | LocalVideoTrack = (kind === localTracks[0].kind) ? localTracks[0] : localTracks[1];
+    const track: LocalAudioTrack | LocalVideoTrack = ((kind === localTracks[0].kind) ? localTracks[0] : localTracks[1]) as LocalAudioTrack | LocalVideoTrack;
 
     if (mute) {
       track.disable();
