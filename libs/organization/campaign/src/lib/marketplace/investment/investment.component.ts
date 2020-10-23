@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Campaign, CampaignService } from '../+state';
+import { Campaign, CampaignService } from '../../+state';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'campaign-marketplace',
-  templateUrl: './marketplace.component.html',
-  styleUrls: ['./marketplace.component.scss'],
+  selector: 'marketplace-campaign-investment',
+  templateUrl: './investment.component.html',
+  styleUrls: ['./investment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceComponent implements OnInit {
+export class MarketplaceInvestmentComponent implements OnInit {
   campaign$: Observable<Campaign>;
 
   constructor(
