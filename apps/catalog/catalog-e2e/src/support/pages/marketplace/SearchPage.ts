@@ -79,7 +79,7 @@ export default class SearchPage extends NavbarPage {
   public clickWishlistButton(movieName: string) {
     cy.get('movie-card', {timeout: 30000})
       .contains(movieName).parent().parent()
-      .find('button[test-id=heart-button]').click();
+      .find('button[test-id=heart-button]').click('bottom', {force: true} );
     cy.wait(2000);
   }
 

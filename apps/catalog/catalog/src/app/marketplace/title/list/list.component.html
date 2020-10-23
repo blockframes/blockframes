@@ -36,8 +36,6 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-
-    <!-- TODO issue#2576 -->
     <ng-template filter label="Library / Line-up" [form]="searchForm.storeType">
       <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="searchForm.storeType" scope="storeType">
       </static-check-boxes>
@@ -68,35 +66,6 @@
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
-    <!-- TODO issue#2576 -->
-    <!-- <ng-template filter label="AVAILS" section>
-      <p class="mat-caption">You need to fill in Terms, Territory and Media before applying the Avails filter</p>
-    </ng-template> -->
-
-    <!-- TODO 2562-->
-    <!--    <ng-template filter label="Term">
-      <p>TODO</p>
-    </ng-template> -->
-
-    <!-- TODO 2562-->
-    <!--  <ng-template filter label="Territory">
-      <p>TODO</p>
-    </ng-template> -->
-
-    <!-- TODO 2562-->
-    <!--    <ng-template filter label="Media">
-      <p>TODO</p>
-    </ng-template> -->
-
-    <!-- TODO 2562-->
-    <!--   <ng-template filter label="Exclusivity">
-      <p>TODO</p>
-    </ng-template> -->
-
-    <!-- TODO issue#2576 -->
-    <!--     <ng-template filter label="" section>
-      <button mat-stroked-button color="primary">Apply Avails Filter</button>
-    </ng-template> -->
   </list-filter>
 
   <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">

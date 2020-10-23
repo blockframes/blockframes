@@ -28,37 +28,40 @@ function toBigNumber(value: number) {
   }
 }
 
+
 // todo(#3967) Make it work with € also. Right now it does 1.25€K instead of 1.25K€
 @Pipe({ name: 'bigNumber' })
 export class BigNumberPipe implements PipeTransform {
   constructor(
-    @Inject(LOCALE_ID) private _locale: string,
+    @Inject(LOCALE_ID) private locale: string,
   ) {}
 
   transform(value: number, digitInfo: string) {
     if (value === null || value === undefined) return '';
-    const locale = this._locale;
     const num = strToNumber(value);
     const { result, symbol } = toBigNumber(num);
-    return `${formatNumber(result, locale, digitInfo)}${symbol}`;
-  }
+    return `${formatNumber(result, this.locale, digitInfo)}${symbol}`;  }
 }
 
+
+
+export function toBigCurrency(value: number, locale: string = 'en', currencyCode: string = 'USD') {
+  const currency = getCurrencySymbol(currencyCode, 'wide', locale);
+  const num = strToNumber(value);
+  const { result, symbol } = toBigNumber(num);
+  return `${formatCurrency(result, locale, currency, currencyCode)}${symbol}`;
+}
 
 @Pipe({ name: 'bigCurrency' })
 export class BigCurrencyPipe implements PipeTransform {
   constructor(
-    @Inject(LOCALE_ID) private _locale: string,
+    @Inject(LOCALE_ID) private locale: string,
     @Inject(DEFAULT_CURRENCY_CODE) private _defaultCurrencyCode: string = 'USD'
   ) {}
 
   transform(value: number, currencyCode: string = this._defaultCurrencyCode) {
     if (value === null || value === undefined) return '';
-    const locale = this._locale;
-    const currency = getCurrencySymbol(currencyCode, 'wide', locale);
-    const num = strToNumber(value);
-    const { result, symbol } = toBigNumber(num);
-    return `${formatCurrency(result, locale, currency, currencyCode)}${symbol}`;
+    return toBigCurrency(value, this.locale, currencyCode);
   }
 }
 

@@ -55,6 +55,11 @@ const routes = [
         data: { animation: 4 }
       },
       {
+        path: 'financing',
+        loadChildren: () => import('@blockframes/campaign/marketplace/financing/financing.module').then(m => m.MarketplaceFinancingModule),
+        data: { animation: 4 }
+      },
+      {
         path: 'campaign',
         loadChildren: () => import('@blockframes/campaign/marketplace/marketplace.module').then(m => m.MarketplaceModule),
         data: { animation: 5 }
