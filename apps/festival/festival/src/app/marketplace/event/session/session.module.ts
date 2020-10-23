@@ -34,7 +34,6 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     OrgNameModule,
     EventPlayerModule,
     MeetingMediaListModule,
-    MeetingModule,
     FileNameModule,
     MediaControlModule,
     MediaViewerModule,
