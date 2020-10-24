@@ -1,0 +1,62 @@
+<ng-container *ngIf="isDataLoaded$ | async; else loading">
+  <ng-container *ngIf="(hasAcceptedMovies$ | async) else noAcceptedMovies">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>Dashboard</h1>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
+        <a mat-stroked-button color="primary" routerLink="../title">
+          <mat-icon svgIcon="video_library"></mat-icon>
+          <span>View my titles</span>
+        </a>
+        <a mat-mini-fab color="primary" routerLink="../import" matTooltip="Import a new title">
+          <mat-icon svgIcon="add"></mat-icon>
+        </a>
+      </div>
+    </header>
+    <section>
+      <h3>My Marketplace Activity</h3>
+      <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
+    </section>
+  </ng-container>
+
+  <ng-template #noAcceptedMovies>
+    <section fxLayout="column" fxLayoutAlign="center center">
+      <ng-container *ngIf="(hasMovies$ | async) else noMovies">
+        <h1>You have no title published yet.</h1>
+        <p class="mat-body-1">
+          As long as you have no title to display, your organization will not appear on the marketplace.
+          <br>
+          You can either add several titles at once through bulk import, or just one at a time.
+        </p>
+        <p class="mat-body-1">
+          N.B.: Only submitted projects will appear on the marketplace, not drafts.
+        </p>
+
+      </ng-container>
+      <ng-template #noMovies>
+        <dashboard-no-title></dashboard-no-title>
+      </ng-template>
+      <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
+        <!-- Should only be shown for noAcceptedMovies && !noMovies -->
+        <ng-container *ngIf="(hasMovies$ | async)">
+          <mat-card fxLayout="column" fxLayoutalign="center center">
+            <img asset="add_draft.webp" alt="Manage Drafts">
+            <a routerLink="../title" mat-button color="primary">Manage Drafts</a>
+          </mat-card>
+        </ng-container>
+        <mat-card fxLayout="column" fxLayoutalign="center center">
+          <img asset="add_title.webp" alt="Add title image">
+          <a routerLink="../title/lobby" mat-button color="primary">Add one title</a>
+        </mat-card>
+        <mat-card fxLayout="column">
+          <img asset="add_files.webp" alt="Upload files image">
+          <a routerLink="../import" mat-button color="primary">Import your titles in bulk</a>
+        </mat-card>
+      </article>
+    </section>
+  </ng-template>
+</ng-container>
+<ng-template #loading>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner color="primary"></mat-spinner>
+  </article>
+</ng-template>

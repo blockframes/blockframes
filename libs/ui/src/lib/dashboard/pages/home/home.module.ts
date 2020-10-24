@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -18,6 +19,7 @@ import { HomeComponent } from './home.component';
 // Modules
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -26,12 +28,14 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
     FlexLayoutModule,
     MovieAnalyticsChartModule,
     ImageReferenceModule,
-
+    NoTitleModule,
+    
     // Material
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
     MatCardModule,
+    MatProgressSpinnerModule,
 
     // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])

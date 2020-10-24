@@ -118,7 +118,7 @@
 
 
   <!-- Festival -->
-  <section *ngIf="movie.prizes.length && (movie | hasStatus: status.afterProd)">
+  <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">

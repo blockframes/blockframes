@@ -1585,7 +1585,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/financiers/financiers",
+            "outputPath": "dist/apps/financiers",
             "index": "apps/financiers/financiers/src/index.html",
             "main": "apps/financiers/financiers/src/main.ts",
             "polyfills": "apps/financiers/financiers/src/polyfills.ts",
