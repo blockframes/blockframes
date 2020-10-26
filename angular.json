@@ -422,6 +422,16 @@
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
             "assets": [],
             "buildLibsFromSource": true
+          },
+          "configurations": {
+            "demo1":{
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ]
+            }
           }
         },
         "serve": {

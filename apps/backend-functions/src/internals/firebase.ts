@@ -3,8 +3,6 @@ import * as admin from 'firebase-admin';
 
 export const functions = region('europe-west1')
 
-export type DocumentReference = admin.firestore.DocumentReference;
-
 import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
