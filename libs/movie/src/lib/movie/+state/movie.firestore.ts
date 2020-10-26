@@ -16,7 +16,6 @@ import {
   PremiereType,
   UnitBox,
   ShootingPeriod,
-  MovieCurrency,
   HostedVideoType,
   Territory,
   SocialGoal
@@ -86,7 +85,6 @@ interface MovieRaw<D> {
   storeConfig: StoreConfig, //! required
   synopsis: string, //! required
   title: Title, //! required
-  socialGoals: SocialGoal[]
 
 
   // New Data
@@ -303,7 +301,7 @@ export interface MovieSalesPitch {
 
 export interface MovieGoalsAudience {
   targets: string[],
-  goals: string[]
+  goals: SocialGoal[]
 }
 
 

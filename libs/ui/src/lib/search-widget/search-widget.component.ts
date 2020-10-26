@@ -36,7 +36,7 @@ export class SearchWidgetComponent implements AfterViewInit, OnDestroy {
 
   private sub: Subscription;
 
-  constructor(private acitvatedRoute: ActivatedRoute, private router: Router, private routerQuery: RouterQuery) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private routerQuery: RouterQuery) { }
 
   ngAfterViewInit() {
     this.sub = this.routerQuery.select('navigationId').subscribe(_ => {
@@ -59,7 +59,7 @@ export class SearchWidgetComponent implements AfterViewInit, OnDestroy {
       ids = result.items.map(item => item.id).flat(1);
     }
     this.router.navigate([this.link], {
-      relativeTo: this.acitvatedRoute,
+      relativeTo: this.activatedRoute,
       queryParams: {
         ids: ids,
         searchTerm: this.searchCtrl.value

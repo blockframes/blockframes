@@ -7,6 +7,10 @@
     </form>
   </list-page-app-bar>
 
+  <list-page-title>
+    <h1 class="mat-display-2 page-title">On the market today</h1>
+  </list-page-title>
+
   <!-- SORT -->
   <!--   <list-page-sort>
 
@@ -36,7 +40,6 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-    <!-- TODO issue#2576 -->
     <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"

@@ -171,8 +171,6 @@ jobs:
             fi
   build-and-test-prs:
     executor: blockframes-ci
-    environment:
-        ENV: ci
     steps:
       - prepare_environment
       - run:
@@ -209,8 +207,6 @@ jobs:
             fi
   test-e2e: # TODO: This needs to be refactored - runs tests against CI project when there's a commit to CI & nightly tests
     executor: blockframes-ci
-    environment:
-        ENV: ci
     steps:
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
@@ -227,7 +223,6 @@ jobs:
   test-e2e-release: # * Will build and test each release commit against staging
     executor: blockframes-ci
     environment:
-        ENV: staging # TODO still needed due to test commands
         NG_CONFIG: staging
         ENV_TS: env/env.staging.ts
         SERVICE_ACCOUNT: FIREBASE_STAGING_SERVICE_ACCOUNT

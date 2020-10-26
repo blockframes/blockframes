@@ -1,11 +1,9 @@
 <tunnel-page>
-  <h4 title>LAST STEP</h4>
-  <h1 subtitle>Summary Page</h1>
-  <p description class="mat-body-1">
-    Please verify that all the information you have entered is correct before submitting to Media Financiers for
-    validation.
-  </p>
   <ng-container tunnel-form>
+    <p class="mat-body-1">
+      Please verify that all the information you have entered is correct before submitting to Media Financiers for
+      validation.
+    </p>
 
     <div *ngIf="invalidFields.length" class="mat-body">
       <div class="mandatory-control">
@@ -56,7 +54,7 @@
 
     <section id="reviews">
       <h3>Selections and Reviews</h3>
-      <movie-summary-review [movie]="form" [link]="('artistic' | getPath)"></movie-summary-review>
+      <movie-summary-review [movie]="form" [link]="('reviews' | getPath)"></movie-summary-review>
     </section>
 
     <mat-divider></mat-divider>

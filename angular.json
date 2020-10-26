@@ -422,6 +422,16 @@
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
             "assets": [],
             "buildLibsFromSource": true
+          },
+          "configurations": {
+            "demo1":{
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/demo/env.demo1.ts"
+                }
+              ]
+            }
           }
         },
         "serve": {
@@ -1575,7 +1585,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/financiers/financiers",
+            "outputPath": "dist/apps/financiers",
             "index": "apps/financiers/financiers/src/index.html",
             "main": "apps/financiers/financiers/src/main.ts",
             "polyfills": "apps/financiers/financiers/src/polyfills.ts",

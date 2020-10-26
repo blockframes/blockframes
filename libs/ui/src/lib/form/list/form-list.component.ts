@@ -55,7 +55,7 @@ export class FormListComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.formItem.dirty) this.save()
+    if (this.formItem?.dirty) this.save()
   }
 
   get isFormEmpty() {

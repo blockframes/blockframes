@@ -119,7 +119,7 @@ export function storeSearchableMovie(
       appAccess: movieAppAccess ?
         app.filter(a => movie.storeConfig?.appAccess[a]) :
         [],
-      socialGoals: movie.socialGoals
+      socialGoals: movie.audience.goals
     };
 
     return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);

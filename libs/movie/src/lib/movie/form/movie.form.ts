@@ -1016,7 +1016,7 @@ function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
   const { targets, goals } = createAudienceGoals(entity);
   return {
     targets: FormList.factory(targets, el => new FormControl(el)),
-    goals: new FormControl(goals)
+    goals: new FormStaticValueArray<'socialGoals'>(goals, 'socialGoals')
   }
 }
 

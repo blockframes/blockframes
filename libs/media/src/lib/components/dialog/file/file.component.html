@@ -1,12 +1,28 @@
 <h1>Add File</h1>
 <mat-divider></mat-divider>
 <form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
-  <mat-form-field appearance="outline">
-    <mat-label>Note title</mat-label>
-    <input matInput formControlName="title">
-  </mat-form-field>
+
+  <ng-container *ngIf="!!hostedMediaWithMetadataForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Note title</mat-label>
+      <input matInput formControlName="title">
+    </mat-form-field>
+  </ng-container>
+
+  <ng-container *ngIf="!!movieNotesForm">
+    <form-display-name [form]="movieNotesForm"></form-display-name>
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select test-id="role" [formControl]="movieNotesForm.get('role')">
+        <mat-option *ngFor="let role of roles" [value]="role">
+          {{ role | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </ng-container>
+
   <file-upload
-    [form]="data.form.get('ref')"
+    [form]="data.form.controls.ref"
     [storagePath]="data.storagePath"
     [accept]="['.pdf']"
     [filePrivacy]="data.privacy"
