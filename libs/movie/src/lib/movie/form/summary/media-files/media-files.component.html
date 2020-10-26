@@ -5,24 +5,24 @@
   </a>
 </h6>
 <ul>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Presentation Deck </strong>
+  <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Presentation Deck </strong>
     <missing-control [control]="movie.promotional.get('presentation_deck').get('ref')" [link]="link" fragment="files">
       <ng-template let-deck>
         {{ deck | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Scenario </strong>
+  <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Scenario </strong>
     <missing-control [control]="movie.promotional.get('scenario').get('ref')" fragment="files" [link]="link">
       <ng-template let-scenario>
         {{ scenario | fileName | maxLength: 30  }}
       </ng-template>
     </missing-control>
   </li>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Moodboard / Artistic Deck </strong>
+  <li fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Moodboard / Artistic Deck </strong>
     <missing-control [control]="movie.promotional.get('moodboard').get('ref')" fragment="files" [link]="link">
       <ng-template let-moodboard>
         {{ moodboard | fileName | maxLength: 30  }}

@@ -18,15 +18,13 @@
             <missing-control [control]="cast.get('lastName')" [link]="link" fragment="cast-member"></missing-control>
           </strong>
           <span>&nbsp;</span>
-          <ng-container *ngFor="let film of cast.filmography.controls; let isLast = last">
-            <span *ngIf="film.get('title').value">
-              <missing-control [control]="film.get('title')" [link]="link" fragment="cast-member"></missing-control>
-              <span>&nbsp;</span>
-              <span>(<missing-control [control]="film.get('year')" [link]="link" fragment="cast-member">
-                </missing-control>)</span>
-              <ng-container>{{ isLast ? '' : ', ' }}</ng-container>
-            </span>
-          </ng-container>
+          <missing-control [control]="cast.filmography" [link]="link" fragment="cast-member">
+            <ng-template let-filmographies>
+              <ng-container *ngFor="let filmography of filmographies">
+                {{ filmography | filmography }}
+              </ng-container>
+            </ng-template>
+          </missing-control>
         </li>
       </ng-template>
     </missing-control>

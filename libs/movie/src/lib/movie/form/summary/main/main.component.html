@@ -9,11 +9,13 @@
   <ul>
     <li>
       <strong>International Title1 </strong>
-      <missing-control test-id="international-title" [control]="title.get('international')" [link]="link" fragment="reference"></missing-control>
+      <missing-control test-id="international-title" [control]="title.get('international')" [link]="link"
+        fragment="reference"></missing-control>
     </li>
     <li>
       <strong>Original Title </strong>
-      <missing-control test-id="original-title" [control]="title.get('original')" [link]="link" fragment="reference"></missing-control>
+      <missing-control test-id="original-title" [control]="title.get('original')" [link]="link" fragment="reference">
+      </missing-control>
     </li>
     <li>
       <strong>Content Type </strong>
@@ -25,7 +27,8 @@
     </li>
     <li>
       <strong>Title Reference </strong>
-      <missing-control test-id="reference" [control]="movie.get('internalRef')" [link]="link" fragment="reference"></missing-control>
+      <missing-control test-id="reference" [control]="movie.get('internalRef')" [link]="link" fragment="reference">
+      </missing-control>
     </li>
   </ul>
 </article>
@@ -39,16 +42,16 @@
     </a>
   </h6>
   <ul>
-    <li>
-      <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Film Page Banner Image </strong>
+    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <bf-preview-modal [ref]="movie.banner.value.ref"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <missing-control test-id="original-title" [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
         </ng-template>
       </missing-control>
     </li>
-    <li>
-      <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Poster Image </strong>
+    <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <bf-preview-modal [ref]="movie.poster.value.ref"><strong> Poster Image </strong></bf-preview-modal>
       <missing-control test-id="original-title" [control]="movie.poster.ref" [link]="link">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
@@ -73,18 +76,20 @@
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>
-      <missing-control test-id="country" [control]="movie.originCountries" [link]="link" fragment="general-information" scope="territories">
+      <missing-control test-id="country" [control]="movie.originCountries" [link]="link" fragment="general-information"
+        scope="territories">
       </missing-control>
     </li>
     <li>
       <strong>Original Languag{ movie.originalLanguages.controls.length, plural, =0 {e} =1 {e} other {es}} </strong>
-      <missing-control test-id="language" [control]="movie.originalLanguages" [link]="link" fragment="general-information"
-        scope="languages">
+      <missing-control test-id="language" [control]="movie.originalLanguages" [link]="link"
+        fragment="general-information" scope="languages">
       </missing-control>
     </li>
     <li>
       <strong>Genre{ movie.genres.controls.length, plural, =0 {} =1 {} other {s}} </strong>
-      <missing-control test-id="genres" [control]="movie.genres" [link]="link" fragment="general-information" scope="genres">
+      <missing-control test-id="genres" [control]="movie.genres" [link]="link" fragment="general-information"
+        scope="genres">
       </missing-control>
     </li>
     <li>
@@ -111,7 +116,8 @@
           <strong>
             <missing-control test-id="first-name" [control]="director.get('firstName')"></missing-control>
             <missing-control test-id="last-name" [control]="director.get('lastName')"></missing-control>
-            (<missing-control test-id="director-category" [control]="director.get('category')" scope="directorCategory"></missing-control>)
+            (<missing-control test-id="director-category" [control]="director.get('category')" scope="directorCategory">
+            </missing-control>)
           </strong>
           <ng-container *ngFor="let film of director.filmography.controls">
             <span>{{ film | filmography }}</span>

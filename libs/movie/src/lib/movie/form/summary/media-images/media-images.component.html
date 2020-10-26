@@ -8,7 +8,7 @@
   <missing-control [control]="stillPhoto" [link]="link">
     <ng-template let-images>
       <article fxLayout *ngFor="let image of images">
-        <mat-icon svgIcon="eye" color="primary"></mat-icon>
+        <bf-preview-modal [ref]="image.ref"></bf-preview-modal>
         <span>{{ image.ref | fileName | maxLength: 30 }}</span>
       </article>
     </ng-template>
