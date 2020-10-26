@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
@@ -8,15 +8,20 @@ import {MeetingService} from "@blockframes/event/components/meeting/+state/meeti
   templateUrl: './video.component.html',
   styleUrls: ['./video.component.scss']
 })
-export class ControlVideoComponent {
+export class ControlVideoComponent implements OnInit {
 
   participant$: Observable<IParticipantMeeting>;
+  isVideoAvailable: boolean;
 
   constructor(private meetingService: MeetingService) {
     this.participant$ = this.meetingService.getLocalParticipants();
   }
 
-  muteVideo(participant: IParticipantMeeting){
+  async ngOnInit() {
+    this.isVideoAvailable = await this.meetingService.isVideoAvailable()
+  }
+
+  muteVideo(participant: IParticipantMeeting) {
     this.meetingService.muteUnmuteLocal(participant.identity, 'video', participant.statusMedia.video);
   }
 }

@@ -1,22 +1,15 @@
-.container-btn-mute-unmute-local-video {
-  display: flex;
+section {
+  display: inline-flex;
 
-  .btn-mute-unmute-local-video {
-    width: 5vh;
-    height: 5vh;
+  button {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    ::ng-deep .active {
-      background-color: green;
-    }
-
-    ::ng-deep .deactive {
-      background-color: red;
-    }
   }
 }
 

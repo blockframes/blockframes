@@ -8,12 +8,18 @@ import {MeetingService} from "@blockframes/event/components/meeting/+state/meeti
   templateUrl: './audio.component.html',
   styleUrls: ['./audio.component.scss']
 })
-export class ControlAudioComponent {
+export class ControlAudioComponent implements OnInit {
 
   participant$: Observable<IParticipantMeeting>;
+  isAudioAvailable: boolean;
+
 
   constructor(private meetingService: MeetingService) {
     this.participant$ = this.meetingService.getLocalParticipants()
+  }
+
+  async ngOnInit() {
+    this.isAudioAvailable = await this.meetingService.isAudioAvailable()
   }
 
   muteAudio(participant: IParticipantMeeting){
