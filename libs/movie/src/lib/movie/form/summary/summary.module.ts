@@ -14,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
+import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
 
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
@@ -77,6 +78,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,
+    PreviewModalModule,
 
     // Materials
     MatChipsModule,

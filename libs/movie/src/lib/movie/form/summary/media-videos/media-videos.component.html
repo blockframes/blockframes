@@ -5,26 +5,26 @@
   </a>
 </h6>
 <ul>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Teaser Link </strong>
+  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Teaser Link </strong>
     <missing-control [control]="movie.promotional.get('teaser_link')" [link]="link" fragment="videos"></missing-control>
   </li>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Trailer Link </strong>
+  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Trailer Link </strong>
     <missing-control [control]="movie.promotional.get('trailer_link')" [link]="link" fragment="videos">
     </missing-control>
   </li>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Promo Link </strong>
+  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Promo Link </strong>
     <missing-control [control]="movie.promotional.get('promo_reel_link')" [link]="link" fragment="videos">
     </missing-control>
   </li>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Screener Link </strong>
+  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Screener Link </strong>
     <missing-control [control]="movie.promotional.get('screener_link')" [link]="link" fragment="videos">
     </missing-control>
-  <li>
-    <mat-icon svgIcon="eye" color="primary"></mat-icon><strong> Other Links </strong>
+  <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
+    <strong> Other Links </strong>
     <missing-control [control]="movie.promotional.get('other_links')" [link]="link">
       <ng-template let-links>
         <ng-container *ngFor="let link of links">
