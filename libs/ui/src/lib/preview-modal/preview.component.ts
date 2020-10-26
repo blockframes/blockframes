@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { DialogPreviewComponent } from './dialog-preview/dialog-preview.component';
 
@@ -17,7 +17,7 @@ export class PreviewModalComponent {
   constructor(private dialog: MatDialog, private sanitizer: DomSanitizer) { }
 
   openModal() {
-    let ref: any;
+    let ref: string | SafeUrl;
     if (!!this.form.blobOrFile.value) {
       const blobUrl = URL.createObjectURL(this.form.blobOrFile.value);
       ref = this.sanitizer.bypassSecurityTrustUrl(blobUrl);

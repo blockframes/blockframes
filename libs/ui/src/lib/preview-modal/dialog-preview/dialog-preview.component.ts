@@ -24,11 +24,11 @@ export class DialogPreviewComponent implements OnInit {
     private mediaService: MediaService
   ) { }
 
-  ngOnInit() {
-    if(this.data.ref?.changingThisBreaksApplicationSecurity?.includes('blob')) {
+  async ngOnInit() {
+    if (this.data.ref?.changingThisBreaksApplicationSecurity?.includes('blob')) {
       this.src = this.data.ref
     } else {
-      this.mediaService.generateImgIxUrl(this.data.ref, this.parameters).then(src => this.src = src)
+      this.src = await this.mediaService.generateImgIxUrl(this.data.ref, this.parameters);
     }
   }
 }
