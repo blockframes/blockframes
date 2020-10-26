@@ -43,7 +43,7 @@
   </h6>
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [ref]="movie.banner.value.ref"><strong> Film Page Banner Image </strong></bf-preview-modal>
+      <bf-preview-modal [form]="movie.banner"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <missing-control test-id="original-title" [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
@@ -51,7 +51,7 @@
       </missing-control>
     </li>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [ref]="movie.poster.value.ref"><strong> Poster Image </strong></bf-preview-modal>
+      <bf-preview-modal [form]="movie.poster"><strong> Poster Image </strong></bf-preview-modal>
       <missing-control test-id="original-title" [control]="movie.poster.ref" [link]="link">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}

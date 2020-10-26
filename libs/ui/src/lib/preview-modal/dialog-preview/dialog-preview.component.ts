@@ -20,12 +20,15 @@ export class DialogPreviewComponent implements OnInit {
   public src: string
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { ref: string },
+    @Inject(MAT_DIALOG_DATA) public data,
     private mediaService: MediaService
   ) { }
 
   ngOnInit() {
-    console.log(this.data.ref)
-    this.mediaService.generateImgIxUrl(this.data.ref, this.parameters).then(src => this.src = src)
+    if(this.data.ref?.changingThisBreaksApplicationSecurity?.includes('blob')) {
+      this.src = this.data.ref
+    } else {
+      this.mediaService.generateImgIxUrl(this.data.ref, this.parameters).then(src => this.src = src)
+    }
   }
 }
