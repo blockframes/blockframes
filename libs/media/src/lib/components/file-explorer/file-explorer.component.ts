@@ -215,7 +215,7 @@ export class FileExplorerComponent {
         } else if (isHostedMediaWithMetadataForm(ctrl)) {
           // HostedMediaWithMetadataForm
           const title = (row as HostedMediaWithMetadata).title;
-          return ctrl.get('title').value == title;
+          return ctrl.get('title').value === title;
         } else {
           // MovieNotesForm
           const ref = (row as MovieNote).ref;
