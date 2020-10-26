@@ -37,7 +37,6 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-    <!-- TODO issue#2576 -->
     <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"
@@ -66,7 +65,7 @@
     </ng-template>
 
     <ng-template filter label="Social Goals" [form]="searchForm.socialGoals">
-      <static-check-boxes fxLayout="column"  [form]="searchForm.socialGoals" scope="socialGoals"></static-check-boxes>
+      <static-check-boxes fxLayout="column" [form]="searchForm.socialGoals" scope="socialGoals"></static-check-boxes>
     </ng-template>
 
     <ng-template filter label="Budget" [form]="searchForm.minBudget">

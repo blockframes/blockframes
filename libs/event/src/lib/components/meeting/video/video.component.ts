@@ -4,10 +4,10 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 // Blockframes
 import {Event} from "@blockframes/event/+state";
 import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/meeting.interface";
+import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 // Twilio
-import {LocalParticipant, Participant} from "twilio-video";
-import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
+import {Participant} from "twilio-video";
 
 @Component({
   selector: '[remoteParticipants] [event] event-meeting-video',

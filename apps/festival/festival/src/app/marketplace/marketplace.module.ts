@@ -85,6 +85,7 @@ const routes: Routes = [{
         }, {
           path: 'session',
           canActivate: [SessionGuard],
+          canDeactivate: [SessionGuard],
           loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
         },
         {
