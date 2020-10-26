@@ -83,6 +83,7 @@ export class ListComponent implements OnInit, OnDestroy {
       }
       this.lastPage = this.hitsViewed === this.nbHits;
       this.loading$.next(false)
+      console.log(this.nbHits, this.hitsViewed)
     });;
   }
 

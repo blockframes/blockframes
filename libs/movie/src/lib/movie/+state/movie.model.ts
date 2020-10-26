@@ -89,7 +89,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     scoring: null,
     soundFormat: null,
     isOriginalVersionAvailable: null,
-    socialGoals: [],
     estimatedBudget: null,
     ...params,
     banner: params.banner ?? '',
