@@ -25,7 +25,7 @@ export class DialogPreviewComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    if (this.data.ref?.changingThisBreaksApplicationSecurity?.includes('blob')) {
+    if (typeof this.data.ref !== 'string') {
       this.src = this.data.ref
     } else {
       this.src = await this.mediaService.generateImgIxUrl(this.data.ref, this.parameters);
