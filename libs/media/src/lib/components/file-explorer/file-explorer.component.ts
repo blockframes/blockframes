@@ -3,22 +3,32 @@ import { Observable } from 'rxjs';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdate, isMediaForm } from '@blockframes/media/+state/media.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FileDialogComponent } from '../dialog/file/file.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
 import { HostedMediaWithMetadataForm } from '@blockframes/media/form/media-with-metadata.form';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/organization.firestore';
+import { MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { FormList } from '@blockframes/utils/form';
+import { MediaRatioType } from '../cropper/cropper.component';
+import { MovieForm, MovieNotesForm } from '@blockframes/movie/form/movie.form';
+import { HostedMediaForm } from '@blockframes/media/form/media.form';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { ImageDialogComponent } from '../dialog/image/image.component';
+import { Privacy } from '@blockframes/utils/file-sanitizer';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { App } from '@blockframes/utils/apps';
+import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
 
 // Material
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
-import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { HostedMediaForm } from '@blockframes/media/form/media.form';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { MediaRatioType } from '../cropper/cropper.component';
-import { FormList } from '@blockframes/utils/form';
+
+type MediaFormTypes = HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm
+type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm)[], HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm>
 
 const columns = { 
   ref: 'Type',
@@ -39,6 +49,7 @@ interface SubDirectory {
   docNameField: string,
   fileRefField: string,
   storagePath: string,
+  privacy: Privacy
   selected?: boolean
 }
 
@@ -70,6 +81,7 @@ export class FileExplorerComponent {
           docNameField: 'title',
           fileRefField: 'ref',
           storagePath: `orgs/${org.id}/documents/notes`,
+          privacy: 'protected',
           selected: true
         },
         {
@@ -79,7 +91,8 @@ export class FileExplorerComponent {
           multiple: false,
           docNameField: 'logo',
           fileRefField: 'logo',
-          storagePath: `orgs/${org.id}/logo`
+          storagePath: `orgs/${org.id}/logo`,
+          privacy: 'public'
         }
       ]
     });
@@ -87,35 +100,65 @@ export class FileExplorerComponent {
     this.orgId = org.id;
 
     this.org$ = this.organizationService.valueChanges(org.id);
+    this.active$ = this.organizationService.valueChanges(org.id);
+
+    this.getTitleDirectories(org);
   };
 
   private orgId: string;
+
+  // 💀 if org doesnt have document.notes, then nothing is displayed. This issue probably doesn't happen if it's based on a Form - but forms dont update
   public org$: Observable<OrganizationDocumentWithDates>;
+
   public directories: Directory[] = [];
-  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
-  public singleFileForm: OrganizationForm;
+  public active$: Observable<Movie | OrganizationDocumentWithDates>
+  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
+  public activeForm: OrganizationForm | MovieForm;
 
   constructor(
     private dialog: MatDialog,
     private mediaService: MediaService,
+    private movieService: MovieService,
     private organizationService: OrganizationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private routerQuery: RouterQuery
   ) {}
 
   public async selectDirectory(event: MatSelectionListChange) {
+    // needed in order to manage the selected selection list; since there are many lists
+    this.activeDirectory.selected = false;
+    // needed to re-render the cropper component.
+    this.activeForm = undefined;
+
     const selected = event.source.selectedOptions.selected;
     const [ selectedValues ] = selected.map(x => x.value);
+    this.activeDirectory = selectedValues;
 
-    if (!(selectedValues as SubDirectoryFile | SubDirectoryImage).multiple) {
-      const org = await this.organizationService.getValue(this.orgId);
-      this.singleFileForm = new OrganizationForm(org);
-      this.cdr.markForCheck();
+    const multiple = (selectedValues as SubDirectoryFile | SubDirectoryImage).multiple;
+    const collection = this.getCollection();
+
+    if (collection === 'movies') {
+      const id = this.getId()
+      if (multiple) {
+        this.active$ = this.movieService.valueChanges(id);
+      } else {
+        const movie = await this.movieService.getValue(id);
+        this.activeForm = new MovieForm(movie);
+      }
+    } else {
+      if (multiple) {
+        this.active$ = this.organizationService.valueChanges(this.orgId);
+      } else {
+        const org = await this.organizationService.getValue(this.orgId);
+        this.activeForm = new OrganizationForm(org);
+      }
     }
 
-    this.activeDirectory = selectedValues;
+    this.activeDirectory.selected = true;
+    this.cdr.markForCheck();
   }
 
   public deleteFile(row: HostedMediaWithMetadata) {
@@ -129,10 +172,12 @@ export class FileExplorerComponent {
           const orgForm = new OrganizationForm(org);
           const formList = this.getFormList(orgForm);
           const index = formList.controls.findIndex(form => {
-            if (determineFormType(form)) {
+            if (isHostedMediaForm(form)) {
+              return form.get('ref').value === row.ref;
+            } else if (isHostedMediaWithMetadataForm(form)) {
               return form.get('title').value === row.title;
             } else {
-              return form.get('ref').value === row.ref;
+              return form.get('ref').get('ref').value === row.ref;
             }
           });
 
@@ -146,34 +191,65 @@ export class FileExplorerComponent {
     });
   }
 
-  public async openDialog(row?: HostedMediaWithMetadata) {
-    const org = await this.organizationService.getValue(this.orgId);
-    const orgForm = new OrganizationForm(org);
-    const formList = this.getFormList(orgForm);
+  public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {
 
-    let mediaForm: HostedMediaWithMetadataForm | HostedMediaForm;
+    let formList: MediaFormList;
+    const collection = this.getCollection();
+    if (collection === 'orgs') {
+      const org = await this.organizationService.getValue(this.orgId);
+      this.activeForm = new OrganizationForm(org);
+      formList = this.getFormList(this.activeForm);
+    } else {
+      const movie = await this.movieService.getValue(this.getId());
+      this.activeForm = new MovieForm(movie);
+      formList = this.getFormList(this.activeForm);
+    }
+
+    let mediaForm: MediaFormTypes;
     if (!!row) {
       mediaForm = formList.controls.find(ctrl => {
-        if (determineFormType(ctrl)) {
-          return ctrl.get('title').value === row.title;
+        if (isHostedMediaForm(ctrl)) {
+          // HostedMediaForm
+          const ref = (row as string);
+          return ctrl.get('ref').value === ref;
+        } else if (isHostedMediaWithMetadataForm(ctrl)) {
+          // HostedMediaWithMetadataForm
+          const title = (row as HostedMediaWithMetadata).title;
+          return ctrl.get('title').value === title;
         } else {
-          return ctrl.get('ref').value === row.ref;
+          // MovieNotesForm
+          const ref = (row as MovieNote).ref;
+          return ctrl.get('ref').get('ref').value === ref;
         }
       })
     } else {
       mediaForm = formList.add();
     }
 
-    const dialog = this.dialog.open(FileDialogComponent, { width: '60vw', data: {
-      form: mediaForm,
-      privacy: 'protected',
-      storagePath: this.activeDirectory.storagePath
-    }});
+    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
+    if (this.activeDirectory.type === 'file') {
+      dialog = this.dialog.open(FileDialogComponent, { width: '60vw', data: {
+        form: mediaForm,
+        privacy: 'protected',
+        storagePath: this.activeDirectory.storagePath
+      }});
+    } else {
+      dialog = this.dialog.open(ImageDialogComponent, { width: '60vw', data: {
+        form: mediaForm,
+        ratio: this.activeDirectory.ratio,
+        storagePath: this.activeDirectory.storagePath
+      }});
+    }
 
     dialog.afterClosed().subscribe(async result => {
       if (!!result) {
-        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(orgForm);
-        await this.organizationService.update(this.orgId, documentToUpdate);
+        const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.activeForm);
+        if (collection === 'orgs') {
+          await this.organizationService.update(this.orgId, documentToUpdate);
+        } else {
+          documentToUpdate.id = this.getId();
+          await this.movieService.update(documentToUpdate);
+        }
         this.mediaService.uploadMedias(mediasToUpload);
       }
     });
@@ -186,13 +262,110 @@ export class FileExplorerComponent {
   }
 
   public async updateImage() {
-    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.singleFileForm);
-    await this.organizationService.update(this.orgId, documentToUpdate);
+    const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.activeForm);
+    
+    const collection = this.getCollection();
+    if (collection === 'movies') {
+      documentToUpdate.id = this.getId();
+      this.movieService.update(documentToUpdate);
+    } else if (collection === 'orgs') {
+      await this.organizationService.update(this.orgId, documentToUpdate);
+    }
     this.mediaService.uploadMedias(mediasToUpload);
   }
 
+  private async getTitleDirectories(org: OrganizationDocumentWithDates) {
+    const titlesRaw = await this.movieService.getValue(org.movieIds);
+    const currentApp: App = this.routerQuery.getData('app');
+    const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
+
+    for (const title of titles) {
+      this.directories.push({
+        name: title.title.original,
+        subDirectories: [
+          {
+            name: 'Poster',
+            type: 'image',
+            ratio: 'poster',
+            multiple: false,
+            docNameField: 'poster',
+            fileRefField: 'poster',
+            storagePath: `movies/${title.id}/poster`,
+            privacy: 'public'
+          },
+          {
+            name: 'Banner',
+            type: 'image',
+            ratio: 'banner',
+            multiple: false,
+            docNameField: 'banner',
+            fileRefField: 'banner',
+            storagePath: `movies/${title.id}/banner`,
+            privacy: 'public'
+          },
+          {
+            name: 'Still Photo',
+            type: 'image',
+            multiple: true,
+            docNameField: '',
+            fileRefField: '',
+            ratio: 'still',
+            storagePath: `movies/${title.id}/promotional.still_photo`,
+            privacy: 'public'
+          },
+          {
+            name: 'Presentation Deck',
+            type: 'file',
+            multiple: false,
+            docNameField: 'presentation_deck',
+            fileRefField: 'presentation_deck',
+            storagePath: `movies/${title.id}/promotional.presentation_deck`,
+            privacy: 'public'
+          },
+          {
+            name: 'Sales Pitch',
+            type: 'file',
+            multiple: false,
+            docNameField: 'file',
+            fileRefField: 'file',
+            storagePath: `movies/${title.id}/promotional.moodboard`,
+            privacy: 'public'
+          },
+          {
+            name: 'Scenario',
+            type: 'file',
+            multiple: false,
+            docNameField: 'scenario',
+            fileRefField: 'scenario',
+            storagePath: `movies/${title.id}/promotional.scenario`,
+            privacy: 'public'
+          },
+          {
+            name: 'Notes & Statements',
+            type: 'file',
+            multiple: true,
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${title.id}/promotional.notes`,
+            privacy: 'protected'
+          }
+        ]
+      })
+    }
+
+    this.cdr.markForCheck();
+  }
+
   public getSingleMediaForm(): HostedMediaForm {
-    return this.singleFileForm.controls[this.activeDirectory.fileRefField];
+    const path = this.activeDirectory.storagePath.split('/').pop();
+    let form: MediaFormTypes;
+    if (!!path) {
+      form = path.split('.').reduce((res, key) => res?.controls?.[key], this.activeForm);
+    } else {
+      // probably possible to remove fileRefField
+      form = this.activeForm.controls[this.activeDirectory.fileRefField];
+    }
+    return isHostedMediaForm(form) ? form : form.controls.ref;
   }
 
   /**
@@ -202,11 +375,31 @@ export class FileExplorerComponent {
     return this.activeDirectory.storagePath.split('/').splice(2).join('.');
   }
 
-  private getFormList(form: OrganizationForm | MovieForm): FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm> {
+  private getId() {
+    return this.activeDirectory.storagePath.split('/')[1];
+  }
+
+  public getCollection() {
+    return this.activeDirectory.storagePath.split('/').shift() as 'movies' | 'orgs';
+  }
+
+  public getFileRef(row: HostedMediaWithMetadata | string) {
+    return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
+  }
+
+  public getTitleRef(row: HostedMediaWithMetadata | string) {
+    return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+  }
+
+  private getFormList(form: OrganizationForm | MovieForm): MediaFormList {
     return this.getDeepPath().split('.').reduce((res, key) => res?.controls?.[key], form);
   }
 }
 
-function determineFormType(form: HostedMediaWithMetadataForm | HostedMediaForm): form is HostedMediaWithMetadataForm {
-  return !!(form as HostedMediaWithMetadataForm).get('title');
+function isHostedMediaForm(form: MediaFormTypes): form is HostedMediaForm {
+  return isMediaForm(form)
+}
+
+function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {
+  return !!(form as HostedMediaWithMetadataForm).get('title')
 }

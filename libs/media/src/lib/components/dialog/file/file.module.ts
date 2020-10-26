@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { FormDisplayNameModule } from '@blockframes/ui/form/display-name/display-name.module';
 
 import { FileDialogComponent } from './file.component';
 
@@ -14,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [FileDialogComponent],
@@ -23,6 +25,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
 
     UploadModule,
+    FormDisplayNameModule,
 
     // Material
     MatDialogModule,
@@ -30,7 +33,8 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatInputModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSelectModule
   ],
 })
 export class FileDialogModule { }
