@@ -1,5 +1,5 @@
 <section *ngIf="participant$ | async as participant">
-  <button [disabled]="!isAudioAvailable" (click)="muteAudio(participant)">
+  <button [disabled]="!isAudioAvailable" (click)="muteAudio(participant)" [ngStyle]="{'background-color': isAudioAvailable && participant.statusMedia.audio ? 'green' : isAudioAvailable && !participant.statusMedia.audio ? 'red' : '' }">
     <img src="assets/icons/microphone.svg" alt="Audio">
   </button>
 </section>

@@ -1,5 +1,5 @@
 <section *ngIf="participant$ | async as participant">
-  <button [disabled]="!isVideoAvailable" (click)="muteVideo(participant)">
+  <button [disabled]="!isVideoAvailable" (click)="muteVideo(participant)" [ngStyle]="{'background-color': isVideoAvailable && participant.statusMedia.video ? 'green' : isVideoAvailable && !participant.statusMedia.video ? 'red' : '' }">
     <img src="assets/icons/cam.svg" alt="Video">
   </button>
 </section>
