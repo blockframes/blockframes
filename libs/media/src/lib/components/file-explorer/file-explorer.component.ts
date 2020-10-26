@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
-import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
+import { extractMediaFromDocumentBeforeUpdate, isMediaForm } from '@blockframes/media/+state/media.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { FileDialogComponent } from '../dialog/file/file.component';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
@@ -14,19 +14,21 @@ import { MovieService } from '@blockframes/movie/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormList } from '@blockframes/utils/form';
 import { MediaRatioType } from '../cropper/cropper.component';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm, MovieNotesForm } from '@blockframes/movie/form/movie.form';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ImageDialogComponent } from '../dialog/image/image.component';
 import { Privacy } from '@blockframes/utils/file-sanitizer';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { App } from '@blockframes/utils/apps';
+import { MovieNote } from '@blockframes/movie/+state/movie.firestore';
 
 // Material
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
 
-type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm)[], HostedMediaWithMetadataForm | HostedMediaForm>
+type MediaFormTypes = HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm
+type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm)[], HostedMediaWithMetadataForm | HostedMediaForm | MovieNotesForm>
 
 const columns = { 
   ref: 'Type',
@@ -170,10 +172,12 @@ export class FileExplorerComponent {
           const orgForm = new OrganizationForm(org);
           const formList = this.getFormList(orgForm);
           const index = formList.controls.findIndex(form => {
-            if (determineFormType(form)) {
+            if (isHostedMediaForm(form)) {
+              return form.get('ref').value === row.ref;
+            } else if (isHostedMediaWithMetadataForm(form)) {
               return form.get('title').value === row.title;
             } else {
-              return form.get('ref').value === row.ref;
+              return form.get('ref').get('ref').value === row.ref;
             }
           });
 
@@ -187,7 +191,7 @@ export class FileExplorerComponent {
     });
   }
 
-  public async openDialog(row?: HostedMediaWithMetadata | string) {
+  public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {
 
     let formList: MediaFormList;
     const collection = this.getCollection();
@@ -201,15 +205,21 @@ export class FileExplorerComponent {
       formList = this.getFormList(this.activeForm);
     }
 
-    let mediaForm: HostedMediaWithMetadataForm | HostedMediaForm;
+    let mediaForm: MediaFormTypes;
     if (!!row) {
       mediaForm = formList.controls.find(ctrl => {
-        if (determineFormType(ctrl)) {
-          const title = typeof(row) === "string" ? row : row.title;
-          return ctrl.get('title').value === title;
-        } else {
-          const ref = typeof(row) === "string" ? row : row.ref;
+        if (isHostedMediaForm(ctrl)) {
+          // HostedMediaForm
+          const ref = (row as string);
           return ctrl.get('ref').value === ref;
+        } else if (isHostedMediaWithMetadataForm(ctrl)) {
+          // HostedMediaWithMetadataForm
+          const title = (row as HostedMediaWithMetadata).title;
+          return ctrl.get('title').value == title;
+        } else {
+          // MovieNotesForm
+          const ref = (row as MovieNote).ref;
+          return ctrl.get('ref').get('ref').value === ref;
         }
       })
     } else {
@@ -330,15 +340,15 @@ export class FileExplorerComponent {
             storagePath: `movies/${title.id}/promotional.scenario`,
             privacy: 'public'
           },
-          // {
-          //   name: 'Notes & Statements',
-          //   type: 'file',
-          //   multiple: true,
-          //   docNameField: 'ref',
-          //   fileRefField: 'ref',
-          //   storagePath: `movies/${title.id}/promotional.notes`,
-          //   privacy: 'protected'
-          // }
+          {
+            name: 'Notes & Statements',
+            type: 'file',
+            multiple: true,
+            docNameField: 'ref',
+            fileRefField: 'ref',
+            storagePath: `movies/${title.id}/promotional.notes`,
+            privacy: 'protected'
+          }
         ]
       })
     }
@@ -348,14 +358,14 @@ export class FileExplorerComponent {
 
   public getSingleMediaForm(): HostedMediaForm {
     const path = this.activeDirectory.storagePath.split('/').pop();
-    let form: HostedMediaForm | HostedMediaWithMetadataForm;
+    let form: MediaFormTypes;
     if (!!path) {
       form = path.split('.').reduce((res, key) => res?.controls?.[key], this.activeForm);
     } else {
       // probably possible to remove fileRefField
       form = this.activeForm.controls[this.activeDirectory.fileRefField];
     }
-    return determineFormType(form) ? form.get('ref') : form;
+    return isHostedMediaForm(form) ? form : form.controls.ref;
   }
 
   /**
@@ -386,6 +396,10 @@ export class FileExplorerComponent {
   }
 }
 
-function determineFormType(form: HostedMediaWithMetadataForm | HostedMediaForm): form is HostedMediaWithMetadataForm {
-  return !!(form as HostedMediaWithMetadataForm).get('title');
+function isHostedMediaForm(form: MediaFormTypes): form is HostedMediaForm {
+  return isMediaForm(form)
+}
+
+function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {
+  return !!(form as HostedMediaWithMetadataForm).get('title')
 }
