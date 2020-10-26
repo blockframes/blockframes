@@ -62,7 +62,7 @@ export async function upgradeAlgoliaMovies() {
       'searchable(orgName)',
 
       // other facets
-      'socialGoals',
+      'audience.goals',
       'genres',
       'languages.original',
       'languages.dubbed',
