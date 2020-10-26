@@ -7,7 +7,7 @@ import {IParticipantMeeting} from "@blockframes/event/components/meeting/+state/
 import {MeetingService} from "@blockframes/event/components/meeting/+state/meeting.service";
 
 // Twilio
-import {Participant} from "twilio-video";
+import {LocalParticipant, Participant} from "twilio-video";
 
 @Component({
   selector: '[remoteParticipants] [event] event-meeting-video',
