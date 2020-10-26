@@ -12,9 +12,7 @@ export class PreviewModalComponent {
 
   @Input() ref: string
 
-  constructor(private dialog: MatDialog) { 
-    setTimeout(() => console.log(this.ref), 1000)
-  }
+  constructor(private dialog: MatDialog) { }
 
   openModal() {
     this.dialog.open(DialogPreviewComponent, {

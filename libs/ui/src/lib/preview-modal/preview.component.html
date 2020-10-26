@@ -1,2 +1,5 @@
-<mat-icon svgIcon="eye" color="primary" matTooltip="Click to see preview" (click)="openModal()"></mat-icon>
+<button mat-icon-button (click)="openModal()" [disabled]="!ref" matTooltip="Click to see preview"
+  [matTooltipDisabled]="!ref">
+  <mat-icon svgIcon="eye" color="primary"></mat-icon>
+</button>
 <ng-content></ng-content>

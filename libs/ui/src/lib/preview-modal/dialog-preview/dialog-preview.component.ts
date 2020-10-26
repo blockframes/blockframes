@@ -25,6 +25,8 @@ export class DialogPreviewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.mediaService.generateImgIxUrl(this.data.ref, this.parameters).then(src => this.src = src)
+    if (this.data.ref.includes('http')) {
+      this.mediaService.generateImgIxUrl(this.data.ref, this.parameters).then(src => this.src = src)
+    }
   }
 }
