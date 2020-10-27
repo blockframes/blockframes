@@ -11,4 +11,19 @@ mat-card {
   mat-divider {
     position: static;
   }
+
+  mat-list {
+    mat-list-item {
+      mat-icon {
+        min-width: 28px;
+        margin: 0 14px;
+      }
+    }
+  }
+
+  p.no-files {
+    width: 70%;
+    text-align: center;
+    margin: 32px auto;
+  }
 }

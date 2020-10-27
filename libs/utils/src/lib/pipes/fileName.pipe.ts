@@ -53,15 +53,15 @@ export class FilePathPipe implements PipeTransform {
     if (collection === 'movies') {
       collection = 'Movie';
       const movie = await this.movieService.getValue(docId);
-      docName = movie.title.original;
+      docName = movie?.title?.original ?? 'Unknown Movie';
     } else if (collection === 'orgs') {
       collection = 'Organization';
       const org = await this.orgService.getValue(docId);
-      docName = org.denomination.public;
+      docName = org?.denomination?.public ?? 'Unknown Organization';
     } else if (collection === 'users') {
       collection = 'User';
       const user = await this.userService.getValue(docId);
-      docName = `${user.firstName} ${user.lastName}`;
+      docName = `${user?.firstName} ${user?.lastName}`;
     }
 
     return `${collection}${separator}${docName}${separator}${folder}${separator}${fileName}`;

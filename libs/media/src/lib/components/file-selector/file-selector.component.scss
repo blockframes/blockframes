@@ -5,22 +5,56 @@ section {
   }
 }
 
-mat-expansion-panel {
-  mat-expansion-panel-header {
-    mat-icon {
-      margin-right: 12px;
+mat-tab-group {
+  height: 60vh;
+  flex-grow: 1;
+
+  mat-expansion-panel {
+    mat-expansion-panel-header {
+      mat-icon {
+        margin-right: 12px;
+      }
+    }
+  }
+
+  mat-list {
+    margin-left: 42px;
+    mat-list-item {
+      div {
+        width: 100%;
+        span {
+          mat-icon {
+            margin-right: 12px;
+          }
+        }
+      }
     }
   }
 }
 
-mat-list {
-  margin-left: 42px;
-  mat-list-item {
-    div {
-      width: 100%;
+.selected {
+  border-left: solid 1px var(--borderGrey);
+  padding: 0 0 0 12px;
+
+  h4 {
+    margin: 12px 0 0 0;
+  }
+
+  mat-list {
+    height: 52vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    mat-list-item {
       span {
+        width: 100%;
         mat-icon {
-          margin-right: 12px;
+          width: 28px;
+        }
+        button {
+          mat-icon {
+            width: 18px;
+          }
         }
       }
     }
