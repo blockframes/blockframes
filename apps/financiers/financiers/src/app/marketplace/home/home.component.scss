@@ -9,23 +9,25 @@ header {
   margin-bottom: 80px;
   background-image: url("/assets/images/ACMbannerlanding.png");
   background-size: cover;
-  text-align: center;
-  border: none;
 
-  h1.mat-display-2 {
-    margin-bottom: 80px;
-  }
   h4 {
     text-transform: uppercase;
     margin-bottom: 0;
   }
+  h1 {
+    margin-bottom: 32px;
+  }
+  p {
+    width: 50%;
+  }
+
 }
 
 .detail {
   margin: 24px 0px;
 }
 
-.upcoming-events-banner {
+.banner {
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
   padding: 40px 0px;
