@@ -39,10 +39,10 @@ export class MarketplaceFinancingComponent implements OnInit {
   budgetData = budgetData;
   formatter = {
     bigCurrency: {
-      formatter: (value: number) => typeof value === 'number' ? toBigCurrency(value, this.locale) : 'Not Provided'
+      formatter: (value: number) => typeof value === 'number' ? toBigCurrency(value, this.locale) : ''
     },
     percent: {
-      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : 'Not Provided'
+      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : ''
     }
   }
 
