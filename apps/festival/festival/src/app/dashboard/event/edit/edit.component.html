@@ -75,7 +75,7 @@
           <div fxLayout="row" fxLayoutAlign="end">
             <button mat-stroked-button color="primary" (click)="openFileSelector()">
               <mat-icon svgIcon="folder"></mat-icon>
-              Manage Files
+              <span>Manage Files</span>
             </button>
           </div>
 
@@ -85,8 +85,8 @@
           <ng-container *ngIf="files.value.length > 0; else noFiles">
             <mat-list>
               <mat-list-item *ngFor="let file of files.value">
-                <mat-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
-                {{file | filePath: ' > ' | async}}
+                <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
+                <span>{{file | filePath: ' > ' | async}}</span>
               </mat-list-item>
             </mat-list>
           </ng-container>

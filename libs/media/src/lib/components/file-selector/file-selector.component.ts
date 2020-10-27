@@ -1,29 +1,26 @@
 
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, Pipe, PipeTransform } from '@angular/core';
 
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { recursivelyListFiles } from '@blockframes/media/+state/media.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
-  selector: '[form] media-file-selector',
+  selector: 'media-file-selector',
   templateUrl: './file-selector.component.html',
   styleUrls: ['./file-selector.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileSelectorComponent implements OnInit {
+export class FileSelectorComponent implements OnInit, OnDestroy {
 
-  orgFiles: string[];
+  orgFiles: { path: string, isSelected: boolean }[];
   movies: Movie[];
-  moviesFiles: Record<string, string[]>;
+  moviesFiles: Record<string, { path: string, isSelected: boolean}[]>;
   selectedFiles: string[];
 
-  escapeHandler = (event: KeyboardEvent) => {
-    if (event.code === 'Escape') {
-      this.closeDialog();
-    }
-  }
+  private sub: Subscription;
 
   constructor(
     private orgQuery: OrganizationQuery,
@@ -36,27 +33,62 @@ export class FileSelectorComponent implements OnInit {
     this.selectedFiles = this.data.selectedFiles ?? [];
 
     const org = this.orgQuery.getActive();
-    this.orgFiles = recursivelyListFiles(org);
+    this.orgFiles = recursivelyListFiles(org).map(file => ({path: file, isSelected: this.selectedFiles.includes(file)}));
     this.movies = await this.movieService.getValue(org.movieIds);
     this.moviesFiles = {};
-    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie));
+    this.movies.forEach(movie => this.moviesFiles[movie.id] = recursivelyListFiles(movie).map(file => ({path: file, isSelected: this.selectedFiles.includes(file)})));
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
-    this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog
+    this.sub = this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog
     window.addEventListener('keyup', this.escapeHandler); // user press the escape key
   }
 
-  isSelected(file: string) {
-    return this.selectedFiles.some(selected => selected === file);
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
-  select(file: string) {
-    this.selectedFiles.push(file);
+  escapeHandler(event: KeyboardEvent) {
+    if (event.code === 'Escape') {
+      this.closeDialog();
+    }
   }
 
-  unSelect(file: string) {
-    const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
-    this.selectedFiles = newSelectedFiles;
+  toggleSelect(file: string) {
+
+    for (const orgFile of this.orgFiles) {
+      if (orgFile.path === file) {
+
+        orgFile.isSelected = !orgFile.isSelected;
+
+        if (orgFile.isSelected) {
+          this.selectedFiles.push(file);
+        } else {
+          const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
+          this.selectedFiles = newSelectedFiles;
+        }
+        return; // avoid further iterations
+
+      }
+    }
+
+    for (const movieId in this.moviesFiles) {
+      for (const movieFile of this.moviesFiles[movieId]) {
+
+        if (movieFile.path === file) {
+
+          movieFile.isSelected = !movieFile.isSelected;
+
+          if (movieFile.isSelected) {
+            this.selectedFiles.push(file);
+          } else {
+            const newSelectedFiles = this.selectedFiles.filter(selected => selected !== file);
+            this.selectedFiles = newSelectedFiles;
+          }
+          return; // avoid further iterations
+        }
+
+      }
+    }
   }
 
   closeDialog() {

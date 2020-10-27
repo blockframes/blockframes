@@ -7,24 +7,18 @@
 
 <mat-divider></mat-divider>
 
-<div fxLayout="row">
+<div fxLayout="row" class="container">
   <mat-tab-group>
     <mat-tab label="Organization Files">
       <mat-list>
-        <ng-container *ngIf="orgFiles.length > 0; else noOrgFiles">
+        <ng-container *ngIf="orgFiles.length; else noOrgFiles">
           <mat-list-item *ngFor="let file of orgFiles">
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-              <span fxLayout="row" fxLayoutAlign="start center">
-                <mat-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
-                {{file | fileName}}
-              </span>
-              <ng-container *ngIf="isSelected(file); else notSelected">
-                <button mat-icon-button color="primary" (click)="unSelect(file)"><mat-icon svgIcon="check"></mat-icon></button>
-              </ng-container>
-              <ng-template #notSelected>
-                <button mat-icon-button (click)="select(file)"><mat-icon svgIcon="add"></mat-icon></button>
-              </ng-template>
-            </div>
+            <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
+            <div mat-line [matTooltip]="file.path | fileName">{{file.path | fileName}}</div>
+            <button mat-icon-button (click)="toggleSelect(file.path)">
+              <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
+              <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
+            </button>
           </mat-list-item>
         </ng-container>
         <ng-template #noOrgFiles>
@@ -39,25 +33,19 @@
 
         <mat-expansion-panel-header>
           <mat-icon svgIcon="folder"></mat-icon>
-          {{movie.title.international}} ({{moviesFiles[movie.id].length}} files)
+          <span>{{movie.title.international}} ({{moviesFiles[movie.id].length}} files)</span>
         </mat-expansion-panel-header>
 
         <mat-divider></mat-divider>
         <mat-list>
-          <ng-container *ngIf="moviesFiles[movie.id].length > 0; else noMovieFiles">
+          <ng-container *ngIf="moviesFiles[movie.id].length; else noMovieFiles">
             <mat-list-item *ngFor="let file of moviesFiles[movie.id]">
-              <div fxLayout="row" fxLayoutAlign="space-between center">
-                <span fxLayout="row" fxLayoutAlign="start center">
-                  <mat-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
-                  {{file | fileName}}
-                </span>
-                <ng-container *ngIf="isSelected(file); else notSelected">
-                  <button mat-icon-button color="primary" (click)="unSelect(file)"><mat-icon svgIcon="check"></mat-icon></button>
-                </ng-container>
-                <ng-template #notSelected>
-                  <button mat-icon-button (click)="select(file)"><mat-icon svgIcon="add"></mat-icon></button>
-                </ng-template>
-              </div>
+              <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
+              <div mat-line [matTooltip]="file.path | fileName">{{file.path | fileName}}</div>
+              <button mat-icon-button (click)="toggleSelect(file.path)">
+                <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
+                <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
+              </button>
             </mat-list-item>
           </ng-container>
           <ng-template #noMovieFiles>
@@ -74,11 +62,9 @@
     <h4>Selected Files ({{selectedFiles.length}})</h4>
     <mat-list>
       <mat-list-item *ngFor="let file of selectedFiles">
-        <span fxLayout="row" fxLayoutAlign="start center">
-          <mat-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
-          <span [matTooltip]="file | fileName">{{file | fileName | maxLength: 15}}</span>
-          <button mat-icon-button (click)="unSelect(file)"><mat-icon svgIcon="cross"></mat-icon></button>
-        </span>
+        <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
+        <div mat-line [matTooltip]="file | fileName">{{file | fileName}}</div>
+        <button mat-icon-button (click)="toggleSelect(file)"><mat-icon svgIcon="cross"></mat-icon></button>
       </mat-list-item>
     </mat-list>
     <button mat-raised-button color="primary" (click)="closeDialog()">Add Files</button>

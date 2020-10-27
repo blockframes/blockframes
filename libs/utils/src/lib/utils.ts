@@ -44,7 +44,7 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
 }
 
 /**
- * Convert a file extension into teh corresponding file type.
+ * Convert a file extension into the corresponding file type.
  * @example
  * extensionToFileType('png'); // 'image'
  * extensionToFileType('mp4'); // 'video'
@@ -55,7 +55,7 @@ export function extensionToType(extension: string): AllowedFileType | 'unknown' 
 
   // we use a for in loop so we can directly return when a match is found
   // (returning in a forEach just end the current iteration)
-  for(const type in allowedFiles) {
+  for (const type in allowedFiles) {
     const match = allowedFiles[type].extension.some(fileExtension => fileExtension === extension);
     if (match) return type as AllowedFileType;
   }

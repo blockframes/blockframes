@@ -1,59 +1,54 @@
 
-section {
-  button {
-    margin-right: 24px;
-  }
-}
+:host {
 
-mat-tab-group {
-  height: 60vh;
-  flex-grow: 1;
+  display: block;
+  height: 100%;
+  width: 100%;
 
-  mat-expansion-panel {
-    mat-expansion-panel-header {
-      mat-icon {
-        margin-right: 12px;
-      }
+  section {
+    button {
+      margin-right: 24px;
     }
   }
 
-  mat-list {
-    margin-left: 42px;
-    mat-list-item {
-      div {
-        width: 100%;
-        span {
-          mat-icon {
-            margin-right: 12px;
-          }
-        }
-      }
-    }
-  }
-}
+  .container {
+      width: 100%;
+      height: 90%;
 
-.selected {
-  border-left: solid 1px var(--borderGrey);
-  padding: 0 0 0 12px;
-
-  h4 {
-    margin: 12px 0 0 0;
-  }
-
-  mat-list {
-    height: 52vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    mat-list-item {
-      span {
-        width: 100%;
+    mat-tab-group {
+      width: 60%;
+      mat-expansion-panel-header {
         mat-icon {
-          width: 28px;
+          // a too long expansion panel title is causing the icon to shrink
+          // leading to icon with different sizes depending on the title length
+          // we do this to ensure the icon stays at its normal size
+          min-width: 24px;
         }
-        button {
-          mat-icon {
-            width: 18px;
+      }
+      mat-list {
+        margin-left: 42px;
+      }
+    }
+
+    .selected {
+      width: 40%;
+      border-left: solid 1px var(--foreground-divider);
+      padding-left: 16px;
+
+      h4 {
+        margin-top: 16px;
+      }
+
+      mat-list {
+        // this is needed in order to have a scrollable
+        // list of selected files
+        overflow-y: scroll;
+        margin-bottom: 16px;
+        mat-list-item {
+          button {
+            mat-icon {
+              width: 16px;
+            }
           }
         }
       }

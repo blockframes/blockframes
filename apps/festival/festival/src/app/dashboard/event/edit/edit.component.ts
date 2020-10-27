@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { UserService } from '@blockframes/user/+state';
 import { User } from '@blockframes/auth/+state';
 import { Observable, Subscription } from 'rxjs';
-import { switchMap, pluck, map } from 'rxjs/operators';
+import { switchMap, pluck, map, take } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -108,7 +108,7 @@ export class EditComponent implements OnInit, OnDestroy {
       data: {
         selectedFiles: this.files.value,
       }
-    }).afterClosed().subscribe(result => {
+    }).afterClosed().pipe(take(1)).subscribe(result => {
       this.files.patchAllValue(result);
       this.cdr.markForCheck();
     });

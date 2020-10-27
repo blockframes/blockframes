@@ -21,9 +21,7 @@ export class FileNamePipe implements PipeTransform {
   }
 }
 
-@Pipe({
-  name: 'filePath'
-})
+@Pipe({ name: 'filePath' })
 export class FilePathPipe implements PipeTransform {
 
   constructor(
@@ -41,13 +39,14 @@ export class FilePathPipe implements PipeTransform {
     const arrayedRef = file.split('/');
     if (arrayedRef.length < 5) {
       console.warn('MALFORMED FILE PATH', file);
-      console.warn('Path should be formed of <privacy>/<collection>/<ID>/<folders>/<fileName>')
+      console.warn('Path should be formed of <privacy>/<collection>/<ID>/<folders>/<fileName>');
+      return '';
     }
     let collection = arrayedRef[1];
     const docId = arrayedRef[2];
     const fileName = arrayedRef.pop();
-    const folders = arrayedRef.pop();
-    const folder = folders.split('.').pop();
+    const subFolders = arrayedRef.pop();
+    const folder = subFolders.split('.').pop();
 
     let docName = docId;
     if (collection === 'movies') {
@@ -64,7 +63,7 @@ export class FilePathPipe implements PipeTransform {
       docName = `${user?.firstName} ${user?.lastName}`;
     }
 
-    return `${collection}${separator}${docName}${separator}${folder}${separator}${fileName}`;
+    return [collection, docName, folder, fileName].join(separator);
   }
 }
 
@@ -93,7 +92,7 @@ export class FileTypeImagePipe implements PipeTransform {
     if (typeof file !== 'string') {
       console.warn('UNEXPECTED FILE', file);
       console.warn('This pipe require a string as input');
-      return 'unknown';
+      return kind === 'image' ? 'image.webp' : 'document';
     }
 
     const extension = getFileExtension(file);
