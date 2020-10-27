@@ -41,7 +41,12 @@
       <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail($event, movie)">
         <mat-form-field appearance="outline">
           <mat-label>Subject</mat-label>
-          <input matInput formControlName="subject" required/>
+          <mat-select formControlName="subject" required>
+            <mat-option></mat-option>
+            <mat-option value="I’m all set. Ready to invest">I’m all set. Ready to invest</mat-option>
+            <mat-option value="I have a question about the project">I have a question about the project</mat-option>
+            <mat-option value="Other">Other</mat-option>
+          </mat-select>
           <mat-error>Please select a subject</mat-error>
         </mat-form-field>
         <div fxLayout fxLayoutGap="24px">
