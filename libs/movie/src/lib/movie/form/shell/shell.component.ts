@@ -74,7 +74,6 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       {
         path: 'sales-pitch',
         label: 'Sales Pitch',
-        shouldHide: isStatus(status, ['released'])
       }, {
         path: 'media-files',
         label: 'Files'

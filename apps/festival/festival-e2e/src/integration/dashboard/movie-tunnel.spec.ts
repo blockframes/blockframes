@@ -168,9 +168,8 @@ const testSteps = [
     input: 'techSpec', comp_save: [], save_form: false},
   {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input',  
     input: 'availableMaterials', comp_save: [], save_form: false},
-  // @TODO Mano #3419 : the movie you create have productionStatus "released" so you can't test this step
-  /*{title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
-    input: 'salesPitch', comp_save: [], save_form: false},*/
+  {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
+    input: 'salesPitch', comp_save: [], save_form: false},
   {title: 'Files', selector: 'movie-form-media-files file-upload', 
     input: 'files',  comp_save: [], save_form: false},
   // @TODO Mano #3419 : the movie you create have productionStatus "released" so you can't test this step
