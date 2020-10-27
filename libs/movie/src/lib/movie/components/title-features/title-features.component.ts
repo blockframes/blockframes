@@ -10,7 +10,7 @@ interface TitleFeature {
 function createTitleFeatureView(movie: Movie): TitleFeature[] {
   const { genres, runningTime, originalLanguages, originCountries } = movie;
   const convertedGenres = genres.map(genre => genres[genre]);
-  const convertedRunTime = typeof runningTime.time === "string" ? runningTime.time : `${runningTime.time}min`;
+  const convertedRunTime = typeof runningTime.time === 'number' ? `${runningTime.time}min` : 'TBC';
   const convertedOriginalLanguages = originalLanguages.map(language => languages[language]);
   const convertedOriginCountries = originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
   const statusLabel = productionStatus[movie.productionStatus];
