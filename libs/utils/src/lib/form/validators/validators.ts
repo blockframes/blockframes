@@ -147,6 +147,6 @@ export function isKeyValidator(scope: Scope): ValidatorFn {
  */
 export function isKeyArrayValidator(scope: Scope): ValidatorFn {
   return (control: FormControl): ValidationErrors => {
-    return control.value.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
+    return control.value?.every(value => isInKeys(scope, value)) ? null : { invalidValue: true }
   };
 }
