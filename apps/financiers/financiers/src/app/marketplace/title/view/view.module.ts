@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
@@ -18,6 +19,10 @@ import { CampaignProgressModule } from '@blockframes/campaign/components/progres
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes = [
   {
@@ -67,6 +72,7 @@ const routes = [
   declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MovieShellModule,
     ImageReferenceModule,
@@ -76,8 +82,12 @@ const routes = [
     PromotionalLinksModule,
     CampaignProgressModule,
     // Material
+    MatDialogModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
     // Routes
     RouterModule.forChild(routes)
   ]
