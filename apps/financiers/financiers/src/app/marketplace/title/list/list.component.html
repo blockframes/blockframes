@@ -8,7 +8,7 @@
   </list-page-app-bar>
 
   <list-page-title>
-    <h1 class="mat-display-2 page-title">On the market today</h1>
+    <h1 class="mat-display-2 page-title">All Projects</h1>
   </list-page-title>
 
   <!-- SORT -->
@@ -41,10 +41,10 @@
   <!-- FILTERS (ng-content) -->
   <list-filter>
 
-    <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
+    <ng-template filter label="Partners" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
         [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"
-        label="Search for a Sales Agent" placeholder="Organization name"></algolia-chips-autocomplete>
+        label="Search for a Partners" placeholder="Organization name"></algolia-chips-autocomplete>
     </ng-template>
 
     <ng-template filter label="Genres" [form]="searchForm.genres">
@@ -90,9 +90,10 @@
     </div>
   </ng-template>
 
-
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
-    You've viewed {{ hitsViewed }} of {{ nbHits }} titles
-  </list-page-progress>
+  <ng-container *ngIf="nbHits">
+    <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+      You've viewed {{ hitsViewed }} of {{ nbHits }} titles
+    </list-page-progress>
+  </ng-container>
 
 </list-page>
