@@ -14,10 +14,12 @@ const routes = [{
     pathMatch: 'full'
   }, {
     path: 'title',
-    loadChildren: () => import('../title/title.module').then(m => m.OrganizationTitleModule)
+    loadChildren: () => import('../title/title.module').then(m => m.OrganizationTitleModule),
+    data: { animation: 0 },
   }, {
     path: 'member',
-    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule)
+    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule),
+    data: { animation: 1 },
   }]
 }]
 
