@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Campaign, CampaignService } from '../../+state';
 import { switchMap } from 'rxjs/operators';
