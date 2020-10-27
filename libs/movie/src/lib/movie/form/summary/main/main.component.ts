@@ -19,4 +19,10 @@ export class SummaryMainComponent {
     return [this.movie.get('genres'), ...this.movie.get('customGenres').controls];
   }
 
+  runningTimeType() {
+    return typeof this.movie.runningTime.get('time').value === 'number'
+    ? `${this.movie.runningTime.get('time').value}min`
+    : 'TBC'
+  }
+
 }
