@@ -39,22 +39,25 @@
     <article *ngIf="movie | hasKeys: ['promotional.scenario', 'promotional.moodboard', 'promotional.presentation_deck']">
       <h2>Files</h2>
       <div grid>
-        <mat-card [col]="4" *ngIf="movie.promotional.presentation_deck as deck">
+        <mat-card [col]="3" *ngIf="movie.promotional.presentation_deck as deck">
+          <img asset="add_deck.webp" />
           <a mat-button [href]="deck | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
         </mat-card>
-        <mat-card [col]="4" *ngIf="movie.promotional.scenario as scenario">
+        <mat-card [col]="3" *ngIf="movie.promotional.scenario as scenario">
+          <img asset="add_scenario.webp" />
           <a mat-button [href]="scenario | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
             <span>Scenario</span>
           </a>
         </mat-card>
-        <mat-card [col]="4" *ngIf="movie.promotional.moodboard as moodboard">
+        <mat-card [col]="3" *ngIf="movie.promotional.moodboard as moodboard">
+          <img asset="add_moodboard.webp" />
           <a mat-button [href]="moodboard | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
-            <span>Moodboard / Artistic Deck</span>
+            <span>Moodboard</span>
           </a>
         </mat-card>
       </div>
@@ -62,9 +65,9 @@
 
     <article *ngIf="movie.promotional.still_photo.length">
       <h2>Images</h2>
-      <bf-carousel flex [min]="4">
+      <bf-carousel flex [min]="3">
         <ng-container *ngFor="let photo of movie.promotional.still_photo">
-          <img carouselItem [col]="3" [ref]="photo" asset="empty_poster.webp" >
+          <img carouselItem [col]="4" [ref]="photo" asset="empty_poster.webp" >
         </ng-container>
       </bf-carousel>
     </article>
