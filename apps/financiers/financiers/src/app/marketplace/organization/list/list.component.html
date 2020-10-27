@@ -3,8 +3,7 @@
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-      <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for titles, directors, keywords, ...">
+      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Try searching for our partners...">
     </form>
   </list-page-app-bar>
 
@@ -42,8 +41,10 @@
     </div>
   </ng-template>
 
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
-    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
-  </list-page-progress>
+  <ng-container *ngIf="nbHits">
+    <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+      <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+    </list-page-progress>
+  </ng-container>
 
 </list-page>
