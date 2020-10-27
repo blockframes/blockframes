@@ -15,14 +15,15 @@
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
-  </title-marketplace-shell>
 
-  <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-    <h1>Project Funding</h1>
-    <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
-    <button mat-flat-button color="accent">
-      Invest in this project
-    </button>
-    <p class="mat-caption">Learn more about investing in cinema industry</p>
-  </section>
+    <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+      <h1>Project Funding</h1>
+      <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
+      <button mat-flat-button color="accent">
+        Invest in this project
+      </button>
+      <p class="mat-caption">Learn more about investing in cinema industry</p>
+    </section>
+
+  </title-marketplace-shell>
 </ng-container>

@@ -17,6 +17,7 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { PromotionalLinksModule } from '@blockframes/movie/components/promotional-links/promotional-links.module';
 import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 import { HasKeysModule } from '@blockframes/utils/pipes';
+import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [TitleMarketplaceShellComponent],
@@ -40,6 +42,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     CarouselModule,
     MatLayoutModule,
     HasKeysModule,
+    DownloadModule,
 
     // Material
     MatChipsModule,
@@ -47,6 +50,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatIconModule,
     MatSnackBarModule,
     MatTabsModule,
+    MatCardModule,
 
     // Routes
     RouterModule
