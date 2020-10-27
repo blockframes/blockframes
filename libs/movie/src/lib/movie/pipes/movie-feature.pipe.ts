@@ -19,7 +19,7 @@ export class MovieFeaturePipe implements PipeTransform {
     if (originalLanguages.length > 0) displayedLanguages += languages[originalLanguages[0]];
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
-    const isTBC = (runningTime.time && release.status !== 'TBC') ? `${runningTime.time}'` : 'TBC';
+    const isTBC = (typeof runningTime.time === 'number') ? `${runningTime.time}'` : 'TBC';
 
     return [
       contentType ? contentType[contentType] : '',
