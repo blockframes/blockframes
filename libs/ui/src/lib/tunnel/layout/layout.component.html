@@ -25,7 +25,9 @@
     </ng-container>
 
     <!-- Main Content -->
-    <router-outlet></router-outlet>
+    <main [@routeAnimation]="animationOutlet(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </main>
 
     <!-- Previous / Next -->
     <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center" class="footnote">
