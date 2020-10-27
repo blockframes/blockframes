@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     const queryFn: QueryFn = ref => ref.where('storeConfig.appAccess.financiers', '==', true).where('storeConfig.status', '==', 'accepted');
     this.sections = [
       {
-        title: 'New films',
+        title: 'New projects',
         movies$: this.movieService.valueChanges(ref => queryFn(ref))
       },
       {
