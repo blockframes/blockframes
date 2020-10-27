@@ -40,21 +40,21 @@
       <h2>Files</h2>
       <div grid>
         <mat-card [col]="3" *ngIf="movie.promotional.presentation_deck as deck">
-          <img asset="add_deck.webp" />
+          <img asset="deck.webp" />
           <a mat-button [href]="deck | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
             <span>Presentation Deck</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="movie.promotional.scenario as scenario">
-          <img asset="add_scenario.webp" />
+          <img asset="scenario.webp" />
           <a mat-button [href]="scenario | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
             <span>Scenario</span>
           </a>
         </mat-card>
         <mat-card [col]="3" *ngIf="movie.promotional.moodboard as moodboard">
-          <img asset="add_moodboard.webp" />
+          <img asset="moodboard.webp" />
           <a mat-button [href]="moodboard | getUrl | async" target="_blank">
             <mat-icon svgIcon="download"></mat-icon>
             <span>Moodboard</span>
