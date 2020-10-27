@@ -1,8 +1,6 @@
 /**
  * Clouds functions use to access twilio secure functions.
  */
-
-
 import {CallableContext} from "firebase-functions/lib/providers/https";
 
 import {getDocument} from "@blockframes/firebase-utils";
@@ -10,7 +8,7 @@ import {EventDocument, Meeting} from "@blockframes/event/+state/event.firestore"
 import {ErrorResultResponse} from "@blockframes/utils/utils";
 
 import {twilioApiKeySecret, twilioAccountSid, twilioApiKeySid} from './environments/environment';
-import {hasUserAcceptedEvent} from "./internals/invitations/events";
+import {hasUserAcceptedEvent} from "./internals/invitations/meetings";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 
 /**

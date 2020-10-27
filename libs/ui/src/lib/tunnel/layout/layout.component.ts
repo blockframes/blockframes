@@ -6,8 +6,9 @@ import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { filter, map, shareReplay } from 'rxjs/operators';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { MatSidenavContent } from '@angular/material/sidenav';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -46,7 +47,7 @@ function getStepSnapshot(steps: TunnelStep[], url: string): TunnelStepSnapshot {
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  animations: [fade],
+  animations: [fade, routeAnimation],
   host: {
     'class': 'tunnel-layout',
     '[@fade]': 'fade'
@@ -94,6 +95,10 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.currenStep = getStepSnapshot(this.steps, url);
     this.next = getPage(this.steps, url, 1);
     this.previous = getPage(this.steps, url, -1);
+  }
+
+  animationOutlet(outlet: RouterOutlet) {
+    return outlet?.activatedRouteData?.animation;
   }
 
   ngOnDestroy() {

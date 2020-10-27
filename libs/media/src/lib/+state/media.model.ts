@@ -110,7 +110,7 @@ function isMedia(ref: string) {
   return /^(public\/|protected\/)/gm.test(ref);
 }
 
-function isMediaForm(obj: any) {
+export function isMediaForm(obj: any) {
   return (
     typeof obj === 'object' &&
     !!obj &&

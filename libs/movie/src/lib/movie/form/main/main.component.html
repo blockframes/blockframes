@@ -82,7 +82,8 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Release Year</mat-label>
-          <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number" placeholder="YYYY" />
+          <input test-id="release-year" matInput [formControl]="form.release.get('year')" required type="number"
+            placeholder="YYYY" />
           <mat-error *ngIf="form.hasError('invalidYear', 'release.year')">Please enter a 4 digit date (e.g. 2020)
           </mat-error>
           <mat-error *ngIf="form.hasError('required', 'release.year')">
@@ -149,7 +150,8 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input test-id="run-time" matInput type="number" min="0" [formControl]="form.runningTime.get('time')" name="runningTime" />
+          <input test-id="run-time" matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
+            name="runningTime" />
           <mat-hint>In minutes</mat-hint>
           <mat-error>
             Please specify your project's runtime.
@@ -193,8 +195,8 @@
             <div fxLayout fxLayoutGap="24px">
 
               <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
-                <static-select test-id="director-status" scope="memberStatus" [control]="directorForm.get('status')" [withoutValues]="['']"
-                  fxFlex>
+                <static-select test-id="director-status" scope="memberStatus" [control]="directorForm.get('status')"
+                  [withoutValues]="['']" fxFlex>
                   <mat-label>Director's Status</mat-label>
                   <mat-hint>
                     Please specify if the director is confirmed for this project or not.
@@ -202,8 +204,9 @@
                 </static-select>
               </ng-container>
 
-              <static-select test-id="director-category" scope="directorCategory" [control]="directorForm.get('category')"
-                placeholder="Director's Category" [withoutValues]="['']" fxFlex>
+              <static-select test-id="director-category" scope="directorCategory"
+                [control]="directorForm.get('category')" placeholder="Director's Category" [withoutValues]="['']"
+                fxFlex>
                 <mat-label>Director's Category</mat-label>
                 <mat-hint>
                   Please select the applying category reflecting the director's experience.
@@ -213,7 +216,9 @@
 
             <mat-form-field appearance="outline">
               <mat-label>Director's Description</mat-label>
-              <textarea test-id="director-desc" matInput formControlName="description"></textarea>
+              <textarea test-id="director-desc" matInput formControlName="description"
+                placeholder="e.g. James Cameron is a Canadian director, screenwriter, and producer who has had an extensive career in film and television.">
+              </textarea>
               <mat-hint>
                 Director's biography, remarkable elements...
               </mat-hint>

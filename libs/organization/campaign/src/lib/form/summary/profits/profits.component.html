@@ -27,7 +27,6 @@
     </li>
   </ul>
   <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <mat-icon svgIcon="eye"></mat-icon>
     <strong>Detailed waterfall:</strong>
     <missing-control [control]="form.get('files').get('waterfall.ref')">
       <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>

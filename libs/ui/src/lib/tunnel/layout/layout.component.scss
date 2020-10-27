@@ -31,7 +31,12 @@ tunnel-layout {
   
   mat-sidenav-content {
     padding: 40px 48px;
-  
+
+    main {
+      height: auto;
+      min-height: 100%;
+    }
+
     .footnote {
       margin-top: 50px;
     }    

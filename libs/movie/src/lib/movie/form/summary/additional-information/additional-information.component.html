@@ -107,7 +107,7 @@
     </a>
   </h6>
   <missing-control [control]="movie.estimatedBudget" [link]="link" fragment="box-range" class="missing-margin">
-    <ng-template let-budget>{{ budget.label }}</ng-template>
+    <ng-template let-budget>{{ budget | toLabel: 'budgetRange' }}</ng-template>
   </missing-control>
 </article>
 
