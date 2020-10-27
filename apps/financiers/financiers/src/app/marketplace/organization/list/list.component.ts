@@ -11,6 +11,7 @@ import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/o
 // RxJs
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { Territory } from '@blockframes/utils/static-model';
 
 @Component({
   selector: 'financiers-organization-list',
@@ -46,7 +47,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
-    const search = createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'] });
+    const search = createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'], country: '' as Territory });
     this.searchForm.setValue(search);
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),

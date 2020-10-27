@@ -71,11 +71,11 @@
       <filter-budget fxLayout="column" [form]="searchForm.minBudget"></filter-budget>
     </ng-template>
 
+    <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
+      <mat-icon svgIcon="refresh_filters"></mat-icon>
+    </button>
   </list-filter>
 
-  <button mat-icon-button (click)="clear()" matTooltip="Clear all filters">
-    <mat-icon svgIcon="refresh_filters"></mat-icon>
-  </button>
 
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
