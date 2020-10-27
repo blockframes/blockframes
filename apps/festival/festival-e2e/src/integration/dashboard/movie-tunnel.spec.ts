@@ -165,15 +165,16 @@ const testSteps = [
     input: 'shootingInformation', comp_save: [], save_form: false},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
     input: 'techSpec', comp_save: [], save_form: false},
-  {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input', 
-    input: 'availableMaterials', comp_save: [], save_form: false},
+  // @TODO Mano #3419 : the movie you create have productionStatus "released" so you can't test this step
+  /*{title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input',  
+    input: 'availableMaterials', comp_save: [], save_form: false},*/
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
     input: 'salesPitch', comp_save: [], save_form: false},
   {title: 'Files', selector: 'movie-form-media-files file-upload', 
     input: 'files',  comp_save: [], save_form: false},
-  {title: 'Notes and Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
+  {title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
     input: 'notesStatements', comp_save: [], save_form: false},
-  {title: 'Promotional Elements', selector: 'movie-form-media-images', 
+  {title: 'Images', selector: 'movie-form-media-images', 
     input: 'promoElements', comp_save: [], save_form: false},
   {title: 'Videos', selector: 'movie-form-media-videos textarea, input', 
     input: 'videos', comp_save: [], save_form: false}
@@ -245,7 +246,7 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
     //cy.wait(3000);
 
     cy.log('[Summary Page]: Check for mandatory and missing fields');
-    cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary Page');
+    cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
 
     MovieFormSummary.forEach(section => {
       cy.log(`=>[${section.title}]`);

@@ -105,7 +105,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   return steps.map(step => {
     return {
       ...step,
-      routes: step.routes.filter(route => !route?.shouldDisplay)
+      routes: step.routes.filter(route => route.shouldDisplay === undefined || route.shouldDisplay === true)
     }
   })
 }
