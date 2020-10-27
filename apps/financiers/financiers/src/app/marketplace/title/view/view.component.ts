@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -9,6 +9,15 @@ import { OrganizationService } from '@blockframes/organization/+state/organizati
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+interface EmailTemplate {
+  subject: string;
+  from: string;
+  to: string;
+  message: string;
+}
 
 @Component({
   selector: 'financiers-movie-view',
@@ -17,6 +26,8 @@ import { RouteDescription } from '@blockframes/utils/common-interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
+  @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  private dialogRef: MatDialogRef<any, any>;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   public campaign$: Observable<Campaign>;
@@ -52,6 +63,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private movieQuery: MovieQuery,
     private orgService: OrganizationService,
     private campaignService: CampaignService,
+    private dialog: MatDialog,
     public router: Router
   ) {}
 
@@ -63,5 +75,20 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.campaign$ = this.movieQuery.selectActiveId().pipe(
       switchMap(id => this.campaignService.valueChanges(id))
     );
+  }
+
+  openForm() {
+    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+      data: new FormGroup({
+        subject: new FormControl('', Validators.required),
+        from: new FormControl(0),
+        to: new FormControl(0),
+        message: new FormControl(),
+      })
+    });
+  }
+
+  sendEmail(email: EmailTemplate, movie: Movie) {
+    this.dialogRef.close();
   }
 }
