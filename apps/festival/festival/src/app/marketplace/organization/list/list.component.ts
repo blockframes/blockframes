@@ -42,7 +42,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
     const search = createOrganizationSearch({ appAccess: ['festival'], appModule: ['marketplace'] });
-    this.searchForm.setValue(search);
+    this.searchForm.setValue({ ...search, country: '' });
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
