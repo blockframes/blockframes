@@ -1,7 +1,7 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
-export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails';
-import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails';
+export { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
+import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
@@ -59,7 +59,7 @@ function send(msg: MailDataRequired) {
  * @param data 
  * @param context 
  */
-export const sendTestMail = async (
+export const onSendTestMail = async (
   data: { request: EmailRequest, from: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
@@ -76,4 +76,38 @@ export const sendTestMail = async (
       result: 'NOK'
     };
   }
+}
+
+/**
+ * Http callabable function to send an email with template.
+ * @param data 
+ * @param context 
+ */
+export const onSendMailWithTemplate = async (
+  data: { request: EmailTemplateRequest, from: EmailJSON },
+  context: CallableContext
+): Promise<ErrorResultResponse> => {
+  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+
+  if(!isAllowedToUseTemplate(data.request.templateId, context.auth.uid)) { throw new Error('Permission denied: user not allowed.'); }
+  
+  try {
+    await sendMailFromTemplate(data.request, data.from || getSendgridFrom());
+    return { error: '', result: 'OK' };
+  } catch (error) {
+    return {
+      error: error.message ? error.message : 'Unknown error',
+      result: 'NOK'
+    };
+  }
+}
+
+/**
+ * Check if current user is allowed to use this template id for sending email
+ * @param templateId 
+ * @param uid 
+ */
+function isAllowedToUseTemplate(templateId: string, uid: string) {
+  // @TODO #4085
+  return true;
 }
