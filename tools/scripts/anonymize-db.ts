@@ -19,7 +19,7 @@ const fakeEmail = (name: string) =>
   `dev+${name.replace(/\W/g, '').toLowerCase()}-${Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
-    .substr(0, 3)}@cascade8.com`;
+    .substr(0, 3)}@blockframes.io`;
 
 function hasKeys<T extends object>(doc: object, ...keys: (keyof T)[]): doc is T {
   return keys.every((key) => key in doc);
