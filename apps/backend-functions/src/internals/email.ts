@@ -6,7 +6,7 @@ import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 import { ErrorResultResponse } from '../utils';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 import { db } from './firebase';
-import { getSendgridFrom } from '@blockframes/utils/apps';
+import { App, getSendgridFrom } from '@blockframes/utils/apps';
 import { EmailJSON } from '@sendgrid/helpers/classes/email-address';
 
 /**
@@ -84,15 +84,15 @@ export const onSendTestMail = async (
  * @param context 
  */
 export const onSendMailWithTemplate = async (
-  data: { request: EmailTemplateRequest, from: EmailJSON },
+  data: { request: EmailTemplateRequest, app: App },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
 
-  if(!isAllowedToUseTemplate(data.request.templateId, context.auth.uid)) { throw new Error('Permission denied: user not allowed.'); }
-  
+  if (!isAllowedToUseTemplate(data.request.templateId, context.auth.uid)) { throw new Error('Permission denied: user not allowed.'); }
+
   try {
-    await sendMailFromTemplate(data.request, data.from || getSendgridFrom());
+    await sendMailFromTemplate(data.request, getSendgridFrom(data.app));
     return { error: '', result: 'OK' };
   } catch (error) {
     return {
