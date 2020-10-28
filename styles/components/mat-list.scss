@@ -9,6 +9,7 @@
 
 
   .mat-list-base {
+    padding-top: 0; // Used to glue several mat-list together
     background-color: mat-color($background, app-bar);
     border: 1px solid mat-color($foreground, divider);
   }
