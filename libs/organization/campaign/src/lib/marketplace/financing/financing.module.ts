@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DownloadModule } from '@blockframes/media/pipes/download.pipe';
 import { BudgetPipeModule, FundingsPipeModule } from '../../pipes';
+import { HasKeysModule } from '@blockframes/utils/pipes';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NumberPipeModule } from '@blockframes/utils/pipes';
@@ -21,6 +22,7 @@ import { MatDividerModule } from '@angular/material/divider';
     BudgetPipeModule,
     FundingsPipeModule,
     DownloadModule,
+    HasKeysModule,
     NgApexchartsModule,
     MatIconModule,
     MatButtonModule,

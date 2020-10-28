@@ -25,6 +25,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 // Blockframes Movie
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
@@ -72,6 +73,7 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     ToLabelModule,
     EmptyImagePipeModule,
     VersionPipeModule,
+    RunningTimePipeModule,
     FileNameModule,
     FlexLayoutModule,
     DurationModule,
