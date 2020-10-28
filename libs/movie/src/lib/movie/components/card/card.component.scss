@@ -34,10 +34,12 @@ article {
 }
 
 h6,
-p {
-  margin-top: 8px;
-  margin-bottom: 0;
-}
+p,
 span {
   margin-top: 8px;
+  margin-bottom: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
