@@ -18,9 +18,13 @@ header {
     margin-bottom: 32px;
   }
   p {
-    width: 50%;
+    width: 70%;
+    text-align: justify;
   }
 
+  .actions {
+    margin-top: 24px;
+  }
 }
 
 .detail {
@@ -32,6 +36,7 @@ header {
   background-size: cover;
   padding: 40px 0px;
   margin-bottom: 80px;
+  text-align: center;
 }
 
 .movie-header-slider {
@@ -53,7 +58,7 @@ bf-carousel {
 
 @include layout-bp(xs) {
   header {
-    padding: 50px 0;
+    padding: 60px 0;
   }
 }
 
@@ -65,6 +70,6 @@ bf-carousel {
 
 @include layout-bp(md) {
   header {
-    padding: 20px;
+    padding: 40px;
   }
 }

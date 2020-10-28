@@ -7,13 +7,9 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme , foreground);
 
-  // use mainly for the sidenav in movie tunnel, I can't override this in the component, it has to be at the style root.
-  .mat-list-base .mat-list-item .mat-list-item-content {
-    padding: 0;
-  }
 
   .mat-list-base {
-    padding: 0;
+    padding-top: 0; // Used to glue several mat-list together
     background-color: mat-color($background, app-bar);
     border: 1px solid mat-color($foreground, divider);
   }
