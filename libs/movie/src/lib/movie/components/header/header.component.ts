@@ -39,8 +39,6 @@ export class HeaderComponent {
 
   constructor(private location: Location) { }
 
-  // @HostBinding('style.backgroundImage') background: SafeStyle;
-
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {

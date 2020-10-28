@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Directive, Input } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';

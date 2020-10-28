@@ -7,7 +7,7 @@ import { Movie, MovieService } from '@blockframes/movie/+state';
 import { MovieHostedVideosForm } from '@blockframes/movie/form/movie.form';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 import { hostedVideoTypes } from '@blockframes/utils/static-model';
-import { allowedVideoFilesExtensions as extensions, allowedVideoFilesTypes as types } from '@blockframes/utils/utils';
+import { allowedFiles } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'movie-video-upload',
@@ -20,8 +20,8 @@ export class MovieVideoUploadComponent implements OnInit {
   public form: MovieHostedVideosForm;
   public filePrivacy: Privacy = 'protected';
   @Input() movie: Movie;
-  public allowedFilesTypes = types;
-  public allowedFilesExtensions =  extensions;
+  public allowedFilesTypes = allowedFiles.video.mime;
+  public allowedFilesExtensions =  allowedFiles.video.extension;
   public hostedVideoTypes = Object.keys(hostedVideoTypes);
 
   constructor(
