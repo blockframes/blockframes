@@ -16,7 +16,7 @@ import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { getPrivateVideoUrl } from './player';
-import { sendTestMail } from './internals/email';
+import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailWithTemplate } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
@@ -211,7 +211,12 @@ export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
 /**
  * Trigger: when a blockframes admin wants to send an email.
  */
-export const onSendTestMail = functions.https.onCall(sendTestMail);
+export const sendMailAsAdmin = functions.https.onCall(_sendMailAsAdmin);
+
+/**
+ * Trigger: when a regular user wants to send an email.
+ */
+export const sendMailWithTemplate = functions.https.onCall(_sendMailWithTemplate);
 
 //--------------------------------
 //       Orgs Management        //
