@@ -18,6 +18,7 @@ interface CarouselSection {
   title: string;
   movieCount$: Observable<number>;
   movies$: Observable<Movie[]>;
+  queryParams?: Record<string, string>;
 }
 
 @Component({
@@ -60,21 +61,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       {
         title: 'In production',
-        movieCount$: this.movieQuery.selectAll({ 
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
-          && movie.storeConfig?.status === 'accepted' 
-          && movie.storeConfig.appAccess.festival
+        movieCount$: this.movieQuery.selectAll({
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production')
+            && movie.storeConfig?.status === 'accepted'
+            && movie.storeConfig.appAccess.festival
         }).pipe(map(movies => movies.length)),
         movies$: this.movieQuery.selectAll({
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
-          && movie.storeConfig?.status === 'accepted' 
-          && movie.storeConfig.appAccess.festival
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production')
+            && movie.storeConfig?.status === 'accepted'
+            && movie.storeConfig.appAccess.festival
         })
       },
       {
         title: 'Completed films',
         movieCount$: selectMovies('finished').pipe(map(movies => movies.length)),
-        movies$: selectMovies('finished')
+        movies$: selectMovies('finished'),
+        queryParams: { productionStatus: 'finished' }
       },
       {
         title: 'In development',

@@ -11,6 +11,8 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 // import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -41,14 +43,27 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private dynTitle: DynamicTitleService,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Films On Our Market Today');
     // Implicitly we only want accepted movies
     this.searchForm.storeConfig.add('accepted');
-    // On financiers, we want only movie available for financiers
+    // On festival, we want only movie available for festival
     this.searchForm.appAccess.add('festival');
+
+    this.route.queryParams.subscribe(params => {
+      Object.keys(params).forEach(k => {
+        try {
+          this.searchForm[k].add(params[k]);
+        } catch (_) {
+          this.snackBar.open('Invalid parameters in URL', 'close', { duration: 1000 });
+        }
+      });
+    });
+
     this.movies$ = this.movieResultsState.asObservable();
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
