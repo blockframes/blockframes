@@ -69,5 +69,7 @@ export async function exportFirestoreToBucket(db: FirebaseFirestore.Firestore, b
     await Promise.all(promises);
   }
   console.log('Firestore export done, closing our stream');
-  return new Promise(stream.end);
+  return new Promise((res) => {
+    stream.end(res);
+  });
 }
