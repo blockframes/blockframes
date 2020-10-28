@@ -35,7 +35,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * Should be fed with the algolia index name out of the `env.ts`
-   * @example [index]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
+   * @example [index]="algolia.indexNameMovies[appName]" // 'pl_movies' from the env.ts
    */
   @Input() index: string;
 

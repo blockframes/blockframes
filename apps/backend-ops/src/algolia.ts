@@ -49,57 +49,61 @@ export async function upgradeAlgoliaOrgs() {
 export async function upgradeAlgoliaMovies(appConfig?: App) {
 
   if (!appConfig) {
-    app.forEach(async a => await upgradeAlgoliaMovies(a))
-    return;
-  }
+    /* For Each doesn't await */
+    await upgradeAlgoliaMovies('financiers');
+    await upgradeAlgoliaMovies('catalog');
+    await upgradeAlgoliaMovies('festival');
+  } else {
 
-  // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = movieConfig(appConfig)
+    // reset config, clear index and fill it up from the db (which is the only source of truth)
+    const config = movieConfig(appConfig)
 
-  await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
-  await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
+    await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
+    await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
 
-  const { db } = loadAdminServices();
-  const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
+    const { db } = loadAdminServices();
+    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
 
-  for await (const movies of moviesIterator) {
-    const promises = movies.map(async movie => {
-      try {
+    for await (const movies of moviesIterator) {
+      const promises = movies.map(async movie => {
+        try {
 
-        // TODO issue#2692
-        const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
+          // TODO issue#2692
+          const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
 
-        if (querySnap.size === 0) {
-          throw new Error(`Movie ${movie.id} is not part of any orgs`);
-        }
-
-        // TODO : here we might decide to arbitrary choose first org
-        if (querySnap.size > 1) {
-          throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
-        }
-
-        const org = (querySnap.docs[0].data() as OrganizationDocument);
-        const orgName = org.denomination.public || org.denomination.full;
-
-        if (appConfig === 'financiers') {
-          const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
-          const campaign = (campaignSnap.docs[0].data() as Campaign);
-          if (campaign?.id) {
-            
+          if (querySnap.size === 0) {
+            throw new Error(`Movie ${movie.id} is not part of any orgs`);
           }
+
+          // TODO : here we might decide to arbitrary choose first org
+          /*    if (querySnap.size > 1) {
+               throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
+             } */
+
+          const org = (querySnap.docs[0].data() as OrganizationDocument);
+          const orgName = org.denomination.public || org.denomination.full;
+
+          if (appConfig === 'financiers') {
+            const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
+            const campaign = (campaignSnap.docs[0].data() as Campaign);
+            if (campaign?.id) {
+              movie['minPledge'] = campaign.minPledge
+            }
+          }
+
+          await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
+        } catch (error) {
+          console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
+          console.error(error);
         }
+      });
 
-        await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
-      } catch (error) {
-        console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
-        console.error(error);
-      }
-    });
-    await Promise.all(promises);
-    console.log(`chunk of ${movies.length} movies processed...`)
+      await Promise.all(promises);
+      console.log(`chunk of ${movies.length} movies processed...`)
+    }
+
+    console.log('Algolia Movies index updated with success !');
   }
-
-  console.log('Algolia Movies index updated with success !');
 }
 
 export async function upgradeAlgoliaUsers() {
@@ -165,7 +169,7 @@ function movieConfig(appConfig: App) {
   };
   switch (appConfig) {
     case 'financiers': {
-      config.attributesForFaceting.push('audience.goals')
+      ['socialGoals', 'minPledge'].forEach(attr => config.attributesForFaceting.push(attr))
     }
   }
   return config;

@@ -38,7 +38,6 @@ export interface AlgoliaRecordMovie extends AlgoliaRecord {
   budget: number,
   orgName: string,
   storeType: string,
-  appAccess: App[],
   socialGoals: SocialGoal[]
 }
 

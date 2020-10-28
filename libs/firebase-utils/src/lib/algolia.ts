@@ -120,7 +120,7 @@ export function storeSearchableMovie(
 
     const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
-    movieAppAccess.forEach(async appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord))
+    movieAppAccess.forEach(async appName => await indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord))
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);

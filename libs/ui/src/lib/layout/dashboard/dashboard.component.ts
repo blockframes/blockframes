@@ -16,6 +16,7 @@ import { Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { algolia } from '@env';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'layout-dashboard',
@@ -33,7 +34,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   public ltMd$ = this.breakpointsService.ltMd;
 
-  public movieIndex = algolia.indexNameMovies;
+  public movieIndex;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
@@ -45,14 +46,17 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     private breakpointsService: BreakpointsService,
     private invitationQuery: InvitationQuery,
     private notificationQuery: NotificationQuery,
-    private router: Router
+    private router: Router,
+    private routerQuery: RouterQuery
   ) { }
 
   ngAfterViewInit() {
+    const appName = this.routerQuery.getValue().state?.root.data.app;
+    this.movieIndex = algolia.indexNameMovies[appName]
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0}))
+    ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0 }))
   }
 
   ngOnDestroy() {
