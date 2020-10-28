@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 
 // Blockframes
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
