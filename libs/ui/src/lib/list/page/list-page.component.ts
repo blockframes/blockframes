@@ -80,7 +80,7 @@ export class ListPageComponent implements AfterContentInit {
   template: `
   <ng-content></ng-content>
   <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
-  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="value === 100 || !value">LOAD
+  <button mat-stroked-button color="primary" (click)="loadMore.emit()" *ngIf="value === 100 || !value">LOAD
     MORE</button>
     `,
   styles: [`
