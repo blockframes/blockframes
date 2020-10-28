@@ -30,6 +30,7 @@ mat-paginator {
 
 .action-buttons {
   display: flex;
+  justify-content: flex-end;
 }
 
 ::-webkit-scrollbar {

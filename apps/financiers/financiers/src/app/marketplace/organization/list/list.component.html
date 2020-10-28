@@ -35,16 +35,14 @@
     <org-card [org]="org"></org-card>
   </ng-template>
 
-  <ng-template listPageEmpty *ngIf="loading$.value">
+  <ng-template listPageEmpty *ngIf="loading$ | async">
     <div class="loading">
       <mat-spinner color="primary"></mat-spinner>
     </div>
   </ng-template>
 
-  <ng-container *ngIf="nbHits">
-    <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
-      <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
-    </list-page-progress>
-  </ng-container>
+  <list-page-progress *ngIf="nbHits" [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
+    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+  </list-page-progress>
 
 </list-page>

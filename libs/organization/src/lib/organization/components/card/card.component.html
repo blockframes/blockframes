@@ -1,10 +1,10 @@
 <a matRipple [routerLink]="org.id">
   <img [ref]="org.logo" asset="empty_organization.webp" type="logo" alt="organization logo">
 </a>
-<div fxLayout="column" fxLayoutAlign="center center">
+<header fxLayout="column">
   <h5>{{ org | orgName }}</h5>
   <span class="mat-body-2">{{ (org.activity | toLabel: 'orgActivity') || "-" }}</span>
-</div>
+</header>
 <mat-tab-group headerPosition="below" mat-align-tabs="center" [disablePagination]="true">
   <mat-tab>
     <ng-template mat-tab-label>
