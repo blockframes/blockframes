@@ -4,7 +4,7 @@
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
-        <mat-card [formGroup]="form.meta" fxLayout="column">
+        <section [formGroup]="form.meta" fxLayout="column">
           <ng-container *ngIf="(titles$ | async) as titles else loading">
             <!-- Title -->
             <mat-form-field appearance="outline">
@@ -39,13 +39,13 @@
           <ng-template #loading>
             <mat-spinner diameter="50"></mat-spinner>
           </ng-template>
-        </mat-card>
+        </section>
       </ng-container>
 
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
-        <mat-card [formGroup]="form.meta" fxLayout="column">
+        <section [formGroup]="form.meta" fxLayout="column">
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
@@ -68,18 +68,33 @@
 
           <h6>Files</h6>
           <p>
-            Select files you want to share during the meeting.
-            Every member of the meeting will be able to see and download the selected files.
+            Add the files you want to share during meeting.
+            If you didn’t upload the needed files, please add them on <a routerLink="/c/o/dashboard/files">My Files</a> page.
           </p>
-          <bf-form-list [form]="files" buttonText="Add a File" saveButtonText="Select">
-            <ng-template itemRef let-file>
-              {{file | fileName}}
-            </ng-template>
-            <ng-template formView let-fileSelectorForm>
-              <media-file-selector [form]="fileSelectorForm"></media-file-selector>
-            </ng-template>
-          </bf-form-list>
-        </mat-card>
+
+          <div fxLayout="row" fxLayoutAlign="end">
+            <button mat-stroked-button color="primary" (click)="openFileSelector()">
+              <mat-icon svgIcon="folder"></mat-icon>
+              <span>Manage Files</span>
+            </button>
+          </div>
+
+          <p>Selected Files ({{files.value.length}})</p>
+          <mat-divider></mat-divider>
+
+          <ng-container *ngIf="!!files.value.length; else empty">
+            <mat-list>
+              <mat-list-item *ngFor="let file of files.value">
+                <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage: 'icon'"></mat-icon>
+                <span>{{file | filePath: ' > ' | async}}</span>
+              </mat-list-item>
+            </mat-list>
+          </ng-container>
+          <ng-template #empty>
+            <p class="no-files">There no selected files yet. Click on the "Manage Files" button above to add some files.</p>
+          </ng-template>
+
+        </section>
       </ng-container>
     </ng-container>
   </event-edit>
