@@ -149,7 +149,7 @@ export class FileExplorerComponent {
 
     this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path}];
 
-    for (let element of Object.assign([], path).splice(1)) {
+    for (const element of Object.assign([], path).splice(1)) {
       if (currentDirectory.type === 'directory') {
         currentDirectory = currentDirectory.directories[element];
         this.breadCrumbs.push({ name: currentDirectory.name, path: currentDirectory.path });
