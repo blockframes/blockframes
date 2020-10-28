@@ -3,13 +3,14 @@ event-analytics {
   padding: 24px;
 }
 
-mat-card {
+section {
+  background-color: var(--background-card);
+  border-radius: 4px;
+  border: solid 1px var(--foreground-divider);
+  padding: 24px 16px;
+
   button {
     width: 30%;
-  }
-
-  mat-divider {
-    position: static;
   }
 
   p.no-files {

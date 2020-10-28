@@ -1,13 +1,13 @@
 
 
-<section fxLayout="row">
+<header fxLayout="row">
   <h2 fxFlex="0 1">Choose your files</h2>
   <button mat-icon-button fxFlex (click)="closeDialog()"><mat-icon svgIcon="close"></mat-icon></button>
-</section>
+</header>
 
 <mat-divider></mat-divider>
 
-<div fxLayout="row" class="container">
+<section fxLayout="row">
   <mat-tab-group>
     <mat-tab label="Organization Files">
       <mat-list>
@@ -58,7 +58,7 @@
 
     </mat-tab>
   </mat-tab-group>
-  <div class="selected" fxLayout="column" fxLayoutAlign="space-between">
+  <aside fxLayout="column" fxLayoutAlign="space-between">
     <h4>Selected Files ({{selectedFiles.length}})</h4>
     <mat-list>
       <mat-list-item *ngFor="let file of selectedFiles">
@@ -68,5 +68,5 @@
       </mat-list-item>
     </mat-list>
     <button mat-raised-button color="primary" (click)="closeDialog()">Add Files</button>
-  </div>
-</div>
+  </aside>
+</section>

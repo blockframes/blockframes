@@ -3,34 +3,26 @@
 
   display: block;
   height: 100%;
-  width: 100%;
 
-  section {
+  header {
+    height: 50px;
     button {
       margin-right: 24px;
     }
   }
 
-  .container {
+  section {
       width: 100%;
-      height: 90%;
+      height: calc(100% - 50px);
 
     mat-tab-group {
       width: 60%;
-      mat-expansion-panel-header {
-        mat-icon {
-          // a too long expansion panel title is causing the icon to shrink
-          // leading to icon with different sizes depending on the title length
-          // we do this to ensure the icon stays at its normal size
-          min-width: 24px;
-        }
-      }
       mat-list {
         margin-left: 42px;
       }
     }
 
-    .selected {
+    aside {
       width: 40%;
       border-left: solid 1px var(--foreground-divider);
       padding-left: 16px;
@@ -42,7 +34,7 @@
       mat-list {
         // this is needed in order to have a scrollable
         // list of selected files
-        overflow-y: scroll;
+        overflow-y: auto;
         margin-bottom: 16px;
         mat-list-item {
           button {

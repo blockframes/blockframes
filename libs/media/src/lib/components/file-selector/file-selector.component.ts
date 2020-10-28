@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
@@ -40,13 +40,14 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
     // we set disableClose to `true` on the dialog, so we have to fake the exits events
     this.sub = this.dialogRef.backdropClick().subscribe(() => this.closeDialog()); // user click outside of the dialog
-    window.addEventListener('keyup', this.escapeHandler); // user press the escape key
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
+  // simulate closing dialog on Escape key pressed
+  @HostListener('window:keyup', ['$event'])
   escapeHandler(event: KeyboardEvent) {
     if (event.code === 'Escape') {
       this.closeDialog();
@@ -93,7 +94,6 @@ export class FileSelectorComponent implements OnInit, OnDestroy {
 
   closeDialog() {
     // remove the event handler to avoid having it triggered elsewhere in the app
-    window.removeEventListener('keyup', this.escapeHandler);
     this.dialogRef.close(this.selectedFiles);
   }
 

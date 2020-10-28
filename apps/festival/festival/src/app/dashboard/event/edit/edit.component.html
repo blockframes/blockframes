@@ -4,7 +4,7 @@
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
-        <mat-card [formGroup]="form.meta" fxLayout="column">
+        <section [formGroup]="form.meta" fxLayout="column">
           <ng-container *ngIf="(titles$ | async) as titles else loading">
             <!-- Title -->
             <mat-form-field appearance="outline">
@@ -39,13 +39,13 @@
           <ng-template #loading>
             <mat-spinner diameter="50"></mat-spinner>
           </ng-template>
-        </mat-card>
+        </section>
       </ng-container>
 
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
         <h2>Meeting</h2>
-        <mat-card [formGroup]="form.meta" fxLayout="column">
+        <section [formGroup]="form.meta" fxLayout="column">
           <mat-form-field appearance="outline">
             <mat-label>Organized By</mat-label>
             <mat-select formControlName="organizerId">
@@ -94,7 +94,7 @@
             <p class="no-files">There no selected files yet. Click on the "Manage Files" button above to add some files.</p>
           </ng-template>
 
-        </mat-card>
+        </section>
       </ng-container>
     </ng-container>
   </event-edit>
