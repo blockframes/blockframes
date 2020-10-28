@@ -39,7 +39,7 @@ export class PageEmptyDirective { }
 
 
 @Component({
-  selector: '[items]list-page',
+  selector: '[items] list-page',
   templateUrl: 'list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
   animations: [fadeList('.card')],
