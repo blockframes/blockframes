@@ -18,7 +18,8 @@ export class MovieTunnelGuard implements CanActivate {
     }
     // When creating a move we need to make sure the org is updated before checking
     org = await this.orgService.getValue(org.id);
-    const redirect = this.router.parseUrl(`/c/o/dashboard/title/${movieId}`);
+    const redirect = this.router.parseUrl(`/c/o/dashboard/title`);
+    console.log(redirect)
     return org.movieIds.includes(movieId) || redirect;
   }
 }

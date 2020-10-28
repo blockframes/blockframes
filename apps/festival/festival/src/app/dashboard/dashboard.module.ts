@@ -22,6 +22,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
+import { EventOrganizationGuard } from "@blockframes/event/guard/event-organization.guard";
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -67,7 +68,7 @@ const routes: Routes = [{
         loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
         data: { redirect: '/c/o/dashboard/title' }
@@ -81,6 +82,7 @@ const routes: Routes = [{
           loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
           path: ':eventId',
+          canActivate: [EventOrganizationGuard],
           children: [
             {
               path: '',
