@@ -27,45 +27,45 @@ export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirest
   await importFirestoreFromGFile(lastFile, db);
 
   await endMaintenance();
- }
+}
 
- export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: FirebaseFirestore.Firestore) {
-   console.log('restoring file:', firestoreBackupFile.name);
-   const stream = firestoreBackupFile.createReadStream();
-   const lineReader = readline.createInterface({
-     input: stream,
-     terminal: false
-   });
+export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: FirebaseFirestore.Firestore) {
+  console.log('restoring file:', firestoreBackupFile.name);
+  const stream = firestoreBackupFile.createReadStream();
+  const lineReader = readline.createInterface({
+    input: stream,
+    terminal: false
+  });
 
 
-   const readerDone = new Promise(resolve => {
-     lineReader.on('close', resolve);
-   });
+  const readerDone = new Promise(resolve => {
+    lineReader.on('close', resolve);
+  });
 
-   stream.on('end', () => {
-     lineReader.close();
-   });
+  stream.on('end', () => {
+    lineReader.close();
+  });
 
-   const lines: any[] = [];
-   lineReader.on('line', line => {
-     lines.push(line);
-   });
+  const lines: any[] = [];
+  lineReader.on('line', line => {
+    lines.push(line);
+  });
 
-   await readerDone;
+  await readerDone;
 
-   await importFirestoreBackup(lines, db)
+  await importFirestoreBackup(lines, db)
 
-   console.log(`Done processing: ${lines.length - 1} lines loaded`);
- }
+  console.log(`Done processing: ${lines.length - 1} lines loaded`);
+}
 
- export async function importFirestoreBackup(jsonl: JsonlDbRecord[], db: FirebaseFirestore.Firestore) {
-   return runChunks( jsonl, async (line: any) => {
-       const stored: JsonlDbRecord = JSON.parse(line);
-       if (stored.docPath !== '_META/_MAINTENANCE') {
-         await db.doc(stored.docPath).set(reEncodeObject(stored.content));
-       }
-     }, 500, false);
- }
+export async function importFirestoreBackup(jsonl: JsonlDbRecord[], db: FirebaseFirestore.Firestore) {
+  return runChunks( jsonl, async (line: any) => {
+      const stored: JsonlDbRecord = JSON.parse(line);
+      if (stored.docPath !== '_META/_MAINTENANCE') {
+        await db.doc(stored.docPath).set(reEncodeObject(stored.content));
+      }
+  }, 500, false);
+}
 
 /**
  * Take a json object and re-encode its content to match our firebase storage.
