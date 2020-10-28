@@ -19,7 +19,7 @@
           </ng-container>
         </div>
 
-        <ng-container *ngIf="activeDirectory.multiple">
+        <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple">
           <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
             <mat-icon svgIcon="add"></mat-icon>
             <span>Upload file</span>
@@ -38,7 +38,7 @@
       </ng-container>
 
       <ng-template #fileDirectory>
-        <ng-container *ngIf="activeDirectory.multiple else single">
+        <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple else single">
           <ng-container *ngIf="active$ | async | deepKey:getDeepPath() as directory">
             <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
               <ng-template colRef="ref" let-item="item">
