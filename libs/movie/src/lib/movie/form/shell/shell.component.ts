@@ -57,14 +57,14 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     }, {
       path: 'shooting-information',
       label: 'Shooting Information',
-      shouldDisplay: isStatus(status, ['released'])
+      shouldHide: isStatus(status, ['released'])
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: isStatus(status, ['development'])
+      shouldHide: isStatus(status, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -74,14 +74,13 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       {
         path: 'sales-pitch',
         label: 'Sales Pitch',
-        shouldDisplay: isStatus(status, ['released'])
       }, {
         path: 'media-files',
         label: 'Files'
       }, {
         path: 'media-notes',
         label: 'Notes & Statements',
-        shouldDisplay: isStatus(status, ['post_production', 'finished', 'released'])
+        shouldHide: isStatus(status, ['post_production', 'finished', 'released'])
       },
       {
         path: 'media-images',
@@ -105,7 +104,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   return steps.map(step => {
     return {
       ...step,
-      routes: step.routes.filter(route => !route?.shouldDisplay)
+      routes: step.routes.filter(route => !route?.shouldHide)
     }
   })
 }
