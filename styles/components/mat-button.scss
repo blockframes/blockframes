@@ -36,6 +36,12 @@
         fill: mat-color($warn);
       }
     }
+
+    &.mat-button-disabled {
+      svg g, svg polygon, svg path {
+        fill: mat-color($background, disabled-button);
+      }
+    }
   }
 
   // With background
@@ -72,6 +78,13 @@
       svg polygon,
       svg path {
         fill: mat-color($primary, default-contrast);
+      }
+    }
+
+    &.mat-button-disabled {
+      background-color: mat-color($background, disabled-button);
+      svg g, svg polygon, svg path {
+        fill: mat-color($background, disabled-button);
       }
     }
   }

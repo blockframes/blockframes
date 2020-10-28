@@ -1,12 +1,12 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // env

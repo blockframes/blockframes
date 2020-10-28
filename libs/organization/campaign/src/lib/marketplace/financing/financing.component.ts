@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform, ViewEncapsulation } from '@angular/core';
-import { Budget, Campaign, CampaignService, Funding } from '@blockframes/campaign/+state';
+import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { formatPercent } from '@angular/common';
+import { Budget, Campaign, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { toBigCurrency } from '@blockframes/utils/pipes';
-import { formatPercent } from '@angular/common';
 
 const budgetData: { serie: keyof Budget, label: string, color: string }[] = [{
   serie: 'producerFees',
@@ -38,8 +38,12 @@ export class MarketplaceFinancingComponent implements OnInit {
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
-    bigCurrency: { formatter: (value: number) => toBigCurrency(value, this.locale) },
-    percent: { formatter: (value: number) => formatPercent(value / 100, this.locale) }
+    bigCurrency: {
+      formatter: (value: number) => typeof value === 'number' ? toBigCurrency(value, this.locale) : ''
+    },
+    percent: {
+      formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : ''
+    }
   }
 
   constructor(
@@ -59,10 +63,13 @@ export class MarketplaceFinancingComponent implements OnInit {
 @Pipe({ name: 'apexBudget' })
 export class ApexBudgetPipe implements PipeTransform {
   transform(budget: Budget) {
+    const data = budgetData.filter(b => !!budget[b.serie]);
+    if (!data.length) return;
     return {
-      series: budgetData.map(b => budget[b.serie]),
-      labels: budgetData.map(b => b.label),
-      colors: budgetData.map(b => b.color),
+      series: data.map(b => budget[b.serie]),
+      labels: data.map(b => b.label),
+      colors: data.map(b => b.color),
+      data
     };
   }
 }
@@ -70,6 +77,7 @@ export class ApexBudgetPipe implements PipeTransform {
 @Pipe({ name: 'apexFunding' })
 export class ApexFundingPipe implements PipeTransform {
   transform(fundings: Funding[]) {
+    if (!fundings.length) return;
     return {
       series: fundings.map(f => f.amount),
       labels: fundings.map(f => f.name),
@@ -81,8 +89,9 @@ export class ApexFundingPipe implements PipeTransform {
 @Pipe({ name: 'apexProfits' })
 export class ApexProfitsPipe implements PipeTransform {
   transform(profits: Campaign['profits']) {
+    if (!profits.low && !profits.medium && !profits.high) return;
     return {
-      xAxis: { categories: ["Low", "Medium", "High"] },
+      xAxis: { categories: ['Low', 'Medium', 'High'] },
       yAxis: { title: '%' },
       series: [{
         name: "Return on Investment",

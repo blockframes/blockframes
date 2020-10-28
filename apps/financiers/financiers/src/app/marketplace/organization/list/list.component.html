@@ -3,7 +3,7 @@
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Try searching for our partners...">
+      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for our partners...">
     </form>
   </list-page-app-bar>
 
@@ -13,7 +13,7 @@
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Try searching for our partners...</mat-label>
+      <mat-label>Search for our partners...</mat-label>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
   </list-page-search>
