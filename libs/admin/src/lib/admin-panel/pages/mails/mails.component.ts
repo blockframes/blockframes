@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { createEmailRequest } from '@blockframes/utils/emails/utils';
 import { TestEmailForm } from '../../forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SendGridService } from '@blockframes/utils/emails/sendgrid.service'
+import { SendgridService } from '@blockframes/utils/emails/sendgrid.service'
 import { sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { AuthQuery } from '@blockframes/auth/+state';
 
@@ -20,7 +20,7 @@ export class MailsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
-    private sengGridService: SendGridService,
+    private sendgrid: SendgridService,
     private authQuery: AuthQuery,
   ) {
   }
@@ -39,7 +39,7 @@ export class MailsComponent implements OnInit {
 
     this.loading = true;
     const request = createEmailRequest(this.form.value);
-    const output = await this.sengGridService.sendTestMail(request, this.form.get('from').value);
+    const output = await this.sendgrid.sendAsAdmin(request, this.form.get('from').value);
 
     if (output.result === 'OK') {
       this.snackBar.open(`Mail successfully sent to ${request.to}`, 'close', { duration: 5000 });

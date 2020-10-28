@@ -56,14 +56,20 @@ function send(msg: MailDataRequired) {
 /**
  * Http callabable function to send an email just like the other emails of the app are sent.
  * For testing purposes
- * @param data 
+ * @param data
+ *  Request:  subject, text and to email
+ *  App: the from email that will be used as sender (optional)
  * @param context 
  */
-export const onSendTestMail = async (
+export const sendMailAsAdmin = async (
   data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
+
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
@@ -81,15 +87,21 @@ export const onSendTestMail = async (
 /**
  * Http callabable function to send an email with template.
  * @param data 
+ *  Request:  template id with expected variables and to email
+ *  App: the app from which the call to this function was made (optional)
  * @param context 
  */
-export const onSendMailWithTemplate = async (
+export const sendMailWithTemplate = async (
   data: { request: EmailTemplateRequest, app?: App },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
+  if (!context?.auth) {
+    throw new Error('Permission denied: missing auth context.');
+  }
 
-  if (!isAllowedToUseTemplate(data.request.templateId, context.auth.uid)) { throw new Error('Permission denied: user not allowed.'); }
+  if (!isAllowedToUseTemplate(data.request.templateId, context.auth.uid)) {
+    throw new Error('Permission denied: user not allowed.');
+  }
 
   try {
     await sendMailFromTemplate(data.request, getSendgridFrom(data.app));
