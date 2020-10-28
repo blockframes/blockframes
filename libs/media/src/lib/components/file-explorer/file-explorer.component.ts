@@ -33,33 +33,40 @@ type MediaFormList = FormList<(HostedMediaWithMetadataForm | HostedMediaForm | M
 const columns = { 
   ref: 'Type',
   name: 'Document Name',
-  download: 'Download',
-  edit: 'Edit',
-  delete: 'Delete'
+  actions: 'Actions'
 };
 
-interface Directory {
-  name: string,
-  subDirectories: (SubDirectoryImage | SubDirectoryFile)[]
+const directoryColumns = {
+  name: 'Name'
 }
 
-interface SubDirectory {
-  multiple: boolean,
-  name: string,
-  docNameField: string,
-  fileRefField: string,
-  storagePath: string,
-  privacy: Privacy
-  selected?: boolean
+interface DirectoryBase {
+  name: string;
+  path: number[];
 }
 
-interface SubDirectoryImage extends SubDirectory {
-  type: 'image',
-  ratio: MediaRatioType
+interface FileDirectoryBase {
+  multiple: boolean;
+  docNameField: string;
+  fileRefField: string;
+  storagePath: string;
+  privacy: Privacy;
 }
 
-interface SubDirectoryFile extends SubDirectory {
-  type: 'file'
+interface Directory extends DirectoryBase {
+  type: 'directory';
+  collection?: 'movies' | 'orgs';
+  selected?: boolean;
+  directories: (Directory | SubDirectoryImage | SubDirectoryFile)[];
+}
+
+interface SubDirectoryImage extends DirectoryBase, FileDirectoryBase {
+  type: 'image';
+  ratio: MediaRatioType;
+}
+
+interface SubDirectoryFile extends DirectoryBase, FileDirectoryBase {
+  type: 'file';
 }
 
 @Component({
@@ -73,7 +80,11 @@ export class FileExplorerComponent {
   @Input() set org(org: OrganizationDocumentWithDates) {
     this.directories.push({
       name: org.denomination.full,
-      subDirectories: [
+      type: 'directory',
+      collection: 'orgs',
+      selected: true,
+      path: [0],
+      directories: [
         {
           name: 'Documents',
           type: 'file',
@@ -82,7 +93,7 @@ export class FileExplorerComponent {
           fileRefField: 'ref',
           storagePath: `orgs/${org.id}/documents/notes`,
           privacy: 'protected',
-          selected: true
+          path: [0,0]
         },
         {
           name: 'Logo',
@@ -92,15 +103,16 @@ export class FileExplorerComponent {
           docNameField: 'logo',
           fileRefField: 'logo',
           storagePath: `orgs/${org.id}/logo`,
-          privacy: 'public'
+          privacy: 'public',
+          path: [0,1]
         }
       ]
     });
-    this.activeDirectory = this.directories[0].subDirectories[0];
+    this.activeDirectory = this.directories[0];
+    this.breadCrumbs.push({name: this.activeDirectory.name, path: this.activeDirectory.path});
     this.orgId = org.id;
 
     this.org$ = this.organizationService.valueChanges(org.id);
-    this.active$ = this.organizationService.valueChanges(org.id);
 
     this.getTitleDirectories(org);
   };
@@ -114,9 +126,14 @@ export class FileExplorerComponent {
   public columns = columns;
   public initialColumns = Object.keys(columns);
 
+  public directoryColumns = directoryColumns;
+  public initialDirectoryColumns = Object.keys(directoryColumns);
+
   public active$: Observable<Movie | OrganizationDocumentWithDates>
-  public activeDirectory: SubDirectoryImage | SubDirectoryFile;
+  public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile
   public activeForm: OrganizationForm | MovieForm;
+
+  public breadCrumbs: { name: string, path: number[] }[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -127,9 +144,53 @@ export class FileExplorerComponent {
     private routerQuery: RouterQuery
   ) {}
 
+  public goToCrumb(path: number[]) {
+    let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[path[0]];
+
+    this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path}];
+
+    for (let element of Object.assign([], path).splice(1)) {
+      if (currentDirectory.type === 'directory') {
+        currentDirectory = currentDirectory.directories[element];
+        this.breadCrumbs.push({ name: currentDirectory.name, path: currentDirectory.path });
+      } else throw new Error('Not able to navigate to this element in breadcrumb');
+    }
+    this.activeDirectory = currentDirectory;
+    this.cdr.markForCheck();
+  }
+
+  public async selectSubDirectory(name: string) {
+
+    if (this.activeDirectory.type === 'directory') {
+      this.activeDirectory = this.activeDirectory.directories.find(directory => directory.name === name);
+    }
+
+    const collection = this.getCollection();
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      if (this.activeDirectory.multiple) {
+        if (collection === 'movies') {
+          const id = this.getId();
+          this.active$ = this.movieService.valueChanges(id);
+        } else {
+          this.active$ = this.organizationService.valueChanges(this.orgId);
+        }
+      } else {
+        if (collection === 'movies') {
+          const id = this.getId();
+          const movie = await this.movieService.getValue(id);
+          this.activeForm = new MovieForm(movie);
+        } else {
+          const org = await this.organizationService.getValue(this.orgId);
+          this.activeForm = new OrganizationForm(org);
+        }
+      }
+    }
+
+    this.breadCrumbs.push({ name: this.activeDirectory.name, path: this.activeDirectory.path });
+    this.cdr.markForCheck();
+  }
+
   public async selectDirectory(event: MatSelectionListChange) {
-    // needed in order to manage the selected selection list; since there are many lists
-    this.activeDirectory.selected = false;
     // needed to re-render the cropper component.
     this.activeForm = undefined;
 
@@ -137,11 +198,15 @@ export class FileExplorerComponent {
     const [ selectedValues ] = selected.map(x => x.value);
     this.activeDirectory = selectedValues;
 
+    this.breadCrumbs = [{ name: this.activeDirectory.name, path: this.activeDirectory.path }];
+
+    if (this.activeDirectory.type === 'directory') return;
+
     const multiple = (selectedValues as SubDirectoryFile | SubDirectoryImage).multiple;
     const collection = this.getCollection();
 
     if (collection === 'movies') {
-      const id = this.getId()
+      const id = this.getId();
       if (multiple) {
         this.active$ = this.movieService.valueChanges(id);
       } else {
@@ -157,7 +222,6 @@ export class FileExplorerComponent {
       }
     }
 
-    this.activeDirectory.selected = true;
     this.cdr.markForCheck();
   }
 
@@ -233,7 +297,7 @@ export class FileExplorerComponent {
         privacy: 'protected',
         storagePath: this.activeDirectory.storagePath
       }});
-    } else {
+    } else if (this.activeDirectory.type === 'image') {
       dialog = this.dialog.open(ImageDialogComponent, { width: '60vw', data: {
         form: mediaForm,
         ratio: this.activeDirectory.ratio,
@@ -256,9 +320,11 @@ export class FileExplorerComponent {
   }
 
   public async downloadFile(item: Partial<HostedMediaWithMetadata | OrganizationDocumentWithDates>) {
-    const ref = item[this.activeDirectory.fileRefField];
-    const url = await this.mediaService.generateImgIxUrl(ref);
-    window.open(url);
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      const ref = item[this.activeDirectory.fileRefField];
+      const url = await this.mediaService.generateImgIxUrl(ref);
+      window.open(url);
+    }
   }
 
   public async updateImage() {
@@ -279,66 +345,91 @@ export class FileExplorerComponent {
     const currentApp: App = this.routerQuery.getData('app');
     const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
 
+    let indexCounter = this.directories.length;
+
     for (const title of titles) {
       this.directories.push({
         name: title.title.original,
-        subDirectories: [
+        type: 'directory',
+        collection: 'movies',
+        path: [indexCounter],
+        directories: [
           {
-            name: 'Poster',
-            type: 'image',
-            ratio: 'poster',
-            multiple: false,
-            docNameField: 'poster',
-            fileRefField: 'poster',
-            storagePath: `movies/${title.id}/poster`,
-            privacy: 'public'
+            name: 'Main information',
+            type: 'directory',
+            path: [indexCounter, 0],
+            directories: [
+              {
+                name: 'Poster',
+                type: 'image',
+                ratio: 'poster',
+                multiple: false,
+                docNameField: 'poster',
+                fileRefField: 'poster',
+                storagePath: `movies/${title.id}/poster`,
+                privacy: 'public',
+                path: [indexCounter, 0, 0],
+              },
+              {
+                name: 'Banner',
+                type: 'image',
+                ratio: 'banner',
+                multiple: false,
+                docNameField: 'banner',
+                fileRefField: 'banner',
+                storagePath: `movies/${title.id}/banner`,
+                privacy: 'public',
+                path: [indexCounter, 0, 1],
+              },
+            ]
           },
           {
-            name: 'Banner',
-            type: 'image',
-            ratio: 'banner',
-            multiple: false,
-            docNameField: 'banner',
-            fileRefField: 'banner',
-            storagePath: `movies/${title.id}/banner`,
-            privacy: 'public'
-          },
-          {
-            name: 'Still Photo',
-            type: 'image',
-            multiple: true,
-            docNameField: '',
-            fileRefField: '',
-            ratio: 'still',
-            storagePath: `movies/${title.id}/promotional.still_photo`,
-            privacy: 'public'
-          },
-          {
-            name: 'Presentation Deck',
-            type: 'file',
-            multiple: false,
-            docNameField: 'presentation_deck',
-            fileRefField: 'presentation_deck',
-            storagePath: `movies/${title.id}/promotional.presentation_deck`,
-            privacy: 'public'
-          },
-          {
-            name: 'Sales Pitch',
-            type: 'file',
-            multiple: false,
-            docNameField: 'file',
-            fileRefField: 'file',
-            storagePath: `movies/${title.id}/promotional.moodboard`,
-            privacy: 'public'
-          },
-          {
-            name: 'Scenario',
-            type: 'file',
-            multiple: false,
-            docNameField: 'scenario',
-            fileRefField: 'scenario',
-            storagePath: `movies/${title.id}/promotional.scenario`,
-            privacy: 'public'
+            name: 'Promotional Elements',
+            type: 'directory',
+            path: [indexCounter, 1],
+            directories: [
+              {
+                name: 'Presentation Deck',
+                type: 'file',
+                multiple: false,
+                docNameField: 'presentation_deck',
+                fileRefField: 'presentation_deck',
+                storagePath: `movies/${title.id}/promotional.presentation_deck`,
+                privacy: 'public',
+                path: [indexCounter, 1, 0],
+              },
+              {
+                name: 'Scenario',
+                type: 'file',
+                multiple: false,
+                docNameField: 'scenario',
+                fileRefField: 'scenario',
+                storagePath: `movies/${title.id}/promotional.scenario`,
+                privacy: 'public',
+                path: [indexCounter, 1, 1],
+              },
+              {
+                name: 'Moodboard / Artistic Deck',
+                type: 'file',
+                multiple: false,
+                docNameField: 'file',
+                fileRefField: 'file',
+                storagePath: `movies/${title.id}/promotional.moodboard`,
+                privacy: 'public',
+                path: [indexCounter, 1, 2],
+              },
+              {
+                name: 'Still Photo',
+                type: 'image',
+                multiple: true,
+                docNameField: '',
+                fileRefField: '',
+                ratio: 'still',
+                storagePath: `movies/${title.id}/promotional.still_photo`,
+                privacy: 'public',
+                path: [indexCounter, 1, 3],
+              },
+            ]
           },
           {
             name: 'Notes & Statements',
@@ -347,48 +438,60 @@ export class FileExplorerComponent {
             docNameField: 'ref',
             fileRefField: 'ref',
             storagePath: `movies/${title.id}/promotional.notes`,
-            privacy: 'protected'
+            privacy: 'protected',
+            path: [indexCounter, 2],
           }
         ]
       })
+      indexCounter++
     }
-
     this.cdr.markForCheck();
   }
 
   public getSingleMediaForm(): HostedMediaForm {
-    const path = this.activeDirectory.storagePath.split('/').pop();
-    let form: MediaFormTypes;
-    if (!!path) {
-      form = path.split('.').reduce((res, key) => res?.controls?.[key], this.activeForm);
-    } else {
-      // probably possible to remove fileRefField
-      form = this.activeForm.controls[this.activeDirectory.fileRefField];
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      const path = this.activeDirectory.storagePath.split('/').pop();
+      let form: MediaFormTypes;
+      if (!!path) {
+        form = path.split('.').reduce((res, key) => res?.controls?.[key], this.activeForm);
+      } else {
+        // probably possible to remove fileRefField
+        form = this.activeForm.controls[this.activeDirectory.fileRefField];
+      }
+      return isHostedMediaForm(form) ? form : form.controls.ref;
     }
-    return isHostedMediaForm(form) ? form : form.controls.ref;
   }
 
   /**
    * Derive deep path from storage path
    */
   public getDeepPath() {
-    return this.activeDirectory.storagePath.split('/').splice(2).join('.');
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      return this.activeDirectory.storagePath.split('/').splice(2).join('.');
+    }
   }
 
   private getId() {
-    return this.activeDirectory.storagePath.split('/')[1];
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      return this.activeDirectory.storagePath.split('/')[1];
+    }
   }
 
   public getCollection() {
-    return this.activeDirectory.storagePath.split('/').shift() as 'movies' | 'orgs';
+    const index = this.activeDirectory.path[0];
+    return this.directories[index].collection;
   }
 
   public getFileRef(row: HostedMediaWithMetadata | string) {
-    return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      return typeof(row) === "string" ? row : row[this.activeDirectory.fileRefField];
+    }
   }
 
   public getTitleRef(row: HostedMediaWithMetadata | string) {
-    return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+    if (this.activeDirectory.type === 'file' || this.activeDirectory.type === 'image') {
+      return typeof(row) === "string" ? row : row[this.activeDirectory.docNameField];
+    }
   }
 
   private getFormList(form: OrganizationForm | MovieForm): MediaFormList {
@@ -397,9 +500,9 @@ export class FileExplorerComponent {
 }
 
 function isHostedMediaForm(form: MediaFormTypes): form is HostedMediaForm {
-  return isMediaForm(form)
+  return isMediaForm(form);
 }
 
 function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {
-  return !!(form as HostedMediaWithMetadataForm).get('title')
+  return !!(form as HostedMediaWithMetadataForm).get('title');
 }

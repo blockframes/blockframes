@@ -1,58 +1,59 @@
 <section fxLayout>
   <ng-container *ngIf="org$ | async as org">
     <article class="drawer mat-list-base" id="dashboard-navbar">
-      <ng-container *ngFor="let directory of directories">
-        <div fxLayout class="directory" fxLayoutAlign="start center">
-          <mat-icon matListIcon svgIcon="folder"></mat-icon>
-          <span matLine>{{ directory.name | maxLength: 20 }}</span>
-        </div>
-        <mat-selection-list matLine [multiple]="false" (selectionChange)="selectDirectory($event)">
-          <mat-list-option *ngFor="let sub of directory.subDirectories" [selected]="sub.selected" [value]="sub">
-            <mat-icon matListIcon [svgIcon]="sub.multiple ? 'folder' : 'template'"></mat-icon>
-            <span matLine>{{ sub.name | maxLength: 15 }}</span>
+      <mat-selection-list matLine [multiple]="false" (selectionChange)="selectDirectory($event)">
+        <ng-container *ngFor="let directory of directories">
+          <mat-list-option [selected]="directory.selected" [value]="directory">
+            <mat-icon matListIcon [svgIcon]="directory.collection === 'orgs' ? 'building' : 'video_library'"></mat-icon>
+            <span matLine>{{ directory.name | maxLength: 20}}</span>
           </mat-list-option>
-        </mat-selection-list>
-      </ng-container>
+        </ng-container>
+      </mat-selection-list>
     </article>
 
     <article class="view surface">
-      <ng-container *ngIf="active$ | async as active">
-
-        <div fxLayout fxLayoutAlign="space-between center" class="header">
-          <ng-container *ngIf="getCollection() === 'movies'">
-            <span class="breadcrumb">{{ active.title.original | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
-          </ng-container>
-          <ng-container *ngIf="getCollection() === 'orgs'">
-            <span class="breadcrumb">{{ active | orgName | maxLength: 20 }}{{ ' > ' + activeDirectory.name }}</span>
-          </ng-container>
-          <ng-container *ngIf="activeDirectory.multiple">
-            <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
-              <mat-icon svgIcon="add"></mat-icon>
-              <span>Upload file</span>
-            </button>
+      <div fxLayout fxLayoutAlign="space-between center">
+        <div>
+          <ng-container *ngFor="let crumb of breadCrumbs; let i = index; let isLast = last">
+            <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 12 }}{{ !isLast ? ' > ' : ''}}</span>
           </ng-container>
         </div>
 
+        <ng-container *ngIf="activeDirectory.multiple">
+          <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Upload file</span>
+          </button>
+        </ng-container>
+      </div>
+
+      <ng-container *ngIf="activeDirectory.type === 'directory' else fileDirectory">
+        <bf-table-filter [source]="activeDirectory.directories" [columns]="directoryColumns" [initialColumns]="initialDirectoryColumns">
+          <ng-template colRef="name" let-name>
+            <button mat-button (click)="selectSubDirectory(name)">
+              <span>{{ name }}</span>
+            </button>
+          </ng-template>
+        </bf-table-filter>
+      </ng-container>
+
+      <ng-template #fileDirectory>
         <ng-container *ngIf="activeDirectory.multiple else single">
-          <ng-container *ngIf="active | deepKey:getDeepPath() as directory">
+          <ng-container *ngIf="active$ | async | deepKey:getDeepPath() as directory">
             <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
               <ng-template colRef="ref" let-item="item">
                 <img [asset]="getFileRef(item) | fileTypeImage">
               </ng-template>
               <ng-template colRef="name" let-item="item">{{ getTitleRef(item) | fileName }}</ng-template>
-              <ng-template colRef="edit" let-item="item">
+              <ng-template colRef="actions" let-item="item">
+                <button mat-button (click)="downloadFile(item)">
+                  <mat-icon svgIcon="download"></mat-icon>
+                </button>
                 <button mat-button (click)="openDialog(item)">
                   <mat-icon svgIcon="pencil"></mat-icon>
                 </button>
-              </ng-template>
-              <ng-template colRef="delete" let-item="item">
                 <button mat-button (click)="deleteFile(item)">
                   <mat-icon svgIcon="trash"></mat-icon>
-                </button>
-              </ng-template>
-              <ng-template colRef="download" let-item="item">
-                <button mat-button (click)="downloadFile(item)">
-                  <mat-icon svgIcon="download"></mat-icon>
                 </button>
               </ng-template>
             </bf-table-filter>
@@ -68,6 +69,7 @@
                 <p class="mat-caption">Accepted Formats : jpg, png</p>
               </drop-cropper>
             </ng-container>
+
             <ng-container *ngIf="activeDirectory.type === 'file' && !!this.activeForm">
               <file-upload
                 [form]="getSingleMediaForm()"
@@ -87,8 +89,7 @@
             </div>
           </div>
         </ng-template>
-
-      </ng-container>
+      </ng-template>
     </article>
   </ng-container>
 </section>
