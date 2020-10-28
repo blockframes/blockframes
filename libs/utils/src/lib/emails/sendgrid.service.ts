@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { ErrorResultResponse } from '@blockframes/utils/utils';
-import { EmailRequest, EmailTemplateRequest } from '@blockframes/utils/emails/utils';
+import { EmailParameters } from '@blockframes/utils/emails/utils';
 import { callFunction } from 'akita-ng-fire';
 import { App } from '../apps';
 
@@ -13,7 +13,7 @@ export class SendgridService {
    * @param request 
    * @param from 
    */
-  sendAsAdmin: (request: EmailRequest, from?: string) => Promise<ErrorResultResponse> = callFunction.bind(this.functions, 'sendMailAsAdmin');
+  sendAsAdmin: (data: EmailParameters) => Promise<ErrorResultResponse> = callFunction.bind(this, this.functions, 'sendMailAsAdmin');
 
   /**
    * Allowed to every user, but they must use a template Id and cannot choose "from".
@@ -21,7 +21,7 @@ export class SendgridService {
    * @param request 
    * @param app 
    */
-  sendWithTemplate: (request: EmailTemplateRequest, app?: App) => Promise<ErrorResultResponse> = callFunction.bind(this.functions, 'sendMailWithTemplate');
+  sendWithTemplate: (data: EmailParameters) => Promise<ErrorResultResponse> = callFunction.bind(this, this.functions, 'sendMailWithTemplate');
 
   constructor(private functions: AngularFireFunctions) { }
 }

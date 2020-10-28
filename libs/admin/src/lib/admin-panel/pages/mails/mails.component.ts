@@ -38,11 +38,14 @@ export class MailsComponent implements OnInit {
     }
 
     this.loading = true;
-    const request = createEmailRequest(this.form.value);
-    const output = await this.sendgrid.sendAsAdmin(request, this.form.get('from').value);
+    const emailParameters = {
+      request: createEmailRequest(this.form.value),
+      from: { email: this.form.get('from').value }
+    }
+    const output = await this.sendgrid.sendAsAdmin(emailParameters);
 
     if (output.result === 'OK') {
-      this.snackBar.open(`Mail successfully sent to ${request.to}`, 'close', { duration: 5000 });
+      this.snackBar.open(`Mail successfully sent to ${emailParameters.request.to}`, 'close', { duration: 5000 });
     } else {
       this.snackBar.open('There was an error while sending email..', 'close', { duration: 5000 })
     }
