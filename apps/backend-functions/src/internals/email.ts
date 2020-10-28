@@ -60,7 +60,7 @@ function send(msg: MailDataRequired) {
  * @param context 
  */
 export const onSendTestMail = async (
-  data: { request: EmailRequest, from: EmailJSON },
+  data: { request: EmailRequest, from?: EmailJSON },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
@@ -84,7 +84,7 @@ export const onSendTestMail = async (
  * @param context 
  */
 export const onSendMailWithTemplate = async (
-  data: { request: EmailTemplateRequest, app: App },
+  data: { request: EmailTemplateRequest, app?: App },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
   if (!context?.auth) { throw new Error('Permission denied: missing auth context.'); }
