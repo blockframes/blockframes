@@ -17,6 +17,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { EventAnalyticsModule } from '@blockframes/event/components/analytics/analytics.module';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [EditComponent],
@@ -28,7 +32,6 @@ import { EventAnalyticsModule } from '@blockframes/event/components/analytics/an
     EventAnalyticsModule,
     DisplayNameModule,
     FileSelectorModule,
-    FormListModule,
     FileNameModule,
 
     // Material
@@ -37,6 +40,11 @@ import { EventAnalyticsModule } from '@blockframes/event/components/analytics/an
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatListModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+
     RouterModule.forChild([{ path: '', component: EditComponent }])
   ]
 })
