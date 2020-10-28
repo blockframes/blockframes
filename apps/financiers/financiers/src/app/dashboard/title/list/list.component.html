@@ -1,7 +1,7 @@
 <ng-container *ngIf="(titles$ | async) as titles; else loading">
   <ng-container *ngIf="titles.length; else empty">
     <header fxLayout="row" fxLayoutAlign="space-between center" class="import">
-      <h1>My Titles</h1>
+      <h1>My Projects</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
           <mat-icon svgIcon="excel"></mat-icon>
@@ -13,6 +13,13 @@
       </div>
     </header>
 
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="resetFilter('all')" [active]="filter.value === 'all'">All</button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft</button>
+      <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">On Going</button>
+      <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved</button>
+    </nav>
+    
     <mat-card>
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">

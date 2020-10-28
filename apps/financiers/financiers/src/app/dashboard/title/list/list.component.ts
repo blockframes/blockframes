@@ -27,8 +27,7 @@ export class ListComponent implements OnInit, OnDestroy {
   columns = columns;
   initialColumns = ['title', 'view', 'directors', 'productionStatus', 'storeConfig.status'];
   titles$: Observable<Movie[]>;
-  filter = new FormControl();
-  filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  filter = new FormControl('all');
 
   private sub: Subscription;
 
@@ -61,6 +60,10 @@ export class ListComponent implements OnInit, OnDestroy {
   /** Navigate to tunnel if status is draft, else go to page */
   public goToTitle(title: Movie) {
     this.router.navigate([title.id], { relativeTo: this.route });
+  }
+
+  public applyFilter(status: 'all' | 'draft' | 'ongoing' | 'achieved') {
+    this.filter.setValue(status);
   }
 
   ngOnDestroy() {
