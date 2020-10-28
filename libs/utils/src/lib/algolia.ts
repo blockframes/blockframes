@@ -6,6 +6,7 @@ import { GetKeys } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 import { ProductionStatus, Territory } from './static-model';
+import { App } from './apps';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -32,24 +33,23 @@ export interface MovieAlgoliaResult {
   movie: Movie;
 }
 
-export const MoviesIndex = new InjectionToken<Index>('Algolia index to search movies', {
-  providedIn: 'root',
-  factory: () => searchClient.initIndex(algolia.indexNameMovies)
-});
-
 
 /** A simple map to access the index name */
 export const algoliaIndex = {
   user: algolia.indexNameUsers,
   org: algolia.indexNameOrganizations,
-  movie: algolia.indexNameMovies,
+  movie: {
+    financiers: algolia.indexNameMovies.financiers,
+    catalog: algolia.indexNameMovies.catalog,
+    festival: algolia.indexNameMovies.festival
+  },
 }
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
 export type GetAlgoliaSchema<I extends AlgoliaIndex> =
   I extends 'user' ? AlgoliaUser
   : I extends 'org' ? AlgoliaOrg
-  : I extends 'movie' ? AlgoliaMovie
+  : I extends 'movie' ? AlgoliaBaseMovie
   : never;
 
 
@@ -80,7 +80,7 @@ export interface AlgoliaOrg {
   objectID: string
 }
 
-export interface AlgoliaMovie {
+export interface AlgoliaBaseMovie {
   title: {
     international: string,
     original: string

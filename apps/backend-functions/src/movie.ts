@@ -62,8 +62,10 @@ export async function onMovieDelete(
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
+  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+
   // Update algolia's index
-  await deleteObject(algolia.indexNameMovies, context.params.movieId);
+  movieAppAccess.forEach(async appName => await deleteObject(algolia.indexNameMovies[appName], context.params.movieId));
 
   console.log(`removed sub colletions of ${movie.id}`);
   return batch.commit();

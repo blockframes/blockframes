@@ -6,12 +6,14 @@ import {
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
-} from '@blockframes/firebase-utils'; 
+} from '@blockframes/firebase-utils';
 
 import { algolia } from '@env';
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { PublicUser } from "@blockframes/user/types";
+import { App, app } from '@blockframes/utils/apps';
+import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 
 // TODO MIGRATE TO ALGOLIA v4 #2554
 
@@ -19,7 +21,7 @@ export async function upgradeAlgoliaOrgs() {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
   const config = {
-    searchableAttributes: [ 'name' ],
+    searchableAttributes: ['name'],
     attributesForFaceting: [
       'appAccess',
       'appModule',
@@ -44,40 +46,18 @@ export async function upgradeAlgoliaOrgs() {
   console.log('Algolia Orgs index updated with success !');
 }
 
-export async function upgradeAlgoliaMovies() {
+export async function upgradeAlgoliaMovies(appConfig?: App) {
+
+  if (!appConfig) {
+    app.forEach(async a => await upgradeAlgoliaMovies(a))
+    return;
+  }
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = {
-    searchableAttributes: [
-      'title.international',
-      'title.original',
-      'directors',
-      'keywords'
-    ],
-    attributesForFaceting: [
-      // filters
-      'filterOnly(budget)',
+  const config = movieConfig(appConfig)
 
-      // searchable facets
-      'searchable(orgName)',
-
-      // other facets
-      'audience.goals',
-      'genres',
-      'languages.original',
-      'languages.dubbed',
-      'languages.subtitle',
-      'languages.caption',
-      'originCountries',
-      'status',
-      'storeConfig',
-      'storeType',
-      'appAccess'
-    ],
-  };
-
-  await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);
-  await clearIndex(algolia.indexNameMovies, process.env['ALGOLIA_API_KEY']);
+  await setIndexConfiguration(algolia.indexNameMovies[appConfig], config, process.env['ALGOLIA_API_KEY']);
+  await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
@@ -100,6 +80,14 @@ export async function upgradeAlgoliaMovies() {
 
         const org = (querySnap.docs[0].data() as OrganizationDocument);
         const orgName = org.denomination.public || org.denomination.full;
+
+        if (appConfig === 'financiers') {
+          const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
+          const campaign = (campaignSnap.docs[0].data() as Campaign);
+          if (campaign?.id) {
+            
+          }
+        }
 
         await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
       } catch (error) {
@@ -146,4 +134,39 @@ export async function upgradeAlgoliaUsers() {
     console.log(`chunk of ${users.length} users processed...`)
   }
   console.log('Algolia Users index updated with success !');
+}
+
+function movieConfig(appConfig: App) {
+  const config = {
+    searchableAttributes: [
+      'title.international',
+      'title.original',
+      'directors',
+      'keywords'
+    ],
+    attributesForFaceting: [
+      // filters
+      'filterOnly(budget)',
+
+      // searchable facets
+      'searchable(orgName)',
+
+      // other facets
+      'genres',
+      'languages.original',
+      'languages.dubbed',
+      'languages.subtitle',
+      'languages.caption',
+      'originCountries',
+      'status',
+      'storeConfig',
+      'storeType'
+    ],
+  };
+  switch (appConfig) {
+    case 'financiers': {
+      config.attributesForFaceting.push('audience.goals')
+    }
+  }
+  return config;
 }

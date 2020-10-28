@@ -81,7 +81,6 @@ export function storeSearchableMovie(
   }
 
   try {
-    const movieAppAccess = movie.storeConfig.appAccess;
 
     const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
@@ -116,13 +115,12 @@ export function storeSearchableMovie(
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
       storeType: movie.storeConfig?.storeType || '',
-      appAccess: movieAppAccess ?
-        app.filter(a => movie.storeConfig?.appAccess[a]) :
-        [],
       socialGoals: movie.audience.goals
     };
 
-    return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);
+    const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+
+    movieAppAccess.forEach(async appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord))
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);
