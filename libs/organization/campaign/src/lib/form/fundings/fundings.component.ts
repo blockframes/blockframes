@@ -32,6 +32,6 @@ export class CampaignFormFundingsComponent implements OnInit {
 
   ngOnInit() {
     const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/financingPlan/`;
+    this.storagePath = `campaigns/${movieId}/files.financingPlan/`;
   }
 }

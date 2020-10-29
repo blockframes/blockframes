@@ -13,7 +13,7 @@
             <strong>
               {{ title }}
               <ng-container *ngIf="control.get('minPledge').value as minPledge; else anyInvestment">
-                (from {{ minPledge | currency:'USD' }})
+                (from {{ minPledge | currency : form.getCurrency() : 'symbol' : '1.0-0' }})
               </ng-container>
               <ng-template #anyInvestment>
                 (for any investment)

@@ -10,19 +10,19 @@
     <li>
       <strong>ROI low: </strong>
       <missing-control [control]="form.get('profits').get('low')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
     <li>
       <strong>ROI medium: </strong>
       <missing-control [control]="form.get('profits').get('medium')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
     <li>
       <strong>ROI high: </strong>
       <missing-control [control]="form.get('profits').get('high')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
   </ul>
