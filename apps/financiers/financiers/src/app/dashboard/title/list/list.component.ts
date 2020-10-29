@@ -57,8 +57,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(org => this.movieService.syncWithAnalytics(org.movieIds)),
     ).subscribe();
 
-    this.filter$.subscribe(console.log);
-
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.campaignService.queryMoviesCampaign(org.movieIds)),
       map(movies => movies.filter(movie => !!movie)),
