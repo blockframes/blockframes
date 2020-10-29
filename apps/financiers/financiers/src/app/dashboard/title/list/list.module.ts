@@ -13,7 +13,6 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { NumberPipeModule } from '@blockframes/utils/pipes';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
 
 // Material
@@ -33,7 +32,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     TableFilterModule,
     NumberPipeModule,
     ImageReferenceModule,
-    AnalyticsPipeModule,
     NoTitleModule,
     // Material
     MatButtonModule,
