@@ -10,7 +10,6 @@ import { ListComponent } from './list.component';
 
 // Blocfkrames
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { NumberPipeModule } from '@blockframes/utils/pipes';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
@@ -30,7 +29,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
-    NumberPipeModule,
     ImageReferenceModule,
     NoTitleModule,
     // Material

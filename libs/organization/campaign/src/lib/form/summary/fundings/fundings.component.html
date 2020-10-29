@@ -9,7 +9,7 @@
   <ul>
     <li>
       <strong>Total amount: </strong>
-      <span>{{ fundings | totalFundings | bigCurrency }}</span>
+      <span>{{ fundings | totalFundings | currency : form.currency : 'symbol' : '1.0-0' }}</span>
     </li>
     <li fxLayout="column">
       <strong>Fundings</strong>

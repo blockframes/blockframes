@@ -22,13 +22,13 @@
                 <div class="color" [style.backgroundColor]="options.colors[i]"></div>
                 <span>{{ row.label }}</span>
               </td>
-              <td>{{ campaign.budget[row.serie] | bigCurrency:'USD' }}</td>
+              <td>{{ campaign.budget[row.serie] | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </ng-container>
           <tfoot>
             <tr>
               <td>Grand Total Budget</td>
-              <td>{{ campaign.budget | budget | bigCurrency:'USD' }}</td>
+              <td>{{ campaign.budget | budget | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </tfoot>
         </table>
@@ -38,7 +38,7 @@
           [series]="options.series"
           [labels]="options.labels"
           [colors]="options.colors"
-          [tooltip]="{y: formatter.bigCurrency}"
+          [tooltip]="{y: formatter.currency(campaign)}"
         ></apx-chart>
       </article>
       <mat-divider></mat-divider>
@@ -67,7 +67,7 @@
               </td>
               <td>{{ funding.status | titlecase }}</td>
               <td>{{ (funding.amount / (campaign.fundings | totalFundings)) | percent }}</td>
-              <td>{{ funding.amount | bigCurrency:'USD' }}</td>
+              <td>{{ funding.amount | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </ng-container>
           <tfoot>
@@ -75,7 +75,7 @@
               <td>Total Investment</td>
               <td></td>
               <td></td>
-              <td>{{ campaign.budget | budget | bigCurrency:'USD' }}</td>
+              <td>{{ campaign.budget | budget | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </tfoot>
         </table>
@@ -85,7 +85,7 @@
           [series]="options.series"
           [labels]="options.labels"
           [colors]="options.colors"
-          [tooltip]="{y: formatter.bigCurrency}"
+          [tooltip]="{y: formatter.currency(campaign)}"
         ></apx-chart>
       </article>
       <mat-divider></mat-divider>
