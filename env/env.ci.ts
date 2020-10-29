@@ -53,7 +53,11 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: 'ci_orgs',
-  indexNameMovies: 'ci_movies',
+  indexNameMovies: {
+    festival: 'ci_festival_movies',
+    financiers: 'ci_financiers_movies',
+    catalog: 'ci_catalog_movies',
+  },
   indexNameUsers: 'ci_users',
 };
 
