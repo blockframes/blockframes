@@ -7,6 +7,13 @@
 figure {
   position: relative;
   margin: 0;
+  line-height: 1rem;  // Required to fit the img size
+
+  .view-more {
+    color: var(--primary);
+    border: solid 1px var(--primary);
+    padding: 8px;
+  }
 }
 
 wishlist-button {
