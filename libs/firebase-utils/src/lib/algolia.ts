@@ -3,7 +3,7 @@ import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
 import { getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
+import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
@@ -82,7 +82,7 @@ export function storeSearchableMovie(
 
   try {
 
-    const movieRecord: Partial<AlgoliaRecordMovie> = {
+    const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
 
       // searchable keys

@@ -2,11 +2,11 @@ import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
-import { GetKeys } from './static-model';
+import { GetKeys, SocialGoal, Territory } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
-import { ProductionStatus, Territory } from './static-model';
-import { App } from './apps';
+import { ProductionStatus } from './static-model';
+import { App, Module } from './apps';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -49,7 +49,7 @@ export type AlgoliaIndex = keyof typeof algoliaIndex;
 export type GetAlgoliaSchema<I extends AlgoliaIndex> =
   I extends 'user' ? AlgoliaUser
   : I extends 'org' ? AlgoliaOrg
-  : I extends 'movie' ? AlgoliaBaseMovie
+  : I extends 'movie' ? AlgoliaMovie
   : never;
 
 
@@ -80,7 +80,7 @@ export interface AlgoliaOrg {
   objectID: string
 }
 
-export interface AlgoliaBaseMovie {
+export interface AlgoliaMovie {
   title: {
     international: string,
     original: string
@@ -102,4 +102,49 @@ export interface AlgoliaBaseMovie {
   objectID: string
 }
 
+// TODO extract that (along with other potential common features) into an algolia file
+export interface AlgoliaSearch {
+  query: string;
+  page: number;
+  hitsPerPage: number;
+}
 
+interface AlgoliaRecord {
+  objectID: string,
+}
+export interface AlgoliaRecordOrganization extends AlgoliaRecord {
+  name: string,
+  appAccess: App[],
+  appModule: Module[],
+  country: Territory
+}
+
+export interface AlgoliaRecordMovie extends AlgoliaRecord {
+  title: {
+    international: string,
+    original: string,
+  },
+  directors: string[],
+  keywords: string[],
+  genres: string[],
+  originCountries: string[],
+  languages: {
+    original: string[],
+    dubbed: string[],
+    subtitle: string[],
+    caption: string[],
+  },
+  status: string,
+  storeConfig: string,
+  budget: number,
+  orgName: string,
+  storeType: string,
+}
+
+export interface AlgoliaRecordUser extends AlgoliaRecord {
+  email: string,
+  firstName: string,
+  lastName: string,
+  /** this is just a direct url to an image and **NOT** an `ImgRef` */
+  avatar: string,
+}
