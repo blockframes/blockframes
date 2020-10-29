@@ -81,6 +81,11 @@
   <!-- TITLE CARD -->
   <ng-template listPageCard let-title>
     <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]" size="poster">
+      <ng-container *ngIf="title.id | getCampaign | async as campaign">
+        <span matTooltip="Minimum investment amount">
+          {{ campaign.minPledge | currency : campaign.currency : 'symbol' : '1.0-0' }}
+        </span>
+      </ng-container>
     </movie-card>
   </ng-template>
 

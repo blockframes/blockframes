@@ -8,6 +8,7 @@ import { Campaign } from '../../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgressComponent {
+  currency = 'USD';
   received = 0;
   progress = 0;
   steps: number[] = [];
@@ -15,6 +16,7 @@ export class ProgressComponent {
   @Input()
   set campaign(campaign: Campaign) {
     if (campaign) {
+      this.currency = campaign.currency;
       this.received = campaign.received || 0;
       this.progress = (this.received / campaign.cap) * 100;
       let total = 0;

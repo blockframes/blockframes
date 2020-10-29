@@ -25,8 +25,12 @@
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
-        <ng-template colRef="campaign.cap" let-cap>{{ cap | bigCurrency:'USD' }}</ng-template>
-        <ng-template colRef="campaign.received" let-received>{{ received | bigCurrency:'USD' }}</ng-template>
+        <ng-template colRef="campaign.cap" let-cap let-movie="item">
+          {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+        </ng-template>
+        <ng-template colRef="campaign.received" let-received let-movie="item">
+          {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
