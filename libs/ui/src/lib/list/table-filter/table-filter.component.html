@@ -15,7 +15,7 @@
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of columns | keyvalue" [matColumnDef]="column.key">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column.value }} </th>
-      <td mat-cell *matCellDef="let row">
+      <td [ngClass]="{'clickable': clickable}" mat-cell *matCellDef="let row">
         <ng-container *ngIf="(cols | findColRef:column.key) as col; else default">
           <ng-template
             [ngTemplateOutlet]="col.template"

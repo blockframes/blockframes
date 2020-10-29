@@ -1,3 +1,6 @@
+import { EmailJSON } from "@sendgrid/helpers/classes/email-address";
+import { App } from "../apps";
+
 export interface EmailRequest {
   to: string;
   subject: string;
@@ -8,6 +11,12 @@ export interface EmailTemplateRequest {
   to: string;
   templateId: string;
   data: { [key: string]: any };
+}
+
+export interface EmailParameters {
+  request: EmailRequest | EmailTemplateRequest,
+  from?: EmailJSON,
+  app?: App,
 }
 
 export interface EmailRecipient {
