@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
@@ -82,7 +82,7 @@ export function storeSearchableMovie(
 
   try {
 
-    const movieRecord: AlgoliaRecordMovie = {
+    const movieRecord: Partial<AlgoliaRecordMovie> = {
       objectID: movie.id,
 
       // searchable keys
@@ -114,9 +114,13 @@ export function storeSearchableMovie(
       storeConfig: movie.storeConfig?.status || '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || '',
-      socialGoals: movie.audience.goals
+      storeType: movie.storeConfig?.storeType || ''
     };
+
+    if (movie.storeConfig.appAccess.financiers) {
+      movieRecord['minPledge'] = movie['minPledge'];
+      movieRecord['socialGoals'] = movie.audience.goals;
+    }
 
     const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 

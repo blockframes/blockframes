@@ -64,8 +64,12 @@ export async function onMovieDelete(
 
   const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
+  const promises = [];
+
   // Update algolia's index
-  movieAppAccess.forEach(async appName => await deleteObject(algolia.indexNameMovies[appName], context.params.movieId));
+  movieAppAccess.forEach(appName => promises.push(deleteObject(algolia.indexNameMovies[appName], context.params.movieId)));
+
+  await Promise.all(promises)
 
   console.log(`removed sub colletions of ${movie.id}`);
   return batch.commit();
