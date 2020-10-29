@@ -12,10 +12,15 @@
     </article>
 
     <article class="view surface">
-      <div fxLayout fxLayoutAlign="space-between center">
+      <div class="header" fxLayout fxLayoutAlign="space-between center">
         <div>
           <ng-container *ngFor="let crumb of breadCrumbs; let i = index; let isLast = last">
-            <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 12 }}{{ !isLast ? ' > ' : ''}}</span>
+            <ng-container *ngIf="isLast else notLast">
+              <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 24 }}</span>
+            </ng-container>
+            <ng-template #notLast>
+              <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 12 }} > </span>
+            </ng-template>
           </ng-container>
         </div>
 
