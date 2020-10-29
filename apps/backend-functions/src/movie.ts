@@ -67,7 +67,10 @@ export async function onMovieDelete(
   const promises = [];
 
   // Update algolia's index
-  movieAppAccess.forEach(appName => promises.push(deleteObject(algolia.indexNameMovies[appName], context.params.movieId)));
+  movieAppAccess.forEach(appName => {
+    const promise = deleteObject(algolia.indexNameMovies[appName], context.params.movieId)
+    promises.push(promise);
+  })
 
   await Promise.all(promises)
 

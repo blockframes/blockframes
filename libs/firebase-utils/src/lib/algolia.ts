@@ -118,13 +118,19 @@ export function storeSearchableMovie(
     };
 
     if (movie.storeConfig.appAccess.financiers) {
+      movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
-      movieRecord['socialGoals'] = movie.audience.goals;
     }
 
     const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
-    movieAppAccess.forEach(async appName => await indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord))
+    const promises = [];
+
+    // Update algolia's index
+    movieAppAccess.forEach(appName => promises.push(indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord)));
+
+    return Promise.all(promises)
+
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);

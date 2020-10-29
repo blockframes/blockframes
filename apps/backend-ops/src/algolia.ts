@@ -7,7 +7,6 @@ import {
   storeSearchableOrg,
   storeSearchableUser,
 } from '@blockframes/firebase-utils';
-
 import { algolia } from '@env';
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
@@ -49,10 +48,12 @@ export async function upgradeAlgoliaOrgs() {
 export async function upgradeAlgoliaMovies(appConfig?: App) {
 
   if (!appConfig) {
-    /* For Each doesn't await */
-    await upgradeAlgoliaMovies('financiers');
-    await upgradeAlgoliaMovies('catalog');
-    await upgradeAlgoliaMovies('festival');
+    const promises = [];
+    app.forEach(a => {
+      const promise = upgradeAlgoliaMovies(a)
+      promises.push(promise);
+    })
+    await Promise.all(promises);
   } else {
 
     // reset config, clear index and fill it up from the db (which is the only source of truth)
@@ -87,14 +88,13 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
             const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
             const campaign = (campaignSnap.docs[0].data() as Campaign);
             if (campaign?.id) {
-              movie['minPledge'] = campaign.minPledge
+              movie['minPledge'] = campaign.minPledge;
             }
           }
-
           await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
         } catch (error) {
-          console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
-          console.error(error);
+/*           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`); */
+          console.error('test');
         }
       });
 
