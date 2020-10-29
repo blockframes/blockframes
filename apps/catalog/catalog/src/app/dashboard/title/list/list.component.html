@@ -18,6 +18,7 @@
 
       <mat-card>
         <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
+          clickable
           showFilter
           showPaginator
           (rowClick)="goToTitle($event)">

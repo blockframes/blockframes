@@ -34,6 +34,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
 
   @Input() @boolean showFilter: boolean;
   @Input() @boolean showPaginator: boolean;
+  @Input() @boolean clickable: boolean;
 
   // Name of the column headers
   @Input() columns: Record<string, any>;
