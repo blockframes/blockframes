@@ -14,15 +14,15 @@ const users  =  [ userFixture.getByUID(USER.Vincent) ];
 beforeEach(() => {
   clearDataAndPrepareTest();
   signIn(users[0]);
-  acceptCookie();
 });
 
 describe('Test wishlist features from library, detail page',  () => {
   it('User clears all movies from Wish List', () => {
     const p1 = new HomePage();
+    acceptCookie();
     const p3: SearchPage = p1.clickViewTheLibrary();
     const p4: WishlistPage = p3.clickWishlist();
-    cy.get('catalog-wishlist', {timeout: TO.PAGE_LOAD});
+    cy.get('marketplace-wishlist', {timeout: TO.PAGE_LOAD});
     cy.wait(TO.THREE_SEC);
     cy.log('Clear WatchList');
     p4.getWishListCount()
@@ -34,6 +34,7 @@ describe('Test wishlist features from library, detail page',  () => {
   
   it('User logs in, (dis)likes from library page, verifies wishlist.', () => {
     const p1 = new HomePage();
+    acceptCookie();
     const p3: SearchPage = p1.clickViewTheLibrary();
     cy.wait(TO.FIFTEEN_SEC);
 
