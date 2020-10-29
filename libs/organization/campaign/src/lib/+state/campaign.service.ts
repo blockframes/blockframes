@@ -1,21 +1,41 @@
 import { Injectable } from "@angular/core";
 import { OrganizationQuery } from "@blockframes/organization/+state";
-import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig, queryChanges, Query } from 'akita-ng-fire';
 import { Campaign } from "./campaign.model";
 import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';
+import { Movie, MovieService } from "@blockframes/movie/+state";
+import { combineLatest, Observable } from "rxjs";
+import { map } from "rxjs/operators";
+
+export interface MovieCampaign extends Movie {
+  campaign: Campaign;
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'campaigns' })
 export class CampaignService extends CollectionService<CampaignState> {
 
-  constructor(protected store: CampaignStore, private orgQuery: OrganizationQuery) {
+  constructor(
+    protected store: CampaignStore,
+    private orgQuery: OrganizationQuery,
+    private movieService: MovieService
+  ) {
     super(store);
   }
 
   // Make sure we remove all undefined values
   formatToFirestore(campaign: Partial<Campaign>) {
     return removeUndefined(campaign);
+  }
+
+  /** Query movies with their campaign */
+  queryMoviesCampaign(ids: string[]) {
+    const query = (id: string) => combineLatest([
+      this.movieService.valueChanges(id),
+      this.valueChanges(id),
+    ]).pipe(map(([movie, campaign]) => ({ ...movie, campaign })));
+    return combineLatest(ids.map(query))
   }
 
   create(movieId: string) {

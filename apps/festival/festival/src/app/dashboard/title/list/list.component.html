@@ -14,7 +14,7 @@
     </header>
 
     <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
+      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
