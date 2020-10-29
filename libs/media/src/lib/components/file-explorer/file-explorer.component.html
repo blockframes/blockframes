@@ -16,7 +16,7 @@
         <div>
           <ng-container *ngFor="let crumb of breadCrumbs; let i = index; let isLast = last">
             <ng-container *ngIf="isLast else notLast">
-              <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 24 }}</span>
+              <span class="breadcrumb">{{ crumb.name | maxLength: 24 }}</span>
             </ng-container>
             <ng-template #notLast>
               <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 12 }} > </span>

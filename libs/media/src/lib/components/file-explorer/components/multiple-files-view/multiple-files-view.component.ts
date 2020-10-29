@@ -88,16 +88,16 @@ export class MultipleFilesViewComponent implements OnInit {
           }
           const formList = getFormList(form, this.activeDirectory.storagePath);
 
-          const index = formList.controls.findIndex(form => {
-            if (isHostedMediaForm(form)) {
+          const index = formList.controls.findIndex(ctrl => {
+            if (isHostedMediaForm(ctrl)) {
               const ref = (row as string);
-              return form.get('ref').value === ref;
-            } else if (isHostedMediaWithMetadataForm(form)) {
+              return ctrl.get('ref').value === ref;
+            } else if (isHostedMediaWithMetadataForm(ctrl)) {
               const title = (row as HostedMediaWithMetadata).title;
-              return form.get('title').value === title;
+              return ctrl.get('title').value === title;
             } else {
               const ref = (row as MovieNote).ref;
-              return form.get('ref').get('ref').value === ref;
+              return ctrl.get('ref').get('ref').value === ref;
             }
           });
 
