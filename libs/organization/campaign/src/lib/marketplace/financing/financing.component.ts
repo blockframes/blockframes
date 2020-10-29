@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, Pipe, PipeTransform } from '@angular/core';
-import { formatPercent } from '@angular/common';
+import { formatCurrency, formatPercent } from '@angular/common';
 import { Budget, Campaign, CampaignService, Funding } from '../../+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { toBigCurrency } from '@blockframes/utils/pipes';
 
 const budgetData: { serie: keyof Budget, label: string }[] = [{
   serie: 'producerFees',
@@ -33,9 +32,9 @@ export class MarketplaceFinancingComponent implements OnInit {
   campaign$: Observable<Campaign>;
   budgetData = budgetData;
   formatter = {
-    bigCurrency: {
-      formatter: (value: number) => typeof value === 'number' ? toBigCurrency(value, this.locale) : ''
-    },
+    currency: (campaign: Campaign) => ({
+      formatter: (value: number) => typeof value === 'number' ? formatCurrency(value, this.locale, campaign.currency) : ''
+    }),
     percent: {
       formatter: (value: number) => typeof value === 'number' ? formatPercent(value / 100, this.locale) : ''
     }

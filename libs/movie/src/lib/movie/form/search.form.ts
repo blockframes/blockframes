@@ -5,8 +5,8 @@ import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { StoreStatus, ProductionStatus, Territory, Language, Genre, StoreType, SocialGoal } from '@blockframes/utils/static-model/types';
-import { MovieAppAccess } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/ui/algolia/types';
+import { App } from "@blockframes/utils/apps";
+import { AlgoliaRecordOrganization, AlgoliaSearch } from '@blockframes/utils/algolia';
 
 export interface LanguagesSearch {
   original: Language[];
@@ -16,7 +16,6 @@ export interface LanguagesSearch {
 }
 
 export interface MovieSearch extends AlgoliaSearch {
-  appAccess: (keyof MovieAppAccess)[],
   storeType: StoreType[];
   storeConfig: StoreStatus[]
   genres: Genre[];
@@ -30,7 +29,6 @@ export interface MovieSearch extends AlgoliaSearch {
 
 export function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
   return {
-    appAccess: [],
     query: '',
     page: 0,
     hitsPerPage: 8,
@@ -64,7 +62,6 @@ export type LanguageVersionControl = ReturnType<typeof createLanguageVersionCont
 
 function createMovieSearchControl(search: MovieSearch) {
   return {
-    appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
     page: new FormControl(search.page),
     storeType: FormList.factory<GetKeys<'storeType'>>(search.storeType),
@@ -85,12 +82,12 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
   private movieIndex: Index;
 
-  constructor(search: Partial<MovieSearch> = {}) {
+  constructor(app: App, search: Partial<MovieSearch> = {}) {
     const movieSearch = createMovieSearch(search);
     const control = createMovieSearchControl(movieSearch);
     super(control);
 
-    this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies);
+    this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
   }
 
   get query() { return this.get('query'); }
@@ -103,7 +100,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get minBudget() { return this.get('minBudget'); }
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
-  get appAccess() { return this.get('appAccess') };
   get socialGoals() { return this.get('socialGoals'); }
 
 
@@ -120,10 +116,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.productionStatus?.value.length === 0 &&
       this.minBudget?.value === 0 &&
       this.sellers?.value.length === 0 &&
-      this.storeType?.value.length === 0 &&
-      this.appAccess?.value.length === 0 &&
-      this.socialGoals?.value.length === 0
-    );
+      this.storeType?.value.length === 0);
   }
 
   search() {
@@ -144,7 +137,6 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.sellers.value.map(seller => `orgName:${seller.name}`),
         this.storeType.value.map(type => `storeType:${type}`),
         this.storeConfig.value.map(config => `storeConfig:${config}`),
-        this.appAccess.value.map(access => `appAccess:${access}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`)
       ],
 

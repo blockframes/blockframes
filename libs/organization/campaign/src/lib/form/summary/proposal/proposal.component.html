@@ -10,7 +10,7 @@
       <strong>Current amount: </strong>
       <missing-control [control]="form.get('received')" [link]="link">
         <ng-template let-received>
-          {{ received | currency:'USD' }}
+          {{ received | currency : form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -18,7 +18,7 @@
       <strong>Total investment needed: </strong>
       <missing-control [control]="form.get('cap')" [link]="link">
         <ng-template let-cap>
-          {{ cap | currency:'USD' }}
+          {{ cap | currency : form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -26,7 +26,7 @@
       <strong>Minimum investment amount: </strong>
       <missing-control [control]="form.get('minPledge')" [link]="link">
         <ng-template let-minPledge>
-          {{ minPledge | currency:'USD' }}
+          {{ minPledge | currency : form.getCurrency() : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>

@@ -63,7 +63,8 @@ export class WishlistButtonComponent implements OnInit {
   }
 
   public async addToWishlist(event?: Event) {
-    event?.stopPropagation();
+    event.stopPropagation();
+    event.preventDefault();
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);
@@ -76,7 +77,8 @@ export class WishlistButtonComponent implements OnInit {
   }
 
   public async removeFromWishlist(event?: Event) {
-    event?.stopPropagation();
+    event.stopPropagation();
+    event.preventDefault();
     const movie = await this.movieService.getValue(this.movieId);
     const title = movie.title.international;
     this.cartService.updateWishlist(movie);

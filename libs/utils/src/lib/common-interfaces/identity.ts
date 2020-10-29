@@ -4,7 +4,7 @@ import {
   LegalRole,
   SubLicensorRole,
   Territory
-} from "@blockframes/utils/static-model/types";
+} from "../static-model/types";
 import { Location } from "./utility";
 
 

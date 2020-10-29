@@ -12,24 +12,24 @@
             <mat-label>ROI low</mat-label>
             <input type="number" matInput formControlName="low" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
+            <mat-hint>Low case is the profitability in the worst case</mat-hint>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="Low case is the profitability in the worst case"></mat-icon>
         </div>
         <div fxLayout fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>ROI medium</mat-label>
             <input type="number" matInput formControlName="medium" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
+            <mat-hint>Target case is the reasonable profitability you are targetting</mat-hint>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="Target case is the reasonable profitability you are targetting"></mat-icon>
         </div>
         <div fxLayout fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>ROI high</mat-label>
             <input type="number" matInput formControlName="high" min="0"/>
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
+            <mat-hint>Upside case is the best profitability you could expect</mat-hint>
           </mat-form-field>
-          <mat-icon class="info" svgIcon="info" matTooltip="Upside case is the best profitability you could expect"></mat-icon>
         </div>
       </form>
     </section>

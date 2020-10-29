@@ -32,10 +32,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public movies$: Observable<Movie[]>;
 
-  public sortByControl: FormControl = new FormControl('Title');
-  public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
-
-  public searchForm = new MovieSearchForm();
+  public searchForm = new MovieSearchForm('catalog', { storeConfig: ['accepted'] });
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -56,10 +53,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Films On Our Market Today');
-    // Implicitly we only want accepted movies
-    this.searchForm.storeConfig.add('accepted');
-    // On financiers, we want only movie available for financiers
-    this.searchForm.appAccess.add('catalog');
 
     this.route.queryParams.subscribe(params => {
       Object.keys(params).forEach(k => {
@@ -73,10 +66,7 @@ export class ListComponent implements OnInit, OnDestroy {
     });
 
     this.movies$ = this.movieResultsState.asObservable();
-    this.sub = combineLatest([
-      this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
-    ]).pipe(
+    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
@@ -85,7 +75,6 @@ export class ListComponent implements OnInit, OnDestroy {
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      /*    map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), TODO issue #3584 */
     ).subscribe(movies => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
@@ -108,7 +97,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: ['accepted'] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }
