@@ -9,7 +9,6 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
-import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
@@ -20,7 +19,7 @@ import { sendTestMail } from './internals/email';
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions, region } from 'firebase-functions';
+import { RuntimeOptions } from 'firebase-functions';
 import { getTwilioAccessToken } from './twilio';
 
 //--------------------------------
@@ -241,10 +240,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
-/**
- * Trigger: REST call to the /admin app
- *
- *  - Backups / Restore the database
- *  - Quorum Deploy & setup a movie smart-contract
- */
-export const admin = region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
+export { default as dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
+
+export { default as firestorePubsub } from './pubsub/firestore';
