@@ -8,7 +8,7 @@ import {
   storeSearchableUser,
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
-import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
 import { MovieDocument } from "@blockframes/movie/+state/movie.firestore";
 import { PublicUser } from "@blockframes/user/types";
 import { App, app } from '@blockframes/utils/apps';
@@ -48,11 +48,7 @@ export async function upgradeAlgoliaOrgs() {
 export async function upgradeAlgoliaMovies(appConfig?: App) {
 
   if (!appConfig) {
-    const promises = [];
-    app.forEach(a => {
-      const promise = upgradeAlgoliaMovies(a)
-      promises.push(promise);
-    })
+    const promises = app.map(upgradeAlgoliaMovies);
     await Promise.all(promises);
   } else {
 
@@ -73,7 +69,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
           const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
 
           if (querySnap.size === 0) {
-            throw new Error(`Movie ${movie.id} is not part of any orgs`);
+            console.error(`Movie ${movie.id} is not part of any orgs`);
           }
 
           // TODO : here we might decide to arbitrary choose first org
@@ -82,7 +78,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
              } */
 
           const org = (querySnap.docs[0].data() as OrganizationDocument);
-          const orgName = org.denomination.public || org.denomination.full;
+          const organizationName = orgName(org);
 
           if (appConfig === 'financiers') {
             const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
@@ -91,7 +87,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
               movie['minPledge'] = campaign.minPledge;
             }
           }
-          await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
+          await storeSearchableMovie(movie, organizationName, process.env['ALGOLIA_API_KEY'])
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error('test');
@@ -140,37 +136,42 @@ export async function upgradeAlgoliaUsers() {
   console.log('Algolia Users index updated with success !');
 }
 
+const baseConfig = {
+  searchableAttributes: [
+    'title.international',
+    'title.original',
+    'directors',
+    'keywords'
+  ],
+  attributesForFaceting: [
+    // filters
+    'filterOnly(budget)',
+
+    // searchable facets
+    'searchable(orgName)',
+
+    // other facets
+    'genres',
+    'languages.original',
+    'languages.dubbed',
+    'languages.subtitle',
+    'languages.caption',
+    'originCountries',
+    'status',
+    'storeConfig',
+    'storeType'
+  ]
+};
+
 function movieConfig(appConfig: App) {
-  const config = {
-    searchableAttributes: [
-      'title.international',
-      'title.original',
-      'directors',
-      'keywords'
-    ],
-    attributesForFaceting: [
-      // filters
-      'filterOnly(budget)',
-
-      // searchable facets
-      'searchable(orgName)',
-
-      // other facets
-      'genres',
-      'languages.original',
-      'languages.dubbed',
-      'languages.subtitle',
-      'languages.caption',
-      'originCountries',
-      'status',
-      'storeConfig',
-      'storeType'
-    ],
-  };
   switch (appConfig) {
-    case 'financiers': {
-      ['socialGoals', 'filterOnly(minPledge)'].forEach(attr => config.attributesForFaceting.push(attr))
+    case 'financiers': return {
+      searchableAttributes: baseConfig.searchableAttributes,
+      attributesForFaceting: [
+        ...baseConfig.attributesForFaceting,
+        'socialGoals',
+        'filterOnly(minPledge)'
+      ]
     }
   }
-  return config;
 }

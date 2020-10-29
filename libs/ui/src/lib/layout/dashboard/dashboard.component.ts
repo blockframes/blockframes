@@ -34,7 +34,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   public ltMd$ = this.breakpointsService.ltMd;
 
-  public movieIndex;
+  public movieIndex: string;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
@@ -52,7 +52,6 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     const appName = this.routerQuery.getValue().state?.root.data.app;
-    this.movieIndex = algolia.indexNameMovies[appName]
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
