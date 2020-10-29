@@ -1,6 +1,6 @@
 <article>
   <h6>
-    Estimated Budget
+    Budget
     <a mat-icon-button [routerLink]="link" fragment="budget">
       <mat-icon svgIcon="pencil" color="primary"></mat-icon>
     </a>
@@ -8,13 +8,13 @@
   <ul>
     <li>
       <strong>Total Amount </strong>
-      <span>{{ budget.value | budget | bigCurrency: form.get('currency').value || 'USD' }}</span>
+      <span>{{ budget.value | budget | currency: form.currency : 'symbol' : '1.0-0' }}</span>
     </li>
     <li>
       <strong>Producer's Fees </strong>
       <missing-control [control]="budget.get('producerFees')" [link]="link" fragment="budget">
         <ng-template let-fees>
-          {{ fees | currency: form.currency }}
+          {{ fees | currency: form.currency : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -22,7 +22,7 @@
       <strong>Cast Cost </strong>
       <missing-control [control]="budget.get('castCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
-          {{ cost | currency: form.currency }}
+          {{ cost | currency: form.currency : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -30,7 +30,7 @@
       <strong>Shoot Cost </strong>
       <missing-control [control]="budget.get('shootCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
-          {{ cost | currency: form.currency }}
+          {{ cost | currency: form.currency : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -38,7 +38,7 @@
       <strong>Post-Production Cost </strong>
       <missing-control [control]="budget.get('postProdCost')" [link]="link" fragment="budget">
         <ng-template let-cost>
-          {{ cost | currency: form.currency }}
+          {{ cost | currency: form.currency : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>
@@ -46,7 +46,7 @@
       <strong>Others Charges </strong>
       <missing-control [control]="budget.get('others')" [link]="link" fragment="budget">
         <ng-template let-others>
-          {{ others | currency: form.currency }}
+          {{ others | currency: form.currency : 'symbol' : '1.0-0' }}
         </ng-template>
       </missing-control>
     </li>

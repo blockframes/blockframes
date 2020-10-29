@@ -47,7 +47,7 @@
       <p class="mat-body-2 total">
         <b>
           Your total estimated budget is :
-          {{ budget.value | budget | currency: form.currency }}
+          {{ budget.value | budget | currency: form.currency : 'symbol' : '1.0-0' }}
         </b>
       </p>
     </section>
