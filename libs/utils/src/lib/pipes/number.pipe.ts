@@ -45,28 +45,24 @@ export class BigNumberPipe implements PipeTransform {
 
 
 
-export function toBigCurrency(value: number, locale: string = 'en', currencyCode: string = 'USD') {
-  const currency = getCurrencySymbol(currencyCode, 'wide', locale);
-  const num = strToNumber(value);
-  const { result, symbol } = toBigNumber(num);
-  return `${formatCurrency(result, locale, currency, currencyCode)}${symbol}`;
-}
-
-@Pipe({ name: 'bigCurrency' })
-export class BigCurrencyPipe implements PipeTransform {
-  constructor(
-    @Inject(LOCALE_ID) private locale: string,
-    @Inject(DEFAULT_CURRENCY_CODE) private _defaultCurrencyCode: string = 'USD'
-  ) {}
-
-  transform(value: number, currencyCode: string = this._defaultCurrencyCode) {
-    if (value === null || value === undefined) return '';
-    return toBigCurrency(value, this.locale, currencyCode);
+@Pipe({ name: 'sum' })
+export class SumPipe implements PipeTransform {
+  transform(source: number[])
+  transform(source: Object[], key: string)
+  transform(source: number[] | Object[], key?: string) {
+    if (key) {
+      return source.reduce((sum, item) => {
+        const value = key.split('.').reduce((result, k) => result[k], item);
+        return sum + value;
+      }, 0)
+    } else {
+      return source.reduce((sum, i) => sum + i, 0);
+    }
   }
 }
 
 @NgModule({
-  declarations: [BigNumberPipe, BigCurrencyPipe],
-  exports: [BigNumberPipe, BigCurrencyPipe],
+  declarations: [BigNumberPipe, SumPipe],
+  exports: [BigNumberPipe, SumPipe],
 })
 export class NumberPipeModule {}

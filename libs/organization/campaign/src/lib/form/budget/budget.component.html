@@ -10,6 +10,7 @@
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>
           <span>{{ currency | toLabel: 'movieCurrencies' }}</span>
+          <mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</mat-error>
         </ng-template>
       </static-select>
 
@@ -17,24 +18,29 @@
         <mat-label>Producer's Fees</mat-label>
         <input matInput type="number" [formControl]="budget.get('producerFees')" required />
         <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-error *ngIf="budget.hasError('required', 'producerFees')">Please provide the producer's fees.</mat-error>
+
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Cast Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('castCost')" required />
         <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-error *ngIf="budget.hasError('required', 'castCost')">Please provide the Cast cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Shoot Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('shootCost')" required />
         <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-error *ngIf="budget.hasError('required', 'shootCost')">Please provide the Shoot cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Post-Production Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('postProdCost')" required />
         <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-error *ngIf="budget.hasError('required', 'postProdCost')">Please provide the Post-Production cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">

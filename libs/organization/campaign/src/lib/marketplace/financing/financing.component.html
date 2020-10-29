@@ -75,7 +75,7 @@
               <td>Total Investment</td>
               <td></td>
               <td></td>
-              <td>{{ campaign.budget | budget | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+              <td>{{ campaign.fundings | totalFundings | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
             </tr>
           </tfoot>
         </table>
