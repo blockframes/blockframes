@@ -7,7 +7,7 @@
       </a>
       <a mat-list-item routerLink="title" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
-        <span matLine><b>My Titles</b></span>
+        <span matLine><b>My Projects</b></span>
       </a>
       <ng-container *ngIf="org$ | async | canAccess: 'marketplace'">
         <mat-divider></mat-divider>

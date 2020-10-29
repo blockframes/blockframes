@@ -16,10 +16,10 @@
     
       <article>
         <table>
-          <ng-container *ngFor="let row of options.data">
+          <ng-container *ngFor="let row of options.data; let i = index">
             <tr>
               <td fxLayout fxLayoutGap="8px">
-                <div class="color" [style.backgroundColor]="row.color"></div>
+                <div class="color" [style.backgroundColor]="options.colors[i]"></div>
                 <span>{{ row.label }}</span>
               </td>
               <td>{{ campaign.budget[row.serie] | bigCurrency:'USD' }}</td>
