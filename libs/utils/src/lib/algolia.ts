@@ -39,19 +39,13 @@ export const algoliaIndex = {
   user: algolia.indexNameUsers,
   org: algolia.indexNameOrganizations,
   movie: {
-    financiers: algolia.indexNameMovies.financiers as string,
-    catalog: algolia.indexNameMovies.catalog as string,
-    festival: algolia.indexNameMovies.festival as string
-  },
+    financiers: algolia.indexNameMovies.financiers,
+    catalog: algolia.indexNameMovies.catalog ,
+    festival: algolia.indexNameMovies.festival
+  }
 }
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
-export type GetAlgoliaSchema<I extends AlgoliaIndex> =
-  I extends 'user' ? AlgoliaUser
-  : I extends 'org' ? AlgoliaOrg
-  : I extends 'movie' ? AlgoliaMovie
-  : never;
-
 
 ///// TYPES //////
 
