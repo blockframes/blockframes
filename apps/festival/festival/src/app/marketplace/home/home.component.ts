@@ -98,8 +98,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   defaultFilter(movie: Movie) {
     return movie.storeConfig.appAccess.festival
-      && movie.storeConfig.status === "accepted"
-      && movie.contentType === 'feature_film';
+      && movie.storeConfig.status === "accepted";
   }
 
   ngOnDestroy() {

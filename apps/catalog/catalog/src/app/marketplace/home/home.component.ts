@@ -65,8 +65,7 @@ export class MarketplaceHomeComponent implements OnInit {
 
   defaultFilter(movie: Movie) {
     return movie.storeConfig.appAccess.catalog
-      && movie.storeConfig.status === "accepted"
-      && movie.contentType === 'feature_film';
+      && movie.storeConfig.status === "accepted";
   }
 
   public layout(index: number) {
