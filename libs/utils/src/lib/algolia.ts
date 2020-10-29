@@ -102,7 +102,6 @@ export interface AlgoliaMovie {
   objectID: string
 }
 
-// TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
   query: string;
   page: number;
@@ -145,6 +144,5 @@ export interface AlgoliaRecordUser extends AlgoliaRecord {
   email: string,
   firstName: string,
   lastName: string,
-  /** this is just a direct url to an image and **NOT** an `ImgRef` */
   avatar: string,
 }
