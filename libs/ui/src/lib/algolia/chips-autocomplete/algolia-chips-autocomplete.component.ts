@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map }
 import { valueByPath } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Index } from 'algoliasearch';
 
 const Separators = {
   [COMMA]: ',',
@@ -40,7 +41,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * Should be fed with the algolia index name out of the `env.ts`
-   * @example [index]="algolia.indexNameMovies[appName]" // 'pl_movies' from the env.ts
+   * @example [index]="algolia.org" // 'pl_orgs' from the env.ts
+   * @example but if index is a movie, just pass down `movie`
    */
   @Input() index: AlgoliaIndex;
 
@@ -97,9 +99,13 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     if (!!this.facet?.trim()) {
       this.displayWithPath = 'value';
     }
-    const app = this.routerQuery.getValue().state?.root.data.app;
-    // initialize Algolia
-    const indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
+
+    let indexSearch: Index;
+    if(this.index === 'movie') {
+      const app = this.routerQuery.getValue().state?.root.data.app;
+      indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
+    }
+    indexSearch = searchClient.initIndex(algoliaIndex[this.index] as any);
 
     // create search functions
     const regularSearch = (text: string) => indexSearch.search({ query: text, facetFilters: this.getFilter() }).then(result => result.hits);
