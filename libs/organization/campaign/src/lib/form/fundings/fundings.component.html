@@ -33,7 +33,7 @@
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount</mat-label>
                 <input type="number" matInput formControlName="amount" min="0"/>
-                <mat-icon matSuffix svgIcon="USD"></mat-icon>
+                <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
               </mat-form-field>
   
               <mat-form-field fxFlex appearance="outline">

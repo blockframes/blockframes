@@ -83,7 +83,6 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
 function createBudgetFormControl(budget: Partial<Budget> = {}) {
   return {
     castCost: new FormControl(budget.castCost),
-    currency: new FormStaticValue(budget.currency, 'movieCurrencies'),
     postProdCost: new FormControl(budget.postProdCost),
     producerFees: new FormControl(budget.producerFees),
     shootCost: new FormControl(budget.shootCost),
@@ -107,6 +106,7 @@ export class BudgetForm extends FormEntity<BudgetFormControl> {
 function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
   return {
+    currency: new FormStaticValue(campaign.currency, 'movieCurrencies', [Validators.required]),
     cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
     minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
@@ -139,6 +139,10 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
   constructor(value?: Partial<Campaign>) {
     const controls = createCampaignControls(value);
     super(controls, [compareMinPledge, compareReceived]);
+  }
+
+  get currency() {
+    return this.get('currency').value;
   }
 
   setAllValue(campaign: Partial<Campaign> = {}) {
