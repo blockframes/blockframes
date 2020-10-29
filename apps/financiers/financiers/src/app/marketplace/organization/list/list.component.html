@@ -20,13 +20,13 @@
 
   <list-page-description>
     <span i18n *ngIf="nbHits" class="mat-body-2">
-      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partners{nbHits, plural, =0 {} =1 {} other {s}}
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partner{nbHits, plural, =0 {} =1 {} other {s}}
       available.
     </span>
   </list-page-description>
 
   <list-filter>
-    <ng-template filter label="Partner Country" [form]="searchForm.country">
+    <ng-template filter label="Partner's Country" [form]="searchForm.country">
       <form-country [form]="searchForm.country"></form-country>
     </ng-template>
   </list-filter>

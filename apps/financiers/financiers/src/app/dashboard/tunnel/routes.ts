@@ -8,7 +8,7 @@ const appSteps: TunnelStep[] = [{
   icon: 'CAD',
   time: 10,
   routes: [
-    { path: 'budget', label: 'Estimated Budget' },
+    { path: 'budget', label: 'Budget' },
     { path: 'fundings', label: 'Financing Plan' },
     { path: 'profits', label: 'Return on Investment' },
   ],
