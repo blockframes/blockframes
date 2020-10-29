@@ -28,10 +28,8 @@ export class CampaignShellConfig implements FormShellConfig<CampaignControls, Ca
     const id: string = this.route.getParams('movieId');
 
     const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(this.form);
-    await Promise.all([
-      this.mediaService.uploadMedias(mediasToUpload),
-      this.service.save(id, documentToUpdate)
-    ]);
+    await this.service.save(id, documentToUpdate);
+    this.mediaService.uploadMedias(mediasToUpload);
     this.form.markAsPristine();
     return id;
   }
