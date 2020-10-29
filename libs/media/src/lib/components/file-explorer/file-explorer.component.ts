@@ -248,7 +248,6 @@ export class FileExplorerComponent {
   public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {    
     if (this.activeDirectory.type === 'directory') return;
     
-    let formList: MediaFormList;
     let form: OrganizationForm | MovieForm;
     const id = getId(this.activeDirectory.storagePath);
     const collection = getCollection(this.activeDirectory.storagePath);
@@ -260,7 +259,7 @@ export class FileExplorerComponent {
       const movie = await this.movieService.getValue(id);
       form = new MovieForm(movie);
     }
-    formList = getFormList(form, this.activeDirectory.storagePath);
+    const formList = getFormList(form, this.activeDirectory.storagePath);
 
     let mediaForm: MediaFormTypes;
     if (!!row) {

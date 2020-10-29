@@ -10,6 +10,7 @@ import { OrganizationDocumentWithDates } from '@blockframes/organization/+state/
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { ConfirmComponent } from '@blockframes/ui/confirm/confirm.component';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
 // Material
 import { MatDialog } from '@angular/material/dialog';
 // File explorer
@@ -67,33 +68,48 @@ export class MultipleFilesViewComponent implements OnInit {
     }
   }
 
-  public deleteFile(row: HostedMediaWithMetadata) {
+  public deleteFile(row: HostedMediaWithMetadata | MovieNote | string) {
     this.dialog.open(ConfirmComponent, {
       data: {
         title: 'Are you sure you want to delete this file?',
         question: ' ',
         buttonName: 'Yes',
         onConfirm: async () => {
-          // TODO this only supports org files currently - also no MovieNote and string as input to this method
-
+          const collection = getCollection(this.activeDirectory.storagePath);
           const id = getId(this.activeDirectory.storagePath);
-          const org = await this.organizationService.getValue(id);
-          const orgForm = new OrganizationForm(org);
-          const formList = getFormList(orgForm, this.activeDirectory.storagePath);
+
+          let form: OrganizationForm | MovieForm;
+          if (collection === 'movies') {
+            const movie = await this.movieService.getValue(id);
+            form = new MovieForm(movie);
+          } else {
+            const org = await this.organizationService.getValue(id);
+            form = new OrganizationForm(org);
+          }
+          const formList = getFormList(form, this.activeDirectory.storagePath);
+
           const index = formList.controls.findIndex(form => {
             if (isHostedMediaForm(form)) {
-              return form.get('ref').value === row.ref;
+              const ref = (row as string);
+              return form.get('ref').value === ref;
             } else if (isHostedMediaWithMetadataForm(form)) {
-              return form.get('title').value === row.title;
+              const title = (row as HostedMediaWithMetadata).title;
+              return form.get('title').value === title;
             } else {
-              return form.get('ref').get('ref').value === row.ref;
+              const ref = (row as MovieNote).ref;
+              return form.get('ref').get('ref').value === ref;
             }
           });
 
           if (index > -1) {
             formList.removeAt(index);
-            const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(orgForm);
-            await this.organizationService.update(id, documentToUpdate);
+            const { documentToUpdate } = extractMediaFromDocumentBeforeUpdate(form);
+            if (collection === 'movies') {
+              documentToUpdate.id = id;
+              await this.movieService.update(id, documentToUpdate);
+            } else {
+              await this.organizationService.update(id, documentToUpdate);
+            }
           }
         }
       }
