@@ -39,55 +39,15 @@
 
       <ng-template #fileDirectory>
         <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple else single">
-          <ng-container *ngIf="active$ | async | deepKey:getDeepPath() as directory">
-            <bf-table-filter [source]="directory | toArray" [columns]="columns" [initialColumns]="initialColumns">
-              <ng-template colRef="ref" let-item="item">
-                <img [asset]="getFileRef(item) | fileTypeImage">
-              </ng-template>
-              <ng-template colRef="name" let-item="item">{{ getTitleRef(item) | fileName }}</ng-template>
-              <ng-template colRef="actions" let-item="item">
-                <button mat-button (click)="downloadFile(item)">
-                  <mat-icon svgIcon="download"></mat-icon>
-                </button>
-                <button mat-button (click)="openDialog(item)">
-                  <mat-icon svgIcon="pencil"></mat-icon>
-                </button>
-                <button mat-button (click)="deleteFile(item)">
-                  <mat-icon svgIcon="trash"></mat-icon>
-                </button>
-              </ng-template>
-            </bf-table-filter>
-          </ng-container>
+          <file-explorer-multiple-files-view 
+            [activeDirectory]="activeDirectory"
+            (editFile)="openDialog($event)">
+          </file-explorer-multiple-files-view>
         </ng-container>
 
         <ng-template #single>
-          <div fxLayout="column" fxLayoutGap="24px">
-            <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
-              <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
-                <h3 type>Logo</h3>
-                <p class="mat-body-2">Recommended : 512 x 512 px</p>
-                <p class="mat-caption">Accepted Formats : jpg, png</p>
-              </drop-cropper>
-            </ng-container>
-
-            <ng-container *ngIf="activeDirectory.type === 'file' && !!this.activeForm">
-              <file-upload
-                [form]="getSingleMediaForm()"
-                [storagePath]="this.activeDirectory.storagePath"
-                [accept]="['.pdf']"
-                [filePrivacy]="this.activeDirectory.privacy"
-                [types]="['application/pdf']">
-                <h3 type>Upload File</h3>
-                <p class="mat-caption" format>Accepted Formats: .pdf</p>
-              </file-upload>
-            </ng-container>
-            <div fxLayout="column" fxLayoutAlign="center center">
-              <button mat-flat-button color="primary" (click)="updateImage()">
-                <span>Update</span>
-                <mat-icon svgIcon="send"></mat-icon>
-              </button>
-            </div>
-          </div>
+          <file-explorer-single-file-view [activeDirectory]="activeDirectory">
+          </file-explorer-single-file-view>
         </ng-template>
       </ng-template>
     </article>
