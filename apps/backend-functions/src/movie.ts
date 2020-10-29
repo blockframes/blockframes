@@ -127,7 +127,7 @@ export async function onMovieUpdate(
       if (after.storeConfig.appAccess[app]) {
         await storeSearchableMovie(after, orgName(creatorOrg));
       } else if (before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
-        deleteObject(algolia.indexNameMovies[app], before.id);
+        await deleteObject(algolia.indexNameMovies[app], before.id);
       }
     }
   }
