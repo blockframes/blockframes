@@ -16,8 +16,6 @@ export class EventOrganizationGuard implements CanActivate {
   async canActivate(next: ActivatedRouteSnapshot) {
     const eventId: string = next.params['eventId'];
     const event = await this.service.getValue(eventId);
-    console.log(event)
-    console.log(event.ownerId)
     const orgId = this.orgQuery.getActiveId();
     const uid = this.authQuery.userId;
     const redirect = this.router.parseUrl(`/c/o/dashboard/event`);
