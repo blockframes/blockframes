@@ -93,7 +93,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
           }
           await storeSearchableMovie(movie, orgName, process.env['ALGOLIA_API_KEY'])
         } catch (error) {
-/*           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`); */
+          console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
           console.error('test');
         }
       });
@@ -169,7 +169,7 @@ function movieConfig(appConfig: App) {
   };
   switch (appConfig) {
     case 'financiers': {
-      ['socialGoals', 'minPledge'].forEach(attr => config.attributesForFaceting.push(attr))
+      ['socialGoals', 'filterOnly(minPledge)'].forEach(attr => config.attributesForFaceting.push(attr))
     }
   }
   return config;

@@ -123,7 +123,13 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
-    await storeSearchableMovie(after, orgName(creatorOrg));
+    for (const app in after.storeConfig.appAccess) {
+      if (after.storeConfig.appAccess[app]) {
+        await storeSearchableMovie(after, orgName(creatorOrg));
+      } else if (before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
+        deleteObject(algolia.indexNameMovies[app], before.id);
+      }
+    }
   }
 }
 

@@ -39,9 +39,9 @@ export const algoliaIndex = {
   user: algolia.indexNameUsers,
   org: algolia.indexNameOrganizations,
   movie: {
-    financiers: algolia.indexNameMovies.financiers,
-    catalog: algolia.indexNameMovies.catalog,
-    festival: algolia.indexNameMovies.festival
+    financiers: algolia.indexNameMovies.financiers as string,
+    catalog: algolia.indexNameMovies.catalog as string,
+    festival: algolia.indexNameMovies.festival as string
   },
 }
 

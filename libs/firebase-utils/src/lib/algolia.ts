@@ -117,6 +117,7 @@ export function storeSearchableMovie(
       storeType: movie.storeConfig?.storeType || ''
     };
 
+    /* App specific properties */
     if (movie.storeConfig.appAccess.financiers) {
       movieRecord['socialGoals'] = movie?.audience?.goals;
       movieRecord['minPledge'] = movie['minPledge'];
