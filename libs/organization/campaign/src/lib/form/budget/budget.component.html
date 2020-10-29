@@ -1,10 +1,10 @@
 <tunnel-page>
   <ng-container tunnel-form>
 
-    <section id="budget" fxLayout="column">
-      <h3>Budget</h3>
-      <p class="mat-body-2 ">Please choose the currency that will be applied to your project*</p>
-
+    <section id="currency">
+      <h3>Currency</h3>
+      <p class="mat-body-2 ">Please choose the currency that will be applied to your project</p>
+      
       <static-select class="currency" scope="movieCurrencies" [control]="form.get('currency')" required>
         <mat-label>Currency</mat-label>
         <ng-template let-currency>
@@ -13,6 +13,12 @@
           <mat-error *ngIf="form.hasError('required', 'currency')">Please provide a currency.</mat-error>
         </ng-template>
       </static-select>
+    </section>
+    
+    <mat-divider></mat-divider>
+
+    <section id="budget" fxLayout="column">
+      <h3>Budget</h3>
 
       <mat-form-field appearance="outline">
         <mat-label>Producer's Fees</mat-label>
