@@ -14,7 +14,7 @@
     </header>
 
     <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All</button>
+      <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects</button>
       <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft</button>
       <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">On Going</button>
       <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved</button>
@@ -24,10 +24,9 @@
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator clickable
         (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-        <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
-        <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
-        <ng-template colRef="storeConfig.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="campaign.cap" let-cap>{{ cap | bigCurrency:'USD' }}</ng-template>
+        <ng-template colRef="campaign.received" let-received>{{ received | bigCurrency:'USD' }}</ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>

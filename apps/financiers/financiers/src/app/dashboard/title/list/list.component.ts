@@ -12,10 +12,9 @@ type Filters = 'all' | 'draft' | 'ongoing' | 'achieved';
 
 const columns = {
   title: 'Title',
-  view: '# Views',
-  directors: 'Director(s)',
   productionStatus: 'Production Status',
-  'storeConfig.status': 'Status'
+  'campaign.cap': 'Goal Funding',
+  'campaign.received': 'Funding Raised',
 };
 
 function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
@@ -35,7 +34,7 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
 })
 export class ListComponent implements OnInit, OnDestroy {
   columns = columns;
-  initialColumns = ['title', 'view', 'directors', 'productionStatus', 'storeConfig.status'];
+  initialColumns = ['title', 'productionStatus', 'campaign.cap', 'campaign.received'];
   titles$: Observable<MovieCampaign[]>;
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
