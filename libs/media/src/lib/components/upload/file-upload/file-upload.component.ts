@@ -4,11 +4,13 @@ import {
   HostListener,
   ChangeDetectionStrategy,
   OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
+
 @Component({
   selector: '[form] [storagePath] file-upload',
   templateUrl: './file-upload.component.html',
@@ -28,15 +30,27 @@ export class FileUploadComponent implements OnInit {
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit() {
-    // show current file
+
+    // show current file when component loads
     if (!!this.form.blobOrFile.value) {
       this.selected(this.form.blobOrFile.value);
     } else if (!!this.form.oldRef?.value) {
       this.state = 'file';
     }
+
+    // update component when oldRef changes
+    this.form.get('oldRef').valueChanges.subscribe(oldRef => {
+      if (!!oldRef) {
+        this.state = 'file';
+        this.cdr.markForCheck();
+      }
+    });
   }
 
   @HostListener('drop', ['$event'])
