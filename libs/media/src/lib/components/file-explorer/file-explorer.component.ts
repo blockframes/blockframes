@@ -300,7 +300,7 @@ export class FileExplorerComponent {
     dialog.afterClosed().subscribe(async result => {
       if (!!result) {
         if (this.activeDirectory.type === 'directory') return;
-        const id = getId(this.activeDirectory.storagePath);
+
         const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(form);
         if (collection === 'orgs') {
           await this.organizationService.update(id, documentToUpdate);
