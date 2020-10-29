@@ -17,6 +17,7 @@ import { QueryFn } from '@angular/fire/firestore';
 interface CarouselSection {
   title: string;
   movies$: Observable<Movie[]>;
+  queryParams?: Record<string, string>;
 }
 
 @Component({
@@ -49,7 +50,8 @@ export class HomeComponent implements OnInit {
       },
       {
         title: 'In development',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development'))
+        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development')),
+        queryParams: { productionStatus: 'development' }
       }
     ];
 

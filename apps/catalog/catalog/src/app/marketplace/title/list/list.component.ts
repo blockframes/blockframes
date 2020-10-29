@@ -17,6 +17,8 @@ import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, t
 // Others
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -48,6 +50,8 @@ export class ListComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
@@ -56,6 +60,18 @@ export class ListComponent implements OnInit, OnDestroy {
     this.searchForm.storeConfig.add('accepted');
     // On financiers, we want only movie available for financiers
     this.searchForm.appAccess.add('catalog');
+
+    this.route.queryParams.subscribe(params => {
+      Object.keys(params).forEach(k => {
+        try {
+          const values = params[k].split(',');
+          values.forEach(v => this.searchForm[k].add(v.trim()));
+        } catch (_) {
+          this.snackBar.open('Invalid parameters in URL', 'close', { duration: 1000 });
+        }
+      });
+    });
+
     this.movies$ = this.movieResultsState.asObservable();
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),

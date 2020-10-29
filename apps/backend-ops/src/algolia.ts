@@ -56,7 +56,7 @@ export async function upgradeAlgoliaMovies() {
     ],
     attributesForFaceting: [
       // filters
-      'filterOnly(budget)',
+      'filterOnly(estimatedBudget)',
 
       // searchable facets
       'searchable(orgName)',

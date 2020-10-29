@@ -11,6 +11,8 @@ import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -41,7 +43,9 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
   ) {
     this.dynTitle.setPageTitle('Films On Our Market Today');
   }
@@ -52,6 +56,18 @@ export class ListComponent implements OnInit, OnDestroy {
     // On financiers, we want only movie available for financiers
     this.searchForm.appAccess.add('financiers');
     this.movies$ = this.movieResultsState.asObservable();
+
+    this.route.queryParams.subscribe(params => {
+      Object.keys(params).forEach(k => {
+        try {
+          const values = params[k].split(',');
+          values.forEach(v => this.searchForm[k].add(v.trim()));
+        } catch (_) {
+          this.snackBar.open('Invalid parameters in URL', 'close', { duration: 1000 });
+        }
+      });
+    });
+
     this.sub = combineLatest([
       this.sortByControl.valueChanges.pipe(startWith('Title')),
       this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())

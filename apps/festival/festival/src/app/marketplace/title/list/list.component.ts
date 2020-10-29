@@ -57,7 +57,8 @@ export class ListComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       Object.keys(params).forEach(k => {
         try {
-          this.searchForm[k].add(params[k]);
+          const values = params[k].split(',');
+          values.forEach(v => this.searchForm[k].add(v.trim()));
         } catch (_) {
           this.snackBar.open('Invalid parameters in URL', 'close', { duration: 1000 });
         }

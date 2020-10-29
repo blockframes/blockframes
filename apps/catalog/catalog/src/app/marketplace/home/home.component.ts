@@ -4,11 +4,13 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { genres as staticGenre } from '@blockframes/utils/static-model';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 interface CarouselSection {
   title: string;
   subline: string;
   movies: Partial<Movie>[];
+  queryParams?: Record<string, string>;
 }
 @Component({
   selector: 'catalog-home',
@@ -27,13 +29,13 @@ export class MarketplaceHomeComponent implements OnInit {
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.release.year >= 2018 && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
-    });
+      filterBy: movie => this.defaultFilter(movie)
+    }).pipe( map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year'))));
     const postProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.productionStatus === 'post_production' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
+      filterBy: movie => movie.productionStatus === 'post_production' && this.defaultFilter(movie)
     });
     const completed$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.productionStatus === 'finished' && movies.storeConfig.appAccess.catalog && movies.storeConfig.status === "accepted"
+      filterBy: movie => movie.productionStatus === 'finished' && this.defaultFilter(movie)
     });
 
     this.moviesBySections$ = combineLatest([latest$, postProduction$, completed$]).pipe(
@@ -47,16 +49,24 @@ export class MarketplaceHomeComponent implements OnInit {
           {
             title: 'Post-Production Films',
             subline: 'Brand new projects with great potential',
-            movies: postProduction
+            movies: postProduction,
+            queryParams: { productionStatus: 'post_production' }
           },
           {
             title: 'Completed Films',
             subline: 'Explore our selection of fresh or library titles',
-            movies: completed
+            movies: completed,
+            queryParams: { productionStatus: 'finished' }
           }
         ];
       })
     );
+  }
+
+  defaultFilter(movie: Movie) {
+    return movie.storeConfig.appAccess.catalog
+      && movie.storeConfig.status === "accepted"
+      && movie.contentType === 'feature_film';
   }
 
   public layout(index: number) {

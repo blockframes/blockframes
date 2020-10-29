@@ -127,7 +127,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   }
 
   search() {
-    return this.movieIndex.search({
+    const search = {
       hitsPerPage: 50,
       query: this.query.value,
       page: this.page.value,
@@ -147,7 +147,12 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.appAccess.value.map(access => `appAccess:${access}`),
         this.socialGoals.value.map(goal => `socialGoals:${goal}`)
       ],
-      filters: `budget >= ${this.minBudget.value ?? 0}`,
-    });
+
+    } as any;
+
+    if (this.minBudget.value) {
+      search.filters = `estimatedBudget >= ${this.minBudget.value ?? 0}`
+    }
+    return this.movieIndex.search(search);
   }
 }
