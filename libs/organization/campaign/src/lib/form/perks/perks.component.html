@@ -10,7 +10,7 @@
       <ng-template colRef="description" let-description>{{ description }}</ng-template>
       <ng-template colRef="minPledge" let-minPledge>
         <ng-container *ngIf="minPledge; else anyInvestment">
-          {{ minPledge | currency: form.currency : '1.0-0' }}
+          {{ minPledge | currency: form.getCurrency() : '1.0-0' }}
         </ng-container>
         <ng-template #anyInvestment>
           Any investment
@@ -52,7 +52,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Pledge Level</mat-label>
             <input type="number" matInput formControlName="minPledge"/>
-            <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+            <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
             <mat-hint>Please set an amount that you want to collect from your investors for this privilege.</mat-hint>
           </mat-form-field>
 

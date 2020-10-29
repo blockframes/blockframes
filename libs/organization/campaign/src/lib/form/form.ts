@@ -141,7 +141,7 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
     super(controls, [compareMinPledge, compareReceived]);
   }
 
-  get currency() {
+  getCurrency() {
     return this.get('currency').value;
   }
 

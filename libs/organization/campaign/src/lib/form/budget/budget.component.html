@@ -23,7 +23,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Producer's Fees</mat-label>
         <input matInput type="number" [formControl]="budget.get('producerFees')" required />
-        <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('required', 'producerFees')">Please provide the producer's fees.</mat-error>
 
       </mat-form-field>
@@ -31,21 +31,21 @@
       <mat-form-field appearance="outline">
         <mat-label>Cast Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('castCost')" required />
-        <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('required', 'castCost')">Please provide the Cast cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Shoot Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('shootCost')" required />
-        <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('required', 'shootCost')">Please provide the Shoot cost.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Post-Production Cost</mat-label>
         <input matInput type="number" [formControl]="budget.get('postProdCost')" required />
-        <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="budget.hasError('required', 'postProdCost')">Please provide the Post-Production cost.</mat-error>
       </mat-form-field>
 
@@ -53,13 +53,13 @@
         <mat-label>Other Charges</mat-label>
         <input matInput type="number" [formControl]="budget.get('others')" />
         <mat-hint>Other charges include insurance, research screenings, general expense...</mat-hint>
-        <mat-icon matSuffix [svgIcon]="form.currency"></mat-icon>
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
       </mat-form-field>
   
       <p class="mat-body-2 total">
         <b>
           Your total estimated budget is :
-          {{ budget.value | budget | currency: form.currency : 'symbol' : '1.0-0' }}
+          {{ budget.value | budget | currency: form.getCurrency() : 'symbol' : '1.0-0' }}
         </b>
       </p>
     </section>
