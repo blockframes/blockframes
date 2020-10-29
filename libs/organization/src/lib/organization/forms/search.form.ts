@@ -2,7 +2,7 @@
 // Blockframes
 import { Territory } from '@blockframes/utils/static-model';
 import { FormEntity } from '@blockframes/utils/form';
-import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/ui/algolia/types';
+import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/utils/algolia';
 
 // Utils
 import algoliasearch, { Index } from 'algoliasearch';

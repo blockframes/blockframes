@@ -2,8 +2,8 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
-import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/ui/algolia/types';
+import { getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
@@ -81,7 +81,6 @@ export function storeSearchableMovie(
   }
 
   try {
-    const movieAppAccess = movie.storeConfig.appAccess;
 
     const movieRecord: AlgoliaRecordMovie = {
       objectID: movie.id,
@@ -115,14 +114,24 @@ export function storeSearchableMovie(
       storeConfig: movie.storeConfig?.status || '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || '',
-      appAccess: movieAppAccess ?
-        app.filter(a => movie.storeConfig?.appAccess[a]) :
-        [],
-      socialGoals: movie.audience.goals
+      storeType: movie.storeConfig?.storeType || ''
     };
 
-    return indexBuilder(algolia.indexNameMovies, adminKey).saveObject(movieRecord);
+    /* App specific properties */
+    if (movie.storeConfig.appAccess.financiers) {
+      movieRecord['socialGoals'] = movie?.audience?.goals;
+      movieRecord['minPledge'] = movie['minPledge'];
+    }
+
+    const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+
+    const promises = [];
+
+    // Update algolia's index
+    movieAppAccess.forEach(appName => promises.push(indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord)));
+
+    return Promise.all(promises)
+
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
     console.error(error);

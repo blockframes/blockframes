@@ -22,9 +22,6 @@ export class PageTitleDirective { }
 @Directive({ selector: 'list-page-description' })
 export class PageDescriptionTemplateDirective { }
 
-@Directive({ selector: 'list-page-sort' })
-export class PageSortDirective { }
-
 @Directive({ selector: 'list-page-search' })
 export class PageSearchDirective { }
 
