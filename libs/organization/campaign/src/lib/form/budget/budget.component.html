@@ -5,7 +5,7 @@
       <h3>Currency</h3>
       <p class="mat-body-2 ">Please choose the currency that will be applied to your project</p>
       
-      <static-select class="currency" scope="movieCurrencies" [control]="form.get('currency')" required>
+      <static-select class="currency" scope="movieCurrencies" [only]="['USD', 'EUR', 'GBP']" [control]="form.get('currency')" required>
         <mat-label>Currency</mat-label>
         <ng-template let-currency>
           <mat-icon [svgIcon]="currency" matPrefix></mat-icon>

@@ -13,20 +13,24 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StaticSelectComponent implements OnInit {
-
   public staticValue: any[];
+  @ContentChild(TemplateRef) template: TemplateRef<any>;
   @Input() scope: Scope
   @Input() control: FormControl;
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() placeholder: string;
   @Input() @boolean required: boolean;
-  @Input() withoutValues: string[] = []
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  @Input() withoutValues: string[];
+  @Input() only: string[];
 
   ngOnInit() {
-    this.staticValue = this.withoutValues.length
-      ? Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys))
-      : Object.keys(staticModel[this.scope]);
+    if (this.withoutValues) {
+      this.staticValue = Object.keys(staticModel[this.scope]).filter((keys) => !this.withoutValues.includes(keys));
+    } else if (this.only) {
+      this.staticValue = this.only;
+    } else {
+      this.staticValue = Object.keys(staticModel[this.scope]);
+    }
   }
 
 }
