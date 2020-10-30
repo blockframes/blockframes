@@ -1,23 +1,29 @@
 <section fxLayout="column">
-  <header fxLayout="row" fxLayout.lt-md="column" fxFlex>
+  <header fxLayout fxLayout.lt-md="column" fxLayoutGap="16px">
     <ng-container *ngIf="movie$ | async as movie">
-      <img [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
-
-      <article fxLayout="column">
-        <h4>{{ movie | movieFeature }}</h4>
-        <h1>{{ movie.title.international }}</h1>
-        <h6>{{ movie.directors | displayName }}</h6>
-        <span>
-          {{ movie.originCountries | toLabel: 'territories'}}
-        </span>
-        <ng-container *ngIf="movie.originCountries.length && movie.release.year">,</ng-container>
-        {{ movie.release.year }}
-
+      <section fxLayout fxLayoutGap="16px" fxFlex>
+        <img fxHide.xs [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
+  
+        <article fxLayout="column" fxFlex>
+          <h4>{{ movie | movieFeature }}</h4>
+          <h1>{{ movie.title.international }}</h1>
+          <h6>{{ movie.directors | displayName }}</h6>
+          <p>
+            <span>
+              {{ movie.originCountries | toLabel: 'territories'}}
+            </span>
+            <ng-container *ngIf="movie.originCountries.length && movie.release.year">,</ng-container>
+            <span>{{ movie.release.year }}</span>
+          </p>
+        </article>
+      </section>
+      <aside fxLayout="column" fxLayout.lt-md="row" fxLayoutAlign="start end" fxLayoutGap="16px">
         <a mat-button [routerLink]="['/c/o/dashboard/tunnel/movie', movie.id]">
           <mat-icon svgIcon="pencil"></mat-icon>
           <span>Edit</span>
         </a>
-      </article>
+        <ng-content></ng-content>
+      </aside>
     </ng-container>
   </header>
 
