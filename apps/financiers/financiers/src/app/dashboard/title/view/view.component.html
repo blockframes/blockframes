@@ -18,7 +18,7 @@
           with up to date information. The currency is the same as you’ve chosen for your project.
         </p>
       </header>
-      <form fxLayout="column" [formGroup]="form" (ngSubmit)="save(movie.id, form.value)">
+      <form fxLayout="column" fxLayoutGap="8px" [formGroup]="form" (ngSubmit)="save(movie.id, form.value)">
         <!-- Received -->
         <mat-form-field appearance="outline">
           <mat-label>Current Amount</mat-label>
