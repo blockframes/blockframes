@@ -84,7 +84,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
             const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
             if (!campaignSnap.empty) {
               const campaign = (campaignSnap?.docs[0].data() as Campaign);
-              if (campaign?.minPledge) {
+              if (campaign?.id) {
                 movie['minPledge'] = campaign.minPledge;
               }
             }
