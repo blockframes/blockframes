@@ -5,11 +5,13 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: '[form] [storagePath] file-upload',
@@ -17,7 +19,7 @@ import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
   styleUrls: ['./file-upload.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadComponent implements OnInit {
+export class FileUploadComponent implements OnInit, OnDestroy {
   /** use in the html to specify the input, ex: ['.json', '.png'] */
   @Input() public accept: string[];
   /** mime type, ex: ['image/png', 'application/json'] */
@@ -29,6 +31,7 @@ export class FileUploadComponent implements OnInit {
 
   public localSize: string;
   public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
+  private sub: Subscription;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -45,7 +48,7 @@ export class FileUploadComponent implements OnInit {
     }
 
     // update component when oldRef changes
-    this.form.get('oldRef').valueChanges.subscribe(oldRef => {
+    this.sub = this.form.get('oldRef').valueChanges.subscribe(oldRef => {
       if (!!oldRef) {
         this.state = 'file';
         this.cdr.markForCheck();
@@ -141,5 +144,9 @@ export class FileUploadComponent implements OnInit {
     fileExplorer.value = null;
 
     this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
