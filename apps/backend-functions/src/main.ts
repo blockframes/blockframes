@@ -245,6 +245,13 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
+/**
+ * This is a scheduled function which runs daily backup if complied with production configuration
+ */
 export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
 
+/**
+ * This is a pubsub trigger function that allows backup, restore and clear to be called from anywhere
+ * and only by authenticated clients
+ */
 export { firestorePubsub } from './pubsub/firestore';
