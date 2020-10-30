@@ -12,10 +12,13 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class MovieFormMediaFilesComponent {
   form = this.shell.getForm('movie');
 
-  constructor(private shell: MovieFormShellComponent, private route: ActivatedRoute,
-    private dynTitle: DynamicTitleService) {
-      this.dynTitle.setPageTitle('Files')
-     }
+  constructor(
+    private shell: MovieFormShellComponent,
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Files');
+  }
 
   get promotional() {
     return this.form.get('promotional');
