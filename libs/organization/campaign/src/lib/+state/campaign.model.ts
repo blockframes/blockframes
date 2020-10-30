@@ -2,6 +2,7 @@ import { MovieCurrency } from "@blockframes/utils/static-model"
 
 export interface Campaign {
   id: string;
+  currency: MovieCurrency;
   cap?: number;
   minPledge?: number;
   received?: number;
@@ -23,7 +24,6 @@ export interface Campaign {
 
 export interface Budget {
   castCost?: number,
-  currency?: MovieCurrency,
   others?: number,
   postProdCost?: number,
   producerFees?: number,
@@ -50,6 +50,7 @@ export interface Perk {
 export function createCampaign(params: Partial<Campaign> = {}): Campaign {
   return {
     id: '',
+    currency: 'USD',
     perks: [],
     fundings: [],
     profits: {},

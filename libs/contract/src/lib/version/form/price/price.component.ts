@@ -28,7 +28,7 @@ export class PriceComponent implements OnInit {
     this._hasMandate = coerceBooleanProperty(value);
   }
 
-  public algoliaMovieIndex = algolia.indexNameMovies;
+  public algoliaMovieIndex = algolia.indexNameMovies.catalog;
 
   public currencyCtrl: FormStaticValue<'movieCurrencies'>;
 

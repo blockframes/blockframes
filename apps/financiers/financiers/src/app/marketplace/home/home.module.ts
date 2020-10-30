@@ -19,7 +19,6 @@ import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { OrganizationCardMinimalModule } from '@blockframes/organization/components/card-minimal/card-minimal.module';
 import { OrganizationBannerModule } from '@blockframes/organization/components/banner/banner.module';
 import { CampaignPipeModule } from '@blockframes/campaign/pipes';
-import { NumberPipeModule } from '@blockframes/utils/pipes';
 // Page
 import { HomeComponent } from './home.component';
 
@@ -41,7 +40,6 @@ import { HomeComponent } from './home.component';
     OrganizationCardMinimalModule,
     OrganizationBannerModule,
     CampaignPipeModule,
-    NumberPipeModule,
     
     // Material
     MatButtonModule,

@@ -4,12 +4,10 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
-import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { MovieService, Movie } from '@blockframes/movie/+state';
-import { FormControl } from '@angular/forms';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
-// import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by'; // TODO issue #3584
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -24,10 +22,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public movies$: Observable<Movie[]>;
 
-  public sortByControl: FormControl = new FormControl('Title');
-  public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
-
-  public searchForm = new MovieSearchForm();
+  public searchForm = new MovieSearchForm('festival', { storeConfig: ['accepted'] });
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -45,15 +40,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Films On Our Market Today');
-    // Implicitly we only want accepted movies
-    this.searchForm.storeConfig.add('accepted');
-    // On financiers, we want only movie available for financiers
-    this.searchForm.appAccess.add('festival');
     this.movies$ = this.movieResultsState.asObservable();
-    this.sub = combineLatest([
-      this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
-    ]).pipe(
+    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
@@ -62,7 +50,6 @@ export class ListComponent implements OnInit, OnDestroy {
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
       switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      /*    map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), TODO issue #3584 */
     ).subscribe(movies => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
@@ -85,7 +72,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ appAccess: ['festival'], storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: ['accepted'] });
     this.searchForm.reset(initial);
   }
 
