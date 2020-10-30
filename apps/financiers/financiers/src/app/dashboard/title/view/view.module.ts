@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
@@ -15,6 +16,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 const routes = [{
   path: '',
@@ -57,6 +61,7 @@ const routes = [{
   declarations: [TitleViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
@@ -65,8 +70,11 @@ const routes = [{
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     MatDividerModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
     // Route
     RouterModule.forChild(routes)
   ]

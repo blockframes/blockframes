@@ -10,16 +10,7 @@
           Please specify total amount of the investement you need.
         </mat-error>
       </mat-form-field>
-      <!-- Received -->
-      <mat-form-field appearance="outline">
-        <mat-label>Current Amount</mat-label>
-        <input type="number" matInput formControlName="received" [errorStateMatcher]="errorMatcher"
-          min="0" required />
-        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
-        <mat-error *ngIf="form.hasError('receivedOverflow')">
-          Your current amount should be lower than your needed investment.
-        </mat-error>
-      </mat-form-field>
+
       <!-- Minimum Pledge -->
       <mat-form-field appearance="outline">
         <mat-label>Minimum Investment Amount</mat-label>
