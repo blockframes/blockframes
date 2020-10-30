@@ -1,9 +1,11 @@
 import * as admin from 'firebase-admin';
+import fs from 'fs';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
+import  firebase  from '@firebase/testing';
 import { resolve } from 'path';
 import { config } from 'dotenv';
-import { firebase } from '@env';
+import { firebase as firebaseEnv } from '@env';
 import type { FeaturesList } from 'firebase-functions-test/lib/features';
 import type { AppOptions } from 'firebase-admin'; // * Correct Import
 
@@ -29,13 +31,13 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
     // initialize test database
     process.env.GCLOUD_PROJECT = projectId;
     process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
-    admin.initializeApp({ projectId });
-    firebaseTest.firebaseConfig = { projectId };
+    const app = admin.initializeApp({ projectId });
+    firebaseTest.firebaseConfig = { projectId, app };
     return firebaseTest;
   }
 
   const pathToServiceAccountKey = resolve(process.cwd(), process.env.GOOGLE_APPLICATION_CREDENTIALS)
-  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebase, ...overrideConfig }, pathToServiceAccountKey);
+  const testObj: FeaturesList = firebaseFunctionsTest({ ...firebaseEnv, ...overrideConfig }, pathToServiceAccountKey);
   // tslint:disable-next-line: no-eval
   const runtimeConfig = eval('require')(resolve(process.cwd(), './.runtimeconfig.json'));
   testObj.mockConfig(runtimeConfig);
@@ -45,6 +47,28 @@ export function initFunctionsTestMock(offline = true, overrideConfig?: AppOption
 export function getTestingProjectId() {
   // projectId cannot have '.' in the string; need whole numbers
   return 'test' + testIndex;
+}
+
+/**
+ * Helper function to setup Firestore DB Data
+ */
+export async function setFirestoreDB(firebaseTest: any, 
+              strRulesPath: string, data: any) {
+  // Apply the firestore rules to the project
+  const projectId = firebaseTest.projectId;
+  await firebase.loadFirestoreRules({
+    projectId,
+    rules: fs.readFileSync(strRulesPath, "utf8")
+  });
+
+  // Write data to firestore app
+  if (data) {
+    const db = firebaseTest.app;
+    for (const key in data) {
+      const ref = db.doc(key);
+      await ref.set(data[key]);
+    }
+  }
 }
 
 //////////////
