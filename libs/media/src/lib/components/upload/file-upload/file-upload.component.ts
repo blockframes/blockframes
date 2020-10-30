@@ -3,6 +3,8 @@ import {
   Input,
   HostListener,
   ChangeDetectionStrategy,
+  ContentChild,
+  TemplateRef,
   OnInit,
   ChangeDetectorRef,
   OnDestroy,
@@ -12,6 +14,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
 import { Subscription } from 'rxjs';
+import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
+
+type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
 @Component({
   selector: '[form] [storagePath] file-upload',
@@ -29,8 +34,12 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   @Input() form: HostedMediaForm;
   @Input() filePrivacy: Privacy = 'public';
 
+  @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
+  @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
+
   public localSize: string;
-  public state: 'waiting' | 'hovering' | 'ready' | 'file' = 'waiting';
+  public state: UploadState = 'waiting';
+
   private sub: Subscription;
 
   constructor(
@@ -47,13 +56,11 @@ export class FileUploadComponent implements OnInit, OnDestroy {
       this.state = 'file';
     }
 
-    // update component when oldRef changes
-    this.sub = this.form.get('oldRef').valueChanges.subscribe(oldRef => {
-      if (!!oldRef) {
-        this.state = 'file';
-        this.cdr.markForCheck();
-      }
-    });
+    this.sub = this.form.valueChanges.subscribe((value: HostedMediaFormValue) => this.setState(value));
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   @HostListener('drop', ['$event'])
@@ -71,12 +78,26 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   @HostListener('dragleave', ['$event'])
   onDragLeave($event: DragEvent) {
     $event.preventDefault();
-    this.state = 'waiting';
+    this.setState(this.form.value);
+  }
+
+  public setState(value: HostedMediaFormValue) {
+    let newState: UploadState;
+
+    if (!!value.blobOrFile && !!value.ref && !!value.fileName) {
+      newState = 'ready';
+    } else if (!!value.oldRef && !!value.fileName && !!value.ref) {
+      newState = 'file';
+    } else {
+      newState = 'waiting';
+    }
+    this.state = newState;
+    this.cdr.markForCheck();
   }
 
   public selected(files: FileList | File) {
 
-    let file;
+    let file: File;
     if ('item' in files) {
       if (!files.item(0)) {
         this.snackBar.open('No file found', 'close', { duration: 1000 });
@@ -117,7 +138,6 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     } else {
       this.localSize = `${(size / (1000 * 1000)).toFixed(1)} GB`;
     }
-    this.state = 'ready';
 
     this.form.patchValue({
       ref: getStoragePath(this.storagePath, this.filePrivacy),
@@ -127,23 +147,15 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     this.form.markAsDirty();
   }
 
-  public delete() {
-    this.state = 'waiting';
-    this.form.patchValue({ ref: '' });
-    this.form.markAsDirty();
-  }
-
-  public reset(fileExplorer: HTMLInputElement) {
-
+  public delete(fileExplorer: HTMLInputElement) {
     this.form.patchValue({
+      ref: '',
       blobOrFile: undefined,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
     })
     this.form.markAsDirty();
 
     fileExplorer.value = null;
-
-    this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
   }
 
   ngOnDestroy() {
