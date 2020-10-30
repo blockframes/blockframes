@@ -5,7 +5,7 @@
 
   <title-dashboard-shell [routes]="navLinks">
     <ng-container *ngIf="movie.storeConfig.status === 'accepted'">
-      <button mat-flat-button color="primary" (click)="openDialog(movie.id)">Updat current amount</button>
+      <button mat-stroked-button color="primary" (click)="openDialog(movie.id)">Update current amount</button>
     </ng-container>
   </title-dashboard-shell>
 
@@ -29,8 +29,10 @@
           </mat-error>
         </mat-form-field>
 
-        <button mat-stroked-button type="submit" color="primary" [disabled]="form.invalid">Save</button>
-        <button mat-button mat-dialog-close type="reset">Cancel</button>
+        <footer fxLayout fxLayoutAlign="space-between center">
+          <button mat-stroked-button mat-dialog-close type="reset" color="primary">Cancel</button>
+          <button mat-flat-button type="submit" color="primary" [disabled]="form.invalid">Save</button>
+        </footer>
       </form>
     </ng-container>
   </ng-template>
