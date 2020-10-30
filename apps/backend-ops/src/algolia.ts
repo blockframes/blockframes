@@ -5,7 +5,8 @@ import {
   setIndexConfiguration,
   storeSearchableMovie,
   storeSearchableOrg,
-  storeSearchableUser,, getDocument
+  storeSearchableUser,
+  getDocument
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
