@@ -89,9 +89,18 @@
     },
     "blockframes-francois": {
       "hosting": {
-        "catalog": ["blockframes-francois"],
-        "festival": ["blockframes-francois-festival"],
-        "financiers": ["blockframes-francois-financier"]
+        "catalog": [
+          "blockframes-francois-catalog"
+        ],
+        "festival": [
+          "blockframes-francois-festival"
+        ],
+        "financiers": [
+          "blockframes-francois-financier"
+        ],
+        "crm": [
+          "blockframes-francois-crm"
+        ]
       }
     },
     "blockframes-bruce": {
@@ -138,7 +147,7 @@
         "crm": [
           "crm-demo1-blockframes"
         ],
-        "financiers" : [
+        "financiers": [
           "blockframes-demo1-financiers"
         ]
       }
