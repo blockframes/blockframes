@@ -31,4 +31,4 @@ const firestorePubsubHandler: PubsubHandler = async (message) => {
   return Promise.reject();
 };
 
-export default functions.runWith(heavyConfig).pubsub.topic('firestore').onPublish(firestorePubsubHandler)
+export const firestorePubsub = functions.runWith(heavyConfig).pubsub.topic('firestore').onPublish(firestorePubsubHandler)

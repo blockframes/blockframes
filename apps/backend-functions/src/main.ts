@@ -245,6 +245,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
-export { default as dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
+export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
 
-export { default as firestorePubsub } from './pubsub/firestore';
+export { firestorePubsub } from './pubsub/firestore';

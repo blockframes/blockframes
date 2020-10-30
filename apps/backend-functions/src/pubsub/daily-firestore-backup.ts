@@ -12,4 +12,4 @@ async function dailyBackupHandler() {
   return Promise.resolve(msg)
 }
 
-export default functions.pubsub.schedule('0 1 * * *').onRun(dailyBackupHandler)
+export const dailyFirestoreBackup = functions.pubsub.schedule('0 1 * * *').onRun(dailyBackupHandler)
