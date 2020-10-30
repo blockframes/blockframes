@@ -34,7 +34,11 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
-    return this.configs[name].form;
+    return this.configs[name]?.form;
+  }
+
+  getConfig<K extends keyof ShellConfig>(name: K): ShellConfig[K] {
+    return this.configs[name];
   }
 
   animationOutlet(outlet: RouterOutlet) {
