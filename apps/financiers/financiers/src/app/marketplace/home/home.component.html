@@ -17,7 +17,7 @@
         <article fxLayout="column" *ngIf="movies.length">
           <div fxLayout="row" fxLayoutAlign="space-between start" flex>
             <h1>{{ section.title }}</h1>
-            <a mat-button routerLink="../title" color="primary">
+            <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
               <span>See all</span>
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>

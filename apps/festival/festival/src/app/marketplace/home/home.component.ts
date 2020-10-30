@@ -18,6 +18,7 @@ interface CarouselSection {
   title: string;
   movieCount$: Observable<number>;
   movies$: Observable<Movie[]>;
+  queryParams?: Record<string, string>;
 }
 
 @Component({
@@ -44,42 +45,41 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    this.sub = this.movieService.syncCollection(ref => ref.limit(50)).subscribe();
+    this.sub = this.movieService.syncCollection().subscribe();
     const selectMovies = (status: Movie['productionStatus']) => {
       return this.movieQuery.selectAll({
-        filterBy: movies => movies.productionStatus === status && movies.storeConfig.appAccess.festival && movies.storeConfig.status === "accepted"
+        filterBy: movie => movie.productionStatus === status && this.defaultFilter(movie)
       });
     }
     this.sections = [
       {
         title: 'New films',
-        movieCount$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(map(movies => movies.length)),
-        movies$: this.movieQuery.selectAll({ filterBy: movie => movie.storeConfig?.status === 'accepted' && movie.storeConfig.appAccess.festival }).pipe(
+        movieCount$: this.movieQuery.selectAll({ filterBy: movie => this.defaultFilter(movie) }).pipe(map(movies => movies.length)),
+        movies$: this.movieQuery.selectAll({ filterBy: movie => this.defaultFilter(movie) }).pipe(
           map(movies => movies.sort((a, b) => sortMovieBy(a, b, 'Production Year'))),
         )
       },
       {
         title: 'In production',
-        movieCount$: this.movieQuery.selectAll({ 
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
-          && movie.storeConfig?.status === 'accepted' 
-          && movie.storeConfig.appAccess.festival
+        movieCount$: this.movieQuery.selectAll({
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') && this.defaultFilter(movie)
         }).pipe(map(movies => movies.length)),
         movies$: this.movieQuery.selectAll({
-          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') 
-          && movie.storeConfig?.status === 'accepted' 
-          && movie.storeConfig.appAccess.festival
-        })
+          filterBy: movie => (movie.productionStatus === 'shooting' || movie.productionStatus === 'post_production') && this.defaultFilter(movie)
+        }),
+        queryParams: { productionStatus: 'shooting,post_production' }
       },
       {
         title: 'Completed films',
         movieCount$: selectMovies('finished').pipe(map(movies => movies.length)),
-        movies$: selectMovies('finished')
+        movies$: selectMovies('finished'),
+        queryParams: { productionStatus: 'finished' }
       },
       {
         title: 'In development',
         movieCount$: selectMovies('development').pipe(map(movies => movies.length)),
-        movies$: selectMovies('development')
+        movies$: selectMovies('development'),
+        queryParams: { productionStatus: 'development' }
       },
     ];
 
@@ -94,6 +94,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       map(orgs => orgs[Math.floor(Math.random() * orgs.length)])
     );
 
+  }
+
+  defaultFilter(movie: Movie) {
+    return movie.storeConfig.appAccess.festival
+      && movie.storeConfig.status === "accepted";
   }
 
   ngOnDestroy() {

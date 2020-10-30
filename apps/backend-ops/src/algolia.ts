@@ -39,7 +39,7 @@ export async function upgradeAlgoliaOrgs() {
     });
 
     await Promise.all(promises);
-    console.log(`chunk of ${orgs.length} orgs processed...`)
+    console.log(`chunk of ${orgs.length} orgs processed...`);
   }
 
   console.log('Algolia Orgs index updated with success !');
@@ -59,7 +59,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
 
     const { db } = loadAdminServices();
-    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
+    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
 
     for await (const movies of moviesIterator) {
       const promises = movies.map(async movie => {
@@ -98,7 +98,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
       });
 
       await Promise.all(promises);
-      console.log(`chunk of ${movies.length} movies processed...`)
+      console.log(`chunk of ${movies.length} movies processed...`);
     }
 
     console.log('Algolia Movies index updated with success !');

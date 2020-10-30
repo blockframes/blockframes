@@ -1,5 +1,4 @@
 // Angular
-import { FormControl } from '@angular/forms';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -11,12 +10,14 @@ import {
 import { Movie, MovieService } from '@blockframes/movie/+state';
 
 // RxJs
-import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 // Others
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -30,7 +31,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public movies$: Observable<Movie[]>;
 
-  public searchForm = new MovieSearchForm('catalog', { storeConfig: ['accepted'] });
+  public storeStatus: StoreStatus = 'accepted';
+  public searchForm = new MovieSearchForm('catalog', this.storeStatus);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -45,11 +47,23 @@ export class ListComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
     this.movies$ = this.movieResultsState.asObservable();
+
+    const params = this.route.snapshot.queryParams;
+    for (const key in params) {
+      try {
+        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
+      } catch (_) {
+        console.error(`Invalid parameter ${key} in URL`);
+      }
+    }
+
     this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
@@ -81,7 +95,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }
