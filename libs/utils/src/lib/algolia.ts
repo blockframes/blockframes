@@ -2,11 +2,12 @@ import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
-import { GetKeys, SocialGoal, Territory } from './static-model';
+import { GetKeys, Language, SocialGoal, Territory } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 import { ProductionStatus } from './static-model';
 import { App, Module } from './apps';
+import { MovieRunningTime, MovieRelease } from '@blockframes/movie/+state/movie.firestore';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -132,6 +133,11 @@ export interface AlgoliaRecordMovie extends AlgoliaRecord {
   budget: number,
   orgName: string,
   storeType: string,
+  poster: string,
+  banner: string,
+  originalLanguages: Language[],
+  runningTime: MovieRunningTime,
+  release: MovieRelease
 }
 
 export interface AlgoliaRecordUser extends AlgoliaRecord {
