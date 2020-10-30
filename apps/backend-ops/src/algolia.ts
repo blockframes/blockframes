@@ -82,14 +82,18 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
 
           if (appConfig === 'financiers') {
             const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
-            const campaign = (campaignSnap.docs[0].data() as Campaign);
-            if (campaign?.id) {
-              movie['minPledge'] = campaign.minPledge;
+            if (!campaignSnap.empty) {
+              const campaign = (campaignSnap?.docs[0].data() as Campaign);
+              if (campaign?.minPledge) {
+                movie['minPledge'] = campaign.minPledge;
+              }
             }
           }
-          await storeSearchableMovie(movie, organizationName, process.env['ALGOLIA_API_KEY']);
+
+          await storeSearchableMovie(movie, organizationName, process.env['ALGOLIA_API_KEY'])
         } catch (error) {
           console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
+          console.error(error);
         }
       });
 
@@ -172,5 +176,6 @@ function movieConfig(appConfig: App) {
         'filterOnly(minPledge)'
       ]
     }
+    default: return baseConfig;
   }
 }
