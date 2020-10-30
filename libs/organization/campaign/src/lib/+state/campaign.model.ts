@@ -41,10 +41,11 @@ export interface Perk {
   title: string,
   description: string,
   minPledge: number,
-  amount: {
-    current: number,
-    total: number
-  }
+  // @todo(#4116)
+  // amount: {
+  //   current: number,
+  //   total: number
+  // }
 }
 
 export function createCampaign(params: Partial<Campaign> = {}): Campaign {
@@ -64,10 +65,11 @@ export function createPerk(params: Partial<Perk> = {}): Perk {
     title: '',
     description: '',
     minPledge: 0,
-    amount: {
-      total: 0,
-      current: 0,
-    },
+    // @todo(#4116)
+    // amount: {
+    //   total: 0,
+    //   current: 0,
+    // },
     ...params
   }
 }
