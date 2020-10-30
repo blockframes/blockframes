@@ -10,7 +10,6 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -39,24 +38,22 @@ export class ListComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-  ) { }
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
-
-    this.route.queryParams.subscribe(params => {
-      Object.keys(params).forEach(k => {
-        try {
-          const values = params[k].split(',');
-          values.forEach(v => this.searchForm[k].add(v.trim()));
-        } catch (_) {
-          this.snackBar.open('Invalid parameters in URL', 'close', { duration: 1000 });
-        }
-      });
-    });
-
     this.movies$ = this.movieResultsState.asObservable();
+
+    const params = this.route.snapshot.queryParams;
+    for (const key in params) {
+      try {
+        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
+      } catch (_) {
+        console.error(`Invalid parameter ${key} in URL`);
+      }
+    }
+
     this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
