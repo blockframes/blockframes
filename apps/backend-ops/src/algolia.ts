@@ -5,7 +5,7 @@ import {
   setIndexConfiguration,
   storeSearchableMovie,
   storeSearchableOrg,
-  storeSearchableUser,
+  storeSearchableUser,, getDocument
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
@@ -81,12 +81,12 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
           const organizationName = orgName(org);
 
           if (appConfig === 'financiers') {
-            const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
-            if (!campaignSnap.empty) {
-              const campaign = (campaignSnap?.docs[0].data() as Campaign);
-              if (campaign?.minPledge) {
-                movie['minPledge'] = campaign.minPledge;
-              }
+            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
+            if (campaign?.minPledge) {
+              movie['minPledge'] = campaign.minPledge;
+            }
+            if (campaign?.minPledge) {
+              movie['minPledge'] = campaign.minPledge;
             }
           }
 
