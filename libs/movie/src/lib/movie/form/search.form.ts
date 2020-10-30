@@ -82,12 +82,13 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
 
   private movieIndex: Index;
 
-  constructor(app: App, search: Partial<MovieSearch> = {}) {
-    const movieSearch = createMovieSearch(search);
+  constructor(app: App, storeStatus: StoreStatus) {
+    const movieSearch = createMovieSearch({});
     const control = createMovieSearchControl(movieSearch);
     super(control);
 
     this.movieIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+    this.storeConfig.add(storeStatus);
   }
 
   get query() { return this.get('query'); }
@@ -143,7 +144,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     } as any;
 
     if (this.minBudget.value) {
-      search.filters = `estimatedBudget >= ${this.minBudget.value ?? 0}`
+      search.filters = `budget >= ${this.minBudget.value ?? 0}`;
     }
     return this.movieIndex.search(search);
   }

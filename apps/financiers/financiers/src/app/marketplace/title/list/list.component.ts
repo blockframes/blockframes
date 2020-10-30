@@ -11,6 +11,7 @@ import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/sear
 import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 @Component({
   selector: 'financiers-marketplace-title-list',
@@ -23,8 +24,8 @@ export class ListComponent implements OnInit, OnDestroy {
   private movieResultsState = new BehaviorSubject<Movie[]>([]);
 
   public movies$: Observable<Movie[]>;
-
-  public searchForm = new MovieSearchForm('financiers', { storeConfig: ['accepted'] });
+  public storeStatus: StoreStatus = 'accepted';
+  public searchForm = new MovieSearchForm('financiers', this.storeStatus);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -88,7 +89,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }

@@ -148,7 +148,7 @@ const baseConfig = {
   ],
   attributesForFaceting: [
     // filters
-    'filterOnly(estimatedBudget)',
+    'filterOnly(budget)',
 
     // searchable facets
     'searchable(orgName)',
