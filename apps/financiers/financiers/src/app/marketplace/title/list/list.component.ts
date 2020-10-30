@@ -5,10 +5,10 @@ import {
   ChangeDetectorRef,
   OnDestroy
 } from '@angular/core';
-import { Observable, of, Subscription, BehaviorSubject } from 'rxjs';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { Movie } from '@blockframes/movie/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ActivatedRoute } from '@angular/router';
 import { StoreStatus } from '@blockframes/utils/static-model/types';
@@ -37,7 +37,6 @@ export class ListComponent implements OnInit, OnDestroy {
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
@@ -64,9 +63,7 @@ export class ListComponent implements OnInit, OnDestroy {
         debounceTime(500),
         switchMap(() => this.searchForm.search()),
         tap(res => this.nbHits = res.nbHits),
-        pluck('hits'),
-        map(result => result.map(movie => movie.objectID)),
-        switchMap((ids: string[]) => ids.length ? this.movieService.valueChanges(ids) : of([])),
+        pluck('hits')
       ).subscribe((movies: Movie[]) => {
         if (this.loadMoreToggle) {
           this.movieResultsState.next(this.movieResultsState.value.concat(movies))
