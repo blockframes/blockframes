@@ -41,6 +41,7 @@ export interface Perk {
   title: string,
   description: string,
   minPledge: number,
+  // @todo(#4116)
   // amount: {
   //   current: number,
   //   total: number
@@ -64,6 +65,7 @@ export function createPerk(params: Partial<Perk> = {}): Perk {
     title: '',
     description: '',
     minPledge: 0,
+    // @todo(#4116)
     // amount: {
     //   total: 0,
     //   current: 0,
