@@ -171,8 +171,6 @@ jobs:
             fi
   build-and-test-prs:
     executor: blockframes-ci
-    environment:
-        NODE_OPTIONS: "--max_old_space_size=7168 --maxWorkers=8"
     steps:
       - prepare_environment
       - run:
