@@ -157,8 +157,4 @@ export class FileUploadComponent implements OnInit, OnDestroy {
 
     fileExplorer.value = null;
   }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 }
