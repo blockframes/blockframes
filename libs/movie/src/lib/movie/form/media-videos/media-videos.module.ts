@@ -13,6 +13,11 @@ import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.pipe';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
+import { UploadModule } from '@blockframes/media/components/upload/upload.module';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FileNameModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [MovieFormMediaVideosComponent],
@@ -23,11 +28,16 @@ import { MatDividerModule } from '@angular/material/divider';
     FlexLayoutModule,
     FormListModule,
     MaxLengthModule,
+    UploadModule,
+    FileNameModule,
 
     // Material
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: MovieFormMediaVideosComponent }])
