@@ -173,7 +173,7 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
   ngOnDestroy() {
     this.sub?.unsubscribe();
     this.getForm('movie').reset();
-    if (this.configs[name]) {
+    if (this.configs['campaign']) {
       this.getForm('campaign').reset();
     }
   }
