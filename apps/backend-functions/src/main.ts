@@ -29,7 +29,7 @@ import { getTwilioAccessToken } from './twilio';
 /**
  * Runtime options for heavy functions
  */
-const heavyConfig: RuntimeOptions = {
+export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };

@@ -3,11 +3,7 @@ import { EventContext, RuntimeOptions } from 'firebase-functions';
 import { Message } from 'firebase-functions/lib/providers/pubsub';
 import { Bucket } from '@google-cloud/storage';
 import { clear, exportFirestoreToBucket, getBackupBucket, restoreFromBackupBucket } from '@blockframes/firebase-utils';
-
-const heavyConfig: RuntimeOptions = {
-  timeoutSeconds: 300,
-  memory: '1GB',
-};
+import { heavyConfig } from '../main';
 
 type PubsubHandler = (message: Message, context: EventContext) => any
 
