@@ -8,6 +8,7 @@ import { Campaign, CampaignService } from '@blockframes/campaign/+state';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CampaignForm } from '@blockframes/campaign/form/form';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
+import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
 
 
 const links: RouteDescription[] = [
@@ -41,6 +42,7 @@ const links: RouteDescription[] = [
 })
 export class TitleViewComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate: TemplateRef<any>;
+  @ViewChild(DashboardTitleShellComponent) shell: DashboardTitleShellComponent;
   private dialogRef: MatDialogRef<any, any>;
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
@@ -50,7 +52,6 @@ export class TitleViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private campaignService: CampaignService,
     private dialog: MatDialog
   ) {}
 
@@ -59,17 +60,17 @@ export class TitleViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
-  async openDialog(movieId: string) {
-    const campaign = await this.campaignService.getValue(movieId);
-    if (campaign) {
-      const form = new CampaignForm(campaign);
-      const errorMatcher = new CrossFieldErrorMatcher();
-      this.dialogRef = this.dialog.open(this.dialogTemplate, { minWidth: '50vw', data: {form, errorMatcher} });
-    }
+  async openDialog() {
+    const form = this.shell.getForm('campaign');
+    const errorMatcher = new CrossFieldErrorMatcher();
+    this.dialogRef = this.dialog.open(this.dialogTemplate, {
+      minWidth: '50vw',
+      data: {form, errorMatcher}
+    });
   }
 
-  async save(movieId: string, campaign: Campaign) {
+  async save() {
     this.dialogRef.close();
-    this.campaignService.update(movieId, campaign);
+    this.shell.getConfig('campaign').onSave({ publishing: false });
   }
 }

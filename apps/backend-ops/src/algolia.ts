@@ -6,6 +6,7 @@ import {
   storeSearchableMovie,
   storeSearchableOrg,
   storeSearchableUser,
+  getDocument
 } from '@blockframes/firebase-utils';
 import { algolia } from '@env';
 import { OrganizationDocument, orgName } from "@blockframes/organization/+state/organization.firestore";
@@ -39,7 +40,7 @@ export async function upgradeAlgoliaOrgs() {
     });
 
     await Promise.all(promises);
-    console.log(`chunk of ${orgs.length} orgs processed...`)
+    console.log(`chunk of ${orgs.length} orgs processed...`);
   }
 
   console.log('Algolia Orgs index updated with success !');
@@ -59,7 +60,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
     await clearIndex(algolia.indexNameMovies[appConfig], process.env['ALGOLIA_API_KEY']);
 
     const { db } = loadAdminServices();
-    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300)
+    const moviesIterator = getCollectionInBatches<MovieDocument>(db.collection('movies'), 'id', 300);
 
     for await (const movies of moviesIterator) {
       const promises = movies.map(async movie => {
@@ -81,12 +82,12 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
           const organizationName = orgName(org);
 
           if (appConfig === 'financiers') {
-            const campaignSnap = await db.collection('campaigns').where('id', '==', movie.id).get();
-            if (!campaignSnap.empty) {
-              const campaign = (campaignSnap?.docs[0].data() as Campaign);
-              if (campaign?.minPledge) {
-                movie['minPledge'] = campaign.minPledge;
-              }
+            const campaign = await getDocument<Campaign>(`campaign/${movie.id}`);
+            if (campaign?.minPledge) {
+              movie['minPledge'] = campaign.minPledge;
+            }
+            if (campaign?.minPledge) {
+              movie['minPledge'] = campaign.minPledge;
             }
           }
 
@@ -98,7 +99,7 @@ export async function upgradeAlgoliaMovies(appConfig?: App) {
       });
 
       await Promise.all(promises);
-      console.log(`chunk of ${movies.length} movies processed...`)
+      console.log(`chunk of ${movies.length} movies processed...`);
     }
 
     console.log('Algolia Movies index updated with success !');

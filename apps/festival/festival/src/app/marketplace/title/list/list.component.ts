@@ -4,11 +4,13 @@ import {
   OnInit,
   OnDestroy
 } from '@angular/core';
-import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Movie } from '@blockframes/movie/+state';
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -21,8 +23,8 @@ export class ListComponent implements OnInit, OnDestroy {
   private movieResultsState = new BehaviorSubject<Movie[]>([]);
 
   public movies$: Observable<Movie[]>;
-
-  public searchForm = new MovieSearchForm('festival', { storeConfig: ['accepted'] });
+  public storeStatus: StoreStatus = 'accepted';
+  public searchForm = new MovieSearchForm('festival', this.storeStatus);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -34,13 +36,23 @@ export class ListComponent implements OnInit, OnDestroy {
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private movieService: MovieService,
     private dynTitle: DynamicTitleService,
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
     this.movies$ = this.movieResultsState.asObservable();
+    const params = this.route.snapshot.queryParams;
+    for (const key in params) {
+      try {
+        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
+      } catch (_) {
+        console.error(`Invalid parameter ${key} in URL`);
+      }
+    }
+
     this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
@@ -48,8 +60,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
     ).subscribe(movies => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
@@ -72,7 +82,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
   }
 

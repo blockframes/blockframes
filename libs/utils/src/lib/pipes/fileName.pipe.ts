@@ -6,11 +6,10 @@ import { UserService } from '@blockframes/user/+state';
 import { getFileExtension } from '../file-sanitizer';
 import { extensionToType } from '../utils';
 
-@Pipe({
-  name: 'fileName'
-})
+@Pipe({ name: 'fileName' })
 export class FileNamePipe implements PipeTransform {
   transform(file: string) {
+    if (!file) return '';
     if (typeof file !== 'string') {
       console.warn('UNEXPECTED FILE', file);
       console.warn('This pipe require a string as input');
