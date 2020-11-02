@@ -18,6 +18,7 @@ export class DialogPreviewComponent implements OnInit {
   };
 
   public src: string
+  public placeholder = 'empty_slider.webp';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
@@ -25,10 +26,27 @@ export class DialogPreviewComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    // create an XHR object
+    const xhr = new XMLHttpRequest();
+
     if (typeof this.data.ref !== 'string') {
       this.src = this.data.ref
     } else {
-      this.src = await this.mediaService.generateImgIxUrl(this.data.ref, this.parameters);
+      const source = await this.mediaService.generateImgIxUrl(this.data.ref, this.parameters);
+
+      // listen for `onload` event
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          this.src = source;
+        } else {
+          this.src = '';
+          console.log('Image does not exist.');
+        }
+      };
+      // create a `HEAD` request
+      xhr.open('HEAD', source);
+      // send request
+      xhr.send();
     }
   }
 }

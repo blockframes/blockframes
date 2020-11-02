@@ -1,2 +1,6 @@
-<img [src]="src">
+<ng-container *ngIf="!src">
+  <span>coucou t'as pas d'image !</span>
+</ng-container>
+
+<img [src]="src" asset="placeholder">
 <!-- Implement PDF viewer when its ready TODO #4072 -->
