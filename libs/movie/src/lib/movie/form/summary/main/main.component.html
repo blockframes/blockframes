@@ -1,4 +1,4 @@
-<!-- REFERENCE -->
+﻿<!-- REFERENCE -->
 <article>
   <h6>
     Reference
@@ -44,7 +44,8 @@
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [form]="movie.banner"><strong> Film Page Banner Image </strong></bf-preview-modal>
-      <missing-control test-id="original-title" [control]="movie.banner.ref" [link]="link" fragments="images">
+      <!-- test-id="banner-image" -->
+      <missing-control  [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
           {{ banner | fileName | maxLength: 30 }}
         </ng-template>
@@ -52,7 +53,8 @@
     </li>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
       <bf-preview-modal [form]="movie.poster"><strong> Poster Image </strong></bf-preview-modal>
-      <missing-control test-id="original-title" [control]="movie.poster.ref" [link]="link">
+      <!-- test-id="poster-image" --> 
+      <missing-control [control]="movie.poster.ref" [link]="link">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
         </ng-template>
@@ -92,9 +94,9 @@
         scope="genres">
       </missing-control>
     </li>
-    <li>
+    <li test-id="info-runtime">
       <strong>Running Time </strong>
-      <missing-control test-id="run-time" [control]="movie.runningTime.get('status')">
+      <missing-control [control]="movie.runningTime.get('status')">
         <ng-template let-runningStatus>{{ runningStatus | toLabel: "screeningStatus"}}</ng-template>
       </missing-control>
       <ng-container> - </ng-container>
@@ -116,7 +118,7 @@
   <ul>
     <missing-control [control]="movie.directors" [link]="link" fragment="directors">
       <ng-template let-directors="control">
-        <li *ngFor="let director of directors.controls">
+        <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]= "'dir-info' + (i + 1)">
           <strong>
             <missing-control test-id="first-name" [control]="director.get('firstName')"></missing-control>
             <missing-control test-id="last-name" [control]="director.get('lastName')"></missing-control>

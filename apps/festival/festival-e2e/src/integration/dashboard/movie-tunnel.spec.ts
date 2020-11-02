@@ -6,6 +6,12 @@ import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { TO } from '@blockframes/e2e/utils';
 import { acceptCookie, signIn, selectAction, clickOnMenu } from '@blockframes/e2e/utils/functions';
 
+const getStepsToSkip = (movie:any) => {
+  if (movie.productionStatus.status5) 
+    return ['Shooting Information', 'Notes & Statements'];
+
+  return [];
+}
 const userFixture = new User();
 const users = [ userFixture.getByUID(USER.Jean) ];
 let movieURL: string;
@@ -139,7 +145,11 @@ const Movie = {
   }
 }
 
-const val = Movie.production;
+let val:any = Movie.mainInfo;
+val['info-runtime'] = `${val['status']} - ${val['run-time']}min`;
+val['dir-info1'] = `${val['first-name']}${val['last-name']} (${val['director-category']}) Oscar Award Winner`;
+
+val = Movie.production;
 val['prod-co-summary'] = `${val['production-country'].toLowerCase()} ${val['production-company-name']}`;
 val['coprod-co-summary'] = `${val['co-production-country'].toLowerCase()} ${val['co-production-company-name']}`;
 val['producer-summary'] = `${val['producer-role'].toLowerCase()} ${val['first-name']} ${val['last-name']}`;
@@ -148,37 +158,35 @@ val['salesAgent-summary'] = `${val['sales-country'].toLowerCase()} ${val['sales-
 
 const testSteps = [
   {title: 'Production Status', selector: 'movie-form-title-status mat-radio-button', 
-    input: 'productionStatus', comp_save: [], save_form: false},  
+    input: 'productionStatus', comp_save: [], save_form: true},  
   {title: 'Main Information', selector: 'movie-form-main input, static-select, chips-autocomplete', 
-    input: 'mainInfo', comp_save: [], save_form: false},
+    input: 'mainInfo', comp_save: [], save_form: true},
   {title: 'Storyline Elements', selector: 'movie-form-story-elements textarea, input', 
-    input: 'storyElements', comp_save: [], save_form: false},
+    input: 'storyElements', comp_save: [], save_form: true},
   {title: 'Production Information', selector: 'movie-form-production input, static-select, mat-select, chips-autocomplete', 
-    input: 'production', comp_save: ['row-save'], save_form: false}, 
+    input: 'production', comp_save: ['row-save'], save_form: true}, 
   {title: 'Artistic Team', selector: 'movie-form-artistic input, textarea, static-select', 
-    input: 'artisticTeam', comp_save: ['table-save'], save_form: false},
+    input: 'artisticTeam', comp_save: ['table-save'], save_form: true},
   {title: 'Selection & Reviews', selector: 'movie-form-reviews static-select, input, textarea', 
-    input: 'reviews', comp_save: [], save_form: false},
+    input: 'reviews', comp_save: [], save_form: true},
   {title: 'Additional Information', selector: 'movie-form-additional-information input, mat-button-toggle, form-country, movie-form-budget-range, static-select', 
-    input: 'additionalInfo', comp_save: [], save_form: false},
-  // @TODO Mano #3419 : the movie you create have productionStatus "released" so you can't test this step
-  /*{title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input', 
-    input: 'shootingInformation', comp_save: [], save_form: false},*/
+    input: 'additionalInfo', comp_save: [], save_form: true},
+  {title: 'Shooting Information', selector: 'movie-shooting-information mat-radio-button, static-select, input', 
+    input: 'shootingInformation', comp_save: [], save_form: true},
   {title: 'Technical Specification', selector: 'movie-form-technical-info static-select', 
-    input: 'techSpec', comp_save: [], save_form: false},
+    input: 'techSpec', comp_save: [], save_form: true},
   {title: 'Available Materials', selector: 'movie-form-available-materials mat-slide-toggle, input',  
-    input: 'availableMaterials', comp_save: [], save_form: false},
+    input: 'availableMaterials', comp_save: [], save_form: true},
   {title: 'Sales Pitch', selector: 'movie-form-sales-pitch textarea, input, mat-select', 
-    input: 'salesPitch', comp_save: [], save_form: false},
+    input: 'salesPitch', comp_save: [], save_form: true},
   {title: 'Files', selector: 'movie-form-media-files file-upload', 
-    input: 'files',  comp_save: [], save_form: false},
-  // @TODO Mano #3419 : the movie you create have productionStatus "released" so you can't test this step
-  /*{title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
-    input: 'notesStatements', comp_save: [], save_form: false},*/
+    input: 'files',  comp_save: [], save_form: true},
+  {title: 'Notes & Statements', selector: 'movie-form-media-notes input, mat-select, file-upload', 
+    input: 'notesStatements', comp_save: [], save_form: true},
   {title: 'Images', selector: 'movie-form-media-images', 
-    input: 'promoElements', comp_save: [], save_form: false},
+    input: 'promoElements', comp_save: [], save_form: true},
   {title: 'Videos', selector: 'movie-form-media-videos textarea, input', 
-    input: 'videos', comp_save: [], save_form: false}
+    input: 'videos', comp_save: [], save_form: true}
 ];
 
 const MovieFormSummary = [
@@ -210,7 +218,13 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
 
     cy.get('h1', {timeout: TO.VSLOW_UPDATE}).contains('Production Status');
 
+    const skipSteps = getStepsToSkip(Movie);
+
     testSteps.forEach(step => {
+      if (skipSteps.includes(step.title)) {
+        return;
+      }
+
       cy.log(`=> Step : [${step.title}]`);
       cy.get('h1', {timeout: TO.PAGE_ELEMENT}).contains(step.title);
       setForm(step.selector, {inputValue: Movie[step.input]});
@@ -242,9 +256,10 @@ describe('User can navigate to the movie tunnel pages start and main.', () => {
   });
 
   //Verify Summary sheet fields are correct
-  it('Verify fields in Summary Page', () => {
-    //cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/1dPPD8KtuGqvQcAytVWx/summary');
-    //cy.wait(3000);
+  it.only('Verify fields in Summary Page', () => {
+    cy.visit('http://localhost:4200/c/o/dashboard/tunnel/movie/qDN4L9s91XGTjRdkzVyI/summary');
+    cy.wait(3000);
+    acceptCookie();
 
     cy.log('[Summary Page]: Check for mandatory and missing fields');
     cy.get('h1', {timeout: TO.FIFTEEN_SEC}).contains('Summary & Submission');
