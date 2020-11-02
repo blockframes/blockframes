@@ -123,7 +123,8 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
-    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
+    /* If no value is set for this property we want it to be true by default */
+    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable === null ? true : entity.isOriginalVersionAvailable),
     originalLanguages: FormList.factory(entity.originalLanguages, el =>
       new FormStaticValue<'languages'>(el, 'languages'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),

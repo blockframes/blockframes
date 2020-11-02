@@ -3,33 +3,37 @@
     <section id="profits">
       <h3>Return on investment</h3>
       <p>
-        Please add your estimated return on invest (in %) for each case.
+        Please add your estimated return on investment (in %) for each case. Calculate it by dividing the expected
+        share of revenue by the initial investment.
       </p>
-      
+
       <form [formGroup]="form.get('profits')" id="profits" fxLayout="column">
-        <div fxLayout fxLayoutGap="16px">
+        <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>ROI low</mat-label>
-            <input type="number" matInput formControlName="low" min="0"/>
+            <input type="number" matInput formControlName="low" min="0" />
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
             <mat-hint>Low case is the profitability in the worst case</mat-hint>
           </mat-form-field>
+          <mat-icon svgIcon="info" matTooltip="Profitability in the worst case"></mat-icon>
         </div>
-        <div fxLayout fxLayoutGap="16px">
+        <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>ROI medium</mat-label>
-            <input type="number" matInput formControlName="medium" min="0"/>
+            <input type="number" matInput formControlName="medium" min="0" />
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
             <mat-hint>Target case is the reasonable profitability you are targetting</mat-hint>
           </mat-form-field>
+          <mat-icon svgIcon="info" matTooltip="Reasonable profitability you are targeting"></mat-icon>
         </div>
-        <div fxLayout fxLayoutGap="16px">
+        <div fxLayout fxLayoutAlign="start baseline" fxLayoutGap="16px">
           <mat-form-field appearance="outline">
             <mat-label>ROI high</mat-label>
-            <input type="number" matInput formControlName="high" min="0"/>
+            <input type="number" matInput formControlName="high" min="0" />
             <mat-icon matSuffix svgIcon="percent"></mat-icon>
             <mat-hint>Upside case is the best profitability you could expect</mat-hint>
           </mat-form-field>
+          <mat-icon svgIcon="info" matTooltip="Best profitability you could expect"></mat-icon>
         </div>
       </form>
     </section>
@@ -43,10 +47,11 @@
       </h3>
       <p>
         Please <b>upload your detailed revenue waterfall</b>
-        <br/>
+        <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-upload [form]="form.get('files').get('waterfall')" [storagePath]="storagePath" accept="['.pdf']" [types]="['application/pdf']">
+      <file-upload [form]="form.get('files').get('waterfall')" [storagePath]="storagePath" accept="['.pdf']"
+        [types]="['application/pdf']">
         <h3 type>Upload Files</h3>
         <p class="mat-caption" format>Accepted Formats: .pdf</p>
       </file-upload>

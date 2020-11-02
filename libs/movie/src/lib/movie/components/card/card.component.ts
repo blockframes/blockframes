@@ -19,9 +19,7 @@ export class CardComponent {
   @Input() movie: Movie;
   @Input() link: string | string[] = "..";
 
-  constructor(private breakpointsService: BreakpointsService) {
-    setTimeout(()=> console.log(this.movie), 2000)
-  }
+  constructor(private breakpointsService: BreakpointsService) { }
 
   get placeholderAsset() {
     if (this.size === 'banner') {
