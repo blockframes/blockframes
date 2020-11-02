@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 
 // Blockframes
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 
 // RxJs
-import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 // Others
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
@@ -44,7 +44,6 @@ export class ListComponent implements OnInit, OnDestroy {
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
     private route: ActivatedRoute,
@@ -71,8 +70,6 @@ export class ListComponent implements OnInit, OnDestroy {
       switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
     ).subscribe(movies => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))

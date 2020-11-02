@@ -114,7 +114,18 @@ export function storeSearchableMovie(
       storeConfig: movie.storeConfig?.status || '',
       budget: movie.estimatedBudget || null,
       orgName: organizationName,
-      storeType: movie.storeConfig?.storeType || ''
+      storeType: movie.storeConfig?.storeType || '',
+      originalLanguages: movie.originalLanguages,
+      runningTime: {
+        status: movie.runningTime.status,
+        time: movie.runningTime.time
+      },
+      release: {
+        status: movie.release.status,
+        year: movie.release.year
+      },
+      banner: movie.banner,
+      poster: movie.poster
     };
 
     /* App specific properties */
