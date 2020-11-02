@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProgressComponent } from './progress.component';
-import { NumberPipeModule } from '@blockframes/utils/pipes';
-
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
@@ -13,7 +11,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    NumberPipeModule,
     MatProgressBarModule
   ]
 })

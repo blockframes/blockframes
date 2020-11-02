@@ -24,21 +24,25 @@
 
   <!-- Ready -->
   <section *ngSwitchCase="'ready'">
-    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
-    <h3>{{ form.fileName.value }}</h3>
-    <span class="mat-body-2">{{ localSize }}</span>
-    <button mat-mini-fab color="divider">
-      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
-    </button>
+    <ng-template
+      [ngTemplateOutlet]="onReadyTemplate || default"
+    ></ng-template>
   </section>
 
   <!-- File -->
   <section *ngSwitchCase="'file'">
-    <img asset="pdf.webp" alt="pdf image" class="file-uploaded">
-    <h3>{{ form.fileName.value }}</h3>
-    <button mat-mini-fab color="divider">
-      <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
-    </button>
+    <ng-template
+      [ngTemplateOutlet]="onFileTemplate || default"
+    ></ng-template>
   </section>
 
 </ng-container>
+
+<ng-template #default>
+  <img [asset]="form.fileName.value | fileTypeImage" alt="file image" class="file-uploaded">
+  <h3>{{ form.fileName.value }}</h3>
+  <span *ngIf="!!localSize" class="mat-body-2">{{ localSize }}</span>
+  <button mat-mini-fab color="divider">
+    <mat-icon (click)="delete(fileExplorer)" svgIcon="cross" matTooltip="Delete File"></mat-icon>
+  </button>
+</ng-template>

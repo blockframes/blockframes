@@ -368,6 +368,8 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
 
 export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
   return {
+    screener: createHostedVideo(params?.screener),
+    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)),
     ...params,
   }
 }

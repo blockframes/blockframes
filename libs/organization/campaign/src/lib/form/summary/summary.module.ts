@@ -5,7 +5,7 @@ import { SummaryProposalComponent } from './proposal/proposal.component';
 import { SummaryPerksComponent } from './perks/perks.component';
 
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
-import { ToLabelModule, NumberPipeModule, FileNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
+import { ToLabelModule, FileNameModule, MaxLengthModule } from '@blockframes/utils/pipes';
 import { PerksPipeModule, FundingsPipeModule, BudgetPipeModule } from '../../pipes';
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
 
@@ -25,7 +25,6 @@ import { SummaryBudgetComponent } from './budget/budget.component';
   imports: [
     CommonModule,
     ToLabelModule,
-    NumberPipeModule,
     FileNameModule,
     MaxLengthModule,
     PerksPipeModule,

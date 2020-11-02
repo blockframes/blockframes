@@ -7,6 +7,8 @@ import { Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter, startWith, map } from 'rxjs/operators';
 import { valueByPath } from '@blockframes/utils/pipes';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Index } from 'algoliasearch';
 
 const Separators = {
   [COMMA]: ',',
@@ -39,7 +41,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * Should be fed with the algolia index name out of the `env.ts`
-   * @example [index]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
+   * @example [index]="algolia.org" // 'pl_orgs' from the env.ts
+   * @example but if index is a movie, just pass down `movie`
    */
   @Input() index: AlgoliaIndex;
 
@@ -84,7 +87,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor() {}
+  constructor(private routerQuery: RouterQuery) { }
 
   ngOnInit() {
     this.values$ = this.form.valueChanges.pipe(startWith(this.form.value));
@@ -96,12 +99,17 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     if (!!this.facet?.trim()) {
       this.displayWithPath = 'value';
     }
-    // initialize Algolia
-    const indexSearch = searchClient.initIndex(algoliaIndex[this.index]);
+
+    let indexSearch: Index;
+    if(this.index === 'movie') {
+      const app = this.routerQuery.getValue().state?.root.data.app;
+      indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
+    }
+    indexSearch = searchClient.initIndex(algoliaIndex[this.index] as any);
 
     // create search functions
-    const regularSearch = (text: string) => indexSearch.search({query: text, facetFilters: this.getFilter()}).then(result => result.hits);
-    const facetSearch = (text: string) => indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
+    const regularSearch = (text: string) => indexSearch.search({ query: text, facetFilters: this.getFilter() }).then(result => result.hits);
+    const facetSearch = (text: string) => indexSearch.searchForFacetValues({ facetName: this.facet, facetQuery: text }).then(result => result.facetHits);
 
     // perform search
     this.algoliaSearchResults$ = this.searchCtrl.valueChanges.pipe(

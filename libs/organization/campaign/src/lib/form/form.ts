@@ -18,14 +18,15 @@ function compareReceived(form: CampaignForm): ValidationErrors | null {
     : null
 }
 
-export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
-  const control = form.get('amount');
-  if (control) {
-    return control?.value.total < control?.value.current
-      ? { amountOverflow: true }
-      : null
-  }
-};
+// @todo(#4116)
+// export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
+//   const control = form.get('amount');
+//   if (control) {
+//     return control?.value.total < control?.value.current
+//       ? { amountOverflow: true }
+//       : null
+//   }
+// };
 
 
 //////////
@@ -38,10 +39,11 @@ function createPerkControls(value?: Partial<Perk>) {
     title: new FormControl(perk.title, [Validators.required]),
     description: new FormControl(perk.description, Validators.required),
     minPledge: new FormControl(perk.minPledge),
-    amount: new FormEntity({
-      current: new FormControl(perk.amount.current),
-      total: new FormControl(perk.amount.total, Validators.required),
-    })
+    // @todo(#4116)
+    // amount: new FormEntity({
+    //   current: new FormControl(perk.amount.current),
+    //   total: new FormControl(perk.amount.total, Validators.required),
+    // })
   };
 }
 
@@ -50,7 +52,7 @@ type PerkControls = ReturnType<typeof createPerkControls>;
 export class PerkForm extends FormEntity<PerkControls, Perk> {
   constructor(value?: Partial<Perk>) {
     const controls = createPerkControls(value);
-    super(controls, comparePerkAmount);
+    super(controls);
   }
 }
 
@@ -83,7 +85,6 @@ export class FundingForm extends FormEntity<FundingControls, Funding> {
 function createBudgetFormControl(budget: Partial<Budget> = {}) {
   return {
     castCost: new FormControl(budget.castCost),
-    currency: new FormStaticValue(budget.currency, 'movieCurrencies'),
     postProdCost: new FormControl(budget.postProdCost),
     producerFees: new FormControl(budget.producerFees),
     shootCost: new FormControl(budget.shootCost),
@@ -107,6 +108,7 @@ export class BudgetForm extends FormEntity<BudgetFormControl> {
 function createCampaignControls(value?: Partial<Campaign>) {
   const campaign = createCampaign(value);
   return {
+    currency: new FormStaticValue(campaign.currency, 'movieCurrencies', [Validators.required]),
     cap: new FormControl(campaign.cap, [Validators.required, Validators.min(0)]),
     minPledge: new FormControl(campaign.minPledge, [Validators.required, Validators.min(0)]),
     received: new FormControl(campaign.received),
@@ -139,6 +141,10 @@ export class CampaignForm extends FormEntity<CampaignControls, Campaign> {
   constructor(value?: Partial<Campaign>) {
     const controls = createCampaignControls(value);
     super(controls, [compareMinPledge, compareReceived]);
+  }
+
+  getCurrency() {
+    return this.get('currency').value;
   }
 
   setAllValue(campaign: Partial<Campaign> = {}) {

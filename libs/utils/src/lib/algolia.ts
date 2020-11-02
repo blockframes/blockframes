@@ -2,10 +2,12 @@ import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
-import { GetKeys } from './static-model';
+import { GetKeys, Language, SocialGoal, Territory } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
-import { ProductionStatus, Territory } from './static-model';
+import { ProductionStatus } from './static-model';
+import { App, Module } from './apps';
+import { MovieRunningTime, MovieRelease } from '@blockframes/movie/+state/movie.firestore';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
@@ -32,26 +34,19 @@ export interface MovieAlgoliaResult {
   movie: Movie;
 }
 
-export const MoviesIndex = new InjectionToken<Index>('Algolia index to search movies', {
-  providedIn: 'root',
-  factory: () => searchClient.initIndex(algolia.indexNameMovies)
-});
-
 
 /** A simple map to access the index name */
 export const algoliaIndex = {
   user: algolia.indexNameUsers,
   org: algolia.indexNameOrganizations,
-  movie: algolia.indexNameMovies,
+  movie: {
+    financiers: algolia.indexNameMovies.financiers,
+    catalog: algolia.indexNameMovies.catalog ,
+    festival: algolia.indexNameMovies.festival
+  }
 }
 
 export type AlgoliaIndex = keyof typeof algoliaIndex;
-export type GetAlgoliaSchema<I extends AlgoliaIndex> =
-  I extends 'user' ? AlgoliaUser
-  : I extends 'org' ? AlgoliaOrg
-  : I extends 'movie' ? AlgoliaMovie
-  : never;
-
 
 ///// TYPES //////
 
@@ -102,4 +97,52 @@ export interface AlgoliaMovie {
   objectID: string
 }
 
+export interface AlgoliaSearch {
+  query: string;
+  page: number;
+  hitsPerPage: number;
+}
 
+interface AlgoliaRecord {
+  objectID: string,
+}
+export interface AlgoliaRecordOrganization extends AlgoliaRecord {
+  name: string,
+  appAccess: App[],
+  appModule: Module[],
+  country: Territory
+}
+
+export interface AlgoliaRecordMovie extends AlgoliaRecord {
+  title: {
+    international: string,
+    original: string,
+  },
+  directors: string[],
+  keywords: string[],
+  genres: string[],
+  originCountries: string[],
+  languages: {
+    original: string[],
+    dubbed: string[],
+    subtitle: string[],
+    caption: string[],
+  },
+  status: string,
+  storeConfig: string,
+  budget: number,
+  orgName: string,
+  storeType: string,
+  poster: string,
+  banner: string,
+  originalLanguages: Language[],
+  runningTime: MovieRunningTime,
+  release: MovieRelease
+}
+
+export interface AlgoliaRecordUser extends AlgoliaRecord {
+  email: string,
+  firstName: string,
+  lastName: string,
+  avatar: string,
+}

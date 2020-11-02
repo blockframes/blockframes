@@ -24,6 +24,6 @@ export class CampaignFormProfitsComponent implements OnInit {
   
   ngOnInit() {
     const { movieId } = this.route.snapshot.params;
-    this.storagePath = `campaigns/${movieId}/waterfall/`;
+    this.storagePath = `campaigns/${movieId}/files.waterfall/`;
   }
 }

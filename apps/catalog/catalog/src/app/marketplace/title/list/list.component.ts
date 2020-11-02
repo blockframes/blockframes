@@ -1,5 +1,4 @@
 // Angular
-import { FormControl } from '@angular/forms';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -8,15 +7,17 @@ import {
 } from '@angular/core';
 
 // Blockframes
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 
 // RxJs
-import { Observable, combineLatest, of, BehaviorSubject, Subscription } from 'rxjs';
-import { map, debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime, switchMap, pluck, startWith, distinctUntilChanged, tap } from 'rxjs/operators';
 
 // Others
 import { MovieSearchForm, createMovieSearch } from '@blockframes/movie/form/search.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { ActivatedRoute } from '@angular/router';
+import { StoreStatus } from '@blockframes/utils/static-model/types';
 
 @Component({
   selector: 'catalog-marketplace-title-list',
@@ -30,10 +31,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public movies$: Observable<Movie[]>;
 
-  public sortByControl: FormControl = new FormControl('Title');
-  public sortOptions: string[] = ['Title', 'Director' /* 'Production Year' #1146 */];
-
-  public searchForm = new MovieSearchForm();
+  public storeStatus: StoreStatus = 'accepted';
+  public searchForm = new MovieSearchForm('catalog', this.storeStatus);
 
   public nbHits: number;
   public hitsViewed = 0;
@@ -45,31 +44,32 @@ export class ListComponent implements OnInit, OnDestroy {
   public loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private movieService: MovieService,
     private cdr: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-  ) { }
+    private route: ActivatedRoute,
+  ) {
+    this.dynTitle.setPageTitle('Films On Our Market Today');
+  }
 
   ngOnInit() {
-    this.dynTitle.setPageTitle('Films On Our Market Today');
-    // Implicitly we only want accepted movies
-    this.searchForm.storeConfig.add('accepted');
-    // On financiers, we want only movie available for financiers
-    this.searchForm.appAccess.add('catalog');
     this.movies$ = this.movieResultsState.asObservable();
-    this.sub = combineLatest([
-      this.sortByControl.valueChanges.pipe(startWith('Title')),
-      this.searchForm.valueChanges.pipe(startWith(this.searchForm.value), distinctUntilChanged())
-    ]).pipe(
+
+    const params = this.route.snapshot.queryParams;
+    for (const key in params) {
+      try {
+        params[key].split(',').forEach(v => this.searchForm[key].add(v.trim()));
+      } catch (_) {
+        console.error(`Invalid parameter ${key} in URL`);
+      }
+    }
+
+    this.sub = this.searchForm.valueChanges.pipe(startWith(this.searchForm.value),
       tap(() => this.loading$.next(true)),
       distinctUntilChanged(),
       debounceTime(500),
       switchMap(() => this.searchForm.search()),
       tap(res => this.nbHits = res.nbHits),
       pluck('hits'),
-      map(result => result.map(movie => movie.objectID)),
-      switchMap(ids => ids.length ? this.movieService.valueChanges(ids) : of([])),
-      /*    map(movies => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))), TODO issue #3584 */
     ).subscribe(movies => {
       if (this.loadMoreToggle) {
         this.movieResultsState.next(this.movieResultsState.value.concat(movies))
@@ -92,7 +92,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   clear() {
-    const initial = createMovieSearch({ appAccess: ['catalog'], storeConfig: ['accepted'] });
+    const initial = createMovieSearch({ storeConfig: [this.storeStatus] });
     this.searchForm.reset(initial);
     this.cdr.markForCheck();
   }

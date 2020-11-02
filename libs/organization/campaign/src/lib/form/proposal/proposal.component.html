@@ -4,31 +4,18 @@
       <!-- Cap -->
       <mat-form-field appearance="outline">
         <mat-label>Total Investment Needed</mat-label>
-        <input type="number" matInput placeholder="$" formControlName="cap" required min="0" />
-        <mat-hint>Please pay attention, amount should be in dollars.</mat-hint>
-        <mat-icon matSuffix svgIcon="USD"></mat-icon>
+        <input type="number" matInput formControlName="cap" required min="0" />
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="form.hasError('required', 'cap')">
           Please specify total amount of the investement you need.
         </mat-error>
       </mat-form-field>
-      <!-- Received -->
-      <mat-form-field appearance="outline">
-        <mat-label>Current Amount</mat-label>
-        <input type="number" matInput placeholder="$" formControlName="received" [errorStateMatcher]="errorMatcher"
-          min="0" required />
-        <mat-icon matSuffix svgIcon="USD"></mat-icon>
-        <mat-error *ngIf="form.hasError('receivedOverflow')">
-          Your current amount should be lower than your needed investment.
-        </mat-error>
-        <mat-hint>Please specify in dollars the amount that you already have for this project.</mat-hint>
-      </mat-form-field>
+
       <!-- Minimum Pledge -->
       <mat-form-field appearance="outline">
         <mat-label>Minimum Investment Amount</mat-label>
-        <input type="number" matInput placeholder="$" formControlName="minPledge" [errorStateMatcher]="errorMatcher"
-          required min="0" />
-        <mat-icon matSuffix svgIcon="USD"></mat-icon>
-        <mat-hint>Please pay attention, amount should be in dollars.</mat-hint>
+        <input type="number" matInput formControlName="minPledge" [errorStateMatcher]="errorMatcher" required min="0" />
+        <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
         <mat-error *ngIf="form.hasError('minPledgeOverflow')">
           The minimum investment should be lower than your needed investment.
         </mat-error>
