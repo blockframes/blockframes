@@ -10,9 +10,13 @@ export class DisplayNamePipe implements PipeTransform {
     const capitalize = (str: string) => str?.toUpperCase();
     if (Array.isArray(value)) {
       return value.map(person => {
-        const firstName = capitalize(person.firstName);
-        const lastName = capitalize(person.lastName);
-        return `${firstName} ${lastName}`;
+        if (person?.firstName) {
+          const firstName = capitalize(person.firstName);
+          const lastName = capitalize(person.lastName);
+          return `${firstName} ${lastName}`;
+        } else {
+          return value;
+        }
       }).join(', ');
     } else {
       const firstName = capitalize(value.firstName);
