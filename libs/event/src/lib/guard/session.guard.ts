@@ -36,13 +36,14 @@ export class SessionGuard implements CanActivate, CanDeactivate<any> {
   }
 
   canDeactivate(): Observable<boolean> {
-      const dialogRef = this.dialog.open(ConfirmComponent, {
-        data: {
-          title: 'Are you sure ?',
-          question: 'You might not be able to come back to this screening as its access is time-limited.',
-          buttomName: 'Yes',
-        }
-      })
-      return dialogRef.afterClosed();
+    const event = this.eventQuery.getActive();
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      data: {
+        title: 'Are you sure ?',
+        question: `You might not be able to come back to this ${event.type} as its access is time-limited.`,
+        buttomName: 'Yes',
+      }
+    })
+    return dialogRef.afterClosed();
   }
 }
