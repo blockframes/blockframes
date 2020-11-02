@@ -677,6 +677,10 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
+
+  get videos() {
+    return this.get('videos');
+  }
 }
 
 // ------------------------------
@@ -1045,6 +1049,12 @@ export class MovieHostedVideoForm extends FormEntity<MovieHostedVideoControls, H
   constructor(video?: Partial<HostedVideo>) {
     super(createMovieHostedVideoControl(video));
   }
+
+  get ref() { return this.get('ref'); }
+  get jwPlayerId() { return this.get('jwPlayerId'); }
+  get title() { return this.get('title'); }
+  get description() { return this.get('description'); }
+  get type() { return this.get('type'); }
 }
 
 function createMovieHostedVideosControl(videos: Partial<HostedVideos> = {}) {
