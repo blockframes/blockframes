@@ -1,6 +1,8 @@
-<ng-container *ngIf="!src">
-  <span>coucou t'as pas d'image !</span>
-</ng-container>
+<div *ngIf="src; else default">
+  <img [src]="src"/>
+  <!-- Implement PDF viewer when its ready TODO #4072 -->
+</div>
 
-<img [src]="src" asset="placeholder">
-<!-- Implement PDF viewer when its ready TODO #4072 -->
+<ng-template #default>
+  <span>Whoops! It looks like the upload of your image didn't work. Please try again here.</span>
+</ng-template>

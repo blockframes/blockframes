@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { PreviewModalComponent } from './preview.component';
+import { DialogModalModule } from './dialog-preview/dialog-preview.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { PreviewModalComponent } from './preview.component';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    DialogModalModule
   ],
   exports: [PreviewModalComponent],
   declarations: [PreviewModalComponent],

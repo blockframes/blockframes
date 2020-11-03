@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, HostBinding, Inject, Input, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
@@ -18,7 +18,7 @@ export class DialogPreviewComponent implements OnInit {
   };
 
   public src: string
-  public placeholder = 'empty_slider.webp';
+  public placeholder = 'assets/images/banner_empty.png';
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data,
@@ -40,7 +40,6 @@ export class DialogPreviewComponent implements OnInit {
           this.src = source;
         } else {
           this.src = '';
-          console.log('Image does not exist.');
         }
       };
       // create a `HEAD` request

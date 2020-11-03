@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 import { DialogPreviewComponent } from './dialog-preview.component';

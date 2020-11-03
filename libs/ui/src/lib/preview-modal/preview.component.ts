@@ -25,7 +25,6 @@ export class PreviewModalComponent {
       ref = this.form.ref.value;
     }
     this.dialog.open(DialogPreviewComponent, {
-      // width: '50vw',
       height: '50vh',
       hasBackdrop: true,
       data: { ref }

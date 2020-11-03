@@ -3,10 +3,9 @@
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 100%;
 }
 
-img {
-  height: auto;
-  width: 100%;
+div, img {
+  height: 100%;
+  max-width: 100%;
 }
