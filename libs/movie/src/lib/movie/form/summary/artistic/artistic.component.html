@@ -9,7 +9,7 @@
   <ul>
     <missing-control [control]="movie.cast" [link]="link" fragment="cast-member">
       <ng-template let-casts="control">
-        <li *ngFor="let cast of casts.controls">
+        <li test-id="cast-summary" *ngFor="let cast of casts.controls">
           <strong>
             <missing-control [control]="cast.get('firstName')" [link]="link" fragment="cast-member"></missing-control>
           </strong>
@@ -42,7 +42,7 @@
   <ul>
     <missing-control [control]="movie.crew" fragment="crew-member" [link]="link">
       <ng-template let-crew="control">
-        <li *ngFor="let crew of crew.controls">
+        <li test-id="crew-summary" *ngFor="let crew of crew.controls">
           <strong>
             <missing-control [control]="crew.get('firstName')" [link]="link" fragment="crew-member"></missing-control>
           </strong>
