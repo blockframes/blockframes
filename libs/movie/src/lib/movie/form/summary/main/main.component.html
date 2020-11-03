@@ -120,15 +120,15 @@
       <ng-template let-directors="control">
         <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]= "'dir-info' + (i + 1)">
           <strong>
-            <missing-control test-id="first-name" [control]="director.get('firstName')"></missing-control>
-            <missing-control test-id="last-name" [control]="director.get('lastName')"></missing-control>
-            (<missing-control test-id="director-category" [control]="director.get('category')" scope="directorCategory">
+            <missing-control [control]="director.get('firstName')"></missing-control>
+            <missing-control [control]="director.get('lastName')"></missing-control>
+            (<missing-control [control]="director.get('category')" scope="directorCategory">
             </missing-control>)
           </strong>
           <ng-container *ngFor="let film of director.filmography.controls">
             <span>{{ film | filmography }}</span>
           </ng-container>
-          <missing-control test-id="director-desc" [control]="director.get('description')"></missing-control>
+          <missing-control [control]="director.get('description')"></missing-control>
         </li>
       </ng-template>
     </missing-control>

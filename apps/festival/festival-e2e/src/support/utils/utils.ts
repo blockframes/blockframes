@@ -13,7 +13,6 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   signIn(user);
   cy.get('festival-marketplace', {timeout: TO.PAGE_LOAD});
   acceptCookie();
-  return;
 
   // Navigate to movie-tunnel-main
   cy.log('Click sidemenu to reach Add New Title');
@@ -31,6 +30,4 @@ export function signInAndNavigateToMain(user: Partial<User>) {
   cy.wait(TO.ONE_SEC);
   cy.get('festival-dashboard  a:contains("Start")', { timeout: TO.PAGE_LOAD })
     .click();
-
-
 }
