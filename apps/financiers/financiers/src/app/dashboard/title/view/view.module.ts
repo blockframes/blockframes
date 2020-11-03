@@ -35,24 +35,29 @@ const routes = [{
       data: { animation: 0 }
     },
     {
-      path: 'artistic',
-      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
       data: { animation: 1 }
     },
     {
-      path: 'production',
-      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
+      path: 'artistic',
+      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
       data: { animation: 2 }
+    },
+    {
+      path: 'additional',
+      loadChildren: () => import('@blockframes/movie/dashboard/additional/additional.module').then(m => m.MovieViewAdditionalModule),
+      data: { animation: 3 }
     },
     {
       path: 'financing',
       loadChildren: () => import('@blockframes/campaign/dashboard/financing/financing.module').then(m => m.FinancingModule),
-      data: { animation: 3 }
+      data: { animation: 4 }
     },
     {
       path: 'campaign',
       loadChildren: () => import('@blockframes/campaign/dashboard/investment/investment.module').then(m => m.InvestmentModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     }
   ]
 }];

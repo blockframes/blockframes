@@ -101,5 +101,28 @@
         </div>
       </ng-container>
     </article>
+    <mat-divider></mat-divider>
+  </section>
+
+  
+  <!-- Audience & Goal -->
+  <section id="audience-goals" *ngIf="movie | hasKeys: 'audience'">
+    <h2>Positioning</h2>
+    <article *ngIf="movie.audience.targets.length">
+      <h5>Target audience</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let target of movie.audience.targets">
+          <mat-chip>{{ target }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
+    <article *ngIf="movie.audience.goals.length">
+      <h5>Social responsability goals</h5>
+      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
+        <ng-container *ngFor="let goal of movie.audience.goals">
+          <mat-chip>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
+        </ng-container>
+      </mat-chip-list>
+    </article>
   </section>
 </ng-container>

@@ -10,4 +10,9 @@ export class SummaryAdditionalInformationComponent {
 
   @Input() movie: MovieForm;
   @Input() link: string;
+
+  
+  get goals() {
+    return this.movie.get('audience')
+  }
 }
