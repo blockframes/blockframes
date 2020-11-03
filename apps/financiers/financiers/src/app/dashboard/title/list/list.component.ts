@@ -1,11 +1,11 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { MovieService, Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 import { CampaignService, MovieCampaign } from '@blockframes/campaign/+state/campaign.service';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith, switchMap, tap } from 'rxjs/operators';
 
 type Filters = 'all' | 'draft' | 'ongoing' | 'achieved';
@@ -32,17 +32,14 @@ function filterMovieCampaign(movies: MovieCampaign[], filter: Filters) {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit {
   columns = columns;
   initialColumns = ['title', 'productionStatus', 'campaign.cap', 'campaign.received'];
   titles$: Observable<MovieCampaign[]>;
   filter = new FormControl('all');
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
-  private sub: Subscription;
-
   constructor(
-    private movieService: MovieService,
     private campaignService: CampaignService,
     private orgQuery: OrganizationQuery,
     private router: Router,
@@ -51,11 +48,6 @@ export class ListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Sync with anaytics: It's ok to give ALL movieIds they'll just be set to 0
-    this.sub = this.orgQuery.selectActive().pipe(
-      switchMap(org => this.movieService.syncWithAnalytics(org.movieIds)),
-    ).subscribe();
-
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.campaignService.queryMoviesCampaign(org.movieIds)),
       map(movies => movies.filter(movie => !!movie)),
@@ -78,10 +70,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public applyFilter(filter: Filters) {
     this.filter.setValue(filter);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 }
 

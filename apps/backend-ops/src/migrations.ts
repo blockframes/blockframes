@@ -63,7 +63,7 @@ export async function migrate(withBackup: boolean = true) {
 
     if (withBackup) {
       console.info('backup the database before doing anything');
-      await backup(appUrl.content);
+      await backup();
       console.info('backup done, moving on to the migrations...');
     } else {
       console.warn('⚠️ skipping the backup before running migrations, are you sure?');
@@ -83,12 +83,12 @@ export async function migrate(withBackup: boolean = true) {
   } catch (e) {
     console.error(e);
     console.error('the migration failed, revert\'ing!');
-    await restore(appUrl.content);
+    await restore();
     throw e;
   } finally {
     if (withBackup) {
       console.info('running a backup post-migration');
-      await backup(appUrl.content);
+      await backup();
       console.info('done with the backup post-migration');
     }
     await endMaintenance();

@@ -4,23 +4,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { FileExplorerComponent } from './file-explorer.component';
 
-// Blockframes Components
+// Blockframes
 import { ConfirmModule } from '@blockframes/ui/confirm/confirm.module';
-import { CropperModule } from '../cropper/cropper.module';
 import { FileDialogModule } from '@blockframes/media/components/dialog/file/file.module';
 import { ImageDialogModule } from '@blockframes/media/components/dialog/image/image.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { UploadModule } from '@blockframes/media/components/upload/upload.module';
-
-// Blockframes Pipes
-import { DeepKeyPipeModule } from '@blockframes/utils/pipes';
-import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
 import { MaxLengthModule } from '@blockframes/utils/pipes';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { ToArrayPipeModule } from '@blockframes/utils/pipes/to-array.pipe';
 
-// Blockframes Directives
-import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
+// File explorer
+import { MultipleFilesViewModule } from './components/multiple-files-view/multiple-files-view.module';
+import { SingleFileViewModule } from './components/single-file-view/single-file-view.module';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -33,23 +27,17 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
 
-    // Components
+    // Blockframes
     ConfirmModule,
-    CropperModule,
     FileDialogModule,
     ImageDialogModule,
     TableFilterModule,
-    UploadModule,
-
-    // Pipes
-    DeepKeyPipeModule,
-    FileNameModule,
     MaxLengthModule,
     OrgNameModule,
-    ToArrayPipeModule,
 
-    // Directives
-    ImageReferenceModule,
+    // File explorer
+    MultipleFilesViewModule,
+    SingleFileViewModule,
 
     // Material
     MatListModule,

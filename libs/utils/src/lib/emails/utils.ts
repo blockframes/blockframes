@@ -15,8 +15,12 @@ export interface EmailTemplateRequest {
 
 export interface EmailParameters {
   request: EmailRequest | EmailTemplateRequest,
-  from?: EmailJSON,
   app?: App,
+}
+
+export interface EmailAdminParameters {
+  request: EmailRequest | EmailTemplateRequest,
+  from?: EmailJSON,
 }
 
 export interface EmailRecipient {

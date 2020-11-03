@@ -6,6 +6,8 @@
     <!-- This is not a regular image, don't use the ImageDirective on it -->
     <img [src]="pdfUrl$ | async" alt="current page of the pdf" />
 
+    <ng-content></ng-content>
+
     <button *ngIf="!fullScreen" fxFlexAlign="end" (click)="toggleFullScreen()" mat-icon-button>
       <mat-icon svgIcon="fullscreen"></mat-icon>
     </button>

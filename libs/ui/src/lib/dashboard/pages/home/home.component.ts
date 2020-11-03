@@ -40,7 +40,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     const allMoviesFromOrg$ = this.orgQuery.selectActive().pipe(
       switchMap(({ movieIds }) => this.movieService.valueChanges(movieIds)),
-      filter(movies => !!movies && movies.length >= 1),
       map(movies => movies.filter(movie => !!movie)),
       shareReplay(1),
       tap(_ => _isDataLoaded$.next(true))
