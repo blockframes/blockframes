@@ -10,7 +10,8 @@ h3 {
   margin-bottom: 24px;
 }
 
-h4, h6 {
+h4,
+h6 {
   text-transform: uppercase;
 }
 
@@ -21,4 +22,12 @@ section {
 mat-divider {
   margin-top: 36px;
   margin-bottom: 36px;
+}
+
+span.mat-caption {
+  margin-bottom: 16px;
+}
+
+mat-button-toggle-group {
+  max-width: fit-content;
 }

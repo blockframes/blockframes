@@ -84,7 +84,7 @@
     &.mat-button-disabled {
       background-color: mat-color($background, disabled-button);
       svg g, svg polygon, svg path {
-        fill: mat-color($background, disabled-button);
+        fill: mat-color($foreground, disabled-button);
       }
     }
   }

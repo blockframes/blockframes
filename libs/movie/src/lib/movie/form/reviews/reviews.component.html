@@ -35,7 +35,6 @@
             </div>
 
             <h6 class="mat-caption">Premiere</h6>
-            <div>
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
@@ -43,7 +42,6 @@
                   </mat-button-toggle>
                 </ng-container>
               </mat-button-toggle-group>
-            </div>
             <span class="mat-caption">Select applying premiere if any.</span>
 
           </article>

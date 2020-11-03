@@ -40,7 +40,9 @@
   <section fxLayout="column" fxLayoutAlign="center center">
 
     <ng-container *ngIf="sheets.length; else fileUpload">
-      <span><mat-icon svgIcon="attachment"></mat-icon> File uploaded, click on "Start import" to continue!</span>
+      <span>
+        <mat-icon svgIcon="attachment"></mat-icon> File uploaded, click on "Start import" to continue!
+      </span>
     </ng-container>
 
     <ng-template #fileUpload>
@@ -48,10 +50,7 @@
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/vnd.oasis.opendocument.spreadsheet',
-        'text/csv']"
-        [storagePath]=""
-        [form]="excelForm"
-      >
+        'text/csv']" [storagePath]="" [form]="excelForm">
         <h3 type>Upload files</h3>
         <p class="mat-caption" format>Accepted Formats : xls, xlsx</p>
       </file-upload>
@@ -61,9 +60,6 @@
 
   <section fxLayout="column" fxLayoutAlign="center center">
 
-    <img asset="Upload_380.webp">
-
-    <!-- TODO #1387 -->
     <section fxLayout="row" fxLayoutAlign="end center">
       <ng-container *ngIf="sheets.length">
         <button mat-flat-button color="warn" (click)="removeFile()">
@@ -71,7 +67,8 @@
         </button>
       </ng-container>
 
-      <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">Start import
+      <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">
+        Start import
         <mat-icon svgIcon="arrow_downward"></mat-icon>
       </button>
 
