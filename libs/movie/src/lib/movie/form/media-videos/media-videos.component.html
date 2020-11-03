@@ -3,13 +3,14 @@
 
     <h3>Screener</h3>
     <section>
+      <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
 
       <ng-container *ngIf="hasScreener; else noScreener">
         <mat-list>
           <mat-list-item>
             <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
             <div mat-line>{{screenerForm.get('fileName').value}}</div>
-            <button mat-icon-button (click)="delete()"><mat-icon svgIcon="trash"></mat-icon></button>
+            <button mat-icon-button (click)="deleteScreener()"><mat-icon svgIcon="trash"></mat-icon></button>
           </mat-list-item>
         </mat-list>
       </ng-container>
@@ -25,13 +26,45 @@
             <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
 
         </file-upload>
+        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong> outside your organization unless you explicitly invite them to a virtual screening.</p>
       </ng-template>
     </section>
 
-    <mat-divider></mat-divider>
+    <mat-divider class="thick"></mat-divider>
+
     <h3>Other Videos</h3>
     <section>
+      <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
 
+      <mat-form-field appearance="outline">
+        <mat-label>Video title (optional)</mat-label>
+        <input matInput [formControl]="currentOtherVideo.title" >
+      </mat-form-field>
+      <file-upload
+        [form]="currentOtherVideo.ref"
+        [storagePath]="getPath('otherVideos')"
+        [accept]="allowedFilesExtensions"
+        filePrivacy="public"
+        [types]="allowedFilesTypes">
+          <h3 type>Upload Video</h3>
+          <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
+      </file-upload>
+      <p class="mat-caption">Keep in mind that those videos will be <strong>public</strong> and <strong>viewable by anyone</strong> on the marketplace.</p>
+      <mat-divider></mat-divider>
+      <mat-list>
+        <mat-list-item *ngFor="let video of otherVideos.value; let index = index; trackBy: trackByIndex">
+          <mat-icon mat-list-icon svgIcon="film" [color]="index === selectedOtherVideo ? 'primary' : ''"></mat-icon>
+          <div mat-line>{{ video.title || video.ref.fileName || 'No Title' }}</div>
+          <button mat-icon-button  *ngIf="index !== selectedOtherVideo" (click)="selectOtherVideo(index)"><mat-icon svgIcon="pencil"></mat-icon></button>
+          <button mat-icon-button  [color]="index === selectedOtherVideo ? 'primary' : ''" (click)="deleteOtherVideo(index)"><mat-icon svgIcon="trash"></mat-icon></button>
+        </mat-list-item>
+      </mat-list>
+      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="!!otherVideos.value.length">
+        <button mat-stroked-button color="primary" (click)="addOtherVideo()">
+          Add another Video
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+      </div>
     </section>
 
   </ng-container>
