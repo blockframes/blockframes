@@ -9,8 +9,8 @@
       </button>
 
     </label>
-    <ng-content select="[type]"></ng-content>
-    <ng-content select="[format]"></ng-content>
+    <h3 type>Upload File</h3>
+    <p class="mat-caption" format>Accepted Formats: {{ accept.join(', ') }}</p>
     <p class="mat-caption">Drag and drop a file here or
       <a (click)="fileExplorer.click()">browse</a>
     </p>
@@ -43,6 +43,6 @@
   <h3>{{ form.fileName.value }}</h3>
   <span *ngIf="!!localSize" class="mat-body-2">{{ localSize }}</span>
   <button mat-mini-fab color="divider">
-    <mat-icon (click)="delete(fileExplorer)" svgIcon="cross" matTooltip="Delete File"></mat-icon>
+    <mat-icon (click)="delete()" svgIcon="cross" matTooltip="Delete File"></mat-icon>
   </button>
 </ng-template>

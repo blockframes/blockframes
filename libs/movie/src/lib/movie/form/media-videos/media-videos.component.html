@@ -18,9 +18,8 @@
         <file-upload
           [form]="screenerForm"
           [storagePath]="getPath('screener')"
-          [accept]="allowedFilesExtensions"
-          filePrivacy="protected"
-          [types]="allowedFilesTypes">
+          allowedFileType="video"
+          filePrivacy="protected">
 
             <h3 type>Upload Screener</h3>
             <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
@@ -43,9 +42,8 @@
       <file-upload
         [form]="currentOtherVideo.ref"
         [storagePath]="getPath('otherVideos')"
-        [accept]="allowedFilesExtensions"
-        filePrivacy="public"
-        [types]="allowedFilesTypes">
+        allowedFileType="video"
+        filePrivacy="public">
           <h3 type>Upload Video</h3>
           <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
       </file-upload>

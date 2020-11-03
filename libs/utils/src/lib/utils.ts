@@ -16,8 +16,8 @@ export const clamp = (value: number, clamps: number[]): number => {
 }
 
 
-export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls'] as const;
-type AllowedFileType = typeof allowedFileType[number];
+export const allowedFileType = ['pdf', 'image', 'video', 'docx', 'xls', 'json', 'import'] as const;
+export type AllowedFileType = typeof allowedFileType[number];
 
 export interface FileDefinition { mime: string[], extension: string[] };
 export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
@@ -40,6 +40,14 @@ export const allowedFiles: Record<AllowedFileType, FileDefinition> = {
   xls: {
     mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
     extension: ['xls', 'xlsx'],
+  },
+  json: {
+    mime: ['application/json'],
+    extension: ['json']
+  },
+  import: {
+    mime: ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.oasis.opendocument.spreadsheet', 'text/csv'],
+    extension: ['xls', 'xlsx', 'ods', 'csv']
   }
 }
 

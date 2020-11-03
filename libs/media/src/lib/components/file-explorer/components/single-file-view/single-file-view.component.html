@@ -9,11 +9,8 @@
     <file-upload
       [form]="getSingleMediaForm()"
       [storagePath]="this.activeDirectory.storagePath"
-      [accept]="['.pdf']"
-      [filePrivacy]="this.activeDirectory.privacy"
-      [types]="['application/pdf']">
-      <h3 type>Upload File</h3>
-      <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      [allowedFileType]="this.activeDirectory.acceptedFileType"
+      [filePrivacy]="this.activeDirectory.privacy">
     </file-upload>
   </ng-container>
   <div fxLayout="column" fxLayoutAlign="center center">

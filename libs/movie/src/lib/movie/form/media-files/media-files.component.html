@@ -7,10 +7,7 @@
         test-id="presentation-deck"
         [form]="form.promotional.get('presentation_deck')"
         [storagePath]="getPath('presentation_deck')"
-        accept="['.pdf']"
-        [types]="['application/pdf']">
-          <h3 type>Upload Files</h3>
-          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        allowedFileType="pdf">
       </file-upload>
     </section>
 
@@ -20,10 +17,7 @@
         test-id="scenario"
         [form]="form.promotional.get('scenario')"
         [storagePath]="getPath('scenario')"
-        accept="['.pdf']"
-        [types]="['application/pdf']">
-          <h3 type>Upload Files</h3>
-          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        allowedFileType="pdf">
       </file-upload>
     </section>
 
@@ -33,10 +27,7 @@
         test-id="moodboard"
         [form]="form.promotional.get('moodboard')"
         [storagePath]="getPath('moodboard')"
-        accept="['.pdf']"
-        [types]="['application/pdf']">
-          <h3 type>Upload Files</h3>
-          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        allowedFileType="pdf">
       </file-upload>
     </section>
   </ng-container>

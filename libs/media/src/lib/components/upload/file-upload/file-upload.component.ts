@@ -11,10 +11,16 @@ import {
 } from '@angular/core';
 import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { getMimeType, getStoragePath, sanitizeFileName, Privacy } from '@blockframes/utils/file-sanitizer';
+import {
+  getMimeType,
+  getStoragePath,
+  sanitizeFileName,
+  Privacy,
+} from '@blockframes/utils/file-sanitizer';
 import { getFileNameFromPath } from '@blockframes/media/+state/media.model';
 import { Subscription } from 'rxjs';
 import { HostedMediaFormValue } from '@blockframes/media/+state/media.firestore';
+import { allowedFiles, AllowedFileType } from '@blockframes/utils/utils';
 
 type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
 
@@ -22,20 +28,23 @@ type UploadState = 'waiting' | 'hovering' | 'ready' | 'file';
   selector: '[form] [storagePath] file-upload',
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileUploadComponent implements OnInit, OnDestroy {
-  /** use in the html to specify the input, ex: ['.json', '.png'] */
-  @Input() public accept: string[];
-  /** mime type, ex: ['image/png', 'application/json'] */
-  @Input() public types: string[];
   /** firestore path */
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
   @Input() filePrivacy: Privacy = 'public';
+  @Input() set allowedFileType(fileType: AllowedFileType) {
+    this.accept = allowedFiles[fileType].extension;
+    this.types = allowedFiles[fileType].mime;
+  }
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
   @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
+
+  public accept: string[];
+  public types: string[];
 
   public localSize: string;
   public state: UploadState = 'waiting';
@@ -111,7 +120,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
         this.state = !!this.form.oldRef.value ? 'file' : 'waiting';
         return;
       }
-      file = files
+      file = files;
     }
 
     const fileType = getMimeType(file);
@@ -130,7 +139,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const size = (file.size / 1000);
+    const size = file.size / 1000;
     if (size < 1000) {
       this.localSize = `${size.toFixed(1)} KB`;
     } else if (size < 1000 * 1000) {
@@ -143,16 +152,22 @@ export class FileUploadComponent implements OnInit, OnDestroy {
       ref: getStoragePath(this.storagePath, this.filePrivacy),
       blobOrFile: file,
       fileName: sanitizeFileName(file.name),
-    })
+    });
     this.form.markAsDirty();
   }
 
-  public delete(fileExplorer: HTMLInputElement) {
+  public delete() {
+    this.state = 'waiting';
+    this.form.patchValue({ ref: '' });
+    this.form.markAsDirty();
+  }
+
+  public reset(fileExplorer: HTMLInputElement) {
     this.form.patchValue({
       ref: '',
       blobOrFile: undefined,
       fileName: !!this.form.oldRef.value ? getFileNameFromPath(this.form.oldRef.value) : '',
-    })
+    });
     this.form.markAsDirty();
 
     fileExplorer.value = null;

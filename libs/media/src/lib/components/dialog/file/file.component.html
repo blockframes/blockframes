@@ -24,11 +24,8 @@
   <file-upload
     [form]="data.form.controls.ref"
     [storagePath]="data.storagePath"
-    [accept]="['.pdf']"
-    [filePrivacy]="data.privacy"
-    [types]="['application/pdf']">
-    <h3 type>Upload File</h3>
-    <p class="mat-caption" format>Accepted Formats: .pdf</p>
+    allowedFileType="pdf"
+    [filePrivacy]="data.privacy">
   </file-upload>
   <section fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
