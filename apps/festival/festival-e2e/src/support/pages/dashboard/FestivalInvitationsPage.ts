@@ -1,4 +1,5 @@
 import FestivalMarketplaceEventPage from "../marketplace/FestivalMarketplaceEventPage";
+import { TO } from '@blockframes/e2e/utils';
 
 const ACCEPTED = 'Accepted';
 
@@ -11,7 +12,7 @@ export default class FestivalInvitationsPage {
     cy.get('invitation-view [test-id=more]', {timeout: 30000})
       .first().click();
     cy.get('[test-id=accept-invitation]', {timeout: 3000}).click();
-    cy.wait(2000);
+    cy.wait(TO.SLOW_OP);
   }
 
   refuseInvitationScreening() {

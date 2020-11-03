@@ -113,12 +113,11 @@
         </ng-template>
         <ng-template formView let-locationForm>
           <article [formGroup]="locationForm" fxLayout="column" fxLayoutGap="24px">
-            <static-select test-id="country" scope="territories" [control]="locationForm.get('country')" [withoutValues]="['world']"
-              fxFlex>
+            <static-select test-id="country" scope="territories" [control]="locationForm.get('country')" [withoutValues]="['world']">
               <mat-label>Country</mat-label>
             </static-select>
 
-            <mat-form-field appearance="outline" fxFlex>
+            <mat-form-field appearance="outline">
               <mat-label>Cities</mat-label>
               <mat-chip-list #chipList>
                 <ng-container *ngFor="let city of locationForm.get('cities').value; let i = index">

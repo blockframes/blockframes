@@ -1,11 +1,12 @@
 ﻿import FestivalMarketplaceCalendarPage from "./FestivalMarketplaceCalendarPage";
 import FestivalMarketplaceEventPage from "./FestivalMarketplaceEventPage";
+import { TO } from "@blockframes/e2e/utils";
 
 const CALENDAR_LABEL = 'My Calendar';
 
 export default class FestivalScreeningPage {
   constructor() {
-    cy.get('festival-screening', {timeout: 10000});
+    cy.get('festival-screening', {timeout: TO.PAGE_LOAD});
     cy.wait(1000);
   }
 

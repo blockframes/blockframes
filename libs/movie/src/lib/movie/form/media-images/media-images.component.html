@@ -8,8 +8,7 @@
       <p>It will be used as a cover for the project page on the marketplace.</p>
       <ng-container *ngFor="let still of stillPhoto.controls; let i = index; trackBy: trackByFn">
         <article>
-          <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still"
-            [form]="still">
+          <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still" [form]="still">
             <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Ratio : 16/10</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
@@ -19,7 +18,7 @@
 
       <footer fxLayout="row" fxLayoutAlign="start baseline" fxLayoutGap="16px">
         <mat-divider></mat-divider>
-        <span>Add Images</span>
+        <span class="mat-caption text-primary">Add Images</span>
         <button mat-mini-fab color="primary" (click)="addStill()">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
