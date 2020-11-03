@@ -70,10 +70,8 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     }
   });
 
-  const promises = [];
-
   // Update algolia's index
-  orgAppAccess.forEach(appName => promises.push(indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(orgRecord)));
+  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(orgRecord));
 
   return Promise.all(promises)
 }
@@ -148,10 +146,7 @@ export function storeSearchableMovie(
 
     const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
-    const promises = [];
-
-    // Update algolia's index
-    movieAppAccess.forEach(appName => promises.push(indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord)));
+    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
 
     return Promise.all(promises)
 
