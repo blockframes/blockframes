@@ -6,6 +6,11 @@ export default class FestivalOrganizationListPage {
     cy.get('festival-organization-list', { timeout: TO.PAGE_LOAD });
   }
 
+  searchPartner(orgName: string) {
+    cy.get('mat-form-field input', {timeout: TO.PAGE_ELEMENT})
+      .type(`${orgName}{enter}`, {force: true});
+  }
+
   clickOnOrganization(orgName: string) {
     cy.get('festival-organization-list org-card', { timeout: TO.PAGE_LOAD })
       .contains(orgName).parent().parent().find('a').click();
