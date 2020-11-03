@@ -115,7 +115,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
           user: { firstName: user.firstName },
           title,
         };
-        console.log({ templateId, data, to: user.email });
+
         this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: user.email },
           app: 'financiers'
