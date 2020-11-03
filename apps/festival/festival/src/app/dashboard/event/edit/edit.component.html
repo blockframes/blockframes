@@ -9,8 +9,8 @@
             <!-- Title -->
             <mat-form-field appearance="outline">
               <mat-label>Select the title to display</mat-label>
-              <mat-select formControlName="titleId">
-                <mat-option *ngFor="let title of titles" [value]="title.id" [disabled]="!title.promotional.videos?.screener?.jwPlayerId">
+              <mat-select (selectionChange)="selectionChanged($event)">
+                <mat-option *ngFor="let title of titles" [value]="title" [disabled]="!title.promotional.videos?.screener?.jwPlayerId">
                   <ng-container *ngIf="title.promotional.videos?.screener?.jwPlayerId else noVideo">
                     {{ title.title.international }}
                   </ng-container>

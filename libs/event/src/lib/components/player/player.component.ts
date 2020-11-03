@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy, Input } from '@angular/core';
 import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
@@ -6,11 +6,12 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { loadJWPlayerScript } from '@blockframes/utils/utils';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
-declare const jwplayer: any;
+declare const jwplayer: Function;
 
 @Component({
-  selector: 'event-player',
+  selector: '[ref] media-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
@@ -20,20 +21,22 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
   private player: any;
   private timeout: number;
 
+  @Input() ref: string;
+  @Input() eventId: string;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
     private authQuery: AuthQuery,
     private mediaService: MediaService,
+    private movieService: MovieService,
     private functions: AngularFireFunctions,
   ) { }
 
   async initPlayer() {
 
-    const { id } = this.eventQuery.getActive();
-
     const callDeploy = this.functions.httpsCallable('privateVideo');
-    const { error, result } = await callDeploy({ eventId: id }).toPromise();
+    const { error, result } = await callDeploy({ ref: this.ref, eventId: this.eventId }).toPromise();
 
     if (!!error) {
       // if error is set, result will contain the error message
