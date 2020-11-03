@@ -28,7 +28,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private orgResultsState = new BehaviorSubject<Organization[]>([]);
 
-  public searchForm = new OrganizationSearchForm();
+  public searchForm = new OrganizationSearchForm('financiers');
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
