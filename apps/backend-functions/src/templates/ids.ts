@@ -46,5 +46,8 @@ export const templateIds = {
     attendEvent: {
       created: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5'
     }
+  },
+  financiers: {
+    invest: 'd-e902521de8684c57bbfa633bad88567a'
   }
 }

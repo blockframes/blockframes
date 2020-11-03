@@ -19,9 +19,11 @@
     <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
       <h1>Project Funding</h1>
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
-      <button mat-flat-button color="accent" (click)="openForm()">
-        Invest in this project
-      </button>
+      <ng-container *ngIf="orgs$ | async as orgs">
+        <button mat-flat-button color="accent" (click)="openForm(orgs)">
+          Invest in this project
+        </button>
+      </ng-container>
       <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing in cinema industry</a>
     </section>
 
@@ -29,7 +31,7 @@
 
 
   <!-- Contact partner -->
-  <ng-template #dialogTemplate let-form>
+  <ng-template #dialogTemplate let-data>
     <header>
       <h2>How much would you like to invest in this project ?</h2>
       <p class="mat-caption">
@@ -37,14 +39,13 @@
         If you are not ready to provide us with uch kind of information, just leave a message.
       </p>
     </header>
-    <mat-dialog-content>
-      <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail($event, movie)">
+    <mat-dialog-content *ngIf="data.form as form">
+      <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail(form.value, movie.title.international, data.orgs)">
         <mat-form-field appearance="outline">
           <mat-label>Subject</mat-label>
           <mat-select formControlName="subject" required>
             <mat-option></mat-option>
-            <mat-option value="set">I’m all set</mat-option>
-            <mat-option value="ready">Ready to invest</mat-option>
+            <mat-option value="set">I’m all set. Ready to invest</mat-option>
             <mat-option value="question">I have a question about the project</mat-option>
             <mat-option value="other">Other</mat-option>
           </mat-select>
