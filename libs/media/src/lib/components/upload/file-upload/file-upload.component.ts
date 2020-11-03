@@ -156,13 +156,7 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     this.form.markAsDirty();
   }
 
-  public delete() {
-    this.state = 'waiting';
-    this.form.patchValue({ ref: '' });
-    this.form.markAsDirty();
-  }
-
-  public reset(fileExplorer: HTMLInputElement) {
+  public delete(fileExplorer: HTMLInputElement) {
     this.form.patchValue({
       ref: '',
       blobOrFile: undefined,
