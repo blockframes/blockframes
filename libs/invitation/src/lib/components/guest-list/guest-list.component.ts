@@ -10,6 +10,9 @@ function filterGuest(invitation: Invitation, search: string) {
   return invitation.toUser?.email.toLowerCase().includes(search)
     || invitation.toUser?.firstName.toLowerCase().includes(search)
     || invitation.toUser?.lastName.toLowerCase().includes(search)
+    || invitation.fromUser?.email.toLowerCase().includes(search)
+    || invitation.fromUser?.firstName.toLowerCase().includes(search)
+    || invitation.fromUser?.lastName.toLowerCase().includes(search)
     || invitation.toOrg?.denomination.full.toLowerCase().includes(search)
     || invitation.toOrg?.denomination.public?.toLowerCase().includes(search)
 }
