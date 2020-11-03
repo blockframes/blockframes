@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { app, getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { app, getOrgAppAccess, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
@@ -64,11 +64,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = app.filter(a => {
-    if (org.appAccess[a].dashboard || org.appAccess[a].marketplace) {
-      return true;
-    }
-  });
+  const orgAppAccess = app.filter(a => modules.some(m => org.appAccess[a][m]));
 
   // Update algolia's index
   const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
