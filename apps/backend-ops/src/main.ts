@@ -11,6 +11,7 @@ import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from '.
 import { clearUsers, createUsers, printUsers, generateWatermarks, syncUsers } from './users';
 import { generateFixtures } from './generate-fixtures';
 import { prepareFirestoreRulesPreDeploy, restoreFirestoreRulesPostDeploy } from './firestore-rules';
+import { backup } from './admin';
 
 const args = process.argv.slice(2);
 const [cmd, ...flags] = args;
@@ -32,6 +33,8 @@ async function runCommand() {
     return generateFixtures();
   } else if (cmd === 'upgrade') {
     return upgrade();
+  } else if (cmd === 'backup') {
+    return backup();
   } else if (cmd === 'restore') {
     return restoreShortcut();
   } else if (cmd === 'migrate') {

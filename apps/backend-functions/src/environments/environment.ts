@@ -36,3 +36,5 @@ export const imgixToken = mockConfigIfNeeded('imgix', 'token');
 export const twilioAccountSid = mockConfigIfNeeded('twilio', 'account', 'sid');
 export const twilioApiKeySecret = mockConfigIfNeeded('twilio', 'api', 'key', 'secret');
 export const twilioApiKeySid = mockConfigIfNeeded('twilio', 'api', 'key', 'sid');
+
+export const enableDailyFirestoreBackup = false;

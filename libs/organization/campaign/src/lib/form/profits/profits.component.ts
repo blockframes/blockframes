@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieFormShellComponent } from '@blockframes/movie/form/shell/shell.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { allowedFiles } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'campaign-form-profits',
@@ -12,7 +13,10 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 export class CampaignFormProfitsComponent implements OnInit {
   storagePath: string;
   form = this.shell.getForm('campaign');
-  
+
+  public allowedFilesTypes = allowedFiles.pdf.mime;
+  public allowedFilesExtensions = allowedFiles.pdf.extension;
+
   constructor(
     private shell: MovieFormShellComponent,
     private route: ActivatedRoute,
@@ -21,7 +25,7 @@ export class CampaignFormProfitsComponent implements OnInit {
     this.dynTitle.setPageTitle('Return on Investment')
   }
 
-  
+
   ngOnInit() {
     const { movieId } = this.route.snapshot.params;
     this.storagePath = `campaigns/${movieId}/files.waterfall/`;
