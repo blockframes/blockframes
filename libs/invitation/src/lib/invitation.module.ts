@@ -12,6 +12,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [InvitationComponent],
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     InvitationListModule,
     ImageReferenceModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: InvitationComponent }]),
 
     // Material
