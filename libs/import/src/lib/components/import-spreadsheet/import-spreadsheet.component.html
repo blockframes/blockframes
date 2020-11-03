@@ -2,7 +2,7 @@
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>{{ pageTitle }} </h1>
 
-    <div fxLayout="column" fxLayoutAlign="center">
+    <div fxLayout="column" fxLayoutAlign="center" fxLayoutGap="8px">
       <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
         <mat-icon svgIcon="import"></mat-icon><span>Download our template to import in bulk</span>
       </button>
@@ -20,7 +20,7 @@
     </div>
   </section>
 
-  <section fxLayout="row" fxLayoutAlign="center center" *ngIf="isUserBlockframesAdmin">
+  <section fxLayout="row" fxLayoutAlign="center center" *ngIf="isUserBlockframesAdmin" class="type">
     <mat-form-field appearance="outline">
       <mat-label>Select import type</mat-label>
       <mat-select [formControl]="fileType">

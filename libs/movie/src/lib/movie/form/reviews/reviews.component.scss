@@ -24,10 +24,10 @@ mat-divider {
   margin-bottom: 36px;
 }
 
-span.mat-caption {
+div.toggle-btn {
   margin-bottom: 16px;
-}
 
-mat-button-toggle-group {
-  max-width: fit-content;
+  mat-button-toggle-group {
+    max-width: fit-content;
+  }
 }
