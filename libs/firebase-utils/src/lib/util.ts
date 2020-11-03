@@ -43,15 +43,18 @@ export function readJsonlFile(dbBackupPath: string) {
     .map((str) => JSON.parse(str) as JsonlDbRecord);
 }
 
+let missingVarsMessageShown = false;
+
 export function warnMissingVars(): void | never {
   const warn = (key: string, msg: string) => {
     console.warn(`Please ensure the following variable is set in .env : ${key}`);
     console.warn(`More info: ${msg}\n`);
   };
   // Use '||' instead of '??' to detect empty string
-  requiredVars.map(
+  if (!missingVarsMessageShown) requiredVars.map(
     ({ key, msg }: { key: string; msg: string }) => process.env?.[key] || warn(key, msg)
   );
+  missingVarsMessageShown = true;
 }
 
 export function catchErrors<T>(fn: (...args: any[]) => T): T | undefined {
@@ -81,14 +84,7 @@ export function loadAdminServices(): AdminServices {
   config();
   warnMissingVars();
 
-  let cert: string | admin.ServiceAccount;
-  try {
-    // If service account is a stringified json object
-    cert = JSON.parse(process.env.FIREBASE_CI_SERVICE_ACCOUNT as string);
-  } catch (err) {
-    // If service account is a path
-    cert = process.env.FIREBASE_CI_SERVICE_ACCOUNT as admin.ServiceAccount;
-  }
+  const cert = getKeyFile(process.env.FIREBASE_CI_SERVICE_ACCOUNT);
 
   if (!admin.apps.length) {
     admin.initializeApp({
@@ -120,3 +116,14 @@ export function loadAdminServices(): AdminServices {
 }
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+function getKeyFile(keyFile: string): admin.ServiceAccount {
+  try {
+    // If service account is a stringified json object
+    return JSON.parse(keyFile) as admin.ServiceAccount;
+  } catch (err) {
+    // If service account is a path
+    // tslint:disable-next-line: no-eval
+    return eval('require')(keyFile) as admin.ServiceAccount;
+  }
+}

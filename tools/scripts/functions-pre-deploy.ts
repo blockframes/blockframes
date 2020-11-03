@@ -1,4 +1,7 @@
 import { execSync } from 'child_process';
+import { config } from 'dotenv';
+
+config()
 
 function execLog(cmd: string) {
   const output = execSync(cmd);

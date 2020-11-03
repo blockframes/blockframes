@@ -1,0 +1,27 @@
+<div fxLayout="column" fxLayoutGap="24px">
+  <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
+    <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
+      <h3 type>Logo</h3>
+      <p class="mat-body-2">Recommended : 512 x 512 px</p>
+      <p class="mat-caption">Accepted Formats : jpg, png</p>
+    </drop-cropper>
+  </ng-container>
+
+  <ng-container *ngIf="activeDirectory.type === 'file' && !!this.activeForm">
+    <file-upload
+      [form]="getSingleMediaForm()"
+      [storagePath]="this.activeDirectory.storagePath"
+      [accept]="['.pdf']"
+      [filePrivacy]="this.activeDirectory.privacy"
+      [types]="['application/pdf']">
+      <h3 type>Upload File</h3>
+      <p class="mat-caption" format>Accepted Formats: .pdf</p>
+    </file-upload>
+  </ng-container>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <button mat-flat-button color="primary" (click)="update()">
+      <span>Update</span>
+      <mat-icon svgIcon="send"></mat-icon>
+    </button>
+  </div>
+</div>
