@@ -1,18 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, Pipe } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CollectionReference } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Campaign, CampaignService } from '@blockframes/campaign/+state';
-import { mainRoute, additionalRoute, artisticRoute, productionRoute } from '@blockframes/movie/marketplace';
 import { RouteDescription } from '@blockframes/utils/common-interfaces';
+import { SendgridService } from '@blockframes/utils/emails/sendgrid.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { shareReplay, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { UserService } from '@blockframes/user/+state';
 
-interface EmailTemplate {
+interface EmailData {
   subject: string;
   from: string;
   to: string;
@@ -61,34 +65,62 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
+    private authQuery: AuthQuery,
+    private userService: UserService,
     private orgService: OrganizationService,
     private campaignService: CampaignService,
     private dialog: MatDialog,
+    private sendgrid: SendgridService,
     public router: Router
   ) {}
 
   ngOnInit() {
+    const orgQueryFn = (movieId: string, ref: CollectionReference) => ref
+      .where('movieIds', 'array-contains', movieId)
+      .where('appAccess.financiers.dashboard', '==', true);
+
     this.movie$ = this.movieQuery.selectActive();
     this.orgs$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
+      switchMap(movieId => this.orgService.getValue(ref => orgQueryFn(movieId, ref))),
+      shareReplay(1)
     );
     this.campaign$ = this.movieQuery.selectActiveId().pipe(
       switchMap(id => this.campaignService.valueChanges(id))
     );
   }
 
-  openForm() {
+  openForm(orgs: Organization[]) {
+    const form = new FormGroup({
+      subject: new FormControl('', Validators.required),
+      from: new FormControl(),
+      to: new FormControl(),
+      message: new FormControl(),
+    });
     this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      data: new FormGroup({
-        subject: new FormControl('', Validators.required),
-        from: new FormControl(0),
-        to: new FormControl(0),
-        message: new FormControl(),
-      })
+      data: { orgs, form }
     });
   }
 
-  sendEmail(email: EmailTemplate, movie: Movie) {
+  async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
     this.dialogRef.close();
+    const templateId = 'd-e902521de8684c57bbfa633bad88567a';
+    const { firstName, lastName, email } = this.authQuery.user;
+
+    for (const org of orgs) {
+      const users = await this.userService.getValue(org.userIds);
+      for (const user of users) {
+        const data = {
+          ...emailData,
+          investor: { firstName, lastName, email },
+          user: { firstName: user.firstName },
+          title,
+        };
+        console.log({ templateId, data, to: user.email });
+        this.sendgrid.sendWithTemplate({
+          request: { templateId, data, to: user.email },
+          app: 'financiers'
+        });
+      }
+    }
   }
 }
