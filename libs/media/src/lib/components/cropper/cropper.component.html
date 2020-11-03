@@ -7,8 +7,8 @@
       <img class="add-files-icon" asset="add_files.webp" alt="upload image">
     </button>
     <ng-content select="[type]"></ng-content>
-    <ng-content select="[dimensions]"></ng-content>
-    <ng-content select="[format]"></ng-content>
+    <p class="mat-body-2">{{ cropDimensions }}</p>
+    <p class="mat-caption">Accepted Formats: .jpg, .png</p>
     <p class="mat-caption">Drag and drop a file here or <a (click)="fileUploader.click()">browse</a></p>
   </article>
 

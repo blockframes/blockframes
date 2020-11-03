@@ -28,7 +28,6 @@ import {
   getId,
   isHostedMediaForm,
   isHostedMediaWithMetadataForm,
-  MediaFormList,
   MediaFormTypes,
   SubDirectoryFile,
   SubDirectoryImage

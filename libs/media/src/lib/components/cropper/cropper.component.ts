@@ -61,6 +61,7 @@ export class CropperComponent implements OnInit {
   file: File;
   croppedImage: string;
   cropRatio: number;
+  cropDimensions: string;
   parentWidth: number;
   prev: CropStep;
   previewUrl$ = new BehaviorSubject<string | SafeUrl>('');
@@ -71,6 +72,23 @@ export class CropperComponent implements OnInit {
 
   @Input() set ratio(ratio: MediaRatioType) {
     this.cropRatio = mediaRatio[ratio];
+
+    switch (ratio) {
+      case 'square':
+        this.cropDimensions = 'Recommended : 512 x 512 px';
+        break;
+      case 'poster':
+        this.cropDimensions = 'Ratio : 3:4';
+        break;
+      case 'banner':
+        this.cropDimensions = 'Ratio : 16:9';
+        break;
+      case 'still':
+        this.cropDimensions = 'Ratio : 16/10';
+        break;
+      default:
+        throw new Error('Unknown ratio');
+    }    
   }
   @Input() form?: HostedMediaForm;
   @Input() setWidth?: number;

@@ -54,8 +54,6 @@
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'poster'" ratio="poster" [form]="form.poster">
           <h3 type>Film Poster</h3>
-          <p class="mat-body-2" dimensions>Ratio: 3:4</p>
-          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
       </article>
 
@@ -67,8 +65,6 @@
         </p>
         <drop-cropper [storagePath]="movieId | ref: 'movie' : 'banner'" ratio="banner" [form]="form.banner">
           <h3 type>Film Banner Image</h3>
-          <p class="mat-body-2" dimensions>Ratio : 16:9</p>
-          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
         </drop-cropper>
       </article>
     </section>
