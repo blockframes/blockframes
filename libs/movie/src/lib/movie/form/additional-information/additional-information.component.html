@@ -133,16 +133,39 @@
         <mat-button-toggle-group [formControl]="form.certifications" multiple name="certifications"
           aria-label="Certifications">
           <ng-container *ngFor="let certification of certifications; index as i">
-            <mat-button-toggle [attr.test-id]= "'certification' + (i + 1)" [value]="certification" [matTooltip]="certification?.hint"
-              [matTooltipDisabled]="!certification?.hint">
+            <mat-button-toggle [attr.test-id]= "'certification' + (i + 1)" [value]="certification">
               {{ certification | toLabel: 'certifications' }}
             </mat-button-toggle>
           </ng-container>
         </mat-button-toggle-group>
       </article>
       <span class="mat-caption">Select all that apply</span>
+
+      <mat-divider></mat-divider>
     </section>
 
 
+    <section id="audience-goals" fxLayout="column">
+      <h3>Positioning</h3>
+      <bf-form-list [form]="audience.get('targets')" buttonText="Add a Target">
+        <ng-template itemRef let-target>{{ target }}</ng-template>
+        <ng-template formView let-targetForm>
+          <div fxLayout>
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Target Audience (optional)</mat-label>
+              <input test-id="target-audience" matInput type="text" placeholder="Target Audience" [formControl]="targetForm" />
+            </mat-form-field>
+          </div>
+        </ng-template>
+      </bf-form-list>
+
+      <mat-form-field appearance="outline" fxFlex>
+        <mat-label>Social Responsability Goals (optional)</mat-label>
+        <mat-select test-id="goal" [formControl]="audience.get('goals')" multiple>
+          <mat-option *ngFor="let goal of staticGoals" [value]="goal">{{ goal | toLabel: 'socialGoals' }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </section>
   </ng-container>
 </tunnel-page>
