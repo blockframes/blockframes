@@ -40,9 +40,10 @@
   <section fxLayout="column" fxLayoutAlign="center center">
 
     <ng-container *ngIf="sheets.length; else fileUpload">
-      <span>
-        <mat-icon svgIcon="attachment"></mat-icon> File uploaded, click on "Start import" to continue!
-      </span>
+      <p>
+        <mat-icon svgIcon="attachment"></mat-icon>
+        <span>File uploaded, click on "Start import" to continue!</span>
+      </p>
     </ng-container>
 
     <ng-template #fileUpload>
