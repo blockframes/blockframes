@@ -5,7 +5,7 @@ import { Campaign } from "./campaign.model";
 import { CampaignState, CampaignStore } from "./campaign.store";
 import { removeUndefined } from '@blockframes/utils/helpers';
 import { Movie, MovieService } from "@blockframes/movie/+state";
-import { combineLatest, Observable } from "rxjs";
+import { combineLatest, of } from "rxjs";
 import { map } from "rxjs/operators";
 
 export interface MovieCampaign extends Movie {
@@ -31,11 +31,15 @@ export class CampaignService extends CollectionService<CampaignState> {
 
   /** Query movies with their campaign */
   queryMoviesCampaign(ids: string[]) {
-    const query = (id: string) => combineLatest([
-      this.movieService.valueChanges(id),
-      this.valueChanges(id),
-    ]).pipe(map(([movie, campaign]) => ({ ...movie, campaign })));
-    return combineLatest(ids.map(query))
+    if (ids.length) {
+      const query = (id: string) => combineLatest([
+        this.movieService.valueChanges(id),
+        this.valueChanges(id),
+      ]).pipe(map(([movie, campaign]) => ({ ...movie, campaign })));
+      return combineLatest(ids.map(query))
+    } else {
+      return of([]);
+    }
   }
 
   create(movieId: string) {
