@@ -1,5 +1,5 @@
-<ng-container *ngIf="isDataLoaded; else loading">
-  <ng-container *ngIf="(invitations$ | async).length; else noFeed">
+<ng-container *ngIf="invitations$ | async as invitations; else loading">
+  <ng-container *ngIf="invitations.length else empty">
     <header fxLayout="row" fxLayoutAlign="space-between start">
       <h1>Invitations</h1>
       <button mat-button test-id="invitation-accept-all" (click)="acceptAll()">
@@ -15,7 +15,7 @@
     <mat-spinner color="primary"></mat-spinner>
   </article>
 </ng-template>
-<ng-template #noFeed>
+<ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no invitation yet.</h1>
     <p>You haven't received any invitations at this time.</p>
