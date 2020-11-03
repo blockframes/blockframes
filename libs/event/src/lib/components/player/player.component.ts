@@ -1,12 +1,10 @@
 import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy, Input } from '@angular/core';
-import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { ImageParameters } from '@blockframes/media/directives/image-reference/imgix-helpers';
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { loadJWPlayerScript } from '@blockframes/utils/utils';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 declare const jwplayer: Function;
 
@@ -26,10 +24,8 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private eventQuery: EventQuery,
     private authQuery: AuthQuery,
     private mediaService: MediaService,
-    private movieService: MovieService,
     private functions: AngularFireFunctions,
   ) { }
 
