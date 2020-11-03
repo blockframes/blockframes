@@ -71,7 +71,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   });
 
   // Update algolia's index
-  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(orgRecord));
+  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
 
   return Promise.all(promises)
 }
