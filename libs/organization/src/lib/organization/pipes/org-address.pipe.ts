@@ -2,7 +2,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Organization, AddressSet } from '../+state';
 import { territories } from '@blockframes/utils/static-model';
 
-@Pipe({ name: 'orgAddress', pure: true })
+@Pipe({ name: 'orgAddress' })
 export class OrgAddressPipe implements PipeTransform {
   transform(org: Organization, set: keyof AddressSet = 'main') {
     const { street, zipCode, city, country } = org.addresses[set];
@@ -11,7 +11,7 @@ export class OrgAddressPipe implements PipeTransform {
       return `${street}, ${zipCode} ${city}, ${countryLabel}`;
     }
     if (!!country) {
-      return country
+      return territories[country];
     }
     return 'No address provided';
   }
