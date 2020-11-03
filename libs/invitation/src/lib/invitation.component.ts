@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { InvitationQuery, InvitationService } from './+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { Subscription } from 'rxjs';
@@ -15,11 +15,13 @@ export class InvitationComponent implements OnInit, OnDestroy {
   invitations$ = this.query.toMe();
 
   private sub: Subscription;
+  public isDataLoaded = false;
 
   constructor(
     private query: InvitationQuery,
     private service: InvitationService,
     private dynTitle: DynamicTitleService,
+    private cdr: ChangeDetectorRef,
   ) { }
 
   ngOnInit() {
@@ -27,6 +29,8 @@ export class InvitationComponent implements OnInit, OnDestroy {
       !!invitations.length ?
         this.dynTitle.setPageTitle('Invitations List') :
         this.dynTitle.setPageTitle('Invitations List', 'Empty');
+        this.isDataLoaded = true;
+        this.cdr.markForCheck();
     });
   }
 

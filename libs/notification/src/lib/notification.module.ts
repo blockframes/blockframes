@@ -7,6 +7,7 @@ import { ImageReferenceModule } from '@blockframes/media/directives/image-refere
 import { NotificationComponent } from './notification.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [NotificationComponent],
@@ -17,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     ImageReferenceModule,
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: NotificationComponent }])
   ]
 })
