@@ -9,7 +9,7 @@ import { loadJWPlayerScript } from '@blockframes/utils/utils';
 declare const jwplayer: Function;
 
 @Component({
-  selector: '[ref] media-player',
+  selector: '[ref] event-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
