@@ -46,7 +46,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
     const organizationSearch = createOrganizationSearch(search);
     const control = createOrganizationSearchControl(organizationSearch);
     super(control);
-    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameMovies[app]);
+    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
   }
 
 
