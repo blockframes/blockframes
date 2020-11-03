@@ -1,5 +1,4 @@
 [
-  { "key": "ADMIN_PASSWORD", "msg": "Used to authenticate various admin tasks, please enter." },
   { "key": "SENDGRID_API_KEY", "msg": "API key for Sendgrid, the emailer service, is missing." },
   { "key": "ALGOLIA_APP_ID", "msg": "API key for Algolia is missing." },
   { "key": "ALGOLIA_API_KEY", "msg": "API key for Algolia is missing." },

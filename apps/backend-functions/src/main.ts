@@ -9,7 +9,6 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
-import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
@@ -20,7 +19,7 @@ import { sendMailAsAdmin as _sendMailAsAdmin, sendMailWithTemplate as _sendMailW
 import { linkFile, getMediaToken as _getMediaToken } from './media';
 import { onEventDelete } from './event';
 import { skipInMaintenance } from '@blockframes/firebase-utils';
-import { RuntimeOptions, region } from 'firebase-functions';
+import { RuntimeOptions } from 'firebase-functions';
 import { getTwilioAccessToken } from './twilio';
 
 //--------------------------------
@@ -30,7 +29,7 @@ import { getTwilioAccessToken } from './twilio';
 /**
  * Runtime options for heavy functions
  */
-const heavyConfig: RuntimeOptions = {
+export const heavyConfig: RuntimeOptions = {
   timeoutSeconds: 300,
   memory: '1GB',
 };
@@ -247,9 +246,12 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 export const onFileUpload = functions.storage.object().onFinalize(skipInMaintenance(linkFile));
 
 /**
- * Trigger: REST call to the /admin app
- *
- *  - Backups / Restore the database
- *  - Quorum Deploy & setup a movie smart-contract
+ * This is a scheduled function which runs daily backup if complied with production configuration
  */
-export const admin = region('us-central1').runWith(heavyConfig).https.onRequest(adminApp);
+export { dailyFirestoreBackup } from './pubsub/daily-firestore-backup';
+
+/**
+ * This is a pubsub trigger function that allows backup, restore and clear to be called from anywhere
+ * and only by authenticated clients
+ */
+export { firestorePubsub } from './pubsub/firestore';
