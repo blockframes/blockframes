@@ -1,0 +1,17 @@
+
+<ng-container *ngIf="loading$ | async as loading; else ready">
+  <mat-spinner></mat-spinner>
+</ng-container>
+<ng-template #ready>
+  <event-pdf-viewer [ref]="ref" [control]="control">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <button mat-icon-button (click)="previous()" [disabled]="previousDisable$ | async">
+        <mat-icon svgIcon="arrow_left"></mat-icon>
+      </button>
+      {{ control.currentPage }} / {{ control.totalPages }}
+      <button mat-icon-button (click)="next()" [disabled]="nextDisable$ | async">
+        <mat-icon svgIcon="arrow_right"></mat-icon>
+      </button>
+    </div>
+  </event-pdf-viewer>
+</ng-template>
