@@ -22,6 +22,7 @@ import { NOW } from '../../fixtures/data';
 import { EVENTS } from '@blockframes/e2e/utils';
 import { User, USER } from '@blockframes/e2e/fixtures/users';
 import { Orgs } from '@blockframes/e2e/fixtures/orgs';
+import { TO } from '@blockframes/e2e/utils';
 
 let tomorrow, twodayslater;
 const userFixture = new User();
@@ -115,15 +116,10 @@ describe('User create a screening', () => {
     acceptCookie();
 
     const p1 = new FestivalMarketplaceHomePage();
-    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
-    // Wait notifications
-    cy.wait(8000);
-    cy.log(`=>Test Notification from {${OrgName}} exists`);
-    pn.verifyNotification(OrgName, true); 
 
     p1.clickOnMenu();
     const p2: FestivalOrganizationListPage = p1.selectSalesAgents();
-    cy.wait(5000);
+    cy.wait(TO.SLOW_OP);
     p2.searchPartner(OrgName);
     const p3: FestivalMarketplaceOrganizationTitlePage = p2.clickOnOrganization(OrgName);
     cy.log(`[A]: schedule screening of {${screeningEvent}}`);
@@ -132,8 +128,13 @@ describe('User create a screening', () => {
     p4.clickOnMenu();
     const p5: FestivalMarketplaceCalendarPage = p4.selectCalendar();
     const p6: FestivalMarketplaceEventPage = p5.clickOnEvent(movieTitle);
-    //cy.wait(5000);
     cy.log(`{${movieTitle}} must exist in user schedule! | [A]`);
     p6.assertScreeningExist(movieTitle);
+
+    const pn: FestivalMarketplaceNotificationsPage = p1.goToNotifications();
+    // Wait notifications
+    cy.wait(TO.THREE_SEC);
+    cy.log(`=>Test Notification from {${OrgName}} exists`);
+    pn.verifyNotification(OrgName, true); 
   });
 });
