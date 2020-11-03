@@ -11,7 +11,7 @@ import { organizationCreated, organizationWasAccepted, organizationRequestedAcce
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, module, getAppName } from '@blockframes/utils/apps';
+import { app, modules, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
@@ -71,7 +71,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => module.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
+    return app.some(a => modules.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
   }
   return false;
 }
