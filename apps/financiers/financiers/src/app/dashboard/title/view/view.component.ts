@@ -17,12 +17,16 @@ const links: RouteDescription[] = [
     label: 'Main Information'
   },
   {
+    path: 'production',
+    label: 'Production Information'
+  },
+  {
     path: 'artistic',
     label: 'Artistic Information'
   },
   {
-    path: 'production',
-    label: 'Production Information'
+    path: 'additional',
+    label: 'Additional Information'
   },
   {
     path: 'financing',

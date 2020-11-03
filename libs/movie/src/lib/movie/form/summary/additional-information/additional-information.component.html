@@ -123,3 +123,35 @@
     <ng-template let-certs>{{ certs | toLabel: 'certifications' }}</ng-template>
   </missing-control>
 </article>
+
+
+<!-- AUDIENCE AND GOALS -->
+<article>
+  <h6>
+    Positioning
+    <a mat-icon-button [routerLink]="link" fragment="audience-goals">
+      <mat-icon svgIcon="pencil" color="primary"></mat-icon>
+    </a>
+  </h6>
+  <ul>
+    <li>
+      <strong>Target Audience </strong>
+      <missing-control [control]="goals.get('targets')" [link]="link">
+        <ng-template let-targets>
+          <ng-container *ngFor="let target of targets; let last = last">
+            <span>{{ target | titlecase }}{{ last ? '' : ', ' }}</span>
+          </ng-container>
+        </ng-template>
+      </missing-control>
+      <br />
+      <strong>Social Responsibility Goals </strong>
+      <missing-control [control]="goals.get('goals')" [link]="link">
+        <ng-template let-goals>
+          <ng-container *ngFor="let goal of goals; let last = last">
+            <span>{{ goal | toLabel: 'socialGoals' }}{{ last ? '' : ', ' }}</span>
+          </ng-container>
+        </ng-template>
+      </missing-control>
+    </li>
+  </ul>
+</article>

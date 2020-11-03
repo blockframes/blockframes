@@ -6,6 +6,6 @@ export const additionalRoute: RouteDescription = {
   requireKeys: [
     'estimatedBudget', 'originalRelease', 'boxOffice', 'rating',
     'format', 'formatQuality', 'color', 'soundFormat',
-    'certifications'
+    'certifications', 'audience'
   ],
 }
