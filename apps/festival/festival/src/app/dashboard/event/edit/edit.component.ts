@@ -15,7 +15,6 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FileSelectorComponent } from '@blockframes/media/components/file-selector/file-selector.component';
-import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'festival-event-edit',
@@ -113,14 +112,5 @@ export class EditComponent implements OnInit, OnDestroy {
       this.files.patchAllValue(result);
       this.cdr.markForCheck();
     });
-  }
-
-  selectionChanged(change: MatSelectChange) {
-    const movie = change.value as Movie;
-    const ref = movie.promotional.videos?.screener?.ref ?? '';
-    this.form.meta.patchValue({
-      titleId: movie.id,
-      file: ref
-    })
   }
 }

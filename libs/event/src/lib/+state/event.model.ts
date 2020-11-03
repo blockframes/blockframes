@@ -78,7 +78,6 @@ export function createScreening(screening: Partial<Screening>): Screening {
   return {
     titleId: '',
     description: '',
-    file: '',
     ...screening
   }
 }
