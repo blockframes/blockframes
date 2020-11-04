@@ -21,25 +21,17 @@
     </div>
   </ng-template>
 
-  <header fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="start start" class="dark-contrast-theme"
+  <header fxLayout="column" fxLayoutGap="20px" class="dark-contrast-theme"
     bgAsset="profil_banner.webp">
     <a mat-icon-button (click)="goBack()">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="org-info" fxLayout="row" fxLayoutGap="20px">
       <img [ref]="org.logo" asset="empty_organization.webp" alt="organization logo">
-      <article fxLayout="column" fxLayoutAlign="start start">
+      <article fxFlex fxLayout="column" fxLayoutAlign="start start">
         <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
         <span class="mat-display-2">{{ org | orgName }}</span>
-        <h2>
-          <span>{{ org.addresses.main.street | titlecase }}</span>
-          <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-          <span>{{ org.addresses.main.zipCode | titlecase }}</span>
-          <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-          <span>{{ org.addresses.main.city | titlecase }}</span>
-          <ng-container *ngIf="org.addresses.main.city && org.addresses.main.country">, </ng-container>
-          <span>{{ org.addresses.main.country | toLabel: 'territories' }}</span>
-        </h2>
+        <h2>{{ org | orgAddress }}</h2>
         <p class="mat-body-2">{{ org.description }}</p>
         <ng-container *ngIf="org.email">
           <a mat-stroked-button color="primary"

@@ -5,9 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 // Components
 import { MemberAddComponent } from './member-add.component';
 
-// Blockframes
-import { FormListModule } from '@blockframes/ui/form/list/form-list.module';
-
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +13,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -25,7 +23,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    FormListModule,
     // Material
     MatButtonModule,
     MatIconModule,
@@ -33,6 +30,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
+    MatChipsModule,
   ],
   exports: [
     MemberAddComponent
