@@ -22,11 +22,9 @@ export class CardComponent {
   constructor(private breakpointsService: BreakpointsService) { }
 
   get placeholderAsset() {
-    if (this.size === 'banner') {
-      return `empty_slider.webp`;
-    } else {
-      return `empty_poster.webp`;
-    }
+    return this.size === 'banner'
+      ? 'empty_banner.webp'
+      : 'empty_poster.webp';
   }
 }
 
