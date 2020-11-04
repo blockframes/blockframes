@@ -10,7 +10,7 @@
           <h6>{{ movie.directors | displayName }}</h6>
           <p>
             <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
-            <span *ngIf="movie.originCountries.length && movie.release.year">, </span>
+            <span *ngIf="movie.originCountries.length && movie.release.year"> - </span>
             <span>{{ movie.release.year }}</span>
           </p>
         </article>
