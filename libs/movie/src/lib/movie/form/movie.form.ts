@@ -560,16 +560,16 @@ type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
 // ------------------------------
 
 export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
-  constructor(runningTime?: Movie['runningTime']) {
-    super(createRunningTimeFormControl(runningTime), [runningTimeRequired]);
+  constructor(runningTime?: Movie['runningTime'], validators: ValidatorFn[] = []) {
+    super(createRunningTimeFormControl(runningTime), [...validators, runningTimeRequired]);
   }
 }
 
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
   const { time, status } = createRunningTime(runningTime);
   return {
-    time: new FormControl(time, [Validators.min(1)]),
-    status: new FormControl(status),
+    time: new FormControl(time, [Validators.min(1), Validators.required]),
+    status: new FormControl(status, [Validators.required]),
   }
 }
 
