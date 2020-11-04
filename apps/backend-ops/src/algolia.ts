@@ -17,33 +17,39 @@ import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 
 // TODO MIGRATE TO ALGOLIA v4 #2554
 
-export async function upgradeAlgoliaOrgs() {
+export async function upgradeAlgoliaOrgs(appConfig?: App) {
 
-  // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = {
-    searchableAttributes: ['name'],
-    attributesForFaceting: [
-      'appAccess',
-      'appModule',
-      'name',
-      'country'
-    ],
-  };
-  await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
-  await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
-
-  const { db } = loadAdminServices();
-  const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
-  for await (const orgs of orgsIterator) {
-    const promises = orgs.map(org => {
-      return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
-    });
-
+  if (!appConfig) {
+    const promises = app.map(upgradeAlgoliaMovies);
     await Promise.all(promises);
-    console.log(`chunk of ${orgs.length} orgs processed...`);
-  }
+  } else {
 
-  console.log('Algolia Orgs index updated with success !');
+    // reset config, clear index and fill it up from the db (which is the only source of truth)
+    const config = {
+      searchableAttributes: ['name'],
+      attributesForFaceting: [
+        'appAccess',
+        'appModule',
+        'name',
+        'country'
+      ],
+    };
+    await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
+    await clearIndex(algolia.indexNameOrganizations[appConfig], process.env['ALGOLIA_API_KEY']);
+
+    const { db } = loadAdminServices();
+    const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
+    for await (const orgs of orgsIterator) {
+      const promises = orgs.map(org => {
+        return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
+      });
+
+      await Promise.all(promises);
+      console.log(`chunk of ${orgs.length} orgs processed...`);
+    }
+
+    console.log('Algolia Orgs index updated with success !');
+  }
 }
 
 export async function upgradeAlgoliaMovies(appConfig?: App) {
