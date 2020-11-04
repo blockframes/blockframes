@@ -1,10 +1,10 @@
-import { algolia } from '@env';
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.form';
 import { legalRoles, subLicensorRoles, contractStatus } from '@blockframes/utils/static-model';
+import { AlgoliaIndex } from '@blockframes/utils/algolia';
 
 interface PartyDialogData {
   title: string,
@@ -23,7 +23,7 @@ export class EditPartyComponent implements OnInit {
   public statuses = contractStatus;
   public staticRoles = legalRoles;
   public staticSubRoles = subLicensorRoles;
-  public algoliaOrg = algolia.indexNameOrganizations;
+  public algoliaOrg: AlgoliaIndex = 'org';
   public resetInput = false;
 
   constructor(

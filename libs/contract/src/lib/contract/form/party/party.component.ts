@@ -4,6 +4,7 @@ import { legalRoles, subLicensorRoles } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { AlgoliaIndex } from '@blockframes/utils/algolia';
 
 @Component({
   selector: '[form] contract-form-party',
@@ -20,7 +21,7 @@ export class ContractFormPartyComponent {
     this._hasRole = coerceBooleanProperty(value);
   }
 
-  public algoliaOrg = algolia.indexNameOrganizations;
+  public algoliaOrg: AlgoliaIndex = 'org';
 
   public staticRoles = Object.keys(legalRoles).filter(role => {
     const wantedRoles = ['licensee', 'licensor'];

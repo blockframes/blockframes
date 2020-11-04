@@ -3,6 +3,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { AlgoliaIndex } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'organization-find',
@@ -13,7 +14,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 
 export class OrganizationFindComponent {
   private orgId: string;
-  public orgIndex = algolia.indexNameOrganizations;
+  public orgIndex: AlgoliaIndex = 'org';
 
   constructor(
     private snackBar: MatSnackBar,
