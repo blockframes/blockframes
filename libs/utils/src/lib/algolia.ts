@@ -102,7 +102,8 @@ export interface AlgoliaRecordOrganization extends AlgoliaRecord {
   name: string,
   appAccess: App[],
   appModule: Module[],
-  country: Territory
+  country: Territory,
+  lineUp: number
 }
 
 export interface AlgoliaRecordMovie extends AlgoliaRecord {

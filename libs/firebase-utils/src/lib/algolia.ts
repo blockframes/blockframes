@@ -60,11 +60,12 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     name: orgName(org),
     appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
-    country: org.addresses.main.country
+    country: org.addresses.main.country,
+    lineUp: org['lineUp'] ?? 0
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = app.filter(a => modules.some(m => org.appAccess[a][m]));
+  const orgAppAccess = findOrgAppAccess(org)
 
   // Update algolia's index
   const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
@@ -178,4 +179,8 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
     console.error(error);
     return new Promise(res => res(true));
   }
+}
+
+export function findOrgAppAccess(org: OrganizationDocument) {
+  return app.filter(a => modules.some(m => !org.appAccess[a][m]));
 }
