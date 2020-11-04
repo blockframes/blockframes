@@ -6,6 +6,7 @@ import { HostedMediaForm } from '@blockframes/media/form/media.form';
 import { isMediaForm } from "@blockframes/media/+state/media.model";
 import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
+import { AllowedFileType } from "@blockframes/utils/utils";
 
 interface DirectoryBase {
   name: string;
@@ -33,6 +34,7 @@ export interface SubDirectoryImage extends DirectoryBase, FileDirectoryBase {
 }
 
 export interface SubDirectoryFile extends DirectoryBase, FileDirectoryBase {
+  acceptedFileType: AllowedFileType
   type: 'file';
 }
 

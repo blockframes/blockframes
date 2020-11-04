@@ -16,8 +16,7 @@
     </div>
     <ng-container *ngIf="!isMnemonic; else: mnemonicImport">
       <file-upload
-        [accept]="['.json']"
-        [types]="['application/json']"
+        allowedFileType="json"
         (uploaded)="importedJson($event)"
       ></file-upload>
     </ng-container>

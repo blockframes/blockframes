@@ -9,8 +9,8 @@
       </button>
 
     </label>
-    <ng-content select="[type]"></ng-content>
-    <ng-content select="[format]"></ng-content>
+    <ng-content select="[title]"></ng-content>
+    <p class="mat-caption">Accepted Formats: {{ accept.join(', ') }}</p>
     <p class="mat-caption">Drag and drop a file here or
       <a (click)="fileExplorer.click()">browse</a>
     </p>

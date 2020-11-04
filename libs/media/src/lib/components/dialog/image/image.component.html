@@ -2,9 +2,7 @@
 <mat-divider></mat-divider>
 <form [formGroup]="data.form" fxLayout="column" fxLayoutGap="24px">
   <drop-cropper [ratio]="data.ratio" [storagePath]="data.storagePath" [form]="data.form">
-    <h3 type>Logo</h3>
-    <p class="mat-body-2">Recommended : 512 x 512 px</p>
-    <p class="mat-caption">Accepted Formats : jpg, png</p>
+    <h3 title>Logo</h3>
   </drop-cropper>
   <section fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">
