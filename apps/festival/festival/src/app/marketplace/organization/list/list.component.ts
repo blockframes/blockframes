@@ -22,7 +22,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   private orgResultsState = new BehaviorSubject<Organization[]>([]);
 
-  public searchForm = new OrganizationSearchForm();
+  public searchForm = new OrganizationSearchForm('festival');
 
   public loading$ = new BehaviorSubject<boolean>(false);
 
@@ -41,7 +41,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
-    const search = createOrganizationSearch({ appAccess: ['festival'], appModule: ['marketplace'] });
+    const search = createOrganizationSearch({ appModule: ['marketplace'] });
     this.searchForm.setValue({ ...search, country: '' });
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),

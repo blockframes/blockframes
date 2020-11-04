@@ -50,10 +50,8 @@
         <br />
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-upload [form]="form.get('files').get('waterfall')" [storagePath]="storagePath"
-        [accept]="allowedFilesExtensions" [types]="allowedFilesTypes">
-        <h3 type>Upload Files</h3>
-        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      <file-upload [form]="form.get('files').get('waterfall')" [storagePath]="storagePath" allowedFileType="pdf">
+        <h3 title>Upload File</h3>
       </file-upload>
     </section>
   </ng-container>

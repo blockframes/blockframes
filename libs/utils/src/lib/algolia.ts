@@ -1,24 +1,15 @@
 import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { InjectionToken } from '@angular/core';
 import { GetKeys, Language, SocialGoal, Territory } from './static-model';
 import { FormList, Validator } from './form';
 import { FormControl } from '@angular/forms';
 import { ProductionStatus } from './static-model';
-import { App, Module } from './apps';
+import { Module } from './apps';
 import { MovieRunningTime, MovieRelease } from '@blockframes/movie/+state/movie.firestore';
 
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
-
-export const OrganizationsIndex = new InjectionToken<Index>(
-  'Algolia index to search organizations',
-  {
-    providedIn: 'root',
-    factory: () => searchClient.initIndex(algolia.indexNameOrganizations)
-  }
-);
 
 /** An Organization search result coming from Algolia */
 export interface OrganizationAlgoliaResult {
@@ -41,7 +32,7 @@ export const algoliaIndex = {
   org: algolia.indexNameOrganizations,
   movie: {
     financiers: algolia.indexNameMovies.financiers,
-    catalog: algolia.indexNameMovies.catalog ,
+    catalog: algolia.indexNameMovies.catalog,
     festival: algolia.indexNameMovies.festival
   }
 }
@@ -108,9 +99,9 @@ interface AlgoliaRecord {
 }
 export interface AlgoliaRecordOrganization extends AlgoliaRecord {
   name: string,
-  appAccess: App[],
   appModule: Module[],
-  country: Territory
+  country: Territory,
+  isAccepted: boolean
 }
 
 export interface AlgoliaRecordMovie extends AlgoliaRecord {

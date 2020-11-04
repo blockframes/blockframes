@@ -62,7 +62,7 @@ export class VideoControlComponent {
     if (!this.event.meta.controls[this.event.meta.selectedFile]) {
 
       // get the video info from the backend function
-      const { error, result} = await this.getVideoInfo({ eventId: this.event.id, ref: this.event.meta.selectedFile }).toPromise();
+      const { error, result} = await this.getVideoInfo({ ref: this.event.meta.selectedFile, eventId: this.event.id }).toPromise();
       if (!!error) {
         // if error is set, result will contain the error message
         throw new Error(result);

@@ -8,18 +8,18 @@ import { difference } from 'lodash';
 import { db, getUser } from './internals/firebase';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationAppAccessChanged } from './templates/mail';
-import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
+import { OrganizationDocument, PublicUser, PermissionsDocument, MovieDocument } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app, module, getAppName } from '@blockframes/utils/apps';
+import { app, modules, getAppName } from '@blockframes/utils/apps';
 import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganizationDocument, createPublicUserDocument, getFromEmail } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
-function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     toUserId,
     type: notificationType,
@@ -52,7 +52,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifUser(userId, 'memberAddedToOrg', after, userAdded));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberAddedToOrg', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -63,7 +63,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifUser(userId, 'memberRemovedFromOrg', after, userRemoved));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberRemovedFromOrg', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -71,7 +71,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 /** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
 function newAppAccessGranted(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
-    return app.some(a => module.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
+    return app.some(a => modules.some(m => !before.appAccess[a]?.[m] && !!after.appAccess[a]?.[m]));
   }
   return false;
 }
@@ -86,10 +86,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
   }
 }
 
-export async function onOrganizationCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: EventContext
-): Promise<any> {
+export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
@@ -98,6 +95,7 @@ export async function onOrganizationCreate(
   }
   const emailRequest = await organizationCreated(org);
   const from = await getFromEmail(org);
+
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from),
@@ -149,7 +147,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     await triggerNotifications([notification]);
   }
 
-  // @todo(#3640) 09/09/2020 : We got rid of ethers dependancies
+  // @todo(#3640) 09/09/2020 : We got rid of ethers dependencies
   // const RELAYER_CONFIG: RelayerConfig = {
   //   ...relayer,
   //   mnemonic
@@ -175,7 +173,14 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // }
 
   // Update algolia's index
-  await storeSearchableOrg(after)
+
+  /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
+  if (before.status === 'accepted' && after.status === 'pending') {
+    const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
+    await Promise.all(promises)
+  }
+
+  storeSearchableOrg(after)
 
   return Promise.resolve(true); // no-op by default
 }
@@ -189,8 +194,12 @@ export async function onOrganizationDelete(
 
   await cleanOrgMedias(org);
 
+  const orgAppAccess = findOrgAppAccess(org)
+
   // Update algolia's index
-  return deleteObject(algolia.indexNameOrganizations, context.params.orgID);
+  const promises = orgAppAccess.map(appName => deleteObject(algolia.indexNameOrganizations[appName], context.params.orgID));
+
+  await Promise.all(promises)
 }
 
 export const accessToAppChanged = async (

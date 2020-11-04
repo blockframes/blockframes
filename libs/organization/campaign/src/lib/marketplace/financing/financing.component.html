@@ -5,11 +5,11 @@
     <!-- Budget -->
     <section id="budget" *ngIf="campaign.budget | apexBudget as options" >
       <header fxLayout fxLayoutAlign="space-between center">
-        <h2>Estimated Budget</h2>
+        <h2>Budget</h2>
         <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
           <a mat-button [href]="file" target="_blank">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
-            <span>Download Estimated Budget</span>
+            <span>Download Budget</span>
           </a>
         </ng-container>
       </header>

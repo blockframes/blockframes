@@ -11,7 +11,7 @@
   </section>
 
 
-  <!-- Main Information -->
+  <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
     <h2>Story Elements</h2>
     <article *ngIf="movie.logline">
@@ -44,7 +44,7 @@
       <h5>Release Year</h5>
       <p>
         <span>{{ movie.release.year }}</span>
-        <span *ngIf="movie.release.status"> ({{ movie.release.status }})</span>
+        <span *ngIf="movie.release.status"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
       </p>
     </article>
 
@@ -70,7 +70,18 @@
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
         <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | duration }}</span>
-        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status | titlecase }}</span>
+        <span *ngIf="movie.runningTime.status">
+          <!-- TODO #4124 rework the runningTime.time data ?-->
+          <ng-container
+          *ngIf="movie.runningTime.status === 'confirmed'
+          && movie.runningTime.time !== 'TBC'
+          && movie.runningTime.time !== 'TBD'
+          && movie.runningTime.time !== '-';
+          else runningTimeStatus">Confirmed</ng-container>
+          <ng-template #runningTimeStatus>
+            {{ movie.runningTime.status | toLabel: 'screeningStatus' }}
+          </ng-template>
+        </span>
       </div>
     </article>
 

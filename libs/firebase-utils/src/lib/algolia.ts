@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { getOrgAppAccess, getOrgModuleAccess } from "@blockframes/utils/apps";
+import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
@@ -45,6 +45,7 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 
   return indexBuilder(indexName, adminKey).setSettings(config);
 }
+
 // ------------------------------------
 //           ORGANIZATIONS
 // ------------------------------------
@@ -58,12 +59,18 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const orgRecord: AlgoliaRecordOrganization = {
     objectID: org.id,
     name: orgName(org),
-    appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
-    country: org.addresses.main.country
+    country: org.addresses.main.country,
+    isAccepted: org.status === 'accepted'
   };
 
-  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject(orgRecord);
+  /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
+  const orgAppAccess = findOrgAppAccess(org)
+
+  // Update algolia's index
+  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+
+  return Promise.all(promises)
 }
 
 // ------------------------------------
@@ -136,10 +143,7 @@ export function storeSearchableMovie(
 
     const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
 
-    const promises = [];
-
-    // Update algolia's index
-    movieAppAccess.forEach(appName => promises.push(indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord)));
+    const promises = movieAppAccess.map(appName => indexBuilder(algolia.indexNameMovies[appName], adminKey).saveObject(movieRecord));
 
     return Promise.all(promises)
 
@@ -175,4 +179,8 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
     console.error(error);
     return new Promise(res => res(true));
   }
+}
+
+export function findOrgAppAccess(org: OrganizationDocument) {
+  return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }

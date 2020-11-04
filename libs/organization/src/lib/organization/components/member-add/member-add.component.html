@@ -2,25 +2,27 @@
   <mat-card-title>Invite Members</mat-card-title>
   <p class="mat-caption">Invite your co-workers to join your company so that they can use the application.</p>
 
-  <bf-form-list [form]="form" buttonText="Add email">
-    <ng-template let-email itemRef>
-      {{ email }}
-    </ng-template>
-    <ng-template let-control formView>
-      <mat-form-field appearance="outline">
-        <mat-label>Email Address</mat-label>
-        <input matInput type="email" placeholder="name@example.com" aria-label="Email" [formControl]="control" />
-        <mat-icon matSuffix svgIcon="mail"></mat-icon>
-        <mat-error *ngIf="control.hasError('email')">
-          Please enter a <strong>valid</strong> email address.
-        </mat-error>
-      </mat-form-field>
-    </ng-template>
-  </bf-form-list>
+  <mat-form-field appearance="outline">
+    <mat-chip-list #chipList aria-label="email selection">
+      <mat-chip *ngFor="let email of form.value; let i = index" removable (removed)="form.removeAt(i)">
+        <span>{{email}}</span>
+        <mat-icon svgIcon="close" matChipRemove></mat-icon>
+      </mat-chip>
+      <input [formControl]="emailForm" placeholder="Add an email"
+             [matChipInputFor]="chipList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="true"
+             (matChipInputTokenEnd)="add()">
+    </mat-chip-list>
+    <mat-label>Email Address</mat-label>
+    <mat-icon matSuffix svgIcon="mail"></mat-icon>
+    <mat-hint>Enter emails separated by a comma.</mat-hint>
+  </mat-form-field>
+  <p class="mat-caption text-warn" *ngIf="error"><i>{{ error }}</i></p>
 
   <div fxLayout="row" fxLayoutAlign="center">
     <ng-container *ngIf="!(isSending$ | async); else sendingInvitations">
-      <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
+      <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="error || (isSending$ | async)" (click)="sendInvitations()">
         <mat-icon svgIcon="send"></mat-icon>
         <span i18n>Send invitation{ form.controls.length, plural, =1 {} other {s} }</span>
       </button>

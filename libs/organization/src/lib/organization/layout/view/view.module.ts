@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { OrgNameModule, OrgAddressModule } from '@blockframes/organization/pipes';
 
 // Components
 import { ViewComponent } from './view.component';
@@ -29,6 +29,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     AppBarModule,
     ToLabelModule,
     OrgNameModule,
+    OrgAddressModule,
     // Material
     MatTabsModule,
     MatButtonModule,

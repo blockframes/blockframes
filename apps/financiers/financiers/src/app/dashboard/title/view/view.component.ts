@@ -9,6 +9,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CampaignForm } from '@blockframes/campaign/form/form';
 import { CrossFieldErrorMatcher } from '@blockframes/utils/form/matchers';
 import { DashboardTitleShellComponent } from '@blockframes/movie/dashboard/shell/shell.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 const links: RouteDescription[] = [
@@ -56,7 +57,8 @@ export class TitleViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbar: MatSnackBar,
   ) {}
 
   ngOnInit() {
@@ -75,6 +77,7 @@ export class TitleViewComponent implements OnInit {
 
   async save() {
     this.dialogRef.close();
-    this.shell.getConfig('campaign').onSave({ publishing: false });
+    await this.shell.getConfig('campaign').onSave({ publishing: false });
+    this.snackbar.open('The current amount has been updated.', null, { duration: 1000 });
   }
 }

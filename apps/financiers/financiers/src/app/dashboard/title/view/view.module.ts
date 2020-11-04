@@ -19,6 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes = [{
   path: '',
@@ -80,6 +81,7 @@ const routes = [{
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
     // Route
     RouterModule.forChild(routes)
   ]

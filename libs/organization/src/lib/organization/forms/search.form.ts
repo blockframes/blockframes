@@ -8,6 +8,7 @@ import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/utils/alg
 import algoliasearch, { Index } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
+import { App } from '@blockframes/utils/apps';
 
 export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaRecordOrganization> {
   country?: Territory,
@@ -18,8 +19,8 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
     query: '',
     page: 0,
     hitsPerPage: 8,
+    isAccepted: true,
     ...search,
-    appAccess: search.appAccess,
     appModule: search.appModule
   };
 }
@@ -30,8 +31,8 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
     page: new FormControl(search.page),
     hitsPerPage: new FormControl(search.hitsPerPage),
     country: new FormControl(search.country),
-    appAccess: new FormControl(search.appAccess),
-    appModule: new FormControl(search.appModule)
+    appModule: new FormControl(search.appModule),
+    isAccepted: new FormControl(search.isAccepted)
   };
 }
 
@@ -41,11 +42,11 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
   private organizationIndex: Index;
 
-  constructor(search: Partial<OrganizationSearch> = {}) {
+  constructor(app: App, search: Partial<OrganizationSearch> = {}) {
     const organizationSearch = createOrganizationSearch(search);
     const control = createOrganizationSearchControl(organizationSearch);
     super(control);
-    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations);
+    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
   }
 
 
@@ -53,8 +54,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get page() { return this.get('page'); }
   get hitsPerPage() { return this.get('hitsPerPage') }
   get country() { return this.get('country'); }
-  get appAccess() { return this.get('appAccess') }
   get appModule() { return this.get('appModule') }
+  get isAccepted() { return this.get('isAccepted') }
 
 
   search() {
@@ -64,8 +65,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
       page: this.page.value,
       facetFilters: [
         `country:${this.country.value || ''}`,
-        `appAccess:${this.appAccess.value}`,
-        `appModule:${this.appModule.value}`
+        `appModule:${this.appModule.value}`,
+        `isAccepted:${this.isAccepted.value}`
       ]
     });
   }

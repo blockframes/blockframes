@@ -47,13 +47,10 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <file-upload accept="['.xls', '.xlsx', '.ods', '.csv']" [types]="[
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.oasis.opendocument.spreadsheet',
-        'text/csv']" [storagePath]="" [form]="excelForm">
-        <h3 type>Upload files</h3>
-        <p class="mat-caption" format>Accepted Formats : xls, xlsx</p>
+      <file-upload [allowedFileType]="['xls', 'csv']"
+        [storagePath]=""
+        [form]="excelForm">
+        <h3 title>Upload File</h3>
       </file-upload>
 
     </ng-template>

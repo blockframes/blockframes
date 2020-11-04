@@ -3,3 +3,10 @@
   <mat-icon svgIcon="eye" color="primary"></mat-icon>
 </button>
 <ng-content></ng-content>
+
+<ng-template #dialogTemplate let-ref>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <img [ref]="ref | getMediaUrl" asset="empty_banner.webp"/>
+    <!-- Implement PDF viewer when its ready TODO #4072 -->
+  </article>
+</ng-template>

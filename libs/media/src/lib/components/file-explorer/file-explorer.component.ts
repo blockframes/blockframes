@@ -28,7 +28,6 @@ import {
   getId,
   isHostedMediaForm,
   isHostedMediaWithMetadataForm,
-  MediaFormList,
   MediaFormTypes,
   SubDirectoryFile,
   SubDirectoryImage
@@ -58,6 +57,7 @@ export class FileExplorerComponent {
         {
           name: 'Documents',
           type: 'file',
+          acceptedFileType: 'pdf',
           multiple: true,
           docNameField: 'title',
           fileRefField: 'ref',
@@ -188,6 +188,7 @@ export class FileExplorerComponent {
               {
                 name: 'Presentation Deck',
                 type: 'file',
+                acceptedFileType: 'pdf',
                 multiple: false,
                 docNameField: 'presentation_deck',
                 fileRefField: 'presentation_deck',
@@ -198,6 +199,7 @@ export class FileExplorerComponent {
               {
                 name: 'Scenario',
                 type: 'file',
+                acceptedFileType: 'pdf',
                 multiple: false,
                 docNameField: 'scenario',
                 fileRefField: 'scenario',
@@ -208,6 +210,7 @@ export class FileExplorerComponent {
               {
                 name: 'Moodboard / Artistic Deck',
                 type: 'file',
+                acceptedFileType: 'pdf',
                 multiple: false,
                 docNameField: 'file',
                 fileRefField: 'file',
@@ -231,6 +234,7 @@ export class FileExplorerComponent {
           {
             name: 'Notes & Statements',
             type: 'file',
+            acceptedFileType: 'pdf',
             multiple: true,
             docNameField: 'ref',
             fileRefField: 'ref',
