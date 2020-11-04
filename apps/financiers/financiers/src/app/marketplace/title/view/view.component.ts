@@ -15,6 +15,8 @@ import { shareReplay, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { UserService } from '@blockframes/user/+state';
+import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface EmailData {
   subject: string;
@@ -71,6 +73,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private userService: UserService,
     private campaignService: CampaignService,
     private dialog: MatDialog,
+    private snackbar: MatSnackBar,
     private sendgrid: SendgridService,
     public router: Router
   ) {}
@@ -104,9 +107,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   async sendEmail(emailData: EmailData, title: string, orgs: Organization[]) {
     this.dialogRef.close();
+
     const templateId = 'd-e902521de8684c57bbfa633bad88567a';
     const { firstName, lastName, email } = this.authQuery.user;
     const orgName = getOrgName(this.orgQuery.getActive());
+    const promises: Promise<ErrorResultResponse>[] = [];
 
     for (const org of orgs) {
       const users = await this.userService.getValue(org.userIds);
@@ -118,11 +123,18 @@ export class MarketplaceMovieViewComponent implements OnInit {
           title,
         };
 
-        this.sendgrid.sendWithTemplate({
+        const promise = this.sendgrid.sendWithTemplate({
           request: { templateId, data, to: user.email },
           app: 'financiers'
         });
+        promises.push(promise);
       }
     }
+    const res = await Promise.all(promises);
+    const success = res.some(r => r.result);
+    const message = success
+      ? 'Your mail has been send.'
+      : 'An error happened. Your mail has not been send.';
+    this.snackbar.open(message, null, { duration: 1000 });
   }
 }
