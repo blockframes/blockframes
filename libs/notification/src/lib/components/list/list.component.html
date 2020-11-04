@@ -5,8 +5,8 @@
 
       <h2 *ngIf="notificationList.length">
         {{ timeFrame | labelByDate }}
+        <mat-divider></mat-divider>
       </h2>
-      <mat-divider *ngIf="notifications.length"></mat-divider>
 
       <!-- Display all notifications -->
       <ng-container *ngFor="let notification of notificationList">
