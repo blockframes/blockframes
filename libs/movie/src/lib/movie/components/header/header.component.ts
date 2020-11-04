@@ -39,6 +39,7 @@ export class HeaderComponent {
 
   constructor(private location: Location) { }
 
+  @Input() showBackArrow = true;
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {

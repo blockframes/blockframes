@@ -4,7 +4,7 @@
 
       <!-- Screening -->
       <section class="screening" *ngSwitchCase="'screening'">
-        <movie-header *ngIf="event.movie" [movie]="event.movie">
+        <movie-header *ngIf="event.movie" [movie]="event.movie" [showBackArrow]="false">
           <movie-header-preferences>
             <p>{{ event.movie.synopsis }}</p>
             <org-chip [org]="event.org"></org-chip>

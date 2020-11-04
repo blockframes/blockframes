@@ -8,7 +8,7 @@
   bgTheme="dark"
   >
   <section class="overlay">
-    <a mat-icon-button (click)="goBack()">
+    <a mat-icon-button (click)="goBack()" *ngIf="showBackArrow">
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div class="movie-info" fxLayout="row" fxLayoutGap="20px">
