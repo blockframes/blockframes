@@ -100,7 +100,6 @@ interface AlgoliaRecord {
 }
 export interface AlgoliaRecordOrganization extends AlgoliaRecord {
   name: string,
-  appAccess: App[],
   appModule: Module[],
   country: Territory,
   lineUp: number

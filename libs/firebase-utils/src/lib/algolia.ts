@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia as algoliaClient, dev } from '@env';
 import * as functions from 'firebase-functions';
 import { Language } from '@blockframes/utils/static-model';
-import { app, getOrgAppAccess, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
+import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
 import { mockConfigIfNeeded } from './firebase-utils';
@@ -45,11 +45,12 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 
   return indexBuilder(indexName, adminKey).setSettings(config);
 }
+
 // ------------------------------------
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, updateAllIndex?: boolean, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -58,19 +59,23 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
   const orgRecord: AlgoliaRecordOrganization = {
     objectID: org.id,
     name: orgName(org),
-    appAccess: getOrgAppAccess(org),
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     lineUp: org['lineUp'] ?? 0
   };
 
-  /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-  const orgAppAccess = findOrgAppAccess(org)
+  /* We want to update the all org index when a org is created for cross app features */
+  if (updateAllIndex) {
+    return Promise.all([indexBuilder(algolia.indexNameOrganizations.all, adminKey).saveObject(orgRecord)]);
+  } else {
+    /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
+    const orgAppAccess = findOrgAppAccess(org)
 
-  // Update algolia's index
-  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+    // Update algolia's index
+    const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
 
-  return Promise.all(promises)
+    return Promise.all(promises)
+  }
 }
 
 // ------------------------------------
@@ -182,5 +187,11 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
 }
 
 export function findOrgAppAccess(org: OrganizationDocument) {
-  return app.filter(a => modules.some(m => !org.appAccess[a][m]));
+  return app.filter(a => modules.some(m => {
+    try {
+      return org.appAccess[a][m]
+    } catch (error) {
+      return false
+    }
+  }));
 }

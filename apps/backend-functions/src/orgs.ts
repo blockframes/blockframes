@@ -86,10 +86,7 @@ async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after
   }
 }
 
-export async function onOrganizationCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: EventContext
-): Promise<any> {
+export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnapshot): Promise<any> {
   const org = snap.data() as OrganizationDocument;
 
   if (!org?.denomination?.full) {
@@ -182,7 +179,7 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
     const promises = [];
     after.movieIds.forEach(id => promises.push(getDocument<MovieDocument>(`movies/${id}`)));
     const orgMovies: MovieDocument[] = await Promise.all(promises)
-    const lineUpMovies = orgMovies.filter(movie => movie.storeConfig.storeType === 'line_up')
+    const lineUpMovies = orgMovies.filter(movie => movie.storeConfig.storeType === 'line_up' && movie.storeConfig.status === 'accepted')
     if (lineUpMovies.length) {
       after['lineUp'] = lineUpMovies.length;
       await storeSearchableOrg(after)

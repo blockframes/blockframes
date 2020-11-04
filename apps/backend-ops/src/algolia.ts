@@ -18,9 +18,8 @@ import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 // TODO MIGRATE TO ALGOLIA v4 #2554
 
 export async function upgradeAlgoliaOrgs(appConfig?: App) {
-
   if (!appConfig) {
-    const promises = app.map(upgradeAlgoliaMovies);
+    const promises = app.map(upgradeAlgoliaOrgs);
     await Promise.all(promises);
   } else {
 
@@ -31,7 +30,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
         'appAccess',
         'appModule',
         'name',
-        'country'
+        'country',
+        'lineUp'
       ],
     };
     await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);
@@ -40,7 +40,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
+      const promises = orgs.map(org => storeSearchableOrg(org, false, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
