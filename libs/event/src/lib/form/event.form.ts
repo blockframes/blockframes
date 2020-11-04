@@ -73,7 +73,7 @@ export function createScreeningControl(params?: Partial<Screening>) {
   const screening = createScreening(params);
   return {
     titleId: new FormControl(screening.titleId),
-    description: new FormControl(screening.description, [Validators.maxLength(500)])
+    description: new FormControl(screening.description, [Validators.maxLength(500)]),
   }
 }
 

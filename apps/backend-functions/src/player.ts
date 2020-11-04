@@ -3,15 +3,14 @@ import { db, getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToEvent } from './internals/invitations/events';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { PublicUser } from './data/types';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
-import { getDocument } from './data/internals';
+import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { getDocAndPath, upsertWatermark } from '@blockframes/firebase-utils';
 import { File as GFile } from '@google-cloud/storage';
-import { User } from '@sentry/node';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { get } from 'lodash';
 
@@ -21,18 +20,15 @@ const JWPlayerApi = require('jwplatform');
 interface ReadVideoParams {
 
   /**
-   * The id of the event.
-   * If the event is a screening, we will get the JWPlayer video id directly from `movie.promotional.videos.screener`.
-   * Otherwise if the event is a meeting we need the `ref` parameter to know where to find the JWPlayer id in the db.
+   * The reference to the video in storage
    */
-  eventId: string,
+  ref: string;
 
   /**
-   * This parameter is not needed for screening event but it becomes **MANDATORY** for meeting events.
-   *
-   * _Meeting can contains files from several Movies so wee need the file ref to find back it db document (to get the JWPlayer video id)_
+   * The id of the event.
+   * Mandatory if the video is for a meeting.
    */
-  ref?: string;
+  eventId?: string,
 }
 
 export const getPrivateVideoUrl = async (
@@ -40,141 +36,126 @@ export const getPrivateVideoUrl = async (
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
 
-
-  if (!data.eventId) {
-    throw new Error(`No 'eventId' params, this parameter is mandatory !`);
-  }
-
   if (!context.auth) {
     throw new Error(`Unauthorized call !`);
   }
 
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
-
-  if (!event) {
+  if (!data.ref) {
     return {
-      error: 'UNKNOWN_EVENT',
-      result: `There is no event with the ID ${data.eventId}`
-    };
+      error: 'UNKNOWN_REFERENCE',
+      result: 'No reference in params, this parameter is mandatory !'
+    }
   }
 
-  if (event.type !== 'screening' && event.type !== 'meeting') {
+  const uid = context.auth.uid;
+  const { security, collection, doc, docData, fieldToUpdate } = await getDocAndPath(data.ref);
+
+  if (!docData) {
     return {
-      error: 'WRONG_EVENT_TYPE',
-      result: `The event ${data.eventId} is a ${event.type} but only 'screening' & 'meeting' are supported.`
-    };
+      error: 'UNKNOWN_DOCUMENT',
+      result: 'The reference points to an unknown document'
+    }
   }
 
-  const now = firestore.Timestamp.now();
+  let access = security === 'public';
 
-  if (now.seconds < event.start.seconds) {
-    return {
-      error: 'TOO_EARLY',
-      result: `The event ${data.eventId} hasn't started yet`
-    };
-  }
+  if (!access && security === 'protected') {
 
-  if (now.seconds > event.end.seconds) {
-    return {
-      error: 'TOO_LATE',
-      result: `The event ${data.eventId} is finished`
-    };
-  }
-
-  let jwPlayerId: string;
-
-  // CHECK FOR A SCREENING
-  if (event.type === 'screening') {
-
-    if (!('titleId' in event.meta)) {
-      throw new Error(`Event ${data.eventId} is a screening but doesn't have a 'titleId' !`);
+    // CHECK FOR ORGANIZATION MEMBER
+    if (collection === 'movies') {
+      const orgs = await getOrganizationsOfMovie(doc.id);
+      access = orgs
+        .filter(org => !!org && !!org.userIds)
+        .some(org => org.userIds.some(userId => userId === uid));
     }
 
-    const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
-
-    if (!movie) {
-      return {
-        error: 'UNKNOWN_MOVIE',
-        result: `The event ${data.eventId} is about an unknown movie`
-      };
-    }
-
-    if (!movie.promotional.videos?.screener?.jwPlayerId) {
-      return {
-        error: 'NO_VIDEO',
-        result: `The requested screening doesn't exist on movie ${movie.id}`
-      };
-    } else {
-      jwPlayerId = movie.promotional.videos?.screener?.jwPlayerId;
-    }
-
-    if (event.isPrivate && !isUserInvitedToEvent(context.auth.uid, movie.id)) {
-      return {
-        error: 'NO_INVITATION',
-        result: `You have not been invited to see this movie`
-      };
-    }
-
-  // CHECK FOR A MEETING
-  } else {
-
-    if (!data.ref) {
-      return {
-        error: 'NO_FILE',
-        result: 'No file was provided in the ref parameter. ref is mandatory when the event is a meeting'
+    // CHECK FOR EVENT MEMBER
+    if (!access && data.eventId) {
+      const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
+    
+      if (!event) {
+        return {
+          error: 'UNKNOWN_EVENT',
+          result: `There is no event with the ID ${data.eventId}`
+        };
       }
+    
+      if (event.type !== 'screening' && event.type !== 'meeting') {
+        return {
+          error: 'WRONG_EVENT_TYPE',
+          result: `The event ${data.eventId} is a ${event.type} but only 'screening' & 'meeting' are supported.`
+        };
+      }
+    
+      const now = firestore.Timestamp.now();
+    
+      if (now.seconds < event.start.seconds) {
+        return {
+          error: 'TOO_EARLY',
+          result: `The event ${data.eventId} hasn't started yet`
+        };
+      }
+    
+      if (now.seconds > event.end.seconds) {
+        return {
+          error: 'TOO_LATE',
+          result: `The event ${data.eventId} is finished`
+        };
+      }
+
+      // CHECK FOR A SCREENING
+      if (event.type === 'screening') {
+
+        if (!('titleId' in event.meta)) {
+          throw new Error(`Event ${data.eventId} is a screening but doesn't have a 'titleId' !`);
+        }
+
+        if (event.isPrivate && !await isUserInvitedToEvent(uid, event.meta.titleId)) {
+          return {
+            error: 'NO_INVITATION',
+            result: `You have not been invited to see this movie`
+          };
+        }
+
+      // CHECK FOR A MEETING
+      } else {
+
+        if (!await isUserInvitedToEvent(uid, data.eventId)) {
+          return {
+            error: 'UNAUTHORIZED',
+            result: `You are not authorized to get the information of this video`
+          }
+        }
+      }
+
+      access = true;
     }
+  }
 
-    const { filePath, doc, docData, fieldToUpdate } = await getDocAndPath(data.ref);
-
-    const unauthorized: ErrorResultResponse = {
+  if (!access) {
+    return {
       error: 'UNAUTHORIZED',
-      result: `You are not authorized to get the information of this video`
-    };
-
-    if (!isUserInvitedToEvent(context.auth.uid, data.eventId)) {
-
-      // if the user is not invited, we should check if he has the right to see the file
-      // aka if he belong of the org
-      switch (doc.parent.id) {
-        case 'orgs':
-          const isAuthorizedInOrg = (docData as OrganizationDocument).userIds.some(userId => userId === context.auth?.uid);
-          if (!isAuthorizedInOrg) {
-            return unauthorized;
-          }
-          break;
-        case 'movies':
-          const creatorId = (docData as MovieDocument)._meta!.createdBy;
-          const { orgId } = await getDocument<User>(`users/${creatorId}`);
-          const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-          const isAuthorizedInMovie = org.userIds.some(userId => userId === context.auth?.uid);
-          if (!isAuthorizedInMovie) {
-            return unauthorized;
-          }
-          break;
-        default:
-          return unauthorized;
-      }
-    }
-
-    let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, fieldToUpdate);
-
-    if (Array.isArray(savedRef)) {
-      savedRef = savedRef.find(video => video.ref === filePath);
-    }
-
-    if (!savedRef || !savedRef.jwPlayerId) {
-      return {
-        error: 'DOCUMENT_VIDEO_NOT_FOUND',
-        result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
-      }
-    } else {
-      jwPlayerId = savedRef.jwPlayerId;
+      result: `You are not authorized to see this video`
     }
   }
+
+  // get JwPlayerId
+  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, fieldToUpdate)
+  if (Array.isArray(savedRef)) {
+    savedRef = savedRef.find(video => video.ref === data.ref);
+  }
+
+  if (!savedRef || !savedRef.jwPlayerId) {
+    return {
+      error: 'DOCUMENT_VIDEO_NOT_FOUND',
+      result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
+    }
+  }
+  
+  const jwPlayerId = savedRef.jwPlayerId
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
-  const userRef = db.collection('users').doc(context.auth.uid);
+  const userRef = db.collection('users').doc(uid);
   const userSnap = await userRef.get();
   const user = userSnap.data() as PublicUser;
 
