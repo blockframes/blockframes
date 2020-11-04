@@ -61,7 +61,7 @@ export function storeSearchableOrg(org: OrganizationDocument, updateAllIndex?: b
     name: orgName(org),
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
-    lineUp: org['lineUp'] ?? 0
+    isAccepted: org['isAccepted']
   };
 
   /* We want to update the all org index when a org is created for cross app features */

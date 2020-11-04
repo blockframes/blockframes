@@ -47,7 +47,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Sales Agent', 'All');
     this.orgs$ = this.orgResultsState.asObservable();
-    const search = createOrganizationSearch({ appAccess: ['financiers'], appModule: ['marketplace'], country: '' as Territory });
+    const search = createOrganizationSearch({ appModule: ['marketplace'], country: '' as Territory });
     this.searchForm.setValue(search);
     this.sub = this.searchForm.valueChanges.pipe(
       startWith(this.searchForm.value),

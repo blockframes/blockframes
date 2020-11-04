@@ -95,11 +95,12 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   }
   const emailRequest = await organizationCreated(org);
   const from = await getFromEmail(org);
+
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from),
     // Update algolia's index
-    storeSearchableOrg(org)
+    storeSearchableOrg(org, true)
   ]);
 }
 
@@ -172,25 +173,20 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   // }
 
   // Update algolia's index
-
-  if (after.movieIds.length) {
-    /* We need to find the movies from the org and if the org has some movies in line up,
-    then we put the org on the index. */
-    const promises = [];
-    after.movieIds.forEach(id => promises.push(getDocument<MovieDocument>(`movies/${id}`)));
-    const orgMovies: MovieDocument[] = await Promise.all(promises)
-    const lineUpMovies = orgMovies.filter(movie => movie.storeConfig.storeType === 'line_up' && movie.storeConfig.status === 'accepted')
-    if (lineUpMovies.length) {
-      after['lineUp'] = lineUpMovies.length;
-      await storeSearchableOrg(after)
-    }
+  if (after.status !== before.status && after.status === 'accepted') {
+    // add flag to org: "isAccepted"
+    after['isAccepted'] = true;
   }
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   else if (before.status === 'accepted' && after.status === 'pending') {
     const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
     promises.push(deleteObject(algolia.indexNameOrganizations.all, after.id))
     await Promise.all(promises)
+  } else {
+    after['isAccepted'] = false;
   }
+  storeSearchableOrg(after)
+
   return Promise.resolve(true); // no-op by default
 }
 

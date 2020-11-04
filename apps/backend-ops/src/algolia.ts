@@ -31,7 +31,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
         'appModule',
         'name',
         'country',
-        'lineUp'
+        'isAccepted'
       ],
     };
     await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);

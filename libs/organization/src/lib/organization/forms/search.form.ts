@@ -20,6 +20,7 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
     page: 0,
     hitsPerPage: 8,
     ...search,
+    isAccepted: true,
     appModule: search.appModule
   };
 }
@@ -30,7 +31,8 @@ function createOrganizationSearchControl(search: OrganizationSearch) {
     page: new FormControl(search.page),
     hitsPerPage: new FormControl(search.hitsPerPage),
     country: new FormControl(search.country),
-    appModule: new FormControl(search.appModule)
+    appModule: new FormControl(search.appModule),
+    isAccepted: new FormControl(search.isAccepted)
   };
 }
 
@@ -53,6 +55,7 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
   get hitsPerPage() { return this.get('hitsPerPage') }
   get country() { return this.get('country'); }
   get appModule() { return this.get('appModule') }
+  get isAccepted() { return this.get('isAccepted') }
 
 
   search() {
@@ -62,7 +65,8 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
       page: this.page.value,
       facetFilters: [
         `country:${this.country.value || ''}`,
-        `appModule:${this.appModule.value}`
+        `appModule:${this.appModule.value}`,
+        `isAccepted:${this.isAccepted.value}`
       ]
     });
   }
