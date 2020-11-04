@@ -1,5 +1,8 @@
 <tunnel-page>
   <ng-container tunnel-form>
+    <p *ngIf="form.getCurrency() === 'USD'">
+      "US Dollar ($) is the default currency, you may change it on the <a routerLink="../budget">Budget page</a>."
+    </p>
     <section id="fundings">
       <h3>Financing plan</h3>
       <p>
