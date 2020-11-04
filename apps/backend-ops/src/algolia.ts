@@ -40,9 +40,7 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
     for await (const orgs of orgsIterator) {
-      const promises = orgs.map(org => {
-        return storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']);
-      });
+      const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);
       console.log(`chunk of ${orgs.length} orgs processed...`);
