@@ -2,10 +2,11 @@
 import EventEditPage from './EventEditPage';
 import FestivalInvitationsPage from './FestivalInvitationsPage';
 import FestivalMarketplaceNotifications from '../marketplace/FestivalMarketplaceNotificationsPage';
+import { TO } from '@blockframes/e2e/utils';
 
 export default class FestivalDashboardHomePage {
   constructor() {
-    cy.get('festival-dashboard-home', { timeout: 40000 })
+    cy.get('festival-dashboard', { timeout: TO.PAGE_LOAD })
   }
 
   goToMarket() {
@@ -13,7 +14,7 @@ export default class FestivalDashboardHomePage {
   }
 
   goToCalendar() {
-    cy.get('festival-dashboard-home').get('a[test-id=calendar]').click();
+    cy.get('festival-dashboard').get('a[test-id=calendar]').click();
     return new EventPage();
   }
 

@@ -14,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 // Blockframes UI
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
+import { PreviewModalModule } from '@blockframes/ui/preview-modal/preview.module'
 
 // Blockframes Utils
 import { MaxLengthModule, ToLabelModule } from '@blockframes/utils/pipes';
@@ -24,6 +25,7 @@ import { HasStatusModule } from '@blockframes/movie/pipes/has-status.pipe';
 
 // Blockframes Movie
 import { FilmographyPipeModule } from '@blockframes/movie/pipes/filmography.pipe';
+import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 
 // Blockframes Media
 import { EmptyImagePipeModule } from '@blockframes/media/directives/image-reference/image-reference.pipe';
@@ -71,12 +73,14 @@ import { SummarySalesPitchComponent } from './sales-pitch/sales-pitch.component'
     ToLabelModule,
     EmptyImagePipeModule,
     VersionPipeModule,
+    RunningTimePipeModule,
     FileNameModule,
     FlexLayoutModule,
     DurationModule,
     HasStatusModule,
     MaxLengthModule,
     FilmographyPipeModule,
+    PreviewModalModule,
 
     // Materials
     MatChipsModule,

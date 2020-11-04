@@ -6,6 +6,8 @@ import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 import { Organization } from '@blockframes/organization/+state';
 import { FormControl, Validators } from '@angular/forms';
 import { FormList } from '@blockframes/utils/form';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+
 
 @Component({
   selector: '[org] member-add',
@@ -16,19 +18,42 @@ import { FormList } from '@blockframes/utils/form';
 })
 export class MemberAddComponent {
   @Input() org: Organization;
-  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
   private _isSending = new BehaviorSubject<boolean>(false);
   public isSending$ = this._isSending.asObservable();
+  public separatorKeysCodes = [COMMA, ENTER];
+  public emailForm = new FormControl('', Validators.email);
+  public form = FormList.factory<string, FormControl>([], email => new FormControl(email, [Validators.required, Validators.email]));
+  public error: string;
+
 
   constructor(
     private snackBar: MatSnackBar,
-    private invitationService: InvitationService
+    private invitationService: InvitationService,
   ) { }
 
+  add() {
+    this.error = '';
+    if (this.emailForm.value) {
+      const emails: string[] = this.emailForm.value.split(',');
+      const invalid = emails.filter(value => Validators.email({value}  as any));
+      if (invalid.length) {
+        this.error = `These mails are not valid email: ${invalid.join(', ')}.`;
+      } else {
+        for (const email of emails) {
+          if (!this.form.value.includes(email)) {
+            this.form.add(email.trim());
+          }
+        }
+        this.emailForm.reset();
+      }
+    }
+  }
+
   public async sendInvitations() {
+    this.add();
+    if (this.error) return;
     try {
       this._isSending.next(true);
-      if (this.form.invalid) throw new Error('Please enter valid email(s) address(es)');
       const emails = this.form.value;
       const invitationsExist = await this.invitationService.orgInvitationExists(emails);
       if (invitationsExist) throw new Error('You already send an invitation to one or more of these users');

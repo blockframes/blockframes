@@ -3,8 +3,7 @@
   <list-page-app-bar>
     <form class="app-bar" [formGroup]="searchForm" fxLayout fxLayoutAlign="center center">
       <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-      <input type="text" formControlName="query" [value]="searchForm.query.value"
-        placeholder="Search for titles, directors, keywords, ...">
+      <input type="text" formControlName="query" [value]="searchForm.query.value" placeholder="Search for our partners...">
     </form>
   </list-page-app-bar>
 
@@ -14,21 +13,21 @@
 
   <list-page-search>
     <mat-form-field appearance="outline" [formGroup]="searchForm">
-      <mat-label>Try searching for our partners...</mat-label>
+      <mat-label>Search for our partners...</mat-label>
       <input matInput type="text" formControlName="query" [value]="searchForm.query.value">
     </mat-form-field>
   </list-page-search>
 
   <list-page-description>
     <span i18n *ngIf="nbHits" class="mat-body-2">
-      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partners{nbHits, plural, =0 {} =1 {} other {s}}
+      There {nbHits, plural, =0 {} =1 {is} other {are}} {{ nbHits }} partner{nbHits, plural, =0 {} =1 {} other {s}}
       available.
     </span>
   </list-page-description>
 
   <list-filter>
-    <ng-template filter label="Partner Country" [form]="searchForm.country">
-      <form-country [form]="searchForm.country"></form-country>
+    <ng-template filter label="Partner's Country" [form]="searchForm.country">
+      <form-country [form]="searchForm.country" noWorld></form-country>
     </ng-template>
   </list-filter>
 
@@ -36,13 +35,13 @@
     <org-card [org]="org"></org-card>
   </ng-template>
 
-  <ng-template listPageEmpty *ngIf="loading$.value">
+  <ng-template listPageEmpty *ngIf="loading$ | async">
     <div class="loading">
       <mat-spinner color="primary"></mat-spinner>
     </div>
   </ng-template>
 
-  <list-page-progress [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()" *ngIf="!loading$.value">
+  <list-page-progress *ngIf="nbHits" [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
     <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
   </list-page-progress>
 

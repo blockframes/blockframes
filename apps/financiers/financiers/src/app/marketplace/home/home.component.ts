@@ -1,12 +1,12 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 // Blockframes
-import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
+import { MovieService, Movie } from '@blockframes/movie/+state';
 import { OrganizationService, Organization } from '@blockframes/organization/+state';
 
 // RxJs
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // env
@@ -17,6 +17,7 @@ import { QueryFn } from '@angular/fire/firestore';
 interface CarouselSection {
   title: string;
   movies$: Observable<Movie[]>;
+  queryParams?: Record<string, string>;
 }
 
 @Component({
@@ -44,12 +45,13 @@ export class HomeComponent implements OnInit {
     const queryFn: QueryFn = ref => ref.where('storeConfig.appAccess.financiers', '==', true).where('storeConfig.status', '==', 'accepted');
     this.sections = [
       {
-        title: 'New films',
+        title: 'New projects',
         movies$: this.movieService.valueChanges(ref => queryFn(ref))
       },
       {
         title: 'In development',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development'))
+        movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development')),
+        queryParams: { productionStatus: 'development' }
       }
     ];
 

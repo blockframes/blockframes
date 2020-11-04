@@ -4,18 +4,17 @@ import { UserQuery } from '@blockframes/user/+state/user.query';
 import { ViewComponent } from '../view/view.component';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { fade, fadeList } from '@blockframes/utils/animations/fade';
+import { fadeList } from '@blockframes/utils/animations/fade';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'financiers-marketplace-organization-member',
   templateUrl: './member.component.html',
   styleUrls: ['./member.component.scss'],
-  animations: [fade, fadeList('user-card')],
+  animations: [fadeList('user-card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit, OnDestroy {
-  @HostBinding('@fade') animation = true;
 
   private sub: Subscription;
   public org$ = this.parent.org$;

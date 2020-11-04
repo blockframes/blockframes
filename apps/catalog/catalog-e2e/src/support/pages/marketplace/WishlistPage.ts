@@ -4,38 +4,38 @@ import { TO } from "@blockframes/e2e/utils/env";
 export default class WishlistPage extends NavbarPage {
   constructor() {
     super();
-    cy.get('catalog-wishlist', {timeout: TO.PAGE_LOAD});
+    cy.get('marketplace-wishlist', {timeout: TO.PAGE_LOAD});
   }
 
   public clickSendToSellers() {
-    cy.get('catalog-wishlist button[test-id=submit-to-sellers]')
+    cy.get('marketplace-wishlist button[test-id=submit-to-sellers]')
       .click();
     cy.wait(2000);
   }
 
   public assertNoCurrentWishlist() {
-    cy.get('catalog-wishlist')
+    cy.get('marketplace-wishlist')
       .should((table) => expect(table).length(0));
   }
 
   public assertMovieInCurrentWishlist(movieName: string) {
-    cy.get('catalog-wishlist td', {timeout: TO.SLOW_OP})
+    cy.get('marketplace-wishlist td', {timeout: TO.SLOW_OP})
       .contains(movieName);
   }
 
   public assertNoMovieInWishlist() {
-    cy.get('catalog-wishlist table')
+    cy.get('marketplace-wishlist table')
       .should((table) => expect(table).to.not.exist);
   }
 
   public assertMovieInSentWishlist(movieName: string) {
-    cy.get('catalog-wishlist td').contains(movieName);
+    cy.get('marketplace-wishlist td').contains(movieName);
   }
 
   private removeMatchingMovie(movieNames: string[]) {
     movieNames.forEach(movieName => {
       cy.log(`Removing {${movieName}} from WishList..`);
-      cy.get('catalog-wishlist')
+      cy.get('marketplace-wishlist')
         .contains('tr', movieName)
         .find('button[test-id=remove]').click();
       cy.wait(3000);
@@ -54,7 +54,7 @@ export default class WishlistPage extends NavbarPage {
     }
 
     cy.wait(TO.FIFTEEN_SEC);
-    cy.get("catalog-wishlist section", {timeout: TO.VSLOW_UPDATE}).then($table => {
+    cy.get("marketplace-wishlist section", {timeout: TO.VSLOW_UPDATE}).then($table => {
       if ($table.find("tr").length === 0) {
         cy.log("Wishlist empty...");
         return;
@@ -62,7 +62,7 @@ export default class WishlistPage extends NavbarPage {
 
       if (movieNames.length === 0) {
         const likedMovies = [];
-        cy.get('catalog-wishlist tr').each(($el, index) => {
+        cy.get('marketplace-wishlist tr').each(($el, index) => {
           if (index === 0) return;
           const title = Cypress.$($el)[0].firstElementChild.textContent.trim()
           console.log(title);

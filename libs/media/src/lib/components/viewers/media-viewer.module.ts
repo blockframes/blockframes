@@ -28,6 +28,6 @@ import { VideoViewerComponent } from './video-viewer/video-viewer.component';
     FileNameModule,
     ImageReferenceModule,
   ],
-  exports: [ MediaViewerComponent ],
+  exports: [ MediaViewerComponent, PdfViewerComponent ],
 })
 export class MediaViewerModule {}

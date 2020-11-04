@@ -1,85 +1,64 @@
 <tunnel-page>
-  <h4 title>Promotional Elements</h4>
-  <h1 subtitle>Videos</h1>
   <ng-container tunnel-form>
 
-    <h3>Videos</h3>
-    <section id="videos" fxLayout="column">
+    <h3>Screener</h3>
+    <section>
+      <p>The screener is the full video of this title, it will be used for virtual screenings.</p>
 
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Teaser Link</mat-label>
-        <input test-id="teaserLink" matInput type="url" [formControl]="form.promotional.get('teaser_link')" name="teaserLink"
-          placeholder="https://example.com" />
-        <mat-error>
-          Please enter a valid url.
-        </mat-error>
+      <ng-container *ngIf="hasScreener; else noScreener">
+        <mat-list>
+          <mat-list-item>
+            <mat-icon mat-list-icon [svgIcon]="screenerForm.get('fileName').value | fileTypeImage: 'icon'"></mat-icon>
+            <div mat-line>{{screenerForm.get('fileName').value}}</div>
+            <button mat-icon-button (click)="deleteScreener()"><mat-icon svgIcon="trash"></mat-icon></button>
+          </mat-list-item>
+        </mat-list>
+      </ng-container>
+      <ng-template #noScreener>
+        <file-upload
+          [form]="screenerForm"
+          [storagePath]="getPath('screener')"
+          allowedFileType="video"
+          filePrivacy="protected">
+            <h3 title>Upload Screener</h3>
+        </file-upload>
+        <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong> outside your organization unless you explicitly invite them to a virtual screening.</p>
+      </ng-template>
+    </section>
+
+    <mat-divider class="thick"></mat-divider>
+
+    <h3>Other Videos</h3>
+    <section>
+      <p>Upload other videos such as trailer, teaser, promotional clip, etc...</p>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Video title (optional)</mat-label>
+        <input matInput [formControl]="currentOtherVideo.title" >
       </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Trailer Link</mat-label>
-        <input test-id="trailerLink" matInput type="url" [formControl]="form.promotional.get('trailer_link')" name="trailerLink"
-          placeholder="https://example.com" />
-        <mat-error>
-          Please enter a valid url.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Promo Reel</mat-label>
-        <input test-id="promoReelLink" matInput type="url" [formControl]="form.promotional.get('promo_reel_link')" name="promoReelLink"
-          placeholder="https://example.com" />
-        <mat-error>
-          Please enter a valid url.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Screener</mat-label>
-        <input test-id="screenerLink" matInput type="url" [formControl]="form.promotional.get('screener_link')" name="screenerLink"
-          placeholder="https://example.com" />
-        <mat-error>
-          Please enter a valid url.
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-        <mat-label>Clip Link</mat-label>
-        <input test-id="clipLink" matInput type="url" [formControl]="form.promotional.get('clip_link')" name="clipLink"
-          placeholder="https://example.com" />
-        <mat-error>
-          Please enter a valid url.
-        </mat-error>
-      </mat-form-field>
-
+      <file-upload
+        [form]="currentOtherVideo.ref"
+        [storagePath]="getPath('otherVideos')"
+        allowedFileType="video"
+        filePrivacy="public">
+          <h3 title>Upload Video</h3>
+      </file-upload>
+      <p class="mat-caption">Keep in mind that those videos will be <strong>public</strong> and <strong>viewable by anyone</strong> on the marketplace.</p>
       <mat-divider></mat-divider>
-
-      <h6 class="mat-caption">Other links</h6>
-
-      <bf-form-list [form]="form.promotional.get('other_links')" buttonText="Add another Link"
-        saveButtonText="Save Link">
-        <ng-template itemRef let-links>{{ links.name }} - {{ links.url | maxLength: 20 }}</ng-template>
-        <ng-template formView let-otherLinkForm>
-          <article [formGroup]="otherLinkForm" fxLayout="row" fxLayoutGap="24px">
-
-            <mat-form-field appearance="outline" fxFlex>
-              <mat-label>Link Name</mat-label>
-              <input test-id="otherLinkName" matInput type="text" formControlName="name" name="otherLinkName" />
-              <mat-hint>
-                Give a name to your video.
-              </mat-hint>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline" fxFlex>
-              <mat-label>Link Url</mat-label>
-              <input test-id="otherLinkUrl" matInput type="url" formControlName="url" name="otherLinkUrl" placeholder="https://example.com" />
-              <mat-error *ngIf="otherLinkForm.get('url').hasError('pattern')">
-                Please enter a valid url.
-              </mat-error>
-            </mat-form-field>
-
-          </article>
-        </ng-template>
-      </bf-form-list>
+      <mat-list>
+        <mat-list-item *ngFor="let video of otherVideos.value; let index = index; trackBy: trackByIndex">
+          <mat-icon mat-list-icon svgIcon="film" [color]="index === selectedOtherVideo ? 'primary' : ''"></mat-icon>
+          <div mat-line>{{ video.title || video.ref.fileName || 'No Title' }}</div>
+          <button mat-icon-button  *ngIf="index !== selectedOtherVideo" (click)="selectOtherVideo(index)"><mat-icon svgIcon="pencil"></mat-icon></button>
+          <button mat-icon-button  [color]="index === selectedOtherVideo ? 'primary' : ''" (click)="deleteOtherVideo(index)"><mat-icon svgIcon="trash"></mat-icon></button>
+        </mat-list-item>
+      </mat-list>
+      <div fxLayout="row" fxLayoutAlign="center center" *ngIf="!!otherVideos.value.length">
+        <button mat-stroked-button color="primary" (click)="addOtherVideo()">
+          Add another Video
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
+      </div>
     </section>
 
   </ng-container>

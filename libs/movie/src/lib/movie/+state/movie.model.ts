@@ -89,7 +89,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     scoring: null,
     soundFormat: null,
     isOriginalVersionAvailable: null,
-    socialGoals: [],
     estimatedBudget: null,
     ...params,
     banner: params.banner ?? '',
@@ -369,6 +368,8 @@ export function createMovieNote(note: Partial<MovieNote> = {}): MovieNote {
 
 export function createHostedVideos(params: Partial<HostedVideos>): HostedVideos {
   return {
+    screener: createHostedVideo(params?.screener),
+    otherVideos: params?.otherVideos?.map(video => createHostedVideo(video)),
     ...params,
   }
 }

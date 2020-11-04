@@ -1,18 +1,65 @@
 
-mat-icon {
-  margin-right: 4px;
-}
+:host {
 
-mat-expansion-panel.selector {
-  margin: 24px 0;
-  border: solid 1px #dbdce0;
-  mat-accordion {
-    mat-expansion-panel.folder {
-      margin: 0 24px;
+  display: block;
+  height: 100%;
+
+  header {
+    height: 50px;
+    button {
+      margin-right: 24px;
     }
   }
-}
 
-button {
-  width: 100%;
+  section {
+      width: 100%;
+      height: calc(100% - 50px);
+
+    mat-tab-group {
+      width: 60%;
+      mat-list {
+        margin-left: 42px;
+      }
+    }
+
+    mat-expansion-panel-header {
+      mat-panel-title {
+        width: 100%;
+        div {
+          min-width: 0; // hack to let the flex div take the whole width of the parent
+          h5 {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-bottom: 0;
+            line-height: 16px;
+          }
+        }
+      }
+    }
+
+    aside {
+      width: 40%;
+      border-left: solid 1px var(--foreground-divider);
+      padding-left: 16px;
+
+      h4 {
+        margin-top: 16px;
+      }
+
+      mat-list {
+        // this is needed in order to have a scrollable
+        // list of selected files
+        overflow-y: auto;
+        margin-bottom: 16px;
+        mat-list-item {
+          button {
+            mat-icon {
+              width: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

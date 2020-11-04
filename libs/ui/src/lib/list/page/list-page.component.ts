@@ -22,9 +22,6 @@ export class PageTitleDirective { }
 @Directive({ selector: 'list-page-description' })
 export class PageDescriptionTemplateDirective { }
 
-@Directive({ selector: 'list-page-sort' })
-export class PageSortDirective { }
-
 @Directive({ selector: 'list-page-search' })
 export class PageSearchDirective { }
 
@@ -39,7 +36,7 @@ export class PageEmptyDirective { }
 
 
 @Component({
-  selector: '[items]list-page',
+  selector: '[items] list-page',
   templateUrl: 'list-page.component.html',
   styleUrls: ['./list-page.component.scss'],
   animations: [fadeList('.card')],
@@ -78,11 +75,12 @@ export class ListPageComponent implements AfterContentInit {
 @Component({
   selector: 'list-page-progress',
   template: `
-  <ng-content></ng-content>
-  <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
-  <button mat-stroked-button color="primary" (click)="loadMore.emit()" [disabled]="value === 100">LOAD
-    MORE</button>
-    `,
+    <ng-content></ng-content>
+    <mat-progress-bar color="primary" [value]="value"></mat-progress-bar>
+    <button mat-stroked-button color="primary" (click)="loadMore.emit()" *ngIf="value && value !== 100">
+      LOAD MORE
+    </button>
+  `,
   styles: [`
     :host {
       display: flex;

@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Component
@@ -18,6 +19,11 @@ import { CampaignProgressModule } from '@blockframes/campaign/components/progres
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes = [
   {
@@ -50,18 +56,13 @@ const routes = [
         data: { animation: 3 }
       },
       {
-        path: 'finance',
-        loadChildren: () => import('../finance/finance.module').then(m => m.MarketplaceMovieFinanceModule),
-        data: { animation: 4 }
-      },
-      {
         path: 'financing',
         loadChildren: () => import('@blockframes/campaign/marketplace/financing/financing.module').then(m => m.MarketplaceFinancingModule),
         data: { animation: 4 }
       },
       {
-        path: 'campaign',
-        loadChildren: () => import('@blockframes/campaign/marketplace/marketplace.module').then(m => m.MarketplaceModule),
+        path: 'investment',
+        loadChildren: () => import('@blockframes/campaign/marketplace/investment/investment.module').then(m => m.MarketplaceInvestmentModule),
         data: { animation: 5 }
       }
     ]
@@ -72,6 +73,7 @@ const routes = [
   declarations: [MarketplaceMovieViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     MovieShellModule,
     ImageReferenceModule,
@@ -81,8 +83,13 @@ const routes = [
     PromotionalLinksModule,
     CampaignProgressModule,
     // Material
+    MatDialogModule,
     MatButtonModule,
     MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSnackBarModule,
     // Routes
     RouterModule.forChild(routes)
   ]

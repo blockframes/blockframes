@@ -36,6 +36,12 @@
         fill: mat-color($warn);
       }
     }
+
+    &.mat-button-disabled {
+      svg g, svg polygon, svg path {
+        fill: mat-color($background, disabled-button);
+      }
+    }
   }
 
   // With background
@@ -74,6 +80,13 @@
         fill: mat-color($primary, default-contrast);
       }
     }
+
+    &.mat-button-disabled {
+      background-color: mat-color($background, disabled-button);
+      svg g, svg polygon, svg path {
+        fill: mat-color($foreground, disabled-button);
+      }
+    }
   }
 
   .mat-button,
@@ -83,7 +96,6 @@
     padding: 14px 32px;
   }
 
-  .mat-icon-button.mat-button-disabled,
   .mat-button.mat-button-disabled {
     background-color: mat-color($background, disabled-button);
   }

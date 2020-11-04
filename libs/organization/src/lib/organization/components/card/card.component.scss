@@ -15,10 +15,16 @@ a {
   }
 }
 
-h5,
-span {
-  text-align: center;
-  margin: 0;
+header {
+  width: 80%;
+  h5,
+  span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0;
+    text-overflow: ellipsis;
+  }
 }
 
 mat-tab-group {

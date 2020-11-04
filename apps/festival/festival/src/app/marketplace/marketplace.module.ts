@@ -37,7 +37,7 @@ const routes: Routes = [{
     },
     {
       path: 'wishlist',
-      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule)
+      loadChildren: () => import('@blockframes/ui/marketplace/pages/wishlist/wishlist.module').then(m => m.WishlistModule)
     },
     {
       path: 'title',
@@ -85,6 +85,7 @@ const routes: Routes = [{
         }, {
           path: 'session',
           canActivate: [SessionGuard],
+          canDeactivate: [SessionGuard],
           loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
         },
         {

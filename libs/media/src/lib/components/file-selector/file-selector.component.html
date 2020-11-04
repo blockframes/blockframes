@@ -1,67 +1,77 @@
 
-<mat-expansion-panel class="selector" #fileSelector>
-  <mat-expansion-panel-header>
-    <ng-container *ngIf="(selectedFile$ | async) as selectedFile; else noFile">
-      <mat-icon svgIcon="document"></mat-icon>
-      {{ selectedFile | fileName}}
-    </ng-container>
-    <ng-template #noFile>
-      <mat-icon svgIcon="folder"></mat-icon>
-      Browse Files
-    </ng-template>
-  </mat-expansion-panel-header>
-  <ng-template matExpansionPanelContent>
 
-    <mat-accordion *ngIf="(org$ | async) as org">
+<header fxLayout="row">
+  <h2 fxFlex="0 1">Choose your files</h2>
+  <button mat-icon-button fxFlex (click)="closeDialog()"><mat-icon svgIcon="close"></mat-icon></button>
+</header>
 
-      <mat-expansion-panel class="folder">
-        <mat-expansion-panel-header>
-          <mat-icon svgIcon="home"></mat-icon>
-          {{org.denomination.public}}
-        </mat-expansion-panel-header>
-        <ng-template matExpansionPanelContent>
-          <ng-container *ngIf="org.documents?.notes.length > 0; else noOrgFiles">
-            <ng-container *ngFor="let note of org.documents.notes">
-              <button mat-button (click)="select(note.ref)">
-                <mat-icon svgIcon="document"></mat-icon>
-                {{note.ref | fileName}}
-              </button>
-            </ng-container>
-          </ng-container>
-          <ng-template #noOrgFiles>No Files</ng-template>
+<mat-divider></mat-divider>
+
+<section fxLayout="row">
+  <mat-tab-group>
+    <mat-tab label="Organization Files">
+      <mat-list>
+        <ng-container *ngIf="orgFiles.length; else noOrgFiles">
+          <mat-list-item *ngFor="let file of orgFiles">
+            <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
+            <div mat-line [matTooltip]="file.path | fileName">{{file.path | fileName}}</div>
+            <button mat-icon-button (click)="toggleSelect(file.path)">
+              <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
+              <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
+            </button>
+          </mat-list-item>
+        </ng-container>
+        <ng-template #noOrgFiles>
+          <mat-list-item>No Files</mat-list-item>
         </ng-template>
+      </mat-list>
+    </mat-tab>
+
+    <mat-tab label="Titles Files">
+
+      <mat-expansion-panel *ngFor="let movie of movies">
+
+        <mat-expansion-panel-header>
+          <mat-panel-title fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+            <mat-icon svgIcon="folder"></mat-icon>
+            <div fxFlex fxLayout="column">
+              <h5>{{movie.title.international}}</h5>
+              <p class="mat-caption" i18n>{{moviesFiles[movie.id].length}} {moviesFiles[movie.id].length, plural, =0 {file} =1 {file} other {files}}</p>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-divider></mat-divider>
+        <mat-list>
+          <ng-container *ngIf="moviesFiles[movie.id].length; else noMovieFiles">
+            <mat-list-item *ngFor="let file of moviesFiles[movie.id]">
+              <mat-icon mat-list-icon [svgIcon]="file.path | fileTypeImage : 'icon'"></mat-icon>
+              <div mat-line [matTooltip]="file.path | fileName">{{file.path | fileName}}</div>
+              <button mat-icon-button (click)="toggleSelect(file.path)">
+                <mat-icon *ngIf="file.isSelected" svgIcon="check" color="primary"></mat-icon>
+                <mat-icon *ngIf="!file.isSelected" svgIcon="add"></mat-icon>
+              </button>
+            </mat-list-item>
+          </ng-container>
+          <ng-template #noMovieFiles>
+            <mat-list-item>No Files</mat-list-item>
+          </ng-template>
+        </mat-list>
+        <mat-divider></mat-divider>
+
       </mat-expansion-panel>
 
-      <ng-container *ngIf="(movies$ | async) as movies">
-        <mat-expansion-panel
-          class="folder"
-          *ngFor="let movie of movies"
-          (opened)="getFilesOfMovie(movie)"
-          (closed)="clearFiles()"
-        >
-          <mat-expansion-panel-header>
-            <mat-icon svgIcon="film"></mat-icon>
-            {{movie.title.international}}
-          </mat-expansion-panel-header>
-          <ng-template matExpansionPanelContent>
-            <ng-container *ngIf="movieFiles$ | async as files; else loading">
-              <ng-container *ngIf="files.length > 0; else noMovieFiles">
-                <ng-container *ngFor="let file of files">
-                  <button mat-button (click)="select(file)">
-                    <mat-icon svgIcon="document"></mat-icon>
-                    {{file | fileName}}
-                  </button>
-                </ng-container>
-              </ng-container>
-              <ng-template #noMovieFiles>No Files</ng-template>
-            </ng-container>
-            <ng-template #loading>
-              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </ng-template>
-          </ng-template>
-        </mat-expansion-panel>
-      </ng-container>
-    </mat-accordion>
-
-  </ng-template>
-</mat-expansion-panel>
+    </mat-tab>
+  </mat-tab-group>
+  <aside fxLayout="column" fxLayoutAlign="space-between">
+    <h4>Selected Files ({{selectedFiles.length}})</h4>
+    <mat-list>
+      <mat-list-item *ngFor="let file of selectedFiles">
+        <mat-icon mat-list-icon [svgIcon]="file | fileTypeImage : 'icon'"></mat-icon>
+        <div mat-line [matTooltip]="file | fileName">{{file | fileName}}</div>
+        <button mat-icon-button (click)="toggleSelect(file)"><mat-icon svgIcon="cross"></mat-icon></button>
+      </mat-list-item>
+    </mat-list>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Add Files</button>
+  </aside>
+</section>

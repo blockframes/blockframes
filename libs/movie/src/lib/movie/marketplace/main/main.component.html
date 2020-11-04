@@ -11,7 +11,7 @@
   </section>
 
 
-  <!-- Main Information -->
+  <!-- Storyline Information -->
   <section *ngIf="movie | hasKeys: keys.main">
     <h2>Story Elements</h2>
     <article *ngIf="movie.logline">
@@ -36,29 +36,6 @@
   </section>
 
 
-  <!-- Audience & Goal -->
-  <section id="audience-goals" *ngIf="movie | hasKeys: 'audience'">
-    <h2>Audience & Goals</h2>
-    <article *ngIf="movie.audience.targets.length">
-      <h5>Target audience</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
-        <ng-container *ngFor="let target of movie.audience.targets">
-          <mat-chip>{{ target }}</mat-chip>
-        </ng-container>
-      </mat-chip-list>
-    </article>
-    <article *ngIf="movie.audience.goals.length">
-      <h5>Social responsability goals</h5>
-      <mat-chip-list fxLayout="row" fxLayoutGap="8px">
-        <ng-container *ngFor="let goal of movie.audience.goals">
-          <mat-chip>{{ goal | toLabel: 'socialGoals' }}</mat-chip>
-        </ng-container>
-      </mat-chip-list>
-    </article>
-    <mat-divider></mat-divider>
-  </section>
-
-
   <!-- GENERAL INFORMATION -->
   <section *ngIf="movie | hasKeys: keys.general ">
     <h2>General Information</h2>
@@ -67,7 +44,7 @@
       <h5>Release Year</h5>
       <p>
         <span>{{ movie.release.year }}</span>
-        <span *ngIf="movie.release.status"> ({{ movie.release.status }})</span>
+        <span *ngIf="movie.release.status"> ({{ movie.release.status | toLabel: 'screeningStatus' }})</span>
       </p>
     </article>
 
@@ -93,7 +70,18 @@
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
         <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | duration }}</span>
-        <span *ngIf="movie.runningTime.status">{{ movie.runningTime.status | titlecase }}</span>
+        <span *ngIf="movie.runningTime.status">
+          <!-- TODO #4124 rework the runningTime.time data ?-->
+          <ng-container
+          *ngIf="movie.runningTime.status === 'confirmed'
+          && movie.runningTime.time !== 'TBC'
+          && movie.runningTime.time !== 'TBD'
+          && movie.runningTime.time !== '-';
+          else runningTimeStatus">Confirmed</ng-container>
+          <ng-template #runningTimeStatus>
+            {{ movie.runningTime.status | toLabel: 'screeningStatus' }}
+          </ng-template>
+        </span>
       </div>
     </article>
 
@@ -118,7 +106,7 @@
 
 
   <!-- Festival -->
-  <section *ngIf="movie.prizes.length && (movie | hasStatus: status.afterProd)">
+  <section *ngIf="(movie.prizes.length || movie.customPrizes.length) && (movie | hasStatus: status.afterProd)">
     <h2>Festivals</h2>
     <article grid>
       <ng-container *ngFor="let prize of movie.prizes">

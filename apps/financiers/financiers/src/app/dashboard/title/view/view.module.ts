@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
@@ -15,6 +16,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routes = [{
   path: '',
@@ -31,24 +36,29 @@ const routes = [{
       data: { animation: 0 }
     },
     {
-      path: 'artistic',
-      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
+      path: 'production',
+      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
       data: { animation: 1 }
     },
     {
-      path: 'production',
-      loadChildren: () => import('@blockframes/movie/dashboard/production/production.module').then(m => m.MovieViewProductionModule),
+      path: 'artistic',
+      loadChildren: () => import('@blockframes/movie/dashboard/artistic/artistic.module').then(m => m.MovieViewArtisticModule),
       data: { animation: 2 }
+    },
+    {
+      path: 'additional',
+      loadChildren: () => import('@blockframes/movie/dashboard/additional/additional.module').then(m => m.MovieViewAdditionalModule),
+      data: { animation: 3 }
     },
     {
       path: 'financing',
       loadChildren: () => import('@blockframes/campaign/dashboard/financing/financing.module').then(m => m.FinancingModule),
-      data: { animation: 3 }
+      data: { animation: 4 }
     },
     {
       path: 'campaign',
       loadChildren: () => import('@blockframes/campaign/dashboard/investment/investment.module').then(m => m.InvestmentModule),
-      data: { animation: 4 }
+      data: { animation: 5 }
     }
   ]
 }];
@@ -57,6 +67,7 @@ const routes = [{
   declarations: [TitleViewComponent],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FlexLayoutModule,
     // Blockframes
     DashboardTitleShellModule,
@@ -65,8 +76,12 @@ const routes = [{
     MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
-    MatSelectModule,
     MatDividerModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSnackBarModule,
     // Route
     RouterModule.forChild(routes)
   ]

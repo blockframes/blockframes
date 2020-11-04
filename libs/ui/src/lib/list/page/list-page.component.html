@@ -27,9 +27,6 @@
       </ng-container>
     </button>
 
-    <!-- SORT CONTROL-->
-    <ng-content select="list-page-sort"></ng-content>
-
   </section>
 </header>
 
@@ -76,7 +73,7 @@
     <ng-template [ngTemplateOutlet]="listPageEmptyTemplate || defaultImg"></ng-template>
     <ng-template #defaultImg>
       <div fxLayout="column" fxLayoutAlign="start center">
-        <h6>We didn't found anything.</h6>
+        <h6>Sorry, we didn't find anything.</h6>
         <img asset="no_titles.webp" alt="No titles">
       </div>
     </ng-template>

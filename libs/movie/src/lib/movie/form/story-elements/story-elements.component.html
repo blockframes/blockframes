@@ -1,12 +1,10 @@
 <tunnel-page>
-  <h4 title>Title Information</h4>
-  <h1 subtitle>Storyline Elements</h1>
   <ng-container tunnel-form>
     <section id="logline">
       <h3>Logline</h3>
       <mat-form-field appearance="outline">
-        <textarea test-id="logline" matInput [formControl]="form.logline" cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="350"
-          type="string"
+        <textarea test-id="logline" matInput [formControl]="form.logline" cdkTextareaAutosize cdkAutosizeMinRows="5"
+          maxlength="350" type="string"
           placeholder="e.g. A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxruious, ill-fated Titanic."></textarea>
         <mat-hint align="start">Logline should not exceed 350 characters</mat-hint>
         <mat-error *ngIf="form.logline.hasError('maxlength')">
@@ -20,11 +18,12 @@
     <section id="synopsis">
       <h3>Synopsis *</h3>
       <mat-form-field appearance="outline">
-        <textarea test-id="synopsis" matInput [formControl]="form.synopsis" cdkTextareaAutosize cdkAutosizeMinRows="5" maxlength="1500"
-          type="string" aria-label="synopsis"
+        <textarea test-id="synopsis" matInput [formControl]="form.synopsis" cdkTextareaAutosize cdkAutosizeMinRows="5"
+          maxlength="1500" type="string" aria-label="synopsis"
           placeholder="e.g. 84 years later, a 100 year-old woman named Rose DeWitt Bukater tells the story to her granddaughter Lizzy Calvert, Brock Lovett, Lewis Bodine, Bobby Buell and Anatoly Mikailavich on the Keldysh about her life set in April 10th 1912, on a ship called Titanic when young Rose boards the departing ship with the upper-class passengers and her mother, Ruth DeWitt Bukater, and her fiancé, Caledon Hockley. Meanwhile, a drifter and artist named Jack Dawson and his best friend Fabrizio De Rossi win third-class tickets to the ship in a game. And she explains the whole story from departure until the death of Titanic on its first and last voyage April 15th, 1912 at 2:20 in the morning."
           required></textarea>
-        <mat-hint align="start">{{ form.synopsis.value.length }} / 1500</mat-hint>
+        <mat-hint align="start">{{ form.synopsis.value.length }} / 1500. Synopsis should not exceed 1500 characters.
+        </mat-hint>
         <mat-error *ngIf="form.synopsis.hasError('required')">
           Please fill in your project's synopsis.
         </mat-error>

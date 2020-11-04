@@ -62,8 +62,12 @@ export async function onMovieDelete(
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
+  const movieAppAccess = Object.keys(movie.storeConfig.appAccess).filter(access => movie.storeConfig.appAccess[access]);
+
   // Update algolia's index
-  await deleteObject(algolia.indexNameMovies, context.params.movieId);
+  const promises = movieAppAccess.map(appName => deleteObject(algolia.indexNameMovies[appName], context.params.movieId));
+
+  await Promise.all(promises)
 
   console.log(`removed sub colletions of ${movie.id}`);
   return batch.commit();
@@ -115,6 +119,11 @@ export async function onMovieUpdate(
 
   if (creatorOrg.denomination?.full) {
     await storeSearchableMovie(after, orgName(creatorOrg));
+    for (const app in after.storeConfig.appAccess) {
+      if (after.storeConfig.appAccess[app] && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
+        await deleteObject(algolia.indexNameMovies[app], before.id);
+      }
+    }
   }
 }
 

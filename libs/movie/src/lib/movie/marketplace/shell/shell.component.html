@@ -32,13 +32,44 @@
     <router-outlet #outlet="outlet"></router-outlet>
   </section>
 
+  <ng-content></ng-content>
+
   <!-- Footer -->
-  <ng-container *ngIf="movie.promotional.still_photo.length">
-    <h2 flex>Images</h2>
-    <bf-carousel flex [min]="4">
-      <ng-container *ngFor="let photo of movie.promotional.still_photo">
-        <img carouselItem [col]="3" [ref]="photo" asset="empty_poster.webp" >
-      </ng-container>
-    </bf-carousel>
-  </ng-container>
+  <footer>
+    <article *ngIf="movie | hasKeys: ['promotional.scenario', 'promotional.moodboard', 'promotional.presentation_deck']">
+      <h2>Files</h2>
+      <div grid>
+        <mat-card [col]="3" *ngIf="movie.promotional.presentation_deck as deck">
+          <img asset="deck.webp" />
+          <a mat-button [href]="deck | getUrl | async" target="_blank">
+            <mat-icon svgIcon="download"></mat-icon>
+            <span>Presentation Deck</span>
+          </a>
+        </mat-card>
+        <mat-card [col]="3" *ngIf="movie.promotional.scenario as scenario">
+          <img asset="scenario.webp" />
+          <a mat-button [href]="scenario | getUrl | async" target="_blank">
+            <mat-icon svgIcon="download"></mat-icon>
+            <span>Scenario</span>
+          </a>
+        </mat-card>
+        <mat-card [col]="3" *ngIf="movie.promotional.moodboard as moodboard">
+          <img asset="moodboard.webp" />
+          <a mat-button [href]="moodboard | getUrl | async" target="_blank">
+            <mat-icon svgIcon="download"></mat-icon>
+            <span>Moodboard</span>
+          </a>
+        </mat-card>
+      </div>
+    </article>
+
+    <article *ngIf="movie.promotional.still_photo.length">
+      <h2>Images</h2>
+      <bf-carousel flex [min]="3">
+        <ng-container *ngFor="let photo of movie.promotional.still_photo">
+          <img carouselItem [col]="4" [ref]="photo" asset="empty_still_photo.webp" >
+        </ng-container>
+      </bf-carousel>
+    </article>
+  </footer>
 </ng-container>

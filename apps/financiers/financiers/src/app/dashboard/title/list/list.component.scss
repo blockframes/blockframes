@@ -12,7 +12,7 @@ header {
   margin-bottom: 16px;
 }
 
-header[mat-tab-nav-bar] button {
+nav[mat-tab-nav-bar] button {
   border: none;
   background-color: transparent;
 }
@@ -28,11 +28,6 @@ mat-card {
     width: 100px;
     align-self: center;
   }
-}
-
-p {
-  text-align: center;
-  margin-bottom: 32px;
 }
 
 h1 {

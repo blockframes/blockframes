@@ -41,7 +41,7 @@ const routes: Routes = [{
     },
     {
       path: 'home',   // Home (dashboard if film, welcome if not)
-      loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+      loadChildren: () => import('@blockframes/ui/dashboard/pages/home/home.module').then(m => m.HomeModule),
     },
     {
       path: 'notifications',
@@ -67,7 +67,7 @@ const routes: Routes = [{
         loadChildren: () => import('@blockframes/movie/form/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
         data: { redirect: '/c/o/dashboard/title' }

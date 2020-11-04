@@ -22,7 +22,6 @@ import {
   PageListItemDirective,
   PageProgressComponent,
   PageSearchDirective,
-  PageSortDirective,
   PageTitleDirective,
   PageDescriptionTemplateDirective,
   PageEmptyDirective,
@@ -47,7 +46,6 @@ import {
   ],
   declarations: [
     ListPageComponent,
-    PageSortDirective,
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,
@@ -59,7 +57,6 @@ import {
   ],
   exports: [
     ListPageComponent,
-    PageSortDirective,
     PageSearchDirective,
     PageCardDirective,
     PageListItemDirective,

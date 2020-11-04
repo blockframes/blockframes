@@ -11,7 +11,7 @@ import { MediaViewerModule } from '@blockframes/media/components/viewers/media-v
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.pipe";
 import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
+import { MediaPlayerModule } from '@blockframes/media/components/player/player.module';
 import { MeetingMediaListModule } from '@blockframes/event/components/meeting/media-list/media-list.module';
 import { MeetingModule } from '@blockframes/event/components/meeting/meeting.module';
 
@@ -32,7 +32,7 @@ import { FileNameModule } from '@blockframes/utils/pipes/fileName.pipe';
     DisplayNameModule,
     EventTimeModule,
     OrgNameModule,
-    EventPlayerModule,
+    MediaPlayerModule,
     MeetingMediaListModule,
     FileNameModule,
     MediaControlModule,

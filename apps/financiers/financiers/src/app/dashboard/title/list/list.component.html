@@ -1,7 +1,7 @@
 <ng-container *ngIf="(titles$ | async) as titles; else loading">
-  <ng-container *ngIf="titles.length; else empty">
+  <ng-container *ngIf="(filter.value !== 'all' || titles.length); else empty">
     <header fxLayout="row" fxLayoutAlign="space-between center" class="import">
-      <h1>My Titles</h1>
+      <h1>My Projects</h1>
       <div fxLayoutGap="24px">
         <a mat-stroked-button color="primary" routerLink="../import">
           <mat-icon svgIcon="excel"></mat-icon>
@@ -13,14 +13,24 @@
       </div>
     </header>
 
+    <nav mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="applyFilter('all')" [active]="filter.value === 'all'">All Projects</button>
+      <button mat-tab-link (click)="applyFilter('draft')" [active]="filter.value === 'draft'">Draft</button>
+      <button mat-tab-link (click)="applyFilter('ongoing')" [active]="filter.value === 'ongoing'">Ongoing</button>
+      <button mat-tab-link (click)="applyFilter('achieved')" [active]="filter.value === 'achieved'">Achieved</button>
+    </nav>
+
     <mat-card>
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
-        (rowClick)="goToTitle($event)">
+        clickable (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-        <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
-        <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
         <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
-        <ng-template colRef="storeConfig.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
+        <ng-template colRef="campaign.cap" let-cap let-movie="item">
+          {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+        </ng-template>
+        <ng-template colRef="campaign.received" let-received let-movie="item">
+          {{ received ? (received | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
+        </ng-template>
       </bf-table-filter>
     </mat-card>
   </ng-container>
@@ -33,12 +43,7 @@
 
 <ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h1>You have no title yet.</h1>
-    <p class="mat-body-1">
-      You haven't imported titles yet.
-      <br>
-      You may add several titles at once through bulk import, or just one at a time.
-    </p>
+    <dashboard-no-title></dashboard-no-title>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
       <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.webp" alt="Add title image">

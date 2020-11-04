@@ -10,7 +10,14 @@ section {
   width: 100%;
 }
 
-// Like mat-card before, we don't want a margin-bottom for every h4 in the tunnel
-tunnel-page h4[title] {
+header {
+  margin-bottom: 24px;
+}
+h1.title {
+  margin: 0;
+}
+
+h4.subtitle {
+  text-transform: uppercase;
   margin: 0;
 }

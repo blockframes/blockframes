@@ -9,15 +9,21 @@ header {
   margin-bottom: 80px;
   background-image: url("/assets/images/ACMbannerlanding.png");
   background-size: cover;
-  text-align: center;
-  border: none;
 
-  h1.mat-display-2 {
-    margin-bottom: 80px;
-  }
   h4 {
     text-transform: uppercase;
     margin-bottom: 0;
+  }
+  h1 {
+    margin-bottom: 32px;
+  }
+  p {
+    width: 70%;
+    text-align: justify;
+  }
+
+  .actions {
+    margin-top: 24px;
   }
 }
 
@@ -25,11 +31,12 @@ header {
   margin: 24px 0px;
 }
 
-.upcoming-events-banner {
+.banner {
   background-image: url("/assets/images/banner_empty.png");
   background-size: cover;
   padding: 40px 0px;
   margin-bottom: 80px;
+  text-align: center;
 }
 
 .movie-header-slider {
@@ -51,7 +58,7 @@ bf-carousel {
 
 @include layout-bp(xs) {
   header {
-    padding: 50px 0;
+    padding: 60px 0;
   }
 }
 
@@ -63,6 +70,6 @@ bf-carousel {
 
 @include layout-bp(md) {
   header {
-    padding: 20px;
+    padding: 40px;
   }
 }

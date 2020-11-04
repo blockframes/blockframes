@@ -10,10 +10,10 @@ import { ListComponent } from './list.component';
 
 // Blocfkrames
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { ToLabelModule } from '@blockframes/utils/pipes';
-import { DisplayNameModule } from '@blockframes/utils/pipes';
+
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { AnalyticsPipeModule } from '@blockframes/movie/pipes/analytics.pipe';
+import { NoTitleModule } from '@blockframes/ui/dashboard/components/no-title/no-title.module';
+
 // Material
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,10 +29,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
-    ToLabelModule,
-    DisplayNameModule,
     ImageReferenceModule,
-    AnalyticsPipeModule,
+    NoTitleModule,
     // Material
     MatButtonModule,
     MatTabsModule,

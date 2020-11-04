@@ -1,125 +1,128 @@
 <ng-container *ngIf="campaign$ | async as campaign">
-  <h1>Financial Elements</h1>
-
-  <!-- Budget -->
-  <section id="budget" *ngIf="campaign.budget | apexBudget as options" >
-    <header fxLayout fxLayoutAlign="space-between center">
-      <h2>Estimated Budget</h2>
-      <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
-        <a mat-button [href]="file" target="_blank">
-          <mat-icon svgIcon="arrow_downward"></mat-icon>
-          <span>Download Estimated Budget</span>
-        </a>
-      </ng-container>
-    </header>
+  <ng-container *ngIf="campaign | hasKeys: ['budget', 'fundings', 'profits']">
+    <h1>Financial Elements</h1>
   
-    <article>
-      <table>
-        <ng-container *ngFor="let row of budgetData">
-          <tr>
-            <td fxLayout fxLayoutGap="8px">
-              <div class="color" [style.backgroundColor]="row.color"></div>
-              <span>{{ row.label }}</span>
-            </td>
-            <td>{{ campaign.budget[row.serie] | bigCurrency:'USD' }}</td>
-          </tr>
-        </ng-container>
-        <tfoot>
-          <tr>
-            <td>Grand Total Budget</td>
-            <td>{{ campaign.budget | budget | bigCurrency:'USD' }}</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <apx-chart
-        [chart]="{ type: 'pie' }"
-        [series]="options.series"
-        [labels]="options.labels"
-        [colors]="options.colors"
-        [tooltip]="{y: formatter.bigCurrency}"
-      ></apx-chart>
-    </article>
-    <mat-divider></mat-divider>
-  </section>
-
-
-  <!-- Funding -->
-  <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
-    <header fxLayout fxLayoutAlign="space-between center">
-      <h2>Financing Plan</h2>
-      <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
-        <a mat-button [href]="file" target="_blank">
-          <mat-icon svgIcon="arrow_downward"></mat-icon>
-          <span>Download Financing Plan</span>
-        </a>
-      </ng-container>
-    </header>
-  
-    <article>
-      <table>
-        <ng-container *ngFor="let funding of campaign.fundings; let i = index">
-          <tr>
-            <td fxLayout fxLayoutGap="8px">
-              <div class="color" [style.backgroundColor]="options.colors[i]"></div>
-              <span>{{ funding.name }}</span>
-            </td>
-            <td>{{ funding.status | titlecase }}</td>
-            <td>{{ (funding.amount / (campaign.fundings | totalFundings)) | percent }}</td>
-            <td>{{ funding.amount | bigCurrency:'USD' }}</td>
-          </tr>
-        </ng-container>
-        <tfoot>
-          <tr>
-            <td>Total Investment</td>
-            <td></td>
-            <td></td>
-            <td>{{ campaign.budget | budget | bigCurrency:'USD' }}</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <apx-chart
-        [chart]="{ type: 'pie' }"
-        [series]="options.series"
-        [labels]="options.labels"
-        [colors]="options.colors"
-        [tooltip]="{y: formatter.bigCurrency}"
-      ></apx-chart>
-    </article>
-    <mat-divider></mat-divider>
-  </section>
-
-    <!-- Profits -->
-    <section id="budget" *ngIf="campaign.profits | apexProfits as options">
+    <!-- Budget -->
+    <section id="budget" *ngIf="campaign.budget | apexBudget as options" >
       <header fxLayout fxLayoutAlign="space-between center">
-        <h2>Return on Investment</h2>
-        <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
+        <h2>Budget</h2>
+        <ng-container *ngIf="campaign.files.budget | getUrl | async as file">
           <a mat-button [href]="file" target="_blank">
             <mat-icon svgIcon="arrow_downward"></mat-icon>
-            <span>Download distributed Waterfall</span>
+            <span>Download Budget</span>
           </a>
         </ng-container>
       </header>
     
       <article>
-        <aside>
-          <h3 fxLayout fxFlayoutAlign="start center">
-            <mat-icon svgIcon="info"></mat-icon>
-            <span>What is the return on investment in cinema industry?</span>
-          </h3>
-          <p>
-            Your Return on investment is your share of the total amount of proceeds resulting from the distribution of the film on all media around the world. It may be calculated in % by dividing your share of revenue by the initial investment. If the result is superior to 100%, this means your investment was profitable.
-          </p>
-        </aside>
+        <table>
+          <ng-container *ngFor="let row of options.data; let i = index">
+            <tr>
+              <td fxLayout fxLayoutGap="8px">
+                <div class="color" [style.backgroundColor]="options.colors[i]"></div>
+                <span>{{ row.label }}</span>
+              </td>
+              <td>{{ campaign.budget[row.serie] | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          </ng-container>
+          <tfoot>
+            <tr>
+              <td>Grand Total Budget</td>
+              <td>{{ campaign.budget | budget | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          </tfoot>
+        </table>
   
         <apx-chart
-          [chart]="{ type: 'bar' }"
+          [chart]="{ type: 'pie' }"
           [series]="options.series"
-          [xaxis]="options.xAxis"
-          [dataLabels]="formatter.percent"
-          [tooltip]="{y: formatter.percent}"
+          [labels]="options.labels"
+          [colors]="options.colors"
+          [tooltip]="{y: formatter.currency(campaign)}"
         ></apx-chart>
       </article>
+      <mat-divider></mat-divider>
     </section>
+  
+  
+    <!-- Funding -->
+    <section id="budget" *ngIf="campaign.fundings | apexFunding as options">
+      <header fxLayout fxLayoutAlign="space-between center">
+        <h2>Financing Plan</h2>
+        <ng-container *ngIf="campaign.files.financingPlan | getUrl | async as file">
+          <a mat-button [href]="file" target="_blank">
+            <mat-icon svgIcon="arrow_downward"></mat-icon>
+            <span>Download Financing Plan</span>
+          </a>
+        </ng-container>
+      </header>
+    
+      <article>
+        <table>
+          <ng-container *ngFor="let funding of campaign.fundings; let i = index">
+            <tr>
+              <td fxLayout fxLayoutGap="8px">
+                <div class="color" [style.backgroundColor]="options.colors[i]"></div>
+                <span>{{ funding.name }}</span>
+              </td>
+              <td>{{ funding.status | titlecase }}</td>
+              <td>{{ (funding.amount / (campaign.fundings | totalFundings)) | percent }}</td>
+              <td>{{ funding.amount | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          </ng-container>
+          <tfoot>
+            <tr>
+              <td>Total Investment</td>
+              <td></td>
+              <td></td>
+              <td>{{ campaign.fundings | totalFundings | currency : campaign.currency : 'symbol' : '1.0-0' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+  
+        <apx-chart
+          [chart]="{ type: 'pie' }"
+          [series]="options.series"
+          [labels]="options.labels"
+          [colors]="options.colors"
+          [tooltip]="{y: formatter.currency(campaign)}"
+        ></apx-chart>
+      </article>
+      <mat-divider></mat-divider>
+    </section>
+  
+      <!-- Profits -->
+      <section id="budget" *ngIf="campaign.profits | apexProfits as options">
+        <header fxLayout fxLayoutAlign="space-between center">
+          <h2>Return on Investment</h2>
+          <ng-container *ngIf="campaign.files.waterfall | getUrl | async as file">
+            <a mat-button [href]="file" target="_blank">
+              <mat-icon svgIcon="arrow_downward"></mat-icon>
+              <span>Download distributed Waterfall</span>
+            </a>
+          </ng-container>
+        </header>
+      
+        <article>
+          <aside>
+            <h3 fxLayout fxFlayoutAlign="start center">
+              <mat-icon svgIcon="info"></mat-icon>
+              <span>What is the return on investment in cinema industry?</span>
+            </h3>
+            <p>
+              Your Return on investment is your share of the total amount of proceeds resulting from the distribution of the film on all media around the world. It may be calculated in % by dividing your share of revenue by the initial investment. If the result is superior to 100%, this means your investment was profitable.
+            </p>
+          </aside>
+    
+          <apx-chart
+            [chart]="{ type: 'bar' }"
+            [series]="options.series"
+            [xaxis]="options.xAxis"
+            [dataLabels]="formatter.percent"
+            [tooltip]="{y: formatter.percent}"
+          ></apx-chart>
+        </article>
+      </section>
+
+  </ng-container>
 </ng-container>

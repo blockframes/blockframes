@@ -1,6 +1,4 @@
 <tunnel-page>
-  <h4 title>Financial Elements</h4>
-  <h1 subtitle>Financing plan</h1>
   <ng-container tunnel-form>
     <section id="fundings">
       <h3>Financing plan</h3>
@@ -11,7 +9,7 @@
         <!-- Columns -->
         <ng-template colRef="name" let-name><b>{{ name }}</b></ng-template>
         <ng-template colRef="kind" let-kind>{{ kind }}</ng-template>
-        <ng-template colRef="amount" let-amount>{{ amount | currency }}</ng-template>
+        <ng-template colRef="amount" let-amount>{{ amount | currency: form.getCurrency() : 'symbol' : '1.0-0' }}</ng-template>
         <ng-template colRef="status" let-status>{{ status | titlecase }}</ng-template>
 
         <!-- Local Form -->
@@ -35,7 +33,7 @@
               <mat-form-field fxFlex appearance="outline">
                 <mat-label>Amount</mat-label>
                 <input type="number" matInput formControlName="amount" min="0"/>
-                <mat-icon matSuffix svgIcon="USD"></mat-icon>
+                <mat-icon matSuffix [svgIcon]="form.getCurrency()"></mat-icon>
               </mat-form-field>
   
               <mat-form-field fxFlex appearance="outline">
@@ -65,9 +63,8 @@
         <br/>
         This upload is optional, but this information might be very helpful to your potential investors.
       </p>
-      <file-upload [form]="form.get('files').get('financingPlan')" [storagePath]="storagePath" accept="['.pdf']" [types]="['application/pdf']">
-        <h3 type>Upload Files</h3>
-        <p class="mat-caption" format>Accepted Formats: .pdf</p>
+      <file-upload [form]="form.get('files').get('financingPlan')" [storagePath]="storagePath" allowedFileType="pdf">
+        <h3 title>Upload File</h3>
       </file-upload>
     </section>
   </ng-container>

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy, Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { RouteDescription } from '@blockframes/utils/common-interfaces/navigation';
 import { ShellConfig, FORMS_CONFIG } from '../../form/shell/shell.component';
 import { MovieQuery } from '@blockframes/movie/+state';
@@ -14,7 +14,7 @@ import { MovieQuery } from '@blockframes/movie/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardTitleShellComponent implements OnInit, OnDestroy {
-  private subs: Subscription[] = [];
+  private sub: Subscription;
   movie$ = this.query.selectActive();
 
   @Input() routes: RouteDescription[];
@@ -25,18 +25,20 @@ export class DashboardTitleShellComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    for (const name in this.configs) {
-      const subs = this.configs[name].onInit();
-      this.subs.concat(subs);
-    }
+    const obs = Object.keys(this.configs).map(name => this.configs[name].onInit()).flat();
+    this.sub = combineLatest(obs).subscribe();
   }
 
   ngOnDestroy() {
-    this.subs.forEach(sub => sub.unsubscribe());
+    this.sub?.unsubscribe();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
-    return this.configs[name].form;
+    return this.configs[name]?.form;
+  }
+
+  getConfig<K extends keyof ShellConfig>(name: K): ShellConfig[K] {
+    return this.configs[name];
   }
 
   animationOutlet(outlet: RouterOutlet) {

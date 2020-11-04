@@ -34,3 +34,5 @@ export const imgixToken = functions.config().imgix.token;
 export const twilioAccountSid = functions.config().twilio.account.sid;
 export const twilioApiKeySecret = functions.config().twilio.api.key.secret;
 export const twilioApiKeySid = functions.config().twilio.api.key.sid;
+
+export const enableDailyFirestoreBackup = true;

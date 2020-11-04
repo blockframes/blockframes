@@ -19,7 +19,6 @@ import { EntityControl, FormEntity } from '@blockframes/utils/form';
 import type { MovieShellConfig } from '../movie.shell.config';
 import type { CampaignShellConfig } from '@blockframes/campaign/form/campaign.shell.config';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { RouteDescription } from '@blockframes/utils/common-interfaces';
 
 
 function isStatus(prodStatus: ProductionStatus, acceptableStatus: ProductionStatus[]) {
@@ -31,7 +30,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
     title: 'First Step',
     icon: 'home',
     time: 2,
-    routes: [{ path: 'title-status', label: 'First Step' }],
+    routes: [{ path: 'title-status', label: 'Production Status' }],
   },
   {
     title: 'Title Information',
@@ -51,21 +50,22 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       label: 'Artistic Team'
     }, {
       path: 'reviews',
-      label: 'Selection & Reviews'
+      label: 'Selection & Reviews',
+      shouldHide: isStatus(status, ['development', 'shooting'])
     }, {
       path: 'additional-information',
       label: 'Additional Information'
     }, {
       path: 'shooting-information',
       label: 'Shooting Information',
-      shouldDisplay: isStatus(status, ['released'])
+      shouldHide: isStatus(status, ['released'])
     }, {
       path: 'technical-spec',
       label: 'Technical Specification'
     }, {
       path: 'available-materials',
       label: 'Available Materials',
-      shouldDisplay: isStatus(status, ['development'])
+      shouldHide: isStatus(status, ['development'])
     }]
   }, {
     title: 'Promotional Elements',
@@ -75,14 +75,13 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       {
         path: 'sales-pitch',
         label: 'Sales Pitch',
-        shouldDisplay: isStatus(status, ['released'])
       }, {
         path: 'media-files',
         label: 'Files'
       }, {
         path: 'media-notes',
         label: 'Notes & Statements',
-        shouldDisplay: isStatus(status, ['post_production', 'finished', 'released'])
+        shouldHide: isStatus(status, ['post_production', 'finished', 'released'])
       },
       {
         path: 'media-images',
@@ -95,7 +94,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   },
   ...appSteps,
   {
-    title: 'Summary',
+    title: 'Last Step',
     icon: 'send',
     time: 3,
     routes: [{
@@ -106,7 +105,7 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
   return steps.map(step => {
     return {
       ...step,
-      routes: step.routes.filter((route: any) => (!(route?.shouldDisplay) || !route.shouldDisplay))
+      routes: step.routes.filter(route => !route?.shouldHide)
     }
   })
 }
@@ -155,8 +154,8 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
     const movieForm = this.getForm('movie');
     this.steps$ = movieForm.get('productionStatus').valueChanges.pipe(
       startWith(movieForm.get('productionStatus').value),
-      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps)
-      ));
+      map((productionStatus: ProductionStatus) => getSteps(productionStatus, appSteps))
+    );
     this.exitRoute = `/c/o/dashboard/title/${this.query.getActiveId()}`;
   }
 
@@ -174,12 +173,12 @@ export class MovieFormShellComponent implements TunnelRoot, OnInit, AfterViewIni
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
-    this.getForm('movie').reset()
-    this.getForm('campaign').reset()
+    this.getForm('movie').reset();
+    this.getForm('campaign')?.reset();
   }
 
   getForm<K extends keyof ShellConfig>(name: K): ShellConfig[K]['form'] {
-    return this.configs[name].form;
+    return this.configs[name]?.form;
   }
 
   private checkIfElementIsReady(id: string) {

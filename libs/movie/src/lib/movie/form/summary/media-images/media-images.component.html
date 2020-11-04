@@ -4,13 +4,11 @@
     <mat-icon svgIcon="pencil" color="primary"></mat-icon>
   </a>
 </h6>
-<div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-  <missing-control [control]="stillPhoto" [link]="link">
-    <ng-template let-images>
-      <article fxLayout *ngFor="let image of images">
-        <mat-icon svgIcon="eye" color="primary"></mat-icon>
-        <span>{{ image.ref | fileName | maxLength: 30 }}</span>
-      </article>
-    </ng-template>
-  </missing-control>
-</div>
+<missing-control [control]="stillPhoto" [link]="link">
+  <ng-template let-images="control">
+    <article fxLayout fxLayoutAlign="start center" *ngFor="let image of images.controls">
+      <bf-preview-modal [form]="image" [link]="link"></bf-preview-modal>
+      <span>{{ image.value.ref | fileName | maxLength: 30 }}</span>
+    </article>
+  </ng-template>
+</missing-control>

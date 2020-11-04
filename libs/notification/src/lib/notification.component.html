@@ -1,15 +1,21 @@
-﻿<ng-container *ngIf="hasNotifications$ | async; else noFeed">
-  <header fxLayout="row" fxLayoutAlign="space-between start">
-    <h1>Activity Feed</h1>
-    <button mat-button (click)="markAll()">
-      <mat-icon svgIcon="read"></mat-icon>
-      <span>Mark all as read</span>
-    </button>
-  </header>
-  <notification-list [notifications]="notifications$ | async" class="surface"></notification-list>
+﻿<ng-container *ngIf="notifications$ | async as notifications; else loading">
+  <ng-container *ngIf="notifications.length; else empty">
+    <header fxLayout="row" fxLayoutAlign="space-between start">
+      <h1>Activity Feed</h1>
+      <button mat-button (click)="markAll()">
+        <mat-icon svgIcon="read"></mat-icon>
+        <span>Mark all as read</span>
+      </button>
+    </header>
+    <notification-list [notifications]="notifications" class="surface"></notification-list>
+  </ng-container>
 </ng-container>
-
-<ng-template #noFeed>
+<ng-template #loading>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner color="primary"></mat-spinner>
+  </article>
+</ng-template>
+<ng-template #empty>
   <section fxLayout="column" fxLayoutAlign="center center">
     <h1>You have no notification yet.</h1>
     <p>You haven't received any notifications at this time.</p>

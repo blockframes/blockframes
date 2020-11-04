@@ -1,4 +1,4 @@
-<ng-container *ngIf="!(moviesLoading$ | async)">
+<ng-container *ngIf="!(moviesLoading$ | async); else loading">
   <ng-container *ngIf="(movies$ | async).length else noMovie">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
@@ -19,7 +19,6 @@
   </ng-container>
 
   <ng-template #noMovie>
-    <!-- @TODO (#3337) Create specific component !-->
     <section fxLayout="column" fxLayoutAlign="center center">
       <h1>There’s no marketplace activity yet</h1>
       <p class="mat-body-1">
@@ -44,4 +43,8 @@
     </section>
   </ng-template>
 </ng-container>
-
+<ng-template #loading>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <mat-spinner color="primary"></mat-spinner>
+  </article>
+</ng-template>

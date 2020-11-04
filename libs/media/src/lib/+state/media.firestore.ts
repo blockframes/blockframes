@@ -12,7 +12,7 @@ export interface HostedMediaWithMetadata {
 }
 
 export function clearHostedMediaFormValue(formValue: HostedMediaFormValue): string {
-  if (formValue.ref === '') { return ''; }
+  if (!formValue.ref) return '';
   const ref = formValue.ref;
   const refParts = ref.split('/');
   return refParts.pop() === formValue.fileName ?

@@ -7,7 +7,7 @@ import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToEventFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
-import { EmailRecipient } from "@blockframes/utils/emails";
+import { EmailRecipient } from "@blockframes/utils/emails/utils";
 import { getAppName, getSendgridFrom, App, applicationUrl } from "@blockframes/utils/apps";
 import { orgName, canAccessModule } from "@blockframes/organization/+state/organization.firestore";
 

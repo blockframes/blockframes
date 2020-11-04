@@ -123,7 +123,8 @@ function createMovieControls(movie: Partial<Movie>) {
     keywords: FormList.factory(entity.keywords, el => new FormControl(el)),
     languages: MovieVersionInfoForm.factory(entity.languages, createLanguageControl),
     logline: new FormControl(entity.logline, [Validators.maxLength(350)]),
-    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable),
+    /* If no value is set for this property we want it to be true by default */
+    isOriginalVersionAvailable: new FormControl(entity.isOriginalVersionAvailable ?? true),
     originalLanguages: FormList.factory(entity.originalLanguages, el =>
       new FormStaticValue<'languages'>(el, 'languages'), [Validators.required]),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
@@ -676,6 +677,10 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
+
+  get videos() {
+    return this.get('videos');
+  }
 }
 
 // ------------------------------
@@ -1016,7 +1021,7 @@ function createAudianceAndGoalsFormControl(entity?: Partial<MovieGoalsAudience>)
   const { targets, goals } = createAudienceGoals(entity);
   return {
     targets: FormList.factory(targets, el => new FormControl(el)),
-    goals: new FormControl(goals)
+    goals: new FormStaticValueArray<'socialGoals'>(goals, 'socialGoals')
   }
 }
 
@@ -1044,6 +1049,12 @@ export class MovieHostedVideoForm extends FormEntity<MovieHostedVideoControls, H
   constructor(video?: Partial<HostedVideo>) {
     super(createMovieHostedVideoControl(video));
   }
+
+  get ref() { return this.get('ref'); }
+  get jwPlayerId() { return this.get('jwPlayerId'); }
+  get title() { return this.get('title'); }
+  get description() { return this.get('description'); }
+  get type() { return this.get('type'); }
 }
 
 function createMovieHostedVideosControl(videos: Partial<HostedVideos> = {}) {

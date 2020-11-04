@@ -10,24 +10,23 @@
     <li>
       <strong>ROI low: </strong>
       <missing-control [control]="form.get('profits').get('low')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
     <li>
       <strong>ROI medium: </strong>
       <missing-control [control]="form.get('profits').get('medium')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
     <li>
       <strong>ROI high: </strong>
       <missing-control [control]="form.get('profits').get('high')" link="../profits">
-        <ng-template let-profit>{{ profit | bigCurrency }}</ng-template>
+        <ng-template let-profit>{{ profit / 100 | percent }}</ng-template>
       </missing-control>
     </li>
   </ul>
   <div fxLayout fxLayoutAlign="start center" fxLayoutGap="8px">
-    <mat-icon svgIcon="eye"></mat-icon>
     <strong>Detailed waterfall:</strong>
     <missing-control [control]="form.get('files').get('waterfall.ref')">
       <ng-template let-ref>{{ ref | fileName | maxLength:30 }}</ng-template>

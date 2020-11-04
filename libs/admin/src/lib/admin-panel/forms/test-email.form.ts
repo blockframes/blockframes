@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createEmailRequest, EmailRequest } from '@blockframes/utils/emails';
+import { createEmailRequest, EmailRequest } from '@blockframes/utils/emails/utils';
 
 function createTestEmailControls(entity: Partial<EmailRequest>) {
   const request = createEmailRequest(entity);

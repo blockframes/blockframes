@@ -1,9 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { createEmailRequest, EmailRequest } from '@blockframes/utils/emails';
+import { createEmailRequest } from '@blockframes/utils/emails/utils';
 import { TestEmailForm } from '../../forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { ErrorResultResponse } from '@blockframes/utils/utils';
+import { SendgridService } from '@blockframes/utils/emails/sendgrid.service'
 import { sendgridEmailsFrom } from '@blockframes/utils/apps';
 import { AuthQuery } from '@blockframes/auth/+state';
 
@@ -21,7 +20,7 @@ export class MailsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
-    private functions: AngularFireFunctions,
+    private sendgrid: SendgridService,
     private authQuery: AuthQuery,
   ) {
   }
@@ -39,20 +38,18 @@ export class MailsComponent implements OnInit {
     }
 
     this.loading = true;
-    const request = createEmailRequest(this.form.value);
-    const output = await this.sendTestMail(request, this.form.get('from').value);
+    const emailParameters = {
+      request: createEmailRequest(this.form.value),
+      from: { email: this.form.get('from').value }
+    }
+    const output = await this.sendgrid.sendAsAdmin(emailParameters);
 
     if (output.result === 'OK') {
-      this.snackBar.open(`Mail successfully sent to ${request.to}`, 'close', { duration: 5000 });
+      this.snackBar.open(`Mail successfully sent to ${emailParameters.request.to}`, 'close', { duration: 5000 });
     } else {
       this.snackBar.open('There was an error while sending email..', 'close', { duration: 5000 })
     }
     this.loading = false;
     this.cdRef.markForCheck();
-  }
-
-  private async sendTestMail(request: EmailRequest, from?: string): Promise<ErrorResultResponse> {
-    const f = this.functions.httpsCallable('onSendTestMail');
-    return f({ request, from }).toPromise();
   }
 }

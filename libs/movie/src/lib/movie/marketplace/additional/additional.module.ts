@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdditionalComponent } from './additional.component';
-import { HasKeysModule, ToLabelModule } from '@blockframes/utils/pipes';
+import { HasKeysModule, ToLabelModule, ToDateModule } from '@blockframes/utils/pipes';
 import { HasStatusModule } from '../../pipes/has-status.pipe';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -17,6 +17,7 @@ import { MatChipsModule } from '@angular/material/chips';
     HasKeysModule,
     HasStatusModule,
     ToLabelModule,
+    ToDateModule,
     FlexLayoutModule,
     MatDividerModule,
     MatChipsModule,

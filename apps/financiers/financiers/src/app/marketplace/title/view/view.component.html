@@ -5,7 +5,7 @@
         <ng-container *ngFor="let org of orgs$ | async">
           <org-chip [org]="org"></org-chip>
           <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-            <span>Contact Sales Agent</span>
+            <span>Contact Partner</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
@@ -15,14 +15,64 @@
         <movie-promotional-links [movie]="movie" [links]="promoLinks"></movie-promotional-links>
       </movie-header-actions>
     </movie-header>
+
+    <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+      <h1>Project Funding</h1>
+      <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
+      <ng-container *ngIf="orgs$ | async as orgs">
+        <button mat-flat-button color="accent" (click)="openForm(orgs)">
+          Invest in this project
+        </button>
+      </ng-container>
+      <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing in cinema industry</a>
+    </section>
+
   </title-marketplace-shell>
 
-  <section class="progress" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-    <h1>Project Funding</h1>
-    <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
-    <button mat-flat-button color="accent">
-      Invest in this project
-    </button>
-    <p class="mat-caption">Learn more about investing in cinema industry</p>
-  </section>
+
+  <!-- Contact partner -->
+  <ng-template #dialogTemplate let-data>
+    <header>
+      <h2>How much would you like to invest in this project ?</h2>
+      <p class="mat-caption">
+        Please precise the amount you would like to invest.<br/>
+        If you are not ready to provide us with uch kind of information, just leave a message.
+      </p>
+    </header>
+    <mat-dialog-content *ngIf="data.form as form">
+      <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail(form.value, movie.title.international, data.orgs)">
+        <mat-form-field appearance="outline">
+          <mat-label>Subject</mat-label>
+          <mat-select formControlName="subject" required>
+            <mat-option></mat-option>
+            <mat-option value="set">I’m all set. Ready to invest</mat-option>
+            <mat-option value="question">I have a question about the project</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+          <mat-error>Please select a subject</mat-error>
+        </mat-form-field>
+        <div fxLayout fxLayoutGap="24px">
+          <mat-form-field fxFlex appearance="outline">
+            <mat-label>From</mat-label>
+            <input type="number" matInput formControlName="from" min="0"/>
+          </mat-form-field>
+          <mat-form-field fxFlex appearance="outline">
+            <mat-label>To</mat-label>
+            <input type="number" matInput formControlName="to" min="0"/>
+          </mat-form-field>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="message" ></textarea>
+        </mat-form-field>
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">
+          <button type="submit" mat-stroked-button color="primary" [disabled]="form.invalid">
+            <mat-icon svgIcon="accept"></mat-icon>
+            <span>Send your message</span>
+          </button>
+          <button type="reset" mat-dialog-close mat-button>Cancel</button>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </ng-template>
 </ng-container>

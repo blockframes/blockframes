@@ -1,12 +1,12 @@
 <section fxLayout="column" fxLayoutAlign="start center">
   <article fxLayout="row" fxLayoutAlign="space-between start" class="full-width">
-    <div fxLayout="column" fxFlex.gt-sm="75">
-      <ng-content select="[title]"></ng-content>
-      <ng-content select="[subtitle]"></ng-content>
-      <ng-content select="[description]"></ng-content>
-    </div>
+    <header fxLayout="column" fxFlex.gt-sm="75">
+      <h4 class="subtitle">{{ page.title }}</h4>
+      <h1 class="title">{{ page.route.label }}</h1>
+      <p class="mat-caption">(*) Mandatory fields</p>
+    </header>
   </article>
   <article fxLayout="column" class="full-width">
-      <ng-content select="[tunnel-form]"></ng-content>
+      <ng-content></ng-content>
   </article>
 </section>

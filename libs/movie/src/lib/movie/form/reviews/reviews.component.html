@@ -1,6 +1,4 @@
 <tunnel-page>
-  <h4 title>Title Information</h4>
-  <h1 subtitle>Selection & Reviews</h1>
   <ng-container tunnel-form>
     <h3>Festival & Awards</h3>
     <section id="festival">
@@ -33,11 +31,10 @@
                 <input matInput test-id="prize-year" formControlName="year" type="number" placeholder="YYYY" />
                 <mat-error *ngIf="prizesForm.get('year').hasError('invalidYear')">Please enter a valid year.</mat-error>
               </mat-form-field>
-
             </div>
 
             <h6 class="mat-caption">Premiere</h6>
-            <div>
+            <div fxLayout="column" class="toggle-btn">
               <mat-button-toggle-group [formControl]="prizesForm.get('premiere')" name="Premiere" aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
                   <mat-button-toggle [value]="premiere">
@@ -45,8 +42,8 @@
                   </mat-button-toggle>
                 </ng-container>
               </mat-button-toggle-group>
+              <span class="mat-caption">Select applying premiere if any.</span>
             </div>
-            <span class="mat-caption">Select premiere that apply</span>
 
           </article>
         </ng-template>
@@ -88,7 +85,7 @@
             </div>
 
             <h6 class="mat-caption">Premiere</h6>
-            <div>
+            <div fxLayout="column" class="toggle-btn">
               <mat-button-toggle-group [formControl]="customPrizesForm.get('premiere')" name="Premiere"
                 aria-label="Premiere">
                 <ng-container *ngFor="let premiere of premieres">
@@ -97,9 +94,8 @@
                   </mat-button-toggle>
                 </ng-container>
               </mat-button-toggle-group>
+              <span class="mat-caption">Select applying premiere if any.</span>
             </div>
-            <span class="mat-caption">Select premiere that apply</span>
-
           </article>
         </ng-template>
       </bf-form-list>

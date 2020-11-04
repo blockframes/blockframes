@@ -29,9 +29,9 @@ export const appUrl = {
 //Local firebase emulator UI
 export const emulatorConfig = {
   functionsEmulatorURL: 'http://localhost:5001',
-  firestoreConfig: { 
-    host: 'localhost:8080', 
-    ssl: false 
+  firestoreConfig: {
+    host: 'localhost:8080',
+    ssl: false
   }
 };
 
@@ -52,8 +52,16 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'ci_orgs',
-  indexNameMovies: 'ci_movies',
+  indexNameOrganizations: {
+    festival: 'ci_festival_org',
+    financiers: 'ci_financiers_org',
+    catalog: 'ci_catalog_org'
+  },
+  indexNameMovies: {
+    festival: 'ci_festival_movies',
+    financiers: 'ci_financiers_movies',
+    catalog: 'ci_catalog_movies',
+  },
   indexNameUsers: 'ci_users',
 };
 
