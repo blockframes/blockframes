@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy } from '@angular/core';
-import { EventQuery } from '../../+state/event.query';
+import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, OnDestroy, Input } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
@@ -7,22 +6,24 @@ import { ImageParameters } from '@blockframes/media/directives/image-reference/i
 import { MediaService } from '@blockframes/media/+state/media.service';
 import { loadJWPlayerScript } from '@blockframes/utils/utils';
 
-declare const jwplayer: any;
+declare const jwplayer: Function;
 
 @Component({
-  selector: 'event-player',
+  selector: '[ref] media-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventPlayerComponent implements AfterViewInit, OnDestroy {
+export class MediaPlayerComponent implements AfterViewInit, OnDestroy {
   private player: any;
   private timeout: number;
 
+  @Input() ref: string;
+  @Input() eventId: string;
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private eventQuery: EventQuery,
     private authQuery: AuthQuery,
     private mediaService: MediaService,
     private functions: AngularFireFunctions,
@@ -30,10 +31,8 @@ export class EventPlayerComponent implements AfterViewInit, OnDestroy {
 
   async initPlayer() {
 
-    const { id } = this.eventQuery.getActive();
-
     const callDeploy = this.functions.httpsCallable('privateVideo');
-    const { error, result } = await callDeploy({ eventId: id }).toPromise();
+    const { error, result } = await callDeploy({ ref: this.ref, eventId: this.eventId }).toPromise();
 
     if (!!error) {
       // if error is set, result will contain the error message
