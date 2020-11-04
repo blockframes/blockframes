@@ -20,8 +20,9 @@
       <h1>Project Funding</h1>
       <campaign-progress [campaign]="campaign$ | async"></campaign-progress>
       <ng-container *ngIf="orgs$ | async as orgs">
+        <p class="mat-caption">Meet the fund to have further information</p>
         <button mat-flat-button color="accent" (click)="openForm(orgs)">
-          Invest in this project
+          Open discussion
         </button>
       </ng-container>
       <a mat-button class="mat-caption" href="assets/docs/film-industry.pdf" target="_blank">Learn more about investing in cinema industry</a>
@@ -32,13 +33,7 @@
 
   <!-- Contact partner -->
   <ng-template #dialogTemplate let-data>
-    <header>
-      <h2>How much would you like to invest in this project ?</h2>
-      <p class="mat-caption">
-        Please precise the amount you would like to invest.<br/>
-        If you are not ready to provide us with uch kind of information, just leave a message.
-      </p>
-    </header>
+    <h2>How much would you like to invest in this project ?</h2>
     <mat-dialog-content *ngIf="data.form as form">
       <form [formGroup]="form" fxLayout="column" (ngSubmit)="sendEmail(form.value, movie.title.international, data.orgs)">
         <mat-form-field appearance="outline">
@@ -51,6 +46,10 @@
           </mat-select>
           <mat-error>Please select a subject</mat-error>
         </mat-form-field>
+        <p class="mat-caption">
+          Please precise the amount you would like to invest.<br/>
+          If you are not ready to provide us with such kind of information, just leave a message.
+        </p>
         <div fxLayout fxLayoutGap="24px">
           <mat-form-field fxFlex appearance="outline">
             <mat-label>From</mat-label>
@@ -63,7 +62,7 @@
         </div>
         <mat-form-field appearance="outline">
           <mat-label>Message</mat-label>
-          <textarea matInput formControlName="message" ></textarea>
+          <textarea matInput formControlName="message" placeholder="Questions about cast, financing, investment conditions..." ></textarea>
         </mat-form-field>
         <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px">
           <button type="submit" mat-stroked-button color="primary" [disabled]="form.invalid">
