@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding, Directive, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';

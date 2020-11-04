@@ -25,7 +25,12 @@
       <ng-template let-languages="control">
         <li *ngFor="let language of languages.controls | keyvalue; let isLast = last">
           <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
-          <span>{{ language.value.value | versionPipe }}</span>
+          <ng-container *ngIf="language.value.value | versionPipe; else missingLanguage">
+            <span>{{ language.value.value | versionPipe }}</span>
+          </ng-container>
+          <ng-template #missingLanguage>
+            <a class="missing-control" [routerLink]="link">Missing</a>
+          </ng-template>
         </li>
       </ng-template>
     </missing-control>

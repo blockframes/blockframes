@@ -3,16 +3,14 @@
     <ng-container *ngIf="movie$ | async as movie">
       <section fxLayout fxLayoutGap="16px" fxFlex>
         <img fxHide.xs [ref]="movie.poster" asset="empty_poster.webp" alt="movie poster">
-  
+
         <article fxLayout="column" fxFlex>
           <h4>{{ movie | movieFeature }}</h4>
           <h1>{{ movie.title.international }}</h1>
           <h6>{{ movie.directors | displayName }}</h6>
           <p>
-            <span>
-              {{ movie.originCountries | toLabel: 'territories'}}
-            </span>
-            <ng-container *ngIf="movie.originCountries.length && movie.release.year">,</ng-container>
+            <span>{{ movie.originCountries | toLabel: 'territories'}}</span>
+            <span *ngIf="movie.originCountries.length && movie.release.year">, </span>
             <span>{{ movie.release.year }}</span>
           </p>
         </article>

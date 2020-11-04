@@ -24,7 +24,7 @@
       <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
         clickable (rowClick)="goToTitle($event)">
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
-        <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
+        <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
         <ng-template colRef="campaign.cap" let-cap let-movie="item">
           {{ cap ? (cap | currency : movie.campaign.currency : 'symbol' : '1.0-0') : '-' }}
         </ng-template>
