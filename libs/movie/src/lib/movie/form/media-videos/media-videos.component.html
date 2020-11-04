@@ -20,10 +20,7 @@
           [storagePath]="getPath('screener')"
           allowedFileType="video"
           filePrivacy="protected">
-
-            <h3 type>Upload Screener</h3>
-            <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
-
+            <h3 title>Upload Screener</h3>
         </file-upload>
         <p class="mat-caption">This video is <strong>private</strong> and <strong>cannot be seen by anyone</strong> outside your organization unless you explicitly invite them to a virtual screening.</p>
       </ng-template>
@@ -44,8 +41,7 @@
         [storagePath]="getPath('otherVideos')"
         allowedFileType="video"
         filePrivacy="public">
-          <h3 type>Upload Video</h3>
-          <p class="mat-caption" format>Accepted Formats: {{ allowedFilesExtensions.join(',') }}</p>
+          <h3 title>Upload Video</h3>
       </file-upload>
       <p class="mat-caption">Keep in mind that those videos will be <strong>public</strong> and <strong>viewable by anyone</strong> on the marketplace.</p>
       <mat-divider></mat-divider>

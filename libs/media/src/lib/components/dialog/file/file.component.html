@@ -26,6 +26,7 @@
     [storagePath]="data.storagePath"
     allowedFileType="pdf"
     [filePrivacy]="data.privacy">
+    <h3 title>Upload File</h3>
   </file-upload>
   <section fxLayout="column" fxLayoutAlign="center center">
     <button mat-flat-button color="primary" (click)="upload()" [disabled]="!data.form.valid">

@@ -9,7 +9,7 @@
       <ng-container *ngFor="let still of stillPhoto.controls; let i = index; trackBy: trackByFn">
         <article>
           <drop-cropper [storagePath]="movieId | ref: 'movie' : 'still'" ratio="still" [form]="still">
-            <h3 type>Stills</h3>
+            <h3 title>Stills</h3>
           </drop-cropper>
         </article>
       </ng-container>

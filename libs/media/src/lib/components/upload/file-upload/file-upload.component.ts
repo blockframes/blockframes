@@ -35,16 +35,19 @@ export class FileUploadComponent implements OnInit, OnDestroy {
   @Input() storagePath: string;
   @Input() form: HostedMediaForm;
   @Input() filePrivacy: Privacy = 'public';
-  @Input() set allowedFileType(fileType: AllowedFileType) {
-    this.accept = allowedFiles[fileType].extension;
-    this.types = allowedFiles[fileType].mime;
+  @Input() set allowedFileType(fileType: AllowedFileType | AllowedFileType[]) {
+    const types = Array.isArray(fileType) ? fileType : [fileType]
+    types.forEach(type => {
+      this.accept = this.accept.concat(allowedFiles[type].extension);
+      this.types = this.types.concat(allowedFiles[type].mime);
+    })
   }
 
   @ContentChild('onReady') onReadyTemplate: TemplateRef<any>;
   @ContentChild('onFile') onFileTemplate: TemplateRef<any>;
 
-  public accept: string[];
-  public types: string[];
+  public accept: string[] = [];
+  public types: string[] = [];
 
   public localSize: string;
   public state: UploadState = 'waiting';

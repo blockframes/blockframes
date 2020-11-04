@@ -47,10 +47,11 @@
     </ng-container>
 
     <ng-template #fileUpload>
-      <file-upload allowedFileType="import"
+      <file-upload [allowedFileType]="['xls', 'csv']"
         [storagePath]=""
-        [form]="excelForm"
-      ></file-upload>
+        [form]="excelForm">
+        <h3 title>Upload File</h3>
+      </file-upload>
 
     </ng-template>
   </section>

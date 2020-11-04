@@ -1,7 +1,7 @@
 <div fxLayout="column" fxLayoutGap="24px">
   <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
     <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
-      <h3 type>{{ activeDirectory.name }}</h3>
+      <h3 title>{{ activeDirectory.name }}</h3>
     </drop-cropper>
   </ng-container>
 
@@ -11,6 +11,7 @@
       [storagePath]="activeDirectory.storagePath"
       [allowedFileType]="activeDirectory.acceptedFileType"
       [filePrivacy]="activeDirectory.privacy">
+      <h3 title>Upload File</h3>
     </file-upload>
   </ng-container>
   <div fxLayout="column" fxLayoutAlign="center center">
