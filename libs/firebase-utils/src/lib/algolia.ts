@@ -9,6 +9,10 @@ import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
+interface SearchOptions {
+  allIndices?: boolean
+}
+
 export const algolia = {
   ...algoliaClient,
   adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia?.api_key
@@ -50,7 +54,7 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, updateAllIndex?: boolean, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, options: SearchOptions = {}, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -61,12 +65,12 @@ export function storeSearchableOrg(org: OrganizationDocument, updateAllIndex?: b
     name: orgName(org),
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
-    isAccepted: org['isAccepted']
+    isAccepted: org.status === 'accepted'
   };
 
   /* We want to update the all org index when a org is created for cross app features */
-  if (updateAllIndex) {
-    return Promise.all([indexBuilder(algolia.indexNameOrganizations.all, adminKey).saveObject(orgRecord)]);
+  if (options?.allIndices) {
+    return indexBuilder(algolia.indexNameOrganizations.all, adminKey).saveObject(orgRecord);
   } else {
     /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
     const orgAppAccess = findOrgAppAccess(org)
@@ -187,11 +191,5 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
 }
 
 export function findOrgAppAccess(org: OrganizationDocument) {
-  return app.filter(a => modules.some(m => {
-    try {
-      return org.appAccess[a][m]
-    } catch (error) {
-      return false
-    }
-  }));
+  return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }

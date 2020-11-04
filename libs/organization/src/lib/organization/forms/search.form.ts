@@ -19,8 +19,8 @@ export function createOrganizationSearch(search: Partial<OrganizationSearch> = {
     query: '',
     page: 0,
     hitsPerPage: 8,
-    ...search,
     isAccepted: true,
+    ...search,
     appModule: search.appModule
   };
 }
