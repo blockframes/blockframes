@@ -8,6 +8,7 @@ import { AlgoliaSearch, AlgoliaRecordOrganization } from '@blockframes/utils/alg
 import algoliasearch, { Index } from 'algoliasearch';
 import { algolia } from '@env';
 import { FormControl } from '@angular/forms';
+import { App } from '@blockframes/utils/apps';
 
 export interface OrganizationSearch extends AlgoliaSearch, Partial<AlgoliaRecordOrganization> {
   country?: Territory,
@@ -41,11 +42,11 @@ export class OrganizationSearchForm extends FormEntity<OrganizationSearchControl
 
   private organizationIndex: Index;
 
-  constructor(search: Partial<OrganizationSearch> = {}) {
+  constructor(app: App, search: Partial<OrganizationSearch> = {}) {
     const organizationSearch = createOrganizationSearch(search);
     const control = createOrganizationSearchControl(organizationSearch);
     super(control);
-    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations);
+    this.organizationIndex = algoliasearch(algolia.appId, algolia.searchKey).initIndex(algolia.indexNameOrganizations[app]);
   }
 
 

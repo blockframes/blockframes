@@ -12,14 +12,6 @@ import { MovieRunningTime, MovieRelease } from '@blockframes/movie/+state/movie.
 // @ts-ignore
 export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
 
-export const OrganizationsIndex = new InjectionToken<Index>(
-  'Algolia index to search organizations',
-  {
-    providedIn: 'root',
-    factory: () => searchClient.initIndex(algolia.indexNameOrganizations)
-  }
-);
-
 /** An Organization search result coming from Algolia */
 export interface OrganizationAlgoliaResult {
   name: string;
