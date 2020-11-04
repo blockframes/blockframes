@@ -91,20 +91,21 @@
     <article *ngIf="movie | hasKeys: 'languages'">
       <h5>Versions</h5>
       <ng-container *ngFor="let language of movie.languages | keyvalue">
-        <div class="version" fxLayout fxLayoutGap="8px">
-          <b>{{ language.key | toLabel: 'languages' }}: </b>
-          <mat-chip-list>
-            <ng-container *ngFor="let version of language.value | keyvalue">
-              <mat-chip *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}</mat-chip>
-            </ng-container>
-          </mat-chip-list>
-        </div>
+        <ng-container *ngIf="language.value | versionPipe">
+          <div class="version" fxLayout fxLayoutGap="8px">
+            <b>{{ language.key | toLabel: 'languages' }}: </b>
+            <mat-chip-list>
+              <ng-container *ngFor="let version of language.value | keyvalue">
+                <mat-chip *ngIf="version.value">{{ version.key | toLabel: 'movieLanguageTypes' }}</mat-chip>
+              </ng-container>
+            </mat-chip-list>
+          </div>
+        </ng-container>
       </ng-container>
     </article>
     <mat-divider></mat-divider>
   </section>
 
-  
   <!-- Audience & Goal -->
   <section id="audience-goals" *ngIf="movie | hasKeys: 'audience'">
     <h2>Positioning</h2>

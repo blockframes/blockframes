@@ -323,9 +323,9 @@ export const movieFormatQuality = {
 
 export const movieLanguageTypes = {
   original: 'Original',
-  dubbed: 'Dubbed',
-  subtitle: 'Subtitled',
-  caption: 'Closed-Captions',
+  dubbed: 'Dubbings',
+  subtitle: 'Subtitles',
+  caption: 'Closed Captions',
 } as const
 
 export const premiereType = {
