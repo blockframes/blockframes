@@ -8,9 +8,9 @@
   <ng-container *ngIf="activeDirectory.type === 'file' && !!this.activeForm">
     <file-upload
       [form]="getSingleMediaForm()"
-      [storagePath]="this.activeDirectory.storagePath"
-      [allowedFileType]="this.activeDirectory.acceptedFileType"
-      [filePrivacy]="this.activeDirectory.privacy">
+      [storagePath]="activeDirectory.storagePath"
+      [allowedFileType]="activeDirectory.acceptedFileType"
+      [filePrivacy]="activeDirectory.privacy">
     </file-upload>
   </ng-container>
   <div fxLayout="column" fxLayoutAlign="center center">
