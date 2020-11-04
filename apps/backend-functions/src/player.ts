@@ -130,33 +130,10 @@ export const getPrivateVideoUrl = async (
       // CHECK FOR A MEETING
       } else {
 
-        const unauthorized: ErrorResultResponse = {
-          error: 'UNAUTHORIZED',
-          result: `You are not authorized to get the information of this video`
-        };
-
         if (!await isUserInvitedToEvent(uid, data.eventId)) {
-
-          // if the user is not invited, we should check if he has the right to see the file
-          // aka if he belong of the org
-          switch (doc.parent.id) {
-            case 'orgs':
-              const isAuthorizedInOrg = (docData as OrganizationDocument).userIds.some(userId => userId === uid);
-              if (!isAuthorizedInOrg) {
-                return unauthorized;
-              }
-              break;
-            case 'movies':
-              const creatorId = (docData as MovieDocument)._meta!.createdBy;
-              const { orgId } = await getDocument<User>(`users/${creatorId}`);
-              const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-              const isAuthorizedInMovie = org.userIds.some(userId => userId === uid);
-              if (!isAuthorizedInMovie) {
-                return unauthorized;
-              }
-              break;
-            default:
-              return unauthorized;
+          return {
+            error: 'UNAUTHORIZED',
+            result: `You are not authorized to get the information of this video`
           }
         }
 
