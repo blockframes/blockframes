@@ -18,9 +18,8 @@ import { Campaign } from '@blockframes/campaign/+state/campaign.model';
 // TODO MIGRATE TO ALGOLIA v4 #2554
 
 export async function upgradeAlgoliaOrgs(appConfig?: App) {
-
   if (!appConfig) {
-    const promises = app.map(upgradeAlgoliaMovies);
+    const promises = app.map(upgradeAlgoliaOrgs);
     await Promise.all(promises);
   } else {
 
@@ -31,7 +30,8 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
         'appAccess',
         'appModule',
         'name',
-        'country'
+        'country',
+        'isAccepted'
       ],
     };
     await setIndexConfiguration(algolia.indexNameOrganizations[appConfig], config, process.env['ALGOLIA_API_KEY']);

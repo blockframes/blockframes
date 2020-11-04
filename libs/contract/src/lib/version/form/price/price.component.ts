@@ -4,6 +4,7 @@ import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/c
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormStaticValue } from '@blockframes/utils/form';
+import { AlgoliaIndex } from '@blockframes/utils/algolia';
 
 // Angular
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
@@ -28,7 +29,7 @@ export class PriceComponent implements OnInit {
     this._hasMandate = coerceBooleanProperty(value);
   }
 
-  public algoliaMovieIndex = algolia.indexNameMovies.catalog;
+  public algoliaMovieIndex: AlgoliaIndex = 'movie';
 
   public currencyCtrl: FormStaticValue<'movieCurrencies'>;
 

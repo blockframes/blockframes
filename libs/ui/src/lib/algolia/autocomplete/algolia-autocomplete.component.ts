@@ -114,12 +114,11 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
       this.keyToDisplay = 'value';
     }
 
-    let indexSearch: Index;
     if (this.index === 'movie') {
       const app = this.routerQuery.getValue().state?.root.data.app;
-      indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
+      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
     }
-    indexSearch = searchClient.initIndex(algoliaIndex[this.index] as any);
+    this.indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
