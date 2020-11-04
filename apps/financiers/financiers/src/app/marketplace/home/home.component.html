@@ -24,7 +24,7 @@
           </div>
           <bf-carousel flex [min]="4">
             <ng-container *ngFor="let movie of section.movies$ | async">
-              <movie-card [movie]="movie" size="banner" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
+              <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
                 carouselItem>
                 <ng-container *ngIf="movie.id | getCampaign | async as campaign">
                   <span matTooltip="Minimum investment amount">
