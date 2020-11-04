@@ -7,7 +7,7 @@
     <h2>Release</h2>
     <article *ngFor="let release of movie.originalRelease">
       <h5>{{ release.country | toLabel : 'territories'}}</h5>
-      <p>{{ release.media | toLabel: 'medias' }} {{ release.date | date: 'shortDate' }}</p>
+      <p>{{ release.media | toLabel: 'medias' }} {{ release.date | toDate | date: 'shortDate' }}</p>
     </article>
     <mat-divider></mat-divider>
   </section>
