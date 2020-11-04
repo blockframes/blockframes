@@ -40,6 +40,10 @@ article {
   width: 100%;
 }
 
+.description {
+  overflow: hidden;
+}
+
 h6,
 p,
 span {
@@ -49,4 +53,3 @@ span {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-

@@ -16,8 +16,8 @@
 </figure>
 <article [class]="size">
   <h6>{{ movie.title.international }}</h6>
-  <div fxLayout fxLayoutAlign="space-between end">
-    <div fxLayout="column">
+  <div fxLayout fxLayoutAlign="space-between end" fxLayoutGap="8px">
+    <div class="description" fxLayout="column">
       <p class="mat-caption">{{ movie.directors | displayName }}</p>
       <span class="mat-caption">{{ movie | movieFeature }}</span>
     </div>
