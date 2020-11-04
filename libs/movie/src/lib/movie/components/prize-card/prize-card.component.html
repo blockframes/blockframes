@@ -1,4 +1,7 @@
 <img [ref]="prize.logo" asset="empty_festival.webp" alt="Festival brand logo">
 <h5>{{ prize.name | uppercase }}</h5>
-<span class="mat-body-2">{{ prize?.premiere ? (prize.premiere | toLabel: 'premiereType') : 'Unknown' }} ({{ prize.year }})</span>
+<p class="mat-body-2">
+  <span *ngIf="prize.premiere">{{ prize.premiere | toLabel: 'premiereType' }} </span>
+  <span *ngIf="prize.year">({{ prize.year }})</span>
+</p>
 <caption class="mat-caption">{{ prize?.prize | titlecase }}</caption>

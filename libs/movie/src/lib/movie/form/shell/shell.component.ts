@@ -50,7 +50,8 @@ function getSteps(status: ProductionStatus, appSteps: TunnelStep[] = []): Tunnel
       label: 'Artistic Team'
     }, {
       path: 'reviews',
-      label: 'Selection & Reviews'
+      label: 'Selection & Reviews',
+      shouldHide: isStatus(status, ['development', 'shooting'])
     }, {
       path: 'additional-information',
       label: 'Additional Information'
