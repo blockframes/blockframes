@@ -9,8 +9,8 @@ import { appUrl } from "@env";
 export const app = ['catalog', 'festival', 'financiers'] as const;
 export type App = typeof app[number];
 
-export const module = ['dashboard', 'marketplace'] as const;
-export type Module = typeof module[number];
+export const modules = ['dashboard', 'marketplace'] as const;
+export type Module = typeof modules[number];
 
 export const appName = {
   catalog: 'Archipel Content',
@@ -91,7 +91,7 @@ export function getAppName(slug: App) {
 export function getOrgAppAccess(org: OrganizationDocument | OrganizationDocumentWithDates, first: App = 'festival'): App[] {
   const apps: App[] = [];
   for (const a of app) {
-    const hasAccess = module.some(m => !!org.appAccess[a]?.[m]);
+    const hasAccess = modules.some(m => !!org.appAccess[a]?.[m]);
     if (hasAccess) {
       apps.push(a);
     }
@@ -120,14 +120,14 @@ export function getOrgModuleAccess(org: OrganizationDocument | OrganizationDocum
   const allowedModules = {} as Record<Module, boolean>;
 
   if (_a) {
-    for (const m of module) {
+    for (const m of modules) {
       if (org.appAccess[_a]?.[m]) {
         allowedModules[m] = true;
       }
     }
   } else {
     for (const a of app) {
-      for (const m of module) {
+      for (const m of modules) {
         if (org.appAccess[a]?.[m]) {
           allowedModules[m] = true;
         }
