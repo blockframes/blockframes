@@ -9,10 +9,6 @@ import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
-interface SearchOptions {
-  allIndices?: boolean
-}
-
 export const algolia = {
   ...algoliaClient,
   adminKey: dev ? mockConfigIfNeeded('algolia', 'api_key') : functions.config().algolia?.api_key
@@ -54,7 +50,7 @@ export function setIndexConfiguration(indexName: string, config: IndexSettings, 
 //           ORGANIZATIONS
 // ------------------------------------
 
-export function storeSearchableOrg(org: OrganizationDocument, options: SearchOptions = {}, adminKey?: string): Promise<any> {
+export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
@@ -68,18 +64,13 @@ export function storeSearchableOrg(org: OrganizationDocument, options: SearchOpt
     isAccepted: org.status === 'accepted'
   };
 
-  /* We want to update the all org index when a org is created for cross app features */
-  if (options?.allIndices) {
-    return indexBuilder(algolia.indexNameOrganizations.all, adminKey).saveObject(orgRecord);
-  } else {
-    /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
-    const orgAppAccess = findOrgAppAccess(org)
+  /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
+  const orgAppAccess = findOrgAppAccess(org)
 
-    // Update algolia's index
-    const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
+  // Update algolia's index
+  const promises = orgAppAccess.map(appName => indexBuilder(algolia.indexNameOrganizations[appName], adminKey).saveObject(orgRecord));
 
-    return Promise.all(promises)
-  }
+  return Promise.all(promises)
 }
 
 // ------------------------------------

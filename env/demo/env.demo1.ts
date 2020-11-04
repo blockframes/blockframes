@@ -55,8 +55,7 @@ export const algolia = {
   indexNameOrganizations: {
     festival: 'demo1_festival_org',
     financiers: 'demo1_financiers_org',
-    catalog: 'demo1_catalog_org',
-    all: 'demo1_orgs'
+    catalog: 'demo1_catalog_org'
   },
   indexNameMovies: {
     festival: 'demo1_festival_movies',

@@ -19,7 +19,7 @@ import { Change, EventContext } from 'firebase-functions';
 import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
-function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     toUserId,
     type: notificationType,
@@ -52,7 +52,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifUser(userId, 'memberAddedToOrg', after, userAdded));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberAddedToOrg', after, userAdded));
     return triggerNotifications(notifications);
 
     // Member removed
@@ -63,7 +63,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifUser(userId, 'memberRemovedFromOrg', after, userRemoved));
+    const notifications = after.userIds.map(userId => notifyUser(userId, 'memberRemovedFromOrg', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -100,7 +100,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from),
     // Update algolia's index
-    storeSearchableOrg(org, {allIndices: true})
+    storeSearchableOrg(org)
   ]);
 }
 
@@ -177,7 +177,6 @@ export async function onOrganizationUpdate(change: Change<FirebaseFirestore.Docu
   /* If an org gets his accepted status removed, we want to remove it also from all the indices on algolia */
   if (before.status === 'accepted' && after.status === 'pending') {
     const promises = app.map(access => deleteObject(algolia.indexNameOrganizations[access], after.id))
-    promises.push(deleteObject(algolia.indexNameOrganizations.all, after.id))
     await Promise.all(promises)
   }
 
