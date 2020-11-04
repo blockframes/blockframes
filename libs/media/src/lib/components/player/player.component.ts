@@ -9,13 +9,13 @@ import { loadJWPlayerScript } from '@blockframes/utils/utils';
 declare const jwplayer: Function;
 
 @Component({
-  selector: '[ref] event-player',
+  selector: '[ref] media-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventPlayerComponent implements AfterViewInit, OnDestroy {
+export class MediaPlayerComponent implements AfterViewInit, OnDestroy {
   private player: any;
   private timeout: number;
 
