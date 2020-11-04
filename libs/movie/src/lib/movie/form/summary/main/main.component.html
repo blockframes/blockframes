@@ -43,7 +43,7 @@
   </h6>
   <ul>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [form]="movie.banner"><strong> Film Page Banner Image </strong></bf-preview-modal>
+      <bf-preview-modal [form]="movie.banner" [link]="link"><strong> Film Page Banner Image </strong></bf-preview-modal>
       <!-- test-id="banner-image" -->
       <missing-control  [control]="movie.banner.ref" [link]="link" fragments="images">
         <ng-template let-banner>
@@ -52,8 +52,8 @@
       </missing-control>
     </li>
     <li fxLayout="row wrap" fxLayoutAlign="start center" fxLayoutGap="8px">
-      <bf-preview-modal [form]="movie.poster"><strong> Poster Image </strong></bf-preview-modal>
-      <!-- test-id="poster-image" --> 
+      <bf-preview-modal [form]="movie.poster" [link]="link"><strong> Poster Image </strong></bf-preview-modal>
+      <!-- test-id="poster-image" -->
       <missing-control [control]="movie.poster.ref" [link]="link">
         <ng-template let-poster>
           {{poster | fileName | maxLength: 30 }}
@@ -121,6 +121,7 @@
         <li *ngFor="let director of directors.controls; let i = index" [attr.test-id]= "'dir-info' + (i + 1)">
           <strong>
             <missing-control [control]="director.get('firstName')"></missing-control>
+            <span>&nbsp;</span>
             <missing-control [control]="director.get('lastName')"></missing-control>
             (<missing-control [control]="director.get('category')" scope="directorCategory">
             </missing-control>)
