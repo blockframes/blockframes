@@ -7,6 +7,7 @@ import { staticModel, Scope } from '@blockframes/utils/static-model';
 })
 export class ToLabelPipe implements PipeTransform {
   transform(value: string | string[], scope: Scope): string | string[] {
+    if (!value) return '';
     try {
       return Array.isArray(value) ? value.map(val => staticModel[scope][val]).join(', ') : staticModel[scope][value];
     } catch (error) {
