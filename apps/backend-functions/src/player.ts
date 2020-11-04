@@ -3,7 +3,7 @@ import { db, getStorageBucketName } from './internals/firebase';
 import * as admin from 'firebase-admin';
 import { EventDocument, EventMeta, linkDuration } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToEvent } from './internals/invitations/events';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { PublicUser } from './data/types';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
@@ -11,7 +11,6 @@ import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { ErrorResultResponse } from './utils';
 import { getDocAndPath, upsertWatermark } from '@blockframes/firebase-utils';
 import { File as GFile } from '@google-cloud/storage';
-import { User } from '@sentry/node';
 import { HostedVideo } from '@blockframes/movie/+state/movie.firestore';
 import { get } from 'lodash';
 
@@ -49,34 +48,29 @@ export const getPrivateVideoUrl = async (
   }
 
   const uid = context.auth.uid;
-  const { security, collection, doc, docData } = await getDocAndPath(data.ref);
+  const { security, collection, doc, docData, fieldToUpdate } = await getDocAndPath(data.ref);
 
-  let jwPlayerId: string;
-
-  if (security === 'public') {
-    const result = await getJwPlayerId(data.ref);
-    if (!!result.error) return result;
-    jwPlayerId = result.result;
+  if (!docData) {
+    return {
+      error: 'UNKNOWN_DOCUMENT',
+      result: 'The reference points to an unknown document'
+    }
   }
 
-  if (security === 'protected') {
+  let access = security === 'public';
+
+  if (!access && security === 'protected') {
 
     // CHECK FOR ORGANIZATION MEMBER
     if (collection === 'movies') {
       const orgs = await getOrganizationsOfMovie(doc.id);
-      const isMember = orgs
+      access = orgs
         .filter(org => !!org && !!org.userIds)
         .some(org => org.userIds.some(userId => userId === uid));
-
-      if (isMember) {
-        const result = await getJwPlayerId(data.ref);
-        if (!!result.error) return result;
-        jwPlayerId = result.result;
-      }
     }
 
     // CHECK FOR EVENT MEMBER
-    if (!jwPlayerId && data.eventId) {
+    if (!access && data.eventId) {
       const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
     
       if (!event) {
@@ -123,10 +117,6 @@ export const getPrivateVideoUrl = async (
           };
         }
 
-        const result = await getJwPlayerId(data.ref);
-        if (!!result.error) return result
-        jwPlayerId = result.result
-
       // CHECK FOR A MEETING
       } else {
 
@@ -136,20 +126,33 @@ export const getPrivateVideoUrl = async (
             result: `You are not authorized to get the information of this video`
           }
         }
-
-        const result = await getJwPlayerId(data.ref);
-        if (!!result.error) return result;
-        jwPlayerId = result.result
       }
+
+      access = true;
     }
   }
 
-  if (!jwPlayerId) {
+  if (!access) {
     return {
-      error: 'VIDEO_NOT_FOUND',
-      result: `The file ${data.ref} doesn't have an id for the player`
+      error: 'UNAUTHORIZED',
+      result: `You are not authorized to see this video`
     }
   }
+
+  // get JwPlayerId
+  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, fieldToUpdate)
+  if (Array.isArray(savedRef)) {
+    savedRef = savedRef.find(video => video.ref === data.ref);
+  }
+
+  if (!savedRef || !savedRef.jwPlayerId) {
+    return {
+      error: 'DOCUMENT_VIDEO_NOT_FOUND',
+      result: `The file ${data.ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
+    }
+  }
+  
+  const jwPlayerId = savedRef.jwPlayerId
 
   // watermark fallback : in case the user's watermark doesn't exist we generate it
   const userRef = db.collection('users').doc(uid);
@@ -260,34 +263,5 @@ export const uploadToJWPlayer = async (file: GFile): Promise<{
     return { success: false, message: result.message || '' }
   } else {
     return { success: true, key: result.video.key }
-  }
-}
-
-async function getJwPlayerId(ref: string): Promise<ErrorResultResponse>  {
-  const { doc, docData, fieldToUpdate } = await getDocAndPath(ref);
-  
-  if (!docData) {
-    return {
-      error: 'UNKNOWN_DOCUMENT',
-      result: 'The reference points to an unknown document'
-    }
-  }
-
-  let savedRef: HostedVideo | HostedVideo[] | undefined = get(docData, fieldToUpdate)
-
-  if (Array.isArray(savedRef)) {
-    savedRef = savedRef.find(video => video.ref === ref);
-  }
-
-  if (!savedRef || !savedRef.jwPlayerId) {
-    return {
-      error: 'DOCUMENT_VIDEO_NOT_FOUND',
-      result: `The file ${ref} was pointing to the existing document (${doc.id}), but this document doesn't contain the file or it's not a video`
-    }
-  } else {
-    return {
-      error: '',
-      result: savedRef.jwPlayerId
-    }
   }
 }
