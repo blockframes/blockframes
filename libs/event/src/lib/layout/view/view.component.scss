@@ -22,6 +22,7 @@ h6 {
 pre {
   text-align: center;
   margin-top: 0;
+  margin-bottom: 8px;
 }
 
 section {
@@ -31,6 +32,11 @@ section {
 p.mat-caption {
   text-align: center;
   max-width: 800px;
+  margin-bottom: 24px;
+}
+
+a.mat-flat-button {
+  margin-top: 40px;
 }
 
 invitation-action {

@@ -24,6 +24,7 @@
         <ng-container *ngSwitchCase="'onTime'">
           <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
+          <p class="mat-caption">{{ event.meta.description }}</p>
           <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
           <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner">
             <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
