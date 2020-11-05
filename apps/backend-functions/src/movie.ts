@@ -24,6 +24,11 @@ export async function onMovieCreate(
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
+  if (movie.storeConfig.status === 'accepted') {
+    organization['hasAcceptedMovies'] = true;
+    storeSearchableOrg(organization)
+  }
+
   // Update algolia's index
   return storeSearchableMovie(movie, orgName(organization));
 }
