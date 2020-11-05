@@ -39,7 +39,7 @@ export type InvitationDocument = InvitationBase<Timestamp>;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
-export type InvitationStatus = 'accepted' | 'declined' | 'pending';
+export type InvitationStatus = 'accepted' | 'declined' | 'pending' | 'attended';
 
 /** Type of Invitation depending of its purpose. */
 export type InvitationType = 'attendEvent' | 'joinOrganization';

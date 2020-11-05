@@ -5,6 +5,9 @@ import { pluck, switchMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Screening } from '@blockframes/event/+state/event.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { InvitationQuery } from '@blockframes/invitation/+state/invitation.query';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 
 @Component({
@@ -24,7 +27,10 @@ export class SessionComponent implements OnInit {
   constructor(
     private service: EventService,
     private route: ActivatedRoute,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery,
+    private authQuery: AuthQuery
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +44,28 @@ export class SessionComponent implements OnInit {
         } else {
           this.mediaContainerSize = '60%';
           this.visioContainerSize = '40%';
+        }
+
+        // PLAN A: set invitation to event
+
+        /**
+         * Audience requested to participate
+         * Therefore isInvitationRecepient === false for audience
+         * Only the Organizer (orgmember) has rights to edit the invitation
+         * 
+         * We could allow the creator to edit the invitation too in the firestore rules
+         */
+
+        // apperently invitation is both on the organizer as on the receiver's store
+        const invitations = this.invitationQuery.getAll().filter(invitation => invitation.docId === event.id)
+        for (let invitation of invitations) {
+          // if status is accepted
+          // and the user is either fromUser and requested to attend, or toUser and invited
+          if (invitation.status === 'accepted' && 
+            (invitation.mode === 'request' && invitation.fromUser?.uid === this.authQuery.userId) ||
+            (invitation.mode === 'invitation' && invitation.toUser?.uid === this.authQuery.userId)) {
+            await this.invitationService.update(invitation.id, { status: 'attended' });
+          }
         }
 
         if (event.type === 'screening') {

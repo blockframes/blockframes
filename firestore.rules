@@ -171,7 +171,7 @@ service cloud.firestore {
       // Update is used to change status only. Allowed to recepients only
       // @TODO (#2500) should be handled by a backend function to prevent ugly rules
       // Only "status" can be updated.
-      return isInvitationRecepient()
+      return (isInvitationRecepient() || (isInvitationSender() && existingData().mode == 'request'))
         &&
         (
           isNotUpdatingId('id', existingData().id)

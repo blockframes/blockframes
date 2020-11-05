@@ -24,6 +24,12 @@ export class DurationPipe implements PipeTransform {
           return this.convertToTimeString(value * 60000);
       }
     }
+    if (typeof value === 'object' && 'start' in value && 'end' in value) {
+      const start = new Date(value.start).getTime();
+      const end = new Date(value.end).getTime();
+      const difference = Math.abs(end - start);
+      return this.convertToTimeString(difference);
+    } 
   }
 
   convertToTimeString(time: number) {

@@ -14,11 +14,14 @@ import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MatButtonModule} from '@angular/material/button';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
 
 @NgModule({
   declarations: [EventViewComponent],
   imports: [
     CommonModule,
+    DurationModule,
     FlexLayoutModule,
     EventViewLayoutModule,
     EventRangeModule,
@@ -29,6 +32,7 @@ import { MatButtonModule} from '@angular/material/button';
     OrgChipModule,
     DisplayNameModule,
     MatButtonModule,
+    GuestPipeModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })
