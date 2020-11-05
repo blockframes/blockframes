@@ -5,7 +5,7 @@ import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
-import { mockConfigIfNeeded } from './firebase-utils';
+import { getDocument, mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
@@ -61,7 +61,8 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     name: orgName(org),
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
-    isAccepted: org.status === 'accepted'
+    isAccepted: org.status === 'accepted',
+    hasAcceptedMovies: org['hasAcceptedMovies'] ?? false
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
