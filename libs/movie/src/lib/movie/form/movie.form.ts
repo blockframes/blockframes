@@ -851,13 +851,17 @@ export class MovieVersionInfoForm extends FormEntity<any> {
 }
 
 export class VersionSpecificationForm extends FormEntity<any> {
-  constructor(versionSpecifictaion: MovieLanguageSpecification) {
+  constructor(versionSpecification: MovieLanguageSpecification, validators: ValidatorFn[] = []) {
     super({
-      dubbed: new FormControl(versionSpecifictaion.dubbed),
-      subtitle: new FormControl(versionSpecifictaion.subtitle),
-      caption: new FormControl(versionSpecifictaion.caption)
-    });
+      dubbed: new FormControl(versionSpecification.dubbed),
+      subtitle: new FormControl(versionSpecification.subtitle),
+      caption: new FormControl(versionSpecification.caption)
+    }, [...validators, versionLanguagesValidator]);
   }
+}
+
+const versionLanguagesValidator: ValidatorFn = (version: VersionSpecificationForm) => {
+  return Object.values(version.value).every(hasVersion => !hasVersion) ? { noVersion: true } : null;
 }
 
 // ------------------------------
