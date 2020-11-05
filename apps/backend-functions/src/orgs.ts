@@ -96,6 +96,14 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   const emailRequest = await organizationCreated(org);
   const from = await getFromEmail(org);
 
+  if (org.movieIds.length) {
+    const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
+    const acceptedMovies = movies.filter(movie => movie.storeConfig.status === 'accepted')
+    if (acceptedMovies.length) {
+      org['hasAcceptedMovies'] = true;
+    }
+  }
+
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
     sendMail(emailRequest, from),
