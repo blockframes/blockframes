@@ -1,10 +1,10 @@
-<section fxLayout="row">
+<header>
+  <h1>Contact Us</h1>
+  <span class="mat-caption">Mon - Fri 10:00 AM - 8:00 PM CET</span>
+  <p>Send us a message and we’ll quickly get back to you :</p>
+</header>
+<section fxLayout="row" fxLayoutGap="32px">
   <article>
-    <header>
-      <h1>Contact Us</h1>
-      <span class="mat-caption">Mon - Fri 10:00 AM - 8:00 PM CET</span>
-      <p>Send us a message and we’ll quickly get back to you :</p>
-    </header>
     <form [formGroup]="form" fxLayout="column">
       <mat-form-field appearance="outline">
         <input formControlName="subject" matInput placeholder="Subject">
