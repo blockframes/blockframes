@@ -33,12 +33,7 @@
         <span class="mat-display-2">{{ org | orgName }}</span>
         <h2>{{ org | orgAddress }}</h2>
         <p class="mat-body-2">{{ org.description }}</p>
-        <ng-container *ngIf="org.email">
-          <a mat-stroked-button color="primary"
-            [href]="'mailto:' + org.email + '?subject=Meeting%20request%20via%20Archipel%20Market'">
-            <span>Ask for a meeting</span>
-          </a>
-        </ng-container>
+        <ng-content></ng-content>
       </article>
     </div>
   </header>
