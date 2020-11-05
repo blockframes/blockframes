@@ -21,18 +21,13 @@
     </a>
   </h6>
   <ul>
-    <missing-control [control]="movie.languages" [link]="link" fragment="available-versions">
-      <ng-template let-languages="control">
-        <li *ngFor="let language of languages.controls | keyvalue; let isLast = last">
-          <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
-          <ng-container *ngIf="language.value.value | versionPipe; else missingLanguage">
-            <span>{{ language.value.value | versionPipe }}</span>
-          </ng-container>
-          <ng-template #missingLanguage>
-            <a class="missing-control" [routerLink]="link">Missing</a>
-          </ng-template>
-        </li>
-      </ng-template>
-    </missing-control>
+    <li *ngFor="let language of movie.languages.controls | keyvalue">
+    <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
+    <missing-control [control]="language.value">
+      <ng-template let-version>
+          <span>{{ version | versionPipe }}</span>
+        </ng-template>
+      </missing-control>
+    </li>
   </ul>
 </article>
