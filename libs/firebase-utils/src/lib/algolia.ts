@@ -188,5 +188,6 @@ export function findOrgAppAccess(org: OrganizationDocument) {
 
 export async function hasAcceptedMovies(org: OrganizationDocument) {
   const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)))
+  console.log(movies)
   return !!movies.filter(movie => movie?.storeConfig.status === 'accepted').length
 }

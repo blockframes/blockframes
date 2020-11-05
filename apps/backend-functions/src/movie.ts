@@ -78,7 +78,6 @@ export async function onMovieUpdate(
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
-
   await cleanMovieMedias(before, after);
 
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
@@ -117,12 +116,13 @@ export async function onMovieUpdate(
   const creator = await getDocument<PublicUser>(`users/${after._meta!.createdBy}`);
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
+  console.log(creatorOrg)
   if (creatorOrg.denomination?.full) {
     if (after.storeConfig.status !== before.storeConfig.status && after.storeConfig.status === 'accepted') {
       const orgs = await getCollection<OrganizationDocument>('orgs');
       const filteredOrgs = orgs.filter(org => org.movieIds.includes(after.id))
       for (const org of filteredOrgs) {
-        if (!hasAcceptedMovies(org)) {
+        if (hasAcceptedMovies(org)) {
           org['hasAcceptedMovies'] = true;
           storeSearchableOrg(org)
         }
