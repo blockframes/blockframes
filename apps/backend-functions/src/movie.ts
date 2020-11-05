@@ -116,7 +116,6 @@ export async function onMovieUpdate(
   const creator = await getDocument<PublicUser>(`users/${after._meta!.createdBy}`);
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
-  console.log(creatorOrg)
   if (creatorOrg.denomination?.full) {
     if (after.storeConfig.status !== before.storeConfig.status && after.storeConfig.status === 'accepted') {
       const orgs = await getCollection<OrganizationDocument>('orgs');
