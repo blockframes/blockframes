@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 // Blockframes
 import { HostedMediaWithMetadata } from '@blockframes/media/+state/media.firestore';
@@ -15,13 +14,14 @@ import { MediaService } from '@blockframes/media/+state/media.service';
 import { extractMediaFromDocumentBeforeUpdate } from '@blockframes/media/+state/media.model';
 
 // Material
-import { MatSelectionListChange } from '@angular/material/list';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // File Explorer
 import { ImageDialogComponent } from '../dialog/image/image.component';
 import { FileDialogComponent } from '../dialog/file/file.component';
-import { 
+import {
+  createMovieFileStructure,
+  createOrgFileStructure,
   Directory,
   getCollection,
   getFormList,
@@ -32,11 +32,8 @@ import {
   SubDirectoryFile,
   SubDirectoryImage
 } from './file-explorer.model';
+import { Subscription } from 'rxjs';
 
-
-const directoryColumns = {
-  name: 'Name'
-}
 
 @Component({
   selector: '[org] file-explorer',
@@ -44,59 +41,16 @@ const directoryColumns = {
   styleUrls: ['./file-explorer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileExplorerComponent {
+export class FileExplorerComponent implements OnInit, OnDestroy {
 
-  @Input() set org(org: OrganizationDocumentWithDates) {
-    this.directories.push({
-      name: org.denomination.full,
-      type: 'directory',
-      collection: 'orgs',
-      selected: true,
-      path: [0],
-      directories: [
-        {
-          name: 'Documents',
-          type: 'file',
-          acceptedFileType: 'pdf',
-          multiple: true,
-          docNameField: 'title',
-          fileRefField: 'ref',
-          storagePath: `orgs/${org.id}/documents/notes`,
-          privacy: 'protected',
-          path: [0,0]
-        },
-        {
-          name: 'Logo',
-          type: 'image',
-          ratio: 'square',
-          multiple: false,
-          docNameField: 'logo',
-          fileRefField: 'logo',
-          storagePath: `orgs/${org.id}/logo`,
-          privacy: 'public',
-          path: [0,1]
-        }
-      ]
-    });
-    this.activeDirectory = this.directories[0];
-    this.breadCrumbs.push({name: this.activeDirectory.name, path: this.activeDirectory.path});
-
-    this.org$ = this.organizationService.valueChanges(org.id);
-
-    this.getTitleDirectories(org);
-  };
-
-  // 💀 if org doesnt have document.notes, then nothing is displayed. This issue probably doesn't happen if it's based on a Form - but forms dont update
-  public org$: Observable<OrganizationDocumentWithDates>;
+  @Input() org: OrganizationDocumentWithDates;
 
   public directories: Directory[] = [];
-
-  public directoryColumns = directoryColumns;
-  public initialDirectoryColumns = Object.keys(directoryColumns);
-
-  public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile
+  public activeDirectory: Directory | SubDirectoryImage | SubDirectoryFile;
 
   public breadCrumbs: { name: string, path: number[] }[] = [];
+
+  private dialogSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -105,215 +59,141 @@ export class FileExplorerComponent {
     private organizationService: OrganizationService,
     private cdr: ChangeDetectorRef,
     private routerQuery: RouterQuery
-  ) {}
+  ) { }
 
-  public goToCrumb(path: number[]) {
-    let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[path[0]];
+  ngOnInit() {
 
+    // create org's folders & files
+    const orgFileStructure = createOrgFileStructure(this.org.id, this.org.denomination.full)
+    this.directories.push(orgFileStructure);
+
+    // set the org folder as active
+    this.goTo([0]);
+
+    // create folders & files for every movies of this org
+    this.movieService.getValue(this.org.movieIds).then(titlesRaw => {
+      const currentApp: App = this.routerQuery.getData('app');
+      const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
+
+      titles.forEach((title, index) =>
+        this.directories.push(createMovieFileStructure(title.id, title.title.original, index + 1)) // we do `index + 1` because `[0]` is the org
+      );
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy() {
+    this.dialogSubscription.unsubscribe();
+  }
+
+
+  public goTo(path: number[]) {
+
+    const pathCopy = [...path]; // without a copy we would be modifying the path of the parent directory
+
+    let currentDirectory: Directory | SubDirectoryImage | SubDirectoryFile = this.directories[pathCopy.shift()];
     this.breadCrumbs = [{ name: currentDirectory.name, path: currentDirectory.path}];
 
-    for (const element of Object.assign([], path).splice(1)) {
+    pathCopy.forEach(index => {
       if (currentDirectory.type === 'directory') {
-        currentDirectory = currentDirectory.directories[element];
+        currentDirectory = currentDirectory.directories[index];
         this.breadCrumbs.push({ name: currentDirectory.name, path: currentDirectory.path });
       } else throw new Error('Not able to navigate to this element in breadcrumb');
-    }
+    });
+
     this.activeDirectory = currentDirectory;
   }
 
-  public async selectSubDirectory(name: string) {
-    if (this.activeDirectory.type === 'directory') {
-      this.activeDirectory = this.activeDirectory.directories.find(directory => directory.name === name);
-    }
 
-    this.breadCrumbs.push({ name: this.activeDirectory.name, path: this.activeDirectory.path });
-  }
+  public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {
 
-  public async selectDirectory(event: MatSelectionListChange) {
-    const selected = event.source.selectedOptions.selected;
-    const [ selectedValues ] = selected.map(x => x.value);
-    this.activeDirectory = selectedValues;
-
-    this.breadCrumbs = [{ name: this.activeDirectory.name, path: this.activeDirectory.path }];
-  }
-
-  private async getTitleDirectories(org: OrganizationDocumentWithDates) {
-    const titlesRaw = await this.movieService.getValue(org.movieIds);
-    const currentApp: App = this.routerQuery.getData('app');
-    const titles = titlesRaw.filter(movie => !!movie).filter(movie => movie.storeConfig.appAccess[currentApp]);
-
-    let indexCounter = this.directories.length;
-
-    for (const title of titles) {
-      this.directories.push({
-        name: title.title.original,
-        type: 'directory',
-        collection: 'movies',
-        path: [indexCounter],
-        directories: [
-          {
-            name: 'Main information',
-            type: 'directory',
-            path: [indexCounter, 0],
-            directories: [
-              {
-                name: 'Poster',
-                type: 'image',
-                ratio: 'poster',
-                multiple: false,
-                docNameField: 'poster',
-                fileRefField: 'poster',
-                storagePath: `movies/${title.id}/poster`,
-                privacy: 'public',
-                path: [indexCounter, 0, 0],
-              },
-              {
-                name: 'Banner',
-                type: 'image',
-                ratio: 'banner',
-                multiple: false,
-                docNameField: 'banner',
-                fileRefField: 'banner',
-                storagePath: `movies/${title.id}/banner`,
-                privacy: 'public',
-                path: [indexCounter, 0, 1],
-              },
-            ]
-          },
-          {
-            name: 'Promotional Elements',
-            type: 'directory',
-            path: [indexCounter, 1],
-            directories: [
-              {
-                name: 'Presentation Deck',
-                type: 'file',
-                acceptedFileType: 'pdf',
-                multiple: false,
-                docNameField: 'presentation_deck',
-                fileRefField: 'presentation_deck',
-                storagePath: `movies/${title.id}/promotional.presentation_deck`,
-                privacy: 'public',
-                path: [indexCounter, 1, 0],
-              },
-              {
-                name: 'Scenario',
-                type: 'file',
-                acceptedFileType: 'pdf',
-                multiple: false,
-                docNameField: 'scenario',
-                fileRefField: 'scenario',
-                storagePath: `movies/${title.id}/promotional.scenario`,
-                privacy: 'public',
-                path: [indexCounter, 1, 1],
-              },
-              {
-                name: 'Moodboard / Artistic Deck',
-                type: 'file',
-                acceptedFileType: 'pdf',
-                multiple: false,
-                docNameField: 'file',
-                fileRefField: 'file',
-                storagePath: `movies/${title.id}/promotional.moodboard`,
-                privacy: 'public',
-                path: [indexCounter, 1, 2],
-              },
-              {
-                name: 'Still Photo',
-                type: 'image',
-                multiple: true,
-                docNameField: '',
-                fileRefField: '',
-                ratio: 'still',
-                storagePath: `movies/${title.id}/promotional.still_photo`,
-                privacy: 'public',
-                path: [indexCounter, 1, 3],
-              },
-            ]
-          },
-          {
-            name: 'Notes & Statements',
-            type: 'file',
-            acceptedFileType: 'pdf',
-            multiple: true,
-            docNameField: 'ref',
-            fileRefField: 'ref',
-            storagePath: `movies/${title.id}/promotional.notes`,
-            privacy: 'protected',
-            path: [indexCounter, 2],
-          }
-        ]
-      })
-      indexCounter++
-    }
-    this.cdr.markForCheck();
-  }
-
-  public async openDialog(row?: HostedMediaWithMetadata | MovieNote | string) {    
+    // safe guard
     if (this.activeDirectory.type === 'directory') return;
-    
-    let form: OrganizationForm | MovieForm;
+
+    // retrieving useful values
     const id = getId(this.activeDirectory.storagePath);
     const collection = getCollection(this.activeDirectory.storagePath);
 
+    // instantiating corresponding form
+    let form: OrganizationForm | MovieForm;
     if (collection === 'orgs') {
       const org = await this.organizationService.getValue(id);
       form = new OrganizationForm(org);
-    } else {
+    } else if (collection === 'movies') {
       const movie = await this.movieService.getValue(id);
       form = new MovieForm(movie);
+    } else {
+      throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
     }
-    const formList = getFormList(form, this.activeDirectory.storagePath);
 
+    // retrieving the needed media from the form
     let mediaForm: MediaFormTypes;
+    const formList = getFormList(form, this.activeDirectory.storagePath);
     if (!!row) {
-      mediaForm = formList.controls.find(ctrl => {
-        if (isHostedMediaForm(ctrl)) {
-          // HostedMediaForm
+      mediaForm = formList.controls.find(control => {
+        if (isHostedMediaForm(control)) { // HostedMediaForm
+
           const ref = (row as string);
-          return ctrl.get('ref').value === ref;
-        } else if (isHostedMediaWithMetadataForm(ctrl)) {
-          // HostedMediaWithMetadataForm
+          return control.get('ref').value === ref;
+
+        } else if (isHostedMediaWithMetadataForm(control)) { // HostedMediaWithMetadataForm
+
           const title = (row as HostedMediaWithMetadata).title;
-          return ctrl.get('title').value === title;
-        } else {
-          // MovieNotesForm
+          return control.get('title').value === title;
+
+        } else { // MovieNotesForm
+
           const ref = (row as MovieNote).ref;
-          return ctrl.get('ref').get('ref').value === ref;
+          return control.get('ref').get('ref').value === ref;
         }
-      })
+      });
     } else {
       mediaForm = formList.add();
     }
-
-    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
-    if (this.activeDirectory.type === 'file') {
-      dialog = this.dialog.open(FileDialogComponent, { width: '60vw', data: {
-        form: mediaForm,
-        privacy: this.activeDirectory.privacy,
-        storagePath: this.activeDirectory.storagePath
-      }});
-    } else if (this.activeDirectory.type === 'image') {
-      dialog = this.dialog.open(ImageDialogComponent, { width: '60vw', data: {
-        form: mediaForm,
-        ratio: this.activeDirectory.ratio,
-        storagePath: this.activeDirectory.storagePath
-      }});
+    if (!mediaForm) {
+      throw new Error(`Media Form not found!`);
     }
 
-    dialog.afterClosed().subscribe(async result => {
+    // opening file/image upload dialog
+    let dialog: MatDialogRef<FileDialogComponent | ImageDialogComponent>;
+    if (this.activeDirectory.type === 'file') {
+      dialog = this.dialog.open(FileDialogComponent, {
+        width: '60vw',
+        data: {
+          form: mediaForm,
+          privacy: this.activeDirectory.privacy,
+          storagePath: this.activeDirectory.storagePath,
+        },
+      });
+    } else if (this.activeDirectory.type === 'image') {
+      dialog = this.dialog.open(ImageDialogComponent, {
+        width: '60vw',
+        data: {
+          form: mediaForm,
+          ratio: this.activeDirectory.ratio,
+          storagePath: this.activeDirectory.storagePath,
+        },
+      });
+    }
+
+    // on dialog close update teh corresponding document & upload the file if needed
+    this.dialogSubscription = dialog.afterClosed().subscribe(async result => {
       if (!!result) {
         if (this.activeDirectory.type === 'directory') return;
 
         const { documentToUpdate, mediasToUpload } = extractMediaFromDocumentBeforeUpdate(form);
         if (collection === 'orgs') {
           await this.organizationService.update(id, documentToUpdate);
-        } else {
+        } else if (collection === 'movies') {
           documentToUpdate.id = id;
           await this.movieService.update(documentToUpdate);
+        } else {
+          this.dialogSubscription.unsubscribe();
+          throw new Error(`Unsupported collection ${collection}, only 'orgs' and 'movies' are supported!`);
         }
         this.mediaService.uploadMedias(mediasToUpload);
       }
+      this.dialogSubscription.unsubscribe();
     });
   }
 

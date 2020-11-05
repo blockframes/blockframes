@@ -1,32 +1,35 @@
-section {
+article {
   border-radius: 4px;
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2), 0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
-  overflow: hidden;
-}
 
-.drawer {
-  padding: 16px 0;
+  aside {
+    padding: 16px 0;
+    border-radius: 4px;
 
-  .directory {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 56px;
-    padding: 0 16px;
+    mat-list-option {
+      padding: 0 32px;
+    }
   }
 
-  mat-list-option {
-    padding: 0 32px;
-  }
-}
+  section {
+    width: 100%;
+    padding: 0;
 
-.view {
-  width: 100%;
-  .header {
-    margin: 8px;
-    height: 65px;
-    .breadcrumb {
-      font-size: small;
+    header {
+      margin: 8px;
+      height: 65px;
+
+      div {
+        button {
+          font-size: small;
+          padding: 4px;
+        }
+        span {
+          font-weight: bold;
+        }
+      }
+      button {
+        flex-shrink: 0;
+      }
     }
   }
 }
