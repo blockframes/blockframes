@@ -185,8 +185,3 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
 export function findOrgAppAccess(org: OrganizationDocument) {
   return app.filter(a => modules.some(m => org.appAccess[a]?.[m]));
 }
-
-export async function hasAcceptedMovies(org: OrganizationDocument) {
-  const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)))
-  return !!movies.filter(movie => movie?.storeConfig.status === 'accepted').length
-}
