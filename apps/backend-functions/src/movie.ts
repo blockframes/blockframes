@@ -8,7 +8,7 @@ import { centralOrgID } from './environments/environment';
 import { orgName } from '@blockframes/organization/+state/organization.firestore';
 import { cleanMovieMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableMovie } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableMovie, storeSearchableOrg } from '@blockframes/firebase-utils';
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
@@ -78,7 +78,6 @@ export async function onMovieUpdate(
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
-
   await cleanMovieMedias(before, after);
 
   const isMovieSubmitted = isSubmitted(before.storeConfig, after.storeConfig);
@@ -118,6 +117,10 @@ export async function onMovieUpdate(
   const creatorOrg = await getDocument<OrganizationDocument>(`orgs/${creator!.orgId}`);
 
   if (creatorOrg.denomination?.full) {
+    if (after.storeConfig.status !== before.storeConfig.status && after.storeConfig.status === 'accepted') {
+      creatorOrg['hasAcceptedMovies'] = true;
+      storeSearchableOrg(creatorOrg)
+    }
     await storeSearchableMovie(after, orgName(creatorOrg));
     for (const app in after.storeConfig.appAccess) {
       if (after.storeConfig.appAccess[app] && before.storeConfig.appAccess[app] !== after.storeConfig.appAccess[app]) {
