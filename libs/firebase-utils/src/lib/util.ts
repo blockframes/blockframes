@@ -4,6 +4,9 @@ import { firebase as firebaseCI } from 'env/env.ci';
 import { config } from 'dotenv';
 import { readFileSync } from 'fs';
 import requiredVars from 'tools/mandatory-env-vars.json';
+import { OrganizationDocument } from '@blockframes/organization/+state/organization.model';
+import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
+import { getDocument } from './firebase-utils'
 
 /**
  * This function is an iterator that allows you to fetch documents from a collection in chunks
@@ -13,7 +16,7 @@ import requiredVars from 'tools/mandatory-env-vars.json';
  * @param orderBy the unique key of the document object to order by
  * @param batchSize how many docs to fetch per iteration
  */
-export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650 ) {
+export async function* getCollectionInBatches<K>(ref: admin.firestore.CollectionReference, orderBy: string, batchSize = 650) {
   let querySnapshot = await ref.orderBy(orderBy).limit(batchSize).get();
   let lastSnapshot: FirebaseFirestore.QueryDocumentSnapshot | string = '';
 
@@ -124,4 +127,9 @@ function getKeyFile(keyFile: string): admin.ServiceAccount {
     // tslint:disable-next-line: no-eval
     return eval('require')(keyFile) as admin.ServiceAccount;
   }
+}
+
+export async function hasAcceptedMovies(org: OrganizationDocument) {
+  const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
+  return movies.some(movie => movie.storeConfig.status === 'accepted')
 }
