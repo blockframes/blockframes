@@ -26,18 +26,16 @@
             <p>{{ description }}</p>
           </ng-template>
         </missing-control>
-        <!-- @todo(#4116)
-          <missing-control [control]="control.get('amount')" [link]="link">
-            <ng-template let-amount>
-              <span *ngIf="amount | isUnlimited">
-                Unlimited privileges
-              </span>
-              <span *ngIf="!(amount | isUnlimited)">
-                {{ amount.current }} privileges available initially, {{ amount.total }} privileges left.
-              </span>
-            </ng-template>
-          </missing-control>
-        -->
+        <missing-control [control]="control.get('amount')" [link]="link">
+          <ng-template let-amount>
+            <span *ngIf="amount | isUnlimited">
+              Unlimited privileges
+            </span>
+            <span *ngIf="!(amount | isUnlimited)">
+              {{ amount.current }} privileges available initially, {{ amount.total }} privileges left.
+            </span>
+          </ng-template>
+        </missing-control>
       </li>
     </ng-container>
   </ul>
