@@ -1,7 +1,9 @@
 ﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
-        loadFirestoreRules } from '@firebase/rules-unit-testing';
+        loadFirestoreRules, firestore } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
+
+type Firestore = ReturnType<typeof initFirestoreApp>;
 
 const initFirestoreApp = (projectId: string, auth?: any) => {
   //Define these env vars to avoid getting console warnings
@@ -18,13 +20,15 @@ const initFirestoreApp = (projectId: string, auth?: any) => {
 /**
  * Helper function to setup Firestore DB Data
  */
-async function setFirestore(projectId: string, rulePath: string, db?: any, dataDB?: Object) {
+async function setRules(projectId: string, rulePath: string) {
   // Apply the firestore rules to the project
   await loadFirestoreRules({
     projectId,
     rules: fs.readFileSync(rulePath, "utf8")
   });
+}
 
+async function setData(db?: Firestore, dataDB?: Object) {
   // Write data to firestore app
   if (dataDB) {
     for (const key in dataDB) {
@@ -36,12 +40,13 @@ async function setFirestore(projectId: string, rulePath: string, db?: any, dataD
 
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = initFirestoreApp(projectId, {uid: 'uid-c8'});
-    await setFirestore(projectId, 'firestore.test.rules', db, testFixture);
-    await setFirestore(projectId, 'firestore.rules');
+    await setRules(projectId, 'firestore.test.rules');
+    await setData(db, testFixture);
+    await setRules(projectId, 'firestore.rules');
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
@@ -55,12 +60,13 @@ describe('Blockframe Admin', () => {
 
 describe('General User', () => {
   const projectId = `rules-spec-${Date.now()}`;
-  let db: any;
+  let db: Firestore;
 
   beforeAll(async () => {
     db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setFirestore(projectId, 'firestore.test.rules', db, testFixture);
-    await setFirestore(projectId, 'firestore.rules');
+    await setRules(projectId, 'firestore.test.rules');
+    await setData(db, testFixture);
+    await setRules(projectId, 'firestore.rules');
   });
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
