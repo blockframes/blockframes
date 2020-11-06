@@ -5,7 +5,7 @@ import { Language } from '@blockframes/utils/static-model';
 import { app, getOrgModuleAccess, modules } from "@blockframes/utils/apps";
 import { AlgoliaRecordOrganization, AlgoliaRecordMovie, AlgoliaRecordUser } from '@blockframes/utils/algolia';
 import { OrganizationDocument, orgName } from '@blockframes/organization/+state/organization.firestore';
-import { getDocument, mockConfigIfNeeded } from './firebase-utils';
+import { mockConfigIfNeeded } from './firebase-utils';
 import { PublicUser } from '@blockframes/user/types';
 import { MovieDocument } from '@blockframes/movie/+state/movie.firestore';
 
