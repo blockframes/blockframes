@@ -35,4 +35,11 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
   toMe(filter: (invitation: Invitation) => boolean = () => true) {
     return this.selectAll({ filterBy: i => this.isToMe(i) && filter(i) });
   }
+
+  getUserInvitationToEvent(uid: string, eventId: string) {
+    return this.getAll()
+      .filter(invitation => invitation.docId === eventId)
+      .filter(invitation => (invitation.mode === 'request' && invitation.fromUser?.uid === uid) ||
+                            (invitation.mode === 'invitation' && invitation.toUser?.uid === uid))
+  }
 }

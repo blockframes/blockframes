@@ -46,26 +46,12 @@ export class SessionComponent implements OnInit {
           this.visioContainerSize = '40%';
         }
 
-        // PLAN A: set invitation to event
-
         /**
-         * Audience requested to participate
-         * Therefore isInvitationRecepient === false for audience
-         * Only the Organizer (orgmember) has rights to edit the invitation
-         * 
-         * We could allow the creator to edit the invitation too in the firestore rules
+         * Updating the status of the invitation of the guest
          */
-
-        // apperently invitation is both on the organizer as on the receiver's store
-        const invitations = this.invitationQuery.getAll().filter(invitation => invitation.docId === event.id)
+        const invitations = this.invitationQuery.getUserInvitationToEvent(this.authQuery.userId, event.id).filter(invitation => invitation.status === 'accepted');
         for (let invitation of invitations) {
-          // if status is accepted
-          // and the user is either fromUser and requested to attend, or toUser and invited
-          if (invitation.status === 'accepted' && 
-            (invitation.mode === 'request' && invitation.fromUser?.uid === this.authQuery.userId) ||
-            (invitation.mode === 'invitation' && invitation.toUser?.uid === this.authQuery.userId)) {
             await this.invitationService.update(invitation.id, { status: 'attended' });
-          }
         }
 
         if (event.type === 'screening') {

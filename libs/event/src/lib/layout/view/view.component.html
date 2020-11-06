@@ -26,7 +26,7 @@
           <pre class="mat-body-1">{{ event | eventRange }}</pre>
           <p class="mat-caption">{{ event.meta.description }}</p>
           <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
-          <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || event.isOwner">
+          <ng-container *ngIf="(invitation$ | async)?.status === 'accepted' || (invitation$ | async)?.status === 'attended' || event.isOwner">
             <a test-id="event-room" mat-flat-button [routerLink]="accessRoute" color="accent">Access {{ event.type | titlecase }} Room</a>
           </ng-container>
         </ng-container>

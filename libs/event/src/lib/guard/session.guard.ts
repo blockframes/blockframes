@@ -22,7 +22,7 @@ export class SessionGuard implements CanActivate, CanDeactivate<any> {
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
     const eventId: string = next.params.eventId;
     const hasUserAccepted = this.invitationQuery.hasEntity((invitation: Invitation) => {
-      return invitation.docId === eventId && invitation.status === 'accepted';
+      return invitation.docId === eventId && (invitation.status === 'accepted' || invitation.status === 'attended' );
     });
     const { isOwner } = this.eventQuery.getActive();
     if (!isOwner && !hasUserAccepted) {
