@@ -1,10 +1,8 @@
-//import firebase from 'firebase';
-import { assertFails, assertSucceeds, firestore, initializeTestApp, loadFirestoreRules} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds, firestore, initializeTestApp, loadFirestoreRules} from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 
-const setupFirestoreDB = (auth = null) => {
-  const projectId = `rules-spec-${Date.now()}`;
+const setupFirestore = (projectId: string, auth = null) => {
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
   const app = initializeTestApp({
@@ -97,10 +95,14 @@ describe('Blockframe Admin', () => {
   let db: any;
 
   beforeAll(async () => {
-    db  = setupFirestoreDB();
-    setFirestoreDB(projectId, 
-          ['firestore.test.rules'], 
-          db, null);
+    db  = setupFirestore(projectId, {uid: 'uid-c8'});
+    await setFirestoreDB(projectId, 
+          ['firestore.test.rules', 'firestore.rules'], 
+          db, testFixture);
+  });
+
+  afterAll(async () => {
+    Promise.all(apps().map(app => app.delete()));
   });
 
   test("should allow blockframe admin to read", async () => {
