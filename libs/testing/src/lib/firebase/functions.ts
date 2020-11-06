@@ -1,5 +1,4 @@
 import * as admin from 'firebase-admin';
-import fs from 'fs';
 import firebaseFunctionsTest from 'firebase-functions-test';
 import { runChunks } from '@blockframes/firebase-utils';
 import  firebase  from '@firebase/testing';
@@ -49,27 +48,6 @@ export function getTestingProjectId() {
   return 'test' + testIndex;
 }
 
-/**
- * Helper function to setup Firestore DB Data
- */
-export async function setFirestoreDB(firebaseTest: any, 
-              strRulesPath: string, data: any) {
-  // Apply the firestore rules to the project
-  const projectId = firebaseTest.projectId;
-  await firebase.loadFirestoreRules({
-    projectId,
-    rules: fs.readFileSync(strRulesPath, "utf8")
-  });
-
-  // Write data to firestore app
-  if (data) {
-    const db = firebaseTest.app;
-    for (const key in data) {
-      const ref = db.doc(key);
-      await ref.set(data[key]);
-    }
-  }
-}
 
 //////////////
 // DB TOOLS //
