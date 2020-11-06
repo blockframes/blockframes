@@ -50,7 +50,7 @@ export class SessionComponent implements OnInit {
          * Updating the status of the invitation of the guest
          */
         const invitations = this.invitationQuery.getUserInvitationToEvent(this.authQuery.userId, event.id).filter(invitation => invitation.status === 'accepted');
-        for (let invitation of invitations) {
+        for (const invitation of invitations) {
             await this.invitationService.update(invitation.id, { status: 'attended' });
         }
 

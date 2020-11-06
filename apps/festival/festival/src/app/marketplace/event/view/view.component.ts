@@ -44,7 +44,7 @@ export class EventViewComponent {
     // calculate left over minutes
     const rminutes = Math.round(((minutes / 60) - rhours) * 60);
 
-    let duration: string = '';
+    let duration = '';
     if (!!rhours) {
       duration += rhours === 1 ? `${rhours} hour ` : `${rhours} hours `;
     }
