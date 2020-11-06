@@ -10,7 +10,6 @@ import { UploadModule } from '@blockframes/media/components/upload/upload.module
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 
@@ -25,7 +24,6 @@ import { MatDividerModule } from '@angular/material/divider';
     UploadModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTooltipModule,
     MatIconModule,
     MatDividerModule,
     RouterModule.forChild([{ path: '', component: CampaignFormProfitsComponent }])
