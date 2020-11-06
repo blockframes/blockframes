@@ -24,6 +24,7 @@ export async function onMovieCreate(
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
+  console.log(movie.storeConfig)
   if (movie.storeConfig.status === 'accepted') {
     organization['hasAcceptedMovies'] = true;
     storeSearchableOrg(organization)

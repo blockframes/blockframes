@@ -41,6 +41,17 @@ export async function upgradeAlgoliaOrgs(appConfig?: App) {
     const { db } = loadAdminServices();
     const orgsIterator = getCollectionInBatches<OrganizationDocument>(db.collection('orgs'), 'id', 300)
     for await (const orgs of orgsIterator) {
+
+      for await (const org of orgs) {
+        if (org.movieIds.length) {
+          const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
+          const acceptedMovies = movies.filter(movie => movie.storeConfig.status === 'accepted')
+          if (acceptedMovies.length) {
+            org['hasAcceptedMovies'] = true;
+          }
+        }
+      }
+
       const promises = orgs.map(org => storeSearchableOrg(org, process.env['ALGOLIA_API_KEY']));
 
       await Promise.all(promises);
