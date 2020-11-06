@@ -42,7 +42,7 @@
   </ng-template>
 
   <list-page-progress *ngIf="nbHits" [value]="hitsViewed / nbHits * 100" (loadMore)="loadMore()">
-    <span>You've viewed {{ hitsViewed }} partners from {{ nbHits }}.</span>
+    <span>You've viewed {{ hitsViewed }} of {{ nbHits }} partners.</span>
   </list-page-progress>
 
 </list-page>

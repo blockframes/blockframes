@@ -1,50 +1,55 @@
-<section fxLayout>
-  <ng-container *ngIf="org$ | async as org">
-    <article class="drawer mat-list-base" id="dashboard-navbar">
-      <mat-selection-list matLine [multiple]="false" (selectionChange)="selectDirectory($event)">
-        <ng-container *ngFor="let directory of directories">
-          <mat-list-option [selected]="directory.selected" [value]="directory">
-            <mat-icon matListIcon [svgIcon]="directory.collection === 'orgs' ? 'building' : 'video_library'"></mat-icon>
-            <span matLine>{{ directory.name | maxLength: 20}}</span>
-          </mat-list-option>
-        </ng-container>
-      </mat-selection-list>
-    </article>
+<article fxLayout>
 
-    <article class="view surface">
-      <div class="header" fxLayout fxLayoutAlign="space-between center">
-        <div>
-          <ng-container *ngFor="let crumb of breadCrumbs; let i = index; let isLast = last">
-            <ng-container *ngIf="isLast else notLast">
-              <span class="breadcrumb">{{ crumb.name | maxLength: 24 }}</span>
-            </ng-container>
-            <ng-template #notLast>
-              <span class="breadcrumb" (click)="goToCrumb(crumb.path)">{{ crumb.name | maxLength: 12 }} > </span>
-            </ng-template>
+    <aside id="dashboard-navbar">
+      <mat-selection-list [multiple]="false">
+        <mat-list-option
+          *ngFor="let directory of directories; let first = first"
+          [selected]="breadCrumbs[0].name === directory.name"
+          (click)="goTo(directory.path)"
+        >
+          <mat-icon mat-list-icon [svgIcon]="first ? 'home' : 'film'"></mat-icon>
+          <span mat-line>{{ directory.name | maxLength: 20}}</span>
+        </mat-list-option>
+      </mat-selection-list>
+    </aside>
+
+    <section class="surface">
+
+      <header fxLayout fxLayoutAlign="space-between center">
+
+        <div fxLayout="row wrap" fxLayoutAlign="start center">
+          <ng-container *ngFor="let crumb of breadCrumbs; let isLast = last">
+            <button mat-button color="primary" (click)="goTo(crumb.path)">{{ crumb.name }}</button>
+            <span *ngIf="!isLast">></span>
           </ng-container>
         </div>
 
         <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple">
-          <button mat-stroked-button color="primary" (click)="openDialog()" fxLayoutAlign="center center">
+          <button mat-stroked-button color="primary" (click)="openDialog()">
             <mat-icon svgIcon="add"></mat-icon>
             <span>Upload file</span>
           </button>
         </ng-container>
-      </div>
+
+      </header>
+
+      <mat-divider></mat-divider>
 
       <ng-container *ngIf="activeDirectory.type === 'directory' else fileDirectory">
-        <bf-table-filter [source]="activeDirectory.directories" [columns]="directoryColumns" [initialColumns]="initialDirectoryColumns">
-          <ng-template colRef="name" let-name>
-            <button mat-button (click)="selectSubDirectory(name)">
-              <span>{{ name }}</span>
-            </button>
-          </ng-template>
-        </bf-table-filter>
+        <mat-selection-list [multiple]="false">
+          <mat-list-option *ngFor="let directory of activeDirectory.directories" (click)="goTo(directory.path)" >
+            <mat-icon *ngIf="directory.type === 'directory' || directory.multiple" mat-list-icon svgIcon="folder"></mat-icon>
+            <mat-icon *ngIf="directory.type === 'file' && !directory.multiple" mat-list-icon svgIcon="document"></mat-icon>
+            <mat-icon *ngIf="directory.type === 'image' && !directory.multiple" mat-list-icon svgIcon="picture"></mat-icon>
+            <span mat-line>{{ directory.name }}</span>
+          </mat-list-option>
+        </mat-selection-list>
       </ng-container>
 
       <ng-template #fileDirectory>
+
         <ng-container *ngIf="activeDirectory.type !== 'directory' && activeDirectory.multiple else single">
-          <file-explorer-multiple-files-view 
+          <file-explorer-multiple-files-view
             [activeDirectory]="activeDirectory"
             (editFile)="openDialog($event)">
           </file-explorer-multiple-files-view>
@@ -54,7 +59,8 @@
           <file-explorer-single-file-view [activeDirectory]="activeDirectory">
           </file-explorer-single-file-view>
         </ng-template>
+
       </ng-template>
-    </article>
-  </ng-container>
-</section>
+    </section>
+
+  </article>

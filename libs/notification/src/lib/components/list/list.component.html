@@ -3,10 +3,10 @@
     <!-- For a time frame -->
     <ng-container *ngIf="(notifications | filterByDate: timeFrame) as notificationList">
 
-      <h2 *ngIf="notificationList.length">
-        {{ timeFrame | labelByDate }}
-      </h2>
-      <mat-divider *ngIf="notifications.length"></mat-divider>
+      <ng-container *ngIf="notificationList.length">
+        <h2>{{ timeFrame | labelByDate }}</h2>
+        <mat-divider></mat-divider>
+      </ng-container>
 
       <!-- Display all notifications -->
       <ng-container *ngFor="let notification of notificationList">

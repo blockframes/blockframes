@@ -560,16 +560,16 @@ type ReleaseYearFormControl = ReturnType<typeof createReleaseYearFormControl>;
 // ------------------------------
 
 export class RunningTimeForm extends FormEntity<RunningTimeFormControl> {
-  constructor(runningTime?: Movie['runningTime']) {
-    super(createRunningTimeFormControl(runningTime), [runningTimeRequired]);
+  constructor(runningTime?: Movie['runningTime'], validators: ValidatorFn[] = []) {
+    super(createRunningTimeFormControl(runningTime), [...validators, runningTimeRequired]);
   }
 }
 
 function createRunningTimeFormControl(runningTime?: Partial<Movie['runningTime']>) {
   const { time, status } = createRunningTime(runningTime);
   return {
-    time: new FormControl(time, [Validators.min(1)]),
-    status: new FormControl(status),
+    time: new FormControl(time, [Validators.min(1), Validators.required]),
+    status: new FormControl(status, [Validators.required]),
   }
 }
 
@@ -851,13 +851,17 @@ export class MovieVersionInfoForm extends FormEntity<any> {
 }
 
 export class VersionSpecificationForm extends FormEntity<any> {
-  constructor(versionSpecifictaion: MovieLanguageSpecification) {
+  constructor(versionSpecification: MovieLanguageSpecification, validators: ValidatorFn[] = []) {
     super({
-      dubbed: new FormControl(versionSpecifictaion.dubbed),
-      subtitle: new FormControl(versionSpecifictaion.subtitle),
-      caption: new FormControl(versionSpecifictaion.caption)
-    });
+      dubbed: new FormControl(versionSpecification.dubbed),
+      subtitle: new FormControl(versionSpecification.subtitle),
+      caption: new FormControl(versionSpecification.caption)
+    }, [...validators, versionLanguagesValidator]);
   }
+}
+
+const versionLanguagesValidator: ValidatorFn = (version: VersionSpecificationForm) => {
+  return Object.values(version.value).every(hasVersion => !hasVersion) ? { noVersion: true } : null;
 }
 
 // ------------------------------

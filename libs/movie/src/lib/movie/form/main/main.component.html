@@ -146,8 +146,7 @@
 
         <mat-form-field appearance="outline" fxFlex>
           <mat-label>Running Time</mat-label>
-          <input test-id="run-time" matInput type="number" min="0" [formControl]="form.runningTime.get('time')"
-            name="runningTime" />
+          <input test-id="run-time" matInput type="number" name="runningTime" [formControl]="form.runningTime.get('time')" min="0" required  />
           <mat-hint>In minutes</mat-hint>
           <mat-error>
             Please specify your project's runtime.
@@ -156,11 +155,14 @@
 
         <ng-container *ngIf="form | hasStatus: ['development', 'shooting', 'post_production']">
           <static-select test-id="screening-status" scope="screeningStatus" [control]="form.runningTime.get('status')"
-            placeholder="To be determined/Estimated/Confirmed" [withoutValues]="['']" fxFlex>
+            placeholder="To be determined/Estimated/Confirmed" fxFlex required>
             <mat-label>Status</mat-label>
             <mat-hint>
               Please specify if the running time is estimated, confirmed or to be determined.
             </mat-hint>
+            <mat-error>
+              Please specify if the running time is estimated, confirmed or to be determined.
+            </mat-error>
           </static-select>
         </ng-container>
 

@@ -84,8 +84,6 @@ export function loadAdminServices(): AdminServices {
   config();
   warnMissingVars();
 
-  const cert = getKeyFile(process.env.FIREBASE_CI_SERVICE_ACCOUNT);
-
   if (!admin.apps.length) {
     admin.initializeApp({
       ...firebase,
@@ -98,7 +96,7 @@ export function loadAdminServices(): AdminServices {
       ci = admin.initializeApp(
         {
           projectId: firebaseCI.projectId,
-          credential: admin.credential.cert(cert),
+          credential: admin.credential.applicationDefault(),
         },
         'CI-app'
       );

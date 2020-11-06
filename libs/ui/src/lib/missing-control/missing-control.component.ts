@@ -32,6 +32,8 @@ export class MissingControlComponent implements OnInit, OnDestroy {
   }
 
   isMissing(control: AbstractControl) {
+    if (control.invalid) return true;
+
     if (control instanceof FormArray) {
       return !control.controls.length;
     } else if (control instanceof FormGroup) {

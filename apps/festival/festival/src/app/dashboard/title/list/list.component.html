@@ -19,7 +19,7 @@
         <ng-template colRef="title" let-title><b>{{ title.international }}</b></ng-template>
         <ng-template colRef="view" let-movie="item">{{ movie | getViews | async }}</ng-template>
         <ng-template colRef="directors" let-directors>{{ directors | displayName }}</ng-template>
-        <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
+        <ng-template colRef="productionStatus" let-prod>{{ prod | toLabel: 'productionStatus' }}</ng-template>
         <ng-template colRef="storeConfig.status" let-status>{{ status | toLabel: 'storeStatus' }}</ng-template>
       </bf-table-filter>
     </mat-card>

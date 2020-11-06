@@ -2,3 +2,11 @@ mat-divider {
   border-top-width: 2px;
   margin: 24px 0;
 }
+
+p {
+  margin-bottom: 24px;
+  a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+}

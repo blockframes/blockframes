@@ -50,7 +50,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.orgQuery.selectActive().pipe(
       map(org => org.wishlist.find(wish => wish.status === 'pending')),
-      switchMap(org => this.movieService.valueChanges(org.movieIds))
+      switchMap(org => this.movieService.valueChanges(org?.movieIds || []))
     ).subscribe(allMovies => {
       // valueChanges returns all documents even if they don't exist - created issue for this on akita-ng-fire https://github.com/dappsnation/akita-ng-fire/issues/138
       const movies = allMovies.filter(movie => !!movie);
@@ -65,7 +65,7 @@ export class WishlistComponent implements OnInit, OnDestroy {
   }
 
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`../title/${movieId}`], { relativeTo: this.route });
+    this.router.navigate(['../title', movieId], { relativeTo: this.route });
   }
 
   public remove(movie: Movie, event: Event) {

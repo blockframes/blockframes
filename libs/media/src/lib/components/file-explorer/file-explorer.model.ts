@@ -8,32 +8,44 @@ import { MovieForm, MovieNotesForm } from "@blockframes/movie/form/movie.form";
 import { OrganizationForm } from "@blockframes/organization/forms/organization.form";
 import { AllowedFileType } from "@blockframes/utils/utils";
 
-interface DirectoryBase {
-  name: string;
-  path: number[];
-}
+type DirectoryType = 'directory' | 'file' | 'image';
 
-interface FileDirectoryBase {
-  multiple: boolean;
-  docNameField: string;
-  fileRefField: string;
-  storagePath: string;
-  privacy: Privacy;
+interface DirectoryBase {
+  type: DirectoryType;
+  /** Display Name use in the UI */
+  name: string;
+  /** Path to this directory starting from the root array */
+  path: number[];
 }
 
 export interface Directory extends DirectoryBase {
   type: 'directory';
-  collection?: 'movies' | 'orgs';
-  selected?: boolean;
+  /** Array of sub-folders */
   directories: (Directory | SubDirectoryImage | SubDirectoryFile)[];
 }
 
-export interface SubDirectoryImage extends DirectoryBase, FileDirectoryBase {
+interface FileDirectoryBase extends DirectoryBase {
+  /** Wether or not this directory can contain several files *(like stills photo)* or only one *(like movie poster)* */
+  multiple: boolean;
+  docNameField: string;
+  fileRefField: string;
+  /**
+   * Corresponding path to the firebase storage
+   * @note it **SHOULD NOT** start with a `/`
+   * @note it **SHOULD NOT** end with a `/`
+   * @note it **SHOULD NOT** contain the privacy (`public`/`protected`)
+   * @note it **SHOULD NOT** contain the file name at the end
+   */
+  storagePath: string;
+  privacy: Privacy;
+}
+
+export interface SubDirectoryImage extends FileDirectoryBase {
   type: 'image';
   ratio: MediaRatioType;
 }
 
-export interface SubDirectoryFile extends DirectoryBase, FileDirectoryBase {
+export interface SubDirectoryFile extends FileDirectoryBase {
   acceptedFileType: AllowedFileType
   type: 'file';
 }
@@ -49,6 +61,12 @@ export function getId(storagePath: string) {
   return storagePath.split('/')[1];
 }
 
+/**
+ * Remove `collection` & `docId` from the storage path, then join path parts with a `.`
+ * @example
+ * getDeepPath('movies/1234/promotional/videos.screener');
+ * // 'promotional.videos.screener'
+ */
 export function getDeepPath(storagePath: string) {
   return storagePath.split('/').splice(2).join('.');
 }
@@ -63,4 +81,137 @@ export function isHostedMediaForm(form: MediaFormTypes): form is HostedMediaForm
 
 export function isHostedMediaWithMetadataForm(form: MovieNotesForm | HostedMediaWithMetadataForm): form is HostedMediaWithMetadataForm {
   return !!(form as HostedMediaWithMetadataForm).get('title');
+}
+
+export function createOrgFileStructure(orgId: string, orgName: string): Directory {
+  return {
+    name: orgName,
+    type: 'directory',
+    path: [0],
+    directories: [
+      {
+        name: 'Documents',
+        type: 'file',
+        acceptedFileType: 'pdf',
+        multiple: true,
+        docNameField: 'title',
+        fileRefField: 'ref',
+        storagePath: `orgs/${orgId}/documents/notes`,
+        privacy: 'protected',
+        path: [0,0]
+      },
+      {
+        name: 'Logo',
+        type: 'image',
+        ratio: 'square',
+        multiple: false,
+        docNameField: 'logo',
+        fileRefField: 'logo',
+        storagePath: `orgs/${orgId}/logo`,
+        privacy: 'public',
+        path: [0,1]
+      }
+    ]
+  };
+}
+
+export function createMovieFileStructure(titleId: string, titleName: string, index: number): Directory {
+  return {
+    name: titleName,
+    type: 'directory',
+    path: [index],
+    directories: [
+      {
+        name: 'Main information',
+        type: 'directory',
+        path: [index, 0],
+        directories: [
+          {
+            name: 'Poster',
+            type: 'image',
+            ratio: 'poster',
+            multiple: false,
+            docNameField: 'poster',
+            fileRefField: 'poster',
+            storagePath: `movies/${titleId}/poster`,
+            privacy: 'public',
+            path: [index, 0, 0],
+          },
+          {
+            name: 'Banner',
+            type: 'image',
+            ratio: 'banner',
+            multiple: false,
+            docNameField: 'banner',
+            fileRefField: 'banner',
+            storagePath: `movies/${titleId}/banner`,
+            privacy: 'public',
+            path: [index, 0, 1],
+          },
+        ]
+      },
+      {
+        name: 'Promotional Elements',
+        type: 'directory',
+        path: [index, 1],
+        directories: [
+          {
+            name: 'Presentation Deck',
+            type: 'file',
+            acceptedFileType: 'pdf',
+            multiple: false,
+            docNameField: 'presentation_deck',
+            fileRefField: 'presentation_deck',
+            storagePath: `movies/${titleId}/promotional.presentation_deck`,
+            privacy: 'public',
+            path: [index, 1, 0],
+          },
+          {
+            name: 'Scenario',
+            type: 'file',
+            acceptedFileType: 'pdf',
+            multiple: false,
+            docNameField: 'scenario',
+            fileRefField: 'scenario',
+            storagePath: `movies/${titleId}/promotional.scenario`,
+            privacy: 'public',
+            path: [index, 1, 1],
+          },
+          {
+            name: 'Moodboard / Artistic Deck',
+            type: 'file',
+            acceptedFileType: 'pdf',
+            multiple: false,
+            docNameField: 'file',
+            fileRefField: 'file',
+            storagePath: `movies/${titleId}/promotional.moodboard`,
+            privacy: 'public',
+            path: [index, 1, 2],
+          },
+          {
+            name: 'Still Photo',
+            type: 'image',
+            multiple: true,
+            docNameField: '',
+            fileRefField: '',
+            ratio: 'still',
+            storagePath: `movies/${titleId}/promotional.still_photo`,
+            privacy: 'public',
+            path: [index, 1, 3],
+          },
+        ]
+      },
+      {
+        name: 'Notes & Statements',
+        type: 'file',
+        acceptedFileType: 'pdf',
+        multiple: true,
+        docNameField: 'ref',
+        fileRefField: 'ref',
+        storagePath: `movies/${titleId}/promotional.notes`,
+        privacy: 'protected',
+        path: [index, 2],
+      }
+    ]
+  };
 }

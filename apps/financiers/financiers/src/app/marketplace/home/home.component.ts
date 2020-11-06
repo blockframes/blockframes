@@ -18,6 +18,7 @@ interface CarouselSection {
   title: string;
   movies$: Observable<Movie[]>;
   queryParams?: Record<string, string>;
+  size: 'banner' | 'poster'
 }
 
 @Component({
@@ -46,12 +47,19 @@ export class HomeComponent implements OnInit {
     this.sections = [
       {
         title: 'New projects',
-        movies$: this.movieService.valueChanges(ref => queryFn(ref))
+        movies$: this.movieService.valueChanges(ref => queryFn(ref).orderBy('_meta.createdAt', 'desc')),
+        size: 'banner'
+      },
+      {
+        title: 'Recommanded for you',
+        movies$: this.movieService.valueChanges(ref => queryFn(ref)),
+        size: 'poster'
       },
       {
         title: 'In development',
         movies$: this.movieService.valueChanges(ref => queryFn(ref).where('productionStatus', '==', 'development')),
-        queryParams: { productionStatus: 'development' }
+        queryParams: { productionStatus: 'development' },
+        size: 'banner'
       }
     ];
 

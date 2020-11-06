@@ -21,13 +21,13 @@
     </a>
   </h6>
   <ul>
-    <missing-control [control]="movie.languages" [link]="link" fragment="available-versions">
-      <ng-template let-languages="control">
-        <li *ngFor="let language of languages.controls | keyvalue; let isLast = last">
-          <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
-          <span>{{ language.value.value | versionPipe }}</span>
-        </li>
-      </ng-template>
-    </missing-control>
+    <li *ngFor="let language of movie.languages.controls | keyvalue">
+    <strong>{{ language.key | toLabel: 'languages' }}</strong>&nbsp;
+    <missing-control [control]="language.value">
+      <ng-template let-version>
+          <span>{{ version | versionPipe }}</span>
+        </ng-template>
+      </missing-control>
+    </li>
   </ul>
 </article>
