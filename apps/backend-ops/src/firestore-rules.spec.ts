@@ -1,4 +1,5 @@
-﻿import { apps, assertFails, assertSucceeds, firestore, initializeTestApp, loadFirestoreRules} from '@firebase/rules-unit-testing';
+﻿import { apps, assertFails, assertSucceeds, initializeTestApp, 
+        loadFirestoreRules } from '@firebase/rules-unit-testing';
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 
@@ -42,6 +43,11 @@ async function setFirestoreDB(projectId: string,
   }
 }
 
+/**
+ * TODO : 4166
+ * Refactor this jest extension into separate lib and
+ * using proper TS code.
+ */
 const fexpect: any = Object.assign(expect);
 
 fexpect.extend({
