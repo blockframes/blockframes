@@ -16,6 +16,7 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MatButtonModule} from '@angular/material/button';
 import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
+import { EventTimeModule } from '@blockframes/event/pipes/event-time.pipe';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -33,6 +34,7 @@ import { GuestPipeModule } from '@blockframes/invitation/pipes/guest.pipe';
     DisplayNameModule,
     MatButtonModule,
     GuestPipeModule,
+    EventTimeModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

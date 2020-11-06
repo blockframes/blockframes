@@ -21,6 +21,7 @@ const points: Record<InvitationStatus, number> = {
   accepted: 0,
   declined: 1,
   pending: 2,
+  attended: 3
 };
 
 @Component({

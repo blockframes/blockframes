@@ -18,18 +18,42 @@
       </section>
 
       <!-- Meeting -->
-      <section class="meeting" fxLayout="column"  fxLayoutAlign="center center" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
-        <article>
-          <h2>Your meeting is over!</h2>
-          <div>It lasted {{ ({ 'start': event.start, 'end': event.end }) | duration }}</div>
-          <div>There were {{ attended }} attendees of {{ expected }} expected</div>
-          <div *ngFor="let invitation of invitations$ | async">
-            <span *ngIf="(invitation | guest: 'user') as user">
-              {{ user.firstName }} {{ user.lastName }}
-            </span>
-          </div>
-        </article>
-      </section>
+      <ng-container *ngIf="(event | eventTime) === 'late' else notLate">
+        <section class="meeting" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
+          <article fxLayout="column" fxLayoutAlign="start center">
+            <h1>Your meeting is over!</h1>
+            <div>It lasted {{ getDurationString(event) }}.</div>
+            <br/>
+            <h5>There were {{ attended }} attendees of {{ expected }} expected.</h5>
+            <ng-container *ngFor="let invitation of invitations$ | async">
+              <div *ngIf="(invitation | guest: 'user') as user">
+                {{ user.firstName }} {{ user.lastName }}
+              </div>
+            </ng-container>
+          </article>
+        </section>
+      </ng-container>
+
+      <ng-template #notLate>
+        <section class="meeting" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
+          <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
+            <h2>Organized by</h2>
+            <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+              <img [ref]="event.org.logo" asset="empty_organization.webp" type="logo" alt="Organization Logo">
+              <div fxLayout="column" fxLayoutGap="4px">
+                <h6>{{ event.org | orgName }}</h6>
+                <ng-container *ngIf="event.organizedBy as user">
+                  <span>{{ user | displayName }} | {{ user.position }}</span>
+                </ng-container>
+              </div>
+            </div>
+            <h5>Description</h5>
+            <p>{{ event.meta.description }}</p>
+          </article>
+          <h2>Guest List</h2>
+          <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
+        </section>
+      </ng-template>
 
     </ng-container>
   </event-view>
