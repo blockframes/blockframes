@@ -3,7 +3,8 @@
 import { testFixture } from './fixtures/data';
 import fs from 'fs';
 
-const setupFirestore = (projectId: string, auth = null) => {
+const initFirestoreApp = (projectId: string, auth?: any) => {
+  //Define these env vars to avoid getting console warnings
   process.env.GCLOUD_PROJECT = projectId;
   process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
   const app = initializeTestApp({
@@ -11,114 +12,62 @@ const setupFirestore = (projectId: string, auth = null) => {
     auth
   });
 
-  const db = app.firestore();
-  return db;
+  return app.firestore();
 }
 
 /**
  * Helper function to setup Firestore DB Data
  */
-async function setFirestoreDB(projectId: string, 
-              strRulesPath: string[], db: any = null, data: any = null) {
+async function setFirestore(projectId: string, rulePath: string, db?: any, dataDB?: Object) {
   // Apply the firestore rules to the project
   await loadFirestoreRules({
     projectId,
-    rules: fs.readFileSync(strRulesPath[0], "utf8")
+    rules: fs.readFileSync(rulePath, "utf8")
   });
 
   // Write data to firestore app
-  if (data) {
-    for (const key in data) {
+  if (dataDB) {
+    for (const key in dataDB) {
       const ref = db.doc(key);
-      await ref.set(data[key]);
+      await ref.set(dataDB[key]);
     }
-  }
-
-  if (strRulesPath.length === 2) {
-    // Apply the second firestore rules to the project
-    await loadFirestoreRules({
-      projectId,
-      rules: fs.readFileSync(strRulesPath[1], "utf8")
-    });    
   }
 }
-
-/**
- * TODO : 4166
- * Refactor this jest extension into separate lib and
- * using proper TS code.
- */
-const fexpect: any = Object.assign(expect);
-
-fexpect.extend({
-  async toAllow(testPromise) {
-    let err = '';
-    let pass = false;
-    try {
-      await assertSucceeds(testPromise);
-      pass = true;
-    } catch (error) {
-      err = error;
-      // log error to see which rules caused the test to fail
-      console.log(err);
-    }
-
-    return {
-      pass,
-      message: () =>
-        `Expected Op to be allowed, but was denied ${err ? '\nErr: err': ''}`
-    };
-  }
-});
-
-expect.extend({
-  async toDeny(testPromise) {
-    let err = '';
-    let pass = false;
-    try {
-      await assertFails(testPromise);
-      pass = true;
-    } catch (error) {
-      // log error to see which rules caused the test to fail
-      err = error;
-      console.log(err);
-    }
-
-    return {
-      pass,
-      message: () =>
-        `Expected Op to be denied, but was allowed ${err ? '\nErr: err': ''}`
-    };
-  }
-});
-
-afterAll(() => {
-  //firebase.apps().forEach(app => app.delete());
-});
 
 describe('Blockframe Admin', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: any;
 
   beforeAll(async () => {
-    db  = setupFirestore(projectId, {uid: 'uid-c8'});
-    await setFirestoreDB(projectId, 
-          ['firestore.test.rules', 'firestore.rules'], 
-          db, testFixture);
+    db  = initFirestoreApp(projectId, {uid: 'uid-c8'});
+    await setFirestore(projectId, 'firestore.test.rules', db, testFixture);
+    await setFirestore(projectId, 'firestore.rules');
   });
 
-  afterAll(async () => {
-    Promise.all(apps().map(app => app.delete()));
-  });
+  afterAll(() => Promise.all(apps().map(app => app.delete())));
 
   test("should allow blockframe admin to read", async () => {
     const usersRef = db.collection("users");
-    await fexpect(usersRef.get()).toAllow();
+    await assertSucceeds(usersRef.get());
   });
 
-  test("should allow blockframe admin to write", async () => {
-    expect(true).toBe(true);
+});
 
+describe('General User', () => {
+  const projectId = `rules-spec-${Date.now()}`;
+  let db: any;
+
+  beforeAll(async () => {
+    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
+    await setFirestore(projectId, 'firestore.test.rules', db, testFixture);
+    await setFirestore(projectId, 'firestore.rules');
+  });
+
+  afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+  test("should not allow user to write /blockframesAdmin/user", async () => {
+    const usersRef = db.doc("blockframesAdmin/007");
+    await assertFails(usersRef.set({uid: '007'}));
   });
 });
 
