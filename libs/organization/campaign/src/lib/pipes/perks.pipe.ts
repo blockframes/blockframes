@@ -19,7 +19,7 @@ export class MinPledgePipe implements PipeTransform  {
 }
 
 @NgModule({
-  declarations: [MinPledgePipe],
-  exports: [MinPledgePipe]
+  declarations: [MinPledgePipe, IsUnlimitedPipe],
+  exports: [MinPledgePipe, IsUnlimitedPipe]
 })
 export class PerksPipeModule {}
