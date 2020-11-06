@@ -16,7 +16,7 @@ import { getAdminIds, getAppUrl, getOrgAppKey, getDocument, createPublicOrganiza
 import { ErrorResultResponse } from './utils';
 import { cleanOrgMedias } from './media';
 import { Change, EventContext } from 'firebase-functions';
-import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess } from '@blockframes/firebase-utils';
+import { algolia, deleteObject, storeSearchableOrg, findOrgAppAccess, hasAcceptedMovies } from '@blockframes/firebase-utils';
 
 /** Create a notification with user and org. */
 function notifyUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -97,9 +97,7 @@ export async function onOrganizationCreate(snap: FirebaseFirestore.DocumentSnaps
   const from = await getFromEmail(org);
 
   if (org.movieIds.length) {
-    const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
-    const acceptedMovies = movies.filter(movie => movie.storeConfig.status === 'accepted')
-    if (acceptedMovies.length) {
+    if (await hasAcceptedMovies(org)) {
       org['hasAcceptedMovies'] = true;
     }
   }
