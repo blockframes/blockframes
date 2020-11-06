@@ -20,22 +20,18 @@ const initFirestoreApp = (projectId: string, auth?: any) => {
 /**
  * Helper function to setup Firestore DB Data
  */
-async function setRules(projectId: string, rulePath: string) {
+function setRules(projectId: string, rulePath: string) {
   // Apply the firestore rules to the project
-  await loadFirestoreRules({
+  return loadFirestoreRules({
     projectId,
     rules: fs.readFileSync(rulePath, "utf8")
   });
 }
 
-async function setData(db?: Firestore, dataDB?: Object) {
+function setData(db: Firestore, dataDB: Record<string, Object>) {
   // Write data to firestore app
-  if (dataDB) {
-    for (const key in dataDB) {
-      const ref = db.doc(key);
-      await ref.set(dataDB[key]);
-    }
-  }
+  const promises = Object.entries(dataDB).map(([key, doc]) => db.doc(key).set(doc));
+  return Promise.all(promises);
 }
 
 describe('Blockframe Admin', () => {
