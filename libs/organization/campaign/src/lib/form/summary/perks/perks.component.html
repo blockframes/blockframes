@@ -7,7 +7,7 @@
   </h6>
   <ul>
     <ng-container *ngFor="let control of perks.controls">
-      <li fxLayout="column" fxLayoutGap="8px" >
+      <li fxLayout="column" fxLayoutGap="8px">
         <missing-control [control]="control.get('title')" [link]="link">
           <ng-template let-title>
             <strong>

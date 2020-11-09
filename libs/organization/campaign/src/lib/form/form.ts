@@ -27,7 +27,6 @@ export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
   }
 };
 
-
 //////////
 // PERK //
 //////////

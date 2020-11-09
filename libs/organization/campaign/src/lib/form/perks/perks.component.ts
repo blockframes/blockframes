@@ -10,7 +10,7 @@ const columns = {
   title: 'Title',
   description: 'Description',
   minPledge: 'Pledge Level',
-  amount: 'Amount of Privileges Available',
+  amount: 'Amount of Privileges Available'
 }
 
 @Component({
