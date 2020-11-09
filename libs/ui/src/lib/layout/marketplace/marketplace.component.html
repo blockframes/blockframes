@@ -14,7 +14,7 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+      <header fxLayout fxLayoutAlign="start center">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
@@ -23,9 +23,8 @@
         </a>
         <ng-content select="header"></ng-content>
         <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon
-            svgIcon="heart_fill"
-            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          <mat-icon svgIcon="heart_fill" [matBadge]="wishlistCount$ | async"
+            [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
         <div fxLayout="row" fxLayoutGap="24px">
@@ -54,7 +53,8 @@
     </app-bar>
 
     <!-- CONTENT -->
-    <main fxFlex cdkScrollable>
+    <main fxFlex cdkScrollable fxLayout="column">
+      <ng-content select="[id=homepage-header]"></ng-content>
       <div class="page" [@routeAnimation]="animationOutlet(outlet)">
         <router-outlet #outlet="outlet"></router-outlet>
       </div>

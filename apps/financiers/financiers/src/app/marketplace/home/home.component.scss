@@ -1,30 +1,5 @@
-@import "~@angular/flex-layout/mq";
-
 :host {
   display: block;
-}
-
-header {
-  padding: 100px 96px;
-  margin-bottom: 80px;
-  background-image: url("/assets/images/ACMbannerlanding.png");
-  background-size: cover;
-
-  h4 {
-    text-transform: uppercase;
-    margin-bottom: 0;
-  }
-  h1 {
-    margin-bottom: 32px;
-  }
-  p {
-    width: 70%;
-    text-align: justify;
-  }
-
-  .actions {
-    margin-top: 24px;
-  }
 }
 
 .detail {
@@ -43,10 +18,6 @@ header {
   margin-top: 16px;
 }
 
-bf-slider {
-  margin-bottom: 80px;
-}
-
 /* We need some extra padding because of the intercom button. It covers the slide arrows */
 section {
   padding-bottom: 100px;
@@ -54,22 +25,4 @@ section {
 
 bf-carousel {
   margin-bottom: 80px;
-}
-
-@include layout-bp(xs) {
-  header {
-    padding: 60px 0;
-  }
-}
-
-@include layout-bp(sm) {
-  header {
-    padding: 20px;
-  }
-}
-
-@include layout-bp(md) {
-  header {
-    padding: 40px;
-  }
 }
