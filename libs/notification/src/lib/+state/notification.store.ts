@@ -183,8 +183,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     // Adding user data to the notification of meeting events
     if (!!event && event.type === 'meeting' && !!notification.organization) {
       const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
-      const orgName = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
-      subject = `${user.firstName} ${user.lastName} (${orgName})`;
+      const organizationName = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+      subject = `${user.firstName} ${user.lastName} (${organizationName})`;
     } else if (notification.organization) {
       subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
