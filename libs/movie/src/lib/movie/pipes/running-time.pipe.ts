@@ -7,7 +7,7 @@ import { Pipe, PipeTransform, NgModule } from '@angular/core';
 })
 export class RunningTimePipe implements PipeTransform {
   transform(value: string | number): string {
-    return (typeof value === 'number') ? `${value}min` : 'TBC';
+    return (typeof value === 'number') ? `${value} min` : '';
   }
 }
 

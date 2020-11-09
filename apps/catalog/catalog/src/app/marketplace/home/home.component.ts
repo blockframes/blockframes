@@ -83,7 +83,7 @@ export class MarketplaceHomeComponent implements OnInit {
     const { originCountries, runningTime, genres } = movie;
     return [
       originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
-      typeof runningTime.time === 'number' ? `${runningTime.time} min` : 'TBC',
+      typeof runningTime.time === 'number' ? `${runningTime.time} min` : '',
       genres.slice(0, 2).map(genre => staticGenre[genre]).join(', '),
     ].filter(value => !!value).join(' | ');
   }
