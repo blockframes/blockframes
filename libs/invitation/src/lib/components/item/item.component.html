@@ -37,7 +37,8 @@
 
             </ng-container>
             <ng-template #requestScreening>
-              {{ _invitation.fromUser | displayName }} would like to attend event 
+              {{ _invitation.fromUser | displayName }}
+              <span *ngIf="fromOrg.$ | async as org">( {{ org | orgName }} )</span> would like to attend {{ event.type }} 
               <a [routerLink]="['/c/o/marketplace/event', _invitation.docId]" id="link">{{ event.title }}</a>.
               {{ event | eventRange }}
             </ng-template>
