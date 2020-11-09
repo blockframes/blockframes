@@ -8,6 +8,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { orgName } from '@blockframes/organization/+state';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { getCurrentModule } from '@blockframes/utils/apps';
+import { PublicUser } from '@blockframes/user/types';
 
 export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
@@ -113,11 +114,12 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationToAttendEventAccepted':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
-          this.update(notification.id, newNotification => {
+        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
+          const subject = await this.notificationSubject(notification, event)
+          await this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${this.notificationSubject(notification)} has accepted your invitation to ${event.type} "${event.title}".`
+              message: `${subject} has accepted your invitation to ${event.type} "${event.title}".`
             };
           });
         });
@@ -132,11 +134,12 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationToAttendEventDeclined':
 
         // we perform async fetch to display more meaningful info to the user later (because we cannot do await in akitaPreAddEntity)
-        this.getDocument<Event>(`events/${notification.docId}`).then(event => {
+        this.getDocument<Event>(`events/${notification.docId}`).then(async event => {
+          const subject = await this.notificationSubject(notification, event)
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `${this.notificationSubject(notification)} has declined your invitation to ${event.type} "${event.title}".`
+              message: `${subject} has declined your invitation to ${event.type} "${event.title}".`
             };
           });
         });
@@ -155,7 +158,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
           this.update(notification.id, newNotification => {
             return {
               ...newNotification,
-              message: `Your request to attend event "${event.title}" has been sent.`
+              message: `Your request to attend event ${event.type} "${event.title}" has been sent.`
             };
           });
         });
@@ -174,9 +177,15 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     }
   }
 
-  private notificationSubject(notification: Notification): string {
+  private async notificationSubject(notification: Notification, event?: Event): Promise<string> {
     let subject = 'Unknown subject';
-    if (notification.organization) {
+
+    // Adding user data to the notification of meeting events
+    if (!!event && event.type === 'meeting' && !!notification.organization) {
+      const user = await this.getDocument<PublicUser>(`users/${event.meta.organizerId}`);
+      const orgName = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+      subject = `${user.firstName} ${user.lastName} (${orgName})`;
+    } else if (notification.organization) {
       subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
     } else if (notification.user && notification.user.lastName && notification.user.firstName) {
       subject = `${notification.user.lastName} ${notification.user.firstName}`;
