@@ -13,7 +13,19 @@ mat-sidenav-content {
 
   header {
     width: 100%;
+
+    /* We can't use the fxLayoutGap directive because it set the margin right
+    property to the specified value. But we need to use margin-right:auto to split 
+    the content and we don't want to use !important */
+    * {
+      margin-right: 24px;
+    }
+
+    a:first-of-type {
+      margin-right: auto;
+    }
   }
+
   main {
     height: 100%;
     overflow: auto;

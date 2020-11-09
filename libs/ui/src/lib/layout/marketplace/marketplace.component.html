@@ -14,19 +14,20 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="24px">
-        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()" fxFlexAlign="center start">
+      <header fxLayout fxLayoutAlign="start center">
+        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <a routerLink="." fxFlexAlign="center start">
+        <a routerLink=".">
           <app-logo></app-logo>
         </a>
-        <a test-id="heart-icon" mat-icon-button routerLink="wishlist" fxFlexAlign="center end">
+        <ng-content select="header"></ng-content>
+        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
           <mat-icon svgIcon="heart_fill" [matBadge]="wishlistCount$ | async"
             [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
-        <div fxLayout="row" fxLayoutGap="24px" fxFlexAlign="center end">
+        <div fxLayout="row" fxLayoutGap="24px">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations" test-id="invitations-link">
@@ -53,7 +54,7 @@
 
     <!-- CONTENT -->
     <main fxFlex cdkScrollable fxLayout="column">
-      <ng-content select="header"></ng-content>
+      <ng-content select="[id=homepage-header]"></ng-content>
       <div class="page" [@routeAnimation]="animationOutlet(outlet)">
         <router-outlet #outlet="outlet"></router-outlet>
       </div>
