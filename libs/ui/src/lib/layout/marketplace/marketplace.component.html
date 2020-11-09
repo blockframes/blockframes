@@ -14,21 +14,19 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()" layout>
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
-        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+      <header fxLayout fxLayoutAlign="start center" fxLayoutGap="24px">
+        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()" fxFlexAlign="center start">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <a routerLink=".">
+        <a routerLink="." fxFlexAlign="center start">
           <app-logo></app-logo>
         </a>
-        <ng-content select="header"></ng-content>
-        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon
-            svgIcon="heart_fill"
-            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+        <a test-id="heart-icon" mat-icon-button routerLink="wishlist" fxFlexAlign="center end">
+          <mat-icon svgIcon="heart_fill" [matBadge]="wishlistCount$ | async"
+            [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
           </mat-icon>
         </a>
-        <div fxLayout="row" fxLayoutGap="24px">
+        <div fxLayout="row" fxLayoutGap="24px" fxFlexAlign="center end">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations" test-id="invitations-link">
@@ -54,7 +52,8 @@
     </app-bar>
 
     <!-- CONTENT -->
-    <main fxFlex cdkScrollable>
+    <main fxFlex cdkScrollable fxLayout="column">
+      <ng-content select="header"></ng-content>
       <div class="page" [@routeAnimation]="animationOutlet(outlet)">
         <router-outlet #outlet="outlet"></router-outlet>
       </div>
