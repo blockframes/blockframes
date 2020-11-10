@@ -7,8 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { LandingComponent } from './landing.component';
 import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
-import { RolePipeModule } from '@blockframes/utils/pipes/role.pipe';
-import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module'
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -16,9 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [LandingComponent],
@@ -27,17 +23,13 @@ import { MatInputModule } from '@angular/material/input';
     FlexLayoutModule,
     LandingShellModule,
     ReactiveFormsModule,
-    RolePipeModule,
     ImageReferenceModule,
-    TelInputModule,
     // Material
     MatToolbarModule,
-    MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
-    MatInputModule,
+    MatSnackBarModule,
     MatCardModule,
-    MatSelectModule,
     MatTabsModule,
     RouterModule.forChild([{ path: '', component: LandingComponent }])
   ]

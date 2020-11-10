@@ -1,10 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { getCurrentApp } from '@blockframes/utils/apps';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { createDemoRequestInformations, RequestDemoInformations, RequestDemoRole } from '@blockframes/utils/request-demo';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'festival-landing',
@@ -13,11 +7,6 @@ import { createDemoRequestInformations, RequestDemoInformations, RequestDemoRole
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
-
-  public headerContent = {
-    title: 'Welcome to Archipel Market',
-    description: 'The endless film market',
-  };
 
   public tabNames = ['Sales Agents', 'Buyers'];
 
@@ -79,51 +68,4 @@ export class LandingComponent {
       description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
     }
   ]
-
-  public form = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl('', Validators.email),
-    phoneNumber: new FormControl(''),
-    companyName: new FormControl(''),
-    role: new FormControl('')
-  });
-
-  public roles: RequestDemoRole[] = [
-    'buyer',
-    'seller',
-    'other'
-  ];
-
-  public submitted = false;
-
-  constructor(
-    private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions,
-    private routerQuery: RouterQuery
-  ) { }
-
-  /** Send a mail to the admin with user's informations. */
-  private async sendDemoRequest(information: RequestDemoInformations) {
-    const f = this.functions.httpsCallable('sendDemoRequest');
-    return f(information).toPromise();
-  }
-
-  /** Triggers when a user click on the button from LearnMoreComponent.  */
-  public sendRequest(form: FormGroup) {
-    if (form.invalid) {
-      this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
-      return;
-    }
-    try {
-      const currentApp = getCurrentApp(this.routerQuery);
-      const information: RequestDemoInformations = createDemoRequestInformations({ app: currentApp, ...form.value });
-
-      this.sendDemoRequest(information);
-      this.snackBar.open('Your request has been sent !', 'close', { duration: 2000 });
-      this.submitted = true;
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
-    }
-  }
 }

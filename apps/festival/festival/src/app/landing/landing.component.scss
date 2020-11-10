@@ -4,14 +4,14 @@
   display: block;
 }
 
-shell-header {
+landing-header {
   background-image: url("/assets/images/banner_header.png");
   a {
     margin-top: 80px;
   }
 }
 
-shell-content {
+landing-content {
   .join {
     padding: 48px 0;
   }
@@ -25,14 +25,5 @@ shell-content {
         width: 150px;
       }
     }
-  }
-}
-
-shell-contact {
-  mat-form-field {
-    width: 100%;
-  }
-  p {
-    text-align: center;
   }
 }
