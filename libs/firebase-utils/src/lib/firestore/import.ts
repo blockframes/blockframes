@@ -3,7 +3,7 @@ import type { Bucket, File as GFile } from '@google-cloud/storage';
 import admin from 'firebase-admin';
 import { isArray, isEqual, isPlainObject, sortBy } from 'lodash';
 import { runChunks } from '../firebase-utils';
-import { endMaintenance, startMaintenance } from '../maintenance';
+import { endMaintenance, setImportRunning, startMaintenance } from '../maintenance';
 import { JsonlDbRecord } from '../util';
 import { clear } from './clear';
 
@@ -14,18 +14,20 @@ export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirest
   const files: GFile[] = (await bucket.getFiles())[0];
   const sortedFiles: GFile[] = sortBy(files, ['name']);
 
-  if (sortedFiles.length === 0) throw new Error('Nothing to restore')
+  if (sortedFiles.length === 0) throw new Error('Nothing to restore');
 
   const lastFile: GFile = sortedFiles[sortedFiles.length - 1];
 
-  console.log('Updating restore flag');
+  console.log('Setting maintenance and activating import flag');
   await startMaintenance();
+  await setImportRunning(true);
 
   console.log('Clearing the database');
   await clear(db);
 
   await importFirestoreFromGFile(lastFile, db);
 
+  await setImportRunning(false);
   await endMaintenance();
 }
 
