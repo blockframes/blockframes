@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, Directive } from '@angular/core';
 
 @Component({
-  selector: 'landing-shell',
+  selector: 'landing-shell-page',
   templateUrl: 'shell.component.html',
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,6 +27,6 @@ export class LandingShellComponent implements OnInit {
 export class HeaderShellComponent { }
 
 @Directive({
-  selector: 'shell-usp',
+  selector: 'shell-content',
 })
-export class ShellUSPComponent { }
+export class ShellContentDirectvie { }

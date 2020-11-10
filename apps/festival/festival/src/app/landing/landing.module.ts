@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { LandingComponent } from './landing.component';
-import { LandingModule } from '@blockframes/landing/landing.module';
+import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    LandingModule,
+    LandingShellModule,
     ImageReferenceModule,
     // Material
     MatToolbarModule,

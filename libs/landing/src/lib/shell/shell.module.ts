@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 import {
   LandingShellComponent,
   HeaderShellComponent,
-  ShellUSPComponent
+  ShellContentDirectvie
 } from './shell.component';
 
 // Blockframes
@@ -35,10 +35,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   exports: [
     LandingShellComponent,
     HeaderShellComponent,
-    ShellUSPComponent],
+    ShellContentDirectvie],
   declarations: [
     LandingShellComponent,
     HeaderShellComponent,
-    ShellUSPComponent],
+    ShellContentDirectvie],
 })
 export class LandingShellModule { }
