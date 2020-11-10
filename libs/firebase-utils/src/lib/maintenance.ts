@@ -6,31 +6,63 @@ import {
   META_COLLECTION_NAME,
   _isInMaintenance
 } from '@blockframes/utils/maintenance';
+import { loadAdminServices } from './util';
 
 
-const maintenanceRef = () => {
-  const db = admin.firestore();
+const maintenanceRef = (db?: FirebaseFirestore.Firestore) => {
+  if (!db) db = loadAdminServices().db;
   return db.collection(META_COLLECTION_NAME).doc(MAINTENANCE_DOCUMENT_NAME);
 };
+
+export async function setImportRunning(status: boolean) {
+  return maintenanceRef().set({ importRunning: status } as Partial<IMaintenanceDoc>, { merge: true });
+}
+
+export async function isImportRunning(db: FirebaseFirestore.Firestore) {
+  const maintenanceSnapshot = await maintenanceRef(db).get();
+  const maintenanceDoc = maintenanceSnapshot.data() as IMaintenanceDoc;
+  return maintenanceDoc.importRunning;
+}
+
+export async function importComplete(db?: FirebaseFirestore.Firestore) {
+  if (!db) db = loadAdminServices().db;
+  let unsubscribe: () => void;
+  const p1 = new Promise((res, rej) => {
+    unsubscribe = maintenanceRef(db).onSnapshot((snap) => {
+      console.log('Listening for Firestore import completion...');
+      const maintenanceDoc = snap.data() as IMaintenanceDoc;
+      const isRunning = maintenanceDoc.importRunning ?? rej('importRunning not set on maintenance doc');
+      if (isRunning === false) res();
+    });
+  });
+  const p2 = p1.then(unsubscribe);
+  return p2;
+}
 
 export async function startMaintenance() {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) {
     console.warn('Warning: startMaintenance() called but BLOCKFRAMES_MAINTENANCE_DISABLED is set to true. Maintenance mode is disabled...');
     return;
   }
-  return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
+  return maintenanceRef().set(
+    { startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null },
+    { merge: true }
+  );
 }
 
 export async function endMaintenance() {
   if (process.env.BLOCKFRAMES_MAINTENANCE_DISABLED) return;
-  return maintenanceRef().set({
-    endedAt: admin.firestore.FieldValue.serverTimestamp(),
-    startedAt: null
-  });
+  return maintenanceRef().set(
+    {
+      endedAt: admin.firestore.FieldValue.serverTimestamp(),
+      startedAt: null,
+    },
+    { merge: true }
+  );
 }
 
 /**
- * 
+ *
  * @param delay 8 min by default. This delay is a security to
  * be sure that every process is stopped before continuing
  */

@@ -3,34 +3,33 @@
  *
  * Helper to avoid duplicating all the "semi-broken" google type defs.
  */
-import { isInMaintenance, sleep } from '@blockframes/firebase-utils';
-import { PubSub } from '@google-cloud/pubsub'
-import { firebase } from '@env'
+import { importComplete, isInMaintenance, loadAdminServices, sleep } from '@blockframes/firebase-utils';
+import { PubSub } from '@google-cloud/pubsub';
+import { firebase } from '@env';
 
 /**
  * Trigger a firestore database restore operation for the given project
  */
 export async function restore() {
+  const { db } = loadAdminServices();
   const pubsub = new PubSub({ projectId: firebase.projectId });
   await pubsub.topic('firestore').publish(Buffer.from('import'));
-  await sleep(5000);
-  for (let i = 0; i < 10; i++) {
-    const maintenance = await isInMaintenance(120 * 1000); // 2 minutes delay
-    if (!maintenance) {
-      console.log('Restore process ended!');
-      return;
-    } else {
-      console.log('Waiting for the restore process to end ...');
-      await sleep(1000 * 50);
-    }
+  await sleep(5000); // Wait for process to start
+  const timeoutPromise = () => sleep(1000 * 60 * 10).then(() => 'timeout');
+  const result = await Promise.race([timeoutPromise(), importComplete(db)]);
+  if (result === 'timeout') {
+    throw Error('TIMEOUT: Restore process did not finish within allocated timeframe!');
+  } else {
+    console.log('Firestore import completed successfully!');
   }
-  throw Error('Restore process did not finish within allocated timeframe!');
 }
 
 /**
  * Trigger a firestore database backup operation for the given project
  */
 export async function backup() {
+  loadAdminServices();
   const pubsub = new PubSub({ projectId: firebase.projectId });
   await pubsub.topic('firestore').publish(Buffer.from('export'));
+  console.log('Firestore backup successfully requested.');
 }
