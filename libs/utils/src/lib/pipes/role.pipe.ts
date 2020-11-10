@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { RequestDemoRole, requestDemoRole } from '@blockframes/utils/request-demo';
+import { RequestDemoRole, requestDemoRole } from '../request-demo';
 
 @Pipe({ name: 'roleLabel', pure: true })
 export class RolePipe implements PipeTransform {
@@ -12,4 +12,4 @@ export class RolePipe implements PipeTransform {
   declarations: [RolePipe],
   exports: [RolePipe]
 })
-export class RoleModule {}
+export class RolePipeModule {}

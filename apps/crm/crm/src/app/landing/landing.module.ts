@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // Modules
-import { LandingModule } from '@blockframes/landing/landing.module';
+import { LandingShellModule } from '@blockframes/landing/shell/shell.module';
 
 // Components
 import { LandingComponent } from './pages/landing-page/landing-page.component';
@@ -12,7 +12,7 @@ import { LandingComponent } from './pages/landing-page/landing-page.component';
   declarations: [LandingComponent],
   imports: [
     CommonModule,
-    LandingModule,
+    LandingShellModule,
     RouterModule.forChild([{ path: '', component: LandingComponent }])
   ]
 })
