@@ -35,7 +35,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   exports: [
     LandingShellComponent,
     HeaderShellComponent,
-    ShellContentDirectvie],
+    ShellContentDirectvie,
+    AppLogoModule],
   declarations: [
     LandingShellComponent,
     HeaderShellComponent,

@@ -1,22 +1,5 @@
-@import '~@angular/flex-layout/mq';
+@import "~@angular/flex-layout/mq";
 
-landing-toolbar {
-  width: 100%;
-  position: fixed;
-  top: 0;
-  z-index: 2;
-}
-
-h4, p.mat-display-2 {
-  margin: 0;
-}
-
-h4 {
-  text-transform: uppercase;
-}
-
-@include layout-bp(xs) {
-  .offer {
-    font-size: 30px;
-  }
+:host {
+  display: block;
 }
