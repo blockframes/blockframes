@@ -33,7 +33,7 @@ export class UploadWidgetComponent {
     @Inject('db') public db: AngularFirestore
   ) {}
 
-  async cancel(task: AngularFireUploadTask) {
+  cancel(task: AngularFireUploadTask) {
     task.resume();
     task.cancel();
   }
