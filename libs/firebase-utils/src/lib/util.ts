@@ -118,7 +118,7 @@ export function loadAdminServices(): AdminServices {
 
 export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-function getKeyFile(keyFile: string): admin.ServiceAccount {
+export function getKeyFile(keyFile: string): admin.ServiceAccount {
   try {
     // If service account is a stringified json object
     return JSON.parse(keyFile) as admin.ServiceAccount;

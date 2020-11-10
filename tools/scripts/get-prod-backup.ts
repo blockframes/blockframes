@@ -1,22 +1,17 @@
-import { backupBucket, firebase } from '../../env/env.prod';
+import 'tsconfig-paths/register';
+import { backupBucket, firebase } from 'env/env.prod';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import * as admin from 'firebase-admin';
 import { config } from 'dotenv';
+import { getKeyFile, getLatestFile } from '@blockframes/firebase-utils';
 config();
 
 if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
   throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
 }
 
-let cert: string | admin.ServiceAccount;
-try {
-  // If service account is a stringified json object
-  cert = JSON.parse(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
-} catch (err) {
-  // If service account is a path
-  cert = process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT;
-}
+const cert = getKeyFile(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   storageBucket: backupBucket,
@@ -32,12 +27,7 @@ async function getProdBackup() {
   try {
     // Get latest backup DB
     const [files] = await storage.bucket(backupBucket).getFiles();
-    const last = files
-      .sort(
-        (a, b) =>
-          Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
-      )
-      .pop();
+    const last = getLatestFile(files)
     console.log('Latest backup:', last.metadata.timeCreated);
     console.log('File name: ', last.name);
     console.log('File metadata is: ');
