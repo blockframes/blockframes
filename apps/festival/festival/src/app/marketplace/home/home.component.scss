@@ -1,33 +1,5 @@
-@import "~@angular/flex-layout/mq";
-
 :host {
   display: block;
-}
-
-header {
-  padding: 100px 96px;
-  margin-bottom: 80px;
-  background-image: url("/assets/images/ACMbannerlanding.png");
-  background-size: cover;
-  text-align: center;
-  border: none;
-
-  h1.mat-display-2 {
-    margin-bottom: 30px;
-  }
-
-  p {
-    margin-bottom: 30px;
-    margin-left: 12px;
-    a {
-      border-bottom: 2px solid;
-      font-weight: bolder;
-    }
-  }
-  h4 {
-    text-transform: uppercase;
-    margin-bottom: 0;
-  }
 }
 
 .detail {
@@ -56,22 +28,4 @@ section {
 
 bf-carousel {
   margin-bottom: 80px;
-}
-
-@include layout-bp(xs) {
-  header {
-    padding: 50px 0;
-  }
-}
-
-@include layout-bp(sm) {
-  header {
-    padding: 20px;
-  }
-}
-
-@include layout-bp(md) {
-  header {
-    padding: 20px;
-  }
 }

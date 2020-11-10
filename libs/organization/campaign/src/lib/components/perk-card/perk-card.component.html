@@ -1,13 +1,12 @@
 <mat-card fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="8px">
-  
+
   <img asset="gift.svg" alt="Privilege illustration">
-  
+
   <h5>{{ perk.title }}</h5>
-  
+
   <span class="mat-caption">{{ perk.minPledge | minPledge }}</span>
-  
+
   <p class="mat-body-1">{{ perk.description | maxLength: 130 }}</p>
-  
   <span class="mat-caption">
     <ng-container *ngIf="perk.amount | isUnlimited; else limited">
       Unlimited

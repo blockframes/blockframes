@@ -23,12 +23,20 @@
       </a>
     </mat-nav-list>
   </aside>
-​
-  <header fxFlex fxLayout fxLayoutAlign="end center" class="marketplace-header">
+  ​
+  <header fxFlex fxLayout fxLayoutAlign="end center">
     <a mat-icon-button routerLink="selection">
       <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
         matBadgeColor="accent" matBadgeSize="small">
       </mat-icon>
     </a>
   </header>
+
+  <div id="homepage-header" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px"
+    class="dark-contrast-theme">
+    <h2>Archipel Content</h2>
+    <h1>The only marketplace offering package deals</h1>
+    <p>for TV, VOD and ancillary rights</p>
+    <a mat-flat-button color="accent" test-id="library" routerLink="/c/o/marketplace/title">View the Library</a>
+</div>
 </layout-marketplace>
