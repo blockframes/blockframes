@@ -15,10 +15,7 @@ import { RequestDemoRole } from '@blockframes/utils/request-demo';
   },
   styles: [`:host {
   display: block;
-  padding-top: calc(var(--toolbarHeight) + 100px);
-  padding-bottom: 100px;
-  padding-left: 20%;
-  padding-right: 20%;
+  padding: calc(var(--toolbarHeight) + 100px) 60px 100px;;
   background-size: cover;
 }`]
 })
@@ -29,7 +26,7 @@ export class LandingHeaderComponent { }
   template: `<ng-content></ng-content>`,
   styles: [`:host {
     display: block;
-    margin: 48px 20% 0;
+    margin: 48px 60px;
 }`]
 })
 export class LandingContentComponent { }
@@ -39,7 +36,6 @@ export class LandingContentComponent { }
   template: `<ng-content></ng-content>`,
   styles: [`:host {
     display: block;
-    padding: 0 20%;
   }`]
 })
 export class LandingContactComponent { }
@@ -51,7 +47,6 @@ export class LandingContactComponent { }
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 48px 0;
   }`]
 })
 export class LandingFooterComponent { }
@@ -80,8 +75,8 @@ export class LandingShellComponent {
     role: new FormControl('')
   });
 
-  @ContentChild(LandingContactComponent, { read: TemplateRef }) landingContractComponent: LandingContactComponent
-  @ContentChild(LandingFooterComponent, { read: TemplateRef }) landingFooterComponent: LandingFooterComponent
+  @ContentChild(LandingContactComponent) landingContractComponent: LandingContactComponent
+  @ContentChild(LandingFooterComponent) landingFooterComponent: LandingFooterComponent
 
   constructor(private snackBar: MatSnackBar, private routerQuery: RouterQuery, private functions: AngularFireFunctions) { }
 

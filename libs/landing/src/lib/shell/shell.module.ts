@@ -18,6 +18,7 @@ import {
 import { AppLogoModule } from '@blockframes/ui/layout/app-logo/app-logo.module';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module'
 import { RolePipeModule } from '@blockframes/utils/pipes/role.pipe';
+import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +39,7 @@ import { MatInputModule } from '@angular/material/input';
     AppLogoModule,
     RolePipeModule,
     TelInputModule,
+    ImageReferenceModule,
 
     // Material
     MatButtonModule,
@@ -53,8 +55,7 @@ import { MatInputModule } from '@angular/material/input';
     LandingHeaderComponent,
     LandingContentComponent,
     LandingContactComponent,
-    LandingFooterComponent,
-    AppLogoModule],
+    LandingFooterComponent],
   declarations: [
     LandingShellComponent,
     LandingHeaderComponent,

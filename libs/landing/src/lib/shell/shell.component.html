@@ -35,7 +35,7 @@
         Please fill out the form and we will get back to you to choose the best time.
       </p>
     </article>
-    <form fxLayout="column" fxLayoutAlign="center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
+    <form fxLayout="column" fxLayoutAlign="start center" [formGroup]="form" (ngSubmit)="sendRequest(form)">
       <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column" fxLayoutGap="24px">
         <mat-form-field appearance="outline">
           <mat-label>First name</mat-label>
@@ -93,10 +93,9 @@
   <ng-content select="landing-footer"></ng-content>
 </ng-container>
 <ng-template #footer>
-  <footer fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-    <a routerLink="/">
-      <app-logo></app-logo>
-    </a>
+  <footer fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center"
+    fxLayoutGap="48px">
+    <app-logo></app-logo>
     <h3>Proudly associated with the following partners</h3>
     <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="80px">
       <img asset="CNC_logo.webp" type="logo" alt="cnc">

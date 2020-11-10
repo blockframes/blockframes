@@ -29,5 +29,20 @@ mat-toolbar {
 }
 
 form {
-  
+  article {
+    width: 50%;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+footer {
+  margin: 48px 0;
+  text-align: center;
+  width: 100%;
+  img {
+    height: 40px;
+  }
 }
