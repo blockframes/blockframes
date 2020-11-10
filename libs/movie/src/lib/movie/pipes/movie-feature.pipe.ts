@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { genres as staticGenres, languages } from '@blockframes/utils/static-model/static-model';
-
+import { formatRunningTime } from "@blockframes/movie/pipes/running-time.pipe";
 
 @Pipe({
   name: 'movieFeature',
@@ -19,14 +19,12 @@ export class MovieFeaturePipe implements PipeTransform {
     if (originalLanguages.length > 0) displayedLanguages += languages[originalLanguages[0]];
     if (originalLanguages.length > 1) displayedLanguages += ', ...';
 
-    const isTBC = (typeof runningTime.time === 'number') ? `${runningTime.time} min` : '';
-
     return [
       contentType ? contentType[contentType] : '',
       displayedGenres,
       displayedLanguages,
       release.year,
-      runningTime.time ? isTBC : ''
+      formatRunningTime(runningTime)
     ].filter(v => !!v).join(' | ');
   }
 }

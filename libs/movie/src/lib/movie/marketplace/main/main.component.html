@@ -69,7 +69,7 @@
     <article *ngIf="movie.runningTime.time || movie.runningTime.status">
       <h5>Running time</h5>
       <div fxLayout fxLayoutGap="8px">
-        <span *ngIf="movie.runningTime.time">{{ movie.runningTime.time | getRunningTime }}</span>
+        <span>{{ movie.runningTime | getRunningTime }}</span>
         <span *ngIf="movie.runningTime.status">
           <ng-container *ngIf="movie.runningTime.time">(</ng-container>
           <ng-container>{{ movie.runningTime.status | toLabel: 'screeningStatus' }}</ng-container>

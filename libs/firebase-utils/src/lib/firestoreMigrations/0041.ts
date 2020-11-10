@@ -10,10 +10,7 @@ export async function upgrade(db: Firestore) {
 
     const newData = {
       ...movie,
-      runningTime: {
-        ...movie.runningTime,
-        time: (typeof movie.runningTime.time === 'number') ? movie.runningTime.time : '',
-      }
+      runningTime: updateRunningTime(movie.runningTime)
     };
 
     return batch.set(movieDoc.ref, newData);
@@ -21,4 +18,12 @@ export async function upgrade(db: Firestore) {
 
   console.log('Running time updated on movies');
   await batch.commit();
+}
+
+function updateRunningTime(runningTime) {
+  if (typeof runningTime.time === 'number') {
+    runningTime.time = runningTime.time
+  } else delete runningTime.time;
+
+  return runningTime;
 }

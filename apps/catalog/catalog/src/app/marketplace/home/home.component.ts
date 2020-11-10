@@ -5,6 +5,7 @@ import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { genres as staticGenre } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { formatRunningTime } from '@blockframes/movie/pipes/running-time.pipe';
 
 interface CarouselSection {
   title: string;
@@ -83,7 +84,7 @@ export class MarketplaceHomeComponent implements OnInit {
     const { originCountries, runningTime, genres } = movie;
     return [
       originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
-      typeof runningTime.time === 'number' ? `${runningTime.time} min` : '',
+      formatRunningTime(runningTime),
       genres.slice(0, 2).map(genre => staticGenre[genre]).join(', '),
     ].filter(value => !!value).join(' | ');
   }
