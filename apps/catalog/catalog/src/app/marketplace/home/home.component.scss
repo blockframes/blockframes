@@ -1,3 +1,26 @@
+@import "~@angular/flex-layout/mq";
+
+header {
+  padding: 50px;
+  background-image: url("/assets/images/banner_home.png");
+  background-size: cover;
+  text-align: center;
+  border: none;
+
+  h3 {
+    margin: 0;
+  }
+
+  span {
+    width: 35%;
+    text-align: left;
+  }
+
+  a {
+    margin-top: 20px;
+  }
+}
+
 article {
   width: 80%;
   margin: 75px 0;
@@ -41,6 +64,80 @@ article {
       position: absolute;
       top: 15px;
       right: 15px;
+    }
+  }
+}
+
+@include layout-bp(xs) {
+  header {
+    padding: 50px 0;
+    span {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 0;
+
+    aside {
+      width: 100%;
+      text-align: center;
+    }
+
+    bf-slider {
+      width: 100%;
+      margin: 0;
+      margin-top: 10px;
+    }
+  }
+}
+
+@include layout-bp(sm) {
+  header {
+    padding: 20px;
+    span {
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 50px;
+
+    aside {
+      width: 100%;
+      text-align: center;
+      h1 {
+        margin: 0;
+      }
+    }
+
+    bf-slider {
+      width: 100%;
+      margin: 0;
+      margin-top: 10px;
+    }
+  }
+}
+
+@include layout-bp(md) {
+  header {
+    padding: 20px;
+    span {
+      width: 70%;
+      text-align: left;
+    }
+  }
+
+  article {
+    width: 100%;
+    margin: 50px 0;
+
+    aside {
+      margin: 10px;
     }
   }
 }

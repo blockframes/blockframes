@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 
 // Blockframes
 import { MovieService, Movie } from '@blockframes/movie/+state';
@@ -29,6 +29,8 @@ interface CarouselSection {
 })
 export class HomeComponent implements OnInit {
 
+  @HostBinding('test-id="content"') testId
+
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;
 
@@ -42,7 +44,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.dynTitle.setPageTitle('Home');
-    
+
     const queryFn: QueryFn = ref => ref.where('storeConfig.appAccess.financiers', '==', true).where('storeConfig.status', '==', 'accepted');
     this.sections = [
       {
