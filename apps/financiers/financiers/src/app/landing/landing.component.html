@@ -1,8 +1,4 @@
-<landing-toolbar color="primary" imgAsset="logo_archipel_market_outline.svg"></landing-toolbar>
-<landing-header class="dark-contrast-theme">
-  <h4>Welcome to Media Financiers</h4>
-  <p class="mat-display-2 offer">The ongoing<br />film market</p>
-</landing-header>
+<!--
 <landing-how-it-works
   [tabNames]="tabNames"
   [tabTitle]="tabTitle"
@@ -12,3 +8,19 @@
 </landing-how-it-works>
 <landing-learn-more id="demo"></landing-learn-more>
 <landing-footer logo="lp_logo_archipel_market_outline.webp"></landing-footer>
+ -->
+
+<landing-shell>
+  <shell-header class="dark-contrast-theme">
+    <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center">
+      <h4>Welcome to Media Financiers</h4>
+      <p class="mat-display-2 offer">The ongoing<br />film market</p>
+      <a mat-flat-button color="accent" routerLink="/auth/connexion">
+        <span>Join now</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </header>
+  </shell-header>
+
+  <shell-usp></shell-usp>
+</landing-shell>

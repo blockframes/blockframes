@@ -1,0 +1,18 @@
+<!-- Toolbar -->
+
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <nav fxLayout="row" fxLayoutAlign="space-between center">
+    <a routerLink="/" class="logo">
+      <app-logo></app-logo>
+    </a>
+    <a fxHide.lt-md mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
+    <a test-id="login" mat-button color="primary" routerLink="/auth/connexion" fragment="login">Log in</a>
+    <a test-id="signup" mat-button color="primary" routerLink="/auth/connexion" fragment="signup">Sign up</a>
+  </nav>
+</mat-toolbar>
+
+<!-- Header -->
+
+<ng-content select="shell-header"></ng-content>
+
+<ng-content select="shell-usp"></ng-content>

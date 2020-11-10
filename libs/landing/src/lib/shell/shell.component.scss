@@ -1,0 +1,29 @@
+:host {
+  display: block;
+}
+
+/* Toolbar */
+
+.logo {
+  margin-right: 96px;
+}
+
+#demo-link {
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+mat-toolbar {
+  padding: 0 24px;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+
+  nav {
+    width: 100%;
+    a:nth-child(2) {
+      margin-right: auto;
+    }
+  }
+}
