@@ -1,24 +1,27 @@
-@import "~@angular/flex-layout/mq";
-
-h4,
-p.mat-display-2 {
-  margin: 0;
+:host {
+  display: block;
 }
 
-h4 {
-  text-transform: uppercase;
-}
-
-shell-header {
+landing-header {
   background-image: url("/assets/images/banner_header.png");
-
   a {
     margin-top: 80px;
   }
 }
 
-@include layout-bp(xs) {
-  .offer {
-    font-size: 30px;
+landing-content {
+  .join {
+    padding: 48px 0;
+  }
+
+  article {
+    mat-card {
+      width: 49%;
+      margin-bottom: 24px;
+      text-align: center;
+      img {
+        width: 150px;
+      }
+    }
   }
 }
