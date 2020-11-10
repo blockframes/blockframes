@@ -3,3 +3,36 @@
 :host {
   display: block;
 }
+
+shell-header {
+  background-image: url("/assets/images/banner_header.png");
+  a {
+    margin-top: 80px;
+  }
+}
+
+shell-content {
+  .join {
+    padding: 48px 0;
+  }
+
+  article {
+    mat-card {
+      width: 49%;
+      margin-bottom: 24px;
+      text-align: center;
+      img {
+        width: 150px;
+      }
+    }
+  }
+}
+
+shell-contact {
+  mat-form-field {
+    width: 100%;
+  }
+  p {
+    text-align: center;
+  }
+}

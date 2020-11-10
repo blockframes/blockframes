@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-// Components & Directives
+// Components
 import {
   LandingShellComponent,
   HeaderShellComponent,
-  ShellContentDirectvie
+  ShellContentComponent,
+  ShellContactComponent,
+  ShellFooterComponent
 } from './shell.component';
 
 // Blockframes
@@ -19,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   imports: [
@@ -30,16 +33,22 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     // Material
     MatButtonModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatCardModule,
   ],
   exports: [
     LandingShellComponent,
     HeaderShellComponent,
-    ShellContentDirectvie,
+    ShellContentComponent,
+    ShellContactComponent,
+    ShellFooterComponent,
     AppLogoModule],
   declarations: [
     LandingShellComponent,
     HeaderShellComponent,
-    ShellContentDirectvie],
+    ShellContentComponent,
+    ShellContactComponent,
+    ShellFooterComponent
+  ],
 })
 export class LandingShellModule { }

@@ -17,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [LandingComponent],
@@ -33,7 +35,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormFieldModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
     MatCardModule,
+    MatSelectModule,
     MatTabsModule,
     RouterModule.forChild([{ path: '', component: LandingComponent }])
   ]

@@ -4,8 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
 import { createDemoRequestInformations, RequestDemoInformations, RequestDemoRole } from '@blockframes/utils/request-demo';
 
 @Component({
@@ -15,12 +13,6 @@ import { createDemoRequestInformations, RequestDemoInformations, RequestDemoRole
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
-  private scroll = new BehaviorSubject<number>(0);
-  public toolbarColor$ = this.scroll.asObservable().pipe(
-    map(position => position === 0),
-    distinctUntilChanged(),
-    map(isTop => isTop ? 'transparent-toolbar' : '')
-  );
 
   public headerContent = {
     title: 'Welcome to Archipel Market',
@@ -88,14 +80,6 @@ export class LandingComponent {
     }
   ]
 
-  // According to this article, it's fine with Angular Universal
-  // source: https://technoapple.com/blog/post/scroll-event-at-angular-universal
-  /** Change the toolbar class when page is scrolled. */
-  @HostListener('window:scroll', [])
-  scrollHandler() {
-    this.scroll.next(window.pageYOffset);
-  }
-
   public form = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -118,10 +102,6 @@ export class LandingComponent {
     private functions: AngularFireFunctions,
     private routerQuery: RouterQuery
   ) { }
-
-  get phoneNumber() {
-    return this.form.get('phoneNumber');
-  }
 
   /** Send a mail to the admin with user's informations. */
   private async sendDemoRequest(information: RequestDemoInformations) {

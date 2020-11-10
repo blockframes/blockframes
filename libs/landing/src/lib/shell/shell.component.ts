@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, Directive } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'landing-shell-page',
@@ -6,15 +6,14 @@ import { ChangeDetectionStrategy, Component, OnInit, Directive } from '@angular/
   styleUrls: ['./shell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LandingShellComponent implements OnInit {
-  constructor() { }
-
-  ngOnInit() { }
-}
+export class LandingShellComponent { }
 
 @Component({
   selector: 'shell-header',
   template: '<ng-content></ng-content>',
+  host: {
+    class: 'dark-contrast-theme'
+  },
   styles: [`:host {
   display: block;
   padding-top: calc(var(--toolbarHeight) + 100px);
@@ -26,7 +25,34 @@ export class LandingShellComponent implements OnInit {
 })
 export class HeaderShellComponent { }
 
-@Directive({
+@Component({
   selector: 'shell-content',
+  template: `<ng-content></ng-content>`,
+  styles: [`:host {
+    display: block;
+    margin: 48px 20% 0;
+}`]
 })
-export class ShellContentDirectvie { }
+export class ShellContentComponent { }
+
+@Component({
+  selector: 'shell-contact',
+  template: `<ng-content></ng-content>`,
+  styles: [`:host {
+    display: block;
+    padding: 0 20%;
+  }`]
+})
+export class ShellContactComponent { }
+
+@Component({
+  selector: 'shell-footer',
+  template: `<ng-content></ng-content>`,
+  styles: [`:host {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 48px 0;
+  }`]
+})
+export class ShellFooterComponent { }
