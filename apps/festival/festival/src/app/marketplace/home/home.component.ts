@@ -1,5 +1,5 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, HostBinding } from '@angular/core';
 
 // Blockframes
 import { MovieQuery, MovieService, Movie } from '@blockframes/movie/+state';
@@ -28,6 +28,8 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit, OnDestroy {
+
+  @HostBinding('test-id="content"') testId 
 
   public sections: CarouselSection[];
   public orgs$: Observable<Organization[]>;

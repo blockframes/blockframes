@@ -1,70 +1,79 @@
-<div test-id="content">
-  <section fxLayout="column" fxLayoutGap="48px">
-    <ng-container *ngFor="let section of sections; let i = index">
-      <ng-container *ngIf="section.movieCount$ | async as size">
-        <article fxLayout="column" *ngIf="size >= 4">
+<header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" class="dark-contrast-theme">
+  <h4>Welcome to Archipel Market</h4>
+  <h1 class="mat-display-2">The ongoing<br /> film market</h1>
+  <p>Check out our <a routerLink="/c/o/marketplace/event">Upcoming screenings</a> or discover the platform’s projects
+    or companies:</p>
+  <div fxLayout="row" fxLayoutGap="24px">
+    <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the market today</a>
+    <a mat-stroked-button test-id="sales agent" routerLink="../organization">Who's on the market today</a>
+  </div>
+</header>
+
+<section fxLayout="column" fxLayoutGap="48px">
+  <ng-container *ngFor="let section of sections; let i = index">
+    <ng-container *ngIf="section.movieCount$ | async as size">
+      <article fxLayout="column" *ngIf="size >= 4">
+        <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+          <h1>{{ section.title }}</h1>
+          <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
+            <span>See all</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </div>
+        <bf-carousel flex>
+          <ng-container *ngFor="let movie of section.movies$ | async">
+            <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
+              carouselItem>
+            </movie-card>
+          </ng-container>
+        </bf-carousel>
+        <ng-container *ngIf="i === 0">
+          <!-- Featured Sales Agents -->
           <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-            <h1>{{ section.title }}</h1>
-            <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
+            <h1>Featured Sales Agents</h1>
+            <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
               <span>See all</span>
               <mat-icon svgIcon="arrow_forward"></mat-icon>
             </a>
           </div>
           <bf-carousel flex>
-            <ng-container *ngFor="let movie of section.movies$ | async">
-              <movie-card [movie]="movie" size="banner" [link]="'/c/o/marketplace/title/' + movie.id" [col]="3"
-                carouselItem>
-              </movie-card>
+            <ng-container *ngFor="let org of orgs$ | async">
+              <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
             </ng-container>
           </bf-carousel>
-          <ng-container *ngIf="i === 0">
-            <!-- Featured Sales Agents -->
-            <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-              <h1>Featured Sales Agents</h1>
-              <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
-                <span>See all</span>
-                <mat-icon svgIcon="arrow_forward"></mat-icon>
-              </a>
-            </div>
-            <bf-carousel flex>
-              <ng-container *ngFor="let org of orgs$ | async">
-                <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
-              </ng-container>
-            </bf-carousel>
-            <!-- Events Banner -->
-            <div fxLayout="column" fxLayoutAlign="center center" class="upcoming-events-banner dark-contrast-theme">
-              <h1>Don't miss anything<br />on Archipel Market</h1>
-              <a mat-flat-button color="accent" routerLink="/c/o/marketplace/event">Check out Upcoming Screenings</a>
-            </div>
-            <div fxLayout="row" fxLayoutAlign="space-between start" flex class="movie-header-slider">
-              <h1>Featured films</h1>
-              <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
-                <span>See all</span>
-                <mat-icon svgIcon="arrow_forward"></mat-icon>
-              </a>
-            </div>
-            <bf-slider hideIndicators loop class="dark-contrast-theme">
-              <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient" [image]="movie.banner">
-                <movie-slide [movie]="movie">
-                  <movie-slide-cta>
-                    <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
-                      class="detail">
-                      More Details</a>
-                  </movie-slide-cta>
-                  <movie-slide-actions>
-                    <wishlist-button [movieId]="movie.id"></wishlist-button>
-                  </movie-slide-actions>
-                </movie-slide>
-              </bf-slide>
-            </bf-slider>
-            <!-- Featured Sales Agent Banner -->
-            <!-- TODO (#3413) -->
-            <!-- <ng-container *ngIf="featuredOrg$ | async as org">
+          <!-- Events Banner -->
+          <div fxLayout="column" fxLayoutAlign="center center" class="upcoming-events-banner dark-contrast-theme">
+            <h1>Don't miss anything<br />on Archipel Market</h1>
+            <a mat-flat-button color="accent" routerLink="/c/o/marketplace/event">Check out Upcoming Screenings</a>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-between start" flex class="movie-header-slider">
+            <h1>Featured films</h1>
+            <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
+              <span>See all</span>
+              <mat-icon svgIcon="arrow_forward"></mat-icon>
+            </a>
+          </div>
+          <bf-slider hideIndicators loop class="dark-contrast-theme">
+            <bf-slide *ngFor="let movie of section.movies$ | async" overlayColor="gradient" [image]="movie.banner">
+              <movie-slide [movie]="movie">
+                <movie-slide-cta>
+                  <a mat-flat-button color="primary" [routerLink]="['/c/o/marketplace/title/', movie.id]"
+                    class="detail">
+                    More Details</a>
+                </movie-slide-cta>
+                <movie-slide-actions>
+                  <wishlist-button [movieId]="movie.id"></wishlist-button>
+                </movie-slide-actions>
+              </movie-slide>
+            </bf-slide>
+          </bf-slider>
+          <!-- Featured Sales Agent Banner -->
+          <!-- TODO (#3413) -->
+          <!-- <ng-container *ngIf="featuredOrg$ | async as org">
               <org-banner [org]="org"></org-banner>
             </ng-container> -->
-          </ng-container>
-        </article>
-      </ng-container>
+        </ng-container>
+      </article>
     </ng-container>
-  </section>
-</div>
+  </ng-container>
+</section>

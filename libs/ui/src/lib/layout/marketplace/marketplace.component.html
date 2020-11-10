@@ -53,8 +53,7 @@
     </app-bar>
 
     <!-- CONTENT -->
-    <main fxFlex cdkScrollable fxLayout="column">
-      <ng-content select="[id=homepage-header]"></ng-content>
+    <main fxFlex cdkScrollable>
       <div class="page" [@routeAnimation]="animationOutlet(outlet)">
         <router-outlet #outlet="outlet"></router-outlet>
       </div>
