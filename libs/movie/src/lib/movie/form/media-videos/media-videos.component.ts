@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { getFileNameFromPath } from '@blockframes/media/+state';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { allowedFiles } from '@blockframes/utils/utils';
@@ -12,15 +13,17 @@ import { MovieHostedVideoForm } from '../movie.form';
   styleUrls: ['./media-videos.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieFormMediaVideosComponent implements OnInit {
+export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-  currentOtherVideo: MovieHostedVideoForm;
+  currentOtherVideo = new MovieHostedVideoForm();
   selectedOtherVideo: number;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
+
+  private sub: Subscription;
 
   constructor(
     private shell: MovieFormShellComponent,
@@ -36,7 +39,15 @@ export class MovieFormMediaVideosComponent implements OnInit {
       this.otherVideos.add({ ref: '' });
     }
     this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
+
+    this.sub = this.currentOtherVideo.valueChanges.subscribe(value => {
+      this.otherVideos.at(this.selectedOtherVideo).patchValue(value);
+    })
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   trackByIndex(index: number) { return index; }
@@ -71,7 +82,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
   addOtherVideo() {
     this.otherVideos.add({ ref: '' });
     this.selectedOtherVideo = this.otherVideos.length - 1;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
     this.cdr.markForCheck();
   }
 
@@ -79,7 +90,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
     if (index < 0 || index >= this.otherVideos.length) return;
 
     this.selectedOtherVideo = index;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value) ;
     this.cdr.markForCheck();
   }
 
@@ -91,7 +102,7 @@ export class MovieFormMediaVideosComponent implements OnInit {
       this.otherVideos.add({ ref: '' });
     }
     this.selectedOtherVideo = 0;
-    this.currentOtherVideo = this.otherVideos.at(this.selectedOtherVideo);
+    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
     this.cdr.markForCheck();
   }
 }
