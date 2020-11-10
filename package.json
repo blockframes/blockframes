@@ -142,6 +142,7 @@
     "@babel/core": "7.8.3",
     "@datorama/akita-ng-router-store": "^4.0.0",
     "@datorama/akita-ngdevtools": "^3.0.2",
+    "@firebase/rules-unit-testing": "^1.0.9",
     "@firebase/testing": "^0.16.4",
     "@nrwl/angular": "10.0.1",
     "@nrwl/cypress": "10.0.1",
