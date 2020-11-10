@@ -8,11 +8,7 @@
   <ul>
     <li>
       <strong>Current amount: </strong>
-      <missing-control [control]="form.get('received')" [link]="link">
-        <ng-template let-received>
-          {{ received | currency : form.getCurrency() : 'symbol' : '1.0-0' }}
-        </ng-template>
-      </missing-control>
+      <span>{{ (form.get('received').value || 0) | currency : form.getCurrency() : 'symbol' : '1.0-0' }}</span>
     </li>
     <li>
       <strong>Total investment needed: </strong>

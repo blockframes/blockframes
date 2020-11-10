@@ -2,16 +2,15 @@ import { NgModule, Pipe, PipeTransform } from "@angular/core";
 import { formatCurrency } from '@angular/common';
 import { Perk } from "../+state";
 
-// @todo(#4116)
-// @Pipe({ name: 'isUnlimited' })
-// export class IsUnlimitedPipe implements PipeTransform  {
-//   transform(amount: Perk['amount']) {
-//     return amount.total === Infinity;
-//   }
-// }
+@Pipe({ name: 'isUnlimited' })
+export class IsUnlimitedPipe implements PipeTransform {
+  transform(amount: Perk['amount']) {
+    return amount.total === Infinity;
+  }
+}
 
 @Pipe({ name: 'minPledge' })
-export class MinPledgePipe implements PipeTransform  {
+export class MinPledgePipe implements PipeTransform {
   transform(minPledge: Perk['minPledge']) {
     return minPledge
       ? `from ${formatCurrency(minPledge, 'en', '$', 'USD')}`
@@ -20,7 +19,7 @@ export class MinPledgePipe implements PipeTransform  {
 }
 
 @NgModule({
-  declarations: [MinPledgePipe],
-  exports: [MinPledgePipe]
+  declarations: [MinPledgePipe, IsUnlimitedPipe],
+  exports: [MinPledgePipe, IsUnlimitedPipe]
 })
-export class PerksPipeModule {}
+export class PerksPipeModule { }

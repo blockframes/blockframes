@@ -18,16 +18,14 @@ function compareReceived(form: CampaignForm): ValidationErrors | null {
     : null
 }
 
-// @todo(#4116)
-// export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
-//   const control = form.get('amount');
-//   if (control) {
-//     return control?.value.total < control?.value.current
-//       ? { amountOverflow: true }
-//       : null
-//   }
-// };
-
+export function comparePerkAmount(form: PerkForm): ValidationErrors | null {
+  const control = form.get('amount');
+  if (control) {
+    return control?.value.total < control?.value.current
+      ? { amountOverflow: true }
+      : null
+  }
+};
 
 //////////
 // PERK //
@@ -39,11 +37,10 @@ function createPerkControls(value?: Partial<Perk>) {
     title: new FormControl(perk.title, [Validators.required]),
     description: new FormControl(perk.description, Validators.required),
     minPledge: new FormControl(perk.minPledge),
-    // @todo(#4116)
-    // amount: new FormEntity({
-    //   current: new FormControl(perk.amount.current),
-    //   total: new FormControl(perk.amount.total, Validators.required),
-    // })
+    amount: new FormEntity({
+      current: new FormControl(perk.amount.current),
+      total: new FormControl(perk.amount.total, Validators.required),
+    })
   };
 }
 

@@ -29,10 +29,9 @@ export class StatusIconPipe implements PipeTransform {
   transform(role?: Credit['role']) {
     switch(role) {
       case 'confirmed': return 'check_circle';
-      case 'target':
-      case 'loosely-attached':
-        return 'estimated';
-      default: return 'empty_status';
+      case 'target': return 'estimated';
+      case 'looselyAttached': return 'empty_status'
+      default: return '';
     }
   }
 }

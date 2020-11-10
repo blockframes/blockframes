@@ -23,12 +23,13 @@
       </a>
     </mat-nav-list>
   </aside>
-​
-  <header fxFlex fxLayout fxLayoutAlign="end center" class="marketplace-header">
+  ​
+  <header fxFlex fxLayout fxLayoutAlign="end center">
     <a mat-icon-button routerLink="selection">
       <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)"
         matBadgeColor="accent" matBadgeSize="small">
       </mat-icon>
     </a>
   </header>
+
 </layout-marketplace>

@@ -1,63 +1,64 @@
-<div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" class="dark-contrast-theme">
-    <h4>Welcome to Media Financiers</h4>
-    <h1 class="mat-display-2">The financing hub <br/>for films and TV series</h1>
-    <p>
-      Media Financiers enables private investors to coproduce films and TV series selected by top film financing firms, benefiting from their expertise in dealmaking and content acquisition to access top projects at best conditions.
-    </p>
-    <div class="actions" fxLayout="row" fxLayoutGap="24px">
-      <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the platform today</a>
-      <a mat-stroked-button test-id="sales agent" routerLink="../organization">Who's on the platform today</a>
-    </div>
-  </header>
+<header fxFlex fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center"
+  class="dark-contrast-theme">
 
-  <section fxLayout="column" fxLayoutGap="48px">
-    <ng-container *ngFor="let section of sections; let i = index">
-      <ng-container *ngIf="section.movies$ | async as movies">
-        <article fxLayout="column" *ngIf="movies.length">
-          <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-            <h1>{{ section.title }}</h1>
-            <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
-              <span>See all</span>
-              <mat-icon svgIcon="arrow_forward"></mat-icon>
-            </a>
-          </div>
-          <bf-carousel flex [min]="4">
-            <ng-container *ngFor="let movie of section.movies$ | async">
-              <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
-                carouselItem>
-                <ng-container *ngIf="movie.id | getCampaign | async as campaign">
-                  <span matTooltip="Minimum investment amount">
-                    {{ campaign.minPledge | currency : campaign.currency : 'symbol' : '1.0-0' }}
-                  </span>
-                </ng-container>
-              </movie-card>
-            </ng-container>
-          </bf-carousel>
-        </article>
-      </ng-container>
+  <h4>Welcome to Media Financiers</h4>
+  <h1 class="mat-display-2">The financing hub <br />for films and TV series</h1>
+  <p>
+    Media Financiers enables private investors to coproduce films and TV series selected by top film financing firms,
+    benefiting from their expertise in dealmaking and content acquisition to access top projects at best conditions.
+  </p>
+  <div class="actions" fxLayout="row" fxLayoutGap="24px">
+    <a mat-flat-button color="accent" test-id="library" routerLink="../title">What's on the platform today</a>
+    <a mat-stroked-button test-id="sales agent" routerLink="../organization">Who's on the platform today</a>
+  </div>
+</header>
+
+<section fxLayout="column" fxLayoutGap="48px">
+  <ng-container *ngFor="let section of sections; let i = index">
+    <ng-container *ngIf="section.movies$ | async as movies">
+      <article fxLayout="column" *ngIf="movies.length">
+        <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+          <h1>{{ section.title }}</h1>
+          <a mat-button routerLink="../title" [queryParams]="section?.queryParams" color="primary">
+            <span>See all</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </div>
+        <bf-carousel flex [min]="4">
+          <ng-container *ngFor="let movie of section.movies$ | async">
+            <movie-card [movie]="movie" [size]="section.size" [link]="['/c/o/marketplace/title', movie.id]" [col]="3"
+              carouselItem>
+              <ng-container *ngIf="movie.id | getCampaign | async as campaign">
+                <span matTooltip="Minimum investment amount">
+                  {{ campaign.minPledge | currency : campaign.currency : 'symbol' : '1.0-0' }}
+                </span>
+              </ng-container>
+            </movie-card>
+          </ng-container>
+        </bf-carousel>
+      </article>
     </ng-container>
-    <!-- Banner -->
-    <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px" class="banner dark-contrast-theme">
-      <h1>Do you want to learn more <br/>about investing in the film industry ?</h1>
-      <a mat-flat-button color="accent" href="assets/docs/film-industry.pdf" target="_blank">
-        Download cinema investing guide
-      </a>
-    </section>
-    <section>
-      <div fxLayout="row" fxLayoutAlign="space-between start" flex>
-        <h1>Our Partners</h1>
-        <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
-          <span>See all</span>
-          <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
-      </div>
-      <bf-carousel flex [min]="4">
-        <ng-container *ngFor="let org of orgs$ | async">
-          <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
-        </ng-container>
-      </bf-carousel>
-    </section>
-
+  </ng-container>
+  <!-- Banner -->
+  <section fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px" class="banner dark-contrast-theme">
+    <h1>Do you want to learn more <br />about investing in the film industry ?</h1>
+    <a mat-flat-button color="accent" href="assets/docs/film-industry.pdf" target="_blank">
+      Download cinema investing guide
+    </a>
   </section>
-</div>
+  <section>
+    <div fxLayout="row" fxLayoutAlign="space-between start" flex>
+      <h1>Our Partners</h1>
+      <a mat-button routerLink="/c/o/marketplace/organization" color="primary">
+        <span>See all</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
+    </div>
+    <bf-carousel flex [min]="4">
+      <ng-container *ngFor="let org of orgs$ | async">
+        <org-card-minimal [org]="org" [col]="2" carouselItem></org-card-minimal>
+      </ng-container>
+    </bf-carousel>
+  </section>
+
+</section>
