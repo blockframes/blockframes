@@ -272,6 +272,26 @@ jobs:
           message: 'Deploying to demo1...'
       - prepare_environment
       - build_deploy_upgrade
+  deploy-to-demo2:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-2
+       ENV_TS: './env/demo/env.demo2.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo2...'
+      - prepare_environment
+      - build_deploy_upgrade
+  deploy-to-demo3:
+    executor: blockframes-ci
+    environment:
+       PROJECT_ID: blockframes-demo-3
+       ENV_TS: './env/demo/env.demo3.ts'
+    steps:
+      - slack/notify:
+          message: 'Deploying to demo3...'
+      - prepare_environment
+      - build_deploy_upgrade
   push-anon-db-to-ci:
     executor: blockframes-ci
     steps:
@@ -298,6 +318,16 @@ workflows:
       - copy-storage-from-prod
   deploy:
     jobs:
+      - deploy-to-demo3:
+          filters:
+            branches:
+              only:
+                - demo3
+      - deploy-to-demo2:
+          filters:
+            branches:
+              only:
+                - demo2
       - deploy-to-demo1:
           filters:
             branches:

@@ -10,13 +10,23 @@ export const persistenceSettings = {
   experimentalTabSynchronization: true
 };
 
+//Local firebase emulator UI
+export const emulatorConfig = {
+  functionsEmulatorURL: 'http://localhost:5001',
+  firestoreConfig: {
+    host: 'localhost:8080',
+    ssl: false
+  }
+};
+
 // Firebase
 // ========
 
 export const appUrl = {
-  content: 'https://demo3.archipelcontent.com',
-  market: 'https://demo3.archipelmarket.com',
-  crm: 'https://demo2.crm.blockframes.io',
+  content: 'https://blockframes-demo-3.web.app',
+  market: 'https://festival-demo3-blockframes.web.app',
+  crm: 'https://crm-demo3-blockframes.web.app',
+  financiers: 'https://blockframes-demo3-financiers.web.app',
 }
 
 export const firebase = {
@@ -31,10 +41,23 @@ export const firebase = {
 // Algolia
 // =======
 
+// Algolia
+// =======
+
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'demo3_orgs'
+  indexNameOrganizations: {
+    festival: 'demo3_festival_org',
+    financiers: 'demo3_financiers_org',
+    catalog: 'demo3_catalog_org'
+  },
+  indexNameMovies: {
+    festival: 'demo3_festival_movies',
+    financiers: 'demo3_financiers_movies',
+    catalog: 'demo3_catalog_movies',
+  },
+  indexNameUsers: 'demo3_users',
 };
 
 // Ethereum
@@ -69,3 +92,45 @@ export const relayer = {
 
 export const backupBucket = 'demo3-backups';
 export const sendgridAPIKey = null; // defined in functions.config, see backend-functions/environments
+
+// Yandex Metrika Id
+export const yandexId = 0;
+
+// Intercom
+// ========
+export const intercomId = 'srwfltp4';
+
+// Quorum
+// ========
+export const quorum = {
+  archipelNode: {
+    url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
+    ethAddress: '0x7E5D163D7390A6068d44C8e2F3c2861B5133daa4',
+  },
+  pulsarlNode: {
+    url: 'https://e0rf4hbql8-e0zhtusyfh-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
+    ethAddress: '0x43c92D51ba8c0B83062F8116B036D6616ebe4746',
+  },
+  bankNode: {
+    url: 'https://e0rf4hbql8-e0jbt507aa-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28=',
+    ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
+  },
+}
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-demo3.analytics_200039147.events_';
+
+// Archipel Content OrgId
+// ======================
+export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";
+
+export const heavyChunkSize = 15;
+
+export const chunkSize = 30;
