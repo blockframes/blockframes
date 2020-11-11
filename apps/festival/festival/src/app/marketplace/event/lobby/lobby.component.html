@@ -5,12 +5,36 @@
     <h1>Meeting Lobby</h1>
     <h2>{{event.title}}</h2>
 
-    <!-- TODO REPLACE THIS DIV BY THE VISIO PREVIEW -->
-    <div>
-      VISIO PREVIEW
-    </div>
+    <meeting-video [video]="videoTrack$ | async" [audio]="audioTrack$ | async"></meeting-video>
 
-    <a mat-flat-button routerLink="./session" color="accent">Access {{ event.type | titlecase }} Room</a>
+    <ng-container *ngIf="(videoTrack$ | async) as videoTrack; else noVideoTrack">
+      <button mat-icon-button (click)="toggleVideo()">
+        <mat-icon *ngIf="videoTrack.isEnabled" svgIcon="videocam"></mat-icon>
+        <mat-icon *ngIf="!videoTrack.isEnabled" svgIcon="videocam_off"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #noVideoTrack>
+      <span matTooltip="Your browser don't have the permission to access the camera">
+        <button mat-icon-button disabled>
+          <mat-icon svgIcon="videocam"></mat-icon>
+        </button>
+      </span>
+    </ng-template>
+    <ng-container *ngIf="(audioTrack$ | async) as audioTrack; else noAudioTrack">
+      <button mat-icon-button (click)="toggleAudio()">
+        <mat-icon *ngIf="audioTrack.isEnabled" svgIcon="unmute"></mat-icon>
+        <mat-icon *ngIf="!audioTrack.isEnabled" svgIcon="mute"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #noAudioTrack>
+      <span matTooltip="Your browser don't have the permission to access the microphone">
+        <button mat-icon-button disabled>
+          <mat-icon svgIcon="unmute"></mat-icon>
+        </button>
+      </span>
+    </ng-template>
+
+    <a mat-flat-button routerLink="../session" color="accent">Access {{ event.type | titlecase }} Room</a>
 
     <img asset="meeting.webp" alt="Meeting room">
   </section>

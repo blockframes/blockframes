@@ -1,0 +1,28 @@
+
+<video #video></video>
+<audio #audio></audio>
+
+<div class="no-video" *ngIf="isVideoDisabled$ | async">
+    <div class="circle"></div>
+</div>
+<div class="no-video" *ngIf="isVideoDisabled$ | async">
+  <svg viewBox="0 0 100 100">
+    <text x="50" y="70" text-anchor="middle">{{userInitials}}</text>
+  </svg>
+</div>
+
+<div class="name">
+  <span>{{name}}</span>
+</div>
+
+<div class="controls">
+  <button mat-icon-button (click)="toggleMute()">
+    <mat-icon *ngIf="isAudioMuted$ | async" svgIcon="volume"></mat-icon>
+    <mat-icon *ngIf="!(isAudioMuted$ | async)" svgIcon="volume_off"></mat-icon>
+  </button>
+  <button mat-icon-button (click)="toggleVideo()">
+    <mat-icon *ngIf="isVideoDisabled$ | async" svgIcon="blind_eye"></mat-icon>
+    <mat-icon *ngIf="!(isVideoDisabled$ | async)" svgIcon="eye"></mat-icon>
+  </button>
+</div>
+
