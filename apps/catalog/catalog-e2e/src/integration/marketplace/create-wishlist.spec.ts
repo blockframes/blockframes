@@ -60,7 +60,7 @@ describe('Test wishlist features from library, detail page',  () => {
 
       //3. Verify list
       const p4: WishlistPage = p3.clickWishlist();
-      cy.wait(TO.FIFTEEN_SEC);
+      cy.wait(TO.PAGE_LOAD);
       movieList1.forEach(movieName => {
         p4.assertMovieInCurrentWishlist(movieName);
       });

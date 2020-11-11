@@ -21,7 +21,7 @@ export default abstract class NavbarPage {
   }
 
   public clickWishlist() {
-    cy.get('main', {timeout: TO.PAGE_ELEMENT}).scrollTo('top');
+    //cy.get('main', {timeout: TO.PAGE_ELEMENT}).scrollTo('top');
     cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
       .click();
     cy.wait(TO.ONE_SEC);
@@ -29,8 +29,8 @@ export default abstract class NavbarPage {
   }
 
   public checkWishListCount(count: number) {
-    cy.get('main', {timeout: TO.PAGE_ELEMENT})
-      .scrollTo('top');
+    //cy.get('main', {timeout: TO.PAGE_ELEMENT})
+    //  .scrollTo('top');
     cy.get('catalog-marketplace a[test-id=heart-icon]', {timeout: TO.PAGE_ELEMENT})
       .should('contain', count);
   }
