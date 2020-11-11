@@ -35,9 +35,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   // INPUT ----------------------------
 
   /**
-   * Should be fed with the algolia index name out of the `env.ts`
-   * @example [index]="algolia.org" // 'pl_orgs' from the env.ts
-   * @example but if index is a movie, just pass down `movie`
+   * Set index
    */
   @Input() index: AlgoliaIndex;
 
@@ -113,12 +111,12 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
-
-    if (this.index === 'movie') {
+    if (this.index === 'user') {
+      this.indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
+    } else {
       const app = this.routerQuery.getValue().state?.root.data.app;
       this.indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
     }
-    this.indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
