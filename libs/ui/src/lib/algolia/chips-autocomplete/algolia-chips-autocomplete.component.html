@@ -4,7 +4,7 @@
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip *ngIf="value" selectable removable (removed)="form.removeAt(i)" (dblclick)="edit(i)">
-        <span>{{ value | valueByPath: displayWithPath }}</span>
+        <span>{{ value | deepKey: displayWithPath }}</span>
         <mat-icon matChipRemove svgIcon="close"></mat-icon>
       </mat-chip>
     </ng-container>
@@ -36,5 +36,5 @@
 </mat-autocomplete>
 
 <ng-template #default let-result>
-  <span>{{ result | valueByPath: displayWithPath }}</span>
+  <span>{{ result | deepKey: displayWithPath }}</span>
 </ng-template>

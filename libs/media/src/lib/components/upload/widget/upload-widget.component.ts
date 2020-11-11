@@ -6,6 +6,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 // Blockframes
 import { BehaviorStore } from '@blockframes/utils/helpers';
 import { slideUp } from '@blockframes/utils/animations/fade';
+import { getDeepValue } from '@blockframes/utils/pipes/deep-key.pipe';
 
 @Component({
   selector: 'bf-upload-widget',
@@ -87,5 +88,3 @@ export class UploadWidgetComponent {
     return docSnapshot.ref.update(docData);
   }
 }
-
-const getDeepValue = (val: Object, path: string) => path.split('.').reduce((result, key) => result?.[key], val);
