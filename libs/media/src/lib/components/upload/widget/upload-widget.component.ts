@@ -77,12 +77,23 @@ export class UploadWidgetComponent {
     const currentMediaValue = getDeepValue(docData, fieldToUpdate);
 
     if (Array.isArray(currentMediaValue)) {
-      // find the right value
-      // Actually quite dangerous for otherVideos since we only know ref and not title
-      // If the same ref is used for a different video, then that one might be deleted
-      // It would be nice to have some sort of ID; this would also solve similar 'bug' in file-explorer component
-    } else {
+      const index = currentMediaValue.findIndex(ref => typeof ref === 'string' ? ref === path : ref.ref === path)
+      currentMediaValue.splice(index, 1);
+    } else if (!!currentMediaValue.ref) {
       currentMediaValue.ref = '';
+    } else {
+      const elements = fieldToUpdate.split('.');
+      if (elements.length === 1) {
+      // field with reference is directly on docData
+        docData[fieldToUpdate] = '';
+      } else {
+        // getting the parent object of the field with reference
+        // this is needed because currentMediaValue of type string is not connected to docData
+        const field = elements.pop();
+        const pathToParent = elements.join('.');
+        const mediaParent = getDeepValue(docData, pathToParent);
+        mediaParent[field] = '';
+      }
     }
 
     return docSnapshot.ref.update(docData);

@@ -3,7 +3,7 @@ export * from './to-label.pipe';
 export * from './reverse.pipe';
 export * from './display-name.pipe';
 export * from './filter-by-date.pipe';
-export * from './value-by-path.pipe';
+export * from './deep-key.pipe';
 export * from './workspace.pipe';
 export * from './deep-key.pipe';
 export * from './isAbove.pipe';
