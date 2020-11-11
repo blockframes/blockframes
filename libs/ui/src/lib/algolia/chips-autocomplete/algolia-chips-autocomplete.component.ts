@@ -29,7 +29,6 @@ function splitValue(value: string, keycodes: number[]) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
-  /** The initialized client for algolia */
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
