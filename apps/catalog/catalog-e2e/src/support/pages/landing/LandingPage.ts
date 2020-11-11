@@ -10,12 +10,12 @@ export default class LandingPage {
   }
 
   public clickLogin() {
-    cy.get('landing-toolbar a[test-id=login]').click();
+    cy.get('mat-toolbar a[test-id=login]').click();
     return new AuthLoginPage();
   }
 
   public clickSignup() {
-    cy.get('landing-toolbar a[test-id=signup]').click();
+    cy.get('mat-toolbar a[test-id=signup]').click();
     return new AuthLoginPage();
   }
 }
