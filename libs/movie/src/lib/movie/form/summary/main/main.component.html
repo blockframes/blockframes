@@ -75,6 +75,9 @@
     <li>
       <strong>Release Date </strong>
       <missing-control test-id="release-year" [control]="movie.release.get('year')"></missing-control>
+      (<missing-control [control]="movie.release.get('status')">
+        <ng-template let-releaseStatus>{{ releaseStatus | toLabel: "screeningStatus"}}</ng-template>
+      </missing-control>)
     </li>
     <li>
       <strong>Countr{ movie.originCountries.controls.length, plural, =0 {y} =1 {y} other {ies}} of origin </strong>

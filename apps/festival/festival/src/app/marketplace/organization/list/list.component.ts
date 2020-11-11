@@ -35,7 +35,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: OrganizationService,
-    private dynTitle: DynamicTitleService,
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {
