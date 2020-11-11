@@ -17,8 +17,8 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
 
   form = this.shell.getForm('movie');
   movieId = this.route.snapshot.params.movieId;
-  currentOtherVideo = new MovieHostedVideoForm();
-  selectedOtherVideo: number;
+  activeVideo = new MovieHostedVideoForm();
+  activeVideoIndex: number;
 
   allowedFilesTypes = allowedFiles.video.mime;
   allowedFilesExtensions =  allowedFiles.video.extension;
@@ -35,14 +35,14 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dynTitle.setPageTitle('Videos');
 
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
+    if (!this.videoList.length) {
+      this.videoList.add({ ref: '' });
     }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
+    this.activeVideoIndex = 0;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
 
-    this.sub = this.currentOtherVideo.valueChanges.subscribe(value => {
-      this.otherVideos.at(this.selectedOtherVideo).patchValue(value);
+    this.sub = this.activeVideo.valueChanges.subscribe(value => {
+      this.videoList.at(this.activeVideoIndex).patchValue(value);
     })
   }
 
@@ -56,7 +56,7 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
     return this.form.promotional.videos.screener.ref;
   }
 
-  get otherVideos() {
+  get videoList() {
     return this.form.promotional.videos.otherVideos;
   }
 
@@ -80,29 +80,29 @@ export class MovieFormMediaVideosComponent implements OnInit, OnDestroy {
   }
 
   addOtherVideo() {
-    this.otherVideos.add({ ref: '' });
-    this.selectedOtherVideo = this.otherVideos.length - 1;
-    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
+    this.videoList.add({ ref: '' });
+    this.activeVideoIndex = this.videoList.length - 1;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 
   selectOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
+    if (index < 0 || index >= this.videoList.length) return;
 
-    this.selectedOtherVideo = index;
-    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value) ;
+    this.activeVideoIndex = index;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 
   deleteOtherVideo(index: number) {
-    if (index < 0 || index >= this.otherVideos.length) return;
+    if (index < 0 || index >= this.videoList.length) return;
 
-    this.otherVideos.removeAt(index);
-    if (!this.otherVideos.length) {
-      this.otherVideos.add({ ref: '' });
+    this.videoList.removeAt(index);
+    if (!this.videoList.length) {
+      this.videoList.add({ ref: '' });
     }
-    this.selectedOtherVideo = 0;
-    this.currentOtherVideo.patchValue(this.otherVideos.at(this.selectedOtherVideo).value);
+    this.activeVideoIndex = 0;
+    this.activeVideo.patchValue(this.videoList.at(this.activeVideoIndex).value);
     this.cdr.markForCheck();
   }
 }
