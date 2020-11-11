@@ -102,7 +102,8 @@ export interface AlgoliaRecordOrganization extends AlgoliaRecord {
   appModule: Module[],
   country: Territory,
   isAccepted: boolean,
-  hasAcceptedMovies: boolean
+  hasAcceptedMovies: boolean,
+  movieIds: string[]
 }
 
 export interface AlgoliaRecordMovie extends AlgoliaRecord {

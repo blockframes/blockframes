@@ -6,6 +6,7 @@ import { Organization } from '@blockframes/organization/+state';
 import { debounceTime, distinctUntilChanged, map, pluck, startWith, switchMap, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { OrganizationSearchForm, createOrganizationSearch } from '@blockframes/organization/forms/search.form';
+import { MovieService } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'festival-organization-list',
@@ -36,6 +37,7 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(
     private service: OrganizationService,
     private dynTitle: DynamicTitleService,
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
