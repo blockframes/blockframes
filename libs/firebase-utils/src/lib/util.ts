@@ -131,5 +131,5 @@ function getKeyFile(keyFile: string): admin.ServiceAccount {
 
 export async function hasAcceptedMovies(org: OrganizationDocument) {
   const movies = await Promise.all(org.movieIds.map(id => getDocument<MovieDocument>(`movies/${id}`)));
-  return movies.some(movie => movie.storeConfig.status === 'accepted')
+  return movies.some(movie => movie?.storeConfig?.status === 'accepted')
 }
