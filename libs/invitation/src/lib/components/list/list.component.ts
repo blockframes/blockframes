@@ -5,9 +5,13 @@ import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input } 
 import { PageEvent } from '@angular/material/paginator';
 
 // Blockframes
-import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
+import { descTimeFrames, filterByDate, TimeFrame } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
 import { Invitation } from '../../+state';
+
+interface InvitationWithTimeFrame extends Invitation {
+  timeFrame?: TimeFrame
+}
 
 @Component({
   selector: 'invitation-list',
@@ -17,7 +21,26 @@ import { Invitation } from '../../+state';
 })
 export class ListComponent {
 
-  @Input() invitations: Invitation[];
+  rows: InvitationWithTimeFrame[] = [];
+
+  @Input() set invitations(invits: Invitation[]) {
+    this.rows = [];
+    this.timeFrames.forEach(timeFrame => {
+      const invitationsFiltered = filterByDate(invits, timeFrame);
+      let shouldDisplayTimeFrame = true; // TimeFrame is displayed only once for each invitations of the same timeFrame
+      if (!!invitationsFiltered && invitationsFiltered.length) {
+        invitationsFiltered.forEach(invitation => {
+          const invitationWithTimeFrame = { ...invitation } as InvitationWithTimeFrame;
+          if (shouldDisplayTimeFrame) {
+            invitationWithTimeFrame.timeFrame = timeFrame;
+            shouldDisplayTimeFrame = false;
+          }
+          this.rows.push(invitationWithTimeFrame);
+        })
+      }
+    });
+  }
+
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
 
   timeFrames = descTimeFrames;
