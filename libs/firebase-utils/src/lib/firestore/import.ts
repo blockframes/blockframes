@@ -10,11 +10,12 @@ import { clear } from './clear';
 const KEYS_TIMESTAMP = sortBy(['_seconds', '_nanoseconds']);
 
 export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirestore.Firestore, file?: string) {
-  // We get the backup file before clearing the db, just in case.
+  await setImportRunning(true, db);
+
   let restoreFile: GFile;
 
   if (file) {
-    restoreFile = bucket.file(file)
+    restoreFile = bucket.file(file);
   } else {
     const files: GFile[] = (await bucket.getFiles())[0];
     if (files.length === 0) throw new Error('Nothing to restore');
@@ -24,20 +25,23 @@ export async function restoreFromBackupBucket(bucket: Bucket, db: FirebaseFirest
   const [fileExists] = await restoreFile.exists();
 
   if (fileExists) {
-    console.log('Setting maintenance and activating import flag');
-    await startMaintenance();
-    await setImportRunning(true);
-    console.log('Clearing the database');
-    await clear(db);
-    await importFirestoreFromGFile(restoreFile, db);
-    await setImportRunning(false);
-    await endMaintenance();
+    try {
+      console.log('Setting maintenance and activating import flag');
+      await startMaintenance(db);
+      console.log('Clearing the database');
+      await clear(db);
+      await importFirestoreFromGFile(restoreFile, db);
+      await setImportRunning(false, db);
+    } catch (e) {
+      await triggerImportError(db);
+      throw new Error(e);
+    } finally {
+      await endMaintenance(db);
+    }
   } else {
-    await triggerImportError();
-    await endMaintenance();
+    await triggerImportError(db);
     throw new Error('Nothing to restore');
   }
-
 }
 
 export async function importFirestoreFromGFile(firestoreBackupFile: GFile, db: FirebaseFirestore.Firestore) {

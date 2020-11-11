@@ -4,14 +4,14 @@ import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import * as admin from 'firebase-admin';
 import { config } from 'dotenv';
-import { getKeyFile, getLatestFile } from '@blockframes/firebase-utils';
+import { getServiceAccountObj, getLatestFile } from '@blockframes/firebase-utils';
 config();
 
 if (!('FIREBASE_PRODUCTION_SERVICE_ACCOUNT' in process.env)) {
   throw new Error('Key "FIREBASE_PRODUCTION_SERVICE_ACCOUNT" does not exist in .env');
 }
 
-const cert = getKeyFile(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
+const cert = getServiceAccountObj(process.env.FIREBASE_PRODUCTION_SERVICE_ACCOUNT);
 
 admin.initializeApp({
   storageBucket: backupBucket,

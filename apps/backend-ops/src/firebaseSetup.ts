@@ -11,7 +11,7 @@ import { restore } from './admin';
 import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { copyDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
+import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { isMigrationRequired } from './tools';
@@ -20,7 +20,7 @@ export const { storageBucket } = firebase;
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
-  const dbBackupPath = await copyDbFromCi(storage, getCI());
+  const dbBackupPath = await copyAnonDbFromCi(storage, getCI());
   if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
   console.log('DB copied to local bucket!');
 

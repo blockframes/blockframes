@@ -7,7 +7,7 @@ import { catchErrors } from './util';
 
 export const latestAnonDbFilename = 'LATEST-ANONYMIZED.jsonl'
 
-export async function copyDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
+export async function copyAnonDbFromCi(storage: admin.storage.Storage, ci: admin.app.App) {
   const folder = join(process.cwd(), 'tmp');
 
   return catchErrors(async () => {
