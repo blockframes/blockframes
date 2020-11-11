@@ -62,8 +62,7 @@ export function storeSearchableOrg(org: OrganizationDocument, adminKey?: string)
     appModule: getOrgModuleAccess(org),
     country: org.addresses.main.country,
     isAccepted: org.status === 'accepted',
-    hasAcceptedMovies: org['hasAcceptedMovies'] ?? false,
-    movieIds: org.movieIds
+    hasAcceptedMovies: org['hasAcceptedMovies'] ?? false
   };
 
   /* If a org doesn't have access to the app dashboard or marketplace, there is no need to create or update the index */
