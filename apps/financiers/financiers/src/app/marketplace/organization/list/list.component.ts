@@ -59,6 +59,10 @@ export class ListComponent implements OnInit, OnDestroy {
       pluck('hits'),
       map(results => results.map(org => org.objectID)),
       switchMap(ids => ids.length ? this.service.valueChanges(ids) : of([])),
+      /*  this.movieService.valueChanges(ref => ref
+  .where('id', 'in', org.movieIds)
+  .where('movie.storeConfig.status', '==', 'accepted')
+  .where('movie.hasAccess.festival', '==', true)); */
     ).subscribe(orgs => {
       if (this.loadMoreToggle) {
         this.orgResultsState.next(this.orgResultsState.value.concat(orgs))
