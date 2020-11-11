@@ -29,7 +29,6 @@ function splitValue(value: string, keycodes: number[]) {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
-  public indexName: string;
   public searchCtrl = new FormControl();
   /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any[]>;
@@ -40,9 +39,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
   // INPUT ----------------------------
 
   /**
-   * Should be fed with the algolia index name out of the `env.ts`
-   * @example [index]="algolia.org" // 'pl_orgs' from the env.ts
-   * @example but if index is a movie, just pass down `movie`
+   * Set index
    */
   @Input() index: AlgoliaIndex;
 
@@ -101,11 +98,12 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit, OnDestroy {
     }
 
     let indexSearch: Index;
-    if(this.index === 'movie') {
+    if (this.index === 'user') {
+      indexSearch = searchClient.initIndex(algoliaIndex[this.index] as string);
+    } else {
       const app = this.routerQuery.getValue().state?.root.data.app;
       indexSearch = searchClient.initIndex(algoliaIndex[this.index][app]);
     }
-    indexSearch = searchClient.initIndex(algoliaIndex[this.index] as any);
 
     // create search functions
     const regularSearch = (text: string) => indexSearch.search({ query: text, facetFilters: this.getFilter() }).then(result => result.hits);
