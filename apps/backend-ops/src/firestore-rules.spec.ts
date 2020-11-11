@@ -197,8 +197,8 @@ describe.skip('Permission Rules Tests', () => {
   });
 });
 
-//TODO: 4199
-describe.skip('Movies Rules Tests', () => {
+
+describe.only('Movies Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
@@ -211,9 +211,16 @@ describe.skip('Movies Rules Tests', () => {
 
   afterAll(() => Promise.all(apps().map(app => app.delete())));
 
-  test("test ", async () => {
-
+  test("user with valid org should be able to read movie title", async () => {
+    const movieRef = db.doc("movies/M001");
+    await assertSucceeds(movieRef.get());
   });
+
+  test("user without valid org shouldn't be able to read movie title", async () => {
+    db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
+    const movieRef = db.doc("movies/M001");
+    await assertFails(movieRef.get());
+  });  
 });
 
 //TODO: 4200
