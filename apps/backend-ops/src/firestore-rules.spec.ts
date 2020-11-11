@@ -202,25 +202,41 @@ describe.only('Movies Rules Tests', () => {
   const projectId = `rules-spec-${Date.now()}`;
   let db: Firestore;
 
-  beforeAll(async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
-    await setRules(projectId, 'firestore.test.rules');
-    await setData(db, testFixture);
-    await setRules(projectId, 'firestore.rules');
+  describe('With User in org', () => {
+
+    beforeAll(async () => {
+      db  = initFirestoreApp(projectId, {uid: 'uid-user2'});
+      await setRules(projectId, 'firestore.test.rules');
+      await setData(db, testFixture);
+      await setRules(projectId, 'firestore.rules');
+    });
+
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("user with valid org should be able to read movie title", async () => {
+      const movieRef = db.doc("movies/M001");
+      await assertSucceeds(movieRef.get());
+    });
+
   });
 
-  afterAll(() => Promise.all(apps().map(app => app.delete())));
+  describe('With User not in org', () => {
 
-  test("user with valid org should be able to read movie title", async () => {
-    const movieRef = db.doc("movies/M001");
-    await assertSucceeds(movieRef.get());
-  });
+    beforeAll(async () => {
+      db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
+      await setRules(projectId, 'firestore.test.rules');
+      await setData(db, testFixture);
+      await setRules(projectId, 'firestore.rules');
+    });
 
-  test("user without valid org shouldn't be able to read movie title", async () => {
-    db  = initFirestoreApp(projectId, {uid: 'uid-peeptom'});
-    const movieRef = db.doc("movies/M001");
-    await assertFails(movieRef.get());
+    afterAll(() => Promise.all(apps().map(app => app.delete())));
+
+    test("user without valid org shouldn't be able to read movie title", async () => {
+      const movieRef = db.doc("movies/M001");
+      await assertFails(movieRef.get());
+    });
   });  
+
 });
 
 //TODO: 4200
