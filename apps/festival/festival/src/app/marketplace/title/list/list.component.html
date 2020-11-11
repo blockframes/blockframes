@@ -28,7 +28,7 @@
 
     <ng-template filter label="Sales Agents" [form]="searchForm.sellers">
       <algolia-chips-autocomplete index="org" displayWithPath="name"
-        [filters]="['appAccess:financiers', 'appModule:dashboard']" [form]="searchForm.sellers"
+        [filters]="['appModule:dashboard']" [form]="searchForm.sellers"
         label="Search for a Sales Agent" placeholder="Organization name"></algolia-chips-autocomplete>
     </ng-template>
 
