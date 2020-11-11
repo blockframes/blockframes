@@ -1,6 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'financiers-landing',
@@ -9,18 +7,6 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingComponent {
-  private scroll = new BehaviorSubject<number>(0);
-  public toolbarColor$ = this.scroll.asObservable().pipe(
-    map(position => position === 0),
-    distinctUntilChanged(),
-    map(isTop => isTop ? 'transparent-toolbar' : '')
-  );
-
-  public headerContent = {
-    title: 'Welcome to Archipel Market',
-    description: 'The endless film market',
-  };
-
   public tabNames = ['Sales Agents', 'Buyers'];
 
   public tabTitle = [
@@ -81,13 +67,4 @@ export class LandingComponent {
       description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
     }
   ]
-
-  // According to this article, it's fine with Angular Universal
-  // source: https://technoapple.com/blog/post/scroll-event-at-angular-universal
-  /** Change the toolbar class when page is scrolled. */
-  @HostListener('window:scroll', [])
-  scrollHandler() {
-    this.scroll.next(window.pageYOffset);
-  }
-
 }
