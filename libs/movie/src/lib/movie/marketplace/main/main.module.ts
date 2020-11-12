@@ -6,13 +6,13 @@ import { MainComponent } from './main.component';
 
 import { ImageReferenceModule } from '@blockframes/media/directives/image-reference/image-reference.module';
 import { DisplayNameModule, ToLabelModule, HasKeysModule } from '@blockframes/utils/pipes';
+import { RunningTimePipeModule } from '@blockframes/movie/pipes/running-time.pipe';
 
 import { PrizeCardModule } from '../../components/prize-card/prize-card.module';
 import { CreditCardModule } from '../../components/credit-card/credit-card.module';
 import { ReviewCardModule } from '../../components/review-card/review-card.module';
 import { MatLayoutModule } from '@blockframes/ui/layout/layout.module';
 import { HasStatusModule } from '../../pipes/has-status.pipe';
-import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -34,7 +34,7 @@ import { MatDividerModule } from '@angular/material/divider';
     PrizeCardModule,
     CreditCardModule,
     ReviewCardModule,
-    DurationModule,
+    RunningTimePipeModule,
     // Material
     MatIconModule,
     MatButtonModule,
