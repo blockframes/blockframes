@@ -243,8 +243,8 @@ export interface MovieRelease {
 }
 
 export interface MovieRunningTime {
-  time: number | string,
-  status: string,
+  time?: number,
+  status?: string,
 }
 
 export interface OtherLink {
