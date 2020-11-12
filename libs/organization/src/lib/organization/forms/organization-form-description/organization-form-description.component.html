@@ -1,19 +1,31 @@
+<mat-form-field appearance="outline">
+  <mat-label>Activity</mat-label>
+  <mat-select test-id="activity"  [formControl]="activity" aria-label="activity description">
+    <mat-option *ngFor="let activity of activities | keyvalue" [value]="activity.key">
+      {{ activity.value }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Activity description</mat-label>
-    <mat-select test-id="activity"  [formControl]="activity" aria-label="activity description">
-      <mat-option *ngFor="let activity of activities | keyvalue" [value]="activity.key">
-        {{ activity.value }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Fiscal number</mat-label>
-    <input
-      test-id="fiscalNumber"
-      matInput
-      placeholder="Fiscal number"
-      aria-label="fiscal number"
-      [formControl]="fiscalNumber"
-    />
-  </mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Activity Description</mat-label>
+  <textarea matInput
+  [formControl]="description"
+  cdkTextareaAutosize
+  #autosize="cdkTextareaAutosize"
+  cdkAutosizeMinRows="4"
+  maxlength="500"></textarea>
+  <mat-hint>The description will be shown on your page and will help users to learn more about your company.</mat-hint>
+  <mat-hint align="end">Limited to 500 characters.</mat-hint>
+</mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>Fiscal number</mat-label>
+  <input
+    test-id="fiscalNumber"
+    matInput
+    placeholder="Fiscal number"
+    aria-label="fiscal number"
+    [formControl]="fiscalNumber"
+  />
+</mat-form-field>
