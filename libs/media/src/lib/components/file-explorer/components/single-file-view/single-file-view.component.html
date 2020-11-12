@@ -1,4 +1,4 @@
-<div fxLayout="column" fxLayoutGap="24px">
+<section fxLayout="column" fxLayoutGap="24px">
   <ng-container *ngIf="activeDirectory.type === 'image' && !!this.activeForm">
     <drop-cropper [ratio]="activeDirectory.ratio" [storagePath]="activeDirectory.storagePath" [form]="getSingleMediaForm()">
       <h3 title>{{ activeDirectory.name }}</h3>
@@ -20,4 +20,4 @@
       <mat-icon svgIcon="send"></mat-icon>
     </button>
   </div>
-</div>
+</section>
