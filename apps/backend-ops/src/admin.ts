@@ -3,17 +3,17 @@
  *
  * Helper to avoid duplicating all the "semi-broken" google type defs.
  */
-import { importComplete, isInMaintenance, loadAdminServices, sleep } from '@blockframes/firebase-utils';
+import { importComplete, loadAdminServices, sleep } from '@blockframes/firebase-utils';
 import { PubSub } from '@google-cloud/pubsub';
 import { firebase } from '@env';
 
 /**
  * Trigger a firestore database restore operation for the given project
  */
-export async function restore() {
+export async function restore(file?: string) {
   const { db } = loadAdminServices();
   const pubsub = new PubSub({ projectId: firebase.projectId });
-  await pubsub.topic('firestore').publish(Buffer.from('import'));
+  await pubsub.topic('firestore').publish(Buffer.from('import'), { ...file && { file } });
   await sleep(5000); // Wait for process to start
   const timeoutPromise = () => sleep(1000 * 60 * 10).then(() => 'timeout');
   const result = await Promise.race([timeoutPromise(), importComplete(db)]);

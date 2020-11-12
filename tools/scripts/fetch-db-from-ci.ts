@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register';
-import { loadAdminServices, copyDbFromCi } from '@blockframes/firebase-utils';
+import { loadAdminServices, copyAnonDbFromCi } from '@blockframes/firebase-utils';
 
 const { storage, getCI } = loadAdminServices();
-copyDbFromCi(storage, getCI()).then(() => process.exit(0));
+copyAnonDbFromCi(storage, getCI()).then(() => process.exit(0));
