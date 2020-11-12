@@ -3,8 +3,8 @@
     <aside id="dashboard-navbar">
       <mat-selection-list [multiple]="false">
         <mat-list-option
-          *ngFor="let directory of directories; let first = first"
-          [selected]="breadCrumbs[0].name === directory.name"
+          *ngFor="let directory of directories; let first = first; let index = index"
+          [selected]="index === activeDirectory.path[0]"
           (click)="goTo(directory.path)"
         >
           <mat-icon mat-list-icon [svgIcon]="first ? 'home' : 'film'"></mat-icon>

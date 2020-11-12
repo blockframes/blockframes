@@ -3,6 +3,7 @@ import * as functions from 'firebase-functions';
 import { chunk } from "lodash";
 import * as env from '@env'
 import { tempUploadDir, privacies } from "@blockframes/utils/file-sanitizer";
+import type { File as GFile } from '@google-cloud/storage';
 
 export function getDocument<T>(path: string): Promise<T> {
   const db = admin.firestore();
@@ -110,3 +111,16 @@ export async function runChunks(rows: any[], cb: any, rowsConcurrency?: number, 
  */
 export const mockConfigIfNeeded = (...path: string[]): any =>
   path.reduce((config: any, field) => (config ? config[field] : undefined), functions.config());
+
+/**
+ * Sorts an array of files in a bucket by timeCreated and returns the latest
+ * @param files GCP file type
+ */
+export function getLatestFile(files: GFile[]) {
+  return files
+    .sort(
+      (a, b) =>
+        Number(new Date(a.metadata?.timeCreated)) - Number(new Date(b.metadata?.timeCreated))
+    )
+    .pop();
+}
