@@ -22,8 +22,19 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
     return invitation.toOrg?.id === user.orgId || invitation.toUser?.uid === user.uid;
   }
 
+  iAmGuest(invitation: Invitation) {
+    const user = this.authQuery.user;
+    return (invitation.mode === 'request' && invitation.fromUser.uid === user.uid) ||
+    (invitation.mode === 'invitation' && invitation.toUser.uid === user.uid)
+  }
+
   selectByDocId(docId: string) {
     return this.selectEntity((i: Invitation) => i.docId === docId);
+  }
+
+  /** Query all invitation where current user is a guest */
+  whereIAmGuest(filter: (invitation: Invitation) => boolean = () => true) {
+    return this.selectAll({ filterBy: i => this.iAmGuest(i) && filter(i) });
   }
 
   /** Query all invitation from current user / org */
