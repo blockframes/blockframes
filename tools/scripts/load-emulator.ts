@@ -7,7 +7,7 @@ import * as admin from 'firebase-admin';
 import { firebase, backupBucket } from '@env'
 import { initializeAdminApp } from '@firebase/rules-unit-testing'
 
-const testAdmin = initializeAdminApp({projectId: 'blockframes-demo-1', databaseName: 'test'})
+const testAdmin = initializeAdminApp({projectId: firebase.projectId, databaseName: 'loademulator'})
 const db = testAdmin.firestore()
 const liveAdmin = admin.initializeApp({ credential: admin.credential.applicationDefault(), projectId: firebase.projectId });
 const storage = liveAdmin.storage()
