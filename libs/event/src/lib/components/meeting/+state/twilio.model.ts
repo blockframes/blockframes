@@ -1,2 +1,9 @@
+import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 
-export type TrackKind = 'video' | 'audio';
+
+export interface Tracks {
+  video: LocalVideoTrack,
+  audio: LocalAudioTrack
+};
+
+export type TrackKind = keyof Tracks;

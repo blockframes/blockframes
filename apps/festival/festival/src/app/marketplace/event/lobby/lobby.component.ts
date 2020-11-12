@@ -7,9 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { EventService, Event } from '@blockframes/event/+state';
 import { TwilioService } from '@blockframes/event/components/meeting/+state/twilio.service';
-import { LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { TrackKind } from '@blockframes/event/components/meeting/+state/twilio.model';
+import { TrackKind, Tracks } from '@blockframes/event/components/meeting/+state/twilio.model';
 
 @Component({
   selector: 'festival-lobby',
@@ -21,12 +20,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   public event$: Observable<Event>;
 
-  public track$ = new BehaviorSubject<{
-    video: LocalVideoTrack,
-    audio: LocalAudioTrack
-  }>({video: undefined, audio: undefined});
+  public track$ = new BehaviorSubject<Tracks>({video: undefined, audio: undefined});
 
-  public userName: string;
+  public userName = `${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`;
 
   constructor(
     private authQuery: AuthQuery,
@@ -37,30 +33,27 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.userName = `${this.authQuery.user.firstName} ${this.authQuery.user.lastName}`;
-
     this.event$ = this.route.params.pipe(
       pluck('eventId'),
       switchMap((eventId: string) => this.eventService.queryDocs(eventId)),
     );
 
-    this.twilioService.getLocalTrack('video').then(videoTrack => {
+    this.twilioService.getTrack('video').then(videoTrack => {
       const { audio } = this.track$.getValue();
       this.track$.next({video: videoTrack, audio});
     });
 
-    this.twilioService.getLocalTrack('audio').then(audioTrack => {
+    this.twilioService.getTrack('audio').then(audioTrack => {
       const { video } = this.track$.getValue();
       this.track$.next({video, audio: audioTrack});
     });
   }
 
   ngOnDestroy() {
-    this.twilioService.cleanLocalTrack('video');
-    this.twilioService.cleanLocalTrack('audio');
+    this.twilioService.cleanTrack();
   }
 
   toggleLocalTrack(kind: TrackKind) {
-    this.twilioService.toggleLocalTrack(kind);
+    this.twilioService.toggleTrack(kind);
   }
 }

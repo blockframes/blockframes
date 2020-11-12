@@ -4,6 +4,7 @@
   line-height: 0;
   overflow: hidden;
   background: black;
+  border-radius: 4px;
 
   video {
     width: 100%;
@@ -27,7 +28,7 @@
     text {
       font-size: 32px;
       text-transform: uppercase;
-      fill: var(--foreground-divider);
+      fill: black;
     }
   }
 

@@ -1,17 +1,14 @@
 
 import { Injectable } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { createLocalAudioTrack, createLocalVideoTrack, LocalAudioTrack, LocalVideoTrack } from 'twilio-video';
-import { TrackKind } from './twilio.model';
+import { createLocalAudioTrack, createLocalVideoTrack } from 'twilio-video';
+import { TrackKind, Tracks } from './twilio.model';
 
 
 @Injectable({ providedIn: 'root' })
 export class TwilioService {
 
-  localTrack: {
-    video: LocalVideoTrack,
-    audio: LocalAudioTrack,
-  } = {
+  track: Tracks = {
     video: null,
     audio: null,
   }
@@ -27,40 +24,53 @@ export class TwilioService {
     return this.getAccessToken({ eventId }).toPromise();
   }
 
-  async getLocalTrack(kind: 'video'): Promise<LocalVideoTrack | null>;
-  async getLocalTrack(kind: 'audio'): Promise<LocalAudioTrack | null>;
-  async getLocalTrack(kind: TrackKind): Promise<LocalVideoTrack | LocalAudioTrack | null> {
-    if (!!this.localTrack[kind]) {
-      return this.localTrack[kind];
-    } else {
+  async load<K extends TrackKind>(kind: K, createTrack: () => Promise<Tracks[K]>): Promise<Tracks[K]> {
+    if (!this.track[kind]) {
       try {
-        if (kind === 'video') {
-          this.localTrack[kind] = await createLocalVideoTrack();
-        } else if (kind === 'audio') {
-          this.localTrack[kind] = await createLocalAudioTrack();
-        }
-          return this.localTrack[kind];
-      } catch(error) {
-        return null
+        this.track[kind] = await createTrack();
+      } catch (error) {
+        return null;
+      }
+    }
+    return this.track[kind];
+  }
+
+  async getTrack(): Promise<Tracks>
+  async getTrack<K extends TrackKind>(kind: K): Promise<Tracks[K] | null>
+  async getTrack<K extends TrackKind>(kind?: K) {
+    if (!kind) {
+      const tracks: Tracks = { video: null, audio: null };
+      const videoTrackPromise = this.getTrack('video').then(track => tracks['video'] = track);
+      const audioTrackPromise = this.getTrack('audio').then(track => tracks['audio'] = track);
+      await Promise.all([videoTrackPromise, audioTrackPromise]);
+      return tracks;
+    } else if (kind === 'video') {
+      return this.load('video', createLocalVideoTrack);
+    } else if (kind === 'audio') {
+      return this.load('audio', createLocalAudioTrack);
+    }
+  }
+
+  cleanTrack(kind?: TrackKind) {
+    if (!kind) {
+      this.cleanTrack('video');
+      this.cleanTrack('audio');
+    } else {
+      if (!!this.track[kind]) {
+        this.track[kind].stop();
+        this.track[kind].removeAllListeners();
+        this.track[kind] = null;
       }
     }
   }
 
-  cleanLocalTrack(kind: TrackKind) {
-    if (!!this.localTrack[kind]) {
-      this.localTrack[kind].stop();
-      this.localTrack[kind].removeAllListeners();
-      this.localTrack[kind] = null;
-    }
-  }
+  toggleTrack(kind: TrackKind) {
+    if (!this.track[kind]) return;
 
-  toggleLocalTrack(kind: TrackKind) {
-    if (!this.localTrack[kind]) return;
-
-    if (this.localTrack[kind].isEnabled) {
-      this.localTrack[kind].disable();
+    if (this.track[kind].isEnabled) {
+      this.track[kind].disable();
     } else {
-      this.localTrack[kind].enable();
+      this.track[kind].enable();
     }
   }
 

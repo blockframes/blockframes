@@ -17,7 +17,7 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
   @Input() set video(value: VideoTrack | undefined) {
     if (!!value) {
       this._video = value;
-      this.setUpTracks({track: this.track.video, kind: 'video'});
+      this.setUpTracks('video');
     }
   }
 
@@ -25,7 +25,7 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
   @Input() set audio(value: AudioTrack | undefined) {
     if (!!value) {
       this._audio = value;
-      this.setUpTracks({track: this.track.audio, kind: 'audio'});
+      this.setUpTracks('audio');
     }
   }
 
@@ -71,19 +71,17 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit() {
-    this.setUpTracks(
-      {track: this.track.video, kind: 'video'},
-      {track: this.track.audio, kind: 'audio'},
-    );
+    this.setUpTracks('video', 'audio');
   }
 
   ngOnDestroy() {
     this.cleanTracks(this.track.video, this.track.audio);
   }
 
-  setUpTracks(...trackAndKinds: { track: (VideoTrack | AudioTrack | undefined), kind: TrackKind}[]) {
-    trackAndKinds.forEach(trackAndKind => {
-      const { track } = trackAndKind;
+  setUpTracks(...kinds: TrackKind[]) {
+    kinds.forEach(kind => {
+
+      const track = this.track[kind];
 
       if (!!track) {
 
@@ -104,7 +102,7 @@ export class MeetingVideoComponent implements AfterViewInit, OnDestroy {
         track.on('disabled', (t: VideoTrack | AudioTrack) => this.remoteTrackState$[t.kind].next(t.isEnabled));
 
       } else {
-        this.remoteTrackState$[trackAndKind.kind].next(false);
+        this.remoteTrackState$[kind].next(false);
       }
     });
   }
