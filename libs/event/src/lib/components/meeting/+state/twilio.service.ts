@@ -26,11 +26,7 @@ export class TwilioService {
 
   async load<K extends TrackKind>(kind: K, createTrack: () => Promise<Tracks[K]>): Promise<Tracks[K]> {
     if (!this.track[kind]) {
-      try {
-        this.track[kind] = await createTrack();
-      } catch (error) {
-        return null;
-      }
+      this.track[kind] = await createTrack().catch(e => null);
     }
     return this.track[kind];
   }
