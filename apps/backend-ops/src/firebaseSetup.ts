@@ -8,10 +8,10 @@ import { syncUsers, generateWatermarks } from './users';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
-import { loadAdminServices } from "@blockframes/firebase-utils";
+import { latestAnonDbFilename, loadAdminServices } from "@blockframes/firebase-utils";
 import { cleanDeprecatedData } from './db-cleaning';
 import { cleanStorage } from './storage-cleaning';
-import { copyDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
+import { copyAnonDbFromCi, readJsonlFile, restoreStorageFromCi } from '@blockframes/firebase-utils';
 import { firebase } from '@env';
 import { generateFixtures } from './generate-fixtures';
 import { isMigrationRequired } from './tools';
@@ -20,7 +20,7 @@ export const { storageBucket } = firebase;
 export async function prepareForTesting() {
   const { db, auth, storage, getCI } = loadAdminServices();
   console.log('Fetching anonymized DB from blockframes-ci and uploading to local storage bucket...');
-  const dbBackupPath = await copyDbFromCi(storage, getCI());
+  const dbBackupPath = await copyAnonDbFromCi(storage, getCI());
   if (!dbBackupPath) throw Error('Unable to download Firestore backup from blockframes-ci bucket')
   console.log('DB copied to local bucket!');
 
@@ -29,7 +29,7 @@ export async function prepareForTesting() {
   console.info('Users synced!');
 
   console.info('DB backup in local storage bucket is being restored into Firestore...');
-  await restore();
+  await restore(latestAnonDbFilename);
   console.info('Backup restored!');
 
   console.info('Syncing storage with production backup stored in blockframes-ci...');
@@ -69,7 +69,7 @@ export async function prepareDb() {
   console.warn( 'This script only restores the DB - does NOT refresh Firebase Auth, Sync storage, generate fixtures.');
   console.warn( 'Nor does this script check for a new/updated anonymized db from the ci environment - latest from storage backup used');
   console.log('Restoring latest db from storage...')
-  await restore();
+  await restore(latestAnonDbFilename);
   console.log('Anonymized DB restored. Migrating...');
   await migrate(false);
   console.log('DB migration complete. Cleaning up...');

@@ -1,5 +1,5 @@
 import 'tsconfig-paths/register';
-import { loadAdminServices, catchErrors } from '@blockframes/firebase-utils';
+import { loadAdminServices, catchErrors, latestAnonDbFilename } from '@blockframes/firebase-utils';
 import { backupBucket } from '../../env/env.ci';
 import { existsSync } from 'fs';
 import { join } from 'path';
@@ -12,7 +12,7 @@ async function uploadDB() {
   if (!existsSync(restore)) {
     throw new Error(`File ${restore} doesn't exist.`);
   }
-  const destination = `${new Date().toISOString()}-ANONYMIZED.jsonl`;
+  const destination = latestAnonDbFilename;
   await ciStorage.bucket(backupBucket).upload(restore, { destination });
   console.log(`Restore DB has been saved to: gs://${backupBucket}/${destination}`);
 }
