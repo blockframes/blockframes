@@ -10,11 +10,13 @@ export default class FestivalDashboardHomePage {
   }
 
   goToMarket() {
-    cy.get('a[href="/c/o/marketplace/home"]').click();
+    cy.get('a[href="/c/o/marketplace/home"]', { timeout: TO.PAGE_ELEMENT })
+      .click();
   }
 
   goToCalendar() {
-    cy.get('festival-dashboard').get('a[test-id=calendar]').click();
+    cy.get('festival-dashboard a[test-id=calendar]', { timeout: TO.PAGE_ELEMENT })
+      .click();
     return new EventPage();
   }
 
@@ -23,29 +25,32 @@ export default class FestivalDashboardHomePage {
   }
 
   clickOnInvitations() {
-    cy.get('festival-dashboard a[test-id=invitations-link]', {timeout: 10000})
+    cy.get('festival-dashboard a[test-id=invitations-link]', {timeout: TO.PAGE_ELEMENT})
       .click();
     return new FestivalInvitationsPage();
   }
 
   goToNotifications() {
-    cy.visit('/c/o/dashboard/notifications');
+    cy.get('festival-dashboard a[test-id=notifications-link]', {timeout: TO.PAGE_ELEMENT})
+    .click();
     return new FestivalMarketplaceNotifications()
   }
 
   createEvent(eventTitle: string, eventDate: Date, 
               screeningName: string, isPublic: boolean = false) {
     const eventPage: EventPage = new EventPage();
-    cy.get('a[test-id="calendar"]').then($menu => {
+    cy.get('a[test-id="calendar"]', { timeout: TO.PAGE_ELEMENT }).then($menu => {
       if ($menu.length) {
         cy.wrap($menu).click();
       } else {
-        cy.get('button[test-id=menu]', {timeout: 1000})
+        cy.get('button[test-id=menu]', {timeout: TO.PAGE_ELEMENT})
           .first().click();
-        cy.get('a[test-id="calendar"]', {timeout: 1000}).click();
+        cy.get('a[test-id="calendar"]', {timeout: TO.PAGE_ELEMENT})
+          .click();
       }
-      cy.wait(1000);
-      cy.get('button[test-id="menu"]', {timeout: 1200}).first().click();
+      cy.wait(TO.WAIT_1SEC);
+      cy.get('button[test-id="menu"]', {timeout: TO.PAGE_ELEMENT})
+        .first().click();
       const event: EventEditPage = eventPage.createDetailedEvent(eventDate);
       event.addEventTitle(eventTitle);
       event.selectMovie(screeningName);
